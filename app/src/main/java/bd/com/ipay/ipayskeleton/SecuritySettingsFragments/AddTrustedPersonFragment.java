@@ -1,8 +1,10 @@
 package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -19,6 +22,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -39,6 +43,7 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
     private EditText mEditTextName;
     private EditText mEditTextMobileNumber;
     private EditText mEditTextRelationship;
+    private ImageView mSelectContactButton;
     private Button mAddButton;
 
     private CustomSelectorDialog mCustomSelectorDialog;
@@ -51,6 +56,7 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
     private String mMobileNumber;
 
     private int mSelectedRelationId = -1;
+    private final int PICK_CONTACT_REQUEST = 100;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +73,7 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
         mEditTextMobileNumber = (EditText) v.findViewById(R.id.edit_text_mobile_number);
         mEditTextRelationship = (EditText) v.findViewById(R.id.edit_text_relationship);
         mAddButton = (Button) v.findViewById(R.id.button_add_trusted_person);
+        mSelectContactButton = (ImageView) v.findViewById(R.id.select_number_from_contacts);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -93,6 +100,14 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
             }
         });
 
+        mSelectContactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
+                startActivityForResult(intent, PICK_CONTACT_REQUEST);
+            }
+        });
+
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,6 +121,18 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
         });
 
         return v;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
+                if (mobileNumber != null)
+                    mEditTextMobileNumber.setText(mobileNumber);
+                mEditTextMobileNumber.setError(null);
+            }
+        }
     }
 
     private boolean verifyUserInputs() {

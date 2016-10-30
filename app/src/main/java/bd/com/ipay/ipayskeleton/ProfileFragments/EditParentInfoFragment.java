@@ -1,6 +1,8 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,10 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -35,6 +39,9 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
     private EditText mFathersMobileEditText;
     private EditText mMothersMobileEditText;
 
+    private ImageView mSelectFatherContactButton;
+    private ImageView mSelectMotherContactButton;
+
     private ProgressDialog mProgressDialog;
 
     private String mFathersName = "";
@@ -44,6 +51,9 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
     private String mMothersMobile = "";
 
     private Button mInfoSaveButton;
+
+    private final int PICK_FATHER_CONTACT_REQUEST = 100;
+    private final int PICK_MOTHER_CONTACT_REQUEST = 101;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -68,6 +78,8 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
         mMothersNameEditText = (EditText) v.findViewById(R.id.mothers_name);
         mFathersMobileEditText = (EditText) v.findViewById(R.id.fathers_mobile);
         mMothersMobileEditText = (EditText) v.findViewById(R.id.mothers_mobile);
+        mSelectFatherContactButton = (ImageView) v.findViewById(R.id.father_number);
+        mSelectMotherContactButton = (ImageView) v.findViewById(R.id.mother_number);
 
         mInfoSaveButton = (Button) v.findViewById(R.id.button_save);
 
@@ -76,6 +88,21 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
 
         setParentInformation();
 
+        mSelectFatherContactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
+                startActivityForResult(intent, PICK_FATHER_CONTACT_REQUEST);
+            }
+        });
+
+        mSelectMotherContactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
+                startActivityForResult(intent, PICK_MOTHER_CONTACT_REQUEST);
+            }
+        });
 
         mInfoSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +115,25 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
         });
 
         return v;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_FATHER_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
+                if (mobileNumber != null)
+                    mFathersMobileEditText.setText(mobileNumber);
+                mFathersMobileEditText.setError(null);
+            }
+        } else if (requestCode == PICK_MOTHER_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
+                if (mobileNumber != null)
+                    mMothersMobileEditText.setText(mobileNumber);
+                mMothersMobileEditText.setError(null);
+            }
+        }
     }
 
     private boolean verifyUserInputs() {
@@ -104,7 +150,7 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
             mFathersNameEditText.setError(getString(R.string.error_invalid_first_name));
             focusView = mFathersNameEditText;
             cancel = true;
-        } else if (mFathersName.length() < 5 ) {
+        } else if (mFathersName.length() < 5) {
             mFathersNameEditText.setError(getString(R.string.error_invalid_parent_name));
             focusView = mFathersNameEditText;
             cancel = true;
@@ -114,14 +160,14 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
             mMothersNameEditText.setError(getString(R.string.error_invalid_first_name));
             focusView = mMothersNameEditText;
             cancel = true;
-        } else if (mMothersName.length() < 5 ) {
+        } else if (mMothersName.length() < 5) {
             mMothersNameEditText.setError(getString(R.string.error_invalid_parent_name));
             focusView = mMothersNameEditText;
             cancel = true;
         }
 
         if (mFathersMobile.isEmpty()) mFathersMobile = null;
-        else if ( !ContactEngine.isValidNumber(mFathersMobile)) {
+        else if (!ContactEngine.isValidNumber(mFathersMobile)) {
             mFathersMobileEditText.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mFathersMobileEditText;
             cancel = true;
