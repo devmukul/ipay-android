@@ -39,8 +39,8 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
     private EditText mFathersMobileEditText;
     private EditText mMothersMobileEditText;
 
-    private ImageView mSelectFatherContactButton;
-    private ImageView mSelectMotherContactButton;
+    private ImageView mSelectFatherMobileContactButton;
+    private ImageView mSelectMotherMobileContactButton;
 
     private ProgressDialog mProgressDialog;
 
@@ -78,8 +78,8 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
         mMothersNameEditText = (EditText) v.findViewById(R.id.mothers_name);
         mFathersMobileEditText = (EditText) v.findViewById(R.id.fathers_mobile);
         mMothersMobileEditText = (EditText) v.findViewById(R.id.mothers_mobile);
-        mSelectFatherContactButton = (ImageView) v.findViewById(R.id.father_number);
-        mSelectMotherContactButton = (ImageView) v.findViewById(R.id.mother_number);
+        mSelectFatherMobileContactButton = (ImageView) v.findViewById(R.id.father_number);
+        mSelectMotherMobileContactButton = (ImageView) v.findViewById(R.id.mother_number);
 
         mInfoSaveButton = (Button) v.findViewById(R.id.button_save);
 
@@ -88,7 +88,7 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
 
         setParentInformation();
 
-        mSelectFatherContactButton.setOnClickListener(new View.OnClickListener() {
+        mSelectFatherMobileContactButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
@@ -96,7 +96,7 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
             }
         });
 
-        mSelectMotherContactButton.setOnClickListener(new View.OnClickListener() {
+        mSelectMotherMobileContactButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
