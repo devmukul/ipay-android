@@ -156,8 +156,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
         setHasOptionsMenu(true);
 
-        getDistrictList();
-
         return v;
     }
 
@@ -310,8 +308,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mBusinessMobileNumberView.setText(getString(R.string.phone_number) + ": " + mGetBusinessInformationResponse.getMobileNumber());
         mBusinessTypeView.setText(R.string.loading);
 
-        setContentShown(true);
-
         // Load business types, then extract the name of the business type from businessTypeId
         mGetBusinessTypesAsyncTask = new GetBusinessTypesAsyncTask(getActivity(), new GetBusinessTypesAsyncTask.BusinessTypeLoadListener() {
             @Override
@@ -359,6 +355,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
             setProfileInformation();
             getOccupationList();
+            getDistrictList();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -421,7 +418,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                     } else {
                         mOccupationView.setText(getString(R.string.occupation) + ": " + getString(R.string.not_available));
                     }
-                    setContentShown(true);
                 } catch (Exception e) {
                     e.printStackTrace();
                     mOccupationView.setText(getString(R.string.occupation) + ": " + getString(R.string.not_available));
@@ -459,7 +455,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                     mGetUserAddressResponse = gson.fromJson(result.getJsonString(), GetUserAddressResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mPresentAddress = mGetUserAddressResponse.getPresentAddress();
-
                         loadAddresses();
                         setContentShown(true);
                     } else {
