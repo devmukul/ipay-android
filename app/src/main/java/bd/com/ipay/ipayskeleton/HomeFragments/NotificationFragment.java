@@ -639,7 +639,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             View v;
 
             if (viewType == Constants.NOTIFICATION_TYPE_INTRODUCTION_REQUEST) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_requests, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_requests_notification, parent, false);
                 return new IntroductionRequestViewHolder(v);
 
             } else if (viewType == Constants.NOTIFICATION_TYPE_BUSINESS_ACCOUNT_INVITE) {

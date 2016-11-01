@@ -174,7 +174,6 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                             MINIMUM_INTRODUCER_COUNT = mIntroducerListResponse.getRequiredForProfileCompletion();
 
                             if (mIntroducerList.size() < MINIMUM_INTRODUCER_COUNT) {
-                                //Toast.makeText(getActivity(), "dhukci", Toast.LENGTH_LONG).show();
                                 mCompleteIntroducerHeaderLayout.setVisibility(View.VISIBLE);
                                 mIntroducerStatusTextView.setText(getString(R.string.you_need_to_have) + MINIMUM_INTRODUCER_COUNT
                                         + getString(R.string.introducers_to_complete_the_account_verification_process));
@@ -240,7 +239,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.ask_for_recommendation_sent, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), R.string.ask_for_introduction, Toast.LENGTH_LONG).show();
                         }
                     } else if (getActivity() != null) {
                         Toast.makeText(getActivity(), mAskForIntroductionResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -249,7 +248,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_asking_recommendation, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.failed_asking_introduction, Toast.LENGTH_LONG).show();
                     }
                 }
                 mProgressDialog.dismiss();

@@ -329,6 +329,7 @@
     <string name="fetch_info_failed">Failed to fetch information</string>
     <string name="fetch_notification_failed">Failed to fetch notifications.</string>
     <string name="user_activity_get_failed">Could not fetch user activities</string>
+    <string name="security_question_get_failed">Could not fetch security questions</string>
     <string name="transaction_history_get_failed">Could not fetch transaction histories</string>
     <string name="pending_get_failed">Could not fetch pending requests</string>
     <string name="events_get_failed">Could not fetch my events</string>
@@ -572,6 +573,7 @@
     <string name="failed_update_friend">Update friend failed</string>
     <string name="confirm_request_rejection">Are you sure you want to reject this request?</string>
     <string name="contacts_sync_failed">Contacts Sync Failed</string>
+    <string name="business_contacts_sync_failed">Fail to fetch business contacts</string>
     <string name="search">Search</string>
     <string name="member_since">Member Since</string>
     <string name="select_district">District</string>

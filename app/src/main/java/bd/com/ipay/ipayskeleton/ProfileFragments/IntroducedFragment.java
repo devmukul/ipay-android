@@ -231,9 +231,9 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 mIntroducedMobileNumber = (TextView) itemView.findViewById(R.id.introduced_mobile_number);
                 mIntroducedProfilePictureView = (ProfileImageView) itemView.findViewById(R.id.introduced_profile_picture);
 
-                mSenderName = (TextView) itemView.findViewById(R.id.textview_title);
-                mSenderMobileNumber = (TextView) itemView.findViewById(R.id.textview_description);
-                mDate = (TextView) itemView.findViewById(R.id.textview_time);
+                mSenderName = (TextView) itemView.findViewById(R.id.sender_name);
+                mSenderMobileNumber = (TextView) itemView.findViewById(R.id.sender_mobile_number);
+                mDate = (TextView) itemView.findViewById(R.id.time);
                 mRecommendationProfilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 divider = itemView.findViewById(R.id.divider);
             }

@@ -30,7 +30,7 @@ public class GetAllBusinessListAsyncTask extends HttpRequestGetAsyncTask impleme
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             if (getContext() != null) {
-                Toast.makeText(getContext(), R.string.contacts_sync_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG).show();
                 return;
             }
         }
@@ -45,14 +45,14 @@ public class GetAllBusinessListAsyncTask extends HttpRequestGetAsyncTask impleme
                 dataHelper.createBusinessAccounts(mBusinessContacts);
             } else {
                 if (getContext() != null) {
-                    Toast.makeText(getContext(), R.string.contacts_sync_failed, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG).show();
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
 
             if (getContext() != null) {
-                Toast.makeText(getContext(), R.string.contacts_sync_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG).show();
             }
         }
 

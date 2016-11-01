@@ -265,7 +265,6 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
 
         Gson gson = new Gson();
 
-        //if (this.isAdded()) setContentShown(true);
         switch (result.getApiCommand()) {
 
             case Constants.COMMAND_INTRODUCE_ACTION:
