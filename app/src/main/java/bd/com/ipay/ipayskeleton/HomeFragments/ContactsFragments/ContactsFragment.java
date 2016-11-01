@@ -105,6 +105,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private boolean mBusinessMemberOnly;
     private boolean mShowInvitedOnly;
     private boolean mShowNonInvitedNonMembersOnly;
+    private boolean mShowAllMembersToInvite;
 
     private int nameIndex;
     private int originalNameIndex;
@@ -161,6 +162,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             mBusinessMemberOnly = getArguments().getBoolean(Constants.BUSINESS_ACCOUNTS_ONLY, false);
             mShowInvitedOnly = getArguments().getBoolean(Constants.SHOW_INVITED_ONLY, false);
             mShowNonInvitedNonMembersOnly = getArguments().getBoolean(Constants.SHOW_NON_INVITED_NON_MEMBERS_ONLY, false);
+            mShowAllMembersToInvite = getArguments().getBoolean(Constants.SHOW_ALL_MEMBERS, false);
         }
 
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this).forceLoad();
@@ -714,7 +716,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 final int accountType = mCursor.getInt(accountTypeIndex);
                 final boolean isMember = mCursor.getInt(isMemberIndex) == DBConstants.IPAY_MEMBER;
 
-                boolean isInvited = isInvited(mobileNumber);
+                final boolean isInvited = isInvited(mobileNumber);
 
                 /**
                  * We need to show original name on the top if exists
@@ -750,30 +752,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 if (mShowNonInvitedNonMembersOnly) {
                     inviteButton.setVisibility(View.VISIBLE);
-                    inviteButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            if (originalName != null && !originalName.isEmpty())
-                                setSelectedName(originalName);
-                            else setSelectedName(name);
-                            setSelectedNumber(mobileNumber);
-
-                            new android.app.AlertDialog.Builder(getActivity())
-                                    .setMessage(R.string.are_you_sure_to_invite)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            sendInvite(mobileNumber);
-                                        }
-                                    })
-                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            // Do nothing
-                                        }
-                                    })
-                                    .show();
-                        }
-                    });
                 } else {
                     inviteButton.setVisibility(View.GONE);
                 }
@@ -793,6 +771,25 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                             getActivity().setResult(Activity.RESULT_OK, intent);
                             getActivity().finish();
 
+                        } else if (mShowAllMembersToInvite && !isMember) {
+                            if (originalName != null && !originalName.isEmpty())
+                                setSelectedName(originalName);
+                            else setSelectedName(name);
+                            setSelectedNumber(mobileNumber);
+
+                            new android.app.AlertDialog.Builder(getActivity())
+                                    .setMessage(R.string.are_you_sure_to_invite)
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            sendInvite(mobileNumber);
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // Do nothing
+                                        }
+                                    })
+                                    .show();
                         } else {
                             if (originalName != null && !originalName.isEmpty())
                                 setSelectedName(originalName);
