@@ -84,6 +84,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     // So saving these in these two variables.
     private String mSelectedName;
     private String mSelectedNumber;
+    private String mInvite_message;
 
     private View mSheetViewNonIpayMember;
     private View mSheetViewIpayMember;
@@ -414,7 +415,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private void setUpBottomSheet() {
         mSheetViewNonIpayMember = getActivity().getLayoutInflater()
                 .inflate(R.layout.sheet_view_contact_non_member, null);
-        Button mInviteButton = (Button) mSheetViewNonIpayMember.findViewById(R.id.button_invite);
+        final Button mInviteButton = (Button) mSheetViewNonIpayMember.findViewById(R.id.button_invite);
 
         if (ContactsHolderFragment.mGetInviteInfoResponse != null &&
                 ContactsHolderFragment.mGetInviteInfoResponse.invitees.contains(mSelectedNumber)) {
@@ -427,8 +428,12 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                         mBottomSheetLayout.dismissSheet();
                     }
 
+                    mInvite_message = getString(R.string.are_you_sure_to_invite);
+                    if (!mSelectedName.isEmpty())
+                        mInvite_message = mInvite_message.replace(getString(R.string.this_person), mSelectedName);
+
                     new android.app.AlertDialog.Builder(getActivity())
-                            .setMessage(R.string.are_you_sure_to_invite)
+                            .setMessage(mInvite_message)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     sendInvite(mSelectedNumber);
@@ -511,7 +516,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_send_for_recommendation));
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_send_for_introduction));
         mProgressDialog.show();
         mAskForRecommendationTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ASK_FOR_RECOMMENDATION,
                 Constants.BASE_URL_MM + Constants.URL_ASK_FOR_INTRODUCTION + mobileNumber, null, getActivity());
@@ -715,7 +720,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 final boolean isVerified = mCursor.getInt(verificationStatusIndex) == DBConstants.VERIFIED_USER;
                 final int accountType = mCursor.getInt(accountTypeIndex);
                 final boolean isMember = mCursor.getInt(isMemberIndex) == DBConstants.IPAY_MEMBER;
-
                 final boolean isInvited = isInvited(mobileNumber);
 
                 /**
@@ -777,8 +781,12 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                             else setSelectedName(name);
                             setSelectedNumber(mobileNumber);
 
+                            mInvite_message = getString(R.string.are_you_sure_to_invite);
+                            if (!name.isEmpty())
+                                mInvite_message = mInvite_message.replace(getString(R.string.this_person), name);
+
                             new android.app.AlertDialog.Builder(getActivity())
-                                    .setMessage(R.string.are_you_sure_to_invite)
+                                    .setMessage(mInvite_message)
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             sendInvite(mobileNumber);
