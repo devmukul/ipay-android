@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -52,6 +53,8 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
     private EditText mDistrictSelection;
     private EditText mCountrySelection;
     private EditText mPostalCodeField;
+    private EditTextWithProgressBar mDistrictEditTextProgressBar;
+    private EditTextWithProgressBar mThanaEditTextProgressBar;
 
     private ResourceSelectorDialog<District> districtSelectorDialog;
     private ResourceSelectorDialog<Thana> thanaSelectorDialog;
@@ -78,11 +81,14 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
 
         mAddressLine1Field = (EditText) v.findViewById(R.id.address_line_1);
         mAddressLine2Field = (EditText) v.findViewById(R.id.address_line_2);
-        mThanaSelection = (EditText) v.findViewById(R.id.thana);
-        mDistrictSelection = (EditText) v.findViewById(R.id.district);
         mCountrySelection = (EditText) v.findViewById(R.id.country);
         mCountrySelection.setEnabled(false);
         mPostalCodeField = (EditText) v.findViewById(R.id.postcode);
+        mThanaEditTextProgressBar = (EditTextWithProgressBar) v.findViewById(R.id.thana);
+        mDistrictEditTextProgressBar = (EditTextWithProgressBar) v.findViewById(R.id.district);
+        mDistrictSelection = mDistrictEditTextProgressBar.getEditText();
+        mThanaSelection = mThanaEditTextProgressBar.getEditText();
+
 
         addView(v);
         getDistrictList();
@@ -92,6 +98,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
         if (mGetThanaListAsyncTask != null) {
             return;
         }
+        mThanaEditTextProgressBar.showProgressBar();
 
         mGetThanaListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_THANA_LIST,
                 new ThanaRequestBuilder(districtId).getGeneratedUri(), context, this);
@@ -102,6 +109,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
         if (mGetDistrictListAsyncTask != null) {
             return;
         }
+        mThanaEditTextProgressBar.hideProgressBar();
 
         mGetDistrictListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DISTRICT_LIST,
                 new DistrictRequestBuilder().getGeneratedUri(), context, this);
@@ -297,6 +305,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mDistrictList = mGetDistrictResponse.getDistricts();
+                    mDistrictEditTextProgressBar.hideProgressBar();
                     setDistrictAdapter(mDistrictList);
                     setDistrictName(mSelectedDistrictId);
                     if (mSelectedDistrictId >= 0) {
@@ -319,6 +328,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
                 mGetThanaResponse = gson.fromJson(result.getJsonString(), GetThanaResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mThanaList = mGetThanaResponse.getThanas();
+                    mThanaEditTextProgressBar.hideProgressBar();
                     setThanaAdapter(mThanaList);
                     setThanaName(mSelectedThanaId);
 

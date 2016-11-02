@@ -36,44 +36,26 @@
             android:layout_height="wrap_content"
             android:hint="@string/prompt_business_addr_line2"
             android:inputType="textPostalAddress"
-            android:maxLines="1"/>
+            android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
 
     <View style="@style/Divider" />
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/district"
-            style="@style/CustomEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/district"
-            android:inputType="textPostalAddress"
-            android:maxLines="1"
-            android:focusable="false">
-
-        </EditText>
-    </android.support.design.widget.TextInputLayout>
+    <bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar
+        android:id="@+id/district"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/district"
+        android:inputType="textPostalAddress" />
 
     <View style="@style/Divider" />
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/thana"
-            style="@style/CustomEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/thana"
-            android:inputType="textPostalAddress"
-            android:maxLines="1"
-            android:focusable="false"/>
-    </android.support.design.widget.TextInputLayout>
+    <bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar
+        android:id="@+id/thana"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/thana"
+        android:inputType="textPostalAddress" />
 
     <View style="@style/Divider" />
 
@@ -89,7 +71,7 @@
             android:hint="@string/postcode"
             android:inputType="number"
             android:maxLength="4"
-            android:maxLines="1"/>
+            android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
 
     <View style="@style/Divider" />
@@ -107,7 +89,7 @@
             android:hint="@string/country"
             android:inputType="textPostalAddress"
             android:maxLines="1"
-            android:text="@string/bangladesh"/>
+            android:text="@string/bangladesh" />
     </android.support.design.widget.TextInputLayout>
 
     <View style="@style/Divider" />

@@ -51,20 +51,12 @@
 
         <View style="@style/Divider" />
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/bank_branch"
-                style="@style/CustomEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:hint="@string/bank_branch"
-                android:inputType="textPostalAddress"
-                android:maxLines="1" />
-        </android.support.design.widget.TextInputLayout>
+        <bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar
+            android:id="@+id/editText_with_progressBar_branch"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/bank_branch"
+            android:inputType="textPostalAddress" />
 
         <View style="@style/Divider" />
 

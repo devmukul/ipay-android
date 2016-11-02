@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPostalAddress"
             android:maxLines="1"
-            android:singleLine="true"/>
+            android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
 
     <View style="@style/DividerOnly" />
@@ -39,41 +39,23 @@
 
     <View style="@style/DividerOnly" />
 
-    <android.support.design.widget.TextInputLayout
-        style="@style/CustomTextInputLayoutWithMargin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/district"
-            style="@style/CustomEditTextLogInSignUp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="false"
-            android:hint="@string/district"
-            android:inputType="textPostalAddress"
-            android:maxLines="1">
-
-        </EditText>
-    </android.support.design.widget.TextInputLayout>
+    <bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar
+        android:id="@+id/district"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/district"
+        android:inputType="textPostalAddress"
+        android:paddingTop="@dimen/value10" />
 
     <View style="@style/DividerOnly" />
 
-    <android.support.design.widget.TextInputLayout
-        style="@style/CustomTextInputLayoutWithMargin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/thana"
-            style="@style/CustomEditTextLogInSignUp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="false"
-            android:hint="@string/thana"
-            android:inputType="textPostalAddress"
-            android:maxLines="1" />
-    </android.support.design.widget.TextInputLayout>
+    <bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar
+        android:id="@+id/thana"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/thana"
+        android:inputType="textPostalAddress"
+        android:paddingTop="@dimen/value10" />
 
     <View style="@style/DividerOnly" />
 
