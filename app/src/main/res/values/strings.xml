@@ -149,6 +149,7 @@
     <string name="select_session"><Sele></Sele>ct Session</string>
     <string name="save">Save</string>
     <string name="ipay_contacts">iPay</string>
+    <string name="security_questions">Set Security Question</string>
     <string name="activity_log">Activity log</string>
     <string name="payments">Payments</string>
     <string name="please_enter_an_account_name">Please provide your Account Name and try again</string>
@@ -331,6 +332,7 @@
     <string name="fetch_notification_failed">Failed to fetch notifications.</string>
     <string name="user_activity_get_failed">Could not fetch user activities</string>
     <string name="security_question_get_failed">Could not fetch security questions</string>
+    <string name="security_answer_set_failed">Failed to set security answers</string>
     <string name="transaction_history_get_failed">Could not fetch transaction histories</string>
     <string name="pending_get_failed">Could not fetch pending requests</string>
     <string name="events_get_failed">Could not fetch my events</string>
@@ -340,6 +342,8 @@
     <string name="change_password_progress">Change password on progress...</string>
     <string name="enter_current_pass">Enter current password</string>
     <string name="current_pass">Current password</string>
+    <string name="enter_question">Select Question</string>
+    <string name="enter_answer">Enter Answer</string>
     <string name="server_down">Can not process your request right now. Please try again later</string>
     <string name="add_money_failed">Could not submit request for add money</string>
     <string name="wallet">Wallet</string>
@@ -403,6 +407,10 @@
     <string name="title_otp_verification_for_business">Enter Code</string>
     <string name="title_select_account_type_page">Welcome</string>
     <string name="version">Version</string>
+    <string name="select_a_question">Select Question</string>
+    <string name="question">Question</string>
+    <string name="answer">Answer</string>
+    <string name="set_security_answer">Saving answers</string>
 
     <!-- ARCA -->
 

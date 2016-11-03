@@ -30,6 +30,11 @@ public class SemesterOrSession implements Resource{
         return sessionName;
     }
 
+    @Override
+    public String getStringId() {
+        return null;
+    }
+
     public void setSessionName(String sessionName) {
         this.sessionName = sessionName;
     }
