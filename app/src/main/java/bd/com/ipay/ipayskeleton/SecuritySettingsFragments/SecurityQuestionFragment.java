@@ -27,7 +27,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.SetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.Model.Security.GetSecurityQuestionRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Security.GetSecurityQuestionResponse;
 import bd.com.ipay.ipayskeleton.Model.Security.SecurityAnswerClass;
@@ -362,7 +361,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
             try {
                 if (holder instanceof SecurityQuestionAdapter.SecurityQuestionHolder) {
                     SecurityQuestionAdapter.SecurityQuestionHolder vh = (SecurityQuestionAdapter.SecurityQuestionHolder) holder;
-                    // So that it knows what item in dataset to update
+                    // Add custom text watcher for edittext validation
                     vh.customWatcher.updatePosition(position);
                     vh.bindView(position);
                 } else if (holder instanceof SecurityQuestionAdapter.FooterViewHolder) {
