@@ -77,8 +77,10 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
 
         mProgressDialog = new ProgressDialog(getActivity());
 
+        mEditTextName.requestFocus();
         final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
 
         mRelationshipList = Arrays.asList(getResources().getStringArray(R.array.relationship));
         mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), getString(R.string.relationship), mRelationshipList);
@@ -204,7 +206,7 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    ((SecuritySettingsActivity) getActivity()).switchToPasswordRecovery();
+                    ((SecuritySettingsActivity) getActivity()).switchToPasswordRecoveryFragment();
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();

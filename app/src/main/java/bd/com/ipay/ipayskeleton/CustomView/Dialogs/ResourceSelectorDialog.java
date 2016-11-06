@@ -56,7 +56,7 @@ public class ResourceSelectorDialog<E extends Resource> extends AlertDialog {
         super(context);
         this.context = context;
         this.resources = resources;
-        this.selectedItemId= selectedItemId;
+        this.selectedItemId = selectedItemId;
 
 
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -68,7 +68,9 @@ public class ResourceSelectorDialog<E extends Resource> extends AlertDialog {
         view = inflater.inflate(R.layout.dialog_custom_listview, null);
         this.setView(view);
 
-        setItems(resources, isStringID);
+        if (isStringID)
+            setItemsWithStringID(resources);
+        else setItems(resources);
     }
 
 
@@ -96,7 +98,7 @@ public class ResourceSelectorDialog<E extends Resource> extends AlertDialog {
         });
     }
 
-    private void setItems(List<E> resources , final boolean isStringID) {
+    private void setItemsWithStringID(List<E> resources) {
         stringIds = new ArrayList<>();
         names = new ArrayList<>();
 
@@ -111,11 +113,10 @@ public class ResourceSelectorDialog<E extends Resource> extends AlertDialog {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String name = names.get(i);
-                String  stringID = stringIds.get(i);
+                String stringID = stringIds.get(i);
 
-                if(isStringID)
                 if (onResourceSelectedListenerWithSelectedIndex != null)
-                    onResourceSelectedListenerWithSelectedIndex.onResourceSelectedWithStringID(stringID, name , selectedItemId);
+                    onResourceSelectedListenerWithSelectedIndex.onResourceSelectedWithStringID(stringID, name, selectedItemId);
                 dismiss();
             }
         });

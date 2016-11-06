@@ -344,6 +344,8 @@
     <string name="current_pass">Current password</string>
     <string name="enter_question">Select Question</string>
     <string name="enter_answer">Enter Answer</string>
+    <string name="trusted_person">Trusted Person</string>
+    <string name="trusted_network">Trusted Network</string>
     <string name="server_down">Can not process your request right now. Please try again later</string>
     <string name="add_money_failed">Could not submit request for add money</string>
     <string name="wallet">Wallet</string>

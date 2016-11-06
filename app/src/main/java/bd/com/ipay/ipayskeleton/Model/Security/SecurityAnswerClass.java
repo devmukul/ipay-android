@@ -1,6 +1,8 @@
 package bd.com.ipay.ipayskeleton.Model.Security;
 
-public class SecurityAnswerClass {
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Resource;
+
+public class SecurityAnswerClass implements Resource {
 
     private String qid;
     private String answer;
@@ -19,5 +21,20 @@ public class SecurityAnswerClass {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    @Override
+    public int getId() {
+        return 0;
+    }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public String getStringId() {
+        return qid;
     }
 }

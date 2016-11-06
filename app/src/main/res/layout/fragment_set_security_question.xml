@@ -15,7 +15,8 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_security_questions"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/value10" />
 
         <TextView
             android:id="@+id/empty_list_text"
@@ -24,7 +25,7 @@
             android:gravity="center"
             android:paddingTop="@dimen/activity_horizontal_margin"
             android:text="@string/empty_list"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 </LinearLayout>

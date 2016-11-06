@@ -2,8 +2,8 @@ package bd.com.ipay.ipayskeleton.Model.Security;
 
 public class SecurityQuestionValidationClass {
     private String question;
-    private boolean isQuestion_available = true;
-    private boolean isAnswer_available = true;
+    private boolean isQuestionAvailable = true;
+    private boolean isAnswerAvailable = true;
 
     public SecurityQuestionValidationClass() {
     }
@@ -16,19 +16,19 @@ public class SecurityQuestionValidationClass {
         this.question = question;
     }
 
-    public boolean isQuestion_available() {
-        return isQuestion_available;
+    public boolean isQuestionAvailable() {
+        return isQuestionAvailable;
     }
 
-    public void setQuestion_available(boolean question_available) {
-        this.isQuestion_available = question_available;
+    public void setQuestionAvailable(boolean questionAvailable) {
+        this.isQuestionAvailable = questionAvailable;
     }
 
-    public boolean isAnswer_available() {
-        return isAnswer_available;
+    public boolean isAnswerAvailable() {
+        return isAnswerAvailable;
     }
 
-    public void setAnswer_available(boolean answer_available) {
-        this.isAnswer_available = answer_available;
+    public void setAnswerAvailable(boolean answerAvailable) {
+        this.isAnswerAvailable = answerAvailable;
     }
 }
