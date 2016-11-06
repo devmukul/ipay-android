@@ -58,7 +58,6 @@ public class ResourceSelectorDialog<E extends Resource> extends AlertDialog {
         this.resources = resources;
         this.selectedItemId = selectedItemId;
 
-
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         viewTitle = inflater.inflate(R.layout.dialog_selector_header, null);
         textViewTitle = (TextView) viewTitle.findViewById(R.id.textviewTitle);
