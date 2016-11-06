@@ -8,7 +8,7 @@ public class SignupRequestBusiness {
     private final String deviceId;
     private final String name;
     private final int accountType;
-    private final long dob;
+    private final String dob;
     private final String password;
     private final String otp;
     private final String businessName;
@@ -20,7 +20,7 @@ public class SignupRequestBusiness {
     private final String promoCode;
 
     public SignupRequestBusiness(String mobileNumber, String deviceId,
-                                 String name, int accountType, long dob,
+                                 String name, int accountType, String dob,
                                  String password, String otp, String businessName,
                                  long businessType, String businessEmail, String personalEmail,
                                  String personalMobileNumber, AddressClass personalAddress,

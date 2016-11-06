@@ -186,7 +186,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
         Gson gson = new Gson();
 
-        SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(mName, mGender, Utilities.dateToMilliSecond(mDateOfBirth),
+        SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(mName, mGender, mDateOfBirth,
                 mOccupation);
 
         String profileInfoJson = gson.toJson(setProfileInfoRequest);
