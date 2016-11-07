@@ -423,14 +423,13 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
             }
 
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
             }
 
             public void afterTextChanged(Editable editable) {
                 if (editable.length() > 0) {
                     mSecurityAnswerClassList.get(position).setAnswer(editable.toString());
                     mSecurityQuestionAnswerValidationClassList.get(position).setAnswerAvailable(true);
-                } else {
-                    mSecurityQuestionAnswerValidationClassList.get(position).setAnswerAvailable(false);
                 }
 
             }
