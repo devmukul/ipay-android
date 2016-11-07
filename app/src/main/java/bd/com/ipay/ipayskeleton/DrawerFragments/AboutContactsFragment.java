@@ -38,7 +38,7 @@ public class AboutContactsFragment extends Fragment {
         mWebView = (TextView) v.findViewById(R.id.web);
 
         mAddressView.setText(Constants.OFFICE_ADDRESS);
-        mPhoneView.setText(": " + Constants.OFFICE_PHONE_NUMBER);
+        mPhoneView.setText(": " + Constants.OFFICE_PHONE_NUMBER +"; "+Constants.OFFICE_LAND_LINE_NUMBER);
         mEmailView.setText(": " + Constants.OFFICE_EMAIL);
         mWebView.setText(": " + Constants.OFFICE_WEB);
 
@@ -54,14 +54,14 @@ public class AboutContactsFragment extends Fragment {
         mapView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openMap();
+                openMapWithLocation();
             }
         });
 
         return v;
     }
 
-    private void openMap() {
+    private void openMapWithLocation() {
         String strUri = "http://maps.google.com/maps?q=loc:" + Constants.OFFICE_LATITUDE + "," + Constants.OFFICE_LONGITUDE + ")";
         Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(strUri));
         intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
