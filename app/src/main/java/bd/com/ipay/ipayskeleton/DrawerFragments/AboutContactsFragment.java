@@ -38,7 +38,7 @@ public class AboutContactsFragment extends Fragment {
         mWebView = (TextView) v.findViewById(R.id.web);
 
         mAddressView.setText(Constants.OFFICE_ADDRESS);
-        mPhoneView.setText(": " + Constants.OFFICE_PHONE_NUMBER +"; "+Constants.OFFICE_LAND_LINE_NUMBER);
+        mPhoneView.setText(": " + Constants.OFFICE_PHONE_NUMBER + "; " + Constants.OFFICE_LAND_LINE_NUMBER);
         mEmailView.setText(": " + Constants.OFFICE_EMAIL);
         mWebView.setText(": " + Constants.OFFICE_WEB);
 
