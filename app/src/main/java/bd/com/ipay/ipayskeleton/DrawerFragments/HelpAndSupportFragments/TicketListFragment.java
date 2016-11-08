@@ -160,7 +160,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                         } else
                             mEmptyListTextView.setVisibility(View.VISIBLE);
 
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
                         mEmptyListTextView.setVisibility(View.VISIBLE);
 
                     } else {
