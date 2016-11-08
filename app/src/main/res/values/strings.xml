@@ -389,6 +389,8 @@
     <string name="transaction_cancelled">Cancelled</string>
     <string name="transaction_rejected">Rejected</string>
     <string name="draft">Saved but not send</string>
+    <string name="pending">Pending</string>
+    <string name="processed">Processed</string>
     <string name="filter_by_date">Filter by date</string>
     <string name="filter_by_service">Filter by service</string>
     <string name="filter_by_event">Filter by event</string>

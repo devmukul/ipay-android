@@ -54,6 +54,7 @@ public class Constants {
     public static final String SHOW_INVITED_ONLY = "SHOW_INVITED_ONLY";
     public static final String SHOW_NON_INVITED_NON_MEMBERS_ONLY = "SHOW_NON_INVITED_NON_MEMBERS_ONLY";
     public static final String SHOW_ALL_MEMBERS = "SHOW_ALL_MEMBERS";
+    public static final String SEARCH_SPECIFIC_NUMBER_ONLY = "SEARCH_SPECIFIC_NUMBER_ONLY";
     public static final String HIDE_STATUSES = "HIDE_STATUSES";
 
 
@@ -338,6 +339,7 @@ public class Constants {
     // SM Reports REST
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";
     public static final String URL_TRANSACTION_HISTORY_SINGLE = "report/transactions/single";
+    public static final String URL_TRANSACTION_HISTORY_PENDING = "/report/pending-transactions";
 
     // SM User Rest
     public static final String URL_REFRESH_BALANCE = "user/balance";

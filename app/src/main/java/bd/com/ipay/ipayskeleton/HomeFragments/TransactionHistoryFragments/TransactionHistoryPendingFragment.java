@@ -53,7 +53,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class TransactionHistoryFragment extends ProgressFragment implements HttpResponseListener {
+public class TransactionHistoryPendingFragment extends ProgressFragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
 
@@ -99,7 +99,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -461,7 +461,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
         mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
-                Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY_PENDING, json, getActivity());
         mTransactionHistoryTask.mHttpResponseListener = this;
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -757,3 +757,4 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         }
     };
 }
+

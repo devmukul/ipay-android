@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
-import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryFragment;
+import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryHolderFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -31,7 +31,7 @@ public class DashBoardFragment extends Fragment {
     private HomeFragment mHomeFragment;
     private PayFragment mPayFragment;
     private ContactsHolderFragment mContactsHolderFragment;
-    private TransactionHistoryFragment mTransactionHistoryFragment;
+    private TransactionHistoryHolderFragment mTransactionHistoryHolderFragment;
 
     private TabLayout.Tab homeTab;
     private TabLayout.Tab payTab;
@@ -51,7 +51,7 @@ public class DashBoardFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
         setTitle();
         mHomeFragment = new HomeFragment();
-        mTransactionHistoryFragment = new TransactionHistoryFragment();
+        mTransactionHistoryHolderFragment = new TransactionHistoryHolderFragment();
         mPayFragment = new PayFragment();
         mContactsHolderFragment = new ContactsHolderFragment();
 
@@ -164,7 +164,7 @@ public class DashBoardFragment extends Fragment {
                 case PAY_TAB:
                     return mPayFragment;
                 case TRANSACTION_HISTORY_TAB:
-                    return mTransactionHistoryFragment;
+                    return mTransactionHistoryHolderFragment;
                 case CONTACTS_TAB:
                     return mContactsHolderFragment;
                 default:
