@@ -73,14 +73,8 @@ public class TransactionHistoryHolderFragment extends Fragment {
         mProcessedTransactionsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
         mPendingTransactionsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
 
-        try {
-            if (mProcessedTransactionHistoryFragment == null) {
-                mProcessedTransactionHistoryFragment = new TransactionHistoryFragment();
-            }
-            getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mProcessedTransactionHistoryFragment).commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mProcessedTransactionHistoryFragment = new TransactionHistoryFragment();
+        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mProcessedTransactionHistoryFragment).commit();
 
     }
 
@@ -91,14 +85,8 @@ public class TransactionHistoryHolderFragment extends Fragment {
         mProcessedTransactionsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
         mPendingTransactionsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
 
-        try {
-            if (mPendingTransactionHistoryFragment == null) {
-                mPendingTransactionHistoryFragment = new TransactionHistoryPendingFragment();
-            }
-            getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mPendingTransactionHistoryFragment).commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mPendingTransactionHistoryFragment = new TransactionHistoryPendingFragment();
+        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mPendingTransactionHistoryFragment).commit();
     }
 
 }

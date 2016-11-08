@@ -185,7 +185,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                     .deviceId(Constants.MOBILE_ANDROID + mDeviceID)
                     .name(SignupOrLoginActivity.mNameBusiness)
                     .accountType(SignupOrLoginActivity.mAccountType)
-                    .dob(Utilities.dateToMilliSecond(SignupOrLoginActivity.mBirthdayBusinessHolder))
+                    .dob(SignupOrLoginActivity.mBirthdayBusinessHolder)
                     .password(SignupOrLoginActivity.mPasswordBusiness)
                     .otp(otp)
                     .businessName(SignupOrLoginActivity.mBusinessName)
@@ -197,14 +197,6 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                     .promoCode(SignupOrLoginActivity.mPromoCode)
                     .build();
 
-            SignupRequestBusiness mSignupModel = new SignupRequestBusiness(SignupOrLoginActivity.mMobileNumberBusiness,
-                    Constants.MOBILE_ANDROID + mDeviceID, SignupOrLoginActivity.mNameBusiness, SignupOrLoginActivity.mAccountType,
-                    Utilities.dateToMilliSecond(SignupOrLoginActivity.mBirthdayBusinessHolder),
-                    SignupOrLoginActivity.mPasswordBusiness, otp,
-                    SignupOrLoginActivity.mBusinessName, SignupOrLoginActivity.mTypeofBusiness,
-                    SignupOrLoginActivity.mEmailBusiness, SignupOrLoginActivity.mEmailBusiness,
-                    SignupOrLoginActivity.mMobileNumberPersonal, SignupOrLoginActivity.mAddressBusiness,
-                    SignupOrLoginActivity.mAddressBusinessHolder, SignupOrLoginActivity.mPromoCode);
             Gson gson = new Gson();
             String json = gson.toJson(mSignupBusinessRequest);
             mSignUpTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SIGN_UP_BUSINESS,

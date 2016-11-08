@@ -672,7 +672,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mUploadButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mDocumentIdEditTextView.getText().toString() == null) {
+                        if (mDocumentIdEditTextView.getText().toString() == null || mDocumentIdEditTextView.getText().toString().isEmpty()) {
                             mDocumentIdEditTextView.setError(getString(R.string.please_enter_document_number));
                             mDocumentIdEditTextView.requestFocus();
                         } else if (documentPreviewBindViewHolderList.get(pos).getmSelectedDocumentUri() == null) {

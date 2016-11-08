@@ -72,6 +72,8 @@ public class TransactionHistoryClass implements Parcelable {
                         return "";
                 case Constants.TRANSACTION_HISTORY_EDUCATION:
                     return additionalInfo.getUserName();
+                case Constants.TRANSACTION_HISTORY_REQUEST_MONEY:
+                    return receiverInfo;
 
             }
         } catch (Exception e) {

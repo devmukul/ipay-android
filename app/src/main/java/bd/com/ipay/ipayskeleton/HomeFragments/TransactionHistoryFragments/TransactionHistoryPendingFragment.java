@@ -99,7 +99,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -571,20 +570,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 final int serviceId = transactionHistory.getServiceID();
 
                 mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
-
-                if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    statusDescriptionView.setText(getString(R.string.transaction_successful));
-                    statusDescriptionView.setTextColor(getResources().getColor(R.color.bottle_green));
-                } else if (statusCode == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
-                    statusDescriptionView.setText(getString(R.string.in_progress));
-                    statusDescriptionView.setTextColor(getResources().getColor(R.color.colorAmber));
-                } else {
-                    if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY) {
-                        mAmountTextView.setText(getString(R.string.not_applicable));
-                    }
-                    statusDescriptionView.setText(getString(R.string.transaction_failed));
-                    statusDescriptionView.setTextColor(getResources().getColor(R.color.background_red));
-                }
 
                 mTransactionDescriptionView.setText(description);
                 if (receiver != null && !receiver.equals("")) {
