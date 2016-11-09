@@ -117,9 +117,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
         mAmountView.setText(Utilities.formatTaka(mAmount));
 
-        if (mIsInContacts)
-            mAddInContactsCheckBox.setVisibility(View.GONE);
-        else {
+        if (!mIsInContacts) {
             mAddInContactsCheckBox.setVisibility(View.VISIBLE);
             mAddInContactsCheckBox.setChecked(true);
         }
@@ -185,7 +183,6 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
         new AddFriendAsyncTask(Constants.COMMAND_ADD_FRIENDS,
                 Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     private void attemptSendMoney(String pin) {

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,13 +21,18 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Api.AddFriendAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
+import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
@@ -52,6 +58,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     private String mDescription;
     private String mReferenceNumber;
     private String mError_message;
+    private boolean mIsInContacts;
 
     private ProfileImageView mProfileImageView;
     private TextView mNameView;
@@ -66,6 +73,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     private View mLinearLayoutRefNumberHolder;
     private View mRefNumberDivider;
     private Button mPaymentButton;
+    private CheckBox mAddInContactsCheckBox;
 
 
     @Override
@@ -76,6 +84,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
         mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
         mReferenceNumber = getActivity().getIntent().getStringExtra(Constants.REFERENCE_NUMBER);
+        mIsInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACT, false);
 
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
@@ -93,6 +102,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mLinearLayoutRefNumberHolder = v.findViewById(R.id.reference_number_holder);
         mRefNumberDivider = v.findViewById(R.id.reference_number_divider);
         mPaymentButton = (Button) v.findViewById(R.id.button_payment);
+        mAddInContactsCheckBox = (CheckBox) v.findViewById(R.id.add_in_contacts);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -123,6 +133,11 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
             mLinearLayoutRefNumberHolder.setVisibility(View.VISIBLE);
             mRefNumberDivider.setVisibility(View.VISIBLE);
             mRefNumberView.setText(mReferenceNumber);
+        }
+
+        if (!mIsInContacts) {
+            mAddInContactsCheckBox.setVisibility(View.VISIBLE);
+            mAddInContactsCheckBox.setChecked(true);
         }
 
         mPaymentButton.setOnClickListener(new View.OnClickListener() {
@@ -164,11 +179,17 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                 @Override
                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                     attemptPayment(pinInputDialogBuilder.getPin());
+                    if (mAddInContactsCheckBox.isChecked()) {
+                        addFriend(mReceiverName, mReceiverMobileNumber, null);
+                    }
                 }
             });
             pinInputDialogBuilder.build().show();
         } else {
             attemptPayment(null);
+            if (mAddInContactsCheckBox.isChecked()) {
+                addFriend(mReceiverName, mReceiverMobileNumber, null);
+            }
         }
     }
 
@@ -201,6 +222,18 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
+    }
+
+    private void addFriend(String name, String phoneNumber, String relationship) {
+        List<InfoAddFriend> newFriends = new ArrayList<>();
+        newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
+
+        AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
+        Gson gson = new Gson();
+        String json = gson.toJson(addFriendRequest);
+
+        new AddFriendAsyncTask(Constants.COMMAND_ADD_FRIENDS,
+                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
