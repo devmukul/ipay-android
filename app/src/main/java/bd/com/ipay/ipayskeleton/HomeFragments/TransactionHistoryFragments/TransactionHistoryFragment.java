@@ -99,7 +99,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -209,11 +209,11 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        /*MenuInflater menuInflater = getActivity().getMenuInflater();
+        MenuInflater menuInflater = getActivity().getMenuInflater();
         menuInflater.inflate(R.menu.activity_transaction_history, menu);
         menuInflater.inflate(R.menu.clear_filter, menu);
         this.menu = menu;
-        menu.findItem(R.id.action_clear_filter).setVisible(false);*/
+        menu.findItem(R.id.action_clear_filter).setVisible(false);
 
     }
 

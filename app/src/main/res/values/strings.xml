@@ -146,7 +146,7 @@
     <string name="select_role">Select a role</string>
     <string name="role">Role</string>
     <string name="select_a_fee_item">Select a fee item</string>
-    <string name="select_session"><Sele></Sele>ct Session</string>
+    <string name="select_session">Select Session</string>
     <string name="save">Save</string>
     <string name="save_contact_number">Save Contact number</string>
     <string name="ipay_contacts">iPay</string>
