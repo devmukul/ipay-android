@@ -239,7 +239,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         intent.putExtra(Constants.AMOUNT, amount);
         intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(receiver));
         intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
-        intent.putExtra(Constants.IS_IN_CONTACT, new SearchContactClass(getActivity()).searchMobileNumber(receiver));
+        intent.putExtra(Constants.IS_IN_CONTACTS, new SearchContactClass(getActivity()).searchMobileNumber(receiver));
 
         startActivityForResult(intent, SEND_MONEY_REVIEW_REQUEST);
 

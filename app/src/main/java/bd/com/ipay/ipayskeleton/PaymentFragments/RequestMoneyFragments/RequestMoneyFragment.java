@@ -213,7 +213,7 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
         intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(receiver));
         intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
         intent.putExtra(Constants.INVOICE_TITLE_TAG, title);
-        intent.putExtra(Constants.IS_IN_CONTACT, new SearchContactClass(getActivity()).searchMobileNumber(receiver));
+        intent.putExtra(Constants.IS_IN_CONTACTS, new SearchContactClass(getActivity()).searchMobileNumber(receiver));
 
         startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
     }

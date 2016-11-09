@@ -82,7 +82,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
 
-        mIsInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACT, false);
+        mIsInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
