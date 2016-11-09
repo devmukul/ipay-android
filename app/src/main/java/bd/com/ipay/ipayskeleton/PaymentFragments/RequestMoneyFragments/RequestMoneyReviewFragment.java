@@ -8,23 +8,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
+import bd.com.ipay.ipayskeleton.Api.AddFriendAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
+import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -40,6 +47,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
     private String mPhotoUri;
     private String mDescription;
     private String mTitle;
+    private boolean mIsInContacts;
 
     private ProfileImageView mProfileImageView;
     private TextView mNameView;
@@ -51,6 +59,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
     private TextView mServiceChargeView;
     private TextView mNetReceivedView;
     private Button mRequestMoneyButton;
+    private CheckBox mAddInContactsCheckBox;
 
 
     @Override
@@ -65,6 +74,8 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
 
+        mIsInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACT, false);
+
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
@@ -75,6 +86,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
         mRequestMoneyButton = (Button) v.findViewById(R.id.button_request_money);
+        mAddInContactsCheckBox = (CheckBox) v.findViewById(R.id.add_in_contacts);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -106,10 +118,20 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
         mAmountView.setText(Utilities.formatTaka(mAmount));
 
+        if (mIsInContacts)
+            mAddInContactsCheckBox.setVisibility(View.GONE);
+        else {
+            mAddInContactsCheckBox.setVisibility(View.VISIBLE);
+            mAddInContactsCheckBox.setChecked(true);
+        }
+
         mRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 attemptRequestMoney();
+                if (mAddInContactsCheckBox.isChecked()) {
+                    addFriend(mReceiverName, mReceiverMobileNumber, null);
+                }
             }
         });
 
@@ -139,12 +161,25 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mRequestMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void addFriend(String name, String phoneNumber, String relationship) {
+        List<InfoAddFriend> newFriends = new ArrayList<>();
+        newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
+
+        AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
+        Gson gson = new Gson();
+        String json = gson.toJson(addFriendRequest);
+
+        new AddFriendAsyncTask(Constants.COMMAND_ADD_FRIENDS,
+                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+    }
+
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         super.httpResponseReceiver(result);
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mRequestMoneyTask = null;
             if (getActivity() != null)

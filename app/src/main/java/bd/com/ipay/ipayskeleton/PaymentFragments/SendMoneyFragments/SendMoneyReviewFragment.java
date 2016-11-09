@@ -48,8 +48,6 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     private HttpRequestPostAsyncTask mSendMoneyTask = null;
     private SendMoneyResponse mSendMoneyResponse;
 
-    private AddFriendAsyncTask mAddFriendAsyncTask;
-
     private ProgressDialog mProgressDialog;
 
     private BigDecimal mAmount;
@@ -121,6 +119,10 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
         if (mIsInContacts)
             mAddInContactsCheckBox.setVisibility(View.GONE);
+        else {
+            mAddInContactsCheckBox.setVisibility(View.VISIBLE);
+            mAddInContactsCheckBox.setChecked(true);
+        }
 
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,25 +161,21 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
                 @Override
                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                     attemptSendMoney(pinInputDialogBuilder.getPin());
-                        if (mAddInContactsCheckBox.isChecked()) {
-                            addFriend(mReceiverName, mReceiverMobileNumber, null);
-                        }
+                    if (mAddInContactsCheckBox.isChecked()) {
+                        addFriend(mReceiverName, mReceiverMobileNumber, null);
+                    }
                 }
             });
             pinInputDialogBuilder.build().show();
         } else {
             attemptSendMoney(null);
             if (mAddInContactsCheckBox.isChecked()) {
-                addFriend(mReceiverName, mReceiverMobileNumber,null);
+                addFriend(mReceiverName, mReceiverMobileNumber, null);
             }
         }
     }
 
     private void addFriend(String name, String phoneNumber, String relationship) {
-        if (mAddFriendAsyncTask != null) {
-            return;
-        }
-
         List<InfoAddFriend> newFriends = new ArrayList<>();
         newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
 

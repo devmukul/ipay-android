@@ -59,8 +59,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
-    private SearchContactClass mSearchReceiverInContacts;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -243,8 +241,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
 
         if (receiver != null) {
-            mSearchReceiverInContacts = new SearchContactClass(getActivity());
-            intent.putExtra(Constants.IS_IN_CONTACT, mSearchReceiverInContacts.searchMobileNumber(receiver));
+            intent.putExtra(Constants.IS_IN_CONTACT, new SearchContactClass(getActivity()).searchMobileNumber(receiver));
         }
 
         startActivityForResult(intent, SEND_MONEY_REVIEW_REQUEST);
