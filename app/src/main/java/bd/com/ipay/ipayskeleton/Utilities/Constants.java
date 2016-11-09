@@ -79,6 +79,7 @@ public class Constants {
     public static final String BOUNDARY = "iPayBoundary";
     public static final String ANDROID = "Android";
     public static final String IS_PIN_ADDED = "is-pin-added";
+    public static final String IS_IN_CONTACT = "is-in-contact";
     public static final String MOBILE_ANDROID = "mobile-android-";
     public static final String THANA = "thana";
     public static final String DISTRICT = "district";

@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyReviewActi
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
@@ -57,6 +58,8 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
     public static final int REQUEST_CODE_PERMISSION = 1001;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
+
+    private SearchContactClass mSearchReceiverInContacts;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -140,7 +143,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             if (mobileNumber != null)
                 mMobileNumberEditText.setText(mobileNumber);
-                mMobileNumberEditText.setError(null);
+            mMobileNumberEditText.setError(null);
         } else if (requestCode == SEND_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
         } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
@@ -203,7 +206,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
             }
         }
 
-        if (! (mDescriptionEditText.getText().toString().trim().length() > 0)) {
+        if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
             focusView = mDescriptionEditText;
             mDescriptionEditText.setError(getString(R.string.please_write_note));
             cancel = true;
@@ -238,6 +241,11 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         intent.putExtra(Constants.AMOUNT, amount);
         intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(receiver));
         intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
+
+        if (receiver != null) {
+            mSearchReceiverInContacts = new SearchContactClass(getActivity());
+            intent.putExtra(Constants.IS_IN_CONTACT, mSearchReceiverInContacts.searchMobileNumber(receiver));
+        }
 
         startActivityForResult(intent, SEND_MONEY_REVIEW_REQUEST);
 

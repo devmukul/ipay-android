@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +52,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     private String mPhotoUri;
     private String mDescription;
     private String mError_message;
+    private boolean mIsInContacts;
 
     private LinearLayout mLinearLayoutDescriptionHolder;
     private ProfileImageView mProfileImageView;
@@ -61,6 +63,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     private TextView mServiceChargeView;
     private TextView mNetReceivedView;
     private Button mSendMoneyButton;
+    private CheckBox mIsInContactsCheckBox;
 
 
     @Override
@@ -74,6 +77,8 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
 
+        mIsInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACT, false);
+
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
@@ -83,6 +88,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
         mSendMoneyButton = (Button) v.findViewById(R.id.button_send_money);
+        mIsInContactsCheckBox = (CheckBox) v.findViewById(R.id.is_in_contacts);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -105,6 +111,9 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         }
 
         mAmountView.setText(Utilities.formatTaka(mAmount));
+
+        if (mIsInContacts)
+            mIsInContactsCheckBox.setVisibility(View.GONE);
 
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
