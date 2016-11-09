@@ -152,6 +152,9 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     }
 
     private void attemptSendMoneyWithPinCheck() {
+        if (mAddInContactsCheckBox.isChecked()) {
+            addFriend(mReceiverName, mReceiverMobileNumber, null);
+        }
         if (SendMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
@@ -159,17 +162,11 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
                 @Override
                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                     attemptSendMoney(pinInputDialogBuilder.getPin());
-                    if (mAddInContactsCheckBox.isChecked()) {
-                        addFriend(mReceiverName, mReceiverMobileNumber, null);
-                    }
                 }
             });
             pinInputDialogBuilder.build().show();
         } else {
             attemptSendMoney(null);
-            if (mAddInContactsCheckBox.isChecked()) {
-                addFriend(mReceiverName, mReceiverMobileNumber, null);
-            }
         }
     }
 

@@ -172,6 +172,9 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     }
 
     private void attemptPaymentWithPinCheck() {
+        if (mAddInContactsCheckBox.isChecked()) {
+            addFriend(mReceiverName, mReceiverMobileNumber, null);
+        }
         if (PaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
@@ -179,17 +182,11 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                 @Override
                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                     attemptPayment(pinInputDialogBuilder.getPin());
-                    if (mAddInContactsCheckBox.isChecked()) {
-                        addFriend(mReceiverName, mReceiverMobileNumber, null);
-                    }
                 }
             });
             pinInputDialogBuilder.build().show();
         } else {
             attemptPayment(null);
-            if (mAddInContactsCheckBox.isChecked()) {
-                addFriend(mReceiverName, mReceiverMobileNumber, null);
-            }
         }
     }
 
