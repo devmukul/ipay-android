@@ -75,8 +75,8 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     private Button mCancelButton;
     private CheckBox mAddInContactsCheckBox;
 
-    private boolean isPinRequired = true;
     private boolean mIsInContacts;
+    private boolean isPinRequired = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -194,6 +194,10 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     }
 
     private void attempAcceptRequestWithPinCheck() {
+        if (mAddInContactsCheckBox.isChecked()) {
+            addFriend(mReceiverName, mReceiverMobileNumber, null);
+        }
+
         if (this.isPinRequired) {
             final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
@@ -201,18 +205,12 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                 @Override
                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                     acceptRequestMoney(mRequestID, pinInputDialogBuilder.getPin());
-                    if (mAddInContactsCheckBox.isChecked()) {
-                        addFriend(mReceiverName, mReceiverMobileNumber, null);
-                    }
                 }
             });
 
             pinInputDialogBuilder.build().show();
         } else {
             acceptRequestMoney(mRequestID, null);
-            if (mAddInContactsCheckBox.isChecked()) {
-                addFriend(mReceiverName, mReceiverMobileNumber, null);
-            }
         }
 
     }
@@ -238,6 +236,10 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     }
 
     private void cancelRequest(Long id) {
+        if (mAddInContactsCheckBox.isChecked()) {
+            addFriend(mReceiverName, mReceiverMobileNumber, null);
+        }
+
         if (mCancelRequestTask != null) {
             return;
         }
@@ -257,6 +259,10 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     }
 
     private void rejectRequestMoney(long id) {
+        if (mAddInContactsCheckBox.isChecked()) {
+            addFriend(mReceiverName, mReceiverMobileNumber, null);
+        }
+
         if (mRejectRequestTask != null) {
             return;
         }

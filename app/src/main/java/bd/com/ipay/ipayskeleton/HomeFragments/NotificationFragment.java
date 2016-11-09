@@ -326,7 +326,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         Intent intent = new Intent(this.getContext(), NotificationActivity.class);
         intent.putExtras(bundle);
-        intent.putExtra(Constants.IS_IN_CONTACTS, new SearchContactClass(getActivity()).searchMobileNumber(mReceiverMobileNumber));
+        intent.putExtra(Constants.IS_IN_CONTACTS,
+                new SearchContactClass(getActivity()).searchMobileNumber(mReceiverMobileNumber));
         startActivity(intent);
     }
 
@@ -581,6 +582,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         bundle.putString(Constants.MOTHERS_NAME, mothersName);
                         bundle.putSerializable(Constants.ADDRESS, mAddress);
                         bundle.putString(Constants.TAG, Constants.RECOMMENDATION);
+                        bundle.putBoolean(Constants.IS_IN_CONTACTS,
+                                new SearchContactClass(getActivity()).searchMobileNumber(senderMobileNumber));
 
                         Intent intent = new Intent(getActivity(), NotificationActivity.class);
                         intent.putExtras(bundle);
