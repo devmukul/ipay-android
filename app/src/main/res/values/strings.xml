@@ -148,7 +148,8 @@
     <string name="select_a_fee_item">Select a fee item</string>
     <string name="select_session">Select Session</string>
     <string name="save">Save</string>
-    <string name="save_contact_number">Save Contact number</string>
+    <string name="friend">Friend</string>
+    <string name="add_to_contacts">Add to Contacts</string>
     <string name="ipay_contacts">iPay</string>
     <string name="security_questions">Set Security Question</string>
     <string name="activity_log">Activity log</string>

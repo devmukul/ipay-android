@@ -179,7 +179,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 
                     addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), mRelationship.toUpperCase());
 
-
                     Utilities.hideKeyboard(getActivity(), nameView);
                     Utilities.hideKeyboard(getActivity(), mobileNumberView);
 
