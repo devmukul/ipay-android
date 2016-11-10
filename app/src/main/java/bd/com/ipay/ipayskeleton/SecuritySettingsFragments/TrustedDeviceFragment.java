@@ -47,6 +47,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
     private RemoveTrustedDeviceResponse mRemoveTrustedDeviceResponse = null;
     private ListView mTrustedDevicesListView;
     private TrustedDeviceAdapter mTrustedDeviceAdapter;
+    private CustomSelectorDialog mCustomSelectorDialog;
 
     private ProgressDialog mProgressDialog;
 
@@ -220,7 +221,6 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
     public class TrustedDeviceAdapter extends ArrayAdapter<TrustedDevice> {
 
         private LayoutInflater inflater;
-        private CustomSelectorDialog mCustomSelectorDialog;
         private List<String> mTrustedDeviceActionList;
         private int ACTION_REMOVE = 0;
 
@@ -276,6 +276,8 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
             } else {
                 thisDeviceView.setVisibility(View.GONE);
                 deviceNameView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
+            }
+            if (!myDeviceID.equals(deviceID)) {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -291,6 +293,13 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                             }
                         });
                         mCustomSelectorDialog.show();
+
+                    }
+                });
+            } else {
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
                     }
                 });
