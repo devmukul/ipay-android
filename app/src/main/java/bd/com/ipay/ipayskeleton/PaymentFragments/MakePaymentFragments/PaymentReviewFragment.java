@@ -58,7 +58,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     private String mDescription;
     private String mReferenceNumber;
     private String mError_message;
-    private boolean mIsInContacts;
 
     private ProfileImageView mProfileImageView;
     private TextView mNameView;
@@ -73,7 +72,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     private View mLinearLayoutRefNumberHolder;
     private View mRefNumberDivider;
     private Button mPaymentButton;
-    private CheckBox mAddInContactsCheckBox;
 
 
     @Override
@@ -84,7 +82,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
         mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
         mReferenceNumber = getActivity().getIntent().getStringExtra(Constants.REFERENCE_NUMBER);
-        mIsInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
 
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
@@ -102,7 +99,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mLinearLayoutRefNumberHolder = v.findViewById(R.id.reference_number_holder);
         mRefNumberDivider = v.findViewById(R.id.reference_number_divider);
         mPaymentButton = (Button) v.findViewById(R.id.button_payment);
-        mAddInContactsCheckBox = (CheckBox) v.findViewById(R.id.add_in_contacts);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -133,11 +129,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
             mLinearLayoutRefNumberHolder.setVisibility(View.VISIBLE);
             mRefNumberDivider.setVisibility(View.VISIBLE);
             mRefNumberView.setText(mReferenceNumber);
-        }
-
-        if (!mIsInContacts) {
-            mAddInContactsCheckBox.setVisibility(View.VISIBLE);
-            mAddInContactsCheckBox.setChecked(true);
         }
 
         mPaymentButton.setOnClickListener(new View.OnClickListener() {
@@ -172,9 +163,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     }
 
     private void attemptPaymentWithPinCheck() {
-        if (mAddInContactsCheckBox.isChecked()) {
-            addFriend(mReceiverName, mReceiverMobileNumber, null);
-        }
         if (PaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
@@ -219,18 +207,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
-    }
-
-    private void addFriend(String name, String phoneNumber, String relationship) {
-        List<InfoAddFriend> newFriends = new ArrayList<>();
-        newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
-
-        AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
-        Gson gson = new Gson();
-        String json = gson.toJson(addFriendRequest);
-
-        new AddFriendAsyncTask(Constants.COMMAND_ADD_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

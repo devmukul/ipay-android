@@ -249,7 +249,6 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(receiver));
         intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
         intent.putExtra(Constants.REFERENCE_NUMBER, referenceNumber);
-        intent.putExtra(Constants.IS_IN_CONTACTS, new SearchContactClass(getActivity()).searchMobileNumber(receiver));
 
         startActivityForResult(intent, PAYMENT_REVIEW_REQUEST);
 
