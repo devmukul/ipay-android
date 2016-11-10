@@ -213,6 +213,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     private boolean verifyUserInputs() {
         boolean cancel = false;
         View focusView = null;
+        BigDecimal maxAmount;
 
         String balance = null;
         if (pref.contains(Constants.USER_BALANCE)) {
@@ -227,7 +228,10 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
-            BigDecimal maxAmount = TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
+            if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(new BigDecimal(balance)) > 0) {
+                maxAmount =  TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
+            } else
+                maxAmount = TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().max((new BigDecimal(balance)));
 
             String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
                     TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),

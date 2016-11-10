@@ -174,6 +174,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
         boolean cancel = false;
         View focusView = null;
+        BigDecimal maxAmount;
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
@@ -192,7 +193,10 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                 && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
-            BigDecimal maxAmount = SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
+            if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(new BigDecimal(balance)) > 0) {
+                maxAmount = SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
+            } else
+                maxAmount = SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().max((new BigDecimal(balance)));
 
             String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
                     SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);

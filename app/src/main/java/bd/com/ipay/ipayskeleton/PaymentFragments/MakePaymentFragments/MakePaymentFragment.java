@@ -178,6 +178,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
 
         boolean cancel = false;
         View focusView = null;
+        BigDecimal maxAmount;
 
         String balance = null;
         if (pref.contains(Constants.USER_BALANCE)) {
@@ -203,7 +204,11 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
                 && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
-            BigDecimal maxAmount = PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
+            if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(new BigDecimal(balance)) > 0) {
+                maxAmount = PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
+            } else
+                maxAmount = PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().max((new BigDecimal(balance)));
+
             String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
                     PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
 

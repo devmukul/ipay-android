@@ -239,7 +239,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.ask_for_introduction, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), R.string.introduction_request_sent, Toast.LENGTH_LONG).show();
                         }
                     } else if (getActivity() != null) {
                         Toast.makeText(getActivity(), mAskForIntroductionResponse.getMessage(), Toast.LENGTH_LONG).show();
