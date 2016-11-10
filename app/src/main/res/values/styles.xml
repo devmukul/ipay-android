@@ -186,6 +186,17 @@
         <item name="android:layout_marginLeft">4dp</item>
     </style>
 
+    <style name="CheckboxRightStyle" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/colorGray</item>
+        <item name="android:layout_gravity">right</item>
+        <item name="android:layout_marginTop">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:drawablePadding">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:button">@null</item>
+    </style>
+
+
     <style name="TextViewInfoLabel" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>

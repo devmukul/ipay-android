@@ -1,7 +1,9 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory;
 
+import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -72,6 +74,9 @@ public class TransactionHistoryClass implements Parcelable {
                         return "";
                 case Constants.TRANSACTION_HISTORY_EDUCATION:
                     return additionalInfo.getUserName();
+                case Constants.TRANSACTION_HISTORY_REQUEST_MONEY:
+                    if (additionalInfo != null)
+                        return additionalInfo.getUserName();
 
             }
         } catch (Exception e) {
@@ -316,6 +321,14 @@ public class TransactionHistoryClass implements Parcelable {
                     }
                 case (Constants.TRANSACTION_HISTORY_EDUCATION):
                     return "Education Payment";
+                case (Constants.TRANSACTION_HISTORY_REQUEST_MONEY):
+                    if (originatingMobileNumber.equals(userMobileNumber)) {
+                        return "Money Request Sent";
+                    } else if (receiverInfo.equals(userMobileNumber)) {
+                        return "Money Request Received";
+                    } else {
+                        return "No Information Available";
+                    }
             }
         } catch (Exception e) {
             e.printStackTrace();

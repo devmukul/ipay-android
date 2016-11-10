@@ -129,30 +129,6 @@ public class Utilities {
     }
 
     /**
-     * Convert date string to millisecond
-     */
-    public static long dateToMilliSecond(String dateString) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        try {
-            Date mDate = sdf.parse(dateString);
-            long timeInMilliseconds = mDate.getTime();
-            return timeInMilliseconds;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    /**
-     * Convert millisecond to date string
-     */
-    public static String milliSecondToDate(long millisecond) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        String mDate = dateFormat.format(new Date(millisecond));
-        return mDate;
-    }
-
-    /**
      * Get utf8 byte array.
      *
      * @param str

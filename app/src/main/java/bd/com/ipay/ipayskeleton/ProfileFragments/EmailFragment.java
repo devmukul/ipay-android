@@ -153,6 +153,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     private void showAddNewEmailDialog() {
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.add_an_email)
+                .autoDismiss(false)
                 .customView(R.layout.dialog_add_new_email, true)
                 .positiveText(R.string.add)
                 .negativeText(R.string.cancel)
@@ -170,12 +171,14 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 String email = emailView.getText().toString().trim();
 
-                imm.hideSoftInputFromWindow(emailView.getWindowToken(), 0);
-
                 if (!InputValidator.isValidEmail(email)) {
-                    Toast.makeText(getActivity(), R.string.enter_valid_email, Toast.LENGTH_LONG).show();
+                    emailView.setError(getString(R.string.enter_valid_email));
+                    emailView.requestFocus();
                 } else {
+                    imm.hideSoftInputFromWindow(emailView.getWindowToken(), 0);
                     addNewEmail(email);
+
+                    dialog.dismiss();
                 }
             }
         });
@@ -184,6 +187,8 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 imm.hideSoftInputFromWindow(emailView.getWindowToken(), 0);
+
+                dialog.dismiss();
             }
         });
 

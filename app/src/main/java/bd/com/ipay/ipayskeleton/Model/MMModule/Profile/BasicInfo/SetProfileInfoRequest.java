@@ -4,10 +4,10 @@ public class SetProfileInfoRequest {
 
     private final String name;
     private final String gender;
-    private final long dob;
+    private final String dob;
     private final int occupation;
 
-    public SetProfileInfoRequest(String name, String gender, long dob, int occupation) {
+    public SetProfileInfoRequest(String name, String gender, String  dob, int occupation) {
         this.name = name;
         this.gender = gender;
         this.dob = dob;

@@ -54,6 +54,7 @@ public class Constants {
     public static final String SHOW_INVITED_ONLY = "SHOW_INVITED_ONLY";
     public static final String SHOW_NON_INVITED_NON_MEMBERS_ONLY = "SHOW_NON_INVITED_NON_MEMBERS_ONLY";
     public static final String SHOW_ALL_MEMBERS = "SHOW_ALL_MEMBERS";
+    public static final String SEARCH_SPECIFIC_NUMBER_ONLY = "SEARCH_SPECIFIC_NUMBER_ONLY";
     public static final String HIDE_STATUSES = "HIDE_STATUSES";
 
 
@@ -78,6 +79,7 @@ public class Constants {
     public static final String BOUNDARY = "iPayBoundary";
     public static final String ANDROID = "Android";
     public static final String IS_PIN_ADDED = "is-pin-added";
+    public static final String IS_IN_CONTACTS = "is-in-contacts";
     public static final String MOBILE_ANDROID = "mobile-android-";
     public static final String THANA = "thana";
     public static final String DISTRICT = "district";
@@ -126,8 +128,9 @@ public class Constants {
     public static final String PHOTO_URI = "photo_uri";
     public static final String VAT = "vat";
 
-    public static final String OFFICE_PHONE_NUMBER = "+8801749763943 ";
-    public static final String OFFICE_EMAIL = "info@ipay.com.bd";
+    public static final String OFFICE_PHONE_NUMBER = "+8801740651429";
+    public static final String OFFICE_LAND_LINE_NUMBER = "+88029852507";
+    public static final String OFFICE_EMAIL = "support@ipay.com.bd";
     public static final String OFFICE_WEB = "www.ipay.com.bd";
     public static final String FEEDBACK = "feedback@ipay.com.bd";
     public static final String OFFICE_ADDRESS = "Silver Tower (12th Floor)\n52 Gulshan Avenue, Circle-1\nDhaka-1212\nBangladesh\n";
@@ -305,7 +308,8 @@ public class Constants {
     public static final String URL_CHANGE_PASSWORD = "settings/password";
     public static final String URL_SEND_OTP_FORGET_PASSWORD = "settings/password/forget";
     public static final String URL_CONFIRM_OTP_FORGET_PASSWORD = "settings/password/forget/confirmation";
-    public static final String URL_GET_SECURITY_QUESTION = "/settings/security/questions";
+    public static final String URL_GET_SECURITY_QUESTIONS = "/settings/security/questions";
+    public static final String URL_SET_SECURITY_ANSWERS = "/settings/security/answers";
 
     public static final String URL_GET_PIN_INFO = "settings/pin";
     public static final String URL_SET_PIN = "settings/pin";
@@ -336,6 +340,7 @@ public class Constants {
     // SM Reports REST
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";
     public static final String URL_TRANSACTION_HISTORY_SINGLE = "report/transactions/single";
+    public static final String URL_TRANSACTION_HISTORY_PENDING = "/report/pending-transactions";
 
     // SM User Rest
     public static final String URL_REFRESH_BALANCE = "user/balance";
@@ -503,6 +508,7 @@ public class Constants {
     public static final String COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE = "COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE";
     public static final String COMMAND_GET_ALL_BUSINESS_LIST = "COMMAND_GET_ALL_BUSINESS_LIST";
     public static final String COMMAND_GET_SECURITY_QUESTIONS = "COMMAND_GET_SECURITY_QUESTIONS";
+    public static final String COMMAND_SET_SECURITY_ANSWERS = "COMMAND_SET_SECURITY_ANSWERS";
 
     // Event
     public static final String COMMAND_GET_MY_EVENTS = "COMMAND_GET_MY_EVENTS";

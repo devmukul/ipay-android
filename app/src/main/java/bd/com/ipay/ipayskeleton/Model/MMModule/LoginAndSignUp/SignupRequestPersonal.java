@@ -7,7 +7,7 @@ public class SignupRequestPersonal {
     private final String mobileNumber;
     private final String deviceId;
     private final String name;
-    private final long dob;
+    private final String dob;
     private final String password;
     private final String otp;
     private final String promoCode;
@@ -15,7 +15,7 @@ public class SignupRequestPersonal {
     private final AddressClass presentAddress;
 
     public SignupRequestPersonal(String mobileNumber, String deviceId, String name,
-                                 Long dob, String password,
+                                 String dob, String password,
                                  String otp, String promoCode, int accountType, AddressClass presentAddress) {
         this.mobileNumber = mobileNumber;
         this.deviceId = deviceId;

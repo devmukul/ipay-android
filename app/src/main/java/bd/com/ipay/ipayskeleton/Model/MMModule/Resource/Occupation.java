@@ -41,6 +41,11 @@ public class Occupation implements Resource, Parcelable {
     }
 
     @Override
+    public String getStringId() {
+        return null;
+    }
+
+    @Override
     public int getId() {
         return id;
 

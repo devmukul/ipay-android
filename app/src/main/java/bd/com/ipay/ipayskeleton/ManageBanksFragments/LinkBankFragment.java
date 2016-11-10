@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -26,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
+import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
@@ -67,6 +69,7 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
     private EditText mAccountNameEditText;
     private EditText mAccountNumberEditText;
     private Button addBank;
+    private EditTextWithProgressBar mBankBranchEditTextProgressBar;
 
     private ResourceSelectorDialog<Bank> bankSelectorDialog;
     private CustomSelectorDialog districtSelectorDialog;
@@ -97,10 +100,11 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
 
         mBankListSelection = (EditText) v.findViewById(R.id.default_bank_accounts);
         mDistrictSelection = (EditText) v.findViewById(R.id.branch_districts);
-        mBankBranchSelection = (EditText) v.findViewById(R.id.bank_branch);
         mAccountNameEditText = (EditText) v.findViewById(R.id.bank_account_name);
         mAccountNumberEditText = (EditText) v.findViewById(R.id.bank_account_number);
         addBank = (Button) v.findViewById(R.id.button_add_bank);
+        mBankBranchEditTextProgressBar=(EditTextWithProgressBar) v.findViewById(R.id.editText_with_progressBar_branch);
+        mBankBranchSelection = mBankBranchEditTextProgressBar.getEditText();
 
         mSelectedBankId = -1;
 
@@ -232,6 +236,7 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
             return;
         }
 
+        mBankBranchEditTextProgressBar.showProgressBar();
         BankBranchRequestBuilder mBankBranchRequestBuilder = new BankBranchRequestBuilder(bankID);
 
         String mUri = mBankBranchRequestBuilder.getGeneratedUri();
@@ -318,6 +323,7 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
                         }
 
                         setDistrictAdapter(mDistrictNames);
+                        mBankBranchEditTextProgressBar.hideProgressBar();
 
                     } else {
                         if (getActivity() != null)

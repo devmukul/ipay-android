@@ -34,12 +34,37 @@
 
                 <TextView
                     android:id="@+id/textview_name"
-                    style="@style/TextViewUserInfoPrimary" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:text="hahahahahah"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="@dimen/text_size_medium" />
 
-                <TextView
-                    android:id="@+id/textview_mobile_number"
-                    style="@style/TextViewUserInfoSecondary" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
+                    <TextView
+                        android:id="@+id/textview_mobile_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="hahahahahah" />
+
+                    <Button
+                        android:id="@+id/add_in_contacts"
+                        android:layout_width="@dimen/value30"
+                        android:layout_height="@dimen/value30"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/textview_mobile_number"
+                        android:background="@drawable/ic_add"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                        android:paddingRight="@dimen/activity_horizontal_margin_card"
+                        android:visibility="gone"/>
+
+                </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
 

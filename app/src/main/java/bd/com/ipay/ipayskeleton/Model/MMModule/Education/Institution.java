@@ -39,6 +39,11 @@ public class Institution implements Resource, Parcelable {
         return name;
     }
 
+    @Override
+    public String getStringId() {
+        return null;
+    }
+
     public int getIpayAccountId() {
         return ipayAccountId;
     }

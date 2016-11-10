@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,13 +21,18 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
+import bd.com.ipay.ipayskeleton.Api.AddFriendAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
+import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
 import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.SendMoney.SendMoneyResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
@@ -51,6 +57,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     private String mPhotoUri;
     private String mDescription;
     private String mError_message;
+    private boolean mIsInContacts;
 
     private LinearLayout mLinearLayoutDescriptionHolder;
     private ProfileImageView mProfileImageView;
@@ -61,6 +68,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     private TextView mServiceChargeView;
     private TextView mNetReceivedView;
     private Button mSendMoneyButton;
+    private CheckBox mAddInContactsCheckBox;
 
 
     @Override
@@ -74,6 +82,8 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
 
+        mIsInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
+
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
@@ -83,6 +93,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
         mSendMoneyButton = (Button) v.findViewById(R.id.button_send_money);
+        mAddInContactsCheckBox = (CheckBox) v.findViewById(R.id.add_in_contacts);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -105,6 +116,11 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         }
 
         mAmountView.setText(Utilities.formatTaka(mAmount));
+
+        if (!mIsInContacts) {
+            mAddInContactsCheckBox.setVisibility(View.VISIBLE);
+            mAddInContactsCheckBox.setChecked(true);
+        }
 
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +152,9 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     }
 
     private void attemptSendMoneyWithPinCheck() {
+        if (mAddInContactsCheckBox.isChecked()) {
+            addFriend(mReceiverName, mReceiverMobileNumber, null);
+        }
         if (SendMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
@@ -149,6 +168,18 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         } else {
             attemptSendMoney(null);
         }
+    }
+
+    private void addFriend(String name, String phoneNumber, String relationship) {
+        List<InfoAddFriend> newFriends = new ArrayList<>();
+        newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
+
+        AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
+        Gson gson = new Gson();
+        String json = gson.toJson(addFriendRequest);
+
+        new AddFriendAsyncTask(Constants.COMMAND_ADD_FRIENDS,
+                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void attemptSendMoney(String pin) {

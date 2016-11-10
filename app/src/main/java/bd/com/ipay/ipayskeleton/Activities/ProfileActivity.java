@@ -241,7 +241,7 @@ public class ProfileActivity extends BaseActivity {
     }
 
     public void switchToEditAddressFragment(Bundle bundle) {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
+        while (getSupportFragmentManager().getBackStackEntryCount() > 2)
             getSupportFragmentManager().popBackStackImmediate();
 
         EditAddressFragment editAddressFragment = new EditAddressFragment();

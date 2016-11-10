@@ -185,7 +185,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                     .deviceId(Constants.MOBILE_ANDROID + mDeviceID)
                     .name(SignupOrLoginActivity.mNameBusiness)
                     .accountType(SignupOrLoginActivity.mAccountType)
-                    .dob(Utilities.dateToMilliSecond(SignupOrLoginActivity.mBirthdayBusinessHolder))
+                    .dob(SignupOrLoginActivity.mBirthdayBusinessHolder)
                     .password(SignupOrLoginActivity.mPasswordBusiness)
                     .otp(otp)
                     .businessName(SignupOrLoginActivity.mBusinessName)

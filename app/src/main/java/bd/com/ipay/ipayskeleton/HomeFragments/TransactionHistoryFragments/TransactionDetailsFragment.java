@@ -1,16 +1,30 @@
 package bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments;
 
+import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import bd.com.ipay.ipayskeleton.Activities.InviteActivity;
+import bd.com.ipay.ipayskeleton.Api.AddFriendAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
+import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
+import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -39,6 +53,8 @@ public class TransactionDetailsFragment extends Fragment {
     private ImageView otherImageView;
     private TextView mMobileNumberView;
     private TextView mNameView;
+    private Button mAddInContactsButton;
+
 
     @Nullable
     @Override
@@ -65,6 +81,7 @@ public class TransactionDetailsFragment extends Fragment {
         otherImageView = (ImageView) v.findViewById(R.id.other_image);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
+        mAddInContactsButton = (Button) v.findViewById(R.id.add_in_contacts);
 
         String mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         if (transactionHistory.getDescription(mMobileNumber) != null)
@@ -88,6 +105,32 @@ public class TransactionDetailsFragment extends Fragment {
         final String otherProfilePicture = transactionHistory.getAdditionalInfo().getUserProfilePic();
         final String otherMobileNumber = transactionHistory.getAdditionalInfo().getUserMobileNumber();
         final String otherName = transactionHistory.getAdditionalInfo().getUserName();
+
+        if (serviceId == Constants.TRANSACTION_HISTORY_SEND_MONEY || serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
+            if (!new SearchContactClass(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getUserMobileNumber())) {
+                mAddInContactsButton.setVisibility(View.VISIBLE);
+            }
+        }
+
+        mAddInContactsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.are_you_sure)
+                        .setMessage(getString(R.string.confirmation_add_to_contacts))
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                addFriend(transactionHistory.getAdditionalInfo().getUserName(),
+                                        transactionHistory.getAdditionalInfo().getUserMobileNumber(), null);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null);
+
+                dialog.show();
+            }
+        });
+
 
         if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
             purposeLayout.setVisibility(View.GONE);
@@ -177,6 +220,18 @@ public class TransactionDetailsFragment extends Fragment {
         }
 
         return v;
+    }
+
+    private void addFriend(String name, String phoneNumber, String relationship) {
+        List<InfoAddFriend> newFriends = new ArrayList<>();
+        newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
+
+        AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
+        Gson gson = new Gson();
+        String json = gson.toJson(addFriendRequest);
+
+        new AddFriendAsyncTask(Constants.COMMAND_ADD_FRIENDS,
+                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 

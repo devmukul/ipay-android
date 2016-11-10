@@ -22,9 +22,12 @@ public class ResourceSelectorDialog<E extends Resource> extends AlertDialog {
     private final Context context;
 
     private List<Integer> ids;
+    private List<String> stringIds;
     private List<String> names;
+    private int selectedItemId;
 
     private OnResourceSelectedListener onResourceSelectedListener;
+    private OnResourceSelectedListenerWithStringID onResourceSelectedListenerWithSelectedIndex;
     private ArrayAdapter<String> arrayAdapter;
 
     private LayoutInflater inflater;
@@ -48,6 +51,27 @@ public class ResourceSelectorDialog<E extends Resource> extends AlertDialog {
 
         setItems(resources);
     }
+
+    public ResourceSelectorDialog(Context context, String mTitle, List<E> resources, int selectedItemId, boolean isStringID) {
+        super(context);
+        this.context = context;
+        this.resources = resources;
+        this.selectedItemId = selectedItemId;
+
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        viewTitle = inflater.inflate(R.layout.dialog_selector_header, null);
+        textViewTitle = (TextView) viewTitle.findViewById(R.id.textviewTitle);
+        textViewTitle.setText(mTitle);
+        this.setCustomTitle(viewTitle);
+
+        view = inflater.inflate(R.layout.dialog_custom_listview, null);
+        this.setView(view);
+
+        if (isStringID)
+            setItemsWithStringID(resources);
+        else setItems(resources);
+    }
+
 
     private void setItems(List<E> resources) {
         ids = new ArrayList<>();
@@ -73,12 +97,44 @@ public class ResourceSelectorDialog<E extends Resource> extends AlertDialog {
         });
     }
 
+    private void setItemsWithStringID(List<E> resources) {
+        stringIds = new ArrayList<>();
+        names = new ArrayList<>();
+
+        for (Resource resource : resources) {
+            stringIds.add(resource.getStringId());
+            names.add(resource.getName());
+        }
+        popUpList = (ListView) view.findViewById(R.id.custom_list);
+        CustomAdapter adapter = new CustomAdapter(context, names);
+        popUpList.setAdapter(adapter);
+        popUpList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String name = names.get(i);
+                String stringID = stringIds.get(i);
+
+                if (onResourceSelectedListenerWithSelectedIndex != null)
+                    onResourceSelectedListenerWithSelectedIndex.onResourceSelectedWithStringID(stringID, name, selectedItemId);
+                dismiss();
+            }
+        });
+    }
+
     public void setOnResourceSelectedListener(OnResourceSelectedListener onResourceSelectedListener) {
         this.onResourceSelectedListener = onResourceSelectedListener;
     }
 
+    public void setOnResourceSelectedListenerWithSelectedIndex(OnResourceSelectedListenerWithStringID onResourceSelectedListenerWithSelectedIndex) {
+        this.onResourceSelectedListenerWithSelectedIndex = onResourceSelectedListenerWithSelectedIndex;
+    }
+
     public interface OnResourceSelectedListener {
         void onResourceSelected(int id, String name);
+    }
+
+    public interface OnResourceSelectedListenerWithStringID {
+        void onResourceSelectedWithStringID(String id, String name, int selectedIndex);
     }
 
     private class CustomAdapter extends ArrayAdapter<String> {

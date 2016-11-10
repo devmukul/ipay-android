@@ -26,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetParentInfoRe
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EditParentInfoFragment extends Fragment implements HttpResponseListener {
@@ -154,6 +155,10 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
             mFathersNameEditText.setError(getString(R.string.error_invalid_parent_name));
             focusView = mFathersNameEditText;
             cancel = true;
+        } else if (!InputValidator.isValidName(mFathersName)) {
+            mFathersNameEditText.setError(getString(R.string.please_enter_valid_name));
+            focusView = mFathersNameEditText;
+            cancel = true;
         }
 
         if (mMothersName.isEmpty()) {
@@ -162,6 +167,10 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
             cancel = true;
         } else if (mMothersName.length() < 5) {
             mMothersNameEditText.setError(getString(R.string.error_invalid_parent_name));
+            focusView = mMothersNameEditText;
+            cancel = true;
+        } else if (!InputValidator.isValidName(mMothersName)) {
+            mMothersNameEditText.setError(getString(R.string.please_enter_valid_name));
             focusView = mMothersNameEditText;
             cancel = true;
         }

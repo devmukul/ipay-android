@@ -27,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.MoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetMoneyRequest;
@@ -340,6 +341,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
             intent.putExtra(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
             intent.putExtra(Constants.NAME, mReceiverName);
             intent.putExtra(Constants.PHOTO_URI, mPhotoUri);
+            intent.putExtra(Constants.IS_IN_CONTACTS, new SearchContactClass(getActivity()).searchMobileNumber(mReceiverMobileNumber));
 
             startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
         }

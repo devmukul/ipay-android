@@ -15,6 +15,11 @@ public class Bank implements Resource {
         return name;
     }
 
+    @Override
+    public String getStringId() {
+        return null;
+    }
+
     public String getBankCode() {
         return bankCode;
     }

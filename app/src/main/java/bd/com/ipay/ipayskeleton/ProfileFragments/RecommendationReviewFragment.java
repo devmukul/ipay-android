@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,13 +19,17 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Api.AddFriendAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
+import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroduceActionResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.District;
@@ -35,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.ThanaRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RecommendationReviewFragment extends ProgressFragment implements HttpResponseListener {
@@ -57,6 +63,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     private String mFathersName = null;
     private String mMothersname = null;
     private AddressClass mAddress;
+    private boolean mIsInContacts;
 
     private List<Thana> mThanaList;
     private List<District> mDistrictList;
@@ -73,6 +80,8 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     private Button mAcceptButton;
     private Button mSpamButton;
 
+    private CheckBox mAddInContactsCheckBox;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_recommendation_review, container, false);
@@ -88,6 +97,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
         mMothersname = bundle.getString(Constants.MOTHERS_NAME);
         mFathersName = bundle.getString(Constants.FATHERS_NAME);
         mAddress = (AddressClass) getArguments().getSerializable(Constants.ADDRESS);
+        mIsInContacts = bundle.getBoolean(Constants.IS_IN_CONTACTS, false);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mSenderNameView = (TextView) v.findViewById(R.id.textview_name);
@@ -95,6 +105,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
         mFathersNameView = (TextView) v.findViewById(R.id.textview_fathers_name);
         mMothersNameView = (TextView) v.findViewById(R.id.textview_mothers_name);
         mAddressView = (TextView) v.findViewById(R.id.textview_present_address);
+        mAddInContactsCheckBox = (CheckBox) v.findViewById(R.id.add_in_contacts);
 
         mAcceptButton = (Button) v.findViewById(R.id.button_accept);
         mRejectButton = (Button) v.findViewById(R.id.button_reject);
@@ -116,6 +127,11 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
 
         if (!(mMothersname == null || mMothersname.isEmpty())) {
             mMothersNameView.setText(mMothersname);
+        }
+
+        if (!mIsInContacts) {
+            mAddInContactsCheckBox.setVisibility(View.VISIBLE);
+            mAddInContactsCheckBox.setChecked(true);
         }
 
         mSenderMobileNumberView.setText(mSenderMobileNumber);
@@ -211,6 +227,9 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     }
 
     private void attemptSetRecommendationStatus(long requestID, String recommendationStatus) {
+        if (mAddInContactsCheckBox.isChecked()) {
+            addFriend(mSenderName, mSenderMobileNumber, null);
+        }
         if (requestID == 0) {
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
@@ -246,6 +265,18 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
         }
         setContentShown(true);
 
+    }
+
+    private void addFriend(String name, String phoneNumber, String relationship) {
+        List<InfoAddFriend> newFriends = new ArrayList<>();
+        newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
+
+        AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
+        Gson gson = new Gson();
+        String json = gson.toJson(addFriendRequest);
+
+        new AddFriendAsyncTask(Constants.COMMAND_ADD_FRIENDS,
+                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

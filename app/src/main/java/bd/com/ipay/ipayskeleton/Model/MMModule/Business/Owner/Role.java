@@ -25,6 +25,11 @@ public class Role implements Resource {
         return name;
     }
 
+    @Override
+    public String getStringId() {
+        return null;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

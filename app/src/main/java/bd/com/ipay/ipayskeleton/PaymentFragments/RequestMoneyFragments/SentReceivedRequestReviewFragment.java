@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,17 +19,23 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Api.AddFriendAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
+import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SentReceivedRequestReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -66,6 +73,9 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     private Button mRejectButton;
     private Button mAcceptButton;
     private Button mCancelButton;
+    private CheckBox mAddInContactsCheckBox;
+
+    private boolean mIsInContacts;
     private boolean isPinRequired = true;
 
     @Override
@@ -87,6 +97,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
         mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
         mPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
+        mIsInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
@@ -99,6 +110,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
+        mAddInContactsCheckBox = (CheckBox) v.findViewById(R.id.add_in_contacts);
 
         mAcceptButton = (Button) v.findViewById(R.id.button_accept);
         mRejectButton = (Button) v.findViewById(R.id.button_reject);
@@ -136,6 +148,11 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
             mAcceptButton.setVisibility(View.GONE);
             mRejectButton.setVisibility(View.GONE);
             mCancelButton.setVisibility(View.VISIBLE);
+        }
+
+        if (!mIsInContacts) {
+            mAddInContactsCheckBox.setVisibility(View.VISIBLE);
+            mAddInContactsCheckBox.setChecked(true);
         }
 
         mAmountView.setText(Utilities.formatTaka(mAmount));
@@ -177,6 +194,10 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     }
 
     private void attempAcceptRequestWithPinCheck() {
+        if (mAddInContactsCheckBox.isChecked()) {
+            addFriend(mReceiverName, mReceiverMobileNumber, null);
+        }
+
         if (this.isPinRequired) {
             final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
@@ -215,6 +236,10 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     }
 
     private void cancelRequest(Long id) {
+        if (mAddInContactsCheckBox.isChecked()) {
+            addFriend(mReceiverName, mReceiverMobileNumber, null);
+        }
+
         if (mCancelRequestTask != null) {
             return;
         }
@@ -234,6 +259,10 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     }
 
     private void rejectRequestMoney(long id) {
+        if (mAddInContactsCheckBox.isChecked()) {
+            addFriend(mReceiverName, mReceiverMobileNumber, null);
+        }
+
         if (mRejectRequestTask != null) {
             return;
         }
@@ -267,6 +296,18 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                 Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
         mAcceptRequestTask.mHttpResponseListener = this;
         mAcceptRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void addFriend(String name, String phoneNumber, String relationship) {
+        List<InfoAddFriend> newFriends = new ArrayList<>();
+        newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
+
+        AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
+        Gson gson = new Gson();
+        String json = gson.toJson(addFriendRequest);
+
+        new AddFriendAsyncTask(Constants.COMMAND_ADD_FRIENDS,
+                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

@@ -79,7 +79,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         passwordRecoveryHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((SecuritySettingsActivity) getActivity()).switchToPasswordRecovery();
+                ((SecuritySettingsActivity) getActivity()).switchToPasswordRecoveryFragment();
             }
         });
 

@@ -8,7 +8,7 @@ public class SignupRequestBusiness {
     private final String deviceId;
     private final String name;
     private final int accountType;
-    private final long dob;
+    private final String dob;
     private final String password;
     private final String otp;
     private final String businessName;
@@ -42,7 +42,7 @@ public class SignupRequestBusiness {
         private String deviceId;
         private String name;
         private int accountType;
-        private long dob;
+        private String dob;
         private String password;
         private String otp;
         private String businessName;
@@ -80,7 +80,7 @@ public class SignupRequestBusiness {
             return this;
         }
 
-        public Builder dob(long val) {
+        public Builder dob(String val) {
             dob = val;
             return this;
         }

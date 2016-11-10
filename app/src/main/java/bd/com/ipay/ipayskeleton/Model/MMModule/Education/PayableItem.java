@@ -40,6 +40,11 @@ public class PayableItem implements Resource, Parcelable {
     }
 
     @Override
+    public String getStringId() {
+        return null;
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
