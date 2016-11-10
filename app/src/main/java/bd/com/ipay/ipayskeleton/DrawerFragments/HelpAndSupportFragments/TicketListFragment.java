@@ -1,7 +1,5 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HelpAndSupportFragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -163,6 +161,9 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND ||
                             result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
                         mEmptyListTextView.setVisibility(View.VISIBLE);
+                        if (getActivity() != null) {
+                            showErrorDialog();
+                        }
 
                     } else {
                         if (getActivity() != null) {
