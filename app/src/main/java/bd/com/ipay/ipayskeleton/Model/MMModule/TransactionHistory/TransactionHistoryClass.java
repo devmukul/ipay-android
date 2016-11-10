@@ -1,7 +1,9 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory;
 
+import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -72,6 +74,9 @@ public class TransactionHistoryClass implements Parcelable {
                         return "";
                 case Constants.TRANSACTION_HISTORY_EDUCATION:
                     return additionalInfo.getUserName();
+                case Constants.TRANSACTION_HISTORY_REQUEST_MONEY:
+                    if (additionalInfo != null)
+                        return additionalInfo.getUserName();
 
             }
         } catch (Exception e) {
@@ -85,6 +90,14 @@ public class TransactionHistoryClass implements Parcelable {
         if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null || receiverInfo == null)
             return Utilities.formatTakaWithComma(netAmount);
 
+        /* **** Service charge effect ****
+          In case of send money with service charge, the amount should be shown, instead of net amount.
+          For example, A sends 10 tk to B with service charge 2 tk. B receives tk 8 while A sends tk 10.
+          A should see 10 tk in the history while B sees 8
+
+          Same thing will be applicable in withdraw money, top up and all kinds of payment
+        */
+
         switch (serviceID) {
             case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
                 return "+" + Utilities.formatTakaWithComma(netAmount);
@@ -96,23 +109,24 @@ public class TransactionHistoryClass implements Parcelable {
                 if (originatingMobileNumber.equals(userMobileNumber)) {
                     return "+" + Utilities.formatTakaWithComma(netAmount);
                 } else if (receiverInfo.equals(userMobileNumber)) {
-                    return "-" + Utilities.formatTakaWithComma(netAmount);
+                    // Service charge effect
+                    return "-" + Utilities.formatTakaWithComma(amount);
                 }
             case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
                 return "+" + Utilities.formatTakaWithComma(netAmount);
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
-                return "-" + Utilities.formatTakaWithComma(netAmount);
+                return "-" + Utilities.formatTakaWithComma(amount); // Service charge effect
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
-                return "-" + Utilities.formatTakaWithComma(netAmount);
+                return "-" + Utilities.formatTakaWithComma(amount); // Service charge effect
             case (Constants.SERVICE_ID_REQUEST_INVOICE):
             case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber)) {
                     return "+" + Utilities.formatTakaWithComma(netAmount);
                 } else if (receiverInfo.equals(userMobileNumber)) {
-                    return "-" + Utilities.formatTakaWithComma(netAmount);
+                    return "-" + Utilities.formatTakaWithComma(amount); // Service charge effect
                 }
             case (Constants.TRANSACTION_HISTORY_EDUCATION):
-                return "-" + Utilities.formatTakaWithComma(netAmount);
+                return "-" + Utilities.formatTakaWithComma(amount); // Service charge effect
         }
 
         return Utilities.formatTakaWithComma(netAmount);
@@ -307,6 +321,14 @@ public class TransactionHistoryClass implements Parcelable {
                     }
                 case (Constants.TRANSACTION_HISTORY_EDUCATION):
                     return "Education Payment";
+                case (Constants.TRANSACTION_HISTORY_REQUEST_MONEY):
+                    if (originatingMobileNumber.equals(userMobileNumber)) {
+                        return "Money Request Sent";
+                    } else if (receiverInfo.equals(userMobileNumber)) {
+                        return "Money Request Received";
+                    } else {
+                        return "No Information Available";
+                    }
             }
         } catch (Exception e) {
             e.printStackTrace();

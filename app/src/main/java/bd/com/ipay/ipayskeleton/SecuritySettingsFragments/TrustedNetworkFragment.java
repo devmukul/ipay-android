@@ -139,7 +139,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
     }
 
     public void setTitle() {
-        getActivity().setTitle(R.string.password_recovery);
+        getActivity().setTitle(R.string.trusted_person);
     }
 
     @Override

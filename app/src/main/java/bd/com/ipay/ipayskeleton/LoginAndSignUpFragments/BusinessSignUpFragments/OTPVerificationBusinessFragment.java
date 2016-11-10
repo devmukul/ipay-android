@@ -180,17 +180,25 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
         } else {
             mProgressDialog.show();
 
+            SignupRequestBusiness mSignupBusinessRequest = new SignupRequestBusiness.Builder()
+                    .mobileNumber(SignupOrLoginActivity.mMobileNumberBusiness)
+                    .deviceId(Constants.MOBILE_ANDROID + mDeviceID)
+                    .name(SignupOrLoginActivity.mNameBusiness)
+                    .accountType(SignupOrLoginActivity.mAccountType)
+                    .dob(SignupOrLoginActivity.mBirthdayBusinessHolder)
+                    .password(SignupOrLoginActivity.mPasswordBusiness)
+                    .otp(otp)
+                    .businessName(SignupOrLoginActivity.mBusinessName)
+                    .businessType(SignupOrLoginActivity.mTypeofBusiness)
+                    .personalEmail(SignupOrLoginActivity.mEmailBusiness)
+                    .personalMobileNumber(SignupOrLoginActivity.mMobileNumberPersonal)
+                    .businessAddress(SignupOrLoginActivity.mAddressBusiness)
+                    .personalAddress(SignupOrLoginActivity.mAddressBusinessHolder)
+                    .promoCode(SignupOrLoginActivity.mPromoCode)
+                    .build();
 
-            SignupRequestBusiness mSignupModel = new SignupRequestBusiness(SignupOrLoginActivity.mMobileNumberBusiness,
-                    Constants.MOBILE_ANDROID + mDeviceID, SignupOrLoginActivity.mNameBusiness, SignupOrLoginActivity.mAccountType,
-                    Utilities.dateToMilliSecond(SignupOrLoginActivity.mBirthdayBusinessHolder),
-                    SignupOrLoginActivity.mPasswordBusiness, otp,
-                    SignupOrLoginActivity.mBusinessName, SignupOrLoginActivity.mTypeofBusiness,
-                    SignupOrLoginActivity.mEmailBusiness, SignupOrLoginActivity.mEmailBusiness,
-                    SignupOrLoginActivity.mMobileNumberPersonal, SignupOrLoginActivity.mAddressBusiness,
-                    SignupOrLoginActivity.mAddressBusinessHolder, SignupOrLoginActivity.mPromoCode);
             Gson gson = new Gson();
-            String json = gson.toJson(mSignupModel);
+            String json = gson.toJson(mSignupBusinessRequest);
             mSignUpTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SIGN_UP_BUSINESS,
                     Constants.BASE_URL_MM + Constants.URL_SIGN_UP_BUSINESS, json, getActivity());
             mSignUpTask.mHttpResponseListener = this;

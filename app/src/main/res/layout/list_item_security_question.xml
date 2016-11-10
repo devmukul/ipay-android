@@ -14,11 +14,10 @@
             style="@style/CustomEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/question"
-            android:inputType="numberDecimal"
-            android:maxLines="1"
             android:focusable="false"
-            android:singleLine="true" />
+            android:hint="@string/question"
+            android:inputType="textMultiLine"
+            android:maxLines="2" />
     </android.support.design.widget.TextInputLayout>
 
     <View style="@style/Divider" />

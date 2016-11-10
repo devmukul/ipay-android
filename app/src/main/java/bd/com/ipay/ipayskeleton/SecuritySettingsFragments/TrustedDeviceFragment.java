@@ -47,6 +47,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
     private RemoveTrustedDeviceResponse mRemoveTrustedDeviceResponse = null;
     private ListView mTrustedDevicesListView;
     private TrustedDeviceAdapter mTrustedDeviceAdapter;
+    private CustomSelectorDialog mCustomSelectorDialog;
 
     private ProgressDialog mProgressDialog;
 
@@ -220,7 +221,6 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
     public class TrustedDeviceAdapter extends ArrayAdapter<TrustedDevice> {
 
         private LayoutInflater inflater;
-        private CustomSelectorDialog mCustomSelectorDialog;
         private List<String> mTrustedDeviceActionList;
         private int ACTION_REMOVE = 0;
 
@@ -248,7 +248,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                     R.drawable.ic_android3x,
             };
 
-            String deviceID = trustedDevice.getDeviceId();
+            final String deviceID = trustedDevice.getDeviceId();
             String Android = getString(R.string.android);
             String IOS = getString(R.string.ios);
             String Computer = getString(R.string.browser);
@@ -263,8 +263,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
 
             }
 
-            String myDeviceID = getString(R.string.mobile_android);
-            myDeviceID = myDeviceID.concat(DeviceInfoFactory.getDeviceId(getActivity()));
+            final String myDeviceID = getString(R.string.mobile_android).concat(DeviceInfoFactory.getDeviceId(getActivity()));
 
             deviceNameView.setText(trustedDevice.getDeviceName());
             grantTimeView.setText(trustedDevice.getCreatedTimeString());
@@ -276,9 +275,12 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
             } else {
                 thisDeviceView.setVisibility(View.GONE);
                 deviceNameView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            }
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!myDeviceID.equals(deviceID)) {
                         mTrustedDeviceActionList = Arrays.asList(getResources().getStringArray(R.array.trusted_device_action));
                         mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), trustedDevice.getDeviceName(), mTrustedDeviceActionList);
                         mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
@@ -291,11 +293,10 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                             }
                         });
                         mCustomSelectorDialog.show();
-
                     }
-                });
-            }
 
+                }
+            });
             return view;
         }
     }

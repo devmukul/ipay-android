@@ -21,8 +21,8 @@ android {
         applicationId "bd.com.ipay.android"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 73
-        versionName "1.0.9"
+        versionCode 74
+        versionName "1.0.10"
         multiDexEnabled true
     }
 
@@ -30,15 +30,26 @@ android {
         abortOnError false
     }
 
-    def ServerType = java.lang.System.getProperty('ServerType') ?: "1"
+    // Server Type 1 -> dev server
+    // Server Type 2 -> test server
+    // Server Type 3 -> stage server
+    // Server Type 4 -> live server
+    // Server Type 5 -> local server
+    def ServerType = java.lang.System.getProperty('ServerType') ?: "4"
+    def AutoLogin = java.lang.System.getProperty('AutoLogin') ?: "false"
+    def DebugOnOffStatus = java.lang.System.getProperty('DebugOnOffStatus') ?: "false"
 
     buildTypes {
         debug {
             buildConfigField "int", "ServerType", ServerType
+            buildConfigField "boolean", "AutoLogin", AutoLogin
+            buildConfigField "boolean", "DebugOnOffStatus", DebugOnOffStatus
         }
         release {
             signingConfig signingConfigs.iPaySigningConfig
             buildConfigField "int", "ServerType", ServerType
+            buildConfigField "boolean", "AutoLogin", AutoLogin
+            buildConfigField "boolean", "DebugOnOffStatus", DebugOnOffStatus
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

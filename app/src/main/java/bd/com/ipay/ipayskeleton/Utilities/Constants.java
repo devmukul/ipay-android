@@ -54,6 +54,7 @@ public class Constants {
     public static final String SHOW_INVITED_ONLY = "SHOW_INVITED_ONLY";
     public static final String SHOW_NON_INVITED_NON_MEMBERS_ONLY = "SHOW_NON_INVITED_NON_MEMBERS_ONLY";
     public static final String SHOW_ALL_MEMBERS = "SHOW_ALL_MEMBERS";
+    public static final String SEARCH_SPECIFIC_NUMBER_ONLY = "SEARCH_SPECIFIC_NUMBER_ONLY";
     public static final String HIDE_STATUSES = "HIDE_STATUSES";
 
 
@@ -78,6 +79,7 @@ public class Constants {
     public static final String BOUNDARY = "iPayBoundary";
     public static final String ANDROID = "Android";
     public static final String IS_PIN_ADDED = "is-pin-added";
+    public static final String IS_IN_CONTACTS = "is-in-contacts";
     public static final String MOBILE_ANDROID = "mobile-android-";
     public static final String THANA = "thana";
     public static final String DISTRICT = "district";
@@ -126,8 +128,9 @@ public class Constants {
     public static final String PHOTO_URI = "photo_uri";
     public static final String VAT = "vat";
 
-    public static final String OFFICE_PHONE_NUMBER = "+8801749763943 ";
-    public static final String OFFICE_EMAIL = "info@ipay.com.bd";
+    public static final String OFFICE_PHONE_NUMBER = "+8801740651429";
+    public static final String OFFICE_LAND_LINE_NUMBER = "+88029852507";
+    public static final String OFFICE_EMAIL = "support@ipay.com.bd";
     public static final String OFFICE_WEB = "www.ipay.com.bd";
     public static final String FEEDBACK = "feedback@ipay.com.bd";
     public static final String OFFICE_ADDRESS = "Silver Tower (12th Floor)\n52 Gulshan Avenue, Circle-1\nDhaka-1212\nBangladesh\n";
@@ -146,7 +149,7 @@ public class Constants {
      * All requests and responses to server, as well as token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.
      */
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = BuildConfig.DebugOnOffStatus;
 
     /**
      * If set to true (with DEBUG flag also being set to true),
@@ -157,7 +160,7 @@ public class Constants {
      * <p>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = BuildConfig.AutoLogin;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
@@ -337,6 +340,7 @@ public class Constants {
     // SM Reports REST
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";
     public static final String URL_TRANSACTION_HISTORY_SINGLE = "report/transactions/single";
+    public static final String URL_TRANSACTION_HISTORY_PENDING = "/report/pending-transactions";
 
     // SM User Rest
     public static final String URL_REFRESH_BALANCE = "user/balance";

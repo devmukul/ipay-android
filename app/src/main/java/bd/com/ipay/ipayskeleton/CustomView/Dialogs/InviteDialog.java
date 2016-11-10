@@ -27,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.Sen
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
@@ -145,6 +146,9 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
 
         if (name.isEmpty()) {
             nameView.setError(context.getResources().getString(R.string.error_invalid_name));
+            error = true;
+        } else if (!InputValidator.isValidName(name)) {
+            nameView.setError(context.getResources().getString(R.string.please_enter_valid_name));
             error = true;
         }
 

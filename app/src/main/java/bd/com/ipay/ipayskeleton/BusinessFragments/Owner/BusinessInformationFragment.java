@@ -338,8 +338,8 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             if (mGetProfileInfoResponse.getMobileNumber() != null)
                 mMobileNumber = mGetProfileInfoResponse.getMobileNumber();
 
-            if (Utilities.milliSecondToDate(mGetProfileInfoResponse.getDateOfBirth()) != null)
-                mDateOfBirth = Utilities.milliSecondToDate(mGetProfileInfoResponse.getDateOfBirth());
+            if (mGetProfileInfoResponse.getDateOfBirth() != null)
+                mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
 
             if (mGetProfileInfoResponse.getGender() != null)
                 mGender = mGetProfileInfoResponse.getGender();

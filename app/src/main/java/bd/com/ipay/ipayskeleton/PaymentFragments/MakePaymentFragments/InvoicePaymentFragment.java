@@ -133,20 +133,11 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.scan_qr_code, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_scan_qr_code) {
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.CAMERA},
-                        REQUEST_CODE_PERMISSION);
-            } else initiateScan();
-            return true;
-        } else {
             return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override

@@ -119,12 +119,22 @@
                         style="@style/TextViewInfoLeftAlign" />
                 </LinearLayout>
 
+                <CheckBox
+                    android:id="@+id/add_in_contacts"
+                    style="@style/CheckboxRightStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+                    android:drawableTint="@color/colorPrimary"
+                    android:text="@string/add_to_contacts"
+                    android:visibility="gone" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingBottom="@dimen/activity_horizontal_margin"
-                    android:paddingTop="@dimen/activity_horizontal_margin_double">
+                    android:paddingTop="@dimen/activity_horizontal_margin">
 
                     <Button
                         android:id="@+id/button_spam"

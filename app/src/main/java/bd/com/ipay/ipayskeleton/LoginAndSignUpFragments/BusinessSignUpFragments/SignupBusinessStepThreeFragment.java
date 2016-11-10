@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponseBusines
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
@@ -182,6 +183,11 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
             focusView = mBusinessHolderFullNameView;
             cancel = true;
 
+        } else if (!InputValidator.isValidName(mBusinessHolderFullNameView.getText().toString().trim())) {
+            mBusinessHolderFullNameView.setError(getString(R.string.please_enter_valid_name));
+            focusView = mBusinessHolderFullNameView;
+            cancel = true;
+
         } else if (SignupOrLoginActivity.mBirthdayBusinessHolder == null || SignupOrLoginActivity.mBirthdayBusinessHolder.length() == 0) {
             mBirthdayEditText.setError(getString(R.string.error_invalid_birthday));
             focusView = mBirthdayEditText;
@@ -192,7 +198,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
             focusView = mBirthdayEditText;
             cancel = true;
 
-        }  else if (!mPersonalAddressView.verifyUserInputs()) {
+        } else if (!mPersonalAddressView.verifyUserInputs()) {
             cancel = true;
 
         } else if (!mAgreementCheckBox.isChecked()) {

@@ -146,8 +146,10 @@
     <string name="select_role">Select a role</string>
     <string name="role">Role</string>
     <string name="select_a_fee_item">Select a fee item</string>
-    <string name="select_session"><Sele></Sele>ct Session</string>
+    <string name="select_session">Select Session</string>
     <string name="save">Save</string>
+    <string name="friend">Friend</string>
+    <string name="add_to_contacts">Add to Contacts</string>
     <string name="ipay_contacts">iPay</string>
     <string name="security_questions">Set Security Question</string>
     <string name="activity_log">Activity log</string>
@@ -181,7 +183,7 @@
     <string name="progress_dialog_text_payment">Payment in progress. Please wait...</string>
     <string name="progress_dialog_text_sending_sms">Sending SMS to your mobile...</string>
     <string name="progress_dialog_validating_promo_code">Validating invitation code...</string>
-    <string name="progress_dialog_processing">Processing TopUp. You would receive money in your mobile shortly.</string>
+    <string name="progress_dialog_processing">Processing TopUp...</string>
     <string name="progress_dialog_fetching_bank_info">Fetching bank information...</string>
     <string name="progress_dialog_cancelling">Cancelling request...</string>
     <string name="progress_dialog_fetching_bank_list">Fetching bank list...</string>
@@ -307,6 +309,7 @@
     <string name="add_title">Add a title</string>
     <string name="attention">Attention</string>
     <string name="otp_sent">OTP sent. Please wait...</string>
+    <string name="please_enter_valid_name">Please enter a valid name.</string>
     <string name="please_enter_valid_mobile_number">Please enter a valid mobile number.</string>
     <string name="please_enter_valid_date_of_birth">Please enter a valid date of birth.</string>
     <string name="please_enter_occupation">Please enter your occupation.</string>
@@ -344,6 +347,8 @@
     <string name="current_pass">Current password</string>
     <string name="enter_question">Select Question</string>
     <string name="enter_answer">Enter Answer</string>
+    <string name="trusted_person">Trusted Person</string>
+    <string name="trusted_network">Trusted Network</string>
     <string name="server_down">Can not process your request right now. Please try again later</string>
     <string name="add_money_failed">Could not submit request for add money</string>
     <string name="wallet">Wallet</string>
@@ -387,6 +392,8 @@
     <string name="transaction_cancelled">Cancelled</string>
     <string name="transaction_rejected">Rejected</string>
     <string name="draft">Saved but not send</string>
+    <string name="pending">Pending</string>
+    <string name="processed">Processed</string>
     <string name="filter_by_date">Filter by date</string>
     <string name="filter_by_service">Filter by service</string>
     <string name="filter_by_event">Filter by event</string>
@@ -534,6 +541,7 @@
     <string name="progress_dialog_make_primary_email">Making this email primary...</string>
     <string name="failed_make_primary">Failed to make this primary email</string>
     <string name="confirmation_remove_email_address">Remove this email address?</string>
+    <string name="confirmation_add_to_contacts">Add this number to contacts?</string>
     <string name="link_bank">Link Bank</string>
     <string name="progress_dialog_if_pin_exists">Preparing. Please wait...</string>
     <string name="failed_loading_pin">Failed loading PIN</string>
