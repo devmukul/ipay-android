@@ -166,6 +166,12 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             cancel = true;
         }
 
+        if (!InputValidator.isValidName(mName)) {
+            mNameEditText.setError(getString(R.string.please_enter_valid_name));
+            focusView = mNameEditText;
+            cancel = true;
+        }
+
         if (!InputValidator.isDateOfBirthValid(mDateOfBirth)) {
             focusView = mDateOfBirthEditText;
             cancel = true;

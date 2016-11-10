@@ -309,6 +309,7 @@
     <string name="add_title">Add a title</string>
     <string name="attention">Attention</string>
     <string name="otp_sent">OTP sent. Please wait...</string>
+    <string name="please_enter_valid_name">Please enter a valid name.</string>
     <string name="please_enter_valid_mobile_number">Please enter a valid mobile number.</string>
     <string name="please_enter_valid_date_of_birth">Please enter a valid date of birth.</string>
     <string name="please_enter_occupation">Please enter your occupation.</string>

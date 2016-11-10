@@ -39,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.Get
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ContactsHolderFragment extends Fragment implements HttpResponseListener {
@@ -211,6 +212,9 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 
         if (name.isEmpty()) {
             nameView.setError(getString(R.string.error_invalid_name));
+            error = true;
+        } else if (!InputValidator.isValidName(name)) {
+            nameView.setError(getString(R.string.please_enter_valid_name));
             error = true;
         }
 
