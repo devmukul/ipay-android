@@ -156,20 +156,23 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
         mSetSecurityAnswerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void removeOtherSelectedQuestions(int index) {
-        mTempSecurityQuestionClassList = mSecurityQuestionsList;
+    private List<SecurityQuestionClass> removeOtherSelectedQuestions(int index) {
         List<SecurityQuestionClass> selectedOtherQuestionList = new ArrayList<>();
 
-        for (SecurityAnswerClass securityAnswerClass : mSecurityAnswerClassList) {
-            if (!mSecurityAnswerClassList.get(index).equals(securityAnswerClass)) {
-                for (SecurityQuestionClass securityQuestionClass : mTempSecurityQuestionClassList)
-                    if (securityAnswerClass.getQid() != null && securityAnswerClass.getQid().equals(securityQuestionClass.getQid())) {
+        for (int i = 0; i < mSecurityAnswerClassList.size(); i++) {
+            if (i != index) {
+                for (SecurityQuestionClass securityQuestionClass : mSecurityQuestionsList)
+                    if (mSecurityAnswerClassList.get(i).getQid() != null &&
+                            mSecurityAnswerClassList.get(i).getQid().equals(securityQuestionClass.getQid())) {
                         selectedOtherQuestionList.add(securityQuestionClass);
                     }
             }
         }
 
+        mTempSecurityQuestionClassList = new ArrayList<>();
+        mTempSecurityQuestionClassList.addAll(mSecurityQuestionsList);
         mTempSecurityQuestionClassList.removeAll(selectedOtherQuestionList);
+        return mTempSecurityQuestionClassList;
     }
 
 
@@ -287,9 +290,8 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
                 mQuestionEditText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        removeOtherSelectedQuestions(pos);
                         questionClassResourceSelectorDialog = new ResourceSelectorDialog(getActivity(),
-                                getString(R.string.select_a_question), mTempSecurityQuestionClassList, pos, true);
+                                getString(R.string.select_a_question), removeOtherSelectedQuestions(pos), pos, true);
                         questionClassResourceSelectorDialog.
                                 setOnResourceSelectedListenerWithSelectedIndex(new ResourceSelectorDialog.OnResourceSelectedListenerWithStringID() {
                                     @Override
