@@ -183,7 +183,7 @@
     <string name="progress_dialog_text_payment">Payment in progress. Please wait...</string>
     <string name="progress_dialog_text_sending_sms">Sending SMS to your mobile...</string>
     <string name="progress_dialog_validating_promo_code">Validating invitation code...</string>
-    <string name="progress_dialog_processing">Processing TopUp. You would receive money in your mobile shortly.</string>
+    <string name="progress_dialog_processing">Processing TopUp...</string>
     <string name="progress_dialog_fetching_bank_info">Fetching bank information...</string>
     <string name="progress_dialog_cancelling">Cancelling request...</string>
     <string name="progress_dialog_fetching_bank_list">Fetching bank list...</string>

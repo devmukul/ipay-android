@@ -149,7 +149,7 @@ public class Constants {
      * All requests and responses to server, as well as token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.
      */
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = BuildConfig.DebugOnOffStatus;
 
     /**
      * If set to true (with DEBUG flag also being set to true),
@@ -160,7 +160,7 @@ public class Constants {
      * <p>
      * *** Set it to false if you are not using the default password ***
      */
-    public static final boolean AUTO_LOGIN = false;
+    public static final boolean AUTO_LOGIN = BuildConfig.AutoLogin;
 
     // Server Type 1 -> dev server
     // Server Type 2 -> test server
