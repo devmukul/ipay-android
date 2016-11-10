@@ -416,6 +416,7 @@ public class Constants {
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
+    public static final int HTTP_RESPONSE_STATUS_PAYMENT_REQUIRED = 402;
     public static final int HTTP_RESPONSE_STATUS_OK = 200;
     public static final int HTTP_RESPONSE_STATUS_PROCESSING = 102;
     public static final int HTTP_RESPONSE_STATUS_UNAUTHORIZED = 401;
