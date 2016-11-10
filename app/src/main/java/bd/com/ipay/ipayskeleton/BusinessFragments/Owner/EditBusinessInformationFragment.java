@@ -151,6 +151,7 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
             cancel = true;
             focusView = mBusinessNameEditText;
         }
+        
         if (!InputValidator.isValidName(mBusinessName)) {
             mBusinessNameEditText.setError(getString(R.string.please_enter_valid_name));
             focusView = mBusinessNameEditText;

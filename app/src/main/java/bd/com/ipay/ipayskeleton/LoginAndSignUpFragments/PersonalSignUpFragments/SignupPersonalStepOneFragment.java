@@ -219,6 +219,11 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             focusView = mNameView;
             cancel = true;
 
+        } else if (!InputValidator.isValidName(mNameView.getText().toString().trim())) {
+            mNameView.setError(getString(R.string.please_enter_valid_name));
+            focusView = mNameView;
+            cancel = true;
+
         } else if (!ContactEngine.isValidNumber(SignupOrLoginActivity.mMobileNumber)) {
             mMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mMobileNumberView;

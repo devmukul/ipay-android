@@ -21,6 +21,7 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SignupBusinessStepTwoFragment extends Fragment {
@@ -109,6 +110,11 @@ public class SignupBusinessStepTwoFragment extends Fragment {
 
         if (mBusinessNameView.getText().toString().trim().length() == 0) {
             mBusinessNameView.setError(getString(R.string.invalid_business_name));
+            focusView = mBusinessNameView;
+            cancel = true;
+
+        } else if (!InputValidator.isValidName(mBusinessNameView.getText().toString().trim())) {
+            mBusinessNameView.setError(getString(R.string.please_enter_valid_name));
             focusView = mBusinessNameView;
             cancel = true;
 

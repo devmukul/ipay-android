@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.AddTrusted
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddTrustedPersonFragment extends Fragment implements HttpResponseListener {
@@ -148,6 +149,11 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
             focusView = mEditTextName;
             mEditTextName.setError(getString(R.string.error_invalid_name));
             cancel = true;
+        }else if (!InputValidator.isValidName(mName)) {
+            mEditTextName.setError(getString(R.string.please_enter_valid_name));
+            focusView = mEditTextName;
+            cancel = true;
+
         } else if (!ContactEngine.isValidNumber(mMobileNumber)) {
 
             focusView = mEditTextMobileNumber;
@@ -206,7 +212,7 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    ((SecuritySettingsActivity) getActivity()).switchToPasswordRecoveryFragment();
+                    ((SecuritySettingsActivity) getActivity()).switchToTrustedPersonFragment();
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
