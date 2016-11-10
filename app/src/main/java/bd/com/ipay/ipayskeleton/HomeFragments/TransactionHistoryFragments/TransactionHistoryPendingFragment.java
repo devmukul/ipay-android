@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -614,12 +615,33 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                     @Override
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing()) {
-                            Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
-                            intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
-                            startActivity(intent);
+                            if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
+
+                              /*  // Money request received
+                                if (ProfileInfoCacheManager.getMobileNumber().equals(receiver)) {
+
+                                    Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
+                                    intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
+                                    intent.putExtra(Constants.AMOUNT, transactionHistory.getAmount());
+                                    intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(receiver));
+                                    intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
+                                    intent.putExtra(Constants.INVOICE_TITLE_TAG, "");
+                                    intent.putExtra(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
+                                    intent.putExtra(Constants.NAME, mReceiverName);
+                                    intent.putExtra(Constants.PHOTO_URI, mPhotoUri);
+
+                                    startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
+                                }*/
+
+                            } else {
+                                Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
+                                intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
+                                startActivity(intent);
+                            }
                         }
 
                     }
+
                 });
 
             }
@@ -732,6 +754,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             }
             return 0;
         }
+
     }
 
     private final BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
