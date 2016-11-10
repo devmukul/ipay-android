@@ -262,7 +262,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PAYMENT_REQUIRED) {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.no_email_added, Toast.LENGTH_LONG).show();
-                            getActivity().onBackPressed();
+                            launchEmailPage();
                         }
                     } else {
                         if (getActivity() != null) {
