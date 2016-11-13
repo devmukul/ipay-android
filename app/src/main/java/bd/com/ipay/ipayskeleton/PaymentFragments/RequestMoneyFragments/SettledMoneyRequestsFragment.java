@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,21 +28,22 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetRequestResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestsSentClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.MoneyRequestClass;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SentMoneyRequestsHistoryFragment extends ProgressFragment implements HttpResponseListener {
+public class SettledMoneyRequestsFragment extends ProgressFragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mSentRequestTask = null;
-    private GetRequestResponse mGetSentRequestResponse;
+    private HttpRequestPostAsyncTask mMoneyRequestListTask = null;
+    private GetRequestResponse mGetMoneyRequestListResponse;
 
     private ProgressDialog mProgressDialog;
-    private RecyclerView mRequestListRecyclerView;
-    private SentMoneyRequestListAdapter mRequestsAdapter;
+    private RecyclerView mMoneyRequestListRecyclerView;
+    private MoneyRequestListAdapter mRequestsAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<RequestsSentClass> sentMoneyRequestClasses;
+    private List<MoneyRequestClass> mMoneyRequestClasses;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyListTextView;
 
@@ -51,19 +51,23 @@ public class SentMoneyRequestsHistoryFragment extends ProgressFragment implement
     private boolean hasNext = false;
     private boolean clearListAfterLoading;
 
+    private String mName;
+    private String mTime;
+    private String mProfilePictureUrl;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_sent_money_requests, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
-        mRequestListRecyclerView = (RecyclerView) v.findViewById(R.id.list_my_requests);
+        mMoneyRequestListRecyclerView = (RecyclerView) v.findViewById(R.id.list_my_requests);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
-        mRequestsAdapter = new SentMoneyRequestListAdapter();
+        mRequestsAdapter = new MoneyRequestListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
-        mRequestListRecyclerView.setLayoutManager(mLayoutManager);
-        mRequestListRecyclerView.setAdapter(mRequestsAdapter);
+        mMoneyRequestListRecyclerView.setLayoutManager(mLayoutManager);
+        mMoneyRequestListRecyclerView.setAdapter(mRequestsAdapter);
 
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -93,29 +97,28 @@ public class SentMoneyRequestsHistoryFragment extends ProgressFragment implement
     }
 
     private void getSentRequests() {
-        if (mSentRequestTask != null) {
+        if (mMoneyRequestListTask != null) {
             return;
         }
 
         GetMoneyRequest mMoneyRequest = new GetMoneyRequest(pageCount,
-                Constants.SERVICE_ID_REQUEST_MONEY,
-                Constants.REQUEST_STATUS_ALL);
+                Constants.SERVICE_ID_REQUEST_MONEY);
         Gson gson = new Gson();
         String json = gson.toJson(mMoneyRequest);
-        mSentRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_REQUESTS_ME,
-                Constants.BASE_URL_SM + Constants.URL_GET_SENT_REQUESTS, json, getActivity());
-        mSentRequestTask.mHttpResponseListener = this;
-        mSentRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mMoneyRequestListTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_ALL_SETTLED_REQUESTS,
+                Constants.BASE_URL_SM + Constants.URL_GET_ALL_REQUESTS, json, getActivity());
+        mMoneyRequestListTask.mHttpResponseListener = this;
+        mMoneyRequestListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void removeProcessingList() {
-        List<RequestsSentClass> tempMoneyRequestClasses = new ArrayList<RequestsSentClass>();
-        for (RequestsSentClass paymentClass : sentMoneyRequestClasses) {
+        List<MoneyRequestClass> tempMoneyRequestClasses = new ArrayList<MoneyRequestClass>();
+        for (MoneyRequestClass paymentClass : mMoneyRequestClasses) {
             if (paymentClass.getStatus() == Constants.REQUEST_STATUS_PROCESSING)
                 tempMoneyRequestClasses.add(paymentClass);
         }
 
-        sentMoneyRequestClasses.removeAll(tempMoneyRequestClasses);
+        mMoneyRequestClasses.removeAll(tempMoneyRequestClasses);
     }
 
     @Override
@@ -125,7 +128,7 @@ public class SentMoneyRequestsHistoryFragment extends ProgressFragment implement
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
-            mSentRequestTask = null;
+            mMoneyRequestListTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null) {
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
@@ -134,24 +137,24 @@ public class SentMoneyRequestsHistoryFragment extends ProgressFragment implement
         }
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_PENDING_REQUESTS_ME)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_ALL_SETTLED_REQUESTS)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 try {
 
-                    mGetSentRequestResponse = gson.fromJson(result.getJsonString(), GetRequestResponse.class);
+                    mGetMoneyRequestListResponse = gson.fromJson(result.getJsonString(), GetRequestResponse.class);
 
-                    if (clearListAfterLoading || sentMoneyRequestClasses == null) {
-                        sentMoneyRequestClasses = mGetSentRequestResponse.getAllNotifications();
+                    if (clearListAfterLoading || mMoneyRequestClasses == null) {
+                        mMoneyRequestClasses = mGetMoneyRequestListResponse.getAllNotifications();
                         clearListAfterLoading = false;
                     } else {
-                        List<RequestsSentClass> tempPendingMoneyRequestClasses;
-                        tempPendingMoneyRequestClasses = mGetSentRequestResponse.getAllNotifications();
-                        sentMoneyRequestClasses.addAll(tempPendingMoneyRequestClasses);
+                        List<MoneyRequestClass> tempPendingMoneyRequestClasses;
+                        tempPendingMoneyRequestClasses = mGetMoneyRequestListResponse.getAllNotifications();
+                        mMoneyRequestClasses.addAll(tempPendingMoneyRequestClasses);
 
                     }
                     removeProcessingList();
-                    hasNext = mGetSentRequestResponse.isHasNext();
+                    hasNext = mGetMoneyRequestListResponse.isHasNext();
                     mRequestsAdapter.notifyDataSetChanged();
 
                 } catch (Exception e) {
@@ -166,64 +169,65 @@ public class SentMoneyRequestsHistoryFragment extends ProgressFragment implement
             }
 
             mSwipeRefreshLayout.setRefreshing(false);
-            mSentRequestTask = null;
+            mMoneyRequestListTask = null;
 
         }
 
-        if (sentMoneyRequestClasses != null && sentMoneyRequestClasses.size() == 0) {
+        if (mMoneyRequestClasses != null && mMoneyRequestClasses.size() == 0) {
             mEmptyListTextView.setVisibility(View.VISIBLE);
         } else mEmptyListTextView.setVisibility(View.GONE);
     }
 
-    public class SentMoneyRequestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public class MoneyRequestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int FOOTER_VIEW = 1;
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
 
         public class MoneyRequestViewHolder extends RecyclerView.ViewHolder {
-            private final TextView mSenderNumber;
-            private final TextView mTime;
+            private final TextView mNameView;
+            private final TextView mTimeView;
             private final TextView mDescriptionView;
             private final ProfileImageView mProfileImageView;
+
 
             public MoneyRequestViewHolder(final View itemView) {
                 super(itemView);
 
-                mSenderNumber = (TextView) itemView.findViewById(R.id.request_number);
-                mTime = (TextView) itemView.findViewById(R.id.time);
+                mNameView = (TextView) itemView.findViewById(R.id.request_number);
+                mTimeView = (TextView) itemView.findViewById(R.id.time);
                 mDescriptionView = (TextView) itemView.findViewById(R.id.description);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
             }
 
             public void bindView(final int pos) {
 
-                final long id = sentMoneyRequestClasses.get(pos).getId();
-                String time = Utilities.getDateFormat(sentMoneyRequestClasses.get(pos).getRequestTime());
-                final String name = sentMoneyRequestClasses.get(pos).getReceiverProfile().getUserName();
-                final String imageUrl = sentMoneyRequestClasses.get(pos).getReceiverProfile().getUserProfilePicture();
-                final String mobileNumber = sentMoneyRequestClasses.get(pos).getReceiverProfile().getUserMobileNumber();
-                final String title = sentMoneyRequestClasses.get(pos).getTitle();
-                final String description = sentMoneyRequestClasses.get(pos).getDescription();
-                final BigDecimal amount = sentMoneyRequestClasses.get(pos).getAmount();
+                final MoneyRequestClass moneyRequestsClass = mMoneyRequestClasses.get(pos);
 
-                mTime.setText(time);
-                mSenderNumber.setText(name);
-                mDescriptionView.setText(Utilities.formatTaka(sentMoneyRequestClasses.get(pos).getAmount()));
+                mTime = Utilities.getDateFormat(moneyRequestsClass.getRequestTime());
+
+                if (ProfileInfoCacheManager.getMobileNumber().equals(moneyRequestsClass.getOriginatorProfile().getUserMobileNumber())) {
+                    mName = moneyRequestsClass.getReceiverProfile().getUserName();
+                    mProfilePictureUrl = moneyRequestsClass.getReceiverProfile().getUserProfilePicture();
+                } else {
+                    mName = moneyRequestsClass.getOriginatorProfile().getUserName();
+                    mProfilePictureUrl = moneyRequestsClass.getOriginatorProfile().getUserProfilePicture();
+                }
+
+                mTimeView.setText(mTime);
+                mNameView.setText(mName);
+                mDescriptionView.setText(Utilities.formatTaka(mMoneyRequestClasses.get(pos).getAmount()));
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        if (sentMoneyRequestClasses.get(pos).getStatus() == Constants.REQUEST_STATUS_ACCEPTED) {
-                            Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
-                            intent.putExtra(Constants.STATUS, Constants.REQUEST_STATUS_ACCEPTED);
-                            intent.putExtra(Constants.MONEY_REQUEST_ID, sentMoneyRequestClasses.get(pos).getTransactionID());
-                            startActivity(intent);
-                        }
+                        Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
+                        intent.putExtra(Constants.STATUS, Constants.REQUEST_STATUS_ACCEPTED);
+                        intent.putExtra(Constants.MONEY_REQUEST_ID, moneyRequestsClass.getTransactionID());
+                        startActivity(intent);
                     }
                 });
 
-                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePictureUrl, false);
 
             }
         }
@@ -262,7 +266,7 @@ public class SentMoneyRequestsHistoryFragment extends ProgressFragment implement
 
             View v;
             if (viewType == MONEY_REQUEST_ITEM_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_pending_request_money_me, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_request, parent, false);
                 return new MoneyRequestViewHolder(v);
             } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
@@ -290,10 +294,10 @@ public class SentMoneyRequestsHistoryFragment extends ProgressFragment implement
 
         @Override
         public int getItemCount() {
-            if (sentMoneyRequestClasses == null || sentMoneyRequestClasses.isEmpty())
+            if (mMoneyRequestClasses == null || mMoneyRequestClasses.isEmpty())
                 return 0;
             else
-                return sentMoneyRequestClasses.size() + 1;
+                return mMoneyRequestClasses.size() + 1;
         }
 
         @Override

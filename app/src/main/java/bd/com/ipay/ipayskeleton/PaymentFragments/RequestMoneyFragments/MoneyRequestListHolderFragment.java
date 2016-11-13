@@ -63,14 +63,6 @@ public class MoneyRequestListHolderFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
-                if (tab.getPosition() == 0) {
-                    RequestMoneyActivity.switchedToReceivedRequestFragment = true;
-                    RequestMoneyActivity.switchedToSentRequestFragment = false;
-                } else if (tab.getPosition() == 1) {
-                    RequestMoneyActivity.switchedToReceivedRequestFragment = false;
-                    RequestMoneyActivity.switchedToSentRequestFragment = true;
-
-                }
                 super.onTabSelected(tab);
             }
         });
@@ -82,29 +74,23 @@ public class MoneyRequestListHolderFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
-/*
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.home_activity, menu);
     }
-*/
 
-   /* @Override
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_notification) {
             Intent intent = new Intent(getActivity(), RequestMoneyHistoryActivity.class);
-            if (RequestMoneyActivity.switchedToReceivedRequestFragment)
-                intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
-            else intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
             startActivity(intent);
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
     }
-*/
     private void setupCustomViewsForTabLayout() {
         mReceivedRequestTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
         mSentRequestTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);

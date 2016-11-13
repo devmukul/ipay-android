@@ -303,6 +303,7 @@ public class Constants {
     public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept";
     public static final String URL_CANCEL_NOTIFICATION_REQUEST = "requests/cancel";
     public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/reject";
+    public static final String URL_GET_ALL_REQUESTS = "requests/all";
 
     // Settings REST
     public static final String URL_CHANGE_PASSWORD = "settings/password";
@@ -463,6 +464,7 @@ public class Constants {
     public static final String COMMAND_ACCEPT_PAYMENT_REQUEST = "COMMAND_ACCEPT_PAYMENT_REQUEST";
     public static final String COMMAND_REJECT_PAYMENT_REQUEST = "COMMAND_REJECT_PAYMENT_REQUEST";
     public static final String COMMAND_GET_PENDING_REQUESTS_ME = "COMMAND_GET_PENDING_REQUESTS_ME";
+    public static final String COMMAND_GET_ALL_SETTLED_REQUESTS = "COMMAND_GET_ALL_SETTLED_REQUESTS";
     public static final String COMMAND_GET_SENT_REQUEST_MONEY_HISTORY = "COMMAND_GET_SENT_REQUEST_MONEY_HISTORY";
     public static final String COMMAND_GET_ALL_PARTICIPANTS_LIST = "COMMAND_GET_ALL_PARTICIPANTS_LIST";
     public static final String COMMAND_REQUEST_MONEY = "COMMAND_REQUEST_MONEY";

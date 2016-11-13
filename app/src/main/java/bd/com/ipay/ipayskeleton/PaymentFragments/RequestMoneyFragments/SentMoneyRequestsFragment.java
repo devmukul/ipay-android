@@ -22,7 +22,6 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -35,7 +34,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestsSentClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.MoneyRequestClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -55,7 +54,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
     private RecyclerView mPendingListRecyclerView;
     private SentMoneyRequestListAdapter mPendingRequestsAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<RequestsSentClass> pendingMoneyRequestClasses;
+    private List<MoneyRequestClass> pendingMoneyRequestClasses;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyListTextView;
 
@@ -182,7 +181,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                         pendingMoneyRequestClasses = mGetPendingRequestResponse.getAllNotifications();
                         clearListAfterLoading = false;
                     } else {
-                        List<RequestsSentClass> tempPendingMoneyRequestClasses;
+                        List<MoneyRequestClass> tempPendingMoneyRequestClasses;
                         tempPendingMoneyRequestClasses = mGetPendingRequestResponse.getAllNotifications();
                         pendingMoneyRequestClasses.addAll(tempPendingMoneyRequestClasses);
                     }
@@ -342,7 +341,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
 
             View v;
             if (viewType == MONEY_REQUEST_ITEM_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_pending_request_money_me, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_request, parent, false);
                 return new MoneyRequestViewHolder(v);
             } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);

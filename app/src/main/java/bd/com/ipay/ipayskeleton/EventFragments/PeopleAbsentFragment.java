@@ -26,7 +26,7 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetRequestResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestsSentClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.MoneyRequestClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -42,7 +42,7 @@ public class PeopleAbsentFragment extends ProgressFragment implements HttpRespon
     private AbsentsListAdapter mAbsentsAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     // TODO: Change the class name
-    private List<RequestsSentClass> listOfAbsents;
+    private List<MoneyRequestClass> listOfAbsents;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyListTextView;
 
@@ -149,7 +149,7 @@ public class PeopleAbsentFragment extends ProgressFragment implements HttpRespon
                     if (listOfAbsents == null) {
                         listOfAbsents = mGetPendingRequestResponse.getAllNotifications();
                     } else {
-                        List<RequestsSentClass> tempPendingMoneyRequestClasses;
+                        List<MoneyRequestClass> tempPendingMoneyRequestClasses;
                         tempPendingMoneyRequestClasses = mGetPendingRequestResponse.getAllNotifications();
                         listOfAbsents.addAll(tempPendingMoneyRequestClasses);
                     }
