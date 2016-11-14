@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -28,6 +29,8 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
@@ -432,19 +435,25 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     if (!mSelectedName.isEmpty())
                         mInvite_message = mInvite_message.replace(getString(R.string.this_person), mSelectedName);
 
-                    new android.app.AlertDialog.Builder(getActivity())
-                            .setMessage(mInvite_message)
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
+                    MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
+                    dialog
+                            .content(mInvite_message)
+                            .cancelable(false)
+                            .positiveText(R.string.yes)
+                            .negativeText(R.string.no)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                     sendInvite(mSelectedNumber);
                                 }
                             })
-                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // Do nothing
+                            .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    dialog.dismiss();
                                 }
-                            })
-                            .show();
+                            });
+                    dialog.show();
                 }
             });
         }
@@ -785,19 +794,26 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                             if (!name.isEmpty())
                                 mInvite_message = mInvite_message.replace(getString(R.string.this_person), name);
 
-                            new android.app.AlertDialog.Builder(getActivity())
-                                    .setMessage(mInvite_message)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
+                            MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
+                            dialog
+                                    .content(mInvite_message)
+                                    .cancelable(false)
+                                    .positiveText(R.string.yes)
+                                    .negativeText(R.string.no)
+                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                             sendInvite(mobileNumber);
                                         }
                                     })
-                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            // Do nothing
+                                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            dialog.dismiss();
                                         }
-                                    })
-                                    .show();
+                                    });
+
+                            dialog.show();
                         } else {
                             if (originalName != null && !originalName.isEmpty())
                                 setSelectedName(originalName);
