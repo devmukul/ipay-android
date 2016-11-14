@@ -54,7 +54,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class TransactionHistoryPendingFragment extends ProgressFragment implements HttpResponseListener {
+public class TransactionHistorySettledPendingFragment extends ProgressFragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
 
