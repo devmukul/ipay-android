@@ -39,7 +39,7 @@ public class TransactionDetailsActivity extends BaseActivity {
         mProgressDialog = new ProgressDialog(this);
 
         setContentView(R.layout.activity_transaction_details);
-        status = getIntent().getIntExtra(Constants.STATUS, 0);
+        status = getIntent().getIntExtra(Constants.STATUS, -1);
 
         if (status == Constants.REQUEST_STATUS_ALL) {
             requestID = getIntent().getStringExtra(Constants.MONEY_REQUEST_ID);
