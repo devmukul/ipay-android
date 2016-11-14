@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.CompletedMoneyRequestsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MoneyRequestListHolderFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -88,6 +89,7 @@ public class RequestMoneyActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, moneyRequestListHolderFragment).commit();
 
+        setTitle(R.string.request_money);
         mFabRequestMoney.setVisibility(View.VISIBLE);
         switchedToPendingList = true;
     }
@@ -95,6 +97,17 @@ public class RequestMoneyActivity extends BaseActivity {
     public void switchToRequestMoneyFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new RequestMoneyFragment()).commit();
+
+        setTitle(R.string.request_money);
+        mFabRequestMoney.setVisibility(View.GONE);
+        switchedToPendingList = false;
+    }
+
+    public void switchToCompletedMoneyRequestListFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new CompletedMoneyRequestsFragment()).commit();
+
+        setTitle(R.string.history);
         mFabRequestMoney.setVisibility(View.GONE);
         switchedToPendingList = false;
     }

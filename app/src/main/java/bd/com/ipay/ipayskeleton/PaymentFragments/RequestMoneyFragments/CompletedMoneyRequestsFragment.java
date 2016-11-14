@@ -34,7 +34,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SettledMoneyRequestsFragment extends ProgressFragment implements HttpResponseListener {
+public class CompletedMoneyRequestsFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mMoneyRequestListTask = null;
     private GetRequestResponse mGetMoneyRequestListResponse;
@@ -73,7 +73,7 @@ public class SettledMoneyRequestsFragment extends ProgressFragment implements Ht
             @Override
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity())) {
-                    refreshPendingList();
+                    refreshCompletedList();
                 }
             }
         });
@@ -85,18 +85,18 @@ public class SettledMoneyRequestsFragment extends ProgressFragment implements Ht
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setContentShown(false);
-        getSentRequests();
+        getCompletedRequests();
     }
 
-    private void refreshPendingList() {
+    private void refreshCompletedList() {
         if (Utilities.isConnectionAvailable(getActivity())) {
             pageCount = 0;
             clearListAfterLoading = true;
-            getSentRequests();
+            getCompletedRequests();
         }
     }
 
-    private void getSentRequests() {
+    private void getCompletedRequests() {
         if (mMoneyRequestListTask != null) {
             return;
         }
@@ -109,16 +109,6 @@ public class SettledMoneyRequestsFragment extends ProgressFragment implements Ht
                 Constants.BASE_URL_SM + Constants.URL_GET_ALL_REQUESTS, json, getActivity());
         mMoneyRequestListTask.mHttpResponseListener = this;
         mMoneyRequestListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void removeProcessingList() {
-        List<MoneyRequestClass> tempMoneyRequestClasses = new ArrayList<MoneyRequestClass>();
-        for (MoneyRequestClass paymentClass : mMoneyRequestClasses) {
-            if (paymentClass.getStatus() == Constants.REQUEST_STATUS_PROCESSING)
-                tempMoneyRequestClasses.add(paymentClass);
-        }
-
-        mMoneyRequestClasses.removeAll(tempMoneyRequestClasses);
     }
 
     @Override
@@ -148,12 +138,11 @@ public class SettledMoneyRequestsFragment extends ProgressFragment implements Ht
                         mMoneyRequestClasses = mGetMoneyRequestListResponse.getAllNotifications();
                         clearListAfterLoading = false;
                     } else {
-                        List<MoneyRequestClass> tempPendingMoneyRequestClasses;
-                        tempPendingMoneyRequestClasses = mGetMoneyRequestListResponse.getAllNotifications();
-                        mMoneyRequestClasses.addAll(tempPendingMoneyRequestClasses);
+                        List<MoneyRequestClass> tempMoneyRequestClasses;
+                        tempMoneyRequestClasses = mGetMoneyRequestListResponse.getAllNotifications();
+                        mMoneyRequestClasses.addAll(tempMoneyRequestClasses);
 
                     }
-                    removeProcessingList();
                     hasNext = mGetMoneyRequestListResponse.isHasNext();
                     mRequestsAdapter.notifyDataSetChanged();
 
@@ -221,7 +210,7 @@ public class SettledMoneyRequestsFragment extends ProgressFragment implements Ht
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
-                        intent.putExtra(Constants.STATUS, Constants.REQUEST_STATUS_ACCEPTED);
+                        intent.putExtra(Constants.STATUS, Constants.REQUEST_STATUS_ALL);
                         intent.putExtra(Constants.MONEY_REQUEST_ID, moneyRequestsClass.getTransactionID());
                         startActivity(intent);
                     }
@@ -244,7 +233,7 @@ public class SettledMoneyRequestsFragment extends ProgressFragment implements Ht
                     public void onClick(View v) {
                         if (hasNext) {
                             pageCount = pageCount + 1;
-                            getSentRequests();
+                            getCompletedRequests();
                         }
                     }
                 });

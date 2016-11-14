@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -18,11 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyHistoryActivity;
-import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class MoneyRequestListHolderFragment extends Fragment {
     private ViewPager viewPager;
@@ -78,19 +73,19 @@ public class MoneyRequestListHolderFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.home_activity, menu);
+        inflater.inflate(R.menu.activity_request_money_history, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_notification) {
-            Intent intent = new Intent(getActivity(), RequestMoneyHistoryActivity.class);
-            startActivity(intent);
+        if (item.getItemId() == R.id.action_history) {
+            ((RequestMoneyActivity) getActivity()).switchToCompletedMoneyRequestListFragment();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
     }
+
     private void setupCustomViewsForTabLayout() {
         mReceivedRequestTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
         mSentRequestTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);

@@ -277,13 +277,6 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustPan" />
 
-        <activity
-            android:name=".Activities.PaymentActivities.RequestMoneyHistoryActivity"
-            android:label="@string/history"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ActionBarNoElevation"
-            android:windowSoftInputMode="adjustPan" />
-
         <!-- Receiver and service -->
 
         <receiver
