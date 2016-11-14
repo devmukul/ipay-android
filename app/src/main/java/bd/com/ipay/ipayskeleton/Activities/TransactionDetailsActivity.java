@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,14 +30,18 @@ public class TransactionDetailsActivity extends BaseActivity {
     private int status;
     private String requestID = null;
 
+    private ProgressDialog mProgressDialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mProgressDialog = new ProgressDialog(this);
+
         setContentView(R.layout.activity_transaction_details);
         status = getIntent().getIntExtra(Constants.STATUS, 0);
 
-        if (status == Constants.REQUEST_STATUS_ACCEPTED) {
+        if (status == Constants.REQUEST_STATUS_ALL) {
             requestID = getIntent().getStringExtra(Constants.MONEY_REQUEST_ID);
             getTransactionHistory();
         } else {
@@ -69,6 +74,9 @@ public class TransactionDetailsActivity extends BaseActivity {
         if (mTransactionHistoryTask != null) {
             return;
         }
+        mProgressDialog.setMessage(getString(R.string.loading));
+        mProgressDialog.show();
+
         SingleTransactionHistoryRequest mTransactionHistoryRequest;
         mTransactionHistoryRequest = new SingleTransactionHistoryRequest(requestID);
 
@@ -122,6 +130,7 @@ public class TransactionDetailsActivity extends BaseActivity {
                     Toast.makeText(this, R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
             }
 
+            mProgressDialog.dismiss();
             mTransactionHistoryTask = null;
         }
     }
