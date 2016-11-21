@@ -40,6 +40,7 @@ public class Constants {
     public static final String STATUS = "STATUS";
     public static final String TAG = "TAG";
     public static final String INVOICE = "INVOICE";
+    public static final String INVOICE_ID = "INVOICE_ID";
     public static final String REQUEST = "REQUEST";
     public static final String RECOMMENDATION = "RECOMMENDATION";
     public static final String BUSINESS = "BUSINESS";
@@ -630,6 +631,7 @@ public class Constants {
     public static final int TRANSACTION_HISTORY_EDUCATION = 8001;
     public static final int TRANSACTION_HISTORY_TOP_UP_ROLLBACK = 2002;
     public static final int TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK = 3003;
+    public static final int TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT = 6003;
 
     public static final int SERVICE_ID_REQUEST_MONEY = 6001;
     public static final int SERVICE_ID_REQUEST_INVOICE = 6003;

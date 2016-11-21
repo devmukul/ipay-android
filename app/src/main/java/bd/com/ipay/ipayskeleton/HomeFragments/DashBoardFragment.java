@@ -16,6 +16,7 @@ import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryHolderFragment;
+import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistorySettledPendingFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -32,7 +33,7 @@ public class DashBoardFragment extends Fragment {
     private HomeFragment mHomeFragment;
     private PayFragment mPayFragment;
     private ContactsHolderFragment mContactsHolderFragment;
-    private TransactionHistoryFragment mTransactionHistoryFragment;
+    private TransactionHistoryHolderFragment mTransactionHistoryFragment;
 
     private TabLayout.Tab homeTab;
     private TabLayout.Tab payTab;
@@ -52,7 +53,7 @@ public class DashBoardFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
         setTitle();
         mHomeFragment = new HomeFragment();
-        mTransactionHistoryFragment = new TransactionHistoryFragment();
+        mTransactionHistoryFragment = new TransactionHistoryHolderFragment();
         mPayFragment = new PayFragment();
         mContactsHolderFragment = new ContactsHolderFragment();
 
@@ -131,9 +132,10 @@ public class DashBoardFragment extends Fragment {
         payTab.setCustomView(payTabView);
 
     }
+
     private void setTitle() {
-        ((HomeActivity)getActivity()).getSupportActionBar().setDisplayUseLogoEnabled(true);
-        ((HomeActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ((HomeActivity) getActivity()).getSupportActionBar().setDisplayUseLogoEnabled(true);
+        ((HomeActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
 
     }
 

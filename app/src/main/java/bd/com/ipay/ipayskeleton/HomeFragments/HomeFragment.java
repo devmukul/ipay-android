@@ -371,6 +371,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         super.onPrepareOptionsMenu(menu);
         if (menu.findItem(R.id.action_search_contacts) != null)
             menu.findItem(R.id.action_search_contacts).setVisible(false);
+
+        if (menu.findItem(R.id.action_filter_by_service) != null)
+            menu.findItem(R.id.action_filter_by_service).setVisible(false);
+        if (menu.findItem(R.id.action_filter_by_date) != null)
+            menu.findItem(R.id.action_filter_by_date).setVisible(false);
     }
 
     private void updateProfileData() {

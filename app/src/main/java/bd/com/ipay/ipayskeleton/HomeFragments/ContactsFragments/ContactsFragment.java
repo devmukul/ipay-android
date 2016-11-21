@@ -245,6 +245,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         ImageView searchIconImageView = (ImageView) mSearchView.findViewById(searchImgId);
         searchIconImageView.setImageResource(R.drawable.ic_search);
         resetSearchKeyword();
+
     }
 
     private void setItemsVisibility(Menu menu, MenuItem exception, boolean visible) {
@@ -252,6 +253,14 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             MenuItem item = menu.getItem(i);
             if (item != null && item != exception) item.setVisible(visible);
         }
+
+        if (menu.findItem(R.id.action_filter_by_service) != null)
+            menu.findItem(R.id.action_filter_by_service).setVisible(false);
+        if (menu.findItem(R.id.action_filter_by_date) != null)
+            menu.findItem(R.id.action_filter_by_date).setVisible(false);
+        if (menu.findItem(R.id.action_clear_filter) != null)
+            menu.findItem(R.id.action_clear_filter).setVisible(false);
+
     }
 
     @Override
