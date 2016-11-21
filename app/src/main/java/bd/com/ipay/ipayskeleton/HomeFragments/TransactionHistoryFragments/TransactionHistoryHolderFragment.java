@@ -54,7 +54,7 @@ public class TransactionHistoryHolderFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        switchToProcessedTransactionsFragment();
+        switchToPendingTransactionsFragment();
     }
 
     @Override

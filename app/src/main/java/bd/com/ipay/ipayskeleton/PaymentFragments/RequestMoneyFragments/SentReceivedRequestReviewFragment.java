@@ -1,7 +1,9 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -75,8 +77,9 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     private Button mCancelButton;
     private CheckBox mAddInContactsCheckBox;
 
-    private boolean mIsInContacts;
+    private boolean isInContacts;
     private boolean isPinRequired = true;
+    private boolean isSwitchedFromTransactionHistory = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -97,7 +100,8 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
         mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
         mPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
-        mIsInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
+        isInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
+        isSwitchedFromTransactionHistory = getActivity().getIntent().getBooleanExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, false);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
@@ -150,7 +154,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
             mCancelButton.setVisibility(View.VISIBLE);
         }
 
-        if (!mIsInContacts) {
+        if (!isInContacts) {
             mAddInContactsCheckBox.setVisibility(View.VISIBLE);
             mAddInContactsCheckBox.setChecked(true);
         }
@@ -337,7 +341,13 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                         String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                            getActivity().onBackPressed();
+                            if (!isSwitchedFromTransactionHistory)
+                                getActivity().onBackPressed();
+                            else {
+                                Intent intent = new Intent();
+                                getActivity().setResult(Activity.RESULT_OK, intent);
+                                getActivity().finish();
+                            }
                         }
 
                     } else {
@@ -363,7 +373,13 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                         String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                            getActivity().onBackPressed();
+                            if (!isSwitchedFromTransactionHistory)
+                                getActivity().onBackPressed();
+                            else {
+                                Intent intent = new Intent();
+                                getActivity().setResult(Activity.RESULT_OK, intent);
+                                getActivity().finish();
+                            }
                         }
 
                     } else {
@@ -390,7 +406,13 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                         String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                            getActivity().onBackPressed();
+                            if (!isSwitchedFromTransactionHistory)
+                                getActivity().onBackPressed();
+                            else {
+                                Intent intent = new Intent();
+                                getActivity().setResult(Activity.RESULT_OK, intent);
+                                getActivity().finish();
+                            }
                         }
 
                     } catch (Exception e) {

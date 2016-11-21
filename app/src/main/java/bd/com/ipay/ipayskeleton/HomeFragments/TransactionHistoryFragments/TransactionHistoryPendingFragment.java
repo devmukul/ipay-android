@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -96,6 +97,9 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private boolean hasNext = false;
     private boolean clearListAfterLoading;
 
+    private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
+    private final int REQUEST_FOR_PAYEMENT_REVIEW_REQUEST = 102;
+
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
 
     private Menu menu;
@@ -188,15 +192,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getTransactionHistory();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            refreshTransactionHistory();
-        }
+        getPendingTransactionHistory();
     }
 
     @Override
@@ -267,7 +263,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private void refreshTransactionHistory() {
         historyPageCount = 0;
         clearListAfterLoading = true;
-        getTransactionHistory();
+        getPendingTransactionHistory();
     }
 
     private boolean verifyDateFilter() {
@@ -459,7 +455,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 }
             };
 
-    private void getTransactionHistory() {
+    private void getPendingTransactionHistory() {
         if (mTransactionHistoryTask != null) {
             return;
         }
@@ -473,7 +469,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
-        mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
+        mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_TRANSACTION_HISTORY,
                 Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY_PENDING, json, getActivity());
         mTransactionHistoryTask.mHttpResponseListener = this;
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -500,6 +496,16 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_MONEY_REVIEW_REQUEST || requestCode == REQUEST_FOR_PAYEMENT_REVIEW_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                refreshTransactionHistory();
+            }
+        }
+
+    }
+
+    @Override
     public void httpResponseReceiver(HttpResponseObject result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
@@ -512,7 +518,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_PENDING_TRANSACTION_HISTORY)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
@@ -576,14 +582,17 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 final String receiver = transactionHistory.getReceiver();
                 final String responseTime = Utilities.getDateFormat(transactionHistory.getResponseTime());
                 final String netAmountWithSign = transactionHistory.getNetAmountFormatted(transactionHistory.getAdditionalInfo().getUserMobileNumber());
-                final Integer statusCode = transactionHistory.getStatusCode();
                 final Double balance = transactionHistory.getBalance();
                 final String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();
                 final int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
                 final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
                 final int serviceId = transactionHistory.getServiceID();
 
-                mAmountTextView.setText(getString(R.string.not_applicable));
+                mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
+
+                if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
+                    mAmountTextView.setText(getString(R.string.not_applicable));
+                }
 
                 mTransactionDescriptionView.setText(description);
                 if (receiver != null && !receiver.equals("")) {
@@ -650,7 +659,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                     public void onClick(View v) {
                         if (hasNext) {
                             historyPageCount = historyPageCount + 1;
-                            getTransactionHistory();
+                            getPendingTransactionHistory();
                         }
                     }
                 });
@@ -744,7 +753,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             }
             return 0;
         }
-
     }
 
     private void launchRequestMoneyReviewPage(TransactionHistoryClass transactionHistory) {
@@ -759,6 +767,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         intent.putExtra(Constants.MONEY_REQUEST_ID, transactionHistory.getId());
         intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
         intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());
+        intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
 
         if (ProfileInfoCacheManager.getMobileNumber().equals(transactionHistory.getOriginatingMobileNumber())) {
             intent.putExtra(Constants.IS_IN_CONTACTS,
@@ -768,15 +777,16 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             intent.putExtra(Constants.IS_IN_CONTACTS,
                     new SearchContactClass(getActivity()).searchMobileNumber(transactionHistory.getOriginatingMobileNumber()));
         }
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
     }
 
     private void launchRequestPaymentReviewPage(TransactionHistoryClass transactionHistory) {
         Intent intent = new Intent(getActivity(), InvoiceActivity.class);
         intent.putExtra(Constants.REQUEST_ID, transactionHistory.getId());
 
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_FOR_PAYEMENT_REVIEW_REQUEST);
     }
+
 
     private final BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
         @Override

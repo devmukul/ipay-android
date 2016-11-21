@@ -28,21 +28,21 @@
                 android:visibility="visible">
 
                 <CheckBox
-                    android:id="@+id/checkbox_processed"
+                    android:id="@+id/checkbox_pending"
                     style="@style/ContactsSelectorStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_left_round_checkbox"
                     android:gravity="center"
-                    android:text="@string/completed" />
+                    android:text="@string/pending" />
 
                 <CheckBox
-                    android:id="@+id/checkbox_pending"
+                    android:id="@+id/checkbox_processed"
                     style="@style/ContactsSelectorStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_right_round_checkbox"
-                    android:text="@string/pending" />
+                    android:text="@string/completed" />
             </LinearLayout>
         </RelativeLayout>
 

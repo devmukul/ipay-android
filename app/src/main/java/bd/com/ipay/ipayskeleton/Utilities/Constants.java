@@ -81,6 +81,7 @@ public class Constants {
     public static final String ANDROID = "Android";
     public static final String IS_PIN_ADDED = "is-pin-added";
     public static final String IS_IN_CONTACTS = "is-in-contacts";
+    public static final String SWITCHED_FROM_TRANSACTION_HISTORY= "switched_from_transaction_history";
     public static final String MOBILE_ANDROID = "mobile-android-";
     public static final String THANA = "thana";
     public static final String DISTRICT = "district";
