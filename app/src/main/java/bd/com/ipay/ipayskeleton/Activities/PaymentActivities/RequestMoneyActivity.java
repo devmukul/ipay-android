@@ -1,30 +1,22 @@
 package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.CompletedMoneyRequestsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MoneyRequestListHolderFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestMoneyActivity extends BaseActivity {
 
     private FloatingActionButton mFabRequestMoney;
     private boolean switchedToPendingList = true;
-    public static boolean switchedToSentRequestFragment = false;
-    public static boolean switchedToReceivedRequestFragment = true;
-
-    private Menu menu;
 
     /**
      * If this value is set in the intent extras,
@@ -99,15 +91,6 @@ public class RequestMoneyActivity extends BaseActivity {
                 .replace(R.id.fragment_container, new RequestMoneyFragment()).commit();
 
         setTitle(R.string.request_money);
-        mFabRequestMoney.setVisibility(View.GONE);
-        switchedToPendingList = false;
-    }
-
-    public void switchToCompletedMoneyRequestListFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new CompletedMoneyRequestsFragment()).commit();
-
-        setTitle(R.string.history);
         mFabRequestMoney.setVisibility(View.GONE);
         switchedToPendingList = false;
     }

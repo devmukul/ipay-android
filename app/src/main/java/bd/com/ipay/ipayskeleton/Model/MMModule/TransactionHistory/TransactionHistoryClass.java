@@ -119,14 +119,6 @@ public class TransactionHistoryClass implements Parcelable {
                 return "-" + Utilities.formatTakaWithComma(amount); // Service charge effect
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
                 return "-" + Utilities.formatTakaWithComma(amount); // Service charge effect
-            case (Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT):
-                if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED) {
-                    if (originatingMobileNumber.equals(userMobileNumber)) {
-                        return "+" + Utilities.formatTakaWithComma(netAmount);
-                    } else if (receiverInfo.equals(userMobileNumber)) {
-                        return "-" + Utilities.formatTakaWithComma(amount); // Service charge effect
-                    }
-                } else return Utilities.formatTakaWithComma(netAmount);
             case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber)) {
                     return "+" + Utilities.formatTakaWithComma(netAmount);
@@ -325,9 +317,9 @@ public class TransactionHistoryClass implements Parcelable {
                 case (Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT):
                     if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED) {
                         if (originatingMobileNumber.equals(userMobileNumber)) {
-                            return "Payment Made";
+                            return "Payment Request Sent";
                         } else if (receiverInfo.equals(userMobileNumber)) {
-                            return "Payment Received";
+                            return "Payment Request Received";
                         } else {
                             return "No Information Available";
                         }

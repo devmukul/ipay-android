@@ -192,6 +192,14 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (Utilities.isConnectionAvailable(getActivity())) {
+            refreshTransactionHistory();
+        }
+    }
+
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (getView() != null) {
@@ -569,13 +577,13 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 final String responseTime = Utilities.getDateFormat(transactionHistory.getResponseTime());
                 final String netAmountWithSign = transactionHistory.getNetAmountFormatted(transactionHistory.getAdditionalInfo().getUserMobileNumber());
                 final Integer statusCode = transactionHistory.getStatusCode();
-                final double balance = transactionHistory.getBalance();
+                final Double balance = transactionHistory.getBalance();
                 final String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();
                 final int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
                 final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
                 final int serviceId = transactionHistory.getServiceID();
 
-                mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
+                mAmountTextView.setText(getString(R.string.not_applicable));
 
                 mTransactionDescriptionView.setText(description);
                 if (receiver != null && !receiver.equals("")) {
@@ -590,26 +598,18 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                     otherImageView.setVisibility(View.VISIBLE);
                     if (bankCode != null) otherImageView.setImageResource(bankIcon);
                     else otherImageView.setImageResource(R.drawable.ic_tran_add);
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK) {
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
                     if (bankCode != null) otherImageView.setImageResource(bankIcon);
                     else otherImageView.setImageResource(R.drawable.ic_tran_withdraw);
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
-                    mProfileImageView.setVisibility(View.INVISIBLE);
-                    otherImageView.setVisibility(View.VISIBLE);
-                    otherImageView.setImageResource(R.drawable.ic_transaction_ipaylogo);
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
                     if (ContactEngine.isValidNumber(receiver)) {
                         int mIcon = getOperatorIcon(receiver);
                         otherImageView.setImageResource(mIcon);
                     } else otherImageView.setImageResource(R.drawable.ic_top_up);
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_EDUCATION) {
-                    mProfileImageView.setVisibility(View.INVISIBLE);
-                    otherImageView.setVisibility(View.VISIBLE);
-                    otherImageView.setImageResource(R.drawable.ic_transaction_education);
                 } else {
                     otherImageView.setVisibility(View.INVISIBLE);
                     mProfileImageView.setVisibility(View.VISIBLE);
@@ -630,7 +630,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                                 startActivity(intent);
                             }
                         }
-
                     }
 
                 });

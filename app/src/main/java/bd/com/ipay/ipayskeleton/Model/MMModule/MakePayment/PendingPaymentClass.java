@@ -54,7 +54,7 @@ public class PendingPaymentClass {
         return title;
     }
 
-    private UserProfile getOriginatorProfile() {
+    public UserProfile getOriginatorProfile() {
         return originatorProfile;
     }
 

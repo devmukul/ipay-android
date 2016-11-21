@@ -211,21 +211,26 @@ public class InvoiceActivity extends BaseActivity implements HttpResponseListene
                     List<ItemList> mItemList = Arrays.asList(mGetSingleInvoiceResponse.getItemList());
 
                     Bundle bundle = new Bundle();
-                    bundle.putString(Constants.DESCRIPTION, mGetSingleInvoiceResponse.getDescription());
+                    bundle.putString(Constants.DESCRIPTION, mGetSingleInvoiceResponse.description);
                     bundle.putString(Constants.TIME, Utilities.getDateFormat(mGetSingleInvoiceResponse.getRequestTime()));
                     bundle.putLong(Constants.MONEY_REQUEST_ID, mGetSingleInvoiceResponse.getId());
                     bundle.putString(Constants.AMOUNT, mGetSingleInvoiceResponse.getAmount().toString());
                     bundle.putString(Constants.VAT, mGetSingleInvoiceResponse.getVat().toString());
                     bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
+                    bundle.putString(Constants.TITLE, mGetSingleInvoiceResponse.getTitle());
                     bundle.putInt(Constants.STATUS, Constants.INVOICE_STATUS_PROCESSING);
-                    bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + mGetSingleInvoiceResponse.getReceiverProfile().getUserProfilePicture());
-                    bundle.putString(Constants.MOBILE_NUMBER, mGetSingleInvoiceResponse.getReceiverProfile().getUserMobileNumber());
-                    bundle.putString(Constants.NAME, mGetSingleInvoiceResponse.getReceiverProfile().getUserName());
 
-                    if (ProfileInfoCacheManager.getMobileNumber().equals(mGetSingleInvoiceResponse.getReceiverProfile().getUserMobileNumber()))
+                    if (ProfileInfoCacheManager.getMobileNumber().equals(mGetSingleInvoiceResponse.getReceiverProfile().getUserMobileNumber())) {
+                        bundle.putString(Constants.MOBILE_NUMBER, mGetSingleInvoiceResponse.getOriginatorProfile().getUserMobileNumber());
+                        bundle.putString(Constants.NAME, mGetSingleInvoiceResponse.getOriginatorProfile().getUserName());
+                        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + mGetSingleInvoiceResponse.getOriginatorProfile().getUserProfilePicture());
                         switchToInvoiceHistoryFragment(bundle);
-                    else
+                    } else {
+                        bundle.putString(Constants.MOBILE_NUMBER, mGetSingleInvoiceResponse.getReceiverProfile().getUserMobileNumber());
+                        bundle.putString(Constants.NAME, mGetSingleInvoiceResponse.getReceiverProfile().getUserName());
+                        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + mGetSingleInvoiceResponse.getReceiverProfile().getUserProfilePicture());
                         switchToInvoiceDetailsFragment(bundle);
+                    }
 
 
                 } else {
