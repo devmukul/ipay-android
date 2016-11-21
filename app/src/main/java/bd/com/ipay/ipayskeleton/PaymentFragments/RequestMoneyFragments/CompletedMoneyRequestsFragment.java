@@ -55,7 +55,6 @@ public class CompletedMoneyRequestsFragment extends ProgressFragment implements 
     private String mTime;
     private String mProfilePictureUrl;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_sent_money_requests, container, false);

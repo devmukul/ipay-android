@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments;
 
+import android.animation.ObjectAnimator;
 import android.app.DatePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -30,6 +31,7 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -45,6 +48,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
@@ -55,13 +59,16 @@ import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TransactionHistorySettledPendingFragment extends ProgressFragment implements HttpResponseListener {
-    private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
-    private TransactionHistoryResponse mTransactionHistoryResponse;
+    private HttpRequestPostAsyncTask mPendingTransactionHistoryTask = null;
+    private HttpRequestPostAsyncTask mSettledTransactionHistoryTask = null;
+
+    private TransactionHistoryResponse mPendingTransactionHistoryResponse;
+    private TransactionHistoryResponse mSettledTransactionHistoryResponse;
 
     private RecyclerView mTransactionHistoryRecyclerView;
     private TransactionHistoryAdapter mTransactionHistoryAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<TransactionHistoryClass> userTransactionHistoryClasses;
+    private List<TransactionHistoryClass> mPendingTransactionHistoryClasses, mSettledTransactionHistoryClasses;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
     private String mMobileNumber;
@@ -85,13 +92,21 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
     private Button filterByDateButton;
     private TextView mEmptyListTextView;
 
-    private int historyPageCount = 0;
+    private int pendingHistoryPageCount = -1;
+    private int settledHistoryPageCount = 0;
+
+    private int pendingArrowRotationAngle = 0;
+    private int settledArrowRotationAngle = 0;
+
     private Integer type = null;
     private Calendar fromDate = null;
     private Calendar toDate = null;
 
     private boolean hasNext = false;
     private boolean clearListAfterLoading;
+
+    public boolean isPendingListExpended = true;
+    private boolean isSettledListExpended = true;
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
 
@@ -100,6 +115,7 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -184,7 +200,7 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getTransactionHistory();
+        getSettledTransactionHistory();
     }
 
     @Override
@@ -209,12 +225,11 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        /*MenuInflater menuInflater = getActivity().getMenuInflater();
+        MenuInflater menuInflater = getActivity().getMenuInflater();
         menuInflater.inflate(R.menu.activity_transaction_history, menu);
         menuInflater.inflate(R.menu.clear_filter, menu);
         this.menu = menu;
-        menu.findItem(R.id.action_clear_filter).setVisible(false);*/
-
+        menu.findItem(R.id.action_clear_filter).setVisible(false);
     }
 
     @Override
@@ -252,9 +267,10 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
     }
 
     private void refreshTransactionHistory() {
-        historyPageCount = 0;
+        settledHistoryPageCount = 0;
         clearListAfterLoading = true;
-        getTransactionHistory();
+        getPendingTransactionHistory();
+        getSettledTransactionHistory();
     }
 
     private boolean verifyDateFilter() {
@@ -276,7 +292,6 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
         filterByDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (verifyDateFilter()) {
                     menu.findItem(R.id.action_clear_filter).setVisible(true);
                     clearServiceFilters();
@@ -292,7 +307,6 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
         mFromDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Calendar calendar = Calendar.getInstance();
                 if (!mFromDateButton.getText().toString().equals("")) {
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -305,6 +319,7 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
                         dpd.getDatePicker().setMaxDate(System.currentTimeMillis());
                         dpd.show();
 
+
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -316,11 +331,9 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
             }
         });
 
-
         mToDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 final Date fromDate;
                 try {
@@ -337,7 +350,6 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
                 }
             }
         });
-
     }
 
     private void setActionsForServiceTypeFilter() {
@@ -390,7 +402,6 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
         for (CheckBox serviceFilter : mCheckBoxTypeMap.keySet()) {
             serviceFilter.setChecked(false);
         }
-
         serviceFilterLayout.setVisibility(View.GONE);
     }
 
@@ -403,26 +414,25 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
         dateFilterLayout.setVisibility(View.GONE);
     }
 
-    private final DatePickerDialog.OnDateSetListener mFromDateSetListener =
-            new DatePickerDialog.OnDateSetListener() {
-                public void onDateSet(DatePicker view, int year,
-                                      int monthOfYear, int dayOfMonth) {
-                    fromDate = Calendar.getInstance();
-                    fromDate.clear();
-                    fromDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                    fromDate.set(Calendar.MONTH, monthOfYear);
-                    fromDate.set(Calendar.YEAR, year);
+    private final DatePickerDialog.OnDateSetListener mFromDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int year,
+                              int monthOfYear, int dayOfMonth) {
+            fromDate = Calendar.getInstance();
+            fromDate.clear();
+            fromDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            fromDate.set(Calendar.MONTH, monthOfYear);
+            fromDate.set(Calendar.YEAR, year);
 
-                    toDate = Calendar.getInstance();
-                    toDate.setTime(fromDate.getTime());
-                    toDate.add(Calendar.DATE, 1);
+            toDate = Calendar.getInstance();
+            toDate.setTime(fromDate.getTime());
+            toDate.add(Calendar.DATE, 1);
 
-                    String fromDateStr = String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year);
+            String fromDateStr = String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year);
 
-                    mFromDateButton.setText(fromDateStr);
-                    mToDateButton.setText(fromDateStr);
-                }
-            };
+            mFromDateButton.setText(fromDateStr);
+            mToDateButton.setText(fromDateStr);
+        }
+    };
 
     private final DatePickerDialog.OnDateSetListener mToDateSetListener =
             new DatePickerDialog.OnDateSetListener() {
@@ -446,44 +456,93 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
                 }
             };
 
-    private void getTransactionHistory() {
-        if (mTransactionHistoryTask != null) {
+    private void getPendingTransactionHistory() {
+        if (mPendingTransactionHistoryTask != null) {
             return;
         }
         TransactionHistoryRequest mTransactionHistoryRequest;
         if (fromDate != null && toDate != null) {
             mTransactionHistoryRequest = new TransactionHistoryRequest(
-                    type, historyPageCount, fromDate.getTimeInMillis(), toDate.getTimeInMillis(), null);
+                    type, pendingHistoryPageCount, fromDate.getTimeInMillis(), toDate.getTimeInMillis(), null);
         } else {
-            mTransactionHistoryRequest = new TransactionHistoryRequest(type, historyPageCount);
+            mTransactionHistoryRequest = new TransactionHistoryRequest(type, pendingHistoryPageCount);
         }
 
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
-        mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
+        mPendingTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_TRANSACTION_HISTORY,
                 Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY_PENDING, json, getActivity());
-        mTransactionHistoryTask.mHttpResponseListener = this;
-        mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mPendingTransactionHistoryTask.mHttpResponseListener = this;
+        mPendingTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses, boolean hasNext) {
-        if (clearListAfterLoading || userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
-            userTransactionHistoryClasses = transactionHistoryClasses;
+    private void getSettledTransactionHistory() {
+        if (mSettledTransactionHistoryTask != null) {
+            return;
+        }
+        TransactionHistoryRequest mTransactionHistoryRequest;
+        if (fromDate != null && toDate != null) {
+            mTransactionHistoryRequest = new TransactionHistoryRequest(
+                    type, settledHistoryPageCount, fromDate.getTimeInMillis(), toDate.getTimeInMillis(), null);
+        } else {
+            mTransactionHistoryRequest = new TransactionHistoryRequest(type, settledHistoryPageCount);
+        }
+
+        Gson gson = new Gson();
+        String json = gson.toJson(mTransactionHistoryRequest);
+        mSettledTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_SETTLED_TRANSACTION_HISTORY,
+                Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY, json, getActivity());
+        mSettledTransactionHistoryTask.mHttpResponseListener = this;
+        mSettledTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void loadPendingTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses) {
+        mPendingTransactionHistoryClasses = transactionHistoryClasses;
+
+        mTransactionHistoryAdapter.notifyDataSetChanged();
+        setContentShown(true);
+    }
+
+    private void loadSettledTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses, boolean hasNext) {
+        if (clearListAfterLoading || mSettledTransactionHistoryClasses == null || mSettledTransactionHistoryClasses.size() == 0) {
+            mSettledTransactionHistoryClasses = transactionHistoryClasses;
             clearListAfterLoading = false;
         } else {
             List<TransactionHistoryClass> tempTransactionHistoryClasses;
             tempTransactionHistoryClasses = transactionHistoryClasses;
-            userTransactionHistoryClasses.addAll(tempTransactionHistoryClasses);
+            mSettledTransactionHistoryClasses.addAll(tempTransactionHistoryClasses);
         }
-
         this.hasNext = hasNext;
-        if (userTransactionHistoryClasses != null && userTransactionHistoryClasses.size() > 0)
-            mEmptyListTextView.setVisibility(View.GONE);
-        else
-            mEmptyListTextView.setVisibility(View.VISIBLE);
 
         mTransactionHistoryAdapter.notifyDataSetChanged();
         setContentShown(true);
+    }
+
+    private void collapsePendingTransactionHistory() {
+        isPendingListExpended = false;
+
+        mTransactionHistoryAdapter.notifyDataSetChanged();
+        //loadPendingTransactionHistory(mPendingTransactionHistoryClasses);
+    }
+
+    private void expandPendingTransactionHistory() {
+        isPendingListExpended = true;
+        mTransactionHistoryAdapter.notifyDataSetChanged();
+       // loadPendingTransactionHistory(mPendingTransactionHistoryClasses);
+    }
+
+    private void collapseSettledTransactionHistory() {
+        isSettledListExpended = false;
+        //clearListAfterLoading = true;
+        mTransactionHistoryAdapter.notifyDataSetChanged();
+        //loadSettledTransactionHistory(mSettledTransactionHistoryClasses, hasNext);
+    }
+
+    private void expandSettledTransactionHistory() {
+        isSettledListExpended = true;
+        //clearListAfterLoading = true;
+        mTransactionHistoryAdapter.notifyDataSetChanged();
+        //loadSettledTransactionHistory(mSettledTransactionHistoryClasses, this.hasNext);
     }
 
     @Override
@@ -491,7 +550,8 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mTransactionHistoryTask = null;
+            mPendingTransactionHistoryTask = null;
+            mSettledTransactionHistoryTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
             return;
@@ -499,37 +559,62 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_PENDING_TRANSACTION_HISTORY)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
-                    mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
-
-                    loadTransactionHistory(mTransactionHistoryResponse.getTransactions(), mTransactionHistoryResponse.isHasNext());
+                    mPendingTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
+                    loadPendingTransactionHistory(mPendingTransactionHistoryResponse.getTransactions());
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
                 }
-
             } else {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
             }
 
             mSwipeRefreshLayout.setRefreshing(false);
-            mTransactionHistoryTask = null;
+            mPendingTransactionHistoryTask = null;
+        }
+
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_SETTLED_TRANSACTION_HISTORY)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                try {
+                    mSettledTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
+                    loadSettledTransactionHistory(mSettledTransactionHistoryResponse.getTransactions(), mSettledTransactionHistoryResponse.isHasNext());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+                }
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+            }
+
+            mSwipeRefreshLayout.setRefreshing(false);
+            mSettledTransactionHistoryTask = null;
             if (this.isAdded()) setContentShown(true);
         }
     }
 
     private class TransactionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-        private static final int FOOTER_VIEW = 1;
+        private static final int PENDING_TRANSACTION_HISTORY_HEADER_VIEW = 1;
+        private static final int PENDING_TRANSACTION_HISTORY_LIST_VIEW = 2;
+        private static final int SETTLED_TRANSACTION_HISTORY_HEADER_VIEW = 3;
+        private static final int SETTLED_TRANSACTION_HISTORY_LIST_VIEW = 4;
+        private static final int SETTLED_TRANSACTION_HISTORY_FOOTER_VIEW = 5;
+        private static final int EMPTY_VIEW = 6;
 
         public class ViewHolder extends RecyclerView.ViewHolder {
+            private final TextView mHeaderView;
             private final TextView mTransactionDescriptionView;
             private final TextView mTimeView;
             private final TextView mReceiverView;
@@ -540,10 +625,11 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
             private final ImageView otherImageView;
             private final ProfileImageView mProfileImageView;
             private final View divider;
+            private final View mArrowButton;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
-
+                mHeaderView = (TextView) itemView.findViewById(R.id.textview_header);
                 mTransactionDescriptionView = (TextView) itemView.findViewById(R.id.activity_description);
                 mTimeView = (TextView) itemView.findViewById(R.id.time);
                 mReceiverView = (TextView) itemView.findViewById(R.id.receiver);
@@ -554,10 +640,12 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 otherImageView = (ImageView) itemView.findViewById(R.id.other_image);
                 divider = itemView.findViewById(R.id.divider);
+                mArrowButton = itemView.findViewById(R.id.arrowButton);
             }
 
-            public void bindView(int pos) {
-                final TransactionHistoryClass transactionHistory = userTransactionHistoryClasses.get(pos);
+            public void bindViewPendingTransactionList(int pos) {
+                pos = pos - 1;
+                final TransactionHistoryClass transactionHistory = mPendingTransactionHistoryClasses.get(pos);
 
                 final String description = transactionHistory.getShortDescription(mMobileNumber);
                 final String receiver = transactionHistory.getReceiver();
@@ -616,23 +704,9 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing()) {
                             if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
-
-                              /*  // Money request received
-                                if (ProfileInfoCacheManager.getMobileNumber().equals(receiver)) {
-
-                                    Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
-                                    intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
-                                    intent.putExtra(Constants.AMOUNT, transactionHistory.getAmount());
-                                    intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(receiver));
-                                    intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
-                                    intent.putExtra(Constants.INVOICE_TITLE_TAG, "");
-                                    intent.putExtra(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
-                                    intent.putExtra(Constants.NAME, mReceiverName);
-                                    intent.putExtra(Constants.PHOTO_URI, mPhotoUri);
-
-                                    startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
-                                }*/
-
+                                launchRequestMoneyReviewPage(transactionHistory);
+                            } else if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT) {
+                                launchRequestPaymentReviewPage(transactionHistory);
                             } else {
                                 Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
                                 intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
@@ -641,14 +715,162 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
                         }
 
                     }
-
                 });
+            }
 
+
+            public void bindViewSettledTransactionList(int pos) {
+
+                if (mPendingTransactionHistoryClasses != null && mPendingTransactionHistoryClasses.size() != 0)
+                    pos = pos - mPendingTransactionHistoryClasses.size() - 2;
+                else
+                    pos = pos - 1;
+
+                final TransactionHistoryClass transactionHistory = mSettledTransactionHistoryClasses.get(pos);
+
+                final String description = transactionHistory.getShortDescription(mMobileNumber);
+                final String receiver = transactionHistory.getReceiver();
+                final String responseTime = Utilities.getDateFormat(transactionHistory.getResponseTime());
+                final String netAmountWithSign = transactionHistory.getNetAmountFormatted(transactionHistory.getAdditionalInfo().getUserMobileNumber());
+                final Integer statusCode = transactionHistory.getStatusCode();
+                final double balance = transactionHistory.getBalance();
+                final String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();
+                final int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
+                final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
+                final int serviceId = transactionHistory.getServiceID();
+
+                mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
+
+                if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    statusDescriptionView.setText(getString(R.string.transaction_successful));
+                    statusDescriptionView.setTextColor(getResources().getColor(R.color.bottle_green));
+                } else if (statusCode == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
+                    statusDescriptionView.setText(getString(R.string.in_progress));
+                    statusDescriptionView.setTextColor(getResources().getColor(R.color.colorAmber));
+                } else {
+                    if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY) {
+                        mAmountTextView.setText(getString(R.string.not_applicable));
+                    }
+                    statusDescriptionView.setText(getString(R.string.transaction_failed));
+                    statusDescriptionView.setTextColor(getResources().getColor(R.color.background_red));
+                }
+
+                mTransactionDescriptionView.setText(description);
+                if (receiver != null && !receiver.equals("")) {
+                    mReceiverView.setVisibility(View.VISIBLE);
+                    mReceiverView.setText(receiver);
+                } else mReceiverView.setVisibility(View.GONE);
+                netAmountView.setText(netAmountWithSign);
+                mTimeView.setText(responseTime);
+
+                if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
+                    mProfileImageView.setVisibility(View.INVISIBLE);
+                    otherImageView.setVisibility(View.VISIBLE);
+                    if (bankCode != null) otherImageView.setImageResource(bankIcon);
+                    else otherImageView.setImageResource(R.drawable.ic_tran_add);
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK) {
+                    mProfileImageView.setVisibility(View.INVISIBLE);
+                    otherImageView.setVisibility(View.VISIBLE);
+                    if (bankCode != null) otherImageView.setImageResource(bankIcon);
+                    else otherImageView.setImageResource(R.drawable.ic_tran_withdraw);
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
+                    mProfileImageView.setVisibility(View.INVISIBLE);
+                    otherImageView.setVisibility(View.VISIBLE);
+                    otherImageView.setImageResource(R.drawable.ic_transaction_ipaylogo);
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
+                    mProfileImageView.setVisibility(View.INVISIBLE);
+                    otherImageView.setVisibility(View.VISIBLE);
+                    if (ContactEngine.isValidNumber(receiver)) {
+                        int mIcon = getOperatorIcon(receiver);
+                        otherImageView.setImageResource(mIcon);
+                    } else otherImageView.setImageResource(R.drawable.ic_top_up);
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_EDUCATION) {
+                    mProfileImageView.setVisibility(View.INVISIBLE);
+                    otherImageView.setVisibility(View.VISIBLE);
+                    otherImageView.setImageResource(R.drawable.ic_transaction_education);
+                } else {
+                    otherImageView.setVisibility(View.INVISIBLE);
+                    mProfileImageView.setVisibility(View.VISIBLE);
+                    mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+                }
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!mSwipeRefreshLayout.isRefreshing()) {
+                            Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
+                            intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
+                            startActivity(intent);
+                        }
+                    }
+                });
+            }
+
+            public void bindViewHeader(final int pos) {
+                if (mPendingTransactionHistoryClasses != null && mPendingTransactionHistoryClasses.size() != 0
+                        && pos < mPendingTransactionHistoryClasses.size()) {
+                    mHeaderView.setText(R.string.pending);
+                } else
+                    mHeaderView.setText(R.string.completed);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mPendingTransactionHistoryClasses != null && mPendingTransactionHistoryClasses.size() != 0
+                                && pos < mPendingTransactionHistoryClasses.size()) {
+                            ObjectAnimator anim = ObjectAnimator.ofFloat(mArrowButton, "rotation", pendingArrowRotationAngle, pendingArrowRotationAngle + 180);
+                            anim.setDuration(400);
+                            anim.start();
+                            pendingArrowRotationAngle += 180;
+                            pendingArrowRotationAngle = pendingArrowRotationAngle % 360;
+
+                            if (isPendingListExpended) {
+                                collapsePendingTransactionHistory();
+                            } else expandPendingTransactionHistory();
+
+                        } else {
+                            ObjectAnimator anim = ObjectAnimator.ofFloat(mArrowButton, "rotation", settledArrowRotationAngle, settledArrowRotationAngle + 180);
+                            anim.setDuration(400);
+                            anim.start();
+                            settledArrowRotationAngle += 180;
+                            settledArrowRotationAngle = settledArrowRotationAngle % 360;
+
+                            if (isSettledListExpended) {
+                                collapseSettledTransactionHistory();
+                            } else expandSettledTransactionHistory();
+                        }
+                    }
+                });
             }
 
             public void bindViewFooter() {
                 if (hasNext) loadMoreTextView.setText(R.string.load_more);
                 else loadMoreTextView.setText(R.string.no_more_results);
+            }
+
+        }
+
+        public class HeaderViewHolder extends ViewHolder {
+            public HeaderViewHolder(View itemView) {
+                super(itemView);
+            }
+        }
+
+        public class PendingTransactionHistoryViewHolder extends ViewHolder {
+            public PendingTransactionHistoryViewHolder(View itemView) {
+                super(itemView);
+            }
+        }
+
+        public class SettledTransactionHistoryViewHolder extends ViewHolder {
+            public SettledTransactionHistoryViewHolder(View itemView) {
+                super(itemView);
+            }
+        }
+
+        public class EmptyTransactionHistoryViewHolder extends ViewHolder {
+            public EmptyTransactionHistoryViewHolder(View itemView) {
+                super(itemView);
             }
         }
 
@@ -659,8 +881,8 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
                     @Override
                     public void onClick(View v) {
                         if (hasNext) {
-                            historyPageCount = historyPageCount + 1;
-                            getTransactionHistory();
+                            settledHistoryPageCount = settledHistoryPageCount + 1;
+                            getSettledTransactionHistory();
                         }
                     }
                 });
@@ -671,46 +893,52 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
             }
         }
 
-        // Now define the view holder for Normal list item
-        public class NormalViewHolder extends ViewHolder {
-            public NormalViewHolder(View itemView) {
-                super(itemView);
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Do whatever you want on clicking the normal items
-                    }
-                });
-            }
-        }
-
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
             View v;
 
-            if (viewType == FOOTER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
+            if (viewType == PENDING_TRANSACTION_HISTORY_HEADER_VIEW || viewType == SETTLED_TRANSACTION_HISTORY_HEADER_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history_header, parent, false);
+                return new HeaderViewHolder(v);
 
+            } else if (viewType == PENDING_TRANSACTION_HISTORY_LIST_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history, parent, false);
+                return new PendingTransactionHistoryViewHolder(v);
+
+            } else if (viewType == SETTLED_TRANSACTION_HISTORY_LIST_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history, parent, false);
+                return new SettledTransactionHistoryViewHolder(v);
+
+            } else if (viewType == EMPTY_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_empty_view, parent, false);
+                return new EmptyTransactionHistoryViewHolder(v);
+
+            } else {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
                 return new FooterViewHolder(v);
             }
-
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history, parent, false);
-
-            return new NormalViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
             try {
-                if (holder instanceof NormalViewHolder) {
-                    NormalViewHolder vh = (NormalViewHolder) holder;
-                    vh.bindView(position);
+                if (holder instanceof HeaderViewHolder) {
+                    HeaderViewHolder vh = (HeaderViewHolder) holder;
+                    vh.bindViewHeader(position);
+
+                } else if (holder instanceof PendingTransactionHistoryViewHolder) {
+                    PendingTransactionHistoryViewHolder vh = (PendingTransactionHistoryViewHolder) holder;
+                    vh.bindViewPendingTransactionList(position);
+
+                } else if (holder instanceof SettledTransactionHistoryViewHolder) {
+                    SettledTransactionHistoryViewHolder vh = (SettledTransactionHistoryViewHolder) holder;
+                    vh.bindViewSettledTransactionList(position);
+
                 } else if (holder instanceof FooterViewHolder) {
                     FooterViewHolder vh = (FooterViewHolder) holder;
                     vh.bindViewFooter();
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -719,18 +947,90 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
 
         @Override
         public int getItemCount() {
-            if (userTransactionHistoryClasses != null && !userTransactionHistoryClasses.isEmpty())
-                return userTransactionHistoryClasses.size() + 1;
+            int pendingTransactionHistoryListSize = 0;
+            int settledTransactionHistoryListSize = 0;
+
+            if (mPendingTransactionHistoryClasses == null && mSettledTransactionHistoryClasses == null)
+                return 0;
+
+            if (mPendingTransactionHistoryClasses != null)
+                pendingTransactionHistoryListSize = mPendingTransactionHistoryClasses.size();
+            if (mSettledTransactionHistoryClasses != null)
+                settledTransactionHistoryListSize = mSettledTransactionHistoryClasses.size();
+
+            if (pendingTransactionHistoryListSize > 0 && settledTransactionHistoryListSize > 0)
+                return pendingTransactionHistoryListSize + settledTransactionHistoryListSize + 3;
+
+            else if (pendingTransactionHistoryListSize == 0 && settledTransactionHistoryListSize > 0)
+                return settledTransactionHistoryListSize + 2;
+
+            else if (pendingTransactionHistoryListSize > 0 && settledTransactionHistoryListSize == 0)
+                return pendingTransactionHistoryListSize + 1;
+
             else return 0;
+
         }
 
         @Override
         public int getItemViewType(int position) {
+            int pendingTransactionHistoryListSize = 0;
+            int settledTransactionHistoryListSize = 0;
 
-            if (position == userTransactionHistoryClasses.size()) {
-                return FOOTER_VIEW;
+            if (mPendingTransactionHistoryClasses == null && mSettledTransactionHistoryClasses == null)
+                return super.getItemViewType(position);
+
+            if (mPendingTransactionHistoryClasses != null)
+                pendingTransactionHistoryListSize = mPendingTransactionHistoryClasses.size();
+            if (mSettledTransactionHistoryClasses != null)
+                settledTransactionHistoryListSize = mSettledTransactionHistoryClasses.size();
+
+            if (pendingTransactionHistoryListSize > 0 && settledTransactionHistoryListSize > 0) {
+                if (position == 0)
+                    return PENDING_TRANSACTION_HISTORY_HEADER_VIEW;
+                else if (position > 0 && position < pendingTransactionHistoryListSize + 1) {
+                    if (isPendingListExpended)
+                        return PENDING_TRANSACTION_HISTORY_LIST_VIEW;
+                    else return EMPTY_VIEW;
+
+                } else if (position == pendingTransactionHistoryListSize + 1)
+                    return SETTLED_TRANSACTION_HISTORY_HEADER_VIEW;
+
+                else if (position > pendingTransactionHistoryListSize + settledTransactionHistoryListSize + 1) {
+                    if (isSettledListExpended)
+                        return SETTLED_TRANSACTION_HISTORY_FOOTER_VIEW;
+                    else return EMPTY_VIEW;
+
+                } else {
+                    if (isSettledListExpended)
+                        return SETTLED_TRANSACTION_HISTORY_LIST_VIEW;
+                    else return EMPTY_VIEW;
+                }
+
+            } else if (pendingTransactionHistoryListSize == 0 && settledTransactionHistoryListSize > 0) {
+                if (position == 0)
+                    return SETTLED_TRANSACTION_HISTORY_HEADER_VIEW;
+
+                else if (position > settledTransactionHistoryListSize) {
+                    if (isSettledListExpended)
+                        return SETTLED_TRANSACTION_HISTORY_FOOTER_VIEW;
+                    else return EMPTY_VIEW;
+
+                } else {
+                    if (isSettledListExpended)
+                        return SETTLED_TRANSACTION_HISTORY_LIST_VIEW;
+                    else return EMPTY_VIEW;
+                }
+
+            } else if (pendingTransactionHistoryListSize > 0 && settledTransactionHistoryListSize == 0) {
+                if (position == 0)
+                    return PENDING_TRANSACTION_HISTORY_HEADER_VIEW;
+
+                else {
+                    if (isPendingListExpended)
+                        return PENDING_TRANSACTION_HISTORY_LIST_VIEW;
+                    else return EMPTY_VIEW;
+                }
             }
-
             return super.getItemViewType(position);
         }
 
@@ -755,6 +1055,36 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
             return 0;
         }
 
+        private void launchRequestMoneyReviewPage(TransactionHistoryClass transactionHistory) {
+
+            Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
+            intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
+            intent.putExtra(Constants.INVOICE_RECEIVER_TAG,
+                    ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getUserMobileNumber()));
+
+            intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, transactionHistory.getShortDescription(mMobileNumber));
+            intent.putExtra(Constants.INVOICE_TITLE_TAG, "");
+            intent.putExtra(Constants.MONEY_REQUEST_ID, transactionHistory.getId());
+            intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
+            intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());
+
+            if (ProfileInfoCacheManager.getMobileNumber().equals(transactionHistory.getOriginatingMobileNumber())) {
+                intent.putExtra(Constants.IS_IN_CONTACTS,
+                        new SearchContactClass(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getUserMobileNumber()));
+                intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
+            } else {
+                intent.putExtra(Constants.IS_IN_CONTACTS,
+                        new SearchContactClass(getActivity()).searchMobileNumber(transactionHistory.getOriginatingMobileNumber()));
+            }
+            startActivity(intent);
+        }
+
+        private void launchRequestPaymentReviewPage(TransactionHistoryClass transactionHistory) {
+            Intent intent = new Intent(getActivity(), InvoiceActivity.class);
+            intent.putExtra(Constants.REQUEST_ID, transactionHistory.getId());
+
+            startActivity(intent);
+        }
     }
 
     private final BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
@@ -765,4 +1095,6 @@ public class TransactionHistorySettledPendingFragment extends ProgressFragment i
         }
     };
 }
+
+
 
