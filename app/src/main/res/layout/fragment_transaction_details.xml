@@ -37,7 +37,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:text="hahahahahah"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textSize="@dimen/text_size_medium" />
 
@@ -49,8 +48,7 @@
                         android:id="@+id/textview_mobile_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="hahahahahah" />
+                        android:layout_centerVertical="true" />
 
                     <Button
                         android:id="@+id/add_in_contacts"

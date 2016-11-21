@@ -310,7 +310,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
-        <item name="android:layout_marginBottom">@dimen/value6</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
     </style>
@@ -318,8 +317,6 @@
     <style name="TextViewUserInfoSecondary" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
-        <item name="android:textSize">@dimen/text_size_small_medium</item>
     </style>
 
     <style name="TextViewUserInfoSecondaryWidthWrapContent" parent="@android:style/Widget.TextView">
