@@ -35,9 +35,9 @@ android {
     // Server Type 3 -> stage server
     // Server Type 4 -> live server
     // Server Type 5 -> local server
-    def ServerType = java.lang.System.getProperty('ServerType') ?: "4"
+    def ServerType = java.lang.System.getProperty('ServerType') ?: "1"
     def AutoLogin = java.lang.System.getProperty('AutoLogin') ?: "false"
-    def DebugOnOffStatus = java.lang.System.getProperty('DebugOnOffStatus') ?: "false"
+    def DebugOnOffStatus = java.lang.System.getProperty('DebugOnOffStatus') ?: "true"
 
     buildTypes {
         debug {
