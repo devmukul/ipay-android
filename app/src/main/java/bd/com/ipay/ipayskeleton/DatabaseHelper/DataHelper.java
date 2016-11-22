@@ -175,7 +175,7 @@ public class DataHelper {
                     + " ELSE "
                     + DBConstants.KEY_ORIGINAL_NAME + " END COLLATE NOCASE";
 
-            Log.w("Query", queryString);
+            if(Constants.DEBUG) Log.w("Query", queryString);
 
             cursor = db.rawQuery(queryString, null);
 
@@ -201,13 +201,13 @@ public class DataHelper {
                     + query + "%'" + ")" + " ORDER BY " + DBConstants.KEY_BUSINESS_NAME
                     + " COLLATE NOCASE";
 
-            Log.w("Query", queryString);
+            if(Constants.DEBUG) Log.w("Query", queryString);
 
             cursor = db.rawQuery(queryString, null);
 
             if (cursor != null) {
                 cursor.getCount();
-                Log.w("Query", cursor.getCount() + "");
+                if(Constants.DEBUG) Log.w("Query", cursor.getCount() + "");
             }
         } catch (Exception e) {
             e.printStackTrace();
