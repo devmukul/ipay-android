@@ -168,7 +168,8 @@ public class InvoiceActivity extends BaseActivity implements HttpResponseListene
     public void switchToInvoiceHistoryFragment(Bundle bundle) {
         InvoiceHistoryFragment invoiceHistoryFragment = new InvoiceHistoryFragment();
         invoiceHistoryFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, invoiceHistoryFragment).commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, invoiceHistoryFragment).commit();
 
         mFabCreateInvoice.setVisibility(View.GONE);
     }

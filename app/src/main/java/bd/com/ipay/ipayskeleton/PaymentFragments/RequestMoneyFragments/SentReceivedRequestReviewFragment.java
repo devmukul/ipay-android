@@ -79,29 +79,25 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
     private boolean isInContacts;
     private boolean isPinRequired = true;
-    private boolean isSwitchedFromTransactionHistory = false;
+    private boolean switchedFromTransactionHistory = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_sent_received_request_review, container, false);
-
-        mRequestType = getActivity().getIntent().getIntExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
-
-        if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST)
-            getActivity().setTitle(R.string.send_money);
-        else
-            getActivity().setTitle(R.string.request_money);
 
         mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
         mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
         mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
         mTitle = getActivity().getIntent().getStringExtra(Constants.INVOICE_TITLE_TAG);
         mRequestID = (long) getActivity().getIntent().getSerializableExtra(Constants.MONEY_REQUEST_ID);
-
         mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
         mPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
+        mRequestType = getActivity().getIntent()
+                .getIntExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
+
         isInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
-        isSwitchedFromTransactionHistory = getActivity().getIntent().getBooleanExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, false);
+        switchedFromTransactionHistory = getActivity().getIntent()
+                .getBooleanExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, false);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
@@ -121,6 +117,11 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mCancelButton = (Button) v.findViewById(R.id.button_cancel);
 
         mProgressDialog = new ProgressDialog(getActivity());
+
+        if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST)
+            getActivity().setTitle(R.string.send_money);
+        else
+            getActivity().setTitle(R.string.request_money);
 
         mProfileImageView.setProfilePicture(mPhotoUri, false);
 
@@ -341,13 +342,13 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                         String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                            if (!isSwitchedFromTransactionHistory)
-                                getActivity().onBackPressed();
-                            else {
+
+                            if (switchedFromTransactionHistory) {
                                 Intent intent = new Intent();
                                 getActivity().setResult(Activity.RESULT_OK, intent);
                                 getActivity().finish();
-                            }
+                            } else
+                                getActivity().onBackPressed();
                         }
 
                     } else {
@@ -373,13 +374,13 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                         String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                            if (!isSwitchedFromTransactionHistory)
-                                getActivity().onBackPressed();
-                            else {
+
+                            if (switchedFromTransactionHistory) {
                                 Intent intent = new Intent();
                                 getActivity().setResult(Activity.RESULT_OK, intent);
                                 getActivity().finish();
-                            }
+                            } else
+                                getActivity().onBackPressed();
                         }
 
                     } else {
@@ -406,13 +407,13 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                         String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                            if (!isSwitchedFromTransactionHistory)
-                                getActivity().onBackPressed();
-                            else {
+
+                            if (switchedFromTransactionHistory) {
                                 Intent intent = new Intent();
                                 getActivity().setResult(Activity.RESULT_OK, intent);
                                 getActivity().finish();
-                            }
+                            } else
+                                getActivity().onBackPressed();
                         }
 
                     } catch (Exception e) {

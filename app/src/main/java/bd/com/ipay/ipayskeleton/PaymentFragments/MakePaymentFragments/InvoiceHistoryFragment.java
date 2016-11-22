@@ -1,6 +1,8 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -60,7 +62,9 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
     private long requestId;
     private String mTitle;
     private String mDescription;
+
     private boolean isPinRequired = true;
+    private boolean switchedFromTransactionHistory = false;
 
     private ProgressDialog mProgressDialog;
 
@@ -75,6 +79,9 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
         mReviewRecyclerView.setLayoutManager(mLayoutManager);
 
         mProgressDialog = new ProgressDialog(getActivity());
+
+        switchedFromTransactionHistory = getActivity().getIntent()
+                .getBooleanExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, false);
 
         Bundle bundle = getArguments();
 
@@ -149,7 +156,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mRejectRequestTask.mHttpResponseListener = this;
         mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -201,7 +208,13 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                     String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        getActivity().onBackPressed();
+
+                        if (switchedFromTransactionHistory) {
+                            Intent intent = new Intent();
+                            getActivity().setResult(Activity.RESULT_OK, intent);
+                            getActivity().finish();
+                        } else
+                            getActivity().onBackPressed();
                     }
 
                 } else {
@@ -225,7 +238,13 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                     String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        getActivity().onBackPressed();
+
+                        if (switchedFromTransactionHistory) {
+                            Intent intent = new Intent();
+                            getActivity().setResult(Activity.RESULT_OK, intent);
+                            getActivity().finish();
+                        } else
+                            getActivity().onBackPressed();
                     }
 
                 } else {
@@ -345,7 +364,18 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                 mAcceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        attempAcceptPaymentRequestWithPinCheck();
+
+                        MaterialDialog.Builder acceptDialog = new MaterialDialog.Builder(getActivity());
+                        acceptDialog.content(R.string.confirm_request_accept);
+                        acceptDialog.positiveText(R.string.yes);
+                        acceptDialog.negativeText(R.string.no);
+                        acceptDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                attempAcceptPaymentRequestWithPinCheck();
+                            }
+                        });
+                        acceptDialog.show();
                     }
                 });
 

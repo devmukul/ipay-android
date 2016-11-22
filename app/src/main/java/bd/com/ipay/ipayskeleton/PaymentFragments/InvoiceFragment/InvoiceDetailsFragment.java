@@ -1,8 +1,10 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -54,12 +56,14 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
 
     private String mDescription;
     private String mTime;
-    private long id;
+    private long mID;
     private int status;
     private String mReceiverName;
     private String mReceiverMobileNumber;
     private String mPhotoUri;
     private Context context;
+
+    private boolean switchedFromTransactionHistory = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,15 +73,18 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
         Bundle bundle = getArguments();
         context = getContext();
 
-        this.mVat = new BigDecimal(bundle.getString(Constants.VAT));
-        this.mAmount = new BigDecimal(bundle.getString(Constants.AMOUNT));
-        this.mDescription = bundle.getString(Constants.DESCRIPTION);
-        this.mTime = bundle.getString(Constants.TIME);
-        this.id = bundle.getLong(Constants.MONEY_REQUEST_ID);
-        this.status = bundle.getInt(Constants.STATUS);
-        this.mReceiverMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
-        this.mReceiverName = bundle.getString(Constants.NAME);
-        this.mPhotoUri = bundle.getString(Constants.PHOTO_URI);
+        mVat = new BigDecimal(bundle.getString(Constants.VAT));
+        mAmount = new BigDecimal(bundle.getString(Constants.AMOUNT));
+        mDescription = bundle.getString(Constants.DESCRIPTION);
+        mTime = bundle.getString(Constants.TIME);
+        mID = bundle.getLong(Constants.MONEY_REQUEST_ID);
+        status = bundle.getInt(Constants.STATUS);
+        mReceiverMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
+        mReceiverName = bundle.getString(Constants.NAME);
+        mPhotoUri = bundle.getString(Constants.PHOTO_URI);
+
+        switchedFromTransactionHistory = getActivity().getIntent()
+                .getBooleanExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, false);
 
         List<ItemList> temporaryItemList;
         temporaryItemList = bundle.getParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG);
@@ -138,7 +145,12 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
-                    ((InvoiceActivity) getActivity()).switchToInvoicesSentFragment();
+                    if (switchedFromTransactionHistory) {
+                        Intent intent = new Intent();
+                        getActivity().setResult(Activity.RESULT_OK, intent);
+                        getActivity().finish();
+                    } else
+                        ((InvoiceActivity) getActivity()).switchToInvoicesSentFragment();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -238,7 +250,7 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
 
                 descriptionTextView.setText(mDescription);
                 timeTextView.setText(mTime);
-                invoiceIDTextView.setText(String.valueOf(id));
+                invoiceIDTextView.setText(String.valueOf(mID));
             }
 
             public void bindViewForFooter() {
@@ -271,7 +283,7 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
                 mRejectButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showAlertDialogue(getString(R.string.cancel_payment_request_confirm), ACTION_CANCEL_REQUEST, id);
+                        showAlertDialogue(getString(R.string.cancel_payment_request_confirm), ACTION_CANCEL_REQUEST, mID);
                     }
                 });
             }

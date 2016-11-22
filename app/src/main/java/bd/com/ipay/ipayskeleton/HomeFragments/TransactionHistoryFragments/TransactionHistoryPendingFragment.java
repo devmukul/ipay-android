@@ -783,6 +783,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private void launchRequestPaymentReviewPage(TransactionHistoryClass transactionHistory) {
         Intent intent = new Intent(getActivity(), InvoiceActivity.class);
         intent.putExtra(Constants.REQUEST_ID, transactionHistory.getId());
+        intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
 
         startActivityForResult(intent, REQUEST_FOR_PAYEMENT_REVIEW_REQUEST);
     }

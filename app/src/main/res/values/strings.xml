@@ -588,6 +588,7 @@
     <string name="failed_add_friend">Add friend failed</string>
     <string name="failed_invite_friend">Invite friend failed</string>
     <string name="failed_update_friend">Update friend failed</string>
+    <string name="confirm_request_accept">Are you sure you want to accept this request?</string>
     <string name="confirm_request_rejection">Are you sure you want to reject this request?</string>
     <string name="contacts_sync_failed">Contacts Sync Failed</string>
     <string name="business_contacts_sync_failed">Fail to fetch business contacts</string>
