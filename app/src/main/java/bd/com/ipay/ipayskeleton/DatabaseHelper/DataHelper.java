@@ -197,7 +197,9 @@ public class DataHelper {
 
             String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_BUSINESS_ACCOUNTS
                     + " WHERE (" + DBConstants.KEY_BUSINESS_NAME + " LIKE '%" + query + "%'"
-                    + " OR " + DBConstants.KEY__BUSINESS_MOBILE_NUMBER + " LIKE '%" + query +"%')";
+                    + " OR " + DBConstants.KEY__BUSINESS_MOBILE_NUMBER + " LIKE '%"
+                    + query + "%'" + ")" + " ORDER BY " + DBConstants.KEY_BUSINESS_NAME
+                    + " COLLATE NOCASE";
 
             Log.w("Query", queryString);
 
@@ -205,7 +207,7 @@ public class DataHelper {
 
             if (cursor != null) {
                 cursor.getCount();
-                Log.w("Query", cursor.getCount()+"");
+                Log.w("Query", cursor.getCount() + "");
             }
         } catch (Exception e) {
             e.printStackTrace();
