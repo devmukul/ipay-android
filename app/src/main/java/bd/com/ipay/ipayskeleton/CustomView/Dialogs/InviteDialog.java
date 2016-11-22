@@ -111,8 +111,11 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
 
                     mMobileNumber = ContactEngine.formatMobileNumberBD(mobileNumberView.getText().toString());
                     mProgressDialog.setMessage(context.getResources().getString(R.string.progress_dialog_sending_invite));
+                    if (mRelationship != null)
+                        addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), mRelationship.toUpperCase());
+                    else
+                        addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), null);
 
-                    addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), mRelationship.toUpperCase());
                     Utilities.hideKeyboard(context, nameView);
                     Utilities.hideKeyboard(context, mobileNumberView);
 
@@ -154,11 +157,6 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
 
         if (!ContactEngine.isValidNumber(mobileNumber)) {
             mobileNumberView.setError(context.getResources().getString(R.string.error_invalid_mobile_number));
-            error = true;
-        }
-
-        if (mRelationship == null) {
-            mEditTextRelationship.setError(context.getResources().getString(R.string.please_enter_relationship));
             error = true;
         }
         return !error;

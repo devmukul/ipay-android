@@ -171,8 +171,10 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 if (verifyUserInputs()) {
                     mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_friend));
-
-                    addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), mRelationship.toUpperCase());
+                    if (mRelationship != null)
+                        addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), mRelationship.toUpperCase());
+                    else
+                        addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), null);
 
                     Utilities.hideKeyboard(getActivity(), nameView);
                     Utilities.hideKeyboard(getActivity(), mobileNumberView);
@@ -214,11 +216,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 
         if (!ContactEngine.isValidNumber(mobileNumber)) {
             mobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
-            error = true;
-        }
-
-        if (mRelationship == null) {
-            mEditTextRelationship.setError(getString(R.string.please_enter_relationship));
             error = true;
         }
         return !error;
