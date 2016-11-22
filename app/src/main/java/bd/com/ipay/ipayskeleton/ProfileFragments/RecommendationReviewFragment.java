@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -41,7 +40,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.ThanaRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
-import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RecommendationReviewFragment extends ProgressFragment implements HttpResponseListener {
 
@@ -63,7 +61,8 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     private String mFathersName = null;
     private String mMothersname = null;
     private AddressClass mAddress;
-    private boolean mIsInContacts;
+
+    private boolean isInContacts;
 
     private List<Thana> mThanaList;
     private List<District> mDistrictList;
@@ -97,7 +96,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
         mMothersname = bundle.getString(Constants.MOTHERS_NAME);
         mFathersName = bundle.getString(Constants.FATHERS_NAME);
         mAddress = (AddressClass) getArguments().getSerializable(Constants.ADDRESS);
-        mIsInContacts = bundle.getBoolean(Constants.IS_IN_CONTACTS, false);
+        isInContacts = bundle.getBoolean(Constants.IS_IN_CONTACTS, false);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mSenderNameView = (TextView) v.findViewById(R.id.textview_name);
@@ -129,7 +128,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
             mMothersNameView.setText(mMothersname);
         }
 
-        if (!mIsInContacts) {
+        if (!isInContacts) {
             mAddInContactsCheckBox.setVisibility(View.VISIBLE);
             mAddInContactsCheckBox.setChecked(true);
         }

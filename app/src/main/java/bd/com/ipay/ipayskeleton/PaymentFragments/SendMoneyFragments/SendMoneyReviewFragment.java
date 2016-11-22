@@ -57,7 +57,8 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     private String mPhotoUri;
     private String mDescription;
     private String mError_message;
-    private boolean mIsInContacts;
+
+    private boolean isInContacts;
 
     private LinearLayout mLinearLayoutDescriptionHolder;
     private ProfileImageView mProfileImageView;
@@ -82,7 +83,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
 
-        mIsInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
+        isInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
@@ -117,7 +118,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
         mAmountView.setText(Utilities.formatTaka(mAmount));
 
-        if (!mIsInContacts) {
+        if (!isInContacts) {
             mAddInContactsCheckBox.setVisibility(View.VISIBLE);
             mAddInContactsCheckBox.setChecked(true);
         }
