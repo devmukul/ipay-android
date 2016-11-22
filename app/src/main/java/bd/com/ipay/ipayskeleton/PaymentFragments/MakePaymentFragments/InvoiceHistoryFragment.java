@@ -364,18 +364,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                 mAcceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
-                        MaterialDialog.Builder acceptDialog = new MaterialDialog.Builder(getActivity());
-                        acceptDialog.content(R.string.confirm_request_accept);
-                        acceptDialog.positiveText(R.string.yes);
-                        acceptDialog.negativeText(R.string.no);
-                        acceptDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                attempAcceptPaymentRequestWithPinCheck();
-                            }
-                        });
-                        acceptDialog.show();
+                        attempAcceptPaymentRequestWithPinCheck();
                     }
                 });
 
