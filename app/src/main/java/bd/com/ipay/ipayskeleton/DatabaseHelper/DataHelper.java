@@ -88,7 +88,7 @@ public class DataHelper {
             try {
                 for (BusinessAccountEntry mBusinessAccountEntry : businessAccountEntries) {
                     ContentValues values = new ContentValues();
-                    values.put(DBConstants.KEY__BUSINESS_MOBILE_NUMBER, mBusinessAccountEntry.getMobileNumber());
+                    values.put(DBConstants.KEY_BUSINESS_MOBILE_NUMBER, mBusinessAccountEntry.getMobileNumber());
                     values.put(DBConstants.KEY_BUSINESS_NAME, mBusinessAccountEntry.getBusinessName());
                     values.put(DBConstants.BUSINESS_EMAIL, mBusinessAccountEntry.getEmail());
                     values.put(DBConstants.KEY_BUSINESS_TYPE, mBusinessAccountEntry.getBusinessType());
@@ -197,7 +197,7 @@ public class DataHelper {
 
             String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_BUSINESS_ACCOUNTS
                     + " WHERE (" + DBConstants.KEY_BUSINESS_NAME + " LIKE '%" + query + "%'"
-                    + " OR " + DBConstants.KEY__BUSINESS_MOBILE_NUMBER + " LIKE '%"
+                    + " OR " + DBConstants.KEY_BUSINESS_MOBILE_NUMBER + " LIKE '%"
                     + query + "%'" + ")" + " ORDER BY " + DBConstants.KEY_BUSINESS_NAME
                     + " COLLATE NOCASE";
 

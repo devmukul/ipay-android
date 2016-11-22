@@ -43,7 +43,7 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
         db.execSQL("create table if not exists " +
                 DBConstants.DB_TABLE_BUSINESS_ACCOUNTS +
                 "(_id integer primary key autoincrement, " +
-                DBConstants.KEY__BUSINESS_MOBILE_NUMBER + " text unique not null, " +
+                DBConstants.KEY_BUSINESS_MOBILE_NUMBER + " text unique not null, " +
                 DBConstants.KEY_BUSINESS_NAME + " text, " +
                 DBConstants.BUSINESS_EMAIL + " text, " +
                 DBConstants.KEY_BUSINESS_TYPE + " integer default 0, " +
