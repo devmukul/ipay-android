@@ -42,10 +42,10 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class InvoiceHistoryFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mAcceptPaymentTask = null;
-    private PaymentAcceptRejectOrCancelResponse mPaymentAcceptRejectOrCancelResponse;
+    private PaymentAcceptRejectOrCancelResponse mPaymentAcceptPaymentResponse;
 
     private HttpRequestPostAsyncTask mRejectRequestTask = null;
-    private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
+    private RequestMoneyAcceptRejectOrCancelResponse mPaymentRejectResponse;
 
     private LinearLayoutManager mLayoutManager;
     private RecyclerView mReviewRecyclerView;
@@ -202,10 +202,10 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
         if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST)) {
 
             try {
-                mPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                mPaymentAcceptPaymentResponse = gson.fromJson(result.getJsonString(),
                         PaymentAcceptRejectOrCancelResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
+                    String message = mPaymentAcceptPaymentResponse.getMessage();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
@@ -219,7 +219,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
 
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), mPaymentAcceptPaymentResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -232,10 +232,10 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
         } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
 
             try {
-                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                mPaymentRejectResponse = gson.fromJson(result.getJsonString(),
                         RequestMoneyAcceptRejectOrCancelResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
+                    String message = mPaymentRejectResponse.getMessage();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
@@ -249,7 +249,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
 
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), mPaymentRejectResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

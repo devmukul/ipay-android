@@ -42,7 +42,7 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
     private final int ACTION_CANCEL_REQUEST = 0;
 
     private HttpRequestPostAsyncTask mCancelPaymentRequestTask = null;
-    private PaymentAcceptRejectOrCancelResponse mPaymentAcceptRejectOrCancelResponse;
+    private PaymentAcceptRejectOrCancelResponse mPaymentCancelResponse;
 
     private ProgressDialog mProgressDialog;
     private RecyclerView mReviewRecyclerView;
@@ -139,9 +139,9 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 try {
-                    mPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                    mPaymentCancelResponse = gson.fromJson(result.getJsonString(),
                             PaymentAcceptRejectOrCancelResponse.class);
-                    String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
+                    String message = mPaymentCancelResponse.getMessage();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
