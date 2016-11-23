@@ -32,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestTrustedDevice;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponseTrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -224,7 +225,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                 String message = mLoginResponseModel.getMessage();
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    pref.edit().putBoolean(Constants.LOGGED_IN, true).apply();
+                    ProfileInfoCacheManager.setLoggedInOutPref(true);
                     pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).apply();
 
                     if (mLoginResponseModel.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE)
