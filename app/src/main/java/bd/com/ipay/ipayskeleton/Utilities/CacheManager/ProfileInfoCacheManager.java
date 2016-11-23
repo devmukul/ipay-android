@@ -72,11 +72,11 @@ public class ProfileInfoCacheManager {
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
-    public static void setLoggedInOutStatus(boolean loggedIn) {
+    public static void setLoggedInStatus(boolean loggedIn) {
         pref.edit().putBoolean(Constants.LOGGED_IN, loggedIn).apply();
     }
 
-    public static boolean getLoggedInOutStatus(boolean defaultValue) {
+    public static boolean getLoggedInStatus(boolean defaultValue) {
         boolean loggedIn = pref.getBoolean(Constants.LOGGED_IN, defaultValue);
         return loggedIn;
     }

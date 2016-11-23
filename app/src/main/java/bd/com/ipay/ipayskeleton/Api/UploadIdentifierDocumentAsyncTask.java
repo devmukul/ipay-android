@@ -89,7 +89,7 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Htt
         if (result != null) {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
                 // Set the preference first
-                ProfileInfoCacheManager.setLoggedInOutStatus(false);
+                ProfileInfoCacheManager.setLoggedInStatus(false);
 
                 // In case of un-authorization go to login activity
                 Intent intent = new Intent(mContext, SignupOrLoginActivity.class);

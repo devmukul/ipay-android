@@ -121,7 +121,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         String json = gson.toJson(mLogoutModel);
 
         // Set the preference
-        ProfileInfoCacheManager.setLoggedInOutStatus(false);
+        ProfileInfoCacheManager.setLoggedInStatus(false);
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT_from_all_device, json, getActivity());

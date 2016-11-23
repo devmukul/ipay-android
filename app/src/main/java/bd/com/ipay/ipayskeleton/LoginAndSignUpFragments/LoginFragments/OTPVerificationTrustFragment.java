@@ -225,7 +225,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                 String message = mLoginResponseModel.getMessage();
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    ProfileInfoCacheManager.setLoggedInOutStatus(true);
+                    ProfileInfoCacheManager.setLoggedInStatus(true);
 
                     pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).apply();
 

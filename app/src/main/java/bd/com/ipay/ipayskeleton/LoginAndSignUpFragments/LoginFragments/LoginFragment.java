@@ -266,7 +266,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                 mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    ProfileInfoCacheManager.setLoggedInOutStatus(true);
+                    ProfileInfoCacheManager.setLoggedInStatus(true);
 
                     SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
                     pref.edit().putString(Constants.USERID, mUserNameLogin).apply();

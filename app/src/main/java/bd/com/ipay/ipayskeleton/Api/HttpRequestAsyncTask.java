@@ -159,11 +159,11 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
                         TokenManager.setTokenTimer(null);
                     }
 
-                    boolean loggedIn = ProfileInfoCacheManager.getLoggedInOutStatus(true);
+                    boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
 
                     if (loggedIn) {
                         // Set the preference first
-                        ProfileInfoCacheManager.setLoggedInOutStatus(false);
+                        ProfileInfoCacheManager.setLoggedInStatus(false);
 
                         // Switch back to login activity because the user is unauthorized
                         Intent intent = new Intent(mContext, SignupOrLoginActivity.class);
