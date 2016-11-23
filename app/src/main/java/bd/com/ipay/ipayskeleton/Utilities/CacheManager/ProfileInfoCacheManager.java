@@ -71,5 +71,15 @@ public class ProfileInfoCacheManager {
         Intent intent = new Intent(Constants.PROFILE_INFO_UPDATE_BROADCAST);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
+
+    public static void setLoggedInStatus(boolean loggedIn) {
+        pref.edit().putBoolean(Constants.LOGGED_IN, loggedIn).apply();
+    }
+
+    public static boolean getLoggedInStatus(boolean defaultValue) {
+        boolean loggedIn = pref.getBoolean(Constants.LOGGED_IN, defaultValue);
+        return loggedIn;
+    }
+
 }
 

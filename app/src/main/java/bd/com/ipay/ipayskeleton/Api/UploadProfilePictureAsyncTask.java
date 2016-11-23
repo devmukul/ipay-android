@@ -1,9 +1,7 @@
 package bd.com.ipay.ipayskeleton.Api;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -21,6 +19,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -37,7 +36,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, HttpRes
         this.imagePath = imagePath;
         this.API_COMMAND = API_COMMAND;
     }
-    
+
     @Override
     protected HttpResponseObject doInBackground(Void... params) {
 
@@ -65,9 +64,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, HttpRes
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
                 // Set the preference first
-                SharedPreferences pref;
-                pref = mContext.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
+                ProfileInfoCacheManager.setLoggedInStatus(false);
 
                 // In case of un-authorization go to login activity
                 Intent intent = new Intent(mContext, SignupOrLoginActivity.class);

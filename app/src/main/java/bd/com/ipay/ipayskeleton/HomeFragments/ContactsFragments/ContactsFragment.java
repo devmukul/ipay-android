@@ -84,7 +84,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     // So saving these in these two variables.
     private String mSelectedName;
     private String mSelectedNumber;
-    private String mInvite_message;
+    private String mInviteMessage;
 
     private View mSheetViewNonIpayMember;
     private View mSheetViewIpayMember;
@@ -428,12 +428,12 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                         mBottomSheetLayout.dismissSheet();
                     }
 
-                    mInvite_message = getString(R.string.are_you_sure_to_invite);
+                    mInviteMessage = getString(R.string.are_you_sure_to_invite);
                     if (!mSelectedName.isEmpty())
-                        mInvite_message = mInvite_message.replace(getString(R.string.this_person), mSelectedName);
+                        mInviteMessage = mInviteMessage.replace(getString(R.string.this_person), mSelectedName);
 
                     new android.app.AlertDialog.Builder(getActivity())
-                            .setMessage(mInvite_message)
+                            .setMessage(mInviteMessage)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     sendInvite(mSelectedNumber);
@@ -781,12 +781,12 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                             else setSelectedName(name);
                             setSelectedNumber(mobileNumber);
 
-                            mInvite_message = getString(R.string.are_you_sure_to_invite);
+                            mInviteMessage = getString(R.string.are_you_sure_to_invite);
                             if (!name.isEmpty())
-                                mInvite_message = mInvite_message.replace(getString(R.string.this_person), name);
+                                mInviteMessage = mInviteMessage.replace(getString(R.string.this_person), name);
 
                             new android.app.AlertDialog.Builder(getActivity())
-                                    .setMessage(mInvite_message)
+                                    .setMessage(mInviteMessage)
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             sendInvite(mobileNumber);

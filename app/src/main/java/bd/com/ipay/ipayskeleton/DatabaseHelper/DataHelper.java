@@ -88,7 +88,7 @@ public class DataHelper {
             try {
                 for (BusinessAccountEntry mBusinessAccountEntry : businessAccountEntries) {
                     ContentValues values = new ContentValues();
-                    values.put(DBConstants.KEY__BUSINESS_MOBILE_NUMBER, mBusinessAccountEntry.getMobileNumber());
+                    values.put(DBConstants.KEY_BUSINESS_MOBILE_NUMBER, mBusinessAccountEntry.getMobileNumber());
                     values.put(DBConstants.KEY_BUSINESS_NAME, mBusinessAccountEntry.getBusinessName());
                     values.put(DBConstants.BUSINESS_EMAIL, mBusinessAccountEntry.getEmail());
                     values.put(DBConstants.KEY_BUSINESS_TYPE, mBusinessAccountEntry.getBusinessType());
@@ -175,7 +175,8 @@ public class DataHelper {
                     + " ELSE "
                     + DBConstants.KEY_ORIGINAL_NAME + " END COLLATE NOCASE";
 
-            Log.w("Query", queryString);
+            if (Constants.DEBUG)
+                Log.w("Query", queryString);
 
             cursor = db.rawQuery(queryString, null);
 
@@ -197,15 +198,19 @@ public class DataHelper {
 
             String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_BUSINESS_ACCOUNTS
                     + " WHERE (" + DBConstants.KEY_BUSINESS_NAME + " LIKE '%" + query + "%'"
-                    + " OR " + DBConstants.KEY__BUSINESS_MOBILE_NUMBER + " LIKE '%" + query +"%')";
+                    + " OR " + DBConstants.KEY_BUSINESS_MOBILE_NUMBER + " LIKE '%"
+                    + query + "%'" + ")" + " ORDER BY " + DBConstants.KEY_BUSINESS_NAME
+                    + " COLLATE NOCASE";
 
-            Log.w("Query", queryString);
+            if (Constants.DEBUG)
+                Log.w("Query", queryString);
 
             cursor = db.rawQuery(queryString, null);
 
             if (cursor != null) {
                 cursor.getCount();
-                Log.w("Query", cursor.getCount()+"");
+                if (Constants.DEBUG)
+                    Log.w("Query", cursor.getCount() + "");
             }
         } catch (Exception e) {
             e.printStackTrace();

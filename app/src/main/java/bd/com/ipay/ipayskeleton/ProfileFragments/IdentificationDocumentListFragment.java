@@ -96,7 +96,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             R.string.business_tin,
             R.string.trade_license,
             R.string.vat_registration_certificate
-
     };
 
     private static final int ACTION_UPLOAD_DOCUMENT = 100;
@@ -191,7 +190,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         mFileName = temp[temp.length - 1];
                         documentPreviewBindViewHolderList.get(mSelectedItemId).setmSelectedfilePath(mFileName);
                         mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent);
-                        Log.w("Loading document", mSelectedItemId + " " + mSelectedDocumentUri.toString());
+                        if (Constants.DEBUG)
+                            Log.w("Loading document", mSelectedItemId + " " + mSelectedDocumentUri.toString());
+
                         documentPreviewBindViewHolderList.get(mSelectedItemId).setmSelectedDocumentUri(mSelectedDocumentUri);
                         mDocumentListAdapter.notifyDataSetChanged();
                         mSelectedItemId = -1;
@@ -319,8 +320,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mProgressDialog.show();
 
         String selectedOImagePath = documentPreviewBindViewHolderList.get(mID).getmSelectedDocumentUri().getPath();
-        Log.w("Loading document", mDocumentID + " " + mID + " " + selectedOImagePath + " " + mDocumentType);
 
+        if (Constants.DEBUG)
+            Log.w("Loading document", mDocumentID + " " + mID + " " + selectedOImagePath + " " + mDocumentType);
 
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(

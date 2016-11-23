@@ -35,7 +35,10 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
 
     private EditText nameView;
     private EditText mobileNumberView;
+
+    private String mName;
     private String mMobileNumber;
+    private String mRelationship;
 
     private final Context context;
     private ProgressDialog mProgressDialog;
@@ -47,9 +50,6 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
     private EditText mEditTextRelationship;
     private CustomSelectorDialog mCustomSelectorDialog;
     private List<String> mRelationshipList;
-
-    private String mRelationship;
-    private int mSelectedRelationId = -1;
 
     private FinishCheckerListener mFinishCheckerListener;
 
@@ -99,7 +99,6 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
             public void onResourceSelected(int selectedIndex, String mRelation) {
                 mEditTextRelationship.setError(null);
                 mEditTextRelationship.setText(mRelation);
-                mSelectedRelationId = selectedIndex;
                 mRelationship = mRelation;
             }
         });
@@ -108,11 +107,15 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 if (verifyUserInputs()) {
-
+                    mName = nameView.getText().toString();
                     mMobileNumber = ContactEngine.formatMobileNumberBD(mobileNumberView.getText().toString());
                     mProgressDialog.setMessage(context.getResources().getString(R.string.progress_dialog_sending_invite));
 
-                    addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), mRelationship.toUpperCase());
+                    if (mRelationship != null)
+                        mRelationship = mRelationship.toUpperCase();
+
+                    addFriend(mName, mMobileNumber, mRelationship);
+
                     Utilities.hideKeyboard(context, nameView);
                     Utilities.hideKeyboard(context, mobileNumberView);
 
@@ -147,18 +150,10 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
         if (name.isEmpty()) {
             nameView.setError(context.getResources().getString(R.string.error_invalid_name));
             error = true;
-        } else if (!InputValidator.isValidName(name)) {
-            nameView.setError(context.getResources().getString(R.string.please_enter_valid_name));
-            error = true;
         }
 
         if (!ContactEngine.isValidNumber(mobileNumber)) {
             mobileNumberView.setError(context.getResources().getString(R.string.error_invalid_mobile_number));
-            error = true;
-        }
-
-        if (mRelationship == null) {
-            mEditTextRelationship.setError(context.getResources().getString(R.string.please_enter_relationship));
             error = true;
         }
         return !error;

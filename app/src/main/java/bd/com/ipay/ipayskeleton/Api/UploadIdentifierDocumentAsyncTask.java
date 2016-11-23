@@ -1,9 +1,7 @@
 package bd.com.ipay.ipayskeleton.Api;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,6 +21,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -63,7 +62,8 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Htt
     @Override
     protected HttpResponseObject doInBackground(Void... params) {
 
-        Log.w("Document Upload", "Started");
+        if (Constants.DEBUG)
+            Log.w("Document Upload", "Started");
 
         HttpResponseObject mHttpResponseObject = new HttpResponseObject();
 
@@ -72,7 +72,8 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Htt
         else
             Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG).show();
 
-        Log.w("Document Upload", "Finished");
+        if (Constants.DEBUG)
+            Log.w("Document Upload", "Finished");
 
         return mHttpResponseObject;
     }
@@ -88,9 +89,7 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Htt
         if (result != null) {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
                 // Set the preference first
-                SharedPreferences pref;
-                pref = mContext.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
+                ProfileInfoCacheManager.setLoggedInStatus(false);
 
                 // In case of un-authorization go to login activity
                 Intent intent = new Intent(mContext, SignupOrLoginActivity.class);
