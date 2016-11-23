@@ -212,9 +212,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         if (name.isEmpty()) {
             nameView.setError(getString(R.string.error_invalid_name));
             error = true;
-        } else if (!InputValidator.isValidName(name)) {
-            nameView.setError(getString(R.string.please_enter_valid_name));
-            error = true;
         }
 
         if (!ContactEngine.isValidNumber(mobileNumber)) {

@@ -150,9 +150,6 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
         if (name.isEmpty()) {
             nameView.setError(context.getResources().getString(R.string.error_invalid_name));
             error = true;
-        } else if (!InputValidator.isValidName(name)) {
-            nameView.setError(context.getResources().getString(R.string.please_enter_valid_name));
-            error = true;
         }
 
         if (!ContactEngine.isValidNumber(mobileNumber)) {
