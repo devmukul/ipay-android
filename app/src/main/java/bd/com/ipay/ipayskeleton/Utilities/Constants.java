@@ -311,8 +311,8 @@ public class Constants {
     public static final String URL_CHANGE_PASSWORD = "settings/password";
     public static final String URL_SEND_OTP_FORGET_PASSWORD = "settings/password/forget";
     public static final String URL_CONFIRM_OTP_FORGET_PASSWORD = "settings/password/forget/confirmation";
-    public static final String URL_GET_SECURITY_QUESTIONS = "/settings/security/questions";
-    public static final String URL_SET_SECURITY_ANSWERS = "/settings/security/answers";
+    public static final String URL_GET_SECURITY_QUESTIONS = "settings/security/questions";
+    public static final String URL_SET_SECURITY_ANSWERS = "settings/security/answers";
 
     public static final String URL_GET_PIN_INFO = "settings/pin";
     public static final String URL_SET_PIN = "settings/pin";
@@ -343,7 +343,8 @@ public class Constants {
     // SM Reports REST
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";
     public static final String URL_TRANSACTION_HISTORY_SINGLE = "report/transactions/single";
-    public static final String URL_TRANSACTION_HISTORY_PENDING = "/report/pending-transactions";
+    public static final String URL_TRANSACTION_HISTORY_COMPLETED = "report/completed-transactions";
+    public static final String URL_TRANSACTION_HISTORY_PENDING = "report/pending-transactions";
 
     // SM User Rest
     public static final String URL_REFRESH_BALANCE = "user/balance";
