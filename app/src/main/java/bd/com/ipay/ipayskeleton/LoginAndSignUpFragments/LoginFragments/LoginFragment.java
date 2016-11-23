@@ -266,8 +266,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                 mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
                     ProfileInfoCacheManager.setLoggedInOutPref(true);
+                    SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
                     pref.edit().putString(Constants.USERID, mUserNameLogin).apply();
                     pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).apply();
                     // When user logs in, we want that by default he would log in to his default account
