@@ -1,9 +1,7 @@
 package bd.com.ipay.ipayskeleton.Api;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -31,6 +29,7 @@ import java.util.Arrays;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -160,13 +159,11 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
                         TokenManager.setTokenTimer(null);
                     }
 
-                    SharedPreferences pref;
-                    pref = mContext.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                    boolean loggedIn = pref.getBoolean(Constants.LOGGED_IN, true);
+                    boolean loggedIn = ProfileInfoCacheManager.getLoggedInOutStatus(true);
 
                     if (loggedIn) {
                         // Set the preference first
-                        pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
+                        ProfileInfoCacheManager.setLoggedInOutStatus(false);
 
                         // Switch back to login activity because the user is unauthorized
                         Intent intent = new Intent(mContext, SignupOrLoginActivity.class);

@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -62,8 +61,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         if (Constants.DEBUG)
             Log.w("Push Found", "From: " + from + ", data: " + data);
 
-        SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, MODE_PRIVATE);
-        boolean isLoggedIn = pref.getBoolean(Constants.LOGGED_IN, false);
+        boolean isLoggedIn = ProfileInfoCacheManager.getLoggedInOutStatus(false);
 
         tag = data.getString(Constants.PUSH_NOTIFICATION_EVENT);
 

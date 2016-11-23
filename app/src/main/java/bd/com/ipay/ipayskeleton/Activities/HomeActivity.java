@@ -474,9 +474,7 @@ public class HomeActivity extends BaseActivity
             if (Utilities.isConnectionAvailable(HomeActivity.this))
                 attemptLogout();
             else {
-                SharedPreferences pref;
-                pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
+                ProfileInfoCacheManager.setLoggedInOutStatus(false);
 
                 finish();
                 Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
@@ -504,9 +502,7 @@ public class HomeActivity extends BaseActivity
                                 exitFromApplication = true;
                                 attemptLogout();
                             } else {
-                                SharedPreferences pref;
-                                pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                                pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
+                                ProfileInfoCacheManager.setLoggedInOutStatus(false);
 
                                 finish();
                             }
@@ -540,7 +536,7 @@ public class HomeActivity extends BaseActivity
         String json = gson.toJson(mLogoutModel);
 
         // Set the preference
-        pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
+        ProfileInfoCacheManager.setLoggedInOutStatus(false);
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, HomeActivity.this);
