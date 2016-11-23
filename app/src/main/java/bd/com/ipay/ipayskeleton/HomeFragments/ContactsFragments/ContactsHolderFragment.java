@@ -68,9 +68,10 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     private CustomSelectorDialog mCustomSelectorDialog;
     private List<String> mRelationshipList;
 
+    private String mName;
+    private String mMobileNumber;
     private String mRelationship;
-    private int mSelectedRelationId = -1;
-    private boolean isViewShown = false;
+
     private View v;
 
     @Override
@@ -161,7 +162,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             public void onResourceSelected(int selectedIndex, String mRelation) {
                 mEditTextRelationship.setError(null);
                 mEditTextRelationship.setText(mRelation);
-                mSelectedRelationId = selectedIndex;
                 mRelationship = mRelation;
             }
         });
@@ -170,12 +170,14 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 if (verifyUserInputs()) {
+                    mName = nameView.getText().toString();
+                    mMobileNumber = mobileNumberView.getText().toString();
                     mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_friend));
 
                     if (mRelationship != null)
                         mRelationship = mRelationship.toUpperCase();
 
-                    addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), mRelationship);
+                    addFriend(mName, mMobileNumber, mRelationship);
 
                     Utilities.hideKeyboard(getActivity(), nameView);
                     Utilities.hideKeyboard(getActivity(), mobileNumberView);
