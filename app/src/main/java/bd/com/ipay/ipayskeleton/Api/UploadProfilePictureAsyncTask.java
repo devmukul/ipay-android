@@ -37,7 +37,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, HttpRes
         this.imagePath = imagePath;
         this.API_COMMAND = API_COMMAND;
     }
-    
+
     @Override
     protected HttpResponseObject doInBackground(Void... params) {
 

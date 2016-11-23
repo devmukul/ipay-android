@@ -63,7 +63,8 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Htt
     @Override
     protected HttpResponseObject doInBackground(Void... params) {
 
-        Log.w("Document Upload", "Started");
+        if (Constants.DEBUG)
+            Log.w("Document Upload", "Started");
 
         HttpResponseObject mHttpResponseObject = new HttpResponseObject();
 
@@ -72,7 +73,8 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Htt
         else
             Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG).show();
 
-        Log.w("Document Upload", "Finished");
+        if (Constants.DEBUG)
+            Log.w("Document Upload", "Finished");
 
         return mHttpResponseObject;
     }

@@ -111,6 +111,7 @@ public class HomeActivity extends BaseActivity
     private int savedCriticalPreferenceVersion;
 
     private static boolean switchedToHomeFragment = true;
+    private boolean exitFromApplication = false;
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -365,7 +366,8 @@ public class HomeActivity extends BaseActivity
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
                 for (int i = 0; i < permissions.length; i++) {
-                    Log.w(permissions[i], grantResults[i] + "");
+                    if (Constants.DEBUG)
+                        Log.w(permissions[i], grantResults[i] + "");
 
                     if (permissions[i].equals(Manifest.permission.READ_CONTACTS)) {
                         if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
@@ -498,7 +500,16 @@ public class HomeActivity extends BaseActivity
                     .setMessage(R.string.are_you_sure_to_exit)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            finish();
+                            if (Utilities.isConnectionAvailable(HomeActivity.this)) {
+                                exitFromApplication = true;
+                                attemptLogout();
+                            } else {
+                                SharedPreferences pref;
+                                pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                                pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
+
+                                finish();
+                            }
                         }
                     })
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -607,8 +618,10 @@ public class HomeActivity extends BaseActivity
                             TokenManager.getTokenTimer().cancel();
 
                         finish();
-                        Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
-                        startActivity(intent);
+                        if (!exitFromApplication) {
+                            Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
+                            startActivity(intent);
+                        }
                     } else {
                         Toast.makeText(HomeActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }

@@ -51,7 +51,8 @@ public class HttpResponseObject {
 
     private String getHeaderValue(String headerName) {
         for (Header header : headers) {
-            Log.w(header.getName(), header.getValue());
+            if (Constants.DEBUG)
+                Log.w(header.getName(), header.getValue());
             if (header.getName().equals(headerName))
                 return header.getValue();
         }
