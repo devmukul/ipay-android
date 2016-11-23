@@ -111,10 +111,11 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
 
                     mMobileNumber = ContactEngine.formatMobileNumberBD(mobileNumberView.getText().toString());
                     mProgressDialog.setMessage(context.getResources().getString(R.string.progress_dialog_sending_invite));
+
                     if (mRelationship != null)
-                        addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), mRelationship.toUpperCase());
-                    else
-                        addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), null);
+                        mRelationship = mRelationship.toUpperCase();
+
+                    addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), mRelationship);
 
                     Utilities.hideKeyboard(context, nameView);
                     Utilities.hideKeyboard(context, mobileNumberView);
