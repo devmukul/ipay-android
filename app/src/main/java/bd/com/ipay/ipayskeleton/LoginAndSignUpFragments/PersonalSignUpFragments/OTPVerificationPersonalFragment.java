@@ -33,7 +33,6 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponsePersona
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.SignupRequestPersonal;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.SignupResponsePersonal;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -314,7 +313,8 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     String message = mLoginResponseModel.getMessage();
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        ProfileInfoCacheManager.setLoggedInOutPref(true);
+                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                        pref.edit().putBoolean(Constants.LOGGED_IN, true).apply();
                         ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
                     } else {

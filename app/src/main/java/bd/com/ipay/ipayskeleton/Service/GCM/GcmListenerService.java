@@ -62,7 +62,8 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         if (Constants.DEBUG)
             Log.w("Push Found", "From: " + from + ", data: " + data);
 
-        boolean isLoggedIn = ProfileInfoCacheManager.getLoggedInOutPref();
+        SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, MODE_PRIVATE);
+        boolean isLoggedIn = pref.getBoolean(Constants.LOGGED_IN, false);
 
         tag = data.getString(Constants.PUSH_NOTIFICATION_EVENT);
 

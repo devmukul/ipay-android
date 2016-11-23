@@ -74,10 +74,12 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
             if (!((Activity) context).isFinishing()) {
                 if (Utilities.isConnectionAvailable(context)) attemptLogout();
                 else {
-                    boolean loggedIn = ProfileInfoCacheManager.getLoggedInOutPref();
+                    SharedPreferences pref;
+                    pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                    boolean loggedIn = pref.getBoolean(Constants.LOGGED_IN, true);
 
                     if (loggedIn) {
-                        ProfileInfoCacheManager.setLoggedInOutPref(false);
+                        pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
 
                         Intent intent = new Intent(context, SignupOrLoginActivity.class);
                         startActivity(intent);
@@ -149,7 +151,8 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
 
-        ProfileInfoCacheManager.setLoggedInOutPref(false);
+        // Set the preference
+        pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, context);
