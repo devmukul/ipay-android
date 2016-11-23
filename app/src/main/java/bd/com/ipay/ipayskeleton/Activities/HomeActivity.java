@@ -618,6 +618,7 @@ public class HomeActivity extends BaseActivity
                             TokenManager.getTokenTimer().cancel();
 
                         finish();
+
                         if (!exitFromApplication) {
                             Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
                             startActivity(intent);
