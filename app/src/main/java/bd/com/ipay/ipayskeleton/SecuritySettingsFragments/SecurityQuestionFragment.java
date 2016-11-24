@@ -31,7 +31,7 @@ import bd.com.ipay.ipayskeleton.Model.Security.GetAllSecurityQuestionRequestBuil
 import bd.com.ipay.ipayskeleton.Model.Security.GetAllSecurityQuestionResponse;
 import bd.com.ipay.ipayskeleton.Model.Security.GetPreviousSelectedSecurityQuestionResponse;
 import bd.com.ipay.ipayskeleton.Model.Security.GetPreviousSelectedSecurityQuestionRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.Security.SecurityAnswerClass;
+import bd.com.ipay.ipayskeleton.Model.Security.SetSecurityAnswerClass;
 import bd.com.ipay.ipayskeleton.Model.Security.SecurityQuestionValidationClass;
 import bd.com.ipay.ipayskeleton.Model.Security.SelectedSecurityQuestionClass;
 import bd.com.ipay.ipayskeleton.Model.Security.SetSecurityAnswerRequest;
@@ -57,7 +57,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
     private SecurityQuestionAdapter mSecurityQuestionAnswerAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private List<SecurityAnswerClass> mSecurityAnswerClassList;
+    private List<SetSecurityAnswerClass> mSetSecurityAnswerClassList;
     private List<String> mSecurityQuestionClassList, mTempSecurityQuestionClassList;
     private List<SelectedSecurityQuestionClass> mPreviousQuestionClassList;
     private List<SecurityQuestionValidationClass> mSecurityQuestionAnswerValidationClassList;
@@ -130,16 +130,16 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
 
     private void setSecurityQuestionAnswerList() {
         mSecurityQuestionAnswerValidationClassList = new ArrayList<>();
-        mSecurityAnswerClassList = new ArrayList<>();
+        mSetSecurityAnswerClassList = new ArrayList<>();
 
 
         for (int mIndex = 0; mIndex < mRequiredQuestions; mIndex++) {
             mSecurityQuestionAnswerValidationClassList.add(new SecurityQuestionValidationClass());
-            mSecurityAnswerClassList.add(new SecurityAnswerClass());
+            mSetSecurityAnswerClassList.add(new SetSecurityAnswerClass());
         }
 
         mSecurityQuesRecyclerView.setAdapter(mSecurityQuestionAnswerAdapter);
-        mSecurityQuestionAnswerAdapter.notifyDataSetChanged();
+        //mSecurityQuestionAnswerAdapter.notifyDataSetChanged();
     }
 
     private void setPreviousSecurityQuestion() {
@@ -147,8 +147,9 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
 
         for (int mIndex = 0; mIndex < minLength; mIndex++) {
 
-            mSecurityQuestionAnswerValidationClassList.add(new SecurityQuestionValidationClass());
-            mSecurityAnswerClassList.add(new SecurityAnswerClass());
+            mSecurityQuestionAnswerValidationClassList.get(mIndex).setQuestion(mPreviousQuestionClassList.get(mIndex).getQuestion());
+            mSecurityQuestionAnswerValidationClassList.get(mIndex).setQuestionAvailable(true);
+            mSecurityQuestionAnswerValidationClassList.get(mIndex).setAnswerAvailable(true);
         }
 
         mSecurityQuesRecyclerView.setAdapter(mSecurityQuestionAnswerAdapter);
@@ -163,7 +164,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
                 mSecurityQuestionAnswerValidationClassList.get(mIndex).setQuestionAvailable(false);
 
             }
-            if (mSecurityAnswerClassList.get(mIndex).getAnswer() == null) {
+            if (mSetSecurityAnswerClassList.get(mIndex).getAnswer() == null) {
                 isValid = false;
                 mSecurityQuestionAnswerValidationClassList.get(mIndex).setAnswerAvailable(false);
             }
@@ -179,7 +180,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
         mProgressDialog.setMessage(getString(R.string.set_security_answer));
         mProgressDialog.show();
 
-        SetSecurityAnswerRequest setSecurityAnswerRequest = new SetSecurityAnswerRequest(mSecurityAnswerClassList, password);
+        SetSecurityAnswerRequest setSecurityAnswerRequest = new SetSecurityAnswerRequest(mSetSecurityAnswerClassList, password);
         Gson gson = new Gson();
         String json = gson.toJson(setSecurityAnswerRequest, SetSecurityAnswerRequest.class);
         mSetSecurityAnswerTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_SECURITY_ANSWERS,
@@ -191,11 +192,11 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
     private List<String> removeOtherSelectedQuestions(int index) {
         List<String> selectedOtherQuestionList = new ArrayList<>();
 
-        for (int i = 0; i < mSecurityAnswerClassList.size(); i++) {
+        for (int i = 0; i < mSetSecurityAnswerClassList.size(); i++) {
             if (i != index) {
                 for (String securityQuestion : mSecurityQuestionClassList)
-                    if (mSecurityAnswerClassList.get(i).getQuestion() != null &&
-                            mSecurityAnswerClassList.get(i).getQuestion().equals(securityQuestion)) {
+                    if (mSetSecurityAnswerClassList.get(i).getQuestion() != null &&
+                            mSetSecurityAnswerClassList.get(i).getQuestion().equals(securityQuestion)) {
                         selectedOtherQuestionList.add(securityQuestion);
                     }
             }
@@ -259,7 +260,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
                     mPreviousSelectedSecurityQuestionResponse = gson.fromJson(result.getJsonString(), GetPreviousSelectedSecurityQuestionResponse.class);
                     mPreviousQuestionClassList = mPreviousSelectedSecurityQuestionResponse.getList();
                     if (mPreviousQuestionClassList != null || !mPreviousQuestionClassList.isEmpty())
-                        setSecurityQuestionAnswerList();
+                        setPreviousSecurityQuestion();
                     else mEmptyListTextView.setVisibility(View.VISIBLE);
 
                     setContentShown(true);
@@ -340,8 +341,8 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
                 if (mSecurityQuestionAnswerValidationClassList.get(pos).getQuestion() != null)
                     mQuestionEditText.setText(mSecurityQuestionAnswerValidationClassList.get(pos).getQuestion());
 
-                if (mSecurityAnswerClassList.get(pos).getAnswer() != null)
-                    mAnswerEditText.setText(mSecurityAnswerClassList.get(pos).getAnswer());
+                if (mSetSecurityAnswerClassList.get(pos).getAnswer() != null)
+                    mAnswerEditText.setText(mSetSecurityAnswerClassList.get(pos).getAnswer());
                 else
                     mAnswerEditText.setText("");
 
@@ -357,7 +358,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
                                         mSecurityQuestionAnswerValidationClassList.get(position).setQuestion(question);
                                         mSecurityQuestionAnswerValidationClassList.get(position).setQuestionAvailable(true);
 
-                                        mSecurityAnswerClassList.get(position).setQuestion(question);
+                                        mSetSecurityAnswerClassList.get(position).setQuestion(question);
                                         mSecurityQuestionAnswerAdapter.notifyDataSetChanged();
                                     }
                                 });
@@ -488,7 +489,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
 
             public void afterTextChanged(Editable editable) {
                 if (editable.length() > 0) {
-                    mSecurityAnswerClassList.get(position).setAnswer(editable.toString());
+                    mSetSecurityAnswerClassList.get(position).setAnswer(editable.toString());
                     mSecurityQuestionAnswerValidationClassList.get(position).setAnswerAvailable(true);
                 }
 
