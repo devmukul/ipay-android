@@ -192,11 +192,11 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
     private List<String> removeOtherSelectedQuestions(int index) {
         List<String> selectedOtherQuestionList = new ArrayList<>();
 
-        for (int i = 0; i < mSetSecurityAnswerClassList.size(); i++) {
+        for (int i = 0; i < mSecurityQuestionAnswerValidationClassList.size(); i++) {
             if (i != index) {
                 for (String securityQuestion : mSecurityQuestionClassList)
-                    if (mSetSecurityAnswerClassList.get(i).getQuestion() != null &&
-                            mSetSecurityAnswerClassList.get(i).getQuestion().equals(securityQuestion)) {
+                    if (mSecurityQuestionAnswerValidationClassList.get(i).getQuestion() != null &&
+                            mSecurityQuestionAnswerValidationClassList.get(i).getQuestion().equals(securityQuestion)) {
                         selectedOtherQuestionList.add(securityQuestion);
                     }
             }

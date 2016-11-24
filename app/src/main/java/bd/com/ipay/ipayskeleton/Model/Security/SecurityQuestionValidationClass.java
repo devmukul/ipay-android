@@ -1,7 +1,9 @@
 package bd.com.ipay.ipayskeleton.Model.Security;
 
 public class SecurityQuestionValidationClass {
+    private int id;
     private String question;
+    private String answer;
     private boolean isQuestionAvailable = true;
     private boolean isAnswerAvailable = true;
 
