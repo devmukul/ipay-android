@@ -142,8 +142,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
             return;
         }
 
-        SharedPreferences pref;
-        pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         String mUserID = ProfileInfoCacheManager.getMobileNumber();
 
         LogoutRequest mLogoutModel = new LogoutRequest(mUserID);
