@@ -121,6 +121,7 @@ public class TransactionDetailsFragment extends Fragment {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                mAddInContactsButton.setVisibility(View.GONE);
                                 addFriend(transactionHistory.getAdditionalInfo().getUserName(),
                                         transactionHistory.getAdditionalInfo().getUserMobileNumber(), null);
                             }
