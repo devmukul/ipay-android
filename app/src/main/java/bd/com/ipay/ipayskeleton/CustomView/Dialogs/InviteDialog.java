@@ -109,7 +109,6 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
                 if (verifyUserInputs()) {
                     mName = nameView.getText().toString();
                     mMobileNumber = ContactEngine.formatMobileNumberBD(mobileNumberView.getText().toString());
-                    mProgressDialog.setMessage(context.getResources().getString(R.string.progress_dialog_sending_invite));
 
                     if (mRelationship != null)
                         mRelationship = mRelationship.toUpperCase();
@@ -164,6 +163,9 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
         if (mAddFriendAsyncTask != null) {
             return;
         }
+        mProgressDialog.setMessage(context.getResources().getString(R.string.processing));
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
 
         List<InfoAddFriend> newFriends = new ArrayList<>();
         newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
@@ -180,11 +182,12 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
 
     private void sendInvite(String phoneNumber) {
         int numberOfInvitees = ContactsHolderFragment.mGetInviteInfoResponse.invitees.size();
+
         if (numberOfInvitees >= ContactsHolderFragment.mGetInviteInfoResponse.totalLimit) {
+            mProgressDialog.dismiss();
             Toast.makeText(context, R.string.invitaiton_limit_exceeded, Toast.LENGTH_LONG).show();
         } else {
             mProgressDialog.setMessage(context.getResources().getString(R.string.progress_dialog_sending_invite));
-            mProgressDialog.show();
 
             mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
                     Constants.BASE_URL_MM + Constants.URL_SEND_INVITE + phoneNumber, null, context, this);
@@ -217,6 +220,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                mProgressDialog.dismiss();
                 Toast.makeText(context, R.string.failed_invite_friend, Toast.LENGTH_LONG).show();
             }
 
