@@ -308,8 +308,9 @@ public class Constants {
     public static final String URL_CHANGE_PASSWORD = "settings/password";
     public static final String URL_SEND_OTP_FORGET_PASSWORD = "settings/password/forget";
     public static final String URL_CONFIRM_OTP_FORGET_PASSWORD = "settings/password/forget/confirmation";
-    public static final String URL_GET_SECURITY_QUESTIONS = "/settings/security/questions";
-    public static final String URL_SET_SECURITY_ANSWERS = "/settings/security/answers";
+    public static final String URL_GET_SECURITY_ALL_QUESTIONS = "settings/security/allquestions/";
+    public static final String URL_GET_SECURITY_QUESTIONS = "settings/security/questions";
+    public static final String URL_SET_SECURITY_ANSWERS = "settings/security/answers";
 
     public static final String URL_GET_PIN_INFO = "settings/pin";
     public static final String URL_SET_PIN = "settings/pin";
@@ -508,7 +509,8 @@ public class Constants {
     public static final String COMMAND_GET_BUSINESS_RULE = "COMMAND_GET_BUSINESS_RULE";
     public static final String COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE = "COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE";
     public static final String COMMAND_GET_ALL_BUSINESS_LIST = "COMMAND_GET_ALL_BUSINESS_LIST";
-    public static final String COMMAND_GET_SECURITY_QUESTIONS = "COMMAND_GET_SECURITY_QUESTIONS";
+    public static final String COMMAND_GET_ALL_SECURITY_QUESTIONS = "COMMAND_GET_ALL_SECURITY_QUESTIONS";
+    public static final String COMMAND_GET_SELECTED_SECURITY_QUESTIONS = "COMMAND_GET_SELECTED_SECURITY_QUESTIONS";
     public static final String COMMAND_SET_SECURITY_ANSWERS = "COMMAND_SET_SECURITY_ANSWERS";
 
     // Event

@@ -26,12 +26,14 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
-import bd.com.ipay.ipayskeleton.Model.Security.GetSecurityQuestionRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.Security.GetSecurityQuestionResponse;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
+import bd.com.ipay.ipayskeleton.Model.Security.GetAllSecurityQuestionRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.Security.GetAllSecurityQuestionResponse;
+import bd.com.ipay.ipayskeleton.Model.Security.GetPreviousSelectedSecurityQuestionResponse;
+import bd.com.ipay.ipayskeleton.Model.Security.GetPreviousSelectedSecurityQuestionRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Security.SecurityAnswerClass;
-import bd.com.ipay.ipayskeleton.Model.Security.SecurityQuestionClass;
 import bd.com.ipay.ipayskeleton.Model.Security.SecurityQuestionValidationClass;
+import bd.com.ipay.ipayskeleton.Model.Security.SelectedSecurityQuestionClass;
 import bd.com.ipay.ipayskeleton.Model.Security.SetSecurityAnswerRequest;
 import bd.com.ipay.ipayskeleton.Model.Security.SetSecurityAnswerResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -40,8 +42,11 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SecurityQuestionFragment extends ProgressFragment implements HttpResponseListener {
 
-    private HttpRequestGetAsyncTask mGetSecurityQuestionTask = null;
-    private GetSecurityQuestionResponse mSecurityQuestionResponse;
+    private HttpRequestGetAsyncTask mGetAllSecurityQuestionTask = null;
+    private GetAllSecurityQuestionResponse mAllSecurityQuestionResponse;
+
+    private HttpRequestGetAsyncTask mGetPreviousSelectedSecurityQuestionTask = null;
+    private GetPreviousSelectedSecurityQuestionResponse mPreviousSelectedSecurityQuestionResponse;
 
     private HttpRequestPostAsyncTask mSetSecurityAnswerTask = null;
     private SetSecurityAnswerResponse mSetSecurityAnswerResponse;
@@ -52,11 +57,12 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
     private SecurityQuestionAdapter mSecurityQuestionAnswerAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private List<SecurityQuestionClass> mSecurityQuestionsList, mTempSecurityQuestionClassList;
     private List<SecurityAnswerClass> mSecurityAnswerClassList;
+    private List<String> mSecurityQuestionClassList, mTempSecurityQuestionClassList;
+    private List<SelectedSecurityQuestionClass> mPreviousQuestionClassList;
     private List<SecurityQuestionValidationClass> mSecurityQuestionAnswerValidationClassList;
 
-    private ResourceSelectorDialog questionClassResourceSelectorDialog;
+    private CustomSelectorDialog questionClassResourceSelectorDialog;
 
     private TextView mEmptyListTextView;
 
@@ -83,7 +89,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
         mProgressDialog = new ProgressDialog(getActivity());
 
         if (Utilities.isConnectionAvailable(getActivity())) {
-            getSecurityQuestions();
+            getAllSecurityQuestions();
         }
         return v;
     }
@@ -98,23 +104,49 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
         setContentShown(false);
     }
 
-    private void getSecurityQuestions() {
-        if (mGetSecurityQuestionTask != null) {
+    private void getAllSecurityQuestions() {
+        if (mGetAllSecurityQuestionTask != null) {
             return;
         }
-        GetSecurityQuestionRequestBuilder getSecurityQuestionBuilder = new GetSecurityQuestionRequestBuilder();
+        GetAllSecurityQuestionRequestBuilder getSecurityQuestionBuilder = new GetAllSecurityQuestionRequestBuilder();
         String url = getSecurityQuestionBuilder.getGeneratedUri();
-        mGetSecurityQuestionTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SECURITY_QUESTIONS,
+        mGetAllSecurityQuestionTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ALL_SECURITY_QUESTIONS,
                 url, getActivity());
-        mGetSecurityQuestionTask.mHttpResponseListener = this;
-        mGetSecurityQuestionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mGetAllSecurityQuestionTask.mHttpResponseListener = this;
+        mGetAllSecurityQuestionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getPreviousSelectedSecurityQuestions() {
+        if (mGetPreviousSelectedSecurityQuestionTask != null) {
+            return;
+        }
+        GetPreviousSelectedSecurityQuestionRequestBuilder getSecurityQuestionBuilder = new GetPreviousSelectedSecurityQuestionRequestBuilder();
+        String url = getSecurityQuestionBuilder.getGeneratedUri();
+        mGetPreviousSelectedSecurityQuestionTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SELECTED_SECURITY_QUESTIONS,
+                url, getActivity());
+        mGetPreviousSelectedSecurityQuestionTask.mHttpResponseListener = this;
+        mGetPreviousSelectedSecurityQuestionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void setSecurityQuestionAnswerList() {
         mSecurityQuestionAnswerValidationClassList = new ArrayList<>();
         mSecurityAnswerClassList = new ArrayList<>();
 
+
         for (int mIndex = 0; mIndex < mRequiredQuestions; mIndex++) {
+            mSecurityQuestionAnswerValidationClassList.add(new SecurityQuestionValidationClass());
+            mSecurityAnswerClassList.add(new SecurityAnswerClass());
+        }
+
+        mSecurityQuesRecyclerView.setAdapter(mSecurityQuestionAnswerAdapter);
+        mSecurityQuestionAnswerAdapter.notifyDataSetChanged();
+    }
+
+    private void setPreviousSecurityQuestion() {
+        int minLength = Math.min(mPreviousQuestionClassList.size(),mRequiredQuestions);
+
+        for (int mIndex = 0; mIndex < minLength; mIndex++) {
+
             mSecurityQuestionAnswerValidationClassList.add(new SecurityQuestionValidationClass());
             mSecurityAnswerClassList.add(new SecurityAnswerClass());
         }
@@ -156,21 +188,21 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
         mSetSecurityAnswerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private List<SecurityQuestionClass> removeOtherSelectedQuestions(int index) {
-        List<SecurityQuestionClass> selectedOtherQuestionList = new ArrayList<>();
+    private List<String> removeOtherSelectedQuestions(int index) {
+        List<String> selectedOtherQuestionList = new ArrayList<>();
 
         for (int i = 0; i < mSecurityAnswerClassList.size(); i++) {
             if (i != index) {
-                for (SecurityQuestionClass securityQuestionClass : mSecurityQuestionsList)
-                    if (mSecurityAnswerClassList.get(i).getQid() != null &&
-                            mSecurityAnswerClassList.get(i).getQid().equals(securityQuestionClass.getQid())) {
-                        selectedOtherQuestionList.add(securityQuestionClass);
+                for (String securityQuestion : mSecurityQuestionClassList)
+                    if (mSecurityAnswerClassList.get(i).getQuestion() != null &&
+                            mSecurityAnswerClassList.get(i).getQuestion().equals(securityQuestion)) {
+                        selectedOtherQuestionList.add(securityQuestion);
                     }
             }
         }
 
         mTempSecurityQuestionClassList = new ArrayList<>();
-        mTempSecurityQuestionClassList.addAll(mSecurityQuestionsList);
+        mTempSecurityQuestionClassList.addAll(mSecurityQuestionClassList);
         mTempSecurityQuestionClassList.removeAll(selectedOtherQuestionList);
         return mTempSecurityQuestionClassList;
     }
@@ -181,7 +213,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mGetSecurityQuestionTask = null;
+            mGetAllSecurityQuestionTask = null;
             mSetSecurityAnswerTask = null;
 
             if (getActivity() != null)
@@ -192,15 +224,41 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_SECURITY_QUESTIONS)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_ALL_SECURITY_QUESTIONS)) {
             if (this.isAdded()) setContentShown(true);
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
-                    mSecurityQuestionResponse = gson.fromJson(result.getJsonString(), GetSecurityQuestionResponse.class);
-                    mSecurityQuestionsList = mSecurityQuestionResponse.getList();
-                    mRequiredQuestions = mSecurityQuestionResponse.getRequired();
-                    if (mRequiredQuestions > 0)
+                    mAllSecurityQuestionResponse = gson.fromJson(result.getJsonString(), GetAllSecurityQuestionResponse.class);
+                    mSecurityQuestionClassList = mAllSecurityQuestionResponse.getList();
+                    mRequiredQuestions = mAllSecurityQuestionResponse.getRequired();
+                    if (mRequiredQuestions > 0) {
+                        setSecurityQuestionAnswerList();
+                        getPreviousSelectedSecurityQuestions();
+                    } else mEmptyListTextView.setVisibility(View.VISIBLE);
+
+                    setContentShown(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.security_question_get_failed, Toast.LENGTH_LONG).show();
+                }
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.security_question_get_failed, Toast.LENGTH_LONG).show();
+            }
+
+            mGetAllSecurityQuestionTask = null;
+        }
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_SELECTED_SECURITY_QUESTIONS)) {
+            if (this.isAdded()) setContentShown(true);
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                try {
+                    mPreviousSelectedSecurityQuestionResponse = gson.fromJson(result.getJsonString(), GetPreviousSelectedSecurityQuestionResponse.class);
+                    mPreviousQuestionClassList = mPreviousSelectedSecurityQuestionResponse.getList();
+                    if (mPreviousQuestionClassList != null || !mPreviousQuestionClassList.isEmpty())
                         setSecurityQuestionAnswerList();
                     else mEmptyListTextView.setVisibility(View.VISIBLE);
 
@@ -216,7 +274,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
                     Toast.makeText(getActivity(), R.string.security_question_get_failed, Toast.LENGTH_LONG).show();
             }
 
-            mGetSecurityQuestionTask = null;
+            mGetAllSecurityQuestionTask = null;
         }
 
         if (result.getApiCommand().equals(Constants.COMMAND_SET_SECURITY_ANSWERS)) {
@@ -290,16 +348,16 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
                 mQuestionEditText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        questionClassResourceSelectorDialog = new ResourceSelectorDialog(getActivity(),
-                                getString(R.string.select_a_question), removeOtherSelectedQuestions(pos), pos, true);
+                        questionClassResourceSelectorDialog = new CustomSelectorDialog(getActivity(),
+                                getString(R.string.select_a_question), removeOtherSelectedQuestions(pos), pos);
                         questionClassResourceSelectorDialog.
-                                setOnResourceSelectedListenerWithSelectedIndex(new ResourceSelectorDialog.OnResourceSelectedListenerWithStringID() {
+                                setOnResourceSelectedListenerWithSelectedPosition(new CustomSelectorDialog.OnResourceSelectedListenerWithPosition() {
                                     @Override
-                                    public void onResourceSelectedWithStringID(String id, String question, int mSelectedQuestionId) {
-                                        mSecurityQuestionAnswerValidationClassList.get(mSelectedQuestionId).setQuestion(question);
-                                        mSecurityQuestionAnswerValidationClassList.get(mSelectedQuestionId).setQuestionAvailable(true);
+                                    public void onResourceSelectedWithPosition(int id, String question, int position) {
+                                        mSecurityQuestionAnswerValidationClassList.get(position).setQuestion(question);
+                                        mSecurityQuestionAnswerValidationClassList.get(position).setQuestionAvailable(true);
 
-                                        mSecurityAnswerClassList.get(mSelectedQuestionId).setQid(id);
+                                        mSecurityAnswerClassList.get(position).setQuestion(question);
                                         mSecurityQuestionAnswerAdapter.notifyDataSetChanged();
                                     }
                                 });

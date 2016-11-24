@@ -4,10 +4,10 @@ import android.net.Uri;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class GetSecurityQuestionRequestBuilder {
+public class GetPreviousSelectedSecurityQuestionRequestBuilder {
     private String generatedUri;
 
-    public GetSecurityQuestionRequestBuilder() {
+    public GetPreviousSelectedSecurityQuestionRequestBuilder() {
         generateUri();
     }
 

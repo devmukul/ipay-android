@@ -2,15 +2,15 @@ package bd.com.ipay.ipayskeleton.Model.Security;
 
 import java.util.List;
 
-public class GetSecurityQuestionResponse {
-    private List<SecurityQuestionClass> list;
+public class GetAllSecurityQuestionResponse {
+    private List<String> list;
     private String message;
     private int required;
 
-    public GetSecurityQuestionResponse() {
+    public GetAllSecurityQuestionResponse() {
     }
 
-    public List<SecurityQuestionClass> getList() {
+    public List<String> getList() {
         return list;
     }
 
