@@ -46,7 +46,7 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
         mEnterPasswordEditText = (EditText) v.findViewById(R.id.password);
         mSetPINButton = (Button) v.findViewById(R.id.save_pin);
 
-        mEnterPasswordEditText.requestFocus();
+        mEnterPINEditText.requestFocus();
         final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
