@@ -149,7 +149,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
         AddMoneyRequest mAddMoneyRequest = new AddMoneyRequest(mBankAccountId, mAmount, mDescription, pin);
