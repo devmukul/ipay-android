@@ -104,6 +104,8 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
     private Menu menu;
 
+    private TransactionHistoryBroadcastReceiver pendingTransactionHistoryBroadcastReceiver;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -193,6 +195,23 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getPendingTransactionHistory();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        pendingTransactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(pendingTransactionHistoryBroadcastReceiver,
+                new IntentFilter("TAG_REFRESH"));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(pendingTransactionHistoryBroadcastReceiver);
+
     }
 
     @Override
@@ -796,5 +815,13 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             refreshTransactionHistory();
         }
     };
+
+    private class TransactionHistoryBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.w("Broadcast received", "Transaction History");
+            refreshTransactionHistory();
+        }
+    }
 }
 

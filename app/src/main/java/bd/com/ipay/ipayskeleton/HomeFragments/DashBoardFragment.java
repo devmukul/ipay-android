@@ -1,10 +1,12 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,6 +77,13 @@ public class DashBoardFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+
+                if (tab.getPosition() == TRANSACTION_HISTORY_TAB) {
+
+                    LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+                    Intent i = new Intent("TAG_REFRESH");
+                    lbm.sendBroadcast(i);
+                }
             }
 
             @Override
@@ -84,7 +93,6 @@ public class DashBoardFragment extends Fragment {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
 

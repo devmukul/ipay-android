@@ -44,7 +44,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
@@ -96,6 +95,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
 
     private Menu menu;
+
+    private TransactionHistoryBroadcastReceiver completedTransactionHistoryBroadcastReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -186,6 +187,23 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getTransactionHistory();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        completedTransactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(completedTransactionHistoryBroadcastReceiver,
+                new IntentFilter("TAG_REFRESH"));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(completedTransactionHistoryBroadcastReceiver);
+
     }
 
     @Override
@@ -757,4 +775,12 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             refreshTransactionHistory();
         }
     };
+
+    private class TransactionHistoryBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.w("Broadcast received", "Transaction History");
+            refreshTransactionHistory();
+        }
+    }
 }
