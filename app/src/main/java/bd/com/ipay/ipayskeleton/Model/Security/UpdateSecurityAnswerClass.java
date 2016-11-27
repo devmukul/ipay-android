@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.Model.Security;
 
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Resource;
 
 public class UpdateSecurityAnswerClass {
 

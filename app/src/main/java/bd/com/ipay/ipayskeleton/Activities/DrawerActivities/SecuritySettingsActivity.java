@@ -14,6 +14,7 @@ import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.DrawerFragments.SecuritySettingsFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.UpdateSecurityQuestionFragment;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SecuritySettingsActivity extends BaseActivity {
@@ -128,6 +129,22 @@ public class SecuritySettingsActivity extends BaseActivity {
         switchedToSettingsFragment = false;
         switchedToAddTrustedPersonFragment = false;
         switchedToPasswordRecoveryFragment = true;
+    }
+
+    public void switchToUpdateSecurityQuestionFragment(Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 3)
+            getSupportFragmentManager().popBackStackImmediate();
+
+        UpdateSecurityQuestionFragment updateSecurityQuestionFragment = new UpdateSecurityQuestionFragment();
+        updateSecurityQuestionFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, updateSecurityQuestionFragment)
+                .addToBackStack(null)
+                .commit();
+
+        switchedToSettingsFragment = false;
+        switchedToAddTrustedPersonFragment = false;
+        switchedToPasswordRecoveryFragment = false;
     }
 
     @Override

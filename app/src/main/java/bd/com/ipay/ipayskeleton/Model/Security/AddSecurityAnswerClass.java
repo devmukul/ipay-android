@@ -1,17 +1,9 @@
 package bd.com.ipay.ipayskeleton.Model.Security;
 
-public class SelectedSecurityQuestionClass {
+public class AddSecurityAnswerClass {
 
-    private int id;
     private String question;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    private String answer;
 
     public String getQuestion() {
         return question;
@@ -21,5 +13,12 @@ public class SelectedSecurityQuestionClass {
         this.question = question;
     }
 
-}
+    public String getAnswer() {
+        return answer;
+    }
 
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+}

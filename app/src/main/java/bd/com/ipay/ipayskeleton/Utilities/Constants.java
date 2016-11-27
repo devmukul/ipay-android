@@ -70,6 +70,9 @@ public class Constants {
     public static final String OPERATING_ON_ACCOUNT_ID = "operatingOnAccountId";
 
     public static final String REQUEST_ID = "REQUEST_ID";
+    public static final String QUESTION_ID = "QUESTION_ID";
+    public static final String PREVIOUS_QUESTION = "PREVIOUS_QUESTIONS";
+    public static final String All_QUESTIONS = "ALL_QUESTIONS";
     public static final String PROFILE_PICTURE = "_PROFILE_PICTURE";
     public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
     public static final String BIRTHDAY = "BIRTHDAY";
@@ -512,6 +515,7 @@ public class Constants {
     public static final String COMMAND_GET_ALL_SECURITY_QUESTIONS = "COMMAND_GET_ALL_SECURITY_QUESTIONS";
     public static final String COMMAND_GET_SELECTED_SECURITY_QUESTIONS = "COMMAND_GET_SELECTED_SECURITY_QUESTIONS";
     public static final String COMMAND_SET_SECURITY_ANSWERS = "COMMAND_SET_SECURITY_ANSWERS";
+    public static final String COMMAND_UPDATE_SECURITY_ANSWERS = "COMMAND_UPDATE_SECURITY_ANSWERS";
 
     // Event
     public static final String COMMAND_GET_MY_EVENTS = "COMMAND_GET_MY_EVENTS";
