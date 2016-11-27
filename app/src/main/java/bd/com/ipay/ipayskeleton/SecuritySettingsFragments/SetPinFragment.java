@@ -93,7 +93,7 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
             // form field with an error.
             focusView.requestFocus();
         } else {
-            //hiding keyboard after save button pressed in set pin
+            // Hiding keyboard after save button pressed in set pin
             Utilities.hideKeyboard(getActivity());
 
             String pin = mEnterPINEditText.getText().toString().trim();
