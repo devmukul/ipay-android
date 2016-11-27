@@ -18,13 +18,12 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.Security.PreviousSecurityQuestionClass;
-import bd.com.ipay.ipayskeleton.Model.Security.UpdateSecurityAnswerClass;
+import bd.com.ipay.ipayskeleton.Model.Security.UpdateSecurityQuestionAnswerClass;
 import bd.com.ipay.ipayskeleton.Model.Security.UpdateSecurityAnswerRequest;
 import bd.com.ipay.ipayskeleton.Model.Security.UpdateSecurityAnswerResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -39,8 +38,9 @@ public class UpdateSecurityQuestionFragment extends Fragment implements HttpResp
     private ProgressDialog mProgressDialog;
 
     private List<String> mAllSecurityQuestionClassList, mTempSecurityQuestionClassList;
+
     private List<PreviousSecurityQuestionClass> mPreviousQuestionClassList;
-    private List<UpdateSecurityAnswerClass> mUpdateQuestionAnswerClassList;
+    private List<UpdateSecurityQuestionAnswerClass> mUpdateQuestionAnswerClassList;
 
     private CustomSelectorDialog questionClassResourceSelectorDialog;
 
@@ -92,7 +92,7 @@ public class UpdateSecurityQuestionFragment extends Fragment implements HttpResp
             public void onClick(View v) {
                 if (verifyQuestionAnswers()) {
 
-                    UpdateSecurityAnswerClass updateSecurityAnswerClass = new UpdateSecurityAnswerClass();
+                    UpdateSecurityQuestionAnswerClass updateSecurityAnswerClass = new UpdateSecurityQuestionAnswerClass();
                     updateSecurityAnswerClass.setId(mPreviousQuestionClassList.get(mQuestionID).getId());
                     updateSecurityAnswerClass.setQuestion(mQuestionEditText.getText().toString());
                     updateSecurityAnswerClass.setAnswer(mAnswerEditText.getText().toString());

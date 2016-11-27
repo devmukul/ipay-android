@@ -1,6 +1,6 @@
 package bd.com.ipay.ipayskeleton.Model.Security;
 
-public class AddSecurityAnswerClass {
+public class AddSecurityQuestionAnswerClass {
 
     private String question;
     private String answer;
