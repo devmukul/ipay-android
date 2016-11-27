@@ -211,7 +211,7 @@ public class UpdateSecurityQuestionFragment extends Fragment implements HttpResp
                 mUpdateSecurityAnswerResponse = gson.fromJson(result.getJsonString(), UpdateSecurityAnswerResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     Toast.makeText(getActivity(), mUpdateSecurityAnswerResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    ((SecuritySettingsActivity) getActivity()).switchToSecurityQuestionFragment();
+                    getActivity().onBackPressed();
 
                 } else {
                     if (getActivity() != null)

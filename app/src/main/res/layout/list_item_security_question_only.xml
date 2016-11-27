@@ -11,8 +11,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:paddingBottom="@dimen/value5"
-        android:paddingTop="@dimen/value5" />
+        android:paddingBottom="@dimen/value6"
+        android:layout_marginTop="@dimen/value6"
+        android:layout_gravity="center_vertical"/>
 
     <View style="@style/Divider" />
 
