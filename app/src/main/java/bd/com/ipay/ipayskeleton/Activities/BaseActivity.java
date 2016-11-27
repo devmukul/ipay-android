@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.Activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -142,8 +141,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
             return;
         }
 
-        SharedPreferences pref;
-        pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         String mUserID = ProfileInfoCacheManager.getMobileNumber();
 
         LogoutRequest mLogoutModel = new LogoutRequest(mUserID);
