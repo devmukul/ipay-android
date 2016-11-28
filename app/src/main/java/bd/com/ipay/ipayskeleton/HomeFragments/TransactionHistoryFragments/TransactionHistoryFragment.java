@@ -558,7 +558,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             private final TextView netAmountView;
             private final ImageView otherImageView;
             private final ProfileImageView mProfileImageView;
-            private final View divider;
+            private final View mBalanceView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -572,7 +572,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 statusDescriptionView = (TextView) itemView.findViewById(R.id.status_description);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 otherImageView = (ImageView) itemView.findViewById(R.id.other_image);
-                divider = itemView.findViewById(R.id.divider);
+                mBalanceView = itemView.findViewById(R.id.balance_holder);
             }
 
             public void bindView(int pos) {
@@ -590,16 +590,19 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 final int serviceId = transactionHistory.getServiceID();
 
                 mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
+                mBalanceView.setVisibility(View.VISIBLE);
 
                 if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
                     statusDescriptionView.setText(getString(R.string.transaction_successful));
                     statusDescriptionView.setTextColor(getResources().getColor(R.color.bottle_green));
                     if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT || serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
-                        mAmountTextView.setText(getString(R.string.not_applicable));
+                       // mAmountTextView.setText(getString(R.string.not_applicable));
+                        mBalanceView.setVisibility(View.GONE);
                     }
                 } else {
                     if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY) {
-                        mAmountTextView.setText(getString(R.string.not_applicable));
+                        //mAmountTextView.setText(getString(R.string.not_applicable));
+                        mBalanceView.setVisibility(View.GONE);
                     }
                     statusDescriptionView.setText(getString(R.string.transaction_failed));
                     statusDescriptionView.setTextColor(getResources().getColor(R.color.background_red));

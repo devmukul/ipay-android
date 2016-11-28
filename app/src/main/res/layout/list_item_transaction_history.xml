@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginBottom="@dimen/activity_vertical_margin_card"
+        android:layout_marginTop="@dimen/activity_vertical_margin_card"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_toRightOf="@+id/profile_picture"
         android:orientation="vertical">
@@ -68,6 +69,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/balance_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp">
@@ -99,7 +101,6 @@
     <View
         android:id="@+id/divider"
         style="@style/Divider"
-
-        android:layout_below="@+id/description_layout" />
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

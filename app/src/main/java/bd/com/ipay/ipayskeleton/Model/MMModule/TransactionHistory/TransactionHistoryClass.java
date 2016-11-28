@@ -315,22 +315,36 @@ public class TransactionHistoryClass implements Parcelable {
                 case (Constants.TRANSACTION_HISTORY_TOP_UP):
                     return "Mobile TopUp";
                 case (Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT):
-                    if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED) {
-                        if (originatingMobileNumber.equals(userMobileNumber)) {
-                            return "Payment Request Sent";
-                        } else if (receiverInfo.equals(userMobileNumber)) {
-                            return "Payment Request Received";
-                        } else {
-                            return "No Information Available";
-                        }
-                    } else {
-                        if (originatingMobileNumber.equals(userMobileNumber)) {
-                            return "Payment Request Sent";
-                        } else if (receiverInfo.equals(userMobileNumber)) {
-                            return "Payment Request Received";
-                        } else {
-                            return "No Information Available";
-                        }
+
+                    switch (statusCode) {
+                        case (Constants.TRANSACTION_STATUS_PROCESSING):
+                            if (originatingMobileNumber.equals(userMobileNumber)) {
+                                return "Payment Request Sent";
+                            } else if (receiverInfo.equals(userMobileNumber)) {
+                                return "Payment Request Received";
+                            } else {
+                                return "No Information Available";
+                            }
+                        case (Constants.TRANSACTION_STATUS_ACCEPTED):
+                            if (originatingMobileNumber.equals(userMobileNumber)) {
+                                return "Payment Request Sent";
+                            } else if (receiverInfo.equals(userMobileNumber)) {
+                                return "Payment Request Received";
+                            } else {
+                                return "No Information Available";
+                            }
+                        case (Constants.TRANSACTION_STATUS_CANCELED):
+                            if (originatingMobileNumber.equals(userMobileNumber)) {
+                                return "Payment Request Canceled";
+                            } else {
+                                return "No Information Available";
+                            }
+                        case (Constants.TRANSACTION_STATUS_REJECTED):
+                            if (originatingMobileNumber.equals(userMobileNumber)) {
+                                return "Payment Request Rejected";
+                            } else {
+                                return "No Information Available";
+                            }
                     }
                 case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT):
                     if (originatingMobileNumber.equals(userMobileNumber)) {
@@ -343,12 +357,36 @@ public class TransactionHistoryClass implements Parcelable {
                 case (Constants.TRANSACTION_HISTORY_EDUCATION):
                     return "Education Payment";
                 case (Constants.TRANSACTION_HISTORY_REQUEST_MONEY):
-                    if (originatingMobileNumber.equals(userMobileNumber)) {
-                        return "Money Request Sent";
-                    } else if (receiverInfo.equals(userMobileNumber)) {
-                        return "Money Request Received";
-                    } else {
-                        return "No Information Available";
+
+                    switch (statusCode) {
+                        case (Constants.TRANSACTION_STATUS_PROCESSING):
+                            if (originatingMobileNumber.equals(userMobileNumber)) {
+                                return "Money Request Sent";
+                            } else if (receiverInfo.equals(userMobileNumber)) {
+                                return "Money Request Received";
+                            } else {
+                                return "No Information Available";
+                            }
+                        case (Constants.TRANSACTION_STATUS_ACCEPTED):
+                            if (originatingMobileNumber.equals(userMobileNumber)) {
+                                return "Money Request Sent";
+                            } else if (receiverInfo.equals(userMobileNumber)) {
+                                return "Money Request Received";
+                            } else {
+                                return "No Information Available";
+                            }
+                        case (Constants.TRANSACTION_STATUS_CANCELED):
+                            if (originatingMobileNumber.equals(userMobileNumber)) {
+                                return "Money Request Canceled";
+                            } else {
+                                return "No Information Available";
+                            }
+                        case (Constants.TRANSACTION_STATUS_REJECTED):
+                            if (originatingMobileNumber.equals(userMobileNumber)) {
+                                return "Money Request Rejected";
+                            } else {
+                                return "No Information Available";
+                            }
                     }
             }
         } catch (Exception e) {
