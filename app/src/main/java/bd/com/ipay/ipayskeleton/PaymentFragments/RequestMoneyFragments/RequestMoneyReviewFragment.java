@@ -46,7 +46,6 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
     private String mReceiverMobileNumber;
     private String mPhotoUri;
     private String mDescription;
-    private String mTitle;
     private boolean mIsInContacts;
 
     private ProfileImageView mProfileImageView;
@@ -69,7 +68,6 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
         mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
         mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
-        mTitle = getActivity().getIntent().getStringExtra(Constants.INVOICE_TITLE_TAG);
 
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
@@ -100,25 +98,15 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
         mMobileNumberView.setText(mReceiverMobileNumber);
 
-        if ((mDescription == null || mDescription.isEmpty()) && (mTitle == null || mTitle.isEmpty())) {
+        if ((mDescription == null || mDescription.isEmpty())) {
             mDescriptionHolder.setVisibility(View.GONE);
         } else {
-            if (mDescription == null || mDescription.isEmpty()) {
-                mDescriptionView.setVisibility(View.GONE);
-            } else {
-                mDescriptionView.setText(mDescription);
-            }
-
-            if (mTitle == null || mTitle.isEmpty()) {
-                mTitleView.setVisibility(View.GONE);
-            } else {
-                mTitleView.setText(mTitle);
-            }
+            mDescriptionView.setText(mDescription);
         }
 
         mAmountView.setText(Utilities.formatTaka(mAmount));
 
-        if (!mIsInContacts){
+        if (!mIsInContacts) {
             mAddInContactsCheckBox.setVisibility(View.VISIBLE);
             mAddInContactsCheckBox.setChecked(true);
         }
@@ -150,7 +138,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
         RequestMoneyRequest mRequestMoneyRequest = new RequestMoneyRequest(mReceiverMobileNumber,
-                mAmount.doubleValue(), mTitle, mDescription);
+                mAmount.doubleValue(), mDescription);
         Gson gson = new Gson();
         String json = gson.toJson(mRequestMoneyRequest);
         mRequestMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REQUEST_MONEY,

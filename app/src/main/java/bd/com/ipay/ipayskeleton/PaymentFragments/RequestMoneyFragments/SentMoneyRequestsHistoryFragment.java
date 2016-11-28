@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -201,10 +200,6 @@ public class SentMoneyRequestsHistoryFragment extends ProgressFragment implement
                 String time = Utilities.getDateFormat(sentMoneyRequestClasses.get(pos).getRequestTime());
                 final String name = sentMoneyRequestClasses.get(pos).getReceiverProfile().getUserName();
                 final String imageUrl = sentMoneyRequestClasses.get(pos).getReceiverProfile().getUserProfilePicture();
-                final String mobileNumber = sentMoneyRequestClasses.get(pos).getReceiverProfile().getUserMobileNumber();
-                final String title = sentMoneyRequestClasses.get(pos).getTitle();
-                final String description = sentMoneyRequestClasses.get(pos).getDescription();
-                final BigDecimal amount = sentMoneyRequestClasses.get(pos).getAmount();
 
                 mTime.setText(time);
                 mSenderNumber.setText(name);
