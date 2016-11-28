@@ -91,7 +91,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-        mPreviousQuestionClassList =new ArrayList<>();
+        mPreviousQuestionClassList = new ArrayList<>();
 
         if (Utilities.isConnectionAvailable(getActivity())) {
             getAllSecurityQuestions();
@@ -191,11 +191,10 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
 
         for (int i = 0; i < mSecurityQuestionAnswerValidationClassList.size(); i++) {
             if (i != index) {
-                for (String securityQuestion : mAllSecurityQuestionClassList)
-                    if (mSecurityQuestionAnswerValidationClassList.get(i).getQuestion() != null &&
-                            mSecurityQuestionAnswerValidationClassList.get(i).getQuestion().equals(securityQuestion)) {
-                        selectedOtherQuestionList.add(securityQuestion);
-                    }
+                if (mSecurityQuestionAnswerValidationClassList.get(i).getQuestion() != null &&
+                        mAllSecurityQuestionClassList.contains(mSecurityQuestionAnswerValidationClassList.get(i).getQuestion())) {
+                    selectedOtherQuestionList.add(mSecurityQuestionAnswerValidationClassList.get(i).getQuestion());
+                }
             }
         }
 
@@ -212,7 +211,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetAllSecurityQuestionTask = null;
-            mGetPreviousSelectedSecurityQuestionTask =null;
+            mGetPreviousSelectedSecurityQuestionTask = null;
             mSetSecurityAnswerTask = null;
 
             if (getActivity() != null)

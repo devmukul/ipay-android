@@ -97,7 +97,7 @@ public class UpdateSecurityQuestionFragment extends Fragment implements HttpResp
                     updateSecurityAnswerClass.setQuestion(mQuestionEditText.getText().toString());
                     updateSecurityAnswerClass.setAnswer(mAnswerEditText.getText().toString());
 
-                    mUpdateQuestionAnswerClassList =new ArrayList<>();
+                    mUpdateQuestionAnswerClassList = new ArrayList<>();
                     mUpdateQuestionAnswerClassList.add(updateSecurityAnswerClass);
 
                     attemptSaveSecurityAnswers(mPassword);
@@ -164,11 +164,10 @@ public class UpdateSecurityQuestionFragment extends Fragment implements HttpResp
 
         for (int i = 0; i < mPreviousQuestionClassList.size(); i++) {
             if (i != mQuestionID) {
-                for (String securityQuestion : mAllSecurityQuestionClassList)
-                    if (mPreviousQuestionClassList.get(i).getQuestion() != null &&
-                            mPreviousQuestionClassList.get(i).getQuestion().equals(securityQuestion)) {
-                        selectedOtherQuestionList.add(securityQuestion);
-                    }
+                if (mPreviousQuestionClassList.get(i).getQuestion() != null &&
+                        mAllSecurityQuestionClassList.contains(mPreviousQuestionClassList.get(i).getQuestion())) {
+                    selectedOtherQuestionList.add(mPreviousQuestionClassList.get(i).getQuestion());
+                }
             }
         }
 
@@ -200,7 +199,7 @@ public class UpdateSecurityQuestionFragment extends Fragment implements HttpResp
             mUpdateSecurityAnswerTask = null;
 
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.security_question_get_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.security_answer_set_failed, Toast.LENGTH_LONG).show();
             return;
         }
 
