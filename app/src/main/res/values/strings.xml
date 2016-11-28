@@ -47,6 +47,7 @@
     <string name="introduced_on">Introduced on: </string>
 
     <string name="invalid_business_name">Enter a business name</string>
+    <string name="invalid_business_type">Enter a business type</string>
     <string name="not_set">Not Set</string>
     <string name="thana">Thana</string>
     <string name="invalid_thana">Please select a Thana</string>

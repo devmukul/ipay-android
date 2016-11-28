@@ -117,10 +117,12 @@ public class SignupBusinessStepTwoFragment extends Fragment {
             mBusinessNameView.setError(getString(R.string.please_enter_valid_name));
             focusView = mBusinessNameView;
             cancel = true;
-
-        } else if (!mBusinessAddressView.verifyUserInputs()) {
+        } else if (mSelectedBusinessTypeId == -1) {
+            mBusinessType.setError(getString(R.string.invalid_business_type));
+            focusView = mBusinessType;
             cancel = true;
-        }
+        } else if (!mBusinessAddressView.verifyUserInputs())
+            cancel = true;
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
