@@ -19,14 +19,15 @@ public class CustomSelectorDialog extends AlertDialog {
 
     private List<String> resources;
     private String mTitle;
+    private int position;
 
     private OnResourceSelectedListener onResourceSelectedListener;
+    private OnResourceSelectedListenerWithPosition onResourceSelectedListenerWithSelectedPosition;
 
     private LayoutInflater inflater;
     private View view, viewTitle;
     private TextView textViewTitle;
     private ListView popUpList;
-
 
     public CustomSelectorDialog(Context context, String mTitle, List<String> resources) {
         super(context);
@@ -45,6 +46,26 @@ public class CustomSelectorDialog extends AlertDialog {
         this.setView(view);
 
         setItems(resources);
+    }
+
+    public CustomSelectorDialog(Context context, String mTitle, List<String> resources, int position) {
+        super(context);
+
+        this.context = context;
+        this.resources = resources;
+        this.mTitle = mTitle;
+        this.position = position;
+
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        viewTitle = inflater.inflate(R.layout.dialog_selector_header, null);
+        textViewTitle = (TextView) viewTitle.findViewById(R.id.textviewTitle);
+        textViewTitle.setText(mTitle);
+        this.setCustomTitle(viewTitle);
+
+        view = inflater.inflate(R.layout.dialog_custom_listview, null);
+        this.setView(view);
+
+        setItemsWithPosition(resources);
 
     }
 
@@ -65,12 +86,21 @@ public class CustomSelectorDialog extends AlertDialog {
         });
     }
 
-    public void setOnResourceSelectedListener(OnResourceSelectedListener onResourceSelectedListener) {
-        this.onResourceSelectedListener = onResourceSelectedListener;
-    }
+    public void setItemsWithPosition(final List<String> resources) {
 
-    public interface OnResourceSelectedListener {
-        void onResourceSelected(int id, String name);
+        popUpList = (ListView) view.findViewById(R.id.custom_list);
+        SelectorAdapter adapter = new SelectorAdapter(context, resources);
+        popUpList.setAdapter(adapter);
+        popUpList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String name = resources.get(i);
+
+                if (onResourceSelectedListenerWithSelectedPosition != null)
+                    onResourceSelectedListenerWithSelectedPosition.onResourceSelectedWithPosition(i, name, position);
+                dismiss();
+            }
+        });
     }
 
     private class SelectorAdapter extends ArrayAdapter<String> {
@@ -94,5 +124,21 @@ public class CustomSelectorDialog extends AlertDialog {
             selectorView.setText(mSelectorName);
             return view;
         }
+    }
+
+    public void setOnResourceSelectedListener(OnResourceSelectedListener onResourceSelectedListener) {
+        this.onResourceSelectedListener = onResourceSelectedListener;
+    }
+
+    public void setOnResourceSelectedListenerWithSelectedPosition(OnResourceSelectedListenerWithPosition onResourceSelectedListenerWithSelectedPosition) {
+        this.onResourceSelectedListenerWithSelectedPosition = onResourceSelectedListenerWithSelectedPosition;
+    }
+
+    public interface OnResourceSelectedListener {
+        void onResourceSelected(int id, String name);
+    }
+
+    public interface OnResourceSelectedListenerWithPosition {
+        void onResourceSelectedWithPosition(int id, String name, int selectedIndex);
     }
 }
