@@ -158,7 +158,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
 
         OTPRequestTrustedDevice mOTPRequestTrustedDevice = new OTPRequestTrustedDevice
                 (mUserNameLogin, mPasswordLogin,
-                        Constants.MOBILE_ANDROID + mDeviceID, SignupOrLoginActivity.mAccountType, SignupOrLoginActivity.mPromoCode);
+                        Constants.MOBILE_ANDROID + mDeviceID, SignupOrLoginActivity.mAccountType);
         Gson gson = new Gson();
         String json = gson.toJson(mOTPRequestTrustedDevice);
         mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,

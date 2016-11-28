@@ -146,7 +146,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             mProgressDialog.show();
 
             OTPRequestPersonalSignup mOtpRequestPersonalSignup = new OTPRequestPersonalSignup(SignupOrLoginActivity.mMobileNumber,
-                    Constants.MOBILE_ANDROID + mDeviceID, Constants.PERSONAL_ACCOUNT_TYPE, SignupOrLoginActivity.mPromoCode);
+                    Constants.MOBILE_ANDROID + mDeviceID, Constants.PERSONAL_ACCOUNT_TYPE);
             Gson gson = new Gson();
             String json = gson.toJson(mOtpRequestPersonalSignup);
             mRequestOTPTask = new
@@ -184,7 +184,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             SignupRequestPersonal mSignupModel = new SignupRequestPersonal(SignupOrLoginActivity.mMobileNumber,
                     Constants.MOBILE_ANDROID + mDeviceID,
                     SignupOrLoginActivity.mName,
-                    SignupOrLoginActivity.mBirthday, SignupOrLoginActivity.mPassword, otp, SignupOrLoginActivity.mPromoCode,
+                    SignupOrLoginActivity.mBirthday, SignupOrLoginActivity.mPassword, otp,
                     Constants.PERSONAL_ACCOUNT_TYPE, SignupOrLoginActivity.mAddressPersonal);
             Gson gson = new Gson();
             String json = gson.toJson(mSignupModel);
