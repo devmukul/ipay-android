@@ -588,23 +588,21 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 final int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
                 final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
                 final int serviceId = transactionHistory.getServiceID();
+                final String status = transactionHistory.getStatus();
 
                 mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
+                statusDescriptionView.setText(status);
                 mBalanceView.setVisibility(View.VISIBLE);
 
                 if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    statusDescriptionView.setText(getString(R.string.transaction_successful));
                     statusDescriptionView.setTextColor(getResources().getColor(R.color.bottle_green));
                     if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT || serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
-                       // mAmountTextView.setText(getString(R.string.not_applicable));
                         mBalanceView.setVisibility(View.GONE);
                     }
                 } else {
                     if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY) {
-                        //mAmountTextView.setText(getString(R.string.not_applicable));
                         mBalanceView.setVisibility(View.GONE);
                     }
-                    statusDescriptionView.setText(getString(R.string.transaction_failed));
                     statusDescriptionView.setTextColor(getResources().getColor(R.color.background_red));
                 }
 

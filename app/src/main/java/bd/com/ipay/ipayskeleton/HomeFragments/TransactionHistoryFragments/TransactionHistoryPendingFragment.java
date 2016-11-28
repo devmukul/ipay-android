@@ -573,11 +573,10 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             private final TextView mReceiverView;
             private final TextView loadMoreTextView;
             private final TextView mAmountTextView;
-            private final TextView statusDescriptionView;
             private final TextView netAmountView;
             private final ImageView otherImageView;
             private final ProfileImageView mProfileImageView;
-            private final View divider;
+            private final View mBalanceView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -588,10 +587,9 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
                 netAmountView = (TextView) itemView.findViewById(R.id.net_amount);
-                statusDescriptionView = (TextView) itemView.findViewById(R.id.status_description);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 otherImageView = (ImageView) itemView.findViewById(R.id.other_image);
-                divider = itemView.findViewById(R.id.divider);
+                mBalanceView = itemView.findViewById(R.id.balance_holder);
             }
 
             public void bindView(int pos) {
@@ -608,9 +606,10 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 final int serviceId = transactionHistory.getServiceID();
 
                 mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
+                mBalanceView.setVisibility(View.VISIBLE);
 
                 if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
-                    mAmountTextView.setText(getString(R.string.not_applicable));
+                    mBalanceView.setVisibility(View.GONE);
                 }
 
                 mTransactionDescriptionView.setText(description);
