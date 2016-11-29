@@ -72,7 +72,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
         dialog
                 .title(R.string.invite_a_friend)
                 .autoDismiss(false)
-                .customView(R.layout.dialog_add_friend, true)
+                .customView(R.layout.dialog_invite_friend, true)
                 .positiveText(R.string.invite)
                 .negativeText(R.string.cancel);
 

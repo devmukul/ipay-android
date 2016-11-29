@@ -44,4 +44,13 @@
             android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
 
+    <CheckBox
+        android:id="@+id/introduceCheckbox"
+        style="@style/CheckboxLeftStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:drawableTint="@color/colorPrimary"
+        android:text="@string/introduce_this_person" />
+
 </LinearLayout>
