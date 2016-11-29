@@ -170,6 +170,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
 
         GetMoneyAndPaymentRequest mGetMoneyAndPaymentRequest = new GetMoneyAndPaymentRequest();
+        // Get only pending requests
+        mGetMoneyAndPaymentRequest.setStatus(Constants.REQUEST_STATUS_PROCESSING);
+
         Gson gson = new Gson();
         String json = gson.toJson(mGetMoneyAndPaymentRequest);
         mGetMoneyAndPaymentRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_AND_PAYMENT_REQUESTS,
@@ -318,7 +321,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         bundle.putSerializable(Constants.AMOUNT, mAmount);
         bundle.putString(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
         bundle.putString(Constants.INVOICE_DESCRIPTION_TAG, mDescriptionofRequest);
-        bundle.putString(Constants.INVOICE_TITLE_TAG, mTitle);
         bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
         bundle.putString(Constants.NAME, mReceiverName);
         bundle.putString(Constants.PHOTO_URI, mPhotoUri);

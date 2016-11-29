@@ -434,6 +434,7 @@ public class Constants {
     public static final String BANK_ACCOUNT_STATUS_VERIFIED = "VERIFIED";
     public static final String BANK_ACCOUNT_STATUS_PENDING = "PENDING";
     public static final String BANK_ACCOUNT_STATUS_NOT_VERIFIED = "NOT_VERIFIED";
+    public static final String BANK_ACCOUNT_STATUS_BLOCKED = "BLOCKED";
 
     public static final int MOBILE_TYPE_PREPAID = 1;
     public static final int MOBILE_TYPE_POSTPAID = 2;

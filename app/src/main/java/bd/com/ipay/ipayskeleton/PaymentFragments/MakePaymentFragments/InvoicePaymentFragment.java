@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -137,7 +135,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-            return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

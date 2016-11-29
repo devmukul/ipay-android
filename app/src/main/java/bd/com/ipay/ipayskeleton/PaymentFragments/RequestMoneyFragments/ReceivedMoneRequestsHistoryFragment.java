@@ -180,8 +180,6 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
         private static final int FOOTER_VIEW = 1;
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
 
-        private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
-
         public class MoneyRequestViewHolder extends RecyclerView.ViewHolder {
             private final TextView mDescriptionView;
             private final TextView mTitleView;
@@ -205,10 +203,7 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
                 final long id = moneyRequest.getId();
                 final String imageUrl = moneyRequest.getOriginatorProfile().getUserProfilePicture();
                 final String name = moneyRequest.originatorProfile.getUserName();
-                final String mobileNumber = moneyRequest.originatorProfile.getUserMobileNumber();
-                final String description = moneyRequest.getDescriptionofRequest();
                 final String time = Utilities.getDateFormat(moneyRequest.getRequestTime());
-                final String title = moneyRequest.getTitle();
                 final BigDecimal amount = moneyRequest.getAmount();
 
                 mDescriptionView.setText(Utilities.formatTaka(amount));

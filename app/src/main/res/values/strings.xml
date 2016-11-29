@@ -98,6 +98,7 @@
     <string name="accept">Accept</string>
     <string name="this_person">this person</string>
     <string name="are_you_sure_to_remove_bank_account">Are you sure you want to remove this account from your bank list?</string>
+    <string name="blocked_bank_message">Sorry, you have taken too many attempts to verify this bank account. Please contact with our customer support for any further queries.</string>
     <string name="cancel_money_request_confirm">Are you sure you want to cancel your request for money?</string>
     <string name="cancel_payment_request_confirm">Are you sure you want to cancel your request for payment?</string>
     <string name="account_type_personal">Personal Account</string>
@@ -403,6 +404,8 @@
     <string name="filter_security_changes">Security Changes</string>
     <string name="clear_filter">Clear Filter</string>
     <string name="select_a_bank">Select Bank</string>
+    <string name="remove_bank_title">Remove this account?</string>
+    <string name="blocked_bank_title">Blocked!</string>
     <string name="bank_name">Bank Name</string>
     <string name="saving_profile_information">Saving profile information</string>
     <string name="saving_parent_information">Saving parent information</string>
@@ -420,8 +423,6 @@
     <string name="question">Question</string>
     <string name="answer">Answer</string>
     <string name="set_security_answer">Saving answers</string>
-
-    <!-- ARCA -->
 
     <!-- PUSH -->
     <string name="push_profile_picture_updated_title">Profile Picture Changed</string>
@@ -464,7 +465,6 @@
     <string name="filter_payment">Payment</string>
     <string name="filter_opening_balance">Opening Balance</string>
     <string name="filter_education">Education</string>
-
     <string name="basic_info">Basic Information</string>
     <string name="student_info">Student Information</string>
     <string name="pay_education_fee">Pay education fees</string>
@@ -486,7 +486,6 @@
     <string name="unverified">Not Verified</string>
     <string name="invited">Invited</string>
     <string name="trusted_devices">Trusted Devices</string>
-
     <string name="logout_from_all_device">Log Out From All Devices</string>
     <string name="logout_from_all_device_warning">Are you sure you want to log out from all devices?</string>
     <string name="progress_dialog_loading_trusted_devices">Loading trusted device list</string>
@@ -691,11 +690,9 @@
     <string name="progress_dialog_adding_friend">Adding friend...</string>
     <string name="add_friend_successful">Add Friend Successful. Refreshing friend list...</string>
     <string name="dialog_requesting_top_up">Preparing for Top Up...</string>
-
     <string name="term_link">https://www.ipay.com.bd/legal/tos</string>
     <string name="privacy_link">https://www.ipay.com.bd/legal/privacy-policy</string>
     <string name="forget_password_link">https://www.ipay.com.bd/forgot-password</string>
-
     <string name="you_cannot_send_money_to_your_number">You can\'t send money to your own mobile number</string>
     <string name="you_cannot_make_payment_to_your_number">You can\'t make payment to your own mobile number</string>
     <string name="you_cannot_request_money_from_your_number">You can\'t request money from your own mobile number</string>
@@ -752,6 +749,10 @@
     </string-array>
 
     <string-array name="verified_bank_action">
+        <item>Remove</item>
+    </string-array>
+
+    <string-array name="blocked_bank_action">
         <item>Remove</item>
     </string-array>
 
