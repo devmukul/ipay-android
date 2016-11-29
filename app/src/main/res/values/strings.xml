@@ -699,6 +699,7 @@
     <string name="ticket_created">Ticket Created</string>
     <string name="creating_ticket">Creating ticket...</string>
     <string name="no_email_added">No Email Added</string>
+    <string name="can_not_add_bank_if_not_verified">You can not link your bank until your iPay account gets verified by our system. After submitting your documents and other information it might take a while for verification.</string>
     <string name="dialog_add_new_email">You need to set up your primary email to use the support system. Add an email now?</string>
     <string name="ticket_created_dialog_text">Request to create a ticket for your issue has been placed successfully. It may take a little while to show up in your ticket list.</string>
     <string name="dialog_verify_email">You need to set up your primary email to use the support system. Verify your email now?</string>
@@ -746,10 +747,6 @@
     </string-array>
 
     <string-array name="verified_bank_action">
-        <item>Remove</item>
-    </string-array>
-
-    <string-array name="blocked_bank_action">
         <item>Remove</item>
     </string-array>
 

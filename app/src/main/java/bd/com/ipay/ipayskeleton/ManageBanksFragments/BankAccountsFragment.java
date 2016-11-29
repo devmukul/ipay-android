@@ -48,6 +48,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankWithAmountRequestB
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankWithAmountResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -96,9 +97,13 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity())) {
+                if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)
+                        && Utilities.isConnectionAvailable(getActivity())) {
+                    // Checked verification status before getting the bank list
                     getBankList();
-                }
+
+                } else
+                    mSwipeRefreshLayout.setRefreshing(false);
             }
         });
         return v;
@@ -108,6 +113,13 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setContentShown(false);
+
+        // Block from adding bank if an user is not verified
+        if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED)) {
+            mEmptyListTextView.setText(R.string.can_not_add_bank_if_not_verified);
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+            return;
+        }
 
         if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE))
             getBankList();
