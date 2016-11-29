@@ -35,6 +35,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
 import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
+import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -177,7 +178,10 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
                     if (mRelationship != null)
                         mRelationship = mRelationship.toUpperCase();
 
-                    addFriend(mName, mMobileNumber, mRelationship);
+                    if (new SearchContactClass(getActivity()).searchMobileNumber(mMobileNumber))
+                        Toast.makeText(getContext(), R.string.contact_already_exists, Toast.LENGTH_LONG).show();
+                    else
+                        addFriend(mName, mMobileNumber, mRelationship);
 
                     Utilities.hideKeyboard(getActivity(), nameView);
                     Utilities.hideKeyboard(getActivity(), mobileNumberView);

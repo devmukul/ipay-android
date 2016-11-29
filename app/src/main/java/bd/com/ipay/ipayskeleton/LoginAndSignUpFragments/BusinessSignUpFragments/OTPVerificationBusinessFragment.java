@@ -145,7 +145,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
 
             OTPRequestBusinessSignup mOtpRequestBusinessSignup = new OTPRequestBusinessSignup
                     (SignupOrLoginActivity.mMobileNumberBusiness,
-                            Constants.MOBILE_ANDROID + mDeviceID, Constants.BUSINESS_ACCOUNT_TYPE, SignupOrLoginActivity.mPromoCode);
+                            Constants.MOBILE_ANDROID + mDeviceID, Constants.BUSINESS_ACCOUNT_TYPE);
             Gson gson = new Gson();
             String json = gson.toJson(mOtpRequestBusinessSignup);
             mRequestOTPTask = new
@@ -195,7 +195,6 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                     .personalMobileNumber(SignupOrLoginActivity.mMobileNumberPersonal)
                     .businessAddress(SignupOrLoginActivity.mAddressBusiness)
                     .personalAddress(SignupOrLoginActivity.mAddressBusinessHolder)
-                    .promoCode(SignupOrLoginActivity.mPromoCode)
                     .build();
 
             Gson gson = new Gson();

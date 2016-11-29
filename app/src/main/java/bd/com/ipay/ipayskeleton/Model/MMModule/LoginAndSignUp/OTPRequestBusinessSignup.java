@@ -5,12 +5,10 @@ public class OTPRequestBusinessSignup {
     private final String mobileNumber;
     private final String deviceId;
     private final int accountType;
-    private final String promoCode;
 
-    public OTPRequestBusinessSignup(String mobileNumber, String deviceId, int accountType, String promoCode) {
+    public OTPRequestBusinessSignup(String mobileNumber, String deviceId, int accountType) {
         this.mobileNumber = mobileNumber;
         this.deviceId = deviceId;
         this.accountType = accountType;
-        this.promoCode = promoCode;
     }
 }
