@@ -152,7 +152,7 @@
     <string name="friend">Friend</string>
     <string name="add_to_contacts">Add to Contacts</string>
     <string name="ipay_contacts">iPay</string>
-    <string name="security_questions">Set Security Question</string>
+    <string name="security_questions">Security Questions</string>
     <string name="update_security_questions">Update Security Question</string>
     <string name="activity_log">Activity log</string>
     <string name="payments">Payments</string>
