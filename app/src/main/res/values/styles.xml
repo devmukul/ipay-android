@@ -192,7 +192,7 @@
         <item name="android:layout_gravity">right</item>
         <item name="android:layout_marginTop">@dimen/activity_horizontal_margin_card</item>
         <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
-        <item name="android:drawablePadding">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:drawablePadding">@dimen/value6</item>
         <item name="android:button">@null</item>
     </style>
 
