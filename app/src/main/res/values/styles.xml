@@ -196,6 +196,12 @@
         <item name="android:button">@null</item>
     </style>
 
+    <style name="CheckboxLeftStyle" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/colorGray</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:layout_marginTop">@dimen/activity_horizontal_margin_card</item>
+    </style>
 
     <style name="TextViewInfoLabel" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
