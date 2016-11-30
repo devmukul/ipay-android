@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestPaymentFragment extends Fragment {
@@ -58,6 +60,8 @@ public class RequestPaymentFragment extends Fragment {
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mVatEditText = (EditText) v.findViewById(R.id.vat);
         mTotalTextView = (TextView) v.findViewById(R.id.total);
+
+        mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.submitting_request_money));

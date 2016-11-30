@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class BankAccountsFragment extends ProgressFragment implements HttpResponseListener {
@@ -291,6 +293,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         View view = dialog.getCustomView();
         final EditText mAmountEditText = (EditText) view.findViewById(R.id.amount);
+        mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
         dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
