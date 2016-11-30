@@ -781,7 +781,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getUserMobileNumber()));
 
         intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, transactionHistory.getShortDescription(mMobileNumber));
-        intent.putExtra(Constants.INVOICE_TITLE_TAG, "");
         intent.putExtra(Constants.MONEY_REQUEST_ID, transactionHistory.getId());
         intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
         intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());

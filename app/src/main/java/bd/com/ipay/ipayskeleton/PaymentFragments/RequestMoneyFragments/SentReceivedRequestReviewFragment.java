@@ -64,7 +64,6 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     private TextView mNameView;
     private TextView mMobileNumberView;
     private TextView mDescriptionTagView;
-    private TextView mTitleTagView;
     private TextView mDescriptionView;
     private View mDescriptionHolder;
     private TextView mAmountView;
@@ -100,7 +99,6 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mDescriptionTagView = (TextView) v.findViewById(R.id.description);
-        mTitleTagView = (TextView) v.findViewById(R.id.title);
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mDescriptionHolder = v.findViewById(R.id.layout_description_holder);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);

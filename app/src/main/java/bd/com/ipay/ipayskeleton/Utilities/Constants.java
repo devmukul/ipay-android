@@ -140,7 +140,6 @@ public class Constants {
     public static final String FEEDBACK = "feedback@ipay.com.bd";
     public static final String OFFICE_ADDRESS = "Silver Tower (12th Floor)\n52 Gulshan Avenue, Circle-1\nDhaka-1212\nBangladesh\n";
     public static final double OFFICE_LATITUDE = 23.7810729;
-
     public static final double OFFICE_LONGITUDE = 90.4169212;
 //    public static final String EMPLOYEE_PRIVILEGE = "EMPLOYEE_PRIVILEGE";
 
@@ -318,7 +317,6 @@ public class Constants {
     public static final String URL_GET_SECURITY_ALL_QUESTIONS = "settings/security/allquestions/";
     public static final String URL_GET_SECURITY_QUESTIONS = "settings/security/questions";
     public static final String URL_SET_SECURITY_ANSWERS = "settings/security/answers";
-    public static final String
 
     public static final String URL_GET_PIN_INFO = "settings/pin";
     public static final String URL_SET_PIN = "settings/pin";
