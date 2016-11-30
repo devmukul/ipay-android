@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -50,6 +51,7 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
+import bd.com.ipay.ipayskeleton.Model.Friend.InviteFriend;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.AskForIntroductionResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -87,7 +89,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     // So saving these in these two variables.
     private String mSelectedName;
     private String mSelectedNumber;
-    private String mInvite_message;
+    private String mInviteMessage;
 
     private View mSheetViewNonIpayMember;
     private View mSheetViewIpayMember;
@@ -440,29 +442,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                         mBottomSheetLayout.dismissSheet();
                     }
 
-                    mInvite_message = getString(R.string.are_you_sure_to_invite);
-                    if (!mSelectedName.isEmpty())
-                        mInvite_message = mInvite_message.replace(getString(R.string.this_person), mSelectedName);
-
-                    MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
-                    dialog
-                            .content(mInvite_message)
-                            .cancelable(false)
-                            .positiveText(R.string.yes)
-                            .negativeText(R.string.no)
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    sendInvite(mSelectedNumber);
-                                }
-                            })
-                            .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    dialog.show();
+                    showInviteDialog(mSelectedName, mSelectedNumber);
                 }
             });
         }
@@ -542,7 +522,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         mAskForRecommendationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void sendInvite(String phoneNumber) {
+    private void sendInvite(String phoneNumber, boolean wantToIntroduce) {
         int numberOfInvitees = ContactsHolderFragment.mGetInviteInfoResponse.invitees.size();
         if (numberOfInvitees >= ContactsHolderFragment.mGetInviteInfoResponse.totalLimit) {
             Toast.makeText(getActivity(), R.string.invitaiton_limit_exceeded,
@@ -551,8 +531,11 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_sending_invite));
             mProgressDialog.show();
 
+            InviteFriend inviteFriend = new InviteFriend(phoneNumber, wantToIntroduce);
+            Gson gson = new Gson();
+            String json = gson.toJson(inviteFriend, InviteFriend.class);
             mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
-                    Constants.BASE_URL_MM + Constants.URL_SEND_INVITE + phoneNumber, null, getActivity(), this);
+                    Constants.BASE_URL_MM + Constants.URL_SEND_INVITE, json, getActivity(), this);
             mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -667,6 +650,44 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         mBottomSheetLayout.showWithSheetView(mSheetViewNonIpayMember);
         mBottomSheetLayout.expandSheet();
     }
+
+    public void showInviteDialog(String name, final String mobileNumber) {
+        mInviteMessage = getString(R.string.are_you_sure_to_invite);
+        if (!name.isEmpty())
+            mInviteMessage = mInviteMessage.replace(getString(R.string.this_person), name);
+
+        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                .title(R.string.invite_to_ipay)
+                .customView(R.layout.dialog_invite_friend_with_introduction, true)
+                .positiveText(R.string.yes)
+                .negativeText(R.string.no)
+                .show();
+
+        View view = dialog.getCustomView();
+        final TextView mInviteText = (TextView) view.findViewById(R.id.textviewInviteMessage);
+        final CheckBox introduceCheckbox = (CheckBox) view.findViewById(R.id.introduceCheckbox);
+
+        mInviteText.setText(mInviteMessage);
+
+        dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                boolean wantToIntroduce = introduceCheckbox.isChecked();
+
+                sendInvite(mobileNumber, wantToIntroduce);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.getBuilder().onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
+            }
+        });
+    }
+
 
     private void setSelectedName(String name) {
         this.mSelectedName = name;
@@ -799,30 +820,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                             else setSelectedName(name);
                             setSelectedNumber(mobileNumber);
 
-                            mInvite_message = getString(R.string.are_you_sure_to_invite);
-                            if (!name.isEmpty())
-                                mInvite_message = mInvite_message.replace(getString(R.string.this_person), name);
-
-                            MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
-                            dialog
-                                    .content(mInvite_message)
-                                    .cancelable(false)
-                                    .positiveText(R.string.yes)
-                                    .negativeText(R.string.no)
-                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            sendInvite(mobileNumber);
-                                        }
-                                    })
-                                    .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-
-                            dialog.show();
+                            showInviteDialog(name, mobileNumber);
                         } else {
                             if (originalName != null && !originalName.isEmpty())
                                 setSelectedName(originalName);

@@ -58,7 +58,6 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     private String mReceiverMobileNumber;
     private String mPhotoUri;
     private String mDescription;
-    private String mTitle;
     private long mRequestID;
 
     private ProfileImageView mProfileImageView;
@@ -67,7 +66,6 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     private TextView mDescriptionTagView;
     private TextView mTitleTagView;
     private TextView mDescriptionView;
-    private TextView mTitleView;
     private View mDescriptionHolder;
     private TextView mAmountView;
     private TextView mServiceChargeView;
@@ -88,7 +86,6 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
         mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
         mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
-        mTitle = getActivity().getIntent().getStringExtra(Constants.INVOICE_TITLE_TAG);
         mRequestID = (long) getActivity().getIntent().getSerializableExtra(Constants.MONEY_REQUEST_ID);
         mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
         mPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
@@ -105,7 +102,6 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mDescriptionTagView = (TextView) v.findViewById(R.id.description);
         mTitleTagView = (TextView) v.findViewById(R.id.title);
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
-        mTitleView = (TextView) v.findViewById(R.id.textview_title);
         mDescriptionHolder = v.findViewById(R.id.layout_description_holder);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
@@ -138,12 +134,6 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
             mDescriptionView.setVisibility(View.GONE);
         } else
             mDescriptionView.setText(mDescription);
-
-        if (mTitle == null || mTitle.isEmpty()) {
-            mTitleTagView.setVisibility(View.GONE);
-            mTitleView.setVisibility(View.GONE);
-        } else
-            mTitleView.setText(mTitle);
 
         if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST) {
             mAcceptButton.setVisibility(View.VISIBLE);

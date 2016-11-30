@@ -31,7 +31,7 @@ public class DBConstants {
     public static final String KEY_UPDATE_TIME = "update_at";
 
     // Business table
-    public static final String KEY__BUSINESS_MOBILE_NUMBER = "mobile_number";
+    public static final String KEY_BUSINESS_MOBILE_NUMBER = "mobile_number";
     public static final String KEY_BUSINESS_NAME = "business_name";
     public static final String BUSINESS_EMAIL = "email";
     public static final String KEY_BUSINESS_TYPE = "business_type";

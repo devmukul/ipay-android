@@ -49,8 +49,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
     private List<MoneyAndPaymentRequest> moneyRequestList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private ProgressDialog mProgressDialog;
-
     private int pageCount = 0;
     private boolean hasNext = false;
     private boolean clearListAfterLoading;
@@ -61,7 +59,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
     private String mReceiverMobileNumber;
     private String mPhotoUri;
     private long mMoneyRequestId;
-    private String mTitle;
     private String mDescription;
     private TextView mEmptyListTextView;
 
@@ -71,7 +68,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mNotificationsRecyclerView = (RecyclerView) v.findViewById(R.id.list_notification);
-        mProgressDialog = new ProgressDialog(getActivity());
 
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mReceivedMoneyRequestListAdapter = new ReceivedMoneyRequestListAdapter();
@@ -239,7 +235,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                         mReceiverName = name;
                         mReceiverMobileNumber = mobileNumber;
                         mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
-                        mTitle = title;
                         mDescription = description;
 
                         launchReviewPage();
@@ -337,7 +332,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
             intent.putExtra(Constants.AMOUNT, mAmount);
             intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
             intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, mDescription);
-            intent.putExtra(Constants.INVOICE_TITLE_TAG, mTitle);
             intent.putExtra(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
             intent.putExtra(Constants.NAME, mReceiverName);
             intent.putExtra(Constants.PHOTO_URI, mPhotoUri);

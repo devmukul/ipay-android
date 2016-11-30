@@ -35,6 +35,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
 import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
+import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -68,9 +69,10 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     private CustomSelectorDialog mCustomSelectorDialog;
     private List<String> mRelationshipList;
 
+    private String mName;
+    private String mMobileNumber;
     private String mRelationship;
-    private int mSelectedRelationId = -1;
-    private boolean isViewShown = false;
+
     private View v;
 
     @Override
@@ -172,7 +174,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             public void onResourceSelected(int selectedIndex, String mRelation) {
                 mEditTextRelationship.setError(null);
                 mEditTextRelationship.setText(mRelation);
-                mSelectedRelationId = selectedIndex;
                 mRelationship = mRelation;
             }
         });
@@ -181,9 +182,17 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 if (verifyUserInputs()) {
+                    mName = nameView.getText().toString();
+                    mMobileNumber = mobileNumberView.getText().toString();
                     mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_friend));
 
-                    addFriend(nameView.getText().toString(), mobileNumberView.getText().toString(), mRelationship.toUpperCase());
+                    if (mRelationship != null)
+                        mRelationship = mRelationship.toUpperCase();
+
+                    if (new SearchContactClass(getActivity()).searchMobileNumber(mMobileNumber))
+                        Toast.makeText(getContext(), R.string.contact_already_exists, Toast.LENGTH_LONG).show();
+                    else
+                        addFriend(mName, mMobileNumber, mRelationship);
 
                     Utilities.hideKeyboard(getActivity(), nameView);
                     Utilities.hideKeyboard(getActivity(), mobileNumberView);
@@ -218,18 +227,10 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         if (name.isEmpty()) {
             nameView.setError(getString(R.string.error_invalid_name));
             error = true;
-        } else if (!InputValidator.isValidName(name)) {
-            nameView.setError(getString(R.string.please_enter_valid_name));
-            error = true;
         }
 
         if (!ContactEngine.isValidNumber(mobileNumber)) {
             mobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
-            error = true;
-        }
-
-        if (mRelationship == null) {
-            mEditTextRelationship.setError(getString(R.string.please_enter_relationship));
             error = true;
         }
         return !error;

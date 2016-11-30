@@ -17,10 +17,8 @@ public class SignupRequestBusiness {
     private final String personalMobileNumber;
     private final AddressClass personalAddress;
     private final AddressClass businessAddress;
-    private final String promoCode;
 
     private SignupRequestBusiness(Builder builder) {
-        promoCode = builder.promoCode;
         mobileNumber = builder.mobileNumber;
         deviceId = builder.deviceId;
         name = builder.name;
@@ -37,7 +35,6 @@ public class SignupRequestBusiness {
     }
 
     public static final class Builder {
-        private String promoCode;
         private String mobileNumber;
         private String deviceId;
         private String name;
@@ -55,10 +52,6 @@ public class SignupRequestBusiness {
         public Builder() {
         }
 
-        public Builder promoCode(String val) {
-            promoCode = val;
-            return this;
-        }
 
         public Builder mobileNumber(String val) {
             mobileNumber = val;

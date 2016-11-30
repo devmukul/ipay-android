@@ -53,7 +53,6 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
     private EditText mMobileNumberEditText;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
-    private EditText mTitleEditText;
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -70,8 +69,6 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
             mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
         }
-
-        mTitleEditText = (EditText) v.findViewById(R.id.title_request);
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.submitting_request_money));
@@ -148,13 +145,6 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
-        if (!(mTitleEditText.getText().toString().trim().length() > 0)) {
-            focusView = mTitleEditText;
-            mTitleEditText.setError(getString(R.string.please_write_title));
-            cancel = true;
-
-        }
-
         // validation check of amount
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
             focusView = mAmountEditText;
@@ -205,14 +195,12 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
     private void launchReviewPage() {
         String receiver = mMobileNumberEditText.getText().toString().trim();
         BigDecimal amount = new BigDecimal(mAmountEditText.getText().toString().trim());
-        String title = mTitleEditText.getText().toString().trim();
         String description = mDescriptionEditText.getText().toString().trim();
 
         Intent intent = new Intent(getActivity(), RequestMoneyReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, amount);
         intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(receiver));
         intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
-        intent.putExtra(Constants.INVOICE_TITLE_TAG, title);
         intent.putExtra(Constants.IS_IN_CONTACTS, new SearchContactClass(getActivity()).searchMobileNumber(receiver));
 
         startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);

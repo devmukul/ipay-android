@@ -9,6 +9,8 @@ import android.view.View;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.LinkBankFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ManageBanksActivity extends BaseActivity {
@@ -41,8 +43,7 @@ public class ManageBanksActivity extends BaseActivity {
             Utilities.hideKeyboard(this);
             if (switchedToAddBankFragment) {
                 switchToBankAccountsFragment();
-            }
-            else {
+            } else {
                 finish();
             }
             return true;
@@ -62,7 +63,12 @@ public class ManageBanksActivity extends BaseActivity {
     public void switchToBankAccountsFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new BankAccountsFragment()).commit();
-        mFabAddNewBank.setVisibility(View.VISIBLE);
+
+        // Check if the account is verified before adding a bank account.
+        if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED))
+            mFabAddNewBank.setVisibility(View.VISIBLE);
+        else mFabAddNewBank.setVisibility(View.GONE);
+
         switchedToAddBankFragment = false;
     }
 

@@ -110,19 +110,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/title"
-                style="@style/ListHeaderStyle"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:layout_weight="0.5"
-                android:text="@string/title" />
-
-            <TextView
-                android:id="@+id/textview_title"
-                style="@style/TextViewDescription" />
-
-            <TextView
                 android:id="@+id/description"
                 style="@style/ListHeaderStyle"
                 android:layout_width="match_parent"

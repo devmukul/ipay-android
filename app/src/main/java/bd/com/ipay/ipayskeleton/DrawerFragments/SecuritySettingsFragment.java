@@ -48,10 +48,10 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         setTitle();
 
         setPINHeader = (IconifiedTextViewWithButton) v.findViewById(R.id.set_pin);
-        changePasswordHeader = (IconifiedTextViewWithButton)v.findViewById(R.id.change_password);
-        trustedDevicesHeader = (IconifiedTextViewWithButton)v.findViewById(R.id.trusted_device);
-        passwordRecoveryHeader =(IconifiedTextViewWithButton) v.findViewById(R.id.password_recovery);
-        logoutHeader = (IconifiedTextViewWithButton)v.findViewById(R.id.logout_from_all_devices);
+        changePasswordHeader = (IconifiedTextViewWithButton) v.findViewById(R.id.change_password);
+        trustedDevicesHeader = (IconifiedTextViewWithButton) v.findViewById(R.id.trusted_device);
+        passwordRecoveryHeader = (IconifiedTextViewWithButton) v.findViewById(R.id.password_recovery);
+        logoutHeader = (IconifiedTextViewWithButton) v.findViewById(R.id.logout_from_all_devices);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -120,8 +120,8 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
 
-       // Set the preference
-        pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
+        // Set the preference
+        ProfileInfoCacheManager.setLoggedInStatus(false);
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT_from_all_device, json, getActivity());
@@ -130,8 +130,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public void setTitle()
-    {
+    public void setTitle() {
         getActivity().setTitle(R.string.security);
     }
 
@@ -141,7 +140,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
-            mLogoutTask=null;
+            mLogoutTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
@@ -149,7 +148,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
 
         Gson gson = new Gson();
 
-                if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
 
             try {
                 mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);

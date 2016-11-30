@@ -60,6 +60,8 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     private String mPhotoUri;
     private String mFathersName = null;
     private String mMothersname = null;
+    private String mIntroductionMessage;
+
     private AddressClass mAddress;
 
     private boolean isInContacts;
@@ -139,9 +141,12 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
             @Override
             public void onClick(View v) {
 
+                mIntroductionMessage = getString(R.string.introduction_request_review_dialog_content);
+                mIntroductionMessage = mIntroductionMessage.replace(getString(R.string.this_person), mSenderName);
+
                 new MaterialDialog.Builder(getActivity())
                         .title(R.string.are_you_sure)
-                        .content(R.string.introduction_request_review_dialog_content)
+                        .content(mIntroductionMessage)
                         .positiveText(R.string.yes)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override

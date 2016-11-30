@@ -149,12 +149,7 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
             focusView = mEditTextName;
             mEditTextName.setError(getString(R.string.error_invalid_name));
             cancel = true;
-        }else if (!InputValidator.isValidName(mName)) {
-            mEditTextName.setError(getString(R.string.please_enter_valid_name));
-            focusView = mEditTextName;
-            cancel = true;
-
-        } else if (!ContactEngine.isValidNumber(mMobileNumber)) {
+        }else if (!ContactEngine.isValidNumber(mMobileNumber)) {
 
             focusView = mEditTextMobileNumber;
             mEditTextMobileNumber.setError(getString(R.string.please_enter_valid_mobile_number));

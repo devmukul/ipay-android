@@ -139,8 +139,6 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                                 }
                             })
                             .show();
-                } else {
-
                 }
             }
 
@@ -156,6 +154,22 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         Intent intent = new Intent(getActivity(), ProfileActivity.class);
         intent.putExtra(Constants.TARGET_FRAGMENT, ProfileCompletionPropertyConstants.VERIFIED_EMAIL);
         startActivity(intent);
+    }
+
+    private void showCreateTicketSuccessDialog() {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
+        dialog
+                .title(R.string.ticket_created)
+                .content(R.string.ticket_created_dialog_text)
+                .cancelable(false)
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        getActivity().onBackPressed();
+                    }
+                })
+                .show();
     }
 
     private boolean verifyUserInputs() {
@@ -241,7 +255,12 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.ticket_created, Toast.LENGTH_LONG).show();
-                            getActivity().onBackPressed();
+                            showCreateTicketSuccessDialog();
+                        }
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PAYMENT_REQUIRED) {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), R.string.no_email_added, Toast.LENGTH_LONG).show();
+                            launchEmailPage();
                         }
                     } else {
                         if (getActivity() != null) {

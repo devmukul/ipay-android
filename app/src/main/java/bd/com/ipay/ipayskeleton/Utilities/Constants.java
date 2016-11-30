@@ -58,7 +58,6 @@ public class Constants {
     public static final String SEARCH_SPECIFIC_NUMBER_ONLY = "SEARCH_SPECIFIC_NUMBER_ONLY";
     public static final String HIDE_STATUSES = "HIDE_STATUSES";
 
-
     public static final String SMS_READER_BROADCAST_RECEIVER_PDUS = "pdus";
     public static final String PROFILE_INFO_UPDATE_BROADCAST = "PROFILE_INFO_UPDATE_BROADCAST";
     public static final String PROFILE_PICTURE_UPDATE_BROADCAST = "PROFILE_PICTURE_UPDATE_BROADCAST";
@@ -71,6 +70,9 @@ public class Constants {
     public static final String OPERATING_ON_ACCOUNT_ID = "operatingOnAccountId";
 
     public static final String REQUEST_ID = "REQUEST_ID";
+    public static final String QUESTION_ID = "QUESTION_ID";
+    public static final String PREVIOUS_QUESTION = "PREVIOUS_QUESTIONS";
+    public static final String All_QUESTIONS = "ALL_QUESTIONS";
     public static final String PROFILE_PICTURE = "_PROFILE_PICTURE";
     public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
     public static final String BIRTHDAY = "BIRTHDAY";
@@ -97,56 +99,56 @@ public class Constants {
     public static final String MESSAGE = "message";
 
     public static final String NAME = "NAME";
+
     public static final String OCCUPATION = "OCCUPATION";
     public static final String OCCUPATION_LIST = "OCCUPATION_LIST";
     public static final String DESIGNATION = "DESIGNATION";
-
     public static final String BUSINESS_NAME = "BUSINESS_NAME";
+
     public static final String BUSINESS_EMAIL = "BUSINESS_EMAIL";
     public static final String BUSINESS_MOBILE_NUMBER = "BUSINESS_MOBILE_NUMBER";
     public static final String BUSINESS_TYPE = "BUSINESS_TYPE";
     public static final String BUSINESS_TYPE_LIST = "BUSINESS_TYPE_LIST";
     public static final String SELECTED_BUSINESS_TYPE = "SELECTED_BUSINESS_TYPE";
-
     public static final String FATHERS_NAME = "FATHERS_NAME";
+
     public static final String MOTHERS_NAME = "MOTHERS_NAME";
     public static final String FATHERS_MOBILE = "FATHERS_MOBILE";
     public static final String MOTHERS_MOBILE = "MOTHERS_MOBILE";
-
     public static final String ASSOCIATION_ID = "ASSOCIATION_ID";
-    public static final String ROLE_ID = "ROLE_ID";
 
+    public static final String ROLE_ID = "ROLE_ID";
     public static final String ADDRESS = "ADDRESS";
+
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
     public static final String PRESENT_ADDRESS = "PRESENT_ADDRESS";
-
     public static final String REQUEST_TYPE = "request_type";
+
     public static final String AMOUNT = "amount";
     public static final String BANK_NAME = "bank_name";
     public static final String BANK_ACCOUNT_NUMBER = "bank_account_number";
     public static final String BANK_ACCOUNT_ID = "bank_account_id";
     public static final String BANK_CODE = "bank_code";
-
     public static final String PHOTO_URI = "photo_uri";
-    public static final String VAT = "vat";
 
+    public static final String VAT = "vat";
     public static final String OFFICE_PHONE_NUMBER = "+8801740651429";
+
     public static final String OFFICE_LAND_LINE_NUMBER = "+88029852507";
     public static final String OFFICE_EMAIL = "support@ipay.com.bd";
     public static final String OFFICE_WEB = "www.ipay.com.bd";
     public static final String FEEDBACK = "feedback@ipay.com.bd";
     public static final String OFFICE_ADDRESS = "Silver Tower (12th Floor)\n52 Gulshan Avenue, Circle-1\nDhaka-1212\nBangladesh\n";
-
     public static final double OFFICE_LATITUDE = 23.7810729;
-    public static final double OFFICE_LONGITUDE = 90.4169212;
 
+    public static final double OFFICE_LONGITUDE = 90.4169212;
 //    public static final String EMPLOYEE_PRIVILEGE = "EMPLOYEE_PRIVILEGE";
 
     public static final int STARTING_DATE = 01;
+
     public static final int STARTING_MONTH = 01;
     public static final int STARTING_YEAR = 2016;
     public static final int DEFAULT_USER_CLASS = 1;
-
     /**
      * All requests and responses to server, as well as token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.
@@ -172,13 +174,13 @@ public class Constants {
     public static final int SERVER_TYPE = BuildConfig.ServerType;
 
     public static final String BASE_URL_MM;
+
     public static final String BASE_URL_SM;
     public static final String BASE_URL_EDU;
     public static final String BASE_URL_FRIEND;
     public static final String BASE_URL_ADMIN;
     public static final String BASE_URL_FTP_SERVER;
     private static final String SERVER_NAME;
-
     static {
         if (SERVER_TYPE == 1) {
 
@@ -233,39 +235,39 @@ public class Constants {
         }
     }
 
-
     // Activity REST
     public static final String URL_USER_ACTIVITY = "/activity";
 
+
     // Bank Operation REST
     public static final String URL_ADD_A_BANK = "bank/";
+
     public static final String URL_GET_BANK = "bank/";
     public static final String URL_REMOVE_A_BANK = "bank/";
     public static final String URL_VERIFY_WITH_AMOUNT_A_BANK = "bank/";
-
     // Bank Transaction REST
     public static final String URL_ADD_MONEY = "banktransaction/cashin";
-    public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout";
 
+    public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout";
     // Bank Verify Rest
     public static final String URL_BANK_VERIFICATION_WITH_AMOUNT = "verify";
 
     // Trusted device CRUD operations
     public static final String URL_ADD_TRUSTED_DEVICE = "device";
+
     public static final String URL_GET_TRUSTED_DEVICES = "device";
     public static final String URL_REMOVE_TRUSTED_DEVICE = "device/";
-
     // Documents Rest
     public static final String URL_GET_DOCUMENTS = "docs/identification/documents";
+
     public static final String URL_GET_BUSINESS_DOCUMENTS = "docs/identification/documents/business";
     public static final String URL_UPLOAD_DOCUMENTS = "docs/identification/documents";
     public static final String URL_UPLOAD_BUSINESS_DOCUMENTS = "docs/identification/documents/business";
     public static final String URL_GET_DOCUMENT_ACCESS_TOKEN = "user/contentAccessToken";
-
     // Event Controller
     public static final String URL_EVENT_LIST = "events/user/eventList/";
-    public static final String URL_EVENT_CATEGORIES = "categories";
 
+    public static final String URL_EVENT_CATEGORIES = "categories";
     // Fee Charge REST
     public static final String URL_SERVICE_CHARGE = "feecharge";
 
@@ -277,8 +279,10 @@ public class Constants {
 
     // Introducer REST
     public static final String URL_ASK_FOR_INTRODUCTION = "/introducer/introduceme/";
+
     public static final String URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "introducer/downstream/notapproved";
     public static final String URL_GET_DOWNSTREAM_APPROVED_INTRODUCTION_REQUESTS = "introducer/downstream/approved";
+
     public static final String URL_GET_UPSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "introducer/upstream/notapproved";
     public static final String URL_GET_UPSTREAM_APPROVED_INTRODUCTION_REQUESTS = "introducer/upstream/approved";
     public static final String URL_INTRODUCE_ACTION = "introducer/";
@@ -311,8 +315,10 @@ public class Constants {
     public static final String URL_CHANGE_PASSWORD = "settings/password";
     public static final String URL_SEND_OTP_FORGET_PASSWORD = "settings/password/forget";
     public static final String URL_CONFIRM_OTP_FORGET_PASSWORD = "settings/password/forget/confirmation";
+    public static final String URL_GET_SECURITY_ALL_QUESTIONS = "settings/security/allquestions/";
     public static final String URL_GET_SECURITY_QUESTIONS = "settings/security/questions";
     public static final String URL_SET_SECURITY_ANSWERS = "settings/security/answers";
+    public static final String
 
     public static final String URL_GET_PIN_INFO = "settings/pin";
     public static final String URL_SET_PIN = "settings/pin";
@@ -420,6 +426,7 @@ public class Constants {
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
+    public static final int HTTP_RESPONSE_STATUS_PAYMENT_REQUIRED = 402;
     public static final int HTTP_RESPONSE_STATUS_OK = 200;
     public static final int HTTP_RESPONSE_STATUS_PROCESSING = 102;
     public static final int HTTP_RESPONSE_STATUS_UNAUTHORIZED = 401;
@@ -432,6 +439,7 @@ public class Constants {
     public static final String BANK_ACCOUNT_STATUS_VERIFIED = "VERIFIED";
     public static final String BANK_ACCOUNT_STATUS_PENDING = "PENDING";
     public static final String BANK_ACCOUNT_STATUS_NOT_VERIFIED = "NOT_VERIFIED";
+    public static final String BANK_ACCOUNT_STATUS_BLOCKED = "BLOCKED";
 
     public static final int MOBILE_TYPE_PREPAID = 1;
     public static final int MOBILE_TYPE_POSTPAID = 2;
@@ -514,8 +522,10 @@ public class Constants {
     public static final String COMMAND_GET_BUSINESS_RULE = "COMMAND_GET_BUSINESS_RULE";
     public static final String COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE = "COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE";
     public static final String COMMAND_GET_ALL_BUSINESS_LIST = "COMMAND_GET_ALL_BUSINESS_LIST";
-    public static final String COMMAND_GET_SECURITY_QUESTIONS = "COMMAND_GET_SECURITY_QUESTIONS";
+    public static final String COMMAND_GET_ALL_SECURITY_QUESTIONS = "COMMAND_GET_ALL_SECURITY_QUESTIONS";
+    public static final String COMMAND_GET_SELECTED_SECURITY_QUESTIONS = "COMMAND_GET_SELECTED_SECURITY_QUESTIONS";
     public static final String COMMAND_SET_SECURITY_ANSWERS = "COMMAND_SET_SECURITY_ANSWERS";
+    public static final String COMMAND_UPDATE_SECURITY_ANSWERS = "COMMAND_UPDATE_SECURITY_ANSWERS";
 
     // Event
     public static final String COMMAND_GET_MY_EVENTS = "COMMAND_GET_MY_EVENTS";
@@ -789,5 +799,10 @@ public class Constants {
 
     public static final int REQUEST_TYPE_RECEIVED_REQUEST = 1;
     public static final int REQUEST_TYPE_SENT_REQUEST = 2;
+
+    // Face detector
+    public static final String NOT_AN_IMAGE = "NOT_AN_IMAGE";
+    public static final String MULTIPLE_FACES = "MULTIPLE_FACES";
+    public static final String NO_FACE_DETECTED = "NO_FACE_DETECTED";
 
 }

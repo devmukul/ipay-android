@@ -177,7 +177,9 @@ public class CreateNewEventFragment extends Fragment implements HttpResponseList
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
                 for (int i = 0; i < permissions.length; i++) {
-                    Log.w(permissions[i], grantResults[i] + "");
+
+                    if (Constants.DEBUG)
+                        Log.w(permissions[i], grantResults[i] + "");
 
                     if (permissions[i].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                         if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {

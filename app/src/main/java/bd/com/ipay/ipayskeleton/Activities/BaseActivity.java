@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.Activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -74,12 +73,11 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
             if (!((Activity) context).isFinishing()) {
                 if (Utilities.isConnectionAvailable(context)) attemptLogout();
                 else {
-                    SharedPreferences pref;
-                    pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                    boolean loggedIn = pref.getBoolean(Constants.LOGGED_IN, true);
+
+                    boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
 
                     if (loggedIn) {
-                        pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
+                        ProfileInfoCacheManager.setLoggedInStatus(false);
 
                         Intent intent = new Intent(context, SignupOrLoginActivity.class);
                         startActivity(intent);
@@ -143,8 +141,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
             return;
         }
 
-        SharedPreferences pref;
-        pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         String mUserID = ProfileInfoCacheManager.getMobileNumber();
 
         LogoutRequest mLogoutModel = new LogoutRequest(mUserID);
@@ -152,7 +148,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
         String json = gson.toJson(mLogoutModel);
 
         // Set the preference
-        pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
+        ProfileInfoCacheManager.setLoggedInStatus(false);
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, context);

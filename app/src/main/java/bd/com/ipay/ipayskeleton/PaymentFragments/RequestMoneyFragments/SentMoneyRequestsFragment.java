@@ -68,7 +68,6 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
     private String mReceiverMobileNumber;
     private String mPhotoUri;
     private long mMoneyRequestId;
-    private String mTitle;
     private String mDescription;
 
     @Override
@@ -276,7 +275,6 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                 final String name = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserName();
                 final String imageUrl = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserProfilePicture();
                 final String mobileNumber = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserMobileNumber();
-                final String title = pendingMoneyRequestClasses.get(pos).getTitle();
                 final String description = pendingMoneyRequestClasses.get(pos).getDescription();
                 final BigDecimal amount = pendingMoneyRequestClasses.get(pos).getAmount();
 
@@ -293,7 +291,6 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                         mReceiverName = name;
                         mReceiverMobileNumber = mobileNumber;
                         mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
-                        mTitle = title;
                         mDescription = description;
 
                         launchReviewPage();
@@ -390,7 +387,6 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
             intent.putExtra(Constants.AMOUNT, mAmount);
             intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
             intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, mDescription);
-            intent.putExtra(Constants.INVOICE_TITLE_TAG, mTitle);
             intent.putExtra(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
             intent.putExtra(Constants.NAME, mReceiverName);
             intent.putExtra(Constants.PHOTO_URI, mPhotoUri);

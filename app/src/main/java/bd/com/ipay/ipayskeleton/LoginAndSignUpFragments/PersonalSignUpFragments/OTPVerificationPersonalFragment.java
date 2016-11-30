@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponsePersona
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.SignupRequestPersonal;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.SignupResponsePersonal;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -145,7 +146,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             mProgressDialog.show();
 
             OTPRequestPersonalSignup mOtpRequestPersonalSignup = new OTPRequestPersonalSignup(SignupOrLoginActivity.mMobileNumber,
-                    Constants.MOBILE_ANDROID + mDeviceID, Constants.PERSONAL_ACCOUNT_TYPE, SignupOrLoginActivity.mPromoCode);
+                    Constants.MOBILE_ANDROID + mDeviceID, Constants.PERSONAL_ACCOUNT_TYPE);
             Gson gson = new Gson();
             String json = gson.toJson(mOtpRequestPersonalSignup);
             mRequestOTPTask = new
@@ -183,7 +184,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             SignupRequestPersonal mSignupModel = new SignupRequestPersonal(SignupOrLoginActivity.mMobileNumber,
                     Constants.MOBILE_ANDROID + mDeviceID,
                     SignupOrLoginActivity.mName,
-                    SignupOrLoginActivity.mBirthday, SignupOrLoginActivity.mPassword, otp, SignupOrLoginActivity.mPromoCode,
+                    SignupOrLoginActivity.mBirthday, SignupOrLoginActivity.mPassword, otp,
                     Constants.PERSONAL_ACCOUNT_TYPE, SignupOrLoginActivity.mAddressPersonal);
             Gson gson = new Gson();
             String json = gson.toJson(mSignupModel);
@@ -313,8 +314,8 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     String message = mLoginResponseModel.getMessage();
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                        pref.edit().putBoolean(Constants.LOGGED_IN, true).apply();
+                        ProfileInfoCacheManager.setLoggedInStatus(true);
+
                         ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
                     } else {

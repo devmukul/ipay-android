@@ -239,6 +239,8 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                 mRelationshipView.setText(trustedPerson.getRelationship());
                 if (pos == mTrustedPersons.size() - 1)
                     divider.setVisibility(View.GONE);
+                else
+                    divider.setVisibility(View.VISIBLE);
             }
         }
 
