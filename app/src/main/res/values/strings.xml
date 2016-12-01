@@ -390,7 +390,9 @@
     <string name="filter_system_event">System Events</string>
     <string name="filter">Filter</string>
     <string name="ticket_verified">Ticket Verified</string>
-    <string name="introducers">Introducer</string>
+    <string name="Introducer">Introducer</string>
+    <string name="introducer">introducer</string>
+    <string name="introducers">introducers</string>
     <string name="introduce_this_person">Introduce this person</string>
     <string name="business_invitation">Business Invitation</string>
     <string name="in_progress">In Progress</string>

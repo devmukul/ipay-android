@@ -86,7 +86,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_recommendation_review, container, false);
 
-        getActivity().setTitle(R.string.introducers);
+        getActivity().setTitle(R.string.Introducer);
 
         Bundle bundle = getArguments();
 
