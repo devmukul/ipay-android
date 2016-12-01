@@ -289,7 +289,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                     profilePictureView.setProfilePicture(R.drawable.ic_logo);
                 }
                 commentView.setText(comment.getBody());
-                timeView.setText(Utilities.getDateFormat(comment.getCreatedAt()));
+                timeView.setText(Utilities.formatDateWithTime(comment.getCreatedAt()));
             }
         }
 

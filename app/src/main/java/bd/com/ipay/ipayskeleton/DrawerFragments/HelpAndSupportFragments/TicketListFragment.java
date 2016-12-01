@@ -209,7 +209,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
 
                 subjectView.setText(ticket.getSubject());
                 descriptionView.setText(ticket.getDescription());
-                timeView.setText(Utilities.getDateFormat(ticket.getCreatedAt()));
+                timeView.setText(Utilities.formatDateWithTime(ticket.getCreatedAt()));
                 statusView.setText(ticket.getStatus().toUpperCase());
 
                 switch (ticket.getStatus()) {

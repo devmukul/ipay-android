@@ -197,7 +197,7 @@ public class SentMoneyRequestsHistoryFragment extends ProgressFragment implement
             public void bindView(final int pos) {
 
                 final long id = sentMoneyRequestClasses.get(pos).getId();
-                String time = Utilities.getDateFormat(sentMoneyRequestClasses.get(pos).getRequestTime());
+                String time = Utilities.formatDateWithTime(sentMoneyRequestClasses.get(pos).getRequestTime());
                 final String name = sentMoneyRequestClasses.get(pos).getReceiverProfile().getUserName();
                 final String imageUrl = sentMoneyRequestClasses.get(pos).getReceiverProfile().getUserProfilePicture();
 
