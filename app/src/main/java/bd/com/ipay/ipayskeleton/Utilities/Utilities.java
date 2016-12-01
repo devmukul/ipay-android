@@ -513,8 +513,12 @@ public class Utilities {
         });
     }
 
-    public static String getDateFormat(long time) {
+    public static String formatDateWithTime(long time) {
         return new SimpleDateFormat("MMM d, yyyy, h:mm a").format(time);
+    }
+
+    public static String formatDateWithoutTime(long time) {
+        return new SimpleDateFormat("MMM d, yyyy").format(time);
     }
 
     public static boolean checkPlayServices(Context context) {

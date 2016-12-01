@@ -201,7 +201,7 @@ public class MyEventsFragment extends ProgressFragment implements HttpResponseLi
                 if (pos == listOfMyEvents.size() - 1) divider.setVisibility(View.GONE);
 
                 final long id = listOfMyEvents.get(pos).getId();
-                String time = Utilities.getDateFormat(listOfMyEvents.get(pos).getRequestTime());
+                String time = Utilities.formatDateWithTime(listOfMyEvents.get(pos).getRequestTime());
                 String name = listOfMyEvents.get(pos).getReceiverProfile().getUserName();
                 String imageUrl = listOfMyEvents.get(pos).getReceiverProfile().getUserProfilePicture();
                 mTime.setText(time);
