@@ -77,6 +77,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
+        // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {

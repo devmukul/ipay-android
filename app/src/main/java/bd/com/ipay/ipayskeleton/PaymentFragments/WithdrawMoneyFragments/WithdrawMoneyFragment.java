@@ -85,6 +85,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         mLinkABankNoteTextView = (TextView) v.findViewById(R.id.link_a_bank_note);
         mBankIcon = (ImageView) v.findViewById(R.id.portrait);
 
+        // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
         mProgressDialog = new ProgressDialog(getActivity());

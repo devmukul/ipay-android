@@ -73,6 +73,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mRefNumberEditText = (EditText) v.findViewById(R.id.reference_number);
 
+        // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
         buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);

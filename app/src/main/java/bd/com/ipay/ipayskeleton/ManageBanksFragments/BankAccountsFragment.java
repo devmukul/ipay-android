@@ -293,6 +293,8 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         View view = dialog.getCustomView();
         final EditText mAmountEditText = (EditText) view.findViewById(R.id.amount);
+
+        // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
         dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {

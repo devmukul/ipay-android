@@ -61,6 +61,7 @@ public class RequestPaymentFragment extends Fragment {
         mVatEditText = (EditText) v.findViewById(R.id.vat);
         mTotalTextView = (TextView) v.findViewById(R.id.total);
 
+        // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
         mProgressDialog = new ProgressDialog(getActivity());

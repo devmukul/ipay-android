@@ -68,6 +68,7 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
 
+        // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {

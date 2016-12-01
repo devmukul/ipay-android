@@ -86,6 +86,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         mBankIcon = (ImageView) v.findViewById(R.id.portrait);
         mAccountNumberLayout = (RelativeLayout) v.findViewById(R.id.account_number_layout);
 
+        // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
         mProgressDialog = new ProgressDialog(getActivity());
