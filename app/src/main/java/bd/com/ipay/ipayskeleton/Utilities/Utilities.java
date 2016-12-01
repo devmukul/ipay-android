@@ -517,6 +517,10 @@ public class Utilities {
         return new SimpleDateFormat("MMM d, yyyy, h:mm a").format(time);
     }
 
+    public static String getDateFormatWithoutTime(long time) {
+        return new SimpleDateFormat("MMM d, yyyy").format(time);
+    }
+
     public static boolean checkPlayServices(Context context) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(context);
