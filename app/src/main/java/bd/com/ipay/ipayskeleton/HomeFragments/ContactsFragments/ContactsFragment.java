@@ -633,10 +633,16 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         selectedBottomSheetView = mSheetViewNonIpayMember;
 
         Button inviteButton = (Button) mSheetViewNonIpayMember.findViewById(R.id.button_invite);
+
+        // You can send invite to the person who is invited by you again for now.
+        // Following segment disables this feature
+        /*
+        // Can not send invite to person who is invited already
         if (ContactsHolderFragment.mGetInviteInfoResponse.getInvitees().contains(mobileNumber))
             inviteButton.setEnabled(false);
         else
             inviteButton.setEnabled(true);
+        */
 
         mBottomSheetLayout.showWithSheetView(mSheetViewNonIpayMember);
         mBottomSheetLayout.expandSheet();
