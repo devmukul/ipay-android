@@ -159,18 +159,8 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
                 .content(R.string.get_verified)
                 .cancelable(false)
                 .content(getString(R.string.can_not_add_bank_if_not_verified))
-                .positiveText(R.string.complete_your_profile)
-                .negativeText(R.string.cancel)
+                .positiveText(R.string.ok)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        getActivity().onBackPressed();
-                        Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                        intent.putExtra(Constants.TARGET_FRAGMENT, ProfileCompletionPropertyConstants.PROFILE_COMPLETENESS);
-                        startActivity(intent);
-                    }
-                })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         getActivity().onBackPressed();
