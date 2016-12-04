@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -17,19 +18,30 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentReviewActivity;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class RequestPaymentFragment extends Fragment {
+public class RequestPaymentFragment extends Fragment implements HttpResponseListener {
+
+    private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
     private final int PICK_CONTACT_REQUEST = 100;
     private static final int REQUEST_CREATE_INVOICE_REVIEW = 101;
@@ -112,7 +124,7 @@ public class RequestPaymentFragment extends Fragment {
                     mTotal = mAmount;
                 }
 
-               if (mVat != null) {
+                if (mVat != null) {
                     if (mTotal != null)
                         mTotal = mAmount.add(mTotal.multiply(mVat.divide(new BigDecimal(100))));
                 }
@@ -148,6 +160,9 @@ public class RequestPaymentFragment extends Fragment {
             }
         });
 
+        // Get business rule
+      //  attemptGetBusinessRule(Constants.SERVICE_ID_MAKE_PAYMENT);
+
         return v;
     }
 
@@ -159,6 +174,7 @@ public class RequestPaymentFragment extends Fragment {
         String description = mDescriptionEditText.getText().toString();
         String amount = mAmountEditText.getText().toString();
         String vat = mVatEditText.getText().toString();
+        String totalAmount = mTotalTextView.getText().toString();
 
         // Check for a validation
         if (!(amount.length() > 0 && Double.parseDouble(amount) > 0)) {
@@ -189,6 +205,20 @@ public class RequestPaymentFragment extends Fragment {
             cancel = true;
         }
 
+        if ((totalAmount.trim().length() > 0)
+                && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+
+            String error_message = InputValidator.isValidAmount(getActivity(), mTotal,
+                    PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+
+            if (error_message != null) {
+                focusView = mAmountEditText;
+                mAmountEditText.setError(error_message);
+                cancel = true;
+            }
+        }
+
         if (cancel) {
             focusView.requestFocus();
             return false;
@@ -196,7 +226,6 @@ public class RequestPaymentFragment extends Fragment {
             return true;
         }
     }
-
 
     private void launchReviewPage() {
         String receiver = mMobileNumberEditText.getText().toString();
@@ -214,6 +243,19 @@ public class RequestPaymentFragment extends Fragment {
         intent.putExtra(Constants.TOTAL, mTotal + "");
 
         startActivityForResult(intent, REQUEST_CREATE_INVOICE_REVIEW);
+    }
+
+    private void attemptGetBusinessRule(int serviceID) {
+
+        if (mGetBusinessRuleTask != null) {
+            return;
+        }
+
+        String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
+        mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
+                mUri, getActivity(), this);
+
+        mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -235,5 +277,48 @@ public class RequestPaymentFragment extends Fragment {
                         Toast.LENGTH_SHORT).show();
         } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CREATE_INVOICE_REVIEW)
             ((InvoiceActivity) getActivity()).switchToInvoicesSentFragment();
+    }
+
+
+    @Override
+    public void httpResponseReceiver(HttpResponseObject result) {
+
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                try {
+                    Gson gson = new Gson();
+
+                    BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
+
+                    if (businessRuleArray != null) {
+                        for (BusinessRule rule : businessRuleArray) {
+                            if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT)) {
+                                PaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+
+                            } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
+                                PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            }
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                }
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+            }
+
+            mGetBusinessRuleTask = null;
+        }
     }
 }

@@ -1,7 +1,9 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,17 +18,20 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SendInvoiceRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.SendInvoiceResponse;
+import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class RequestPaymentReviewFragment extends Fragment implements HttpResponseListener {
+public class RequestPaymentReviewFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSendInvoiceTask = null;
     private SendInvoiceResponse mSendInvoiceResponse;
@@ -41,6 +46,7 @@ public class RequestPaymentReviewFragment extends Fragment implements HttpRespon
 
     private String mReceiverName;
     private String mPhotoUri;
+    private String mError_message;
 
     private ProfileImageView mProfileImageView;
     private TextView mNameView;
@@ -100,12 +106,44 @@ public class RequestPaymentReviewFragment extends Fragment implements HttpRespon
         mCreateInvoiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                attemptSendInvoice();
+
+                if (Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                        && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+                    mError_message = InputValidator.isValidAmount(getActivity(), mTotal,
+                            PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                            PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+
+                    if (mError_message == null) {
+                        attemptSendInvoice();
+
+                    } else {
+                        showErrorDialog();
+                    }
+                }
 
             }
         });
 
+        // Check if Min or max amount is available
+        if (!Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
+                && !Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
+            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_MAKE_PAYMENT);
+        else
+            attemptGetServiceCharge();
+
         return v;
+    }
+
+    private void showErrorDialog() {
+        new AlertDialog.Builder(getContext())
+                .setMessage(mError_message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     private void attemptSendInvoice() {
@@ -123,6 +161,26 @@ public class RequestPaymentReviewFragment extends Fragment implements HttpRespon
                 Constants.BASE_URL_SM + Constants.URL_PAYMENT_SEND_INVOICE, json, getActivity());
         mSendInvoiceTask.mHttpResponseListener = this;
         mSendInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    protected int getServiceID() {
+        return Constants.SERVICE_ID_MAKE_PAYMENT;
+    }
+
+    @Override
+    protected BigDecimal getAmount() {
+        return null;
+    }
+
+    @Override
+    protected void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
+
+    }
+
+    @Override
+    protected void onPinLoadFinished(boolean isPinRequired) {
+
     }
 
     @Override
