@@ -66,7 +66,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     private EditText mAmountEditText;
     private TextView mLinkABankNoteTextView;
     private ImageView mBankIcon;
-    private RelativeLayout mAccountNumberLayout;
     private List<UserBankClass> mListUserBankClasses;
     private ArrayList<String> mUserBankNameList;
     private ArrayList<String> mUserBankAccountNumberList;
@@ -90,7 +89,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         buttonAddMoney = (Button) v.findViewById(R.id.button_cash_in);
         mLinkABankNoteTextView = (TextView) v.findViewById(R.id.link_a_bank_note);
         mBankIcon = (ImageView) v.findViewById(R.id.portrait);
-        mAccountNumberLayout = (RelativeLayout) v.findViewById(R.id.account_number_layout);
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
