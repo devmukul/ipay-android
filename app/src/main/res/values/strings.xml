@@ -565,6 +565,7 @@
     <string name="dialog_prompt_add_pin">Please set your PIN first</string>
     <string name="enter_a_new_pin">Enter a new PIN</string>
     <string name="get_verified_to_invite">You can invite him/her to iPay once you get verified</string>
+    <string name="get_verified">Get verified first!</string>
     <string name="failed_get_document_list">Failed to fetch the list of documents</string>
     <string name="not_submitted">Not Submitted</string>
     <string name="you_need_to_upload_identification_documents_to_get_verified">You need to upload at least one identification documents to get verified</string>
@@ -582,7 +583,8 @@
     <string name="failed_fetching_profile_completion_status">Failed to fetch profile completion status</string>
     <string name="can_not_change_picture">Verified user can not change profile picture</string>
     <string name="profile_completeness">Profile Completeness</string>
-    <string name="profile_completion_text">Yout profile is 0% complete.</string>
+    <string name="complete_your_profile">Complete your profile</string>
+    <string name="profile_completion_text">Your profile is 0% complete.</string>
     <string name="business_contact">Business Contact</string>
     <string name="edit_basic_info">Edit Basic Info</string>
     <string name="edit_contact_info">Edit Contact Info</string>

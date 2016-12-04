@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -31,8 +30,6 @@ import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankAccountRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.VerifyBankAccountResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BankBranch;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BankBranchRequestBuilder;
