@@ -202,8 +202,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             return;
         }
 
-       /* GetMoneyAndPaymentRequest mTransactionHistoryRequest = new GetMoneyAndPaymentRequest(
-                pageCount, Constants.SERVICE_ID_REQUEST_INVOICE);*/
         GetMoneyRequest mMoneyRequest = new GetMoneyRequest(pageCount,
                 Constants.SERVICE_ID_REQUEST_INVOICE,Constants.REQUEST_STATUS_PROCESSING);
         Gson gson = new Gson();
@@ -358,7 +356,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                 final String name = moneyRequest.originatorProfile.getUserName();
                 final String mobileNumber = moneyRequest.originatorProfile.getUserMobileNumber();
                 final String description = moneyRequest.getDescriptionofRequest();
-                final String time = Utilities.getDateFormat(moneyRequest.getRequestTime());
+                final String time = Utilities.formatDateWithTime(moneyRequest.getRequestTime());
                 final String title = moneyRequest.getTitle();
                 final BigDecimal amount = moneyRequest.getAmount();
                 final BigDecimal vat = moneyRequest.getVat();

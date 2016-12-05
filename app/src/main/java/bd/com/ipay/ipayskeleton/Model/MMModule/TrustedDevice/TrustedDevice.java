@@ -49,7 +49,7 @@ public class TrustedDevice {
     }
 
     public String getCreatedTimeString() {
-        return Utilities.getDateFormat(createdTime);
+        return Utilities.formatDateWithTime(createdTime);
     }
 
 }

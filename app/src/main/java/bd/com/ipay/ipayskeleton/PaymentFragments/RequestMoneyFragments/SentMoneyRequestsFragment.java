@@ -22,7 +22,6 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -272,7 +271,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
             public void bindView(int pos) {
 
                 final long id = pendingMoneyRequestClasses.get(pos).getId();
-                String time = Utilities.getDateFormat(pendingMoneyRequestClasses.get(pos).getRequestTime());
+                String time = Utilities.formatDateWithTime(pendingMoneyRequestClasses.get(pos).getRequestTime());
                 final String name = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserName();
                 final String imageUrl = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserProfilePicture();
                 final String mobileNumber = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserMobileNumber();

@@ -149,7 +149,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
         Gson gson = new Gson();
         String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
         mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity());
+                Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mRejectRequestTask.mHttpResponseListener = this;
         mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

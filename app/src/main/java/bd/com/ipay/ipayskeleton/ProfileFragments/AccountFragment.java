@@ -364,7 +364,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                     if (!mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
                         mProfileCompletionStatusView.setText("Your profile is " +
                                 mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
-                                + "complete.\nPlease submit your documents and other information to improve your profile.");
+                                + "complete.\nSubmit documents and other information to improve your profile.");
                         mProfileCompletionStatusView.setVisibility(View.VISIBLE);
                     }
                 } else {

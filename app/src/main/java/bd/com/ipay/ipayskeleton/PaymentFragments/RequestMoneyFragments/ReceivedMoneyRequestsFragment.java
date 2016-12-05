@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -214,7 +212,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                 final String name = moneyRequest.originatorProfile.getUserName();
                 final String mobileNumber = moneyRequest.originatorProfile.getUserMobileNumber();
                 final String description = moneyRequest.getDescriptionofRequest();
-                final String time = Utilities.getDateFormat(moneyRequest.getRequestTime());
+                final String time = Utilities.formatDateWithTime(moneyRequest.getRequestTime());
                 final String title = moneyRequest.getTitle();
                 final BigDecimal amount = moneyRequest.getAmount();
 

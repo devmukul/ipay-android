@@ -19,7 +19,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.InviteActivity;
 import bd.com.ipay.ipayskeleton.Api.AddFriendAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
@@ -86,7 +85,7 @@ public class TransactionDetailsFragment extends Fragment {
         String mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         if (transactionHistory.getDescription(mMobileNumber) != null)
             descriptionTextView.setText(transactionHistory.getDescription(mMobileNumber));
-        timeTextView.setText(Utilities.getDateFormat(transactionHistory.getResponseTime()));
+        timeTextView.setText(Utilities.formatDateWithTime(transactionHistory.getResponseTime()));
         amountTextView.setText(Utilities.formatTaka(transactionHistory.getAmount()));
         feeTextView.setText(Utilities.formatTaka(transactionHistory.getFee()));
         transactionIDTextView.setText(transactionHistory.getTransactionID());

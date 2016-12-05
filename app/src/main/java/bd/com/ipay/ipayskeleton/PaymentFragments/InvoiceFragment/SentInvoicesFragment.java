@@ -221,7 +221,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
             public void bindView(int pos) {
 
                 final String imageUrl = pendingPaymentClasses.get(pos).getReceiverProfile().getUserProfilePicture();
-                final String time = Utilities.getDateFormat(pendingPaymentClasses.get(pos).getRequestTime());
+                final String time = Utilities.formatDateWithTime(pendingPaymentClasses.get(pos).getRequestTime());
                 final String title = pendingPaymentClasses.get(pos).getTitle();
                 final String name = pendingPaymentClasses.get(pos).getReceiverProfile().getUserName();
                 final String mobileNumber = pendingPaymentClasses.get(pos).getReceiverProfile().getUserMobileNumber();

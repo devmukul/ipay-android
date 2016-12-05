@@ -25,7 +25,7 @@
     <string name="error_invalid_QR_code">This QR code is invalid</string>
     <string name="password_hint">Password must contain minimum 8 characters and be alphanumeric. </string>
     <string name="name">Name</string>
-    <string name="enter_new_pin">PIN(4 digit)</string>
+    <string name="enter_new_pin">PIN (4 digit)</string>
     <string name="confirm_your_pin">Confirm PIN</string>
     <string name="enter_new_pass">Enter a new password</string>
     <string name="new_pass">New password</string>
@@ -157,7 +157,7 @@
     <string name="ipay_contacts">iPay</string>
     <string name="security_questions">Security Questions</string>
     <string name="update_security_questions">Update Security Question</string>
-    <string name="activity_log">Activity log</string>
+    <string name="activity_log">Activity Log</string>
     <string name="payments">Payments</string>
     <string name="please_enter_an_account_name">Please provide your Account Name and try again</string>
     <string name="please_select_a_bank">Please select a bank</string>
@@ -361,7 +361,7 @@
     <string name="continue_sign_up">Continue</string>
     <string name="bank_list">Banks</string>
     <string name="bank_branch">Branch</string>
-    <string name="logout">Log out</string>
+    <string name="logout">Log Out</string>
     <string name="bdt">BDT</string>
     <string name="make_payment">Make Payment</string>
     <string name="pay_by_QR_code">Pay by QR Code</string>
@@ -390,7 +390,9 @@
     <string name="filter_system_event">System Events</string>
     <string name="filter">Filter</string>
     <string name="ticket_verified">Ticket Verified</string>
-    <string name="introducers">Introducer</string>
+    <string name="Introducer">Introducer</string>
+    <string name="introducer">introducer</string>
+    <string name="introducers">introducers</string>
     <string name="introduce_this_person">Introduce this person</string>
     <string name="business_invitation">Business Invitation</string>
     <string name="in_progress">In Progress</string>
@@ -565,6 +567,7 @@
     <string name="dialog_prompt_add_pin">Please set your PIN first</string>
     <string name="enter_a_new_pin">Enter a new PIN</string>
     <string name="get_verified_to_invite">You can invite him/her to iPay once you get verified</string>
+    <string name="get_verified">Get verified first!</string>
     <string name="failed_get_document_list">Failed to fetch the list of documents</string>
     <string name="not_submitted">Not Submitted</string>
     <string name="you_need_to_upload_identification_documents_to_get_verified">You need to upload at least one identification documents to get verified</string>
@@ -582,7 +585,7 @@
     <string name="failed_fetching_profile_completion_status">Failed to fetch profile completion status</string>
     <string name="can_not_change_picture">Verified user can not change profile picture</string>
     <string name="profile_completeness">Profile Completeness</string>
-    <string name="profile_completion_text">Yout profile is 0% complete.</string>
+    <string name="profile_completion_text">Your profile is 0% complete.</string>
     <string name="business_contact">Business Contact</string>
     <string name="edit_basic_info">Edit Basic Info</string>
     <string name="edit_contact_info">Edit Contact Info</string>

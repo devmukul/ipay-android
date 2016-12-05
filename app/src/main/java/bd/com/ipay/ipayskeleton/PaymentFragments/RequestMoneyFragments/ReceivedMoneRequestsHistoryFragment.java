@@ -203,7 +203,7 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
                 final long id = moneyRequest.getId();
                 final String imageUrl = moneyRequest.getOriginatorProfile().getUserProfilePicture();
                 final String name = moneyRequest.originatorProfile.getUserName();
-                final String time = Utilities.getDateFormat(moneyRequest.getRequestTime());
+                final String time = Utilities.formatDateWithTime(moneyRequest.getRequestTime());
                 final BigDecimal amount = moneyRequest.getAmount();
 
                 mDescriptionView.setText(Utilities.formatTaka(amount));

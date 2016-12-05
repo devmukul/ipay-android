@@ -480,7 +480,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + notification.getImageUrl(), false);
 
                 mNameView.setText(notification.getName());
-                mTimeView.setText(Utilities.getDateFormat(notification.getTime()));
+                mTimeView.setText(Utilities.formatDateWithTime(notification.getTime()));
 
                 if (notification.getNotificationTitle() != null && !notification.getNotificationTitle().equals("")) {
                     mTitleView.setVisibility(View.VISIBLE);
