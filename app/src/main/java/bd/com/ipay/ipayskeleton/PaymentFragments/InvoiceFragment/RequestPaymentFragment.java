@@ -1,7 +1,9 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -56,7 +58,7 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
     private ProgressDialog mProgressDialog;
 
     private BigDecimal mAmount;
-    private BigDecimal mVat;
+    private BigDecimal mVat = BigDecimal.ZERO;
     private BigDecimal mTotal = null;
 
     @Override
@@ -78,6 +80,7 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.submitting_request_money));
+
 
         mAmountEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -161,7 +164,7 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
         });
 
         // Get business rule
-      //  attemptGetBusinessRule(Constants.SERVICE_ID_MAKE_PAYMENT);
+        attemptGetBusinessRule(Constants.SERVICE_ID_MAKE_PAYMENT);
 
         return v;
     }
@@ -209,9 +212,13 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
                 && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
-            String error_message = InputValidator.isValidAmount(getActivity(), mTotal,
-                    PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+            BigDecimal vatPercentageMinAmount = (mVat.multiply(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())).divide(new BigDecimal(100));
+            BigDecimal vatPercentageMaxAmount = (mVat.multiply(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())).divide(new BigDecimal(100));
 
+            String error_message = InputValidator.isValidAmount(getActivity(), mTotal,
+                    PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT().subtract(vatPercentageMinAmount),
+                    PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().subtract(vatPercentageMaxAmount));
+            
             if (error_message != null) {
                 focusView = mAmountEditText;
                 mAmountEditText.setError(error_message);
@@ -244,6 +251,19 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
 
         startActivityForResult(intent, REQUEST_CREATE_INVOICE_REVIEW);
     }
+
+    private void showErrorDialog(String mError_message) {
+        new AlertDialog.Builder(getContext())
+                .setMessage(mError_message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
 
     private void attemptGetBusinessRule(int serviceID) {
 

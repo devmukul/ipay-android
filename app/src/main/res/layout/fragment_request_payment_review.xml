@@ -90,6 +90,40 @@
 
             </LinearLayout>
 
+            <View style="@style/Divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReview"
+                    android:text="@string/service_charge_with_sign" />
+
+                <TextView
+                    android:id="@+id/textview_service_charge"
+                    style="@style/TextViewInfoColorPrimaryReview" />
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReview"
+                    android:text="@string/net_amount" />
+
+                <TextView
+                    android:id="@+id/textview_net_received"
+                    style="@style/TextViewInfoColorPrimaryReview" />
+            </LinearLayout>
+
+
         </LinearLayout>
 
         <View

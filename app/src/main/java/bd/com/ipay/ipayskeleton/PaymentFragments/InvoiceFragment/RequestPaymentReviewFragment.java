@@ -54,6 +54,8 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
     private TextView mAmountView;
     private TextView mVatView;
     private TextView mTotalView;
+    private TextView mServiceChargeView;
+    private TextView mNetReceivedView;
 
     private TextView mDescriptionView;
     private Button mCreateInvoiceButton;
@@ -80,6 +82,8 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mVatView = (TextView) v.findViewById(R.id.textview_vat);
         mTotalView = (TextView) v.findViewById(R.id.textview_total);
+        mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
+        mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
 
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mCreateInvoiceButton = (Button) v.findViewById(R.id.button_create_invoice);
@@ -120,7 +124,6 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
                         showErrorDialog();
                     }
                 }
-
             }
         });
 
@@ -130,7 +133,6 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
             attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_MAKE_PAYMENT);
         else
             attemptGetServiceCharge();
-
         return v;
     }
 
@@ -164,27 +166,30 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
     }
 
     @Override
-    protected int getServiceID() {
+    public int getServiceID() {
         return Constants.SERVICE_ID_MAKE_PAYMENT;
     }
 
     @Override
-    protected BigDecimal getAmount() {
-        return null;
+    public BigDecimal getAmount() {
+        return mTotal;
     }
 
     @Override
-    protected void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-
+    public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
+        mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
+        mNetReceivedView.setText(Utilities.formatTaka(mTotal.subtract(serviceCharge)));
     }
 
     @Override
-    protected void onPinLoadFinished(boolean isPinRequired) {
-
+    public void onPinLoadFinished(boolean isPinRequired) {
+        PaymentActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
     }
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
+        super.httpResponseReceiver(result);
+
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mProgressDialog.dismiss();
             if (getActivity() != null)
