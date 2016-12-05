@@ -284,10 +284,16 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                     } else {
                         // Check for a valid profile picture
                         // To remove the face detection feature just remove the if condition
+                        /*
+                        // ** Removed face detection for now. Will be added later.
                         if (isSelectedProfileValid(uri)) {
                             mProfilePictureView.setProfilePicture(uri.getPath(), true);
                             updateProfilePicture(uri);
                         }
+                        */
+
+                        mProfilePictureView.setProfilePicture(uri.getPath(), true);
+                        updateProfilePicture(uri);
                     }
                 }
                 break;
