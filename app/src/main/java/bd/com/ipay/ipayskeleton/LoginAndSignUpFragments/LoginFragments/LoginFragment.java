@@ -133,7 +133,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse(getContext().getString(R.string.forget_password_link)));
+                intent.setData(Uri.parse(Constants.BASE_URL_WEB + Constants.URL_FORGET_PASSWORD));
                 startActivity(intent);
                 //((SignupOrLoginActivity) getActivity()).switchToForgetPasswordFragment();
             }
