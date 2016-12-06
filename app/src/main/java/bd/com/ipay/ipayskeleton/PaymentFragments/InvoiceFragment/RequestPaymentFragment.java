@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
@@ -212,9 +213,12 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
                 && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
-            String error_message = InputValidator.isValidTotalAmount(getActivity(), mAmount,
-                    PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                    PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT(),mTotal);
+            BigDecimal vatPercentageMinAmount = PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT().divide(new BigDecimal(1).add(mVat.divide(new BigDecimal(100))), RoundingMode.CEILING);
+            BigDecimal vatPercentageMaxAmount = PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().divide(new BigDecimal(1).add(mVat.divide(new BigDecimal(100))), RoundingMode.FLOOR);
+
+            String error_message = InputValidator.isValidAmount(getActivity(), mAmount,
+                    vatPercentageMinAmount,
+                    vatPercentageMaxAmount);
 
             if (error_message != null) {
                 focusView = mAmountEditText;
