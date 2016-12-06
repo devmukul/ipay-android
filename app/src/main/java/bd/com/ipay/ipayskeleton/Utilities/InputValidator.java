@@ -68,4 +68,18 @@ public class InputValidator {
         return errorMessage;
     }
 
+    public static String isValidTotalAmount(Context context, BigDecimal amount, BigDecimal minAmount, BigDecimal maxAmount, BigDecimal otherAmount) {
+        String errorMessage = null;
+
+            if (otherAmount.compareTo(minAmount) == -1) {
+                errorMessage = context.getResources().getString(R.string.please_enter_minimum_amount) + " " + Utilities.formatTaka(minAmount);
+                return errorMessage;
+            } else if (amount.compareTo(maxAmount) == 1) {
+                errorMessage = context.getResources().getString(R.string.please_enter_not_more_than_max_amount) + " " + Utilities.formatTaka(maxAmount);
+                return errorMessage;
+            }
+
+        return errorMessage;
+    }
+
 }
