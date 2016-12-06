@@ -213,12 +213,12 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
                 && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
-            BigDecimal vatPercentageMinAmount = PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT().divide(new BigDecimal(1).add(mVat.divide(new BigDecimal(100))), RoundingMode.CEILING);
-            BigDecimal vatPercentageMaxAmount = PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().divide(new BigDecimal(1).add(mVat.divide(new BigDecimal(100))), RoundingMode.FLOOR);
+            Double vatPercentageMinAmount = PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT().doubleValue()/(1 +(mVat.doubleValue()/100));
+            Double vatPercentageMaxAmount = PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().doubleValue()/(1 +(mVat.doubleValue()/100));
 
             String error_message = InputValidator.isValidAmount(getActivity(), mAmount,
-                    vatPercentageMinAmount,
-                    vatPercentageMaxAmount);
+                    new BigDecimal(vatPercentageMinAmount),
+                    new BigDecimal(vatPercentageMaxAmount));
 
             if (error_message != null) {
                 focusView = mAmountEditText;
