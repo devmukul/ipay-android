@@ -218,7 +218,7 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
             String error_message = InputValidator.isValidAmount(getActivity(), mTotal,
                     PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT().subtract(vatPercentageMinAmount),
                     PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().subtract(vatPercentageMaxAmount));
-            
+
             if (error_message != null) {
                 focusView = mAmountEditText;
                 mAmountEditText.setError(error_message);
