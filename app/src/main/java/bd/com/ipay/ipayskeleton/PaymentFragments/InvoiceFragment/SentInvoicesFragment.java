@@ -202,7 +202,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
             private final TextView mSenderNameTextView;
             private final TextView mAmountTextView;
             private final TextView mTimeTextView;
-            private final ImageView statusView;
+            private final TextView statusView;
             private final TextView loadMoreTextView;
             private final ProfileImageView mProfileImageView;
 
@@ -213,7 +213,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
                 mTimeTextView = (TextView) itemView.findViewById(R.id.time);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
-                statusView = (ImageView) itemView.findViewById(R.id.status);
+                statusView = (TextView) itemView.findViewById(R.id.status);
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
             }
 
@@ -238,8 +238,8 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                 mSenderNameTextView.setText(name);
 
                 if (status == Constants.INVOICE_STATUS_ACCEPTED) {
-                    statusView.setColorFilter(getResources().getColor(R.color.bottle_green));
-                    statusView.setImageResource(R.drawable.ic_invoice_ok);
+                    statusView.setTextColor(getResources().getColor(R.color.bottle_green));
+                    statusView.setText(R.string.acc);
 
                 } else if (status == Constants.INVOICE_STATUS_PROCESSING) {
                     statusView.setColorFilter(getResources().getColor(R.color.background_yellow));
