@@ -26,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 public class CustomSearchViewEditText extends FrameLayout {
 
     private CustomAutoCompleteView mCustomAutoCompleteView;
+    private TextView mMobileNumberHintView;
 
     private ContactListAdapter mAdapter;
 
@@ -65,6 +66,8 @@ public class CustomSearchViewEditText extends FrameLayout {
         View v = inflater.inflate(R.layout.view_custom_search_view_edit_text, this, true);
 
         mCustomAutoCompleteView = (CustomAutoCompleteView) v.findViewById(R.id.auto_complete_view);
+        mMobileNumberHintView = (TextView) v.findViewById(R.id.mobile_number_hint);
+
         mCustomAutoCompleteView.addTextChangedListener(new CustomAutoCompleteTextChangedListener());
 
         mBusinessContacts = new ArrayList<>();
@@ -95,6 +98,11 @@ public class CustomSearchViewEditText extends FrameLayout {
 
         @Override
         public void onTextChanged(CharSequence userInput, int start, int before, int count) {
+
+            if (userInput.length() > 0)
+                mMobileNumberHintView.setVisibility(VISIBLE);
+            else
+                mMobileNumberHintView.setVisibility(INVISIBLE);
 
             mQuery = userInput.toString();
 
@@ -144,10 +152,11 @@ public class CustomSearchViewEditText extends FrameLayout {
                     businessContact.setMobileNumber(mobileNumber);
                     businessContact.setProfilePictureUrl(profilePictureUrl);
 
-                    for (BusinessType businessType : CommonData.getBusinessTypes()) {
-                        if (businessType.getId() == businessTypeID)
-                            businessContact.setBusinessType(businessType.getName());
-                    }
+                    if (CommonData.getBusinessTypes() != null)
+                        for (BusinessType businessType : CommonData.getBusinessTypes()) {
+                            if (businessType.getId() == businessTypeID)
+                                businessContact.setBusinessType(businessType.getName());
+                        }
                     mBusinessContacts.add(businessContact);
 
                 } while (mCursor.moveToNext());
@@ -210,6 +219,7 @@ public class CustomSearchViewEditText extends FrameLayout {
                     mCustomAutoCompleteView.setText(mobileNumber);
                     mCustomAutoCompleteView.setFocusable(true);
                     mCustomAutoCompleteView.setFocusableInTouchMode(true);
+
                     mBusinessContacts.clear();
                     mAdapter.notifyDataSetChanged();
                 }

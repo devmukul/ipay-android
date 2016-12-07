@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/mobile_number_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:focusable="false"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/mobile_number"
+        android:textSize="@dimen/text_size_extra_small"
+        android:visibility="invisible"/>
 
     <bd.com.ipay.ipayskeleton.CustomView.CustomAutoCompleteView
         android:id="@+id/auto_complete_view"
+        style="@style/CustomEditText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/mobile_number_hint"
         android:completionThreshold="1"
-        android:hint="@string/mobile_number"
-        style="@style/CustomEditText">
+        android:hint="@string/mobile_number">
     </bd.com.ipay.ipayskeleton.CustomView.CustomAutoCompleteView>
 
 </RelativeLayout>
