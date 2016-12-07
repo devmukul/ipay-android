@@ -399,7 +399,7 @@
     <string name="transaction_failed">Failed</string>
     <string name="transaction_cancelled">Cancelled</string>
     <string name="transaction_rejected">Rejected</string>
-    <string name="draft">Saved but not send</string>
+    <string name="save_not_send">Saved but not send</string>
     <string name="pending">Pending</string>
     <string name="processed">Processed</string>
     <string name="filter_by_date">Filter by date</string>
@@ -727,6 +727,10 @@
     <string name="add_comment">Add Comment</string>
     <string name="comment_cannot_be_empty">Comment cannot be empty</string>
     <string name="not_available">Not available</string>
+    <string name="accepted">Accepted</string>
+    <string name="canceled">Canceled</string>
+    <string name="rejected">Rejected</string>
+    <string name="draft">Draft</string>
 
 
     <string-array name="mobile_operators">

@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -239,23 +238,23 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
 
                 if (status == Constants.INVOICE_STATUS_ACCEPTED) {
                     statusView.setTextColor(getResources().getColor(R.color.bottle_green));
-                    statusView.setText(R.string.acc);
+                    statusView.setText(R.string.accepted);
 
                 } else if (status == Constants.INVOICE_STATUS_PROCESSING) {
-                    statusView.setColorFilter(getResources().getColor(R.color.background_yellow));
-                    statusView.setImageResource(R.drawable.ic_invoice_pending);
+                    statusView.setTextColor(getResources().getColor(R.color.background_yellow));
+                    statusView.setText(R.string.processing);
 
                 } else if (status == Constants.INVOICE_STATUS_REJECTED) {
-                    statusView.setColorFilter(Color.RED);
-                    statusView.setImageResource(R.drawable.ic_invoice_notok);
+                    statusView.setTextColor(Color.RED);
+                    statusView.setText(R.string.rejected);
 
                 } else if (status == Constants.INVOICE_STATUS_CANCELED) {
-                    statusView.setColorFilter(Color.GRAY);
-                    statusView.setImageResource(R.drawable.ic_invoice_notok);
+                    statusView.setTextColor(Color.GRAY);
+                    statusView.setText(R.string.canceled);
 
                 } else if (status == Constants.INVOICE_STATUS_DRAFT) {
-                    statusView.setColorFilter(Color.RED);
-                    statusView.setImageResource(R.drawable.ic_invoice_pending);
+                    statusView.setTextColor(Color.RED);
+                    statusView.setText(R.string.draft);
                 }
 
                 mAmountTextView.setText(Utilities.formatTaka(pendingPaymentClasses.get(pos).getAmount()));
