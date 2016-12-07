@@ -6,14 +6,13 @@
     android:orientation="horizontal"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <EditText
-        android:id="@+id/edit_text"
-        android:layout_width="match_parent"
+    <bd.com.ipay.ipayskeleton.CustomView.CustomAutoCompleteView
+        android:id="@+id/auto_complete_view"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
-        android:textSize="@dimen/text_size_small_medium">
-    </EditText>
+        android:completionThreshold="1"
+        android:hint="@string/mobile_number"
+        style="@style/CustomEditText">
+    </bd.com.ipay.ipayskeleton.CustomView.CustomAutoCompleteView>
 
 </RelativeLayout>

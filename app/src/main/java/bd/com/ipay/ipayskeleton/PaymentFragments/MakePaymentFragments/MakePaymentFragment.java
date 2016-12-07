@@ -32,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentReviewActivi
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.CustomSearchViewEditText;
 import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
@@ -52,7 +53,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
     private Button buttonPayment;
     private ImageView buttonSelectFromContacts;
     private ImageView buttonScanQRCode;
-    private EditText mMobileNumberEditText;
+    private CustomSearchViewEditText mMobileNumberEditText;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
     private EditText mRefNumberEditText;
@@ -68,7 +69,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_make_payment, container, false);
         getActivity().setTitle(R.string.make_payment);
-        mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
+        mMobileNumberEditText = (CustomSearchViewEditText) v.findViewById(R.id.mobile_number);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mRefNumberEditText = (EditText) v.findViewById(R.id.reference_number);
@@ -82,15 +83,12 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
 
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
-        if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
-            mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
-        }
 
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), BusinessContactPickerDialogActivity.class);
-                startActivityForResult(intent, PICK_CONTACT_REQUEST);
+                /*Intent intent = new Intent(getActivity(), BusinessContactPickerDialogActivity.class);
+                startActivityForResult(intent, PICK_CONTACT_REQUEST);*/
             }
         });
 

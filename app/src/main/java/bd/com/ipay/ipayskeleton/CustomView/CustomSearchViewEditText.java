@@ -1,29 +1,46 @@
 package bd.com.ipay.ipayskeleton.CustomView;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
+import android.database.Cursor;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
+import bd.com.ipay.ipayskeleton.Model.BusinessContact.BusinessContact;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class CustomSearchViewEditText extends FrameLayout {
 
-    private ImageView mImageView;
-    private EditText mEditText;
-    private View mDivider;
+    private CustomAutoCompleteView mCustomAutoCompleteView;
 
-    private OnClickListener mOnClickListener;
+    private ContactListAdapter mAdapter;
+
+    private Cursor mCursor;
+
+    private int businessNameIndex;
+    private int phoneNumberIndex;
+    private int profilePictureUrlIndex;
+    private int businessTypeIndex;
+
+    private String mQuery = "";
+
+    private Context context;
+
+    private List<BusinessContact> mBusinessContacts;
 
     public CustomSearchViewEditText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -41,97 +58,165 @@ public class CustomSearchViewEditText extends FrameLayout {
     }
 
     private void initView(Context context, AttributeSet attrs) {
+        this.context = context;
+
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflater.inflate(R.layout.view_iconified_edit_text, this, true);
+        View v = inflater.inflate(R.layout.view_custom_search_view_edit_text, this, true);
 
-        mImageView = (ImageView) v.findViewById(R.id.icon);
-        mEditText = (EditText) v.findViewById(R.id.edit_text);
-        mDivider = v.findViewById(R.id.divider);
+        mCustomAutoCompleteView = (CustomAutoCompleteView) v.findViewById(R.id.auto_complete_view);
+        mCustomAutoCompleteView.addTextChangedListener(new CustomAutoCompleteTextChangedListener());
 
-        if (attrs != null) {
-            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconifiedEditText, 0, 0);
+        mBusinessContacts = new ArrayList<>();
 
-            Drawable drawable = a.getDrawable(R.styleable.IconifiedEditText_android_drawableLeft);
-            mImageView.setImageDrawable(drawable);
-
-            String text = a.getString(R.styleable.IconifiedEditText_android_text);
-            String imeActionLabel = a.getString(R.styleable.IconifiedEditText_android_imeActionLabel);
-            String hint = a.getString(R.styleable.IconifiedEditText_android_hint);
-            int inputType = a.getInt(R.styleable.IconifiedEditText_android_inputType, EditorInfo.TYPE_CLASS_TEXT);
-            int maxLength = a.getInt(R.styleable.IconifiedEditText_android_maxLength, -1);
-            int maxLines = a.getInt(R.styleable.IconifiedEditText_android_maxLines, -1);
-            int borderType = a.getInt(R.styleable.IconifiedEditText_borderType, 0x0);
-            boolean enabled = a.getBoolean(R.styleable.IconifiedEditText_android_enabled, true);
-
-            if (text != null)
-                mEditText.setText(text);
-            if (imeActionLabel != null)
-                mEditText.setImeActionLabel(imeActionLabel, EditorInfo.IME_ACTION_DONE);
-            if (hint != null)
-                mEditText.setHint(hint);
-            mEditText.setInputType(inputType);
-            if (maxLength != -1) {
-                mEditText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLength)});
-            }
-            if (maxLines != -1)
-                mEditText.setMaxLines(maxLines);
-            mEditText.setEnabled(enabled);
-            // Corresponding values can be found in attr.xml
-            switch (borderType) {
-                case 0x0:
-                    v.setBackgroundResource(R.drawable.background_no_round_white);
-                    break;
-                case 0x1:
-                    v.setBackgroundResource(R.drawable.background_half_upper_round_white);
-                    mEditText.requestFocus();
-                    break;
-                case 0x2:
-                    v.setBackgroundResource(R.drawable.background_half_lower_round_white);
-                    mDivider.setVisibility(View.GONE);
-                    break;
-                case 0x1|0x2:
-                    v.setBackgroundResource(R.drawable.background_rounded_white);
-                    mDivider.setVisibility(View.GONE);
-                    break;
-            }
-
-            a.recycle();
-        }
-
-//        setBackgroundResource(R.drawable.background_half_upper_round_white);
+        mAdapter = new ContactListAdapter(context, mBusinessContacts);
+        mCustomAutoCompleteView.setAdapter(mAdapter);
 
     }
 
-    public EditText getEditText() {
-        return mEditText;
+    public class CustomAutoCompleteTextChangedListener implements TextWatcher {
+
+
+        public CustomAutoCompleteTextChangedListener() {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count,
+                                      int after) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence userInput, int start, int before, int count) {
+
+            mQuery = userInput.toString();
+
+            // Query the database based on the user input
+            readContactsFromDB();
+
+        }
     }
 
     public Editable getText() {
-        return mEditText.getText();
+        return mCustomAutoCompleteView.getText();
     }
 
     public void setText(String text) {
-        mEditText.setText(text);
-    }
-
-    public void addTextChangedListener(TextWatcher textWatcher) {
-        mEditText.addTextChangedListener(textWatcher);
+        mCustomAutoCompleteView.setText(text);
     }
 
     public void setError(String error) {
-        mEditText.setError(error);
+        mCustomAutoCompleteView.setError(error);
     }
 
-    @Override
-    public void setOnClickListener(OnClickListener l) {
-        super.setOnClickListener(l);
-        mOnClickListener = l;
+
+    public void readContactsFromDB() {
+
+        DataHelper dataHelper = DataHelper.getInstance(context);
+
+        mCursor = dataHelper.searchBusinessContacts(mQuery);
+
+        if (mCursor != null) {
+            mBusinessContacts.clear();
+
+            businessNameIndex = mCursor.getColumnIndex(DBConstants.KEY_BUSINESS_NAME);
+            phoneNumberIndex = mCursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
+            profilePictureUrlIndex = mCursor.getColumnIndex(DBConstants.KEY_BUSINESS_PROFILE_PICTURE);
+            businessTypeIndex = mCursor.getColumnIndex(DBConstants.KEY_BUSINESS_TYPE);
+
+            // Looping through all rows and adding to list
+            if (mCursor.moveToFirst())
+                do {
+                    String businessName = mCursor.getString(businessNameIndex);
+                    String mobileNumber = mCursor.getString(phoneNumberIndex);
+                    String profilePictureUrl = mCursor.getString(profilePictureUrlIndex);
+                    int businessTypeID = mCursor.getInt(businessTypeIndex);
+
+                    BusinessContact businessContact = new BusinessContact();
+                    businessContact.setBusinessName(businessName);
+                    businessContact.setMobileNumber(mobileNumber);
+                    businessContact.setProfilePictureUrl(profilePictureUrl);
+
+                    for (BusinessType businessType : CommonData.getBusinessTypes()) {
+                        if (businessType.getId() == businessTypeID)
+                            businessContact.setBusinessType(businessType.getName());
+                    }
+                    mBusinessContacts.add(businessContact);
+
+                } while (mCursor.moveToNext());
+
+            mAdapter = new ContactListAdapter(context, mBusinessContacts);
+            mCustomAutoCompleteView.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+        }
+
+        mCursor.close();
+
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return mOnClickListener != null;
+    public class ContactListAdapter extends ArrayAdapter<BusinessContact> {
+
+        private LayoutInflater inflater;
+
+        private TextView businessNameView;
+        private TextView businessTypeView;
+        private TextView mobileNumberView;
+        private ProfileImageView profilePictureView;
+
+        public ContactListAdapter(Context context, List<BusinessContact> objects) {
+            super(context, 0, objects);
+            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            BusinessContact businessContact = getItem(position);
+            View view = convertView;
+
+            if (view == null)
+                view = inflater.inflate(R.layout.list_item_business_contact, null);
+
+            businessNameView = (TextView) view.findViewById(R.id.business_name);
+            businessTypeView = (TextView) view.findViewById(R.id.business_type);
+            mobileNumberView = (TextView) view.findViewById(R.id.mobile_number);
+            profilePictureView = (ProfileImageView) view.findViewById(R.id.profile_picture);
+
+            final String businessName = businessContact.getBusinessName();
+            final String mobileNumber = businessContact.getMobileNumber();
+            final String businessType = businessContact.getBusinessType();
+            final String profilePictureUrl = Constants.BASE_URL_FTP_SERVER + businessContact.getProfilePictureUrl();
+
+            if (businessName != null && !businessName.isEmpty()) {
+                businessNameView.setText(businessName);
+            }
+
+            businessTypeView.setText(businessType);
+            mobileNumberView.setText(mobileNumber);
+            profilePictureView.setProfilePicture(profilePictureUrl, false);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    mCustomAutoCompleteView.setFocusable(false);
+                    mCustomAutoCompleteView.setFocusableInTouchMode(false);
+                    mCustomAutoCompleteView.setText(mobileNumber);
+                    mCustomAutoCompleteView.setFocusable(true);
+                    mCustomAutoCompleteView.setFocusableInTouchMode(true);
+                    mBusinessContacts.clear();
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+
+            return view;
+        }
     }
 }
 
