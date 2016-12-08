@@ -87,8 +87,8 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new Intent(getActivity(), BusinessContactPickerDialogActivity.class);
-                startActivityForResult(intent, PICK_CONTACT_REQUEST);*/
+                Intent intent = new Intent(getActivity(), BusinessContactPickerDialogActivity.class);
+                startActivityForResult(intent, PICK_CONTACT_REQUEST);
             }
         });
 
