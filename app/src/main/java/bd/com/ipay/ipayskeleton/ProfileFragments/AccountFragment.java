@@ -19,12 +19,16 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.Arrays;
+import java.util.List;
+
 import bd.com.ipay.ipayskeleton.Activities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Api.UploadProfilePictureAsyncTask;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialogPicHelper;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfilePictureResponse;
@@ -49,6 +53,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private String mProfilePicture = "";
 
     private String mSelectedImagePath = "";
+    private List<String> mPickerList;
 
     private IconifiedTextViewWithButton mBasicInfo;
     private IconifiedTextViewWithButton mEmail;
@@ -64,9 +69,11 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
 
     private ProgressDialog mProgressDialog;
+    private CustomUploadPickerDialogPicHelper customUploadPickerDialog;
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
     private final int ACTION_PICK_PROFILE_PICTURE = 100;
+    private int mPickerActionId = -1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -99,26 +106,34 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         setProfileInformation();
 
-        if (!ProfileInfoCacheManager.isAccountVerified()) {
-            mProfilePictureView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
-                        Intent imageChooserIntent = DocumentPicker.getPickImageIntent(getContext(), getString(R.string.select_an_image));
-                        startActivityForResult(imageChooserIntent, ACTION_PICK_PROFILE_PICTURE);
-                    } else {
-                        DocumentPicker.requestRequiredPermissions(AccountFragment.this, REQUEST_CODE_PERMISSION);
-                    }
-                }
-            });
-        } else {
-            mProfilePictureView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        mPickerList = Arrays.asList(getResources().getStringArray(R.array.upload_picker_action));
+
+        mProfilePictureView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!ProfileInfoCacheManager.isAccountVerified()) {
+
+                    customUploadPickerDialog = new CustomUploadPickerDialogPicHelper(getActivity(), getString(R.string.select_an_image), mPickerList);
+                    customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialogPicHelper.OnResourceSelectedListener() {
+                        @Override
+                        public void onResourceSelected(int mActionId, String action) {
+
+                            if (Constants.ACTION_TYPE_TAKE_PICTURE.equals(action) || Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action))
+                                if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
+                                    selectProfilePictureIntent(mActionId);
+                                } else {
+                                    mPickerActionId = mActionId;
+                                    DocumentPicker.requestRequiredPermissions(AccountFragment.this, REQUEST_CODE_PERMISSION);
+                                }
+                        }
+                    });
+                    customUploadPickerDialog.show();
+
+                } else {
                     Toast.makeText(getActivity(), R.string.can_not_change_picture, Toast.LENGTH_LONG).show();
                 }
-            });
-        }
+            }
+        });
 
         mBasicInfo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,8 +198,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
                 if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
-                    Intent imageChooserIntent = DocumentPicker.getPickImageIntent(getContext(), getString(R.string.select_an_image));
-                    startActivityForResult(imageChooserIntent, ACTION_PICK_PROFILE_PICTURE);
+                    selectProfilePictureIntent(mPickerActionId);
                 } else {
                     Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
                 }
@@ -212,6 +226,11 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mUploadProfilePictureAsyncTask.mHttpResponseListener = this;
         mUploadProfilePictureAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
+    }
+
+    private void selectProfilePictureIntent(int id) {
+        Intent imagePickerIntent = DocumentPicker.getPickImageOrPdfIntentByID(getActivity(), getString(R.string.select_a_document), id);
+        startActivityForResult(imagePickerIntent, ACTION_PICK_PROFILE_PICTURE);
     }
 
     @Override
