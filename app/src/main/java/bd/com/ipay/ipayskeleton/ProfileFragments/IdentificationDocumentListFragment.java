@@ -26,7 +26,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.util.Util;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
@@ -36,7 +35,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DocumentPreviewActivity;
-import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -68,22 +66,24 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
     private HttpRequestGetAsyncTask mGetDocumentAccessTokenTask = null;
 
+    private ProgressDialog mProgressDialog;
+
     private TextView mDocumentUploadInfoView;
     private DocumentListAdapter mDocumentListAdapter;
     private RecyclerView mDocumentListRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 
     private List<IdentificationDocument> mIdentificationDocuments = new ArrayList<>();
-    private IdentificationDocumentDetails mSelectedIdentificationDocument;
-
     private List<IdentificationDocument> mIdentificationBusinessDocuments = new ArrayList<>();
 
-    private ProgressDialog mProgressDialog;
-
+    private IdentificationDocumentDetails mSelectedIdentificationDocument;
     private IdentificationDocumentDetails[] mIdentificationDocumentDetails;
+
+    private ArrayList<DocumentPreviewBindViewHolder> documentPreviewBindViewHolderList;
 
     private String[] DOCUMENT_TYPES, BUSINESS_DOCUMENT_TYPES, DOCUMENT_HINT_TYPES;
 
+    private Uri mSelectedDocumentUri;
     private String mFileName;
 
     private static final int[] DOCUMENT_TYPE_NAMES = {
@@ -106,9 +106,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     private static final int COUNT_UPLOAD_BUSINESS_DOCUMENT = 2;
     private int mSelectedItemId = -1;
     private int mPickerActionId = -1;
-
-    private Uri mSelectedDocumentUri;
-    private ArrayList<DocumentPreviewBindViewHolder> documentPreviewBindViewHolderList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
