@@ -518,8 +518,6 @@
     <string name="item">Item</string>
     <string name="fee">Fee</string>
     <string name="net_payable">Net Payable</string>
-    <string name="service_charge">Service Charge</string>
-    <string name="service_charge_with_sign">(-) Service Charge</string>
     <string name="service_charge">(-) Service Charge</string>
     <string name="topup_package">Type</string>
     <string name="operator">Operator</string>

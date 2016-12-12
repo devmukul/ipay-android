@@ -99,7 +99,7 @@
 
                 <TextView
                     style="@style/TextViewInfoLabelReview"
-                    android:text="@string/service_charge_with_sign" />
+                    android:text="@string/service_charge" />
 
                 <TextView
                     android:id="@+id/textview_service_charge"
