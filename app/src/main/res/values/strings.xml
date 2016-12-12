@@ -76,6 +76,8 @@
     <string name="empty_list">Nothing to show right now.</string>
     <string name="not_empty_list_for_password_recovery"> If you forget your password and try to recover it, we will send text messages to the persons in your Trusted Network, you will be asked to enter the codes contained in those messages.</string>
     <string name="empty_list_for_password_recovery">Tap + to add a person to your Trusted Network.\n\nIf you forget your password and try to recover it, we will send text messages to the persons in your Trusted Network.\nYou will be asked to enter the codes contained in those messages.</string>
+    <string name="remove_trusted_device_message">Removing device from your trusted device list</string>
+    <string name="remove_trusted_person_message">Removing from your trusted network</string>
     <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="error_invalid_pin">PIN must be 4 digit</string>
     <string name="error_invalid_otp">Please enter the OTP sent to your mobile</string>
@@ -500,7 +502,9 @@
     <string name="logout_from_all_device_warning">Are you sure you want to log out from all devices?</string>
     <string name="progress_dialog_loading_trusted_devices">Loading trusted device list</string>
     <string name="success_device_removed">Device removed successfully</string>
+    <string name="success_remove">Removed successfully</string>
     <string name="confirmation_remove_trusted_device">Are you sure you want to remove this device from trusted device list?</string>
+    <string name="confirmation_remove_trusted_person">Are you sure you want to remove this person from your trusted network?</string>
     <string name="select_an_image">Select an Image</string>
     <string name="select_a_document">Select a Document</string>
     <string name="mobile_topup">Mobile TopUp</string>
@@ -757,7 +761,7 @@
     </string-array>
 
 
-    <string-array name="trusted_device_action">
+    <string-array name="trusted_device_or_network_action">
         <item>Remove</item>
     </string-array>
 
