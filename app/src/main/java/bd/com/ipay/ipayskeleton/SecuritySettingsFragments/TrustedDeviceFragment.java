@@ -45,9 +45,9 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
 
     private HttpRequestDeleteAsyncTask mRemoveTrustedDeviceTask = null;
     private RemoveTrustedDeviceResponse mRemoveTrustedDeviceResponse = null;
+
     private ListView mTrustedDevicesListView;
     private TrustedDeviceAdapter mTrustedDeviceAdapter;
-    private CustomSelectorDialog mCustomSelectorDialog;
 
     private ProgressDialog mProgressDialog;
 
@@ -88,17 +88,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
         }
     }
 
-    private void getTrustedDeviceList() {
-        if (mGetTrustedDeviceTask != null) {
-            return;
-        }
-
-        mGetTrustedDeviceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_DEVICES,
-                Constants.BASE_URL_MM + Constants.URL_GET_TRUSTED_DEVICES, getActivity(), this);
-        mGetTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void showTrustedDeviceRemoveConfirmationDialog(final long id, String name) {
+    private void showTrustedDeviceRemoveConfirmationDialog(final long id) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog
                 .setMessage(getString(R.string.confirmation_remove_trusted_device))
@@ -116,11 +106,21 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                 }).show();
     }
 
+    private void getTrustedDeviceList() {
+        if (mGetTrustedDeviceTask != null) {
+            return;
+        }
+
+        mGetTrustedDeviceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_DEVICES,
+                Constants.BASE_URL_MM + Constants.URL_GET_TRUSTED_DEVICES, getActivity(), this);
+        mGetTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private void removeTrustedDevice(long id) {
         if (mRemoveTrustedDeviceTask != null)
             return;
 
-        mProgressDialog.setMessage("Removing device from your trusted device list");
+        mProgressDialog.setMessage(getString(R.string.remove_trusted_device_message));
         mProgressDialog.show();
 
         mRemoveTrustedDeviceTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_TRUSTED_DEVICE,
@@ -223,6 +223,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
         private LayoutInflater inflater;
         private List<String> mTrustedDeviceActionList;
         private int ACTION_REMOVE = 0;
+        private CustomSelectorDialog mCustomSelectorDialog;
 
         public TrustedDeviceAdapter(Context context, List<TrustedDevice> objects) {
             super(context, 0, objects);
@@ -281,14 +282,14 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                 @Override
                 public void onClick(View v) {
                     if (!myDeviceID.equals(deviceID)) {
-                        mTrustedDeviceActionList = Arrays.asList(getResources().getStringArray(R.array.trusted_device_action));
+                        mTrustedDeviceActionList = Arrays.asList(getResources().getStringArray(R.array.trusted_device_or_network_action));
                         mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), trustedDevice.getDeviceName(), mTrustedDeviceActionList);
                         mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
                             @Override
                             public void onResourceSelected(int selectedIndex, String mName) {
                                 if (selectedIndex == ACTION_REMOVE) {
                                     showTrustedDeviceRemoveConfirmationDialog(
-                                            trustedDevice.getId(), trustedDevice.getDeviceName());
+                                            trustedDevice.getId());
                                 }
                             }
                         });
