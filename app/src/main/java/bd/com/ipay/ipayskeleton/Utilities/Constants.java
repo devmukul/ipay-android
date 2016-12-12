@@ -179,6 +179,7 @@ public class Constants {
     public static final String BASE_URL_ADMIN;
     public static final String BASE_URL_FTP_SERVER;
     private static final String SERVER_NAME;
+
     static {
         if (SERVER_TYPE == 1) {
 
@@ -188,7 +189,6 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://10.10.10.11:1337/v1/";
             BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/support/";
-//            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             SERVER_NAME = "dev";
 
         } else if (SERVER_TYPE == 2) {
@@ -370,6 +370,9 @@ public class Constants {
 
     // User Rest (Profile Completion)
     public static final String URL_GET_PROFILE_COMPLETION_STATUS = "/user/profilecompletion";
+
+    // API version check Rest
+    public static final String URL_GET_MIN_API_VERSION_REQUIRED = "/app/min-supported-versions";
 
     // User Rest (Profile Picture)
     public static final String URL_SET_PROFILE_PICTURE = "user/profile/profilepicture/";
@@ -793,5 +796,8 @@ public class Constants {
     public static final String NOT_AN_IMAGE = "NOT_AN_IMAGE";
     public static final String MULTIPLE_FACES = "MULTIPLE_FACES";
     public static final String NO_FACE_DETECTED = "NO_FACE_DETECTED";
+
+    // API Version Checker
+    public static boolean IS_API_VERSION_CHECKED = false;
 
 }

@@ -152,6 +152,8 @@
     <string name="select_session">Select Session</string>
     <string name="save">Save</string>
     <string name="update">Update</string>
+    <string name="update_ipay">Please update iPay</string>
+    <string name="update_your_application">Please update your application from Google Play Store.</string>
     <string name="friend">Friend</string>
     <string name="add_to_contacts">Add to Contacts</string>
     <string name="ipay_contacts">iPay</string>
@@ -290,6 +292,8 @@
     <string name="please_select_a_gender">Please select a gender</string>
     <string name="otp_request_failed">Could not send OTP. Please try again</string>
     <string name="try_again_later">Could not connect to iPay. Please try again later.</string>
+    <string name="later">Later</string>
+    <string name="update_now">Update Now</string>
     <string name="enter_rate">Enter rate per item in BDT</string>
     <string name="event_name">Name of the event</string>
     <string name="event_category">Category</string>
@@ -313,6 +317,7 @@
     <string name="please_add_item_name">Please add item name</string>
     <string name="add_title">Add a title</string>
     <string name="attention">Attention</string>
+    <string name="update_required">Update required!</string>
     <string name="otp_sent">OTP sent. Please wait...</string>
     <string name="please_enter_valid_name">Please enter a valid name.</string>
     <string name="please_enter_valid_mobile_number">Please enter a valid mobile number.</string>
@@ -572,6 +577,7 @@
     <string name="not_submitted">Not Submitted</string>
     <string name="you_need_to_upload_identification_documents_to_get_verified">You need to upload at least one identification documents to get verified</string>
     <string name="document_id">Document ID</string>
+    <string name="verify_identity">Please verify your identity</string>
     <string name="no_face_detected">Sorry, the picture selected is not appropriate for your iPay account.\nPlease take a clear image of your face.</string>
     <string name="not_an_image">Sorry, the file selected is not an image. Please take the picture again.</string>
     <string name="default_profile_pic_inappropriate_message">Sorry, can not update the profile picture. Please take the picture again.</string>
