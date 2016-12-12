@@ -192,7 +192,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         mProgressDialog.show();
 
         mRemoveTrustedPersonTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_TRUSTED_PERSON,
-                Constants.BASE_URL_MM + Constants.URL_GET_TRUSTED_PERSONS + personID, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_TRUSTED_PERSON + personID, getActivity(), this);
         mRemoveTrustedPersonTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

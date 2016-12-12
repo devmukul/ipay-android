@@ -366,6 +366,7 @@ public class Constants {
     // Trusted Network REST
     public static final String URL_GET_TRUSTED_PERSONS = "trustednetwork/trustedpersons/";
     public static final String URL_POST_TRUSTED_PERSONS = "trustednetwork/trustedpersons/";
+    public static final String URL_REMOVE_TRUSTED_PERSON = "trustednetwork/trustedpersons/";
     public static final String URL_SET_RECOVERY_PERSON = "recovery";
 
     // User Rest
