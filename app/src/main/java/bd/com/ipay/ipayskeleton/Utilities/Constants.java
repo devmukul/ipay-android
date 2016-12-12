@@ -378,6 +378,9 @@ public class Constants {
     // User Rest (Profile Completion)
     public static final String URL_GET_PROFILE_COMPLETION_STATUS = "/user/profilecompletion";
 
+    // API version check Rest
+    public static final String URL_GET_MIN_API_VERSION_REQUIRED = "/app/min-supported-versions";
+
     // User Rest (Profile Picture)
     public static final String URL_SET_PROFILE_PICTURE = "user/profile/profilepicture/";
 
@@ -801,5 +804,8 @@ public class Constants {
     public static final String NOT_AN_IMAGE = "NOT_AN_IMAGE";
     public static final String MULTIPLE_FACES = "MULTIPLE_FACES";
     public static final String NO_FACE_DETECTED = "NO_FACE_DETECTED";
+
+    // API Version Checker
+    public static boolean IS_API_VERSION_CHECKED = false;
 
 }
