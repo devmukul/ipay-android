@@ -204,6 +204,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetTrustedPersonsTask = null;
+            mRemoveTrustedPersonTask =null;
 
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
