@@ -172,12 +172,12 @@ public class Constants {
     public static final int SERVER_TYPE = BuildConfig.ServerType;
 
     public static final String BASE_URL_MM;
-
     public static final String BASE_URL_SM;
     public static final String BASE_URL_EDU;
     public static final String BASE_URL_FRIEND;
     public static final String BASE_URL_ADMIN;
     public static final String BASE_URL_FTP_SERVER;
+    public static final String BASE_URL_WEB;
     private static final String SERVER_NAME;
 
     static {
@@ -189,6 +189,8 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://10.10.10.11:1337/v1/";
             BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/support/";
+//            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
+            BASE_URL_WEB ="http://dev.ipay.com.bd";
             SERVER_NAME = "dev";
 
         } else if (SERVER_TYPE == 2) {
@@ -199,6 +201,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_FRIEND = "http://10.15.40.14:1337/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
+            BASE_URL_WEB ="http://test.ipay.com.bd";
             SERVER_NAME = "test";
 
         } else if (SERVER_TYPE == 3) {
@@ -209,6 +212,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
             BASE_URL_FRIEND = "http://10.10.40.14:1337/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
+            BASE_URL_WEB ="http://stage.ipay.com.bd";
             SERVER_NAME = "stage";
 
         } else if (SERVER_TYPE == 4) {
@@ -219,6 +223,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
             BASE_URL_FRIEND = "https://www.ipay.com.bd/friend/v1/";
             BASE_URL_ADMIN = "https://www.ipay.com.bd/api/v1/support/";
+            BASE_URL_WEB ="https://www.ipay.com.bd";
             SERVER_NAME = "live";
 
         } else {
@@ -229,6 +234,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://dev.ipay.com.bd/friend/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
+            BASE_URL_WEB ="http://dev.ipay.com.bd";
             SERVER_NAME = "local";
         }
     }
@@ -315,6 +321,7 @@ public class Constants {
     public static final String URL_GET_SECURITY_ALL_QUESTIONS = "settings/security/allquestions/";
     public static final String URL_GET_SECURITY_QUESTIONS = "settings/security/questions";
     public static final String URL_SET_SECURITY_ANSWERS = "settings/security/answers";
+    public static final String URL_FORGET_PASSWORD = "/forgot-password";
 
     public static final String URL_GET_PIN_INFO = "settings/pin";
     public static final String URL_SET_PIN = "settings/pin";
