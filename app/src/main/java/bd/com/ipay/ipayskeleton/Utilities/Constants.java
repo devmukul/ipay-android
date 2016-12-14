@@ -291,6 +291,7 @@ public class Constants {
     public static final String URL_GET_UPSTREAM_APPROVED_INTRODUCTION_REQUESTS = "introducer/upstream/approved";
     public static final String URL_INTRODUCE_ACTION = "introducer/";
     public static final String URL_GET_PENDING_INTRODUCER = "introducer/pending";
+    public static final String URL_PENDING_INTRODUCER_ACTION = "introducer/pending";
 
     // Invite Rest
     public static final String URL_GET_INVITE_INFO = "invitation";

@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PendingIntroducerReviewDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.Business;
@@ -372,7 +373,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             mServiceChargeTask = null;
             mGetBusinessInvitationTask = null;
             mGetIntroductionRequestTask = null;
-            mGetPendingIntroducerListTask =null;
+            mGetPendingIntroducerListTask = null;
 
             if (isAdded()) {
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -524,9 +525,12 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 Notification notification = mNotifications.get(pos);
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + notification.getImageUrl(), false);
-
                 mNameView.setText(notification.getName());
-                mTimeView.setText(Utilities.formatDateWithTime(notification.getTime()));
+
+                if (notification.getNotificationType() == Constants.NOTIFICATION_TYPE_PENDING_INTRODUCER_REQUEST)
+                    mTimeView.setText(Utilities.formatDateWithoutTime(notification.getTime()));
+                else
+                    mTimeView.setText(Utilities.formatDateWithTime(notification.getTime()));
 
                 if (notification.getNotificationTitle() != null && !notification.getNotificationTitle().equals("")) {
                     mTitleView.setVisibility(View.VISIBLE);
@@ -703,27 +707,25 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 final String senderName = pendingIntroducer.getName();
                 final String senderMobileNumber = pendingIntroducer.getMobileNumber();
-                final String photoUri = pendingIntroducer.getImageUrl();
+                final String photoUri = Constants.BASE_URL_FTP_SERVER + pendingIntroducer.getImageUrl();
 
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        /*Bundle bundle = new Bundle();
-                        bundle.putLong(Constants.REQUEST_ID, requestID);
-                        bundle.putString(Constants.NAME, senderName);
-                        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + photoUri);
-                        bundle.putString(Constants.MOBILE_NUMBER, senderMobileNumber);
-                        bundle.putString(Constants.FATHERS_NAME, fathersName);
-                        bundle.putString(Constants.MOTHERS_NAME, mothersName);
-                        bundle.putSerializable(Constants.ADDRESS, mAddress);
-                        bundle.putString(Constants.TAG, Constants.RECOMMENDATION);
-                        bundle.putBoolean(Constants.IS_IN_CONTACTS,
-                                new SearchContactClass(getActivity()).searchMobileNumber(senderMobileNumber));
+                        new PendingIntroducerReviewDialog(getActivity(), requestID, senderName, senderMobileNumber, photoUri).setActionCheckerListener(
+                                new PendingIntroducerReviewDialog.ActionCheckerListener() {
+                                    @Override
+                                    public void ifFinishNeeded() {
 
-                        Intent intent = new Intent(getActivity(), NotificationActivity.class);
-                        intent.putExtras(bundle);
-                        startActivity(intent);*/
+                                        if (Utilities.isConnectionAvailable(getActivity())) {
+                                            refreshBusinessInvitationList();
+                                            refreshIntroductionRequestList();
+                                            refreshMoneyAndPaymentRequestList();
+                                            refreshPendingIntroducerList();
+                                        }
+                                    }
+                                });
                     }
                 });
             }
@@ -744,8 +746,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 return new BusinessInvitationViewHolder(v);
             } else if (viewType == Constants.NOTIFICATION_TYPE_PENDING_INTRODUCER_REQUEST) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_requests_notification, parent, false);
-                return new MoneyAndPaymentRequestViewHolder(v);
-            }else {
+                return new PendingIntroductionListViewHolder(v);
+            } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_and_make_payment_request, parent, false);
                 return new MoneyAndPaymentRequestViewHolder(v);
             }

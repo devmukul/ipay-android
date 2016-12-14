@@ -151,7 +151,7 @@
                 android:paddingBottom="@dimen/value4"
                 android:paddingLeft="@dimen/activity_horizontal_margin_card"
                 android:paddingTop="@dimen/value4"
-                android:text="@string/introducers" />
+                android:text="@string/profile_introducers" />
 
             <View style="@style/Divider" />
 

@@ -8,7 +8,7 @@ public class PendingIntroducer implements Notification {
     private String name;
     private String mobileNumber;
     private String profilePictureUrl;
-    private int requestTime;
+    private long requestTime;
 
     public PendingIntroducer() {
 
@@ -24,14 +24,17 @@ public class PendingIntroducer implements Notification {
 
     @Override
     public String getNotificationTitle() {
-        return null;
+        String customDescription = "";
+
+        customDescription = getName() + " wants to introduce you ";
+        return customDescription;
     }
 
     @Override
     public String getDescription() {
         String customDescription = "";
 
-        customDescription = getName() + " wantedt to introduce you ";
+        customDescription = getName() + " wants to introduce you ";
 
         return customDescription;
     }
@@ -59,7 +62,7 @@ public class PendingIntroducer implements Notification {
         return mobileNumber;
     }
 
-    public int getRequestTime() {
+    public long getRequestTime() {
         return requestTime;
     }
 
