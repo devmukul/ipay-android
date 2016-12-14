@@ -51,7 +51,7 @@ public class SendMoneyActivity extends BaseActivity {
                     if (sendMoneyFragment != null)
                         sendMoneyFragment.initiateScan();
                 } else {
-                    Toast.makeText(this, R.string.request_for_camera_permission, Toast.LENGTH_LONG);
+                    Toast.makeText(this, R.string.request_for_camera_permission, Toast.LENGTH_LONG).show();
                 }
                 break;
         }
