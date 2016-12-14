@@ -61,11 +61,11 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
                     mHttpResponseObject = parseHttpResponse(mHttpResponse);
                     mHttpResponseObject.setUpdateNeeded(false);
                 } else {
-                    mHttpResponse = makeAPIVersionCheckRequest();
+                    mHttpResponse = makeApiVersionCheckRequest();
                     mHttpResponseObject = parseHttpResponse(mHttpResponse);
 
-                    // Validate the API version and set whether the update is required or not
-                    validateAPIVersion(mHttpResponseObject);
+                    // Validate the Api version and set whether the update is required or not
+                    mHttpResponseObject = validateApiVersion(mHttpResponseObject);
                 }
 
             } else {
@@ -176,7 +176,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
         return null;
     }
 
-    private HttpResponse makeAPIVersionCheckRequest() {
+    private HttpResponse makeApiVersionCheckRequest() {
         try {
             HttpRequestBase httpRequest = new HttpGet(Constants.BASE_URL_MM + Constants.URL_GET_MIN_API_VERSION_REQUIRED);
 
@@ -199,17 +199,22 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
     private HttpResponseObject parseHttpResponse(HttpResponse mHttpResponse) {
         HttpResponseObject mHttpResponseObject = null;
 
+        if (mHttpResponse == null)
+            return mHttpResponseObject;
+
         HttpResponseParser mHttpResponseParser = new HttpResponseParser();
         mHttpResponseParser.setAPI_COMMAND(API_COMMAND);
         mHttpResponseParser.setHttpResponse(mHttpResponse);
 
         mHttpResponseObject = mHttpResponseParser.parseHttpResponse();
+
+        // Set the context, after response is parsed.
         mHttpResponseObject.setContext(mContext);
 
         return mHttpResponseObject;
     }
 
-    private void validateAPIVersion(HttpResponseObject mHttpResponseObject) {
+    private HttpResponseObject validateApiVersion(HttpResponseObject mHttpResponseObject) {
 
         Gson gson = new Gson();
 
@@ -234,6 +239,8 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return mHttpResponseObject;
     }
 
     Context getContext() {
