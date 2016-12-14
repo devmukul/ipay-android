@@ -16,7 +16,7 @@ public class DialogUtils {
                 .cancelable(false)
                 .content(R.string.update_your_application)
                 .positiveText(R.string.update_now)
-                .negativeText(R.string.cancel)
+                .negativeText(R.string.later)
                 .show();
 
         dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
