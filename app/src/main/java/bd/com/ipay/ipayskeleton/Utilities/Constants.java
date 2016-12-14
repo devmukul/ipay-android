@@ -290,6 +290,7 @@ public class Constants {
     public static final String URL_GET_UPSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "introducer/upstream/notapproved";
     public static final String URL_GET_UPSTREAM_APPROVED_INTRODUCTION_REQUESTS = "introducer/upstream/approved";
     public static final String URL_INTRODUCE_ACTION = "introducer/";
+    public static final String URL_GET_PENDING_INTRODUCER = "introducer/pending";
 
     // Invite Rest
     public static final String URL_GET_INVITE_INFO = "invitation";
@@ -503,6 +504,7 @@ public class Constants {
     public static final String COMMAND_GET_IDENTIFICATION_BUSINESS_DOCUMENTS_REQUEST = "COMMAND_GET_IDENTIFICATION_BUSINESS_DOCUMENTS_REQUEST";
     public static final String COMMAND_GET_INTRODUCER_LIST = "COMMAND_GET_INTRODUCER_LIST";
     public static final String COMMAND_GET_INTRODUCED_LIST = "COMMAND_GET_INTRODUCED_LIST";
+    public static final String COMMAND_GET_PENDING_INTRODUCER_LIST = "COMMAND_GET_PENDING_INTRODUCER_LIST";
     public static final String COMMAND_GET_SENT_REQUEST_LIST = "COMMAND_GET_SENT_REQUEST_LIST";
     public static final String COMMAND_SET_PROFILE_INFO_REQUEST = "COMMAND_SET_PROFILE_INFO_REQUEST";
     public static final String COMMAND_SET_PARENT_INFO_REQUEST = "COMMAND_SET_PARENT_INFO_REQUEST";
@@ -773,6 +775,7 @@ public class Constants {
     public static final int NOTIFICATION_TYPE_MAKE_PAYMENT = 2;
     public static final int NOTIFICATION_TYPE_BUSINESS_ACCOUNT_INVITE = 3;
     public static final int NOTIFICATION_TYPE_INTRODUCTION_REQUEST = 4;
+    public static final int NOTIFICATION_TYPE_PENDING_INTRODUCER_REQUEST = 5;
 
     public static final String ACTION_TYPE_VERIFY = "Verify";
     public static final String ACTION_TYPE_ACCEPT = "Accept";
