@@ -378,10 +378,10 @@ public class Constants {
     public static final String URL_SET_PROFILE_INFO_REQUEST = "user/profile";
 
     // User Rest (Profile Completion)
-    public static final String URL_GET_PROFILE_COMPLETION_STATUS = "/user/profilecompletion";
+    public static final String URL_GET_PROFILE_COMPLETION_STATUS = "user/profilecompletion";
 
     // API version check Rest
-    public static final String URL_GET_MIN_API_VERSION_REQUIRED = "/app/min-supported-versions";
+    public static final String URL_GET_MIN_API_VERSION_REQUIRED = "app/min-supported-versions";
 
     // User Rest (Profile Picture)
     public static final String URL_SET_PROFILE_PICTURE = "user/profile/profilepicture/";
