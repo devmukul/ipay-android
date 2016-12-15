@@ -138,7 +138,7 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
 
     private void showErrorDialog() {
         mError_message = mError_message.replace(getString(R.string.payment_amount), getString(R.string.payment_total_amount));
-        
+
         new AlertDialog.Builder(getContext())
                 .setMessage(mError_message)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
