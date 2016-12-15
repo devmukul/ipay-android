@@ -330,7 +330,7 @@
     <string name="please_write_title">Please write a title.</string>
     <string name="please_enter_minimum_amount">Please enter minimum amount of </string>
     <string name="insufficient_balance">Balance insufficient.</string>
-    <string name="please_enter_not_more_than_max_amount">Please enter maximum amount of </string>
+    <string name="please_enter_not_more_than_max_amount">Please enter not more than amount of </string>
     <string name="please_enter_vat_amount">Please enter VAT amount.</string>
     <string name="please_select_relation">Please select a relation</string>
     <string name="start_date">Start date (dd/mm/yyyy)</string>
@@ -515,6 +515,8 @@
     <string name="total_amount">Total Amount</string>
     <string name="review_and_create_invoice"><![CDATA[Review & Create Invoice]]></string>
     <string name="amount">Amount</string>
+    <string name="payment_amount">amount</string>
+    <string name="payment_total_amount">total amount</string>
     <string name="item">Item</string>
     <string name="fee">Fee</string>
     <string name="net_payable">Net Payable</string>
