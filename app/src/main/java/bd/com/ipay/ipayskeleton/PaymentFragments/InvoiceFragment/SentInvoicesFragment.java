@@ -236,25 +236,36 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
 
                 mSenderNameTextView.setText(name);
 
-                if (status == Constants.INVOICE_STATUS_ACCEPTED) {
-                    statusView.setTextColor(getResources().getColor(R.color.bottle_green));
-                    statusView.setText(R.string.accepted);
-
-                } else if (status == Constants.INVOICE_STATUS_PROCESSING) {
-                    statusView.setTextColor(getResources().getColor(R.color.background_yellow));
-                    statusView.setText(R.string.processing);
-
-                } else if (status == Constants.INVOICE_STATUS_REJECTED) {
-                    statusView.setTextColor(Color.RED);
-                    statusView.setText(R.string.rejected);
-
-                } else if (status == Constants.INVOICE_STATUS_CANCELED) {
-                    statusView.setTextColor(Color.GRAY);
-                    statusView.setText(R.string.canceled);
-
-                } else if (status == Constants.INVOICE_STATUS_DRAFT) {
-                    statusView.setTextColor(Color.RED);
-                    statusView.setText(R.string.draft);
+                switch (status) {
+                    case Constants.INVOICE_STATUS_ACCEPTED: {
+                        statusView.setTextColor(getResources().getColor(R.color.bottle_green));
+                        statusView.setText(R.string.accepted);
+                        break;
+                    }
+                    case Constants.INVOICE_STATUS_PROCESSING: {
+                        statusView.setTextColor(getResources().getColor(R.color.background_yellow));
+                        statusView.setText(R.string.processing);
+                        break;
+                    }
+                    case Constants.INVOICE_STATUS_REJECTED: {
+                        statusView.setTextColor(Color.RED);
+                        statusView.setText(R.string.rejected);
+                        break;
+                    }
+                    case Constants.INVOICE_STATUS_CANCELED: {
+                        statusView.setTextColor(Color.GRAY);
+                        statusView.setText(R.string.canceled);
+                        break;
+                    }
+                    case Constants.INVOICE_STATUS_DRAFT: {
+                        statusView.setTextColor(Color.RED);
+                        statusView.setText(R.string.draft);
+                        break;
+                    }
+                    default:
+                        statusView.setTextColor(Color.RED);
+                        statusView.setText(R.string.not_applicable);
+                        break;
                 }
 
                 mAmountTextView.setText(Utilities.formatTaka(pendingPaymentClasses.get(pos).getAmount()));

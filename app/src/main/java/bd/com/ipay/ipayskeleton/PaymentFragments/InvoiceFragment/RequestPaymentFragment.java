@@ -249,18 +249,6 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
         startActivityForResult(intent, REQUEST_CREATE_INVOICE_REVIEW);
     }
 
-    private void showErrorDialog(String mError_message) {
-        new AlertDialog.Builder(getContext())
-                .setMessage(mError_message)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-    }
-
     private void attemptGetBusinessRule(int serviceID) {
 
         if (mGetBusinessRuleTask != null) {
@@ -313,10 +301,11 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
 
                     if (businessRuleArray != null) {
                         for (BusinessRule rule : businessRuleArray) {
-                            if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT)) {
+                            String ruleID = rule.getRuleID();
+                            if (ruleID.equals(Constants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT)) {
                                 PaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
 
-                            } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
+                            } else if (ruleID.equals(Constants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
                                 PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                             }
                         }

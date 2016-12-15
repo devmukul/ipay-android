@@ -126,7 +126,7 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
             }
         });
 
-        // Check if Min or max amount is available
+        // Check if min or max amount is available
         if (!Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
                 && !Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
             attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_MAKE_PAYMENT);
