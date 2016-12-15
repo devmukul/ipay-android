@@ -709,7 +709,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 final String senderMobileNumber = pendingIntroducer.getMobileNumber();
                 final String photoUri = Constants.BASE_URL_FTP_SERVER + pendingIntroducer.getImageUrl();
 
-
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -717,7 +716,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                                 new PendingIntroducerReviewDialog.ActionCheckerListener() {
                                     @Override
                                     public void ifFinishNeeded() {
-
                                         if (Utilities.isConnectionAvailable(getActivity())) {
                                             refreshBusinessInvitationList();
                                             refreshIntroductionRequestList();
