@@ -237,31 +237,26 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                 mSenderNameTextView.setText(name);
 
                 switch (status) {
-                    case Constants.INVOICE_STATUS_ACCEPTED: {
+                    case Constants.INVOICE_STATUS_ACCEPTED:
                         statusView.setTextColor(getResources().getColor(R.color.bottle_green));
                         statusView.setText(R.string.accepted);
                         break;
-                    }
-                    case Constants.INVOICE_STATUS_PROCESSING: {
+                    case Constants.INVOICE_STATUS_PROCESSING:
                         statusView.setTextColor(getResources().getColor(R.color.background_yellow));
                         statusView.setText(R.string.processing);
                         break;
-                    }
-                    case Constants.INVOICE_STATUS_REJECTED: {
+                    case Constants.INVOICE_STATUS_REJECTED:
                         statusView.setTextColor(Color.RED);
                         statusView.setText(R.string.rejected);
                         break;
-                    }
-                    case Constants.INVOICE_STATUS_CANCELED: {
+                    case Constants.INVOICE_STATUS_CANCELED:
                         statusView.setTextColor(Color.GRAY);
                         statusView.setText(R.string.canceled);
                         break;
-                    }
-                    case Constants.INVOICE_STATUS_DRAFT: {
+                    case Constants.INVOICE_STATUS_DRAFT:
                         statusView.setTextColor(Color.RED);
                         statusView.setText(R.string.draft);
                         break;
-                    }
                     default:
                         statusView.setTextColor(Color.RED);
                         statusView.setText(R.string.not_applicable);
