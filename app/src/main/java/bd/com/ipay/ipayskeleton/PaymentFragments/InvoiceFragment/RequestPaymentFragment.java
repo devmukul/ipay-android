@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
@@ -81,7 +80,6 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.submitting_request_money));
-
 
         mAmountEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -263,7 +261,6 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
                 .show();
     }
 
-
     private void attemptGetBusinessRule(int serviceID) {
 
         if (mGetBusinessRuleTask != null) {
@@ -297,7 +294,6 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
         } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CREATE_INVOICE_REVIEW)
             ((InvoiceActivity) getActivity()).switchToInvoicesSentFragment();
     }
-
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {

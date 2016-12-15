@@ -72,7 +72,6 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
             mVat = new BigDecimal(0);
         else mVat = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.VAT));
 
-
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
 
