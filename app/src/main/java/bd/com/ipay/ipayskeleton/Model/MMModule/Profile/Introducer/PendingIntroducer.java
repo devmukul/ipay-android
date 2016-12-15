@@ -26,7 +26,7 @@ public class PendingIntroducer implements Notification {
     public String getNotificationTitle() {
         String customDescription = "";
 
-        customDescription = getName() + " wants to introduce you ";
+        customDescription = "Wants to introduce you ";
         return customDescription;
     }
 
@@ -34,7 +34,7 @@ public class PendingIntroducer implements Notification {
     public String getDescription() {
         String customDescription = "";
 
-        customDescription = getName() + " wants to introduce you ";
+        customDescription = "Wants to introduce you ";
 
         return customDescription;
     }
