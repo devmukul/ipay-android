@@ -29,7 +29,7 @@ public class ApiValidatorAspect {
         try {
             HttpResponseObject mHttpResponseObject = (HttpResponseObject) args[0];
 
-            if (mHttpResponseObject.isUpdateNeeded()) {
+            if (mHttpResponseObject != null && mHttpResponseObject.isUpdateNeeded()) {
                 DialogUtils.showAppUpdateRequiredDialog(mHttpResponseObject.getContext());
             } else {
                 result = joinPoint.proceed();
