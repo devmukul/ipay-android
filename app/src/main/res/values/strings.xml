@@ -330,7 +330,7 @@
     <string name="please_write_title">Please write a title.</string>
     <string name="please_enter_minimum_amount">Please enter minimum amount of </string>
     <string name="insufficient_balance">Balance insufficient.</string>
-    <string name="please_enter_not_more_than_max_amount">You can not send more than </string>
+    <string name="please_enter_not_more_than_max_amount">Maximum limit of amount is </string>
     <string name="please_enter_vat_amount">Please enter VAT amount.</string>
     <string name="please_select_relation">Please select a relation</string>
     <string name="start_date">Start date (dd/mm/yyyy)</string>
@@ -406,7 +406,7 @@
     <string name="transaction_failed">Failed</string>
     <string name="transaction_cancelled">Cancelled</string>
     <string name="transaction_rejected">Rejected</string>
-    <string name="draft">Saved but not send</string>
+    <string name="save_not_send">Saved but not send</string>
     <string name="pending">Pending</string>
     <string name="processed">Processed</string>
     <string name="filter_by_date">Filter by date</string>
@@ -515,6 +515,8 @@
     <string name="total_amount">Total Amount</string>
     <string name="review_and_create_invoice"><![CDATA[Review & Create Invoice]]></string>
     <string name="amount">Amount</string>
+    <string name="payment_amount">amount</string>
+    <string name="payment_total_amount">total amount</string>
     <string name="item">Item</string>
     <string name="fee">Fee</string>
     <string name="net_payable">Net Payable</string>
@@ -736,6 +738,10 @@
     <string name="add_comment">Add Comment</string>
     <string name="comment_cannot_be_empty">Comment cannot be empty</string>
     <string name="not_available">Not available</string>
+    <string name="accepted">Accepted</string>
+    <string name="canceled">Canceled</string>
+    <string name="rejected">Rejected</string>
+    <string name="draft">Draft</string>
 
 
     <string-array name="mobile_operators">
