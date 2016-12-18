@@ -28,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -108,24 +109,14 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
                 }
 
                 try {
-                    // Stop the Token Timer here
-                    CountDownTimer tokenTimer = TokenManager.getTokenTimer();
-                    if (tokenTimer != null) {
-                        tokenTimer.cancel();
-                        TokenManager.setTokenTimer(null);
-                    }
+                    // Stop the token timer here.
+                    MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
+                    myApplicationInstance.stopTokenTimer();
 
                     boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
 
                     if (loggedIn) {
-                        // Set the preference first
-                        ProfileInfoCacheManager.setLoggedInStatus(false);
-
-                        // Switch back to login activity because the user is unauthorized
-                        Intent intent = new Intent(mContext, SignupOrLoginActivity.class);
-                        intent.putExtra(Constants.MESSAGE, message);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        mContext.startActivity(intent);
+                        myApplicationInstance.launchLoginPage(message);
 
                     } else {
                         // Wrong user name or password returns HTTP_RESPONSE_STATUS_UNAUTHORIZED too
@@ -205,6 +196,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
         HttpResponseParser mHttpResponseParser = new HttpResponseParser();
         mHttpResponseParser.setAPI_COMMAND(API_COMMAND);
         mHttpResponseParser.setHttpResponse(mHttpResponse);
+        mHttpResponseParser.setContext(mContext);
 
         mHttpResponseObject = mHttpResponseParser.parseHttpResponse();
 

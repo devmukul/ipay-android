@@ -72,6 +72,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Config;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -80,8 +81,6 @@ public class HomeActivity extends BaseActivity
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
-
-    public static HttpRequestPostAsyncTask mRefreshTokenAsyncTask = null;
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
@@ -595,7 +594,6 @@ public class HomeActivity extends BaseActivity
             mGetProfileInfoTask = null;
             mAddTrustedDeviceTask = null;
             mGetBusinessInformationAsyncTask = null;
-            mRefreshTokenAsyncTask = null;
             Toast.makeText(HomeActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
@@ -609,15 +607,8 @@ public class HomeActivity extends BaseActivity
                     mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
-                        if (TokenManager.getTokenTimer() != null)
-                            TokenManager.getTokenTimer().cancel();
-
-                        finish();
-
                         if (!exitFromApplication) {
-                            Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
-                            startActivity(intent);
+                            ((MyApplication) this.getApplication()).launchLoginPage(null);
                         }
                     } else {
                         Toast.makeText(HomeActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();

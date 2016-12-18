@@ -58,18 +58,6 @@ public class TokenManager {
         TokenManager.refreshToken = refreshToken;
     }
 
-    public static CountDownTimer getTokenTimer() {
-        return BaseActivity.tokenTimer;
-    }
-
-    public static void setTokenTimer(CountDownTimer tokenTimer) {
-        BaseActivity.tokenTimer = tokenTimer;
-    }
-
-    public static void stopTokenTimer() {
-        BaseActivity.tokenTimer.cancel();
-    }
-
     public static long getiPayTokenTimeInMs() {
 
         // We need to set the overlapping time for a refresh token.
