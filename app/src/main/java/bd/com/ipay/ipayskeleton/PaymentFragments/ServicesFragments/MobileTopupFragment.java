@@ -359,12 +359,12 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             }
 
             mGetBusinessRuleTask = null;

@@ -184,6 +184,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         boolean cancel = false;
         View focusView = null;
         BigDecimal maxAmount;
+        String error_message;
 
         String balance = null;
         if (pref.contains(Constants.USER_BALANCE)) {
@@ -209,13 +210,16 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
                 && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
-            if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(new BigDecimal(balance)) > 0) {
-                maxAmount = PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
-            } else
-                maxAmount = PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().max((new BigDecimal(balance)));
+            String amount = mAmountEditText.getText().toString();
 
-            String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                    PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
+            if (new BigDecimal(amount).compareTo(new BigDecimal(balance)) > 0) {
+                error_message = getString(R.string.insufficient_balance);
+            } else {
+                maxAmount = PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
+
+                error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+                        PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
+            }
 
             if (error_message != null) {
                 focusView = mAmountEditText;
@@ -302,12 +306,11 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                 }
-
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             }
 
             mGetBusinessRuleTask = null;
