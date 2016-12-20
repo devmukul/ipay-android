@@ -46,7 +46,6 @@ public class MyApplication extends Application implements HttpResponseListener {
         super.onCreate();
         myApplicationInstance = this;
 
-        Log.d("Application Context", getApplicationContext().toString());
         ProfileInfoCacheManager.initialize(getApplicationContext());
         PushNotificationStatusHolder.initialize(getApplicationContext());
     }
@@ -114,7 +113,7 @@ public class MyApplication extends Application implements HttpResponseListener {
                 TokenManager.getiPayTokenTimeInMs());
     }
 
-    public void stopTokenTimer() {
+    private void stopTokenTimer() {
         if (this.mTokenTimerTask != null) {
             this.mTokenTimerTask.cancel();
         }
@@ -124,7 +123,7 @@ public class MyApplication extends Application implements HttpResponseListener {
         }
     }
 
-    public void refreshToken() {
+    private void refreshToken() {
 
         if (Constants.DEBUG)
             Log.w("Token_Timer", "Refresh token called");
@@ -144,8 +143,14 @@ public class MyApplication extends Application implements HttpResponseListener {
         mRefreshTokenAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    // Launch login page specially for token timeout/un-authorized/logout called for user inactivity
+    // Launch login page for token timeout/un-authorized/logout called for user inactivity
     public void launchLoginPage(String message) {
+        boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
+
+        // If the user is not logged in already, no need to launch the Login page.
+        // Return from here
+        if (!loggedIn) return;
+
         ProfileInfoCacheManager.setLoggedInStatus(false);
         Intent intent = new Intent(getApplicationContext(), SignupOrLoginActivity.class);
         if (message != null)
@@ -201,7 +206,6 @@ public class MyApplication extends Application implements HttpResponseListener {
             }
 
             mRefreshTokenAsyncTask = null;
-
         }
     }
 }

@@ -1,9 +1,7 @@
 package bd.com.ipay.ipayskeleton.Api;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -21,7 +19,6 @@ import org.apache.http.protocol.HTTP;
 
 import java.io.IOException;
 
-import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Configuration.ApiVersionResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
@@ -109,10 +106,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
                 }
 
                 try {
-                    // Stop the token timer here.
                     MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
-                    myApplicationInstance.stopTokenTimer();
-
                     boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
 
                     if (loggedIn) {

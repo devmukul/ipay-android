@@ -3,9 +3,7 @@ package bd.com.ipay.ipayskeleton.Activities;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -39,13 +37,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void forceLogoutForInactivity() {
         if (Utilities.isConnectionAvailable(context))
-            ((MyApplication) this.getApplication()).attemptLogout();
-        else {
-            boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
-
-            if (loggedIn) {
-                ((MyApplication) this.getApplication()).launchLoginPage(getString(R.string.please_log_in_again));
-            }
-        }
+            ((MyApplication) this.getApplication())
+                    .attemptLogout();
+        else
+            ((MyApplication) this.getApplication())
+                    .launchLoginPage(getString(R.string.please_log_in_again));
     }
 }

@@ -469,15 +469,10 @@ public class HomeActivity extends BaseActivity
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_logout) {
-
-            if (Utilities.isConnectionAvailable(HomeActivity.this))
+            if (Utilities.isConnectionAvailable(HomeActivity.this)) {
                 attemptLogout();
-            else {
-                ProfileInfoCacheManager.setLoggedInStatus(false);
-
-                finish();
-                Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
-                startActivity(intent);
+            } else {
+                ((MyApplication) this.getApplication()).launchLoginPage(null);
             }
         }
 
@@ -502,7 +497,6 @@ public class HomeActivity extends BaseActivity
                                 attemptLogout();
                             } else {
                                 ProfileInfoCacheManager.setLoggedInStatus(false);
-
                                 finish();
                             }
                         }
@@ -533,9 +527,6 @@ public class HomeActivity extends BaseActivity
         LogoutRequest mLogoutModel = new LogoutRequest(ProfileInfoCacheManager.getMobileNumber());
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
-
-        // Set the preference
-        ProfileInfoCacheManager.setLoggedInStatus(false);
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, HomeActivity.this);
@@ -609,6 +600,9 @@ public class HomeActivity extends BaseActivity
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (!exitFromApplication) {
                             ((MyApplication) this.getApplication()).launchLoginPage(null);
+                        } else {
+                            // Exit the application
+                            finish();
                         }
                     } else {
                         Toast.makeText(HomeActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
