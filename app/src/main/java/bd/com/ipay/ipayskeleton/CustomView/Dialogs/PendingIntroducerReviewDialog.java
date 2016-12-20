@@ -58,6 +58,7 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
     public void initializeView() {
 
         final MaterialDialog reviewDialog = new MaterialDialog.Builder(this.getContext())
+                .title(R.string.introducer_request)
                 .customView(R.layout.dialog_pending_introducer_review, true)
                 .show();
 
