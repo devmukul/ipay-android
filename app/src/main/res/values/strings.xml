@@ -402,6 +402,7 @@
     <string name="introducers">introducers</string>
     <string name="introducer_request">Introducer request</string>
     <string name="introduce_this_person">Introduce this person</string>
+    <string name="request_to_introduce">Request to introduce you</string>
     <string name="business_invitation">Business Invitation</string>
     <string name="in_progress">In Progress</string>
     <string name="transaction_failed">Failed</string>
