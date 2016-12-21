@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
@@ -194,6 +195,12 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
                                         break;
                                     case Constants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT:
                                         PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                        break;
+                                    case Constants.SERVICE_RULE_REQUEST_MONEY_MAX_AMOUNT_PER_PAYMENT:
+                                        RequestMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                        break;
+                                    case Constants.SERVICE_RULE_REQUEST_MONEY_MIN_AMOUNT_PER_PAYMENT:
+                                        RequestMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                                         break;
                                 }
                             }

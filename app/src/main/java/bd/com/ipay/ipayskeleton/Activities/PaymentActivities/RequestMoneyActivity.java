@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MoneyRequestListHolderFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -22,6 +23,8 @@ public class RequestMoneyActivity extends BaseActivity {
     private boolean switchedToPendingList = true;
     public static boolean switchedToSentRequestFragment = false;
     public static boolean switchedToReceivedRequestFragment = true;
+
+    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
 
     private Menu menu;
 
