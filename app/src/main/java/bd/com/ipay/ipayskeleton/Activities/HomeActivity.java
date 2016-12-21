@@ -356,7 +356,7 @@ public class HomeActivity extends BaseActivity
         }
 
         // Store the updated critical preference version after all necessary actions.
-        pref.edit().putInt(Constants.CRITICAL_PREFERENCE_VERSION, Config.criticalPreferenceVersion);
+        pref.edit().putInt(Constants.CRITICAL_PREFERENCE_VERSION, Config.criticalPreferenceVersion).commit();
     }
 
     @Override

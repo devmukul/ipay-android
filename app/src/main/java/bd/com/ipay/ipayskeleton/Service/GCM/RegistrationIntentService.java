@@ -69,7 +69,7 @@ public class RegistrationIntentService extends IntentService {
      */
     private void saveGCMTokenInPreference(String token) {
         SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        pref.edit().putString(Constants.PUSH_NOTIFICATION_TOKEN, token).commit();
+        pref.edit().putString(Constants.PUSH_NOTIFICATION_TOKEN, token).apply();
     }
 
     /**
