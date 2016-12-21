@@ -124,9 +124,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             @Override
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity())) {
-                    refreshMoneyAndPaymentRequestList();
-                    refreshIntroductionRequestList();
-                    refreshBusinessInvitationList();
+                    refreshNotificationLists(getActivity());
                 }
             }
         });
@@ -137,10 +135,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     public void onResume() {
         super.onResume();
         if (Utilities.isConnectionAvailable(getActivity())) {
-            refreshBusinessInvitationList();
-            refreshIntroductionRequestList();
-            refreshMoneyAndPaymentRequestList();
-            refreshPendingIntroducerList();
+            refreshNotificationLists(getActivity());
         }
     }
 
@@ -164,6 +159,13 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         getIntroductionRequestList(context);
         getBusinessInvitationList(context);
         getPendingIntroducersList(context);
+    }
+
+    public void refreshNotificationLists(Context context) {
+        refreshBusinessInvitationList(context);
+        refreshIntroductionRequestList(context);
+        refreshMoneyAndPaymentRequestList(context);
+        refreshPendingIntroducerList(context);
     }
 
     @Override
@@ -241,31 +243,31 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mServiceChargeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void refreshMoneyAndPaymentRequestList() {
-        if (Utilities.isConnectionAvailable(getActivity())) {
+    private void refreshMoneyAndPaymentRequestList(Context context) {
+        if (Utilities.isConnectionAvailable(context)) {
             mMoneyAndPaymentRequests = null;
-            getMoneyAndPaymentRequest(getActivity());
+            getMoneyAndPaymentRequest(context);
         }
     }
 
-    private void refreshIntroductionRequestList() {
-        if (Utilities.isConnectionAvailable(getActivity())) {
+    private void refreshIntroductionRequestList(Context context) {
+        if (Utilities.isConnectionAvailable(context)) {
             mIntroductionRequests = null;
-            getIntroductionRequestList(getActivity());
+            getIntroductionRequestList(context);
         }
     }
 
-    private void refreshBusinessInvitationList() {
-        if (Utilities.isConnectionAvailable(getActivity())) {
+    private void refreshBusinessInvitationList(Context context) {
+        if (Utilities.isConnectionAvailable(context)) {
             mBusinessInvitations = null;
-            getBusinessInvitationList(getActivity());
+            getBusinessInvitationList(context);
         }
     }
 
-    private void refreshPendingIntroducerList() {
-        if (Utilities.isConnectionAvailable(getActivity())) {
+    private void refreshPendingIntroducerList(Context context) {
+        if (Utilities.isConnectionAvailable(context)) {
             mPendingIntroducerList = null;
-            getPendingIntroducersList(getActivity());
+            getPendingIntroducersList(context);
         }
     }
 
@@ -712,10 +714,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                                     @Override
                                     public void ifFinishNeeded() {
                                         if (Utilities.isConnectionAvailable(getActivity())) {
-                                            refreshBusinessInvitationList();
-                                            refreshIntroductionRequestList();
-                                            refreshMoneyAndPaymentRequestList();
-                                            refreshPendingIntroducerList();
+                                            refreshNotificationLists(getActivity());
                                         }
                                     }
                                 });

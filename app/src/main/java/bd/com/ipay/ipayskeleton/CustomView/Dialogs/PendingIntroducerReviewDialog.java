@@ -37,9 +37,9 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
     private String mPendingIntroucerMobileNumber;
     private String mPendingIntroducerPhotoUri;
 
-    private ProfileImageView mProfileImageView;
-    private TextView mSenderNameView;
-    private TextView mSenderMobileNumberView;
+    private ProfileImageView mPendingIntroducerProfileImageView;
+    private TextView mPendingIntroducerNameView;
+    private TextView mPendingIntroducerMobileNumberView;
 
     private Button mRejectButton;
     private Button mAcceptButton;
@@ -62,9 +62,9 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
                 .show();
 
         View v = reviewDialog.getCustomView();
-        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
-        mSenderNameView = (TextView) v.findViewById(R.id.textview_name);
-        mSenderMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
+        mPendingIntroducerProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
+        mPendingIntroducerNameView = (TextView) v.findViewById(R.id.textview_name);
+        mPendingIntroducerMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
 
         mRequestID = mPendingIntroducer.getId();
         mPendingIntroducerName = mPendingIntroducer.getName();
@@ -100,13 +100,13 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
 
     private void setPendingIntroducerUserInfo() {
         if (mPendingIntroducerName == null || mPendingIntroducerName.isEmpty()) {
-            mSenderNameView.setVisibility(View.GONE);
+            mPendingIntroducerNameView.setVisibility(View.GONE);
         } else {
-            mSenderNameView.setText(mPendingIntroducerName);
+            mPendingIntroducerNameView.setText(mPendingIntroducerName);
         }
 
-        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mPendingIntroducerPhotoUri, false);
-        mSenderMobileNumberView.setText(mPendingIntroucerMobileNumber);
+        mPendingIntroducerProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mPendingIntroducerPhotoUri, false);
+        mPendingIntroducerMobileNumberView.setText(mPendingIntroucerMobileNumber);
     }
 
     public void setActionCheckerListener(ActionCheckerListener actionCheckerListener) {
