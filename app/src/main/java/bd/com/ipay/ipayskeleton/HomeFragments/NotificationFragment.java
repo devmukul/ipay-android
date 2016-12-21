@@ -53,6 +53,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class NotificationFragment extends ProgressFragment implements HttpResponseListener {
@@ -584,11 +585,17 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         mVat = vat;
                         mItemList = itemList;
 
-                        if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
-                            attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
-                        else {
-                            launchInvoiceHistoryFragment();
-                        }
+                        PinChecker moneyAndPaymentRequestPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                            @Override
+                            public void ifPinAdded() {
+                                if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
+                                    attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
+                                else {
+                                    launchInvoiceHistoryFragment();
+                                }
+                            }
+                        });
+                        moneyAndPaymentRequestPinChecker.execute();
                     }
                 });
 
