@@ -403,7 +403,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
     @Override
     public int getServiceID() {
-        return Constants.SERVICE_ID_SEND_MONEY;
+        return Constants.SERVICE_ID_REQUEST_MONEY;
     }
 
     @Override

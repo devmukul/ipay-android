@@ -123,7 +123,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
         if (!Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
                 && !Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
+            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_REQUEST_MONEY);
         else
             attemptGetServiceCharge();
         return v;
@@ -205,7 +205,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
     @Override
     public int getServiceID() {
-        return Constants.SERVICE_ID_SEND_MONEY;
+        return Constants.SERVICE_ID_REQUEST_MONEY;
     }
 
     @Override

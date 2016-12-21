@@ -538,7 +538,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         mItemList = itemList;
 
                         if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
-                            attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
+                            attemptGetServiceCharge(Constants.SERVICE_ID_REQUEST_MONEY);
                         else {
                             launchInvoiceHistoryFragment();
                         }
