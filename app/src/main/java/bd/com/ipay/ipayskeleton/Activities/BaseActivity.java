@@ -2,6 +2,8 @@ package bd.com.ipay.ipayskeleton.Activities;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
+import android.widget.Toast;
 
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -43,4 +45,18 @@ public abstract class BaseActivity extends AppCompatActivity {
             ((MyApplication) this.getApplication())
                     .launchLoginPage(getString(R.string.please_log_in_again));
     }
+
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+
+        if (((MyApplication) this.getApplication()).logoutForInactivity) {
+            forceLogoutForInactivity();
+            ((MyApplication) this.getApplication()).stopUserInactivityDetectorTimer();
+        } else {
+            ((MyApplication) this.getApplication()).stopUserInactivityDetectorTimer();
+            ((MyApplication) this.getApplication()).startUserInactivityDetectorTimer();
+        }
+    }
+
 }
