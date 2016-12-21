@@ -84,7 +84,6 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
         mAcceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 reviewDialog.dismiss();
                 attemptIntroducerVerificationStatus(mRequestID, Constants.INTRODUCTION_REQUEST_ACTION_APPROVE);
             }
@@ -93,7 +92,6 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
         mRejectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 new MaterialDialog.Builder(context)
                         .title(R.string.are_you_sure)
                         .content(R.string.introduction_request_reject_dialog_content)
