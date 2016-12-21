@@ -324,7 +324,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private void launchInvoiceHistoryFragment() {
-
         Bundle bundle = new Bundle();
         bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
         bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
@@ -570,11 +569,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 mAmountView.setText(Utilities.formatTaka(amount));
 
-
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         mMoneyRequestId = id;
                         mAmount = amount;
                         mReceiverName = name;
@@ -664,7 +661,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 super.bindView(pos);
                 final Business businessInvitation = (Business) mNotifications.get(pos);
 
-
                 final String senderName = businessInvitation.getName();
                 final String senderMobileNumber = businessInvitation.getMobileNumber();
                 final String photoUri = businessInvitation.getImageUrl();
@@ -675,7 +671,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         Bundle bundle = new Bundle();
                         bundle.putString(Constants.NAME, senderName);
                         bundle.putString(Constants.PHOTO_URI, photoUri);
