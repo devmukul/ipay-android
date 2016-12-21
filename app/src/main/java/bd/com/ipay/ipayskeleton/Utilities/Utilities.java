@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.Utilities;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -513,8 +514,12 @@ public class Utilities {
         });
     }
 
-    public static String getDateFormat(long time) {
+    public static String formatDateWithTime(long time) {
         return new SimpleDateFormat("MMM d, yyyy, h:mm a").format(time);
+    }
+
+    public static String formatDateWithoutTime(long time) {
+        return new SimpleDateFormat("MMM d, yyyy").format(time);
     }
 
     public static boolean checkPlayServices(Context context) {
@@ -654,5 +659,14 @@ public class Utilities {
 
     public static BigDecimal bigDecimalPercentage(BigDecimal base, BigDecimal pct) {
         return base.multiply(pct).divide(new BigDecimal(100));
+    }
+
+    public static void goToiPayInAppStore(Context mContext) {
+        final String appPackageName = mContext.getPackageName();
+        try {
+            mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
     }
 }

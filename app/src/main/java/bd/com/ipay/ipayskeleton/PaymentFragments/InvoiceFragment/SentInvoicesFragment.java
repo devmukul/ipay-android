@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -202,7 +201,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
             private final TextView mSenderNameTextView;
             private final TextView mAmountTextView;
             private final TextView mTimeTextView;
-            private final ImageView statusView;
+            private final TextView statusView;
             private final TextView loadMoreTextView;
             private final ProfileImageView mProfileImageView;
 
@@ -213,7 +212,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
                 mTimeTextView = (TextView) itemView.findViewById(R.id.time);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
-                statusView = (ImageView) itemView.findViewById(R.id.status);
+                statusView = (TextView) itemView.findViewById(R.id.status);
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
             }
 
@@ -221,7 +220,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
             public void bindView(int pos) {
 
                 final String imageUrl = pendingPaymentClasses.get(pos).getReceiverProfile().getUserProfilePicture();
-                final String time = Utilities.getDateFormat(pendingPaymentClasses.get(pos).getRequestTime());
+                final String time = Utilities.formatDateWithTime(pendingPaymentClasses.get(pos).getRequestTime());
                 final String title = pendingPaymentClasses.get(pos).getTitle();
                 final String name = pendingPaymentClasses.get(pos).getReceiverProfile().getUserName();
                 final String mobileNumber = pendingPaymentClasses.get(pos).getReceiverProfile().getUserMobileNumber();
@@ -237,25 +236,31 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
 
                 mSenderNameTextView.setText(name);
 
-                if (status == Constants.INVOICE_STATUS_ACCEPTED) {
-                    statusView.setColorFilter(getResources().getColor(R.color.bottle_green));
-                    statusView.setImageResource(R.drawable.ic_invoice_ok);
-
-                } else if (status == Constants.INVOICE_STATUS_PROCESSING) {
-                    statusView.setColorFilter(getResources().getColor(R.color.background_yellow));
-                    statusView.setImageResource(R.drawable.ic_invoice_pending);
-
-                } else if (status == Constants.INVOICE_STATUS_REJECTED) {
-                    statusView.setColorFilter(Color.RED);
-                    statusView.setImageResource(R.drawable.ic_invoice_notok);
-
-                } else if (status == Constants.INVOICE_STATUS_CANCELED) {
-                    statusView.setColorFilter(Color.GRAY);
-                    statusView.setImageResource(R.drawable.ic_invoice_notok);
-
-                } else if (status == Constants.INVOICE_STATUS_DRAFT) {
-                    statusView.setColorFilter(Color.RED);
-                    statusView.setImageResource(R.drawable.ic_invoice_pending);
+                switch (status) {
+                    case Constants.INVOICE_STATUS_ACCEPTED:
+                        statusView.setTextColor(getResources().getColor(R.color.bottle_green));
+                        statusView.setText(R.string.accepted);
+                        break;
+                    case Constants.INVOICE_STATUS_PROCESSING:
+                        statusView.setTextColor(getResources().getColor(R.color.background_yellow));
+                        statusView.setText(R.string.processing);
+                        break;
+                    case Constants.INVOICE_STATUS_REJECTED:
+                        statusView.setTextColor(Color.RED);
+                        statusView.setText(R.string.rejected);
+                        break;
+                    case Constants.INVOICE_STATUS_CANCELED:
+                        statusView.setTextColor(Color.GRAY);
+                        statusView.setText(R.string.canceled);
+                        break;
+                    case Constants.INVOICE_STATUS_DRAFT:
+                        statusView.setTextColor(Color.RED);
+                        statusView.setText(R.string.draft);
+                        break;
+                    default:
+                        statusView.setTextColor(Color.RED);
+                        statusView.setText(R.string.not_applicable);
+                        break;
                 }
 
                 mAmountTextView.setText(Utilities.formatTaka(pendingPaymentClasses.get(pos).getAmount()));

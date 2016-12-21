@@ -271,7 +271,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
             public void bindView(int pos) {
 
                 final long id = pendingMoneyRequestClasses.get(pos).getId();
-                String time = Utilities.getDateFormat(pendingMoneyRequestClasses.get(pos).getRequestTime());
+                String time = Utilities.formatDateWithTime(pendingMoneyRequestClasses.get(pos).getRequestTime());
                 final String name = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserName();
                 final String imageUrl = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserProfilePicture();
                 final String mobileNumber = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserMobileNumber();

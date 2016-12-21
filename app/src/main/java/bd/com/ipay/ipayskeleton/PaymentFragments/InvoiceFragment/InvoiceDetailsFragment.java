@@ -273,7 +273,7 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
                     mStatusView.setText(context.getString(R.string.transaction_cancelled));
                     mStatusView.setTextColor(Color.GRAY);
                 } else if (status == Constants.INVOICE_STATUS_DRAFT) {
-                    mStatusView.setText(context.getString(R.string.draft));
+                    mStatusView.setText(context.getString(R.string.save_not_send));
                     mStatusView.setTextColor(Color.GRAY);
                 }
 

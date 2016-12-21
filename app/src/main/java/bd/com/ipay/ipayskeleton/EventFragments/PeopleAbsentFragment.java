@@ -205,7 +205,7 @@ public class PeopleAbsentFragment extends ProgressFragment implements HttpRespon
 
                 if (pos == listOfAbsents.size() - 1) divider.setVisibility(View.GONE);
 
-                String time = Utilities.getDateFormat(listOfAbsents.get(pos).getRequestTime());
+                String time = Utilities.formatDateWithTime(listOfAbsents.get(pos).getRequestTime());
                 String name = listOfAbsents.get(pos).getReceiverProfile().getUserName();
                 String imageUrl = listOfAbsents.get(pos).getReceiverProfile().getUserProfilePicture();
                 mTime.setText(time);

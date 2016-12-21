@@ -69,7 +69,7 @@ public class BankListValidator {
         dialog.show();
     }
 
-    public void showVerifiedBankDialog(final Activity activity) {
+    public void showVerifyBankDialog(final Activity activity) {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(activity);
         dialog
                 .content(R.string.verify_bank_prompt)

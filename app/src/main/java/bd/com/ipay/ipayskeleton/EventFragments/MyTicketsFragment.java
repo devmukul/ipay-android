@@ -200,7 +200,7 @@ public class MyTicketsFragment extends ProgressFragment implements HttpResponseL
                 if (pos == listOfMyTickets.size() - 1) divider.setVisibility(View.GONE);
 
                 final long id = listOfMyTickets.get(pos).getId();
-                String time = Utilities.getDateFormat(listOfMyTickets.get(pos).getRequestTime());
+                String time = Utilities.formatDateWithTime(listOfMyTickets.get(pos).getRequestTime());
                 final String name = listOfMyTickets.get(pos).getReceiverProfile().getUserName();
                 String imageUrl = listOfMyTickets.get(pos).getReceiverProfile().getUserProfilePicture();
                 mTime.setText(time);

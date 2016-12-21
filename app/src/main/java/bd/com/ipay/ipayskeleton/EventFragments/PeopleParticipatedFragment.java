@@ -205,7 +205,7 @@ public class PeopleParticipatedFragment extends ProgressFragment implements Http
 
                 if (pos == listOfParticipants.size() - 1) divider.setVisibility(View.GONE);
 
-                String time = Utilities.getDateFormat(listOfParticipants.get(pos).getRequestTime());
+                String time = Utilities.formatDateWithTime(listOfParticipants.get(pos).getRequestTime());
                 String name = listOfParticipants.get(pos).getReceiverProfile().getUserName();
                 String imageUrl = listOfParticipants.get(pos).getReceiverProfile().getUserProfilePicture();
                 mTime.setText(time);

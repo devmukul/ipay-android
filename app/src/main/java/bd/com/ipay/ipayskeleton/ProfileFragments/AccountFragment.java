@@ -284,10 +284,16 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                     } else {
                         // Check for a valid profile picture
                         // To remove the face detection feature just remove the if condition
+                        /*
+                        // ** Removed face detection for now. Will be added later.
                         if (isSelectedProfileValid(uri)) {
                             mProfilePictureView.setProfilePicture(uri.getPath(), true);
                             updateProfilePicture(uri);
                         }
+                        */
+
+                        mProfilePictureView.setProfilePicture(uri.getPath(), true);
+                        updateProfilePicture(uri);
                     }
                 }
                 break;
@@ -364,7 +370,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                     if (!mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
                         mProfileCompletionStatusView.setText("Your profile is " +
                                 mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
-                                + "complete.\nPlease submit your documents and other information to improve your profile.");
+                                + "complete.\nSubmit documents and other information to improve your profile.");
                         mProfileCompletionStatusView.setVisibility(View.VISIBLE);
                     }
                 } else {

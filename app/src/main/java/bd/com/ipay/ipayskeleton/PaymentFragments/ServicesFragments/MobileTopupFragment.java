@@ -87,8 +87,10 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         int mobileNumberType = pref.getInt(Constants.MOBILE_NUMBER_TYPE, Constants.MOBILE_TYPE_PREPAID);
         if (mobileNumberType == Constants.MOBILE_TYPE_PREPAID) {
             mPackageEditText.setText(mPackageList.get(Constants.MOBILE_TYPE_PREPAID - 1));
+            mSelectedPackageTypeId = Constants.MOBILE_TYPE_PREPAID - 1;
         } else {
             mPackageEditText.setText(mPackageList.get(Constants.MOBILE_TYPE_POSTPAID - 1));
+            mSelectedPackageTypeId = Constants.MOBILE_TYPE_POSTPAID - 1;
         }
 
         mPackageEditText.setOnClickListener(new View.OnClickListener() {
@@ -357,12 +359,12 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             }
 
             mGetBusinessRuleTask = null;

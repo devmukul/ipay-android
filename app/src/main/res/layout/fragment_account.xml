@@ -23,7 +23,7 @@
                     android:layout_width="@dimen/value80"
                     android:layout_height="@dimen/value80"
                     android:layout_gravity="left"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin_double"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/value30"
                     android:layout_marginTop="@dimen/activity_vertical_margin_double" />
 
@@ -151,7 +151,7 @@
                 android:paddingBottom="@dimen/value4"
                 android:paddingLeft="@dimen/activity_horizontal_margin_card"
                 android:paddingTop="@dimen/value4"
-                android:text="@string/introducers" />
+                android:text="@string/profile_introducers" />
 
             <View style="@style/Divider" />
 

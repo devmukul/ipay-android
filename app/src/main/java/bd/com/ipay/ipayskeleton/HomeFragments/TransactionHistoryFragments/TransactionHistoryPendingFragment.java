@@ -597,7 +597,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
                 final String description = transactionHistory.getShortDescription(mMobileNumber);
                 final String receiver = transactionHistory.getReceiver();
-                final String responseTime = Utilities.getDateFormat(transactionHistory.getResponseTime());
+                final String responseTime = Utilities.formatDateWithTime(transactionHistory.getResponseTime());
                 final String netAmountWithSign = transactionHistory.getNetAmountFormatted(transactionHistory.getAdditionalInfo().getUserMobileNumber());
                 final Double balance = transactionHistory.getBalance();
                 final String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();

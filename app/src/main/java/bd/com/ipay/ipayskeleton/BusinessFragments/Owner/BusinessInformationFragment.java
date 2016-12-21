@@ -245,7 +245,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mMobileNumberView.setText(getString(R.string.phone_number) + ": " + mMobileNumber);
         mNameView.setText(getString(R.string.name) + ": " + mName);
 
-        mSignUpTimeView.setText(getString(R.string.inception_date) + ": " + mSignUpTime);
+        mSignUpTimeView.setText(getString(R.string.member_since) + ": " + mSignUpTime);
 
         if (mVerificationStatus != null) {
             if (mVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {

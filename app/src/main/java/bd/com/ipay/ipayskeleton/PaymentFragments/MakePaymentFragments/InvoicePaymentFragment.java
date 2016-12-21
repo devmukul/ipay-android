@@ -42,6 +42,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.MoneyAndPaymentRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -201,10 +202,10 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             return;
         }
 
-        GetMoneyAndPaymentRequest mTransactionHistoryRequest = new GetMoneyAndPaymentRequest(
-                pageCount, Constants.SERVICE_ID_REQUEST_INVOICE);
+        GetMoneyRequest mMoneyRequest = new GetMoneyRequest(pageCount,
+                Constants.SERVICE_ID_REQUEST_INVOICE,Constants.REQUEST_STATUS_PROCESSING);
         Gson gson = new Gson();
-        String json = gson.toJson(mTransactionHistoryRequest);
+        String json = gson.toJson(mMoneyRequest);
         mGetAllNotificationsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_REQUESTS,
                 Constants.BASE_URL_SM + Constants.URL_GET_NOTIFICATIONS, json, getActivity());
         mGetAllNotificationsTask.mHttpResponseListener = this;
@@ -355,7 +356,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                 final String name = moneyRequest.originatorProfile.getUserName();
                 final String mobileNumber = moneyRequest.originatorProfile.getUserMobileNumber();
                 final String description = moneyRequest.getDescriptionofRequest();
-                final String time = Utilities.getDateFormat(moneyRequest.getRequestTime());
+                final String time = Utilities.formatDateWithTime(moneyRequest.getRequestTime());
                 final String title = moneyRequest.getTitle();
                 final BigDecimal amount = moneyRequest.getAmount();
                 final BigDecimal vat = moneyRequest.getVat();
