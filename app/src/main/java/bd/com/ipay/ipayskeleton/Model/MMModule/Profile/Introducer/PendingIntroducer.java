@@ -29,12 +29,6 @@ public class PendingIntroducer implements Notification {
         return customDescription;
     }
 
-    @Override
-    public String getDescription() {
-
-        return null;
-    }
-
     public String getName() {
         return name;
     }

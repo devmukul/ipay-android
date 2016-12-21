@@ -59,11 +59,6 @@ public class IntroductionRequestClass implements Notification {
     }
 
     @Override
-    public String getDescription() {
-        return getSenderMobileNumber();
-    }
-
-    @Override
     public String getImageUrl() {
         return getProfilePictureUrl();
     }

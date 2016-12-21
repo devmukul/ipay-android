@@ -84,20 +84,6 @@ public class MoneyAndPaymentRequest implements Notification {
     }
 
     @Override
-    public String getDescription() {
-
-        String customDescription = "";
-
-        if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) {
-            customDescription = getOriginatorProfile().getUserName() + " requested " + amount + " Tk.";
-        } else if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) {
-            customDescription = getOriginatorProfile().getUserName() + " sent an invoice of " + amount + " Tk.";
-        }
-
-        return customDescription;
-    }
-
-    @Override
     public String getImageUrl() {
         return getOriginatorProfile().getUserProfilePicture();
     }

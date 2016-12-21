@@ -410,8 +410,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 mGetMoneyAndPaymentRequestTask = null;
                 postProcessNotificationList();
-
                 break;
+
             case Constants.COMMAND_GET_RECOMMENDATION_REQUESTS:
                 try {
                     mIntroductionRequestsResponse = gson.fromJson(result.getJsonString(), GetIntroductionRequestsResponse.class);
@@ -429,8 +429,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 mGetIntroductionRequestTask = null;
                 postProcessNotificationList();
-
                 break;
+
             case Constants.COMMAND_GET_BUSINESS_LIST:
                 try {
                     mGetBusinessListResponse = gson.fromJson(result.getJsonString(), GetBusinessListResponse.class);
@@ -448,8 +448,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 mGetBusinessInvitationTask = null;
                 postProcessNotificationList();
-
                 break;
+
             case Constants.COMMAND_GET_PENDING_INTRODUCER_LIST:
                 try {
                     mPendingIntroducerListResponse = gson.fromJson(result.getJsonString(), GetPendingIntroducerListResponse.class);
@@ -467,8 +467,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 mGetPendingIntroducerListTask = null;
                 postProcessNotificationList();
-
                 break;
+
             case Constants.COMMAND_GET_SERVICE_CHARGE:
                 mProgressDialog.dismiss();
                 try {
@@ -499,6 +499,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 }
 
                 mServiceChargeTask = null;
+                break;
+
+            default:
                 break;
         }
     }

@@ -16,7 +16,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetPendingIntroducerRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetPendingIntroducerListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.PendingIntroducer;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroduceActionResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -24,12 +23,12 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mIntroducerActionTask = null;
-    private IntroduceActionResponse mIntroduceActionResponse;
+    private HttpRequestPostAsyncTask mPendingIntroducerActionTask = null;
+    private IntroduceActionResponse mPendingIntroducerActionResponse;
 
     private ProgressDialog mProgressDialog;
 
-    private Context context;
+    private Context Context;
 
     private PendingIntroducer mPendingIntroducer;
 
@@ -50,7 +49,7 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
     public PendingIntroducerReviewDialog(Context context, PendingIntroducer pendingIntroducer) {
         super(context);
 
-        this.context = context;
+        this.Context = context;
         this.mPendingIntroducer = pendingIntroducer;
         initializeView();
     }
@@ -75,7 +74,7 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
         mAcceptButton = (Button) v.findViewById(R.id.button_accept);
         mRejectButton = (Button) v.findViewById(R.id.button_reject);
 
-        mProgressDialog = new ProgressDialog(context);
+        mProgressDialog = new ProgressDialog(Context);
 
         setPendingIntroducerUserInfo();
 
@@ -115,21 +114,21 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
     }
 
     private void attemptAcceptRejectPendingIntroducer(long requestID, String introducerAcceptRejectStatus) {
-        if (context != null)
-            Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_LONG).show();
+        if (Context != null)
+            Toast.makeText(Context, R.string.service_not_available, Toast.LENGTH_LONG).show();
 
         if (introducerAcceptRejectStatus.equals(Constants.INTRODUCTION_REQUEST_ACTION_APPROVE))
-            mProgressDialog.setMessage(context.getString(R.string.adding_introducer));
+            mProgressDialog.setMessage(Context.getString(R.string.adding_introducer));
         else
-            mProgressDialog.setMessage(context.getString(R.string.removing_introducer));
+            mProgressDialog.setMessage(Context.getString(R.string.removing_introducer));
 
         mProgressDialog.show();
         GetPendingIntroducerRequestBuilder getSecurityQuestionBuilder = new GetPendingIntroducerRequestBuilder(requestID, introducerAcceptRejectStatus);
         String url = getSecurityQuestionBuilder.getGeneratedUri();
 
-        mIntroducerActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_INTRODUCE_ACTION, url, null, context);
-        mIntroducerActionTask.mHttpResponseListener = this;
-        mIntroducerActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mPendingIntroducerActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_INTRODUCE_ACTION, url, null, Context);
+        mPendingIntroducerActionTask.mHttpResponseListener = this;
+        mPendingIntroducerActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -138,10 +137,10 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
-            mIntroducerActionTask = null;
+            mPendingIntroducerActionTask = null;
 
-            if (context != null)
-                Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT).show();
+            if (Context != null)
+                Toast.makeText(Context, R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -150,28 +149,27 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
         switch (result.getApiCommand()) {
 
             case Constants.COMMAND_INTRODUCE_ACTION:
-
                 try {
-                    mIntroduceActionResponse = gson.fromJson(result.getJsonString(), IntroduceActionResponse.class);
+                    mPendingIntroducerActionResponse = gson.fromJson(result.getJsonString(), IntroduceActionResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if (context != null)
-                            Toast.makeText(context, mIntroduceActionResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        if (Context != null)
+                            Toast.makeText(Context, mPendingIntroducerActionResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                         if (mActionCheckerListener != null) {
                             mActionCheckerListener.ifFinishNeeded();
                         }
                     } else {
-                        if (context != null)
-                            Toast.makeText(context, mIntroduceActionResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        if (Context != null)
+                            Toast.makeText(Context, mPendingIntroducerActionResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (context != null)
-                        Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_LONG).show();
+                    if (Context != null)
+                        Toast.makeText(Context, R.string.service_not_available, Toast.LENGTH_LONG).show();
                 }
 
                 mProgressDialog.dismiss();
-                mIntroducerActionTask = null;
+                mPendingIntroducerActionTask = null;
                 break;
         }
     }
