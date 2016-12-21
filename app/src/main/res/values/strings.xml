@@ -139,7 +139,7 @@
     <string name="confirm_query">Are you sure?</string>
     <string name="introduction_request_review_dialog_content">You are ensuring the authenticity and credibility of \'this person\' when you introduce him/her.
         Do you want to introduce \'this person\'?</string>
-    <string name="introduction_request_reject_dialog_content">You want to reject the request</string>
+    <string name="introduction_request_reject_dialog_content">You want to reject the request?</string>
     <string name="introduction_request_spam_dialog_content">This is a spam request</string>
     <string name="profile_info_save_failed">Failed to save profile information.</string>
     <string name="profile_picture_set_failed">Failed to set profile picture.</string>
@@ -403,6 +403,7 @@
     <string name="introducer_request">Introducer request</string>
     <string name="introduce_this_person">Introduce this person</string>
     <string name="request_to_introduce">Request to introduce you</string>
+    <string name="request_to_introduce_detail">This person wants to be your introducer to iPay. You can accept or reject this request.</string>
     <string name="business_invitation">Business Invitation</string>
     <string name="in_progress">In Progress</string>
     <string name="transaction_failed">Failed</string>
