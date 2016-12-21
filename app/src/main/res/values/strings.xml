@@ -239,6 +239,8 @@
     <string name="sending_for_verification">Sending for verification...</string>
     <string name="sending_for_verification_with_amount">Bank verification in progress...</string>
     <string name="verifying_user">Verifying user...</string>
+    <string name="adding_introducer">"Adding the person as an introducer... "</string>
+    <string name="removing_introducer">"Rejecting... "</string>
     <string name="add">Add</string>
     <string name="add_email">Add Email</string>
     <string name="confirm">Confirm</string>

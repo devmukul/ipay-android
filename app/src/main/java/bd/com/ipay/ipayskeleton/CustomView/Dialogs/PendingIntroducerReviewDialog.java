@@ -3,13 +3,11 @@ package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
@@ -17,6 +15,9 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetPendingIntroducerRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetPendingIntroducerListResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.PendingIntroducer;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroduceActionResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -29,10 +30,13 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
     private ProgressDialog mProgressDialog;
 
     private Context context;
+
+    private PendingIntroducer mPendingIntroducer;
+
     private long mRequestID;
-    private String mSenderName;
-    private String mSenderMobileNumber;
-    private String mPhotoUri;
+    private String mPendingIntroducerName;
+    private String mPendingIntroucerMobileNumber;
+    private String mPendingIntroducerPhotoUri;
 
     private ProfileImageView mProfileImageView;
     private TextView mSenderNameView;
@@ -43,15 +47,11 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
 
     private ActionCheckerListener mActionCheckerListener;
 
-    public PendingIntroducerReviewDialog(Context context, long id, String name, String mobileNumber, String profilePictureUrl) {
+    public PendingIntroducerReviewDialog(Context context, PendingIntroducer pendingIntroducer) {
         super(context);
 
-        this.mSenderName = name;
-        this.mSenderMobileNumber = mobileNumber;
-        this.mPhotoUri = profilePictureUrl;
-        this.mRequestID = id;
         this.context = context;
-
+        this.mPendingIntroducer = pendingIntroducer;
         initializeView();
     }
 
@@ -67,72 +67,67 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
         mSenderNameView = (TextView) v.findViewById(R.id.textview_name);
         mSenderMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
 
+        mRequestID = mPendingIntroducer.getId();
+        mPendingIntroducerName = mPendingIntroducer.getName();
+        mPendingIntroucerMobileNumber = mPendingIntroducer.getMobileNumber();
+        mPendingIntroducerPhotoUri = mPendingIntroducer.getImageUrl();
+
         mAcceptButton = (Button) v.findViewById(R.id.button_accept);
         mRejectButton = (Button) v.findViewById(R.id.button_reject);
 
         mProgressDialog = new ProgressDialog(context);
 
-        if (mSenderName == null || mSenderName.isEmpty()) {
-            mSenderNameView.setVisibility(View.GONE);
-        } else {
-            mSenderNameView.setText(mSenderName);
-        }
-
-        mProfileImageView.setProfilePicture(mPhotoUri, false);
-        mSenderMobileNumberView.setText(mSenderMobileNumber);
+        setPendingIntroducerUserInfo();
 
         mAcceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 reviewDialog.dismiss();
-                attemptIntroducerVerificationStatus(mRequestID, Constants.INTRODUCTION_REQUEST_ACTION_APPROVE);
+                attemptAcceptRejectPendingIntroducer(mRequestID, Constants.INTRODUCTION_REQUEST_ACTION_APPROVE);
             }
         });
 
         mRejectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new MaterialDialog.Builder(context)
-                        .title(R.string.are_you_sure)
-                        .content(R.string.introduction_request_reject_dialog_content)
-                        .positiveText(R.string.yes)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                reviewDialog.dismiss();
-                                attemptIntroducerVerificationStatus(mRequestID, Constants.INTRODUCTION_REQUEST_ACTION_REJECT);
-                            }
-                        })
-                        .negativeText(R.string.no)
-                        .onNegative(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                // Do nothing
-                            }
-                        })
-                        .show();
+                reviewDialog.dismiss();
+                attemptAcceptRejectPendingIntroducer(mRequestID, Constants.INTRODUCTION_REQUEST_ACTION_REJECT);
+
 
             }
         });
 
     }
 
+    private void setPendingIntroducerUserInfo() {
+        if (mPendingIntroducerName == null || mPendingIntroducerName.isEmpty()) {
+            mSenderNameView.setVisibility(View.GONE);
+        } else {
+            mSenderNameView.setText(mPendingIntroducerName);
+        }
+
+        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mPendingIntroducerPhotoUri, false);
+        mSenderMobileNumberView.setText(mPendingIntroucerMobileNumber);
+    }
+
     public void setActionCheckerListener(ActionCheckerListener actionCheckerListener) {
         mActionCheckerListener = actionCheckerListener;
     }
 
-    private void attemptIntroducerVerificationStatus(long requestID, String recommendationStatus) {
+    private void attemptAcceptRejectPendingIntroducer(long requestID, String introducerAcceptRejectStatus) {
+        if (context != null)
+            Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_LONG).show();
 
-        if (requestID == 0) {
-            if (context != null)
-                Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_LONG).show();
-            return;
-        }
+        if (introducerAcceptRejectStatus.equals(Constants.INTRODUCTION_REQUEST_ACTION_APPROVE))
+            mProgressDialog.setMessage(context.getString(R.string.adding_introducer));
+        else
+            mProgressDialog.setMessage(context.getString(R.string.removing_introducer));
 
-        mProgressDialog.setMessage(context.getString(R.string.verifying_user));
         mProgressDialog.show();
-        mIntroducerActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_INTRODUCE_ACTION,
-                Constants.BASE_URL_MM + Constants.URL_PENDING_INTRODUCER_ACTION + "/" + requestID + "/" + recommendationStatus, null, context);
+        GetPendingIntroducerRequestBuilder getSecurityQuestionBuilder = new GetPendingIntroducerRequestBuilder(requestID, introducerAcceptRejectStatus);
+        String url = getSecurityQuestionBuilder.getGeneratedUri();
+
+        mIntroducerActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_INTRODUCE_ACTION, url, null, context);
         mIntroducerActionTask.mHttpResponseListener = this;
         mIntroducerActionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

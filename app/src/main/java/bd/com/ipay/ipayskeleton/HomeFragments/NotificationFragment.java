@@ -587,9 +587,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                             public void ifPinAdded() {
                                 if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
                                     attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
-                                else {
+                                else
                                     launchInvoiceHistoryFragment();
-                                }
                             }
                         });
                         moneyAndPaymentRequestPinChecker.execute();
@@ -702,16 +701,10 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 final PendingIntroducer pendingIntroducer = (PendingIntroducer) mNotifications.get(pos);
 
-                final long requestID = pendingIntroducer.getId();
-
-                final String senderName = pendingIntroducer.getName();
-                final String senderMobileNumber = pendingIntroducer.getMobileNumber();
-                final String photoUri = Constants.BASE_URL_FTP_SERVER + pendingIntroducer.getImageUrl();
-
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new PendingIntroducerReviewDialog(getActivity(), requestID, senderName, senderMobileNumber, photoUri).setActionCheckerListener(
+                        new PendingIntroducerReviewDialog(getActivity(), pendingIntroducer).setActionCheckerListener(
                                 new PendingIntroducerReviewDialog.ActionCheckerListener() {
                                     @Override
                                     public void ifFinishNeeded() {

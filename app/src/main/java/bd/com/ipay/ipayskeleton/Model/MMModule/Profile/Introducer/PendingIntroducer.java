@@ -24,20 +24,15 @@ public class PendingIntroducer implements Notification {
 
     @Override
     public String getNotificationTitle() {
-        String customDescription = "";
-
-        customDescription = "Request to introduce you ";
+        String customDescription = "Request to introduce you ";
 
         return customDescription;
     }
 
     @Override
     public String getDescription() {
-        String customDescription = "";
 
-        customDescription = "Request to introduce you ";
-
-        return customDescription;
+        return null;
     }
 
     public String getName() {
