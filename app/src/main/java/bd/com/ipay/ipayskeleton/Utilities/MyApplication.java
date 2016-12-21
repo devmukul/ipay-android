@@ -11,6 +11,10 @@ import com.google.gson.Gson;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.os.Handler;
+
+import java.util.logging.LogRecord;
+
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -39,7 +43,7 @@ public class MyApplication extends Application implements HttpResponseListener {
     private static MyApplication myApplicationInstance;
 
     // 5 Minutes inactive time
-    private final long AUTO_LOGOUT_TIMEOUT = 300000;
+    private final long AUTO_LOGOUT_TIMEOUT = 30000;
 
     @Override
     public void onCreate() {
@@ -48,6 +52,7 @@ public class MyApplication extends Application implements HttpResponseListener {
 
         ProfileInfoCacheManager.initialize(getApplicationContext());
         PushNotificationStatusHolder.initialize(getApplicationContext());
+
     }
 
     public static MyApplication getMyApplicationInstance() {
@@ -55,9 +60,11 @@ public class MyApplication extends Application implements HttpResponseListener {
     }
 
     public void startUserInactivityDetectorTimer() {
+
         this.mUserInactiveTimer = new Timer();
         this.mUserInactiveTimerTask = new TimerTask() {
             public void run() {
+
                 MyApplication.this.logoutForInactivity = true;
             }
         };
@@ -88,9 +95,6 @@ public class MyApplication extends Application implements HttpResponseListener {
         LogoutRequest mLogoutModel = new LogoutRequest(mUserID);
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
-
-        // Set the preference
-        ProfileInfoCacheManager.setLoggedInStatus(false);
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, getApplicationContext());
@@ -168,6 +172,7 @@ public class MyApplication extends Application implements HttpResponseListener {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mLogoutTask = null;
+            mRefreshTokenAsyncTask = null;
             return;
         }
 
@@ -180,7 +185,7 @@ public class MyApplication extends Application implements HttpResponseListener {
                 mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    launchLoginPage(null);
+                    launchLoginPage(getApplicationContext().getString(R.string.please_log_in_again));
                 } else {
                     Toast.makeText(getApplicationContext(), mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }

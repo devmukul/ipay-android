@@ -52,6 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         if (((MyApplication) this.getApplication()).logoutForInactivity) {
             forceLogoutForInactivity();
+            
             ((MyApplication) this.getApplication()).stopUserInactivityDetectorTimer();
         } else {
             ((MyApplication) this.getApplication()).stopUserInactivityDetectorTimer();
