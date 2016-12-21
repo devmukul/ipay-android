@@ -24,9 +24,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onResume();
 
         MyApplication myApp = (MyApplication) this.getApplication();
-        if (myApp.logoutForInactivity) {
+        /*if (myApp.logoutForInactivity) {
             forceLogoutForInactivity();
-        }
+        }*/
 
         myApp.stopUserInactivityDetectorTimer();
     }
@@ -50,14 +50,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onUserInteraction() {
         super.onUserInteraction();
 
-        if (((MyApplication) this.getApplication()).logoutForInactivity) {
-            forceLogoutForInactivity();
-            
-            ((MyApplication) this.getApplication()).stopUserInactivityDetectorTimer();
-        } else {
             ((MyApplication) this.getApplication()).stopUserInactivityDetectorTimer();
             ((MyApplication) this.getApplication()).startUserInactivityDetectorTimer();
-        }
+
     }
 
 }

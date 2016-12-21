@@ -66,6 +66,7 @@ public class MyApplication extends Application implements HttpResponseListener {
             public void run() {
 
                 MyApplication.this.logoutForInactivity = true;
+                forceLogoutForInactivity();
             }
         };
 
@@ -145,6 +146,13 @@ public class MyApplication extends Application implements HttpResponseListener {
         mRefreshTokenAsyncTask.mHttpResponseListener = this;
 
         mRefreshTokenAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void forceLogoutForInactivity() {
+        if (Utilities.isConnectionAvailable(getApplicationContext()))
+            attemptLogout();
+        else
+            launchLoginPage(getString(R.string.please_log_in_again));
     }
 
     // Launch login page for token timeout/un-authorized/logout called for user inactivity
