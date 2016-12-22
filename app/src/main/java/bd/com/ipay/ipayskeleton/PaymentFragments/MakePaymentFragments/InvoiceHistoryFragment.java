@@ -156,7 +156,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
 
     @Override
     protected int getServiceID() {
-        return Constants.SERVICE_ID_MAKE_PAYMENT;
+        return Constants.SERVICE_ID_REQUEST_PAYMENT;
     }
 
     @Override

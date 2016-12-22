@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -110,11 +111,11 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
             @Override
             public void onClick(View v) {
 
-                if (Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                        && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+                if (Utilities.isValueAvailable(InvoiceActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                        && Utilities.isValueAvailable(InvoiceActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
                     mError_message = InputValidator.isValidAmount(getActivity(), mTotal,
-                            PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                            PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+                            InvoiceActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                            InvoiceActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
                     if (mError_message == null) {
                         attemptSendInvoice();
@@ -127,9 +128,9 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         });
 
         // Check if min or max amount is available
-        if (!Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
-                && !Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_MAKE_PAYMENT);
+        if (!Utilities.isValueAvailable(InvoiceActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
+                && !Utilities.isValueAvailable(InvoiceActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
+            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_REQUEST_PAYMENT);
         else
             attemptGetServiceCharge();
         return v;
@@ -168,7 +169,7 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
 
     @Override
     public int getServiceID() {
-        return Constants.SERVICE_ID_MAKE_PAYMENT;
+        return Constants.SERVICE_ID_REQUEST_PAYMENT;
     }
 
     @Override
@@ -184,7 +185,7 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
 
     @Override
     public void onPinLoadFinished(boolean isPinRequired) {
-        PaymentActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
+        InvoiceActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
     }
 
     @Override
