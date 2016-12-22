@@ -28,6 +28,8 @@ public class RequestMoneyActivity extends BaseActivity {
      */
     public static final String LAUNCH_NEW_REQUEST = "LAUNCH_NEW_REQUEST";
 
+    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

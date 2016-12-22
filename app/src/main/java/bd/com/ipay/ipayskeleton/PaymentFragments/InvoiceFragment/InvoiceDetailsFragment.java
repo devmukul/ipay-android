@@ -81,7 +81,7 @@ public class InvoiceDetailsFragment extends ReviewFragment implements HttpRespon
         this.mTotal = new BigDecimal(bundle.getString(Constants.AMOUNT));
         this.mDescription = bundle.getString(Constants.DESCRIPTION);
         this.mTime = bundle.getString(Constants.TIME);
-        this.id = bundle.getLong(Constants.MONEY_REQUEST_ID);
+        this.mID = bundle.getLong(Constants.MONEY_REQUEST_ID);
         this.status = bundle.getInt(Constants.STATUS);
         this.mReceiverMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
         this.mReceiverName = bundle.getString(Constants.NAME);
