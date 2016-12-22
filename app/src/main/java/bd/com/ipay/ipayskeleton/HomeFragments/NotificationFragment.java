@@ -307,8 +307,12 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         bundle.putString(Constants.AMOUNT, mAmount.toString());
         bundle.putString(Constants.TITLE, mTitle);
         bundle.putString(Constants.DESCRIPTION, mDescriptionofRequest);
-        bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
         bundle.putString(Constants.TAG, Constants.INVOICE);
+
+        if (mItemList != null)
+            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
+        else
+            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
 
         Intent intent = new Intent(this.getContext(), NotificationActivity.class);
         intent.putExtras(bundle);
@@ -538,7 +542,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         mItemList = itemList;
 
                         if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
-                            attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
+                            attemptGetServiceCharge(Constants.SERVICE_ID_REQUEST_MONEY);
                         else {
                             launchInvoiceHistoryFragment();
                         }
