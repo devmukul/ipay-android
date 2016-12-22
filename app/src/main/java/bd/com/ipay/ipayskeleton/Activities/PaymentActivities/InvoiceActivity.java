@@ -212,7 +212,7 @@ public class InvoiceActivity extends BaseActivity implements HttpResponseListene
 
                     Bundle bundle = new Bundle();
                     bundle.putString(Constants.DESCRIPTION, mGetSingleInvoiceResponse.description);
-                    bundle.putString(Constants.TIME, Utilities.getDateFormat(mGetSingleInvoiceResponse.getRequestTime()));
+                    bundle.putString(Constants.TIME, Utilities.formatDateWithTime(mGetSingleInvoiceResponse.getRequestTime()));
                     bundle.putLong(Constants.MONEY_REQUEST_ID, mGetSingleInvoiceResponse.getId());
                     bundle.putString(Constants.AMOUNT, mGetSingleInvoiceResponse.getAmount().toString());
                     bundle.putString(Constants.VAT, mGetSingleInvoiceResponse.getVat().toString());
