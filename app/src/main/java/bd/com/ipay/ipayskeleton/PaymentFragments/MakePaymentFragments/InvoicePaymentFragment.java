@@ -492,7 +492,6 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             else
                 bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
 
-
             ((PaymentActivity) getActivity()).switchToInvoiceHistoryFragment(bundle);
         }
     }

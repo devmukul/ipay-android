@@ -265,7 +265,6 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
             private final TextView mNetAmountView;
             private final TextView mVatView;
             private final View headerView;
-            private View mServiceChargeHolder;
             private final TextView mServiceChargeView;
             private final TextView mTotalView;
             private Button mAcceptButton;
@@ -286,7 +285,6 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                 mNetAmountView = (TextView) itemView.findViewById(R.id.textview_net_amount);
                 mVatView = (TextView) itemView.findViewById(R.id.textview_vat);
                 headerView = itemView.findViewById(R.id.header);
-                mServiceChargeHolder = itemView.findViewById(R.id.service_charge_layout);
                 mServiceChargeView = (TextView) itemView.findViewById(R.id.textview_service_charge);
                 mTotalView = (TextView) itemView.findViewById(R.id.textview_total);
                 mAcceptButton = (Button) itemView.findViewById(R.id.button_accept);
@@ -325,10 +323,10 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                 mAmount = mTotal.subtract(mVat);
                 mNetAmount = mTotal.subtract(mServiceCharge);
 
-                mServiceChargeView.setText(Utilities.formatTaka(mServiceCharge));
                 mAmountView.setText(Utilities.formatTaka(mAmount));
                 mNetAmountView.setText(Utilities.formatTaka(mNetAmount));
                 mVatView.setText(Utilities.formatTaka(mVat));
+                mServiceChargeView.setText(Utilities.formatTaka(mServiceCharge));
                 mTotalView.setText(Utilities.formatTaka(mTotal));
 
                 if (mTitle.equals("Invoice")) {

@@ -120,7 +120,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
             return;
         }
 
-        GetPendingPaymentsRequest mGetPendingPaymentsRequest = new GetPendingPaymentsRequest(historyPageCount, Constants.SERVICE_ID_REQUEST_INVOICE);
+        GetPendingPaymentsRequest mGetPendingPaymentsRequest = new GetPendingPaymentsRequest(historyPageCount, Constants.SERVICE_ID_REQUEST_PAYMENT);
         Gson gson = new Gson();
         String json = gson.toJson(mGetPendingPaymentsRequest);
         mPendingInvoicesTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_PAYMENT_REQUESTS_SENT,
@@ -131,7 +131,6 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
-
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -274,7 +273,8 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
                             mId = id;
                             mAmount = amount;
                             mVat = vat;
-                            mItemList = Arrays.asList(itemList);
+                            if (itemList != null)
+                                mItemList = Arrays.asList(itemList);
                             if (title.equals("Invoice")) mDescription = description;
                             else mDescription = descriptionofRequest;
                             mStatus = status;
@@ -389,11 +389,15 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
         bundle.putLong(Constants.MONEY_REQUEST_ID, mId);
         bundle.putString(Constants.AMOUNT, mAmount.toString());
         bundle.putString(Constants.VAT, mVat.toString());
-        bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
         bundle.putInt(Constants.STATUS, mStatus);
         bundle.putString(Constants.PHOTO_URI, mPhotoUri);
         bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
         bundle.putString(Constants.NAME, mReceiverName);
+
+        if (mItemList != null)
+            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
+        else
+            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
 
         ((InvoiceActivity) getActivity()).switchToInvoiceDetailsFragment(bundle);
 
