@@ -422,8 +422,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
 
         @Override
         public int getItemCount() {
-            if (mItemList == null) return 2;
-            if (mItemList.size() == 0) return 2;
+            if (mItemList == null || mItemList.size() == 0)  return 2;
             if (mItemList.size() > 0)
                 return 1 + mItemList.size() + 1;
             else return 0;
