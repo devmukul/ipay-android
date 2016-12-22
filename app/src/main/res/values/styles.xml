@@ -586,6 +586,15 @@
         <item name="android:layout_height">74dp</item>
     </style>
 
+    <style name="ReviewImageStyleDialog">
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:layout_marginTop">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginBottom">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_width">74dp</item>
+        <item name="android:layout_height">74dp</item>
+    </style>
+
     <style name="ReviewBankImageStyle">
         <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
         <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
