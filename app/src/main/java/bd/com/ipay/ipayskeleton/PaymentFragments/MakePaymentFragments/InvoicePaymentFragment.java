@@ -203,7 +203,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
         }
 
         GetMoneyRequest mMoneyRequest = new GetMoneyRequest(pageCount,
-                Constants.SERVICE_ID_REQUEST_INVOICE,Constants.REQUEST_STATUS_PROCESSING);
+                Constants.SERVICE_ID_REQUEST_PAYMENT, Constants.REQUEST_STATUS_PROCESSING);
         Gson gson = new Gson();
         String json = gson.toJson(mMoneyRequest);
         mGetAllNotificationsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_REQUESTS,
@@ -486,7 +486,12 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             bundle.putString(Constants.AMOUNT, mAmount.toString());
             bundle.putString(Constants.TITLE, mTitle);
             bundle.putString(Constants.DESCRIPTION, mDescription);
-            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
+
+            if (mItemList != null)
+                bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
+            else
+                bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
+
 
             ((PaymentActivity) getActivity()).switchToInvoiceHistoryFragment(bundle);
         }
