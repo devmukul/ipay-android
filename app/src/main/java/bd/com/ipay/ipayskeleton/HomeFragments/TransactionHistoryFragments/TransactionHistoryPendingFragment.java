@@ -649,7 +649,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                         if (!mSwipeRefreshLayout.isRefreshing()) {
                             if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
                                 launchRequestMoneyReviewPage(transactionHistory);
-                            } else if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT) {
+                            } else if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT || serviceId == Constants.TRANSACTION_HISTORY_INVOICE) {
                                 launchRequestPaymentReviewPage(transactionHistory);
                             } else {
                                 Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
@@ -780,7 +780,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         intent.putExtra(Constants.INVOICE_RECEIVER_TAG,
                 ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getUserMobileNumber()));
 
-        intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, transactionHistory.getShortDescription(mMobileNumber));
+        intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, transactionHistory.getPurpose());
         intent.putExtra(Constants.MONEY_REQUEST_ID, transactionHistory.getId());
         intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
         intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());

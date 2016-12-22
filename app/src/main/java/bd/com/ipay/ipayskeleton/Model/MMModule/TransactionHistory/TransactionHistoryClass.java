@@ -67,7 +67,10 @@ public class TransactionHistoryClass implements Parcelable {
                     return getBankName();
                 case (Constants.TRANSACTION_HISTORY_TOP_UP):
                     return receiverInfo;
+                case (Constants.TRANSACTION_HISTORY_INVOICE):
                 case (Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT):
+                    if (additionalInfo != null)
+                        return additionalInfo.getUserName();
                 case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT):
                     if (additionalInfo != null)
                         return additionalInfo.getUserName();
@@ -109,10 +112,9 @@ public class TransactionHistoryClass implements Parcelable {
             case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
                 if (originatingMobileNumber.equals(userMobileNumber)) {
                     return "+" + Utilities.formatTakaWithComma(netAmount);
-                } else if (receiverInfo.equals(userMobileNumber)) {
+                } else if (receiverInfo.equals(userMobileNumber))
                     // Service charge effect
                     return "-" + Utilities.formatTakaWithComma(amount);
-                }
             case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
                 return "+" + Utilities.formatTakaWithComma(netAmount);
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
@@ -124,6 +126,39 @@ public class TransactionHistoryClass implements Parcelable {
                     return "+" + Utilities.formatTakaWithComma(netAmount);
                 } else if (receiverInfo.equals(userMobileNumber)) {
                     return "-" + Utilities.formatTakaWithComma(amount); // Service charge effect
+                }
+            case (Constants.TRANSACTION_HISTORY_REQUEST_MONEY):
+                if (originatingMobileNumber.equals(userMobileNumber)) {
+                    switch (statusCode) {
+                        case (Constants.TRANSACTION_STATUS_ACCEPTED):
+                            return "-" + Utilities.formatTakaWithComma(amount);
+                        default:
+                            return Utilities.formatTakaWithComma(amount);
+                    }
+                } else if (receiverInfo.equals(userMobileNumber)) {
+                    switch (statusCode) {
+                        case (Constants.TRANSACTION_STATUS_ACCEPTED):
+                            return "+" + Utilities.formatTakaWithComma(netAmount);
+                        default:
+                            return Utilities.formatTakaWithComma(amount);
+                    }
+                }
+            case (Constants.TRANSACTION_HISTORY_INVOICE):
+            case (Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT):
+                if (originatingMobileNumber.equals(userMobileNumber)) {
+                    switch (statusCode) {
+                        case (Constants.TRANSACTION_STATUS_ACCEPTED):
+                            return "-" + Utilities.formatTakaWithComma(amount);
+                        default:
+                            return Utilities.formatTakaWithComma(amount);
+                    }
+                } else if (receiverInfo.equals(userMobileNumber)) {
+                    switch (statusCode) {
+                        case (Constants.TRANSACTION_STATUS_ACCEPTED):
+                            return "+" + Utilities.formatTakaWithComma(netAmount);
+                        default:
+                            return Utilities.formatTakaWithComma(amount);
+                    }
                 }
             case (Constants.TRANSACTION_HISTORY_EDUCATION):
                 return "-" + Utilities.formatTakaWithComma(amount); // Service charge effect
@@ -226,6 +261,32 @@ public class TransactionHistoryClass implements Parcelable {
                     } else {
                         return "No information available";
                     }
+                case (Constants.TRANSACTION_HISTORY_REQUEST_MONEY):
+                    if (receiverInfo.equals(userMobileNumber)) {
+                        if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
+                            return "Sent " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName();
+                        else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
+                            return "Sending " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName();
+                        else {
+                            if (additionalInfo.getUserName() == null)
+                                return "Failed to send money";
+                            else
+                                return "Failed to send " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName();
+                        }
+                    } else if (originatingMobileNumber.equals(userMobileNumber)) {
+                        if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
+                            return "Received " + Utilities.formatTaka(getNetAmount()) + " from " + additionalInfo.getUserName();
+                        else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
+                            return "Receiving " + Utilities.formatTaka(getNetAmount()) + " from " + additionalInfo.getUserName();
+                        else {
+                            if (additionalInfo.getUserName() == null)
+                                return "Failed to receive money";
+                            else
+                                return "Failed to receive " + Utilities.formatTaka(getNetAmount()) + " from " + additionalInfo.getUserName();
+                        }
+                    } else {
+                        return "No information available";
+                    }
                 case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
                     if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
                         return "Added " + Utilities.formatTaka(getNetAmount()) + "  from account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")";
@@ -247,7 +308,32 @@ public class TransactionHistoryClass implements Parcelable {
                         return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo;
                     else
                         return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo + " failed ";
+                case (Constants.TRANSACTION_HISTORY_INVOICE):
                 case (Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT):
+                    if (receiverInfo.equals(userMobileNumber)) {
+                        if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
+                            return "Payment of " + Utilities.formatTaka(getNetAmount()) + " sent to " + additionalInfo.getUserName();
+                        else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
+                            return "Sending payment of " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName();
+                        else {
+                            if (additionalInfo.getUserName() == null)
+                                return "Payment sending failed";
+                            else
+                                return "Sending payment of " + Utilities.formatTaka(getNetAmount()) + "  to " + additionalInfo.getUserName() + " failed";
+                        }
+                    } else if (originatingMobileNumber.equals(userMobileNumber)) {
+                        if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
+                            return "Payment of " + Utilities.formatTaka(getNetAmount()) + " received from " + additionalInfo.getUserName();
+                        else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
+                            return "Receiving payment of " + Utilities.formatTaka(getNetAmount()) + " from " + additionalInfo.getUserName();
+                        else {
+                            if (additionalInfo.getUserName() == null)
+                                return "Payment receiving failed ";
+                            else
+                                return "Receiving payment of " + Utilities.formatTaka(getNetAmount()) + "  from " + additionalInfo.getUserName() + " failed ";
+                        }
+                    } else
+                        return "No information available";
                 case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT):
                     if (originatingMobileNumber.equals(userMobileNumber)) {
                         if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
@@ -314,6 +400,7 @@ public class TransactionHistoryClass implements Parcelable {
                     return "Money Withdrawn";
                 case (Constants.TRANSACTION_HISTORY_TOP_UP):
                     return "Mobile TopUp";
+                case (Constants.TRANSACTION_HISTORY_INVOICE):
                 case (Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT):
                     if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED) {
                         if (originatingMobileNumber.equals(userMobileNumber)) {
@@ -360,7 +447,9 @@ public class TransactionHistoryClass implements Parcelable {
 
     public String getStatus() {
         try {
-            if (serviceID == Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT || serviceID == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
+            if (serviceID == Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT
+                    || serviceID == Constants.TRANSACTION_HISTORY_INVOICE
+                    || serviceID == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
                 switch (statusCode) {
                     case (Constants.TRANSACTION_STATUS_ACCEPTED):
                         return "Accepted";
@@ -425,7 +514,39 @@ public class TransactionHistoryClass implements Parcelable {
                 return -netAmount;
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
                 return -netAmount;
+            case (Constants.TRANSACTION_HISTORY_INVOICE):
             case (Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT):
+                if (originatingMobileNumber.equals(userMobileNumber)) {
+                    switch (statusCode) {
+                        case (Constants.TRANSACTION_STATUS_ACCEPTED):
+                            return -netAmount;
+                        default:
+                            return netAmount;
+                    }
+                } else if (receiverInfo.equals(userMobileNumber)) {
+                    switch (statusCode) {
+                        case (Constants.TRANSACTION_STATUS_ACCEPTED):
+                            return +netAmount;
+                        default:
+                            return netAmount;
+                    } // Service charge effect
+                }
+            case (Constants.TRANSACTION_HISTORY_REQUEST_MONEY):
+                if (originatingMobileNumber.equals(userMobileNumber)) {
+                    switch (statusCode) {
+                        case (Constants.TRANSACTION_STATUS_ACCEPTED):
+                            return -netAmount;
+                        default:
+                            return netAmount;
+                    }
+                } else if (receiverInfo.equals(userMobileNumber)) {
+                    switch (statusCode) {
+                        case (Constants.TRANSACTION_STATUS_ACCEPTED):
+                            return +netAmount;
+                        default:
+                            return netAmount;
+                    } // Service charge effect
+                }
             case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber))
                     return -netAmount;
