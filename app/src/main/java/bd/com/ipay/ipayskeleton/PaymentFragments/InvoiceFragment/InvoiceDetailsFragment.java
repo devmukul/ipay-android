@@ -31,11 +31,12 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
+import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class InvoiceDetailsFragment extends Fragment implements HttpResponseListener {
+public class InvoiceDetailsFragment extends ReviewFragment implements HttpResponseListener {
 
     private final int ACTION_CANCEL_REQUEST = 0;
 
@@ -51,6 +52,7 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
     private BigDecimal mAmount;
     private BigDecimal mNetAmount;
     private BigDecimal mVat;
+    public BigDecimal mServiceCharge = new BigDecimal(-1);
 
     private String mDescription;
     private String mTime;
@@ -60,6 +62,7 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
     private String mReceiverMobileNumber;
     private String mPhotoUri;
     private Context context;
+    private boolean isPinRequired = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,6 +92,8 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
         mLayoutManager = new LinearLayoutManager(this.getContext());
         mReviewRecyclerView.setLayoutManager(mLayoutManager);
         mReviewRecyclerView.setAdapter(invoiceReviewAdapter);
+
+        attemptGetServiceCharge();
         return v;
     }
 
@@ -113,6 +118,28 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
                 Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity());
         mCancelPaymentRequestTask.mHttpResponseListener = this;
         mCancelPaymentRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    protected int getServiceID() {
+        return Constants.SERVICE_ID_REQUEST_PAYMENT;
+    }
+
+    @Override
+    protected BigDecimal getAmount() {
+        return mAmount;
+    }
+
+    @Override
+    protected void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
+
+        this.mServiceCharge = serviceCharge;
+        invoiceReviewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onPinLoadFinished(boolean isPinRequired) {
+        this.isPinRequired = isPinRequired;
     }
 
     @Override
