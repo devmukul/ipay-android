@@ -99,7 +99,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
         super.onActivityCreated(savedInstanceState);
     }
 
-    private void attempAccepttPaymentRequestWithPinCheck() {
+    private void attemptAcceptPaymentRequestWithPinCheck() {
         if (this.isPinRequired) {
             final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
@@ -345,7 +345,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                 mAcceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        attempAccepttPaymentRequestWithPinCheck();
+                        attemptAcceptPaymentRequestWithPinCheck();
                     }
                 });
 
