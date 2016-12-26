@@ -73,15 +73,11 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private LinearLayout serviceFilterLayout;
     private LinearLayout dateFilterLayout;
 
-    private CheckBox mFilterOpeningBalance;
-    private CheckBox mFilterSendMoney;
     private CheckBox mFilterRequestMoney;
     private CheckBox mFilterAddMoney;
     private CheckBox mFilterWithdrawMoney;
     private CheckBox mFilterTopUp;
-    private CheckBox mFilterPayment;
     private CheckBox mFilterRequestPayment;
-    private CheckBox mFilterEducation;
     private Button mClearServiceFilterButton;
 
     private Button mFromDateButton;
@@ -116,7 +112,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_transaction_history, container, false);
+        View v = inflater.inflate(R.layout.fragment_pending_transaction_history, container, false);
         getActivity().setTitle(R.string.transaction_history);
 
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
@@ -135,26 +131,18 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         dateFilterLayout = (LinearLayout) v.findViewById(R.id.date_filter_layout);
         mClearServiceFilterButton = (Button) v.findViewById(R.id.button_clear_filter_service);
 
-        mFilterOpeningBalance = (CheckBox) v.findViewById(R.id.filter_opening_balance);
-        mFilterSendMoney = (CheckBox) v.findViewById(R.id.filter_send_money);
         mFilterRequestMoney = (CheckBox) v.findViewById(R.id.filter_request_money);
         mFilterAddMoney = (CheckBox) v.findViewById(R.id.filter_add_money);
         mFilterWithdrawMoney = (CheckBox) v.findViewById(R.id.filter_withdraw_money);
         mFilterTopUp = (CheckBox) v.findViewById(R.id.filter_top_up);
-        mFilterPayment = (CheckBox) v.findViewById(R.id.filter_payment);
         mFilterRequestPayment = (CheckBox) v.findViewById(R.id.filter_request_payment);
-        mFilterEducation = (CheckBox) v.findViewById(R.id.filter_education);
 
         mCheckBoxTypeMap = new HashMap<>();
-        mCheckBoxTypeMap.put(mFilterOpeningBalance, Constants.TRANSACTION_HISTORY_OPENING_BALANCE);
-        mCheckBoxTypeMap.put(mFilterSendMoney, Constants.TRANSACTION_HISTORY_SEND_MONEY);
         mCheckBoxTypeMap.put(mFilterRequestMoney, Constants.TRANSACTION_HISTORY_REQUEST_MONEY);
         mCheckBoxTypeMap.put(mFilterAddMoney, Constants.TRANSACTION_HISTORY_ADD_MONEY);
         mCheckBoxTypeMap.put(mFilterWithdrawMoney, Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY);
         mCheckBoxTypeMap.put(mFilterTopUp, Constants.TRANSACTION_HISTORY_TOP_UP);
-        mCheckBoxTypeMap.put(mFilterPayment, Constants.TRANSACTION_HISTORY_MAKE_PAYMENT);
         mCheckBoxTypeMap.put(mFilterRequestPayment, Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT);
-        mCheckBoxTypeMap.put(mFilterEducation, Constants.TRANSACTION_HISTORY_EDUCATION);
 
         mFromDateButton = (Button) v.findViewById(R.id.fromButton);
         mToDateButton = (Button) v.findViewById(R.id.toButton);
