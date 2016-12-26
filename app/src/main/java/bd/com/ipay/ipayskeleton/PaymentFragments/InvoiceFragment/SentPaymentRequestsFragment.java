@@ -214,7 +214,6 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
             }
 
-
             public void bindView(int pos) {
 
                 final String imageUrl = pendingPaymentClasses.get(pos).getReceiverProfile().getUserProfilePicture();
@@ -285,8 +284,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
                     }
                 });
             }
-
-
+            
             public void bindViewFooter() {
                 if (hasNext) loadMoreTextView.setText(R.string.load_more);
                 else loadMoreTextView.setText(R.string.no_more_results);
