@@ -470,11 +470,13 @@
     <string name="identification">Identification</string>
     <string name="identification_documents">Identification Documents</string>
     <string name="action_search">Search</string>
-    <string name="filter_send_money">Money Sent/Received</string>
+    <string name="filter_send_money">Send Money</string>
+    <string name="filter_request_money">Request Money</string>
     <string name="filter_add_money">Money Added</string>
     <string name="filter_withdraw_money">Money Withdrawn</string>
     <string name="filter_top_up">Top Up</string>
     <string name="filter_payment">Payment</string>
+    <string name="filter_request_payment">Request Payment</string>
     <string name="filter_opening_balance">Opening Balance</string>
     <string name="filter_education">Education</string>
     <string name="basic_info">Basic Information</string>

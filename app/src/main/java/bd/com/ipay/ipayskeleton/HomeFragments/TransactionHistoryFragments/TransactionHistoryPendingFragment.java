@@ -80,6 +80,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private CheckBox mFilterWithdrawMoney;
     private CheckBox mFilterTopUp;
     private CheckBox mFilterPayment;
+    private CheckBox mFilterRequestPayment;
     private CheckBox mFilterEducation;
     private Button mClearServiceFilterButton;
 
@@ -98,7 +99,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private boolean clearListAfterLoading;
 
     private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
-    private final int REQUEST_FOR_PAYEMENT_REVIEW_REQUEST = 102;
+    private final int REQUEST_PAYMENT_REVIEW_REQUEST = 102;
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
 
@@ -136,19 +137,23 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
         mFilterOpeningBalance = (CheckBox) v.findViewById(R.id.filter_opening_balance);
         mFilterSendMoney = (CheckBox) v.findViewById(R.id.filter_send_money);
+        mFilterRequestMoney = (CheckBox) v.findViewById(R.id.filter_request_money);
         mFilterAddMoney = (CheckBox) v.findViewById(R.id.filter_add_money);
         mFilterWithdrawMoney = (CheckBox) v.findViewById(R.id.filter_withdraw_money);
         mFilterTopUp = (CheckBox) v.findViewById(R.id.filter_top_up);
         mFilterPayment = (CheckBox) v.findViewById(R.id.filter_payment);
+        mFilterRequestPayment = (CheckBox) v.findViewById(R.id.filter_request_payment);
         mFilterEducation = (CheckBox) v.findViewById(R.id.filter_education);
 
         mCheckBoxTypeMap = new HashMap<>();
         mCheckBoxTypeMap.put(mFilterOpeningBalance, Constants.TRANSACTION_HISTORY_OPENING_BALANCE);
         mCheckBoxTypeMap.put(mFilterSendMoney, Constants.TRANSACTION_HISTORY_SEND_MONEY);
+        mCheckBoxTypeMap.put(mFilterRequestMoney, Constants.TRANSACTION_HISTORY_REQUEST_MONEY);
         mCheckBoxTypeMap.put(mFilterAddMoney, Constants.TRANSACTION_HISTORY_ADD_MONEY);
         mCheckBoxTypeMap.put(mFilterWithdrawMoney, Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY);
         mCheckBoxTypeMap.put(mFilterTopUp, Constants.TRANSACTION_HISTORY_TOP_UP);
         mCheckBoxTypeMap.put(mFilterPayment, Constants.TRANSACTION_HISTORY_MAKE_PAYMENT);
+        mCheckBoxTypeMap.put(mFilterRequestPayment, Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT);
         mCheckBoxTypeMap.put(mFilterEducation, Constants.TRANSACTION_HISTORY_EDUCATION);
 
         mFromDateButton = (Button) v.findViewById(R.id.fromButton);
@@ -344,7 +349,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             }
         });
 
-
         mToDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -516,7 +520,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_MONEY_REVIEW_REQUEST || requestCode == REQUEST_FOR_PAYEMENT_REVIEW_REQUEST) {
+        if (requestCode == REQUEST_MONEY_REVIEW_REQUEST || requestCode == REQUEST_PAYMENT_REVIEW_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
                 refreshTransactionHistory();
             }
@@ -649,7 +653,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                         if (!mSwipeRefreshLayout.isRefreshing()) {
                             if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
                                 launchRequestMoneyReviewPage(transactionHistory);
-                            } else if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT || serviceId == Constants.TRANSACTION_HISTORY_INVOICE) {
+                            } else if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT || serviceId == Constants.TRANSACTION_HISTORY_INVOICE) {
                                 launchRequestPaymentReviewPage(transactionHistory);
                             } else {
                                 Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
@@ -802,7 +806,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         intent.putExtra(Constants.REQUEST_ID, transactionHistory.getId());
         intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
 
-        startActivityForResult(intent, REQUEST_FOR_PAYEMENT_REVIEW_REQUEST);
+        startActivityForResult(intent, REQUEST_PAYMENT_REVIEW_REQUEST);
     }
 
 

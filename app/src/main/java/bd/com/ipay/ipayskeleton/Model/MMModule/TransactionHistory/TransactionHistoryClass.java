@@ -1,9 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory;
 
-import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -68,7 +66,7 @@ public class TransactionHistoryClass implements Parcelable {
                 case (Constants.TRANSACTION_HISTORY_TOP_UP):
                     return receiverInfo;
                 case (Constants.TRANSACTION_HISTORY_INVOICE):
-                case (Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT):
+                case (Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT):
                     if (additionalInfo != null)
                         return additionalInfo.getUserName();
                 case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT):
@@ -144,7 +142,7 @@ public class TransactionHistoryClass implements Parcelable {
                     }
                 }
             case (Constants.TRANSACTION_HISTORY_INVOICE):
-            case (Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT):
+            case (Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber)) {
                     switch (statusCode) {
                         case (Constants.TRANSACTION_STATUS_ACCEPTED):
@@ -309,7 +307,7 @@ public class TransactionHistoryClass implements Parcelable {
                     else
                         return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo + " failed ";
                 case (Constants.TRANSACTION_HISTORY_INVOICE):
-                case (Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT):
+                case (Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT):
                     if (receiverInfo.equals(userMobileNumber)) {
                         if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
                             return "Payment of " + Utilities.formatTaka(getNetAmount()) + " sent to " + additionalInfo.getUserName();
@@ -401,7 +399,7 @@ public class TransactionHistoryClass implements Parcelable {
                 case (Constants.TRANSACTION_HISTORY_TOP_UP):
                     return "Mobile TopUp";
                 case (Constants.TRANSACTION_HISTORY_INVOICE):
-                case (Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT):
+                case (Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT):
                     if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED) {
                         if (originatingMobileNumber.equals(userMobileNumber)) {
                             return "Payment Request Sent";
@@ -447,7 +445,7 @@ public class TransactionHistoryClass implements Parcelable {
 
     public String getStatus() {
         try {
-            if (serviceID == Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT
+            if (serviceID == Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT
                     || serviceID == Constants.TRANSACTION_HISTORY_INVOICE
                     || serviceID == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
                 switch (statusCode) {
@@ -515,7 +513,7 @@ public class TransactionHistoryClass implements Parcelable {
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
                 return -netAmount;
             case (Constants.TRANSACTION_HISTORY_INVOICE):
-            case (Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT):
+            case (Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber)) {
                     switch (statusCode) {
                         case (Constants.TRANSACTION_STATUS_ACCEPTED):

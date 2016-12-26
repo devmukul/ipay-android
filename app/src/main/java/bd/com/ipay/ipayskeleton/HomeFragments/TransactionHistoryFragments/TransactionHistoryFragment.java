@@ -75,6 +75,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private CheckBox mFilterWithdrawMoney;
     private CheckBox mFilterTopUp;
     private CheckBox mFilterPayment;
+    private CheckBox mFilterRequestPayment;
     private CheckBox mFilterEducation;
     private Button mClearServiceFilterButton;
 
@@ -128,19 +129,23 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
         mFilterOpeningBalance = (CheckBox) v.findViewById(R.id.filter_opening_balance);
         mFilterSendMoney = (CheckBox) v.findViewById(R.id.filter_send_money);
+        mFilterRequestMoney = (CheckBox) v.findViewById(R.id.filter_request_money);
         mFilterAddMoney = (CheckBox) v.findViewById(R.id.filter_add_money);
         mFilterWithdrawMoney = (CheckBox) v.findViewById(R.id.filter_withdraw_money);
         mFilterTopUp = (CheckBox) v.findViewById(R.id.filter_top_up);
         mFilterPayment = (CheckBox) v.findViewById(R.id.filter_payment);
+        mFilterRequestPayment = (CheckBox) v.findViewById(R.id.filter_request_payment);
         mFilterEducation = (CheckBox) v.findViewById(R.id.filter_education);
 
         mCheckBoxTypeMap = new HashMap<>();
         mCheckBoxTypeMap.put(mFilterOpeningBalance, Constants.TRANSACTION_HISTORY_OPENING_BALANCE);
         mCheckBoxTypeMap.put(mFilterSendMoney, Constants.TRANSACTION_HISTORY_SEND_MONEY);
+        mCheckBoxTypeMap.put(mFilterRequestMoney, Constants.TRANSACTION_HISTORY_REQUEST_MONEY);
         mCheckBoxTypeMap.put(mFilterAddMoney, Constants.TRANSACTION_HISTORY_ADD_MONEY);
         mCheckBoxTypeMap.put(mFilterWithdrawMoney, Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY);
         mCheckBoxTypeMap.put(mFilterTopUp, Constants.TRANSACTION_HISTORY_TOP_UP);
         mCheckBoxTypeMap.put(mFilterPayment, Constants.TRANSACTION_HISTORY_MAKE_PAYMENT);
+        mCheckBoxTypeMap.put(mFilterRequestPayment, Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT);
         mCheckBoxTypeMap.put(mFilterEducation, Constants.TRANSACTION_HISTORY_EDUCATION);
 
         mFromDateButton = (Button) v.findViewById(R.id.fromButton);
@@ -335,7 +340,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             }
         });
 
-
         mToDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -356,7 +360,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 }
             }
         });
-
     }
 
     private void setActionsForServiceTypeFilter() {
@@ -597,13 +600,15 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
                     statusDescriptionView.setTextColor(getResources().getColor(R.color.bottle_green));
                     if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY
-                            || serviceId == Constants.TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT
+                            || serviceId == Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT
                             || serviceId == Constants.TRANSACTION_HISTORY_INVOICE) {
                         if (statusCode != Constants.TRANSACTION_STATUS_ACCEPTED)
                             mBalanceView.setVisibility(View.GONE);
                     }
                 } else {
-                    if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY) {
+                    if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP
+                            && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
+                            && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY) {
                         mBalanceView.setVisibility(View.GONE);
                     }
                     statusDescriptionView.setTextColor(getResources().getColor(R.color.background_red));
@@ -656,7 +661,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                             intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
                             startActivity(intent);
                         }
-
                     }
                 });
 
@@ -703,7 +707,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
             View v;
 
             if (viewType == FOOTER_VIEW) {

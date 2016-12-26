@@ -653,7 +653,7 @@ public class Constants {
     public static final int TRANSACTION_HISTORY_EDUCATION = 8001;
     public static final int TRANSACTION_HISTORY_TOP_UP_ROLLBACK = 2002;
     public static final int TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK = 3003;
-    public static final int TRANSACTION_HISTORY_REQUEST_FOR_PAYMENT = 6005;
+    public static final int TRANSACTION_HISTORY_REQUEST_PAYMENT = 6005;
     public static final int TRANSACTION_HISTORY_INVOICE = 6003;
 
     public static final int SERVICE_ID_REQUEST_MONEY = 6001;
