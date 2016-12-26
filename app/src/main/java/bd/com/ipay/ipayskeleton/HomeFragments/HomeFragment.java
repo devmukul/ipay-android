@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Random;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
@@ -224,7 +224,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mCreateInvoiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), InvoiceActivity.class);
+                Intent intent = new Intent(getActivity(), RequestPaymentActivity.class);
                 startActivity(intent);
             }
         });

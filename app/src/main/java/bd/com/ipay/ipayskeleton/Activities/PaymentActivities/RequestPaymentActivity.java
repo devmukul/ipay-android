@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -26,19 +25,19 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PendingPaymentClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.CreateInvoiceFragmentStepOne;
 import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.CreateInvoiceFragmentStepTwo;
-import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.InvoiceDetailsFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.SentRequestPaymentDetailsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.RequestPaymentFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.SentInvoicesFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.InvoiceHistoryFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.SentRequestPaymentsFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.ReceivedRequestPaymentDetailsFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class InvoiceActivity extends BaseActivity implements HttpResponseListener {
+public class RequestPaymentActivity extends BaseActivity implements HttpResponseListener {
 
-    private HttpRequestGetAsyncTask mGetSingleInvoiceTask = null;
-    private PendingPaymentClass mGetSingleInvoiceResponse;
+    private HttpRequestGetAsyncTask mGetSingleRequestPaymentDetailsTask = null;
+    private PendingPaymentClass mGetSingleRequestPaymentDetailsResponse;
 
     private ProgressDialog mProgressDialog;
 
@@ -46,8 +45,8 @@ public class InvoiceActivity extends BaseActivity implements HttpResponseListene
 
     private boolean switchedFromTransactionHistory = false;
 
-    private long INVOICE_TAG = -1;
-    private long invoiceID;
+    private long REQUEST_PAYMENT_TAG = -1;
+    private long requestPaymentID;
 
     public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
 
@@ -67,12 +66,12 @@ public class InvoiceActivity extends BaseActivity implements HttpResponseListene
             }
         });
 
-        invoiceID = getIntent().getLongExtra(Constants.REQUEST_ID, INVOICE_TAG);
-        if (invoiceID != INVOICE_TAG) {
+        requestPaymentID = getIntent().getLongExtra(Constants.REQUEST_ID, REQUEST_PAYMENT_TAG);
+        if (requestPaymentID != REQUEST_PAYMENT_TAG) {
             switchedFromTransactionHistory = true;
             getSingleInvoiceDetails();
         } else
-            switchToInvoicesSentFragment();
+            switchToSentRequestPaymentsFragment();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -97,13 +96,13 @@ public class InvoiceActivity extends BaseActivity implements HttpResponseListene
 
     }
 
-    public void switchToInvoicesSentFragment() {
+    public void switchToSentRequestPaymentsFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStackImmediate();
         }
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SentInvoicesFragment())
+                .replace(R.id.fragment_container, new SentRequestPaymentsFragment())
                 .commit();
         mFabCreateInvoice.setVisibility(View.VISIBLE);
 
@@ -146,58 +145,58 @@ public class InvoiceActivity extends BaseActivity implements HttpResponseListene
         mFabCreateInvoice.setVisibility(View.GONE);
     }
 
-    public void switchToInvoiceDetailsFragment(Bundle bundle) {
-        InvoiceDetailsFragment invoiceDetailsFragment = new InvoiceDetailsFragment();
+    public void switchToSentRequestPaymentDetailsFragment(Bundle bundle) {
+        SentRequestPaymentDetailsFragment sentRequestPaymentDetailsFragment = new SentRequestPaymentDetailsFragment();
         if (bundle != null) {
-            invoiceDetailsFragment.setArguments(bundle);
+            sentRequestPaymentDetailsFragment.setArguments(bundle);
         }
 
         if (switchedFromTransactionHistory)
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, invoiceDetailsFragment)
+                    .replace(R.id.fragment_container, sentRequestPaymentDetailsFragment)
                     .commit();
         else
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, invoiceDetailsFragment)
+                    .replace(R.id.fragment_container, sentRequestPaymentDetailsFragment)
                     .addToBackStack(null)
                     .commit();
 
         mFabCreateInvoice.setVisibility(View.GONE);
     }
 
-    public void switchToInvoiceHistoryFragment(Bundle bundle) {
-        InvoiceHistoryFragment invoiceHistoryFragment = new InvoiceHistoryFragment();
-        invoiceHistoryFragment.setArguments(bundle);
+    public void switchToReceivedRequestPaymentDetailsFragment(Bundle bundle) {
+        ReceivedRequestPaymentDetailsFragment receivedRequestPaymentDetailsFragment = new ReceivedRequestPaymentDetailsFragment();
+        receivedRequestPaymentDetailsFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, invoiceHistoryFragment).commit();
+                .replace(R.id.fragment_container, receivedRequestPaymentDetailsFragment).commit();
 
         mFabCreateInvoice.setVisibility(View.GONE);
     }
 
     private void getSingleInvoiceDetails() {
-        if (mGetSingleInvoiceTask != null) {
+        if (mGetSingleRequestPaymentDetailsTask != null) {
             return;
         }
         mProgressDialog.setMessage(getString(R.string.loading));
         mProgressDialog.show();
 
-        String mUri = new GetSingleInvoiceRequestBuilder(invoiceID).getGeneratedUri();
-        mGetSingleInvoiceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SINGLE_INVOICE,
+        String mUri = new GetSingleInvoiceRequestBuilder(requestPaymentID).getGeneratedUri();
+        mGetSingleRequestPaymentDetailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SINGLE_INVOICE,
                 mUri, this, this);
 
-        mGetSingleInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mGetSingleRequestPaymentDetailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
     @Override
     public Context setContext() {
-        return InvoiceActivity.this;
+        return RequestPaymentActivity.this;
     }
 
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
-            mGetSingleInvoiceTask = null;
+            mGetSingleRequestPaymentDetailsTask = null;
             Toast.makeText(this, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
@@ -205,19 +204,19 @@ public class InvoiceActivity extends BaseActivity implements HttpResponseListene
         Gson gson = new Gson();
         if (result.getApiCommand().equals(Constants.COMMAND_GET_SINGLE_INVOICE)) {
             try {
-                mGetSingleInvoiceResponse = gson.fromJson(result.getJsonString(), PendingPaymentClass.class);
+                mGetSingleRequestPaymentDetailsResponse = gson.fromJson(result.getJsonString(), PendingPaymentClass.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                    List<ItemList> mItemList = Arrays.asList(mGetSingleInvoiceResponse.getItemList());
+                    List<ItemList> mItemList = Arrays.asList(mGetSingleRequestPaymentDetailsResponse.getItemList());
 
                     Bundle bundle = new Bundle();
-                    bundle.putString(Constants.DESCRIPTION, mGetSingleInvoiceResponse.description);
-                    bundle.putString(Constants.TIME, Utilities.formatDateWithTime(mGetSingleInvoiceResponse.getRequestTime()));
-                    bundle.putLong(Constants.MONEY_REQUEST_ID, mGetSingleInvoiceResponse.getId());
-                    bundle.putString(Constants.AMOUNT, mGetSingleInvoiceResponse.getAmount().toString());
-                    bundle.putString(Constants.VAT, mGetSingleInvoiceResponse.getVat().toString());
-                    bundle.putString(Constants.TITLE, mGetSingleInvoiceResponse.getTitle());
+                    bundle.putString(Constants.DESCRIPTION, mGetSingleRequestPaymentDetailsResponse.description);
+                    bundle.putString(Constants.TIME, Utilities.formatDateWithTime(mGetSingleRequestPaymentDetailsResponse.getRequestTime()));
+                    bundle.putLong(Constants.MONEY_REQUEST_ID, mGetSingleRequestPaymentDetailsResponse.getId());
+                    bundle.putString(Constants.AMOUNT, mGetSingleRequestPaymentDetailsResponse.getAmount().toString());
+                    bundle.putString(Constants.VAT, mGetSingleRequestPaymentDetailsResponse.getVat().toString());
+                    bundle.putString(Constants.TITLE, mGetSingleRequestPaymentDetailsResponse.getTitle());
                     bundle.putInt(Constants.STATUS, Constants.INVOICE_STATUS_PROCESSING);
 
                     if (mItemList != null)
@@ -225,16 +224,16 @@ public class InvoiceActivity extends BaseActivity implements HttpResponseListene
                     else
                         bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
 
-                    if (ProfileInfoCacheManager.getMobileNumber().equals(mGetSingleInvoiceResponse.getReceiverProfile().getUserMobileNumber())) {
-                        bundle.putString(Constants.MOBILE_NUMBER, mGetSingleInvoiceResponse.getOriginatorProfile().getUserMobileNumber());
-                        bundle.putString(Constants.NAME, mGetSingleInvoiceResponse.getOriginatorProfile().getUserName());
-                        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + mGetSingleInvoiceResponse.getOriginatorProfile().getUserProfilePicture());
-                        switchToInvoiceHistoryFragment(bundle);
+                    if (ProfileInfoCacheManager.getMobileNumber().equals(mGetSingleRequestPaymentDetailsResponse.getReceiverProfile().getUserMobileNumber())) {
+                        bundle.putString(Constants.MOBILE_NUMBER, mGetSingleRequestPaymentDetailsResponse.getOriginatorProfile().getUserMobileNumber());
+                        bundle.putString(Constants.NAME, mGetSingleRequestPaymentDetailsResponse.getOriginatorProfile().getUserName());
+                        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + mGetSingleRequestPaymentDetailsResponse.getOriginatorProfile().getUserProfilePicture());
+                        switchToReceivedRequestPaymentDetailsFragment(bundle);
                     } else {
-                        bundle.putString(Constants.MOBILE_NUMBER, mGetSingleInvoiceResponse.getReceiverProfile().getUserMobileNumber());
-                        bundle.putString(Constants.NAME, mGetSingleInvoiceResponse.getReceiverProfile().getUserName());
-                        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + mGetSingleInvoiceResponse.getReceiverProfile().getUserProfilePicture());
-                        switchToInvoiceDetailsFragment(bundle);
+                        bundle.putString(Constants.MOBILE_NUMBER, mGetSingleRequestPaymentDetailsResponse.getReceiverProfile().getUserMobileNumber());
+                        bundle.putString(Constants.NAME, mGetSingleRequestPaymentDetailsResponse.getReceiverProfile().getUserName());
+                        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + mGetSingleRequestPaymentDetailsResponse.getReceiverProfile().getUserProfilePicture());
+                        switchToSentRequestPaymentDetailsFragment(bundle);
                     }
 
                 } else {
@@ -249,7 +248,7 @@ public class InvoiceActivity extends BaseActivity implements HttpResponseListene
                 finish();
             }
 
-            mGetSingleInvoiceTask = null;
+            mGetSingleRequestPaymentDetailsTask = null;
             mProgressDialog.dismiss();
         }
     }

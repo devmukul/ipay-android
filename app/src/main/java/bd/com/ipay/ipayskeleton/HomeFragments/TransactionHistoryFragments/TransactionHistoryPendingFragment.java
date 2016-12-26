@@ -40,7 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -789,7 +789,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     }
 
     private void launchRequestPaymentReviewPage(TransactionHistoryClass transactionHistory) {
-        Intent intent = new Intent(getActivity(), InvoiceActivity.class);
+        Intent intent = new Intent(getActivity(), RequestPaymentActivity.class);
         intent.putExtra(Constants.REQUEST_ID, transactionHistory.getId());
         intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
 

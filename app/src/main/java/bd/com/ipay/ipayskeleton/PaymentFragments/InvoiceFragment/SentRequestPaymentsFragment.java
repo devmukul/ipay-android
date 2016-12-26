@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -36,7 +36,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SentInvoicesFragment extends ProgressFragment implements HttpResponseListener {
+public class SentRequestPaymentsFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mPendingInvoicesTask = null;
     private GetPendingPaymentsResponse mGetPendingPaymentsResponse;
@@ -69,7 +69,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
         View v = inflater.inflate(R.layout.fragment_sent_invoice, container, false);
         getActivity().setTitle(R.string.request_payment);
 
-        ((InvoiceActivity) getActivity()).mFabCreateInvoice.setVisibility(View.VISIBLE);
+        ((RequestPaymentActivity) getActivity()).mFabCreateInvoice.setVisibility(View.VISIBLE);
 
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mProgressDialog = new ProgressDialog(getActivity());
@@ -399,7 +399,7 @@ public class SentInvoicesFragment extends ProgressFragment implements HttpRespon
         else
             bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
 
-        ((InvoiceActivity) getActivity()).switchToInvoiceDetailsFragment(bundle);
+        ((RequestPaymentActivity) getActivity()).switchToSentRequestPaymentDetailsFragment(bundle);
 
     }
 }

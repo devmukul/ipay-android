@@ -97,7 +97,7 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".Activities.PaymentActivities.InvoiceActivity"
+            android:name=".Activities.PaymentActivities.RequestPaymentActivity"
             android:label="@string/create_invoice"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"

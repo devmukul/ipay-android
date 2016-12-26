@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +24,7 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -38,7 +37,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class InvoiceDetailsFragment extends ReviewFragment implements HttpResponseListener {
+public class SentRequestPaymentDetailsFragment extends ReviewFragment implements HttpResponseListener {
 
     private final int ACTION_CANCEL_REQUEST = 0;
 
@@ -181,7 +180,7 @@ public class InvoiceDetailsFragment extends ReviewFragment implements HttpRespon
                         getActivity().setResult(Activity.RESULT_OK, intent);
                         getActivity().finish();
                     } else
-                        ((InvoiceActivity) getActivity()).switchToInvoicesSentFragment();
+                        ((RequestPaymentActivity) getActivity()).switchToSentRequestPaymentsFragment();
 
                 } catch (Exception e) {
                     e.printStackTrace();
