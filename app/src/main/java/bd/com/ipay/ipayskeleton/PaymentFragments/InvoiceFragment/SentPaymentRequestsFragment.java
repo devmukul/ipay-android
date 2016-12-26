@@ -309,6 +309,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
 
                 TextView loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 if (hasNext) loadMoreTextView.setText(R.string.load_more);
+                
                 else loadMoreTextView.setText(R.string.no_more_results);
             }
         }
