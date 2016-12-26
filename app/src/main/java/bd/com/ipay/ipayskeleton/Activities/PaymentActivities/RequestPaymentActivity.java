@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,6 +45,19 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
     public FloatingActionButton mFabNewRequestPayment;
 
     private boolean switchedFromTransactionHistory = false;
+
+    private String mTime;
+    private String mDescription;
+    private int mStatus;
+    private BigDecimal mAmount;
+    private BigDecimal mVat;
+    private long mRequestID;
+    private List<ItemList> mItemList;
+
+    private String mName;
+    private String mMobileNumber;
+    private String mPhotoUri;
+    private String mTitle;
 
     private long REQUEST_PAYMENT_TAG = -1;
     private long requestPaymentID;
@@ -187,12 +201,6 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
         mGetSingleRequestPaymentDetailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-
-    @Override
-    public Context setContext() {
-        return RequestPaymentActivity.this;
-    }
-
     @Override
     public void httpResponseReceiver(HttpResponseObject result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
@@ -208,34 +216,27 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                    List<ItemList> mItemList = Arrays.asList(mGetSingleRequestPaymentDetailsResponse.getItemList());
-
-                    Bundle bundle = new Bundle();
-                    bundle.putString(Constants.DESCRIPTION, mGetSingleRequestPaymentDetailsResponse.description);
-                    bundle.putString(Constants.TIME, Utilities.formatDateWithTime(mGetSingleRequestPaymentDetailsResponse.getRequestTime()));
-                    bundle.putLong(Constants.MONEY_REQUEST_ID, mGetSingleRequestPaymentDetailsResponse.getId());
-                    bundle.putString(Constants.AMOUNT, mGetSingleRequestPaymentDetailsResponse.getAmount().toString());
-                    bundle.putString(Constants.VAT, mGetSingleRequestPaymentDetailsResponse.getVat().toString());
-                    bundle.putString(Constants.TITLE, mGetSingleRequestPaymentDetailsResponse.getTitle());
-                    bundle.putInt(Constants.STATUS, Constants.INVOICE_STATUS_PROCESSING);
-
-                    if (mItemList != null)
-                        bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
-                    else
-                        bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
+                    mItemList = Arrays.asList(mGetSingleRequestPaymentDetailsResponse.getItemList());
+                    mDescription = mGetSingleRequestPaymentDetailsResponse.description;
+                    mTime = Utilities.formatDateWithTime(mGetSingleRequestPaymentDetailsResponse.getRequestTime());
+                    mRequestID = mGetSingleRequestPaymentDetailsResponse.getId();
+                    mAmount = mGetSingleRequestPaymentDetailsResponse.getAmount();
+                    mVat = mGetSingleRequestPaymentDetailsResponse.getVat();
+                    mTitle = mGetSingleRequestPaymentDetailsResponse.getTitle();
 
                     if (ProfileInfoCacheManager.getMobileNumber().equals(mGetSingleRequestPaymentDetailsResponse.getReceiverProfile().getUserMobileNumber())) {
-                        bundle.putString(Constants.MOBILE_NUMBER, mGetSingleRequestPaymentDetailsResponse.getOriginatorProfile().getUserMobileNumber());
-                        bundle.putString(Constants.NAME, mGetSingleRequestPaymentDetailsResponse.getOriginatorProfile().getUserName());
-                        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + mGetSingleRequestPaymentDetailsResponse.getOriginatorProfile().getUserProfilePicture());
-                        switchToReceivedPaymentRequestDetailsFragment(bundle);
-                    } else {
-                        bundle.putString(Constants.MOBILE_NUMBER, mGetSingleRequestPaymentDetailsResponse.getReceiverProfile().getUserMobileNumber());
-                        bundle.putString(Constants.NAME, mGetSingleRequestPaymentDetailsResponse.getReceiverProfile().getUserName());
-                        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + mGetSingleRequestPaymentDetailsResponse.getReceiverProfile().getUserProfilePicture());
-                        switchToSentPaymentRequestDetailsFragment(bundle);
-                    }
+                        mMobileNumber = mGetSingleRequestPaymentDetailsResponse.getOriginatorProfile().getUserMobileNumber();
+                        mName = mGetSingleRequestPaymentDetailsResponse.getOriginatorProfile().getUserName();
+                        mPhotoUri = mGetSingleRequestPaymentDetailsResponse.getOriginatorProfile().getUserProfilePicture();
 
+                        launchReceivedPaymentRequestDetailsReviewFragment();
+                    } else {
+                        mMobileNumber = mGetSingleRequestPaymentDetailsResponse.getReceiverProfile().getUserMobileNumber();
+                        mName = mGetSingleRequestPaymentDetailsResponse.getReceiverProfile().getUserName();
+                        mPhotoUri = mGetSingleRequestPaymentDetailsResponse.getReceiverProfile().getUserProfilePicture();
+
+                        launchSentPaymentRequestDetailsReviewFragment();
+                    }
                 } else {
                     Toast.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
                     finish();
@@ -251,6 +252,53 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
             mGetSingleRequestPaymentDetailsTask = null;
             mProgressDialog.dismiss();
         }
+    }
+
+    private void launchReceivedPaymentRequestDetailsReviewFragment() {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.DESCRIPTION, mDescription);
+        bundle.putString(Constants.TIME, mTime);
+        bundle.putLong(Constants.MONEY_REQUEST_ID, mRequestID);
+        bundle.putString(Constants.AMOUNT, mAmount.toString());
+        bundle.putString(Constants.VAT, mVat.toString());
+        bundle.putString(Constants.TITLE, mTitle);
+        bundle.putInt(Constants.STATUS, Constants.INVOICE_STATUS_PROCESSING);
+
+        if (mItemList != null)
+            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
+        else
+            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
+        bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
+        bundle.putString(Constants.NAME, mName);
+        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + mPhotoUri);
+
+        switchToReceivedPaymentRequestDetailsFragment(bundle);
+    }
+
+    private void launchSentPaymentRequestDetailsReviewFragment() {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.DESCRIPTION, mDescription);
+        bundle.putString(Constants.TIME, mTime);
+        bundle.putLong(Constants.MONEY_REQUEST_ID, mRequestID);
+        bundle.putString(Constants.AMOUNT, mAmount.toString());
+        bundle.putString(Constants.VAT, mVat.toString());
+        bundle.putString(Constants.TITLE, mTitle);
+        bundle.putInt(Constants.STATUS, Constants.INVOICE_STATUS_PROCESSING);
+
+        if (mItemList != null)
+            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
+        else
+            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
+        bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
+        bundle.putString(Constants.NAME, mName);
+        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + mPhotoUri);
+
+        switchToSentPaymentRequestDetailsFragment(bundle);
+    }
+
+    @Override
+    public Context setContext() {
+        return RequestPaymentActivity.this;
     }
 }
 
