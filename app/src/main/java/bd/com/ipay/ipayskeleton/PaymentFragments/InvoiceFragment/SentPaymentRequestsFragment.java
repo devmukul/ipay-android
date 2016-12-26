@@ -151,7 +151,6 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 try {
-
                     mGetPendingPaymentsResponse = gson.fromJson(result.getJsonString(), GetPendingPaymentsResponse.class);
 
                     if (pendingPaymentClasses == null || clearListAfterLoading) {
