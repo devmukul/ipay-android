@@ -102,40 +102,40 @@ public class TransactionHistoryClass implements Parcelable {
 
         switch (serviceID) {
             case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
-                return "+" + Utilities.formatTakaWithComma(netAmount);
+                return Utilities.formatTakaWithSignAndComma("+", netAmount);
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
-                return "+" + Utilities.formatTakaWithComma(netAmount);
+                return Utilities.formatTakaWithSignAndComma("+", netAmount);
             case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
-                return "+" + Utilities.formatTakaWithComma(netAmount);
+                return Utilities.formatTakaWithSignAndComma("+", netAmount);
             case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
                 if (originatingMobileNumber.equals(userMobileNumber)) {
-                    return "+" + Utilities.formatTakaWithComma(netAmount);
+                    return Utilities.formatTakaWithSignAndComma("+", netAmount);
                 } else if (receiverInfo.equals(userMobileNumber))
                     // Service charge effect
-                    return "-" + Utilities.formatTakaWithComma(amount);
+                    return Utilities.formatTakaWithSignAndComma("-", amount);
             case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
-                return "+" + Utilities.formatTakaWithComma(netAmount);
+                return Utilities.formatTakaWithSignAndComma("+", netAmount);
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
-                return "-" + Utilities.formatTakaWithComma(amount); // Service charge effect
+                return Utilities.formatTakaWithSignAndComma("-", amount); // Service charge effect
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
-                return "-" + Utilities.formatTakaWithComma(amount); // Service charge effect
+                return Utilities.formatTakaWithSignAndComma("-", amount); // Service charge effect
             case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber))
-                    return "+" + Utilities.formatTakaWithComma(netAmount);
+                    return Utilities.formatTakaWithSignAndComma("+", netAmount);
                 else if (receiverInfo.equals(userMobileNumber))
-                    return "-" + Utilities.formatTakaWithComma(amount); // Service charge effect
+                    return Utilities.formatTakaWithSignAndComma("-", amount); // Service charge effect
             case (Constants.TRANSACTION_HISTORY_REQUEST_MONEY):
                 if (originatingMobileNumber.equals(userMobileNumber)) {
                     switch (statusCode) {
                         case (Constants.TRANSACTION_STATUS_ACCEPTED):
-                            return "-" + Utilities.formatTakaWithComma(amount);
+                            return Utilities.formatTakaWithSignAndComma("-", amount);
                         default:
                             return Utilities.formatTakaWithComma(amount);
                     }
                 } else if (receiverInfo.equals(userMobileNumber)) {
                     switch (statusCode) {
                         case (Constants.TRANSACTION_STATUS_ACCEPTED):
-                            return "+" + Utilities.formatTakaWithComma(netAmount);
+                            return Utilities.formatTakaWithSignAndComma("+", netAmount);
                         default:
                             return Utilities.formatTakaWithComma(amount);
                     }
@@ -145,24 +145,25 @@ public class TransactionHistoryClass implements Parcelable {
                 if (originatingMobileNumber.equals(userMobileNumber)) {
                     switch (statusCode) {
                         case (Constants.TRANSACTION_STATUS_ACCEPTED):
-                            return "-" + Utilities.formatTakaWithComma(amount);
+                            return Utilities.formatTakaWithSignAndComma("-", amount);
                         default:
                             return Utilities.formatTakaWithComma(amount);
                     }
                 } else if (receiverInfo.equals(userMobileNumber)) {
                     switch (statusCode) {
                         case (Constants.TRANSACTION_STATUS_ACCEPTED):
-                            return "+" + Utilities.formatTakaWithComma(netAmount);
+                            return Utilities.formatTakaWithSignAndComma("+", netAmount);
                         default:
                             return Utilities.formatTakaWithComma(amount);
                     }
                 }
             case (Constants.TRANSACTION_HISTORY_EDUCATION):
-                return "-" + Utilities.formatTakaWithComma(amount); // Service charge effect
+                return Utilities.formatTakaWithSignAndComma("-", amount); // Service charge effect
         }
 
         return Utilities.formatTakaWithComma(netAmount);
     }
+
 
     public double getNetAmount() {
         return netAmount;
