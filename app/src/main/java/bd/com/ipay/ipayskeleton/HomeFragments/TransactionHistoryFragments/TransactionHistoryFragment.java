@@ -97,7 +97,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
     private Menu menu;
 
-    private TransactionHistoryBroadcastReceiver completedTransactionHistoryBroadcastReceiver;
+    private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -198,8 +198,8 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     public void onResume() {
         super.onResume();
 
-        completedTransactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(completedTransactionHistoryBroadcastReceiver,
+        transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
                 new IntentFilter(Constants.TAG_REFRESH));
     }
 
@@ -207,7 +207,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     public void onPause() {
         super.onPause();
 
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(completedTransactionHistoryBroadcastReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
 
     }
 
