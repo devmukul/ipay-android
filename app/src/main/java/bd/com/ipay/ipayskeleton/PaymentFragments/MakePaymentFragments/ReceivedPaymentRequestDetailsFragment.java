@@ -443,6 +443,7 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
         public int getItemCount() {
             if (mInvoiceItemList == null || mInvoiceItemList.size() == 0)  return HEADER_FOOTER_VIEW_COUNT;
             if (mInvoiceItemList.size() > 0)
+                // Count 2 added for header and footer view
                 return 1 + mInvoiceItemList.size() + 1;
             else return 0;
         }
