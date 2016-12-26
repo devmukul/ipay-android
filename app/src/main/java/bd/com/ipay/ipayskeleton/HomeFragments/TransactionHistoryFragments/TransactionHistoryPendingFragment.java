@@ -204,7 +204,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         super.onPause();
 
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(pendingTransactionHistoryBroadcastReceiver);
-
     }
 
     @Override
