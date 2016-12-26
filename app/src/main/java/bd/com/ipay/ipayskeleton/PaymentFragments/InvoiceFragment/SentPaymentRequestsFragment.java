@@ -402,6 +402,5 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
             bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
 
         ((RequestPaymentActivity) getActivity()).switchToSentPaymentRequestDetailsFragment(bundle);
-
     }
 }
