@@ -69,6 +69,8 @@ public class ReceivedRequestPaymentDetailsFragment extends ReviewFragment implem
 
     private ProgressDialog mProgressDialog;
 
+    private final int HEADER_FOOTER_VIEW_COUNT = 2;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_make_payment_notification_review, container, false);
@@ -439,7 +441,7 @@ public class ReceivedRequestPaymentDetailsFragment extends ReviewFragment implem
 
         @Override
         public int getItemCount() {
-            if (mItemList == null || mItemList.size() == 0)  return 2;
+            if (mItemList == null || mItemList.size() == 0)  return HEADER_FOOTER_VIEW_COUNT;
             if (mItemList.size() > 0)
                 return 1 + mItemList.size() + 1;
             else return 0;

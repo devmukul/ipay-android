@@ -68,6 +68,8 @@ public class SentRequestPaymentDetailsFragment extends ReviewFragment implements
 
     private boolean switchedFromTransactionHistory = false;
 
+    private final int HEADER_FOOTER_VIEW_COUNT = 2;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_make_payment_notification_review, container, false);
@@ -386,7 +388,7 @@ public class SentRequestPaymentDetailsFragment extends ReviewFragment implements
         @Override
         public int getItemCount() {
             if (mItemList == null || mItemList.length == 0)
-                return 2;
+                return HEADER_FOOTER_VIEW_COUNT;
             if (mItemList.length > 0)
                 return 1 + mItemList.length + 1;
             else return 0;

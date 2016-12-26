@@ -673,7 +673,6 @@ public class Constants {
     public static final int SERVICE_ID_MIN_AMOUNT_PER_PAYMENT = 87;
     public static final int SERVICE_ID_MAX_AMOUNT_PER_PAYMENT = 88;
 
-
     public static final String RESULT = "Result";
     public static final String POST_REQUEST = "POST_RESULT: ";
     public static final String GET_REQUEST = "GET_RESULT: ";
