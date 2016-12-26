@@ -778,7 +778,9 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private final BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("Broadcast received", "Transaction History");
+            if (Constants.DEBUG)
+                Log.d("Broadcast received", "Transaction History");
+
             refreshTransactionHistory();
         }
     };
@@ -786,7 +788,9 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private class TransactionHistoryBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.w("Broadcast received", "Transaction History");
+            if (Constants.DEBUG)
+                Log.w("Broadcast received", "Transaction History");
+            
             refreshTransactionHistory();
         }
     }
