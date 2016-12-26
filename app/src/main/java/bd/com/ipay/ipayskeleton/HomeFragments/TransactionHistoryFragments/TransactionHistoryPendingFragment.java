@@ -612,9 +612,8 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
                 mBalanceView.setVisibility(View.VISIBLE);
 
-                if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
+                if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY)
                     mBalanceView.setVisibility(View.GONE);
-                }
 
                 mTransactionDescriptionView.setText(description);
                 if (receiver != null && !receiver.equals("")) {
@@ -651,11 +650,11 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                     @Override
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing()) {
-                            if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
+                            if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY)
                                 launchRequestMoneyReviewPage(transactionHistory);
-                            } else if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT || serviceId == Constants.TRANSACTION_HISTORY_INVOICE) {
+                            else if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT || serviceId == Constants.TRANSACTION_HISTORY_INVOICE)
                                 launchRequestPaymentReviewPage(transactionHistory);
-                            } else {
+                            else {
                                 Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
                                 intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
                                 startActivity(intent);

@@ -120,11 +120,10 @@ public class TransactionHistoryClass implements Parcelable {
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
                 return "-" + Utilities.formatTakaWithComma(amount); // Service charge effect
             case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT):
-                if (originatingMobileNumber.equals(userMobileNumber)) {
+                if (originatingMobileNumber.equals(userMobileNumber))
                     return "+" + Utilities.formatTakaWithComma(netAmount);
-                } else if (receiverInfo.equals(userMobileNumber)) {
+                else if (receiverInfo.equals(userMobileNumber))
                     return "-" + Utilities.formatTakaWithComma(amount); // Service charge effect
-                }
             case (Constants.TRANSACTION_HISTORY_REQUEST_MONEY):
                 if (originatingMobileNumber.equals(userMobileNumber)) {
                     switch (statusCode) {
@@ -467,7 +466,6 @@ public class TransactionHistoryClass implements Parcelable {
         }
 
         return "No Information Available";
-
     }
 
     private String getBankAccountNumber() {

@@ -64,7 +64,6 @@ public class InvoiceActivity extends BaseActivity implements HttpResponseListene
             @Override
             public void onClick(View v) {
                 switchToRequestPaymentFragment();
-                //switchToCreateInvoiceFragment();
             }
         });
 
@@ -83,9 +82,8 @@ public class InvoiceActivity extends BaseActivity implements HttpResponseListene
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
-        } else {
+        } else
             return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
@@ -219,9 +217,13 @@ public class InvoiceActivity extends BaseActivity implements HttpResponseListene
                     bundle.putLong(Constants.MONEY_REQUEST_ID, mGetSingleInvoiceResponse.getId());
                     bundle.putString(Constants.AMOUNT, mGetSingleInvoiceResponse.getAmount().toString());
                     bundle.putString(Constants.VAT, mGetSingleInvoiceResponse.getVat().toString());
-                    bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
                     bundle.putString(Constants.TITLE, mGetSingleInvoiceResponse.getTitle());
                     bundle.putInt(Constants.STATUS, Constants.INVOICE_STATUS_PROCESSING);
+
+                    if (mItemList != null)
+                        bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
+                    else
+                        bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
 
                     if (ProfileInfoCacheManager.getMobileNumber().equals(mGetSingleInvoiceResponse.getReceiverProfile().getUserMobileNumber())) {
                         bundle.putString(Constants.MOBILE_NUMBER, mGetSingleInvoiceResponse.getOriginatorProfile().getUserMobileNumber());
@@ -234,7 +236,6 @@ public class InvoiceActivity extends BaseActivity implements HttpResponseListene
                         bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + mGetSingleInvoiceResponse.getReceiverProfile().getUserProfilePicture());
                         switchToInvoiceDetailsFragment(bundle);
                     }
-
 
                 } else {
                     Toast.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
