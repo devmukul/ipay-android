@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.UserProfile;
 
-public class MoneyRequestClass {
+public class MoneyRequest {
 
     private Long id;
     private BigDecimal amount;
@@ -17,7 +17,7 @@ public class MoneyRequestClass {
     private int status;
     private String transactionID;
 
-    public MoneyRequestClass() {
+    public MoneyRequest() {
     }
 
     public Long getId() {

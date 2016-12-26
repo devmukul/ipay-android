@@ -34,7 +34,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.MoneyRequestClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.MoneyRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -54,7 +54,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
     private RecyclerView mPendingListRecyclerView;
     private SentMoneyRequestListAdapter mPendingRequestsAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<MoneyRequestClass> pendingMoneyRequestClasses;
+    private List<MoneyRequest> pendingMoneyRequests;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyListTextView;
 
@@ -176,13 +176,13 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
 
                     mGetPendingRequestResponse = gson.fromJson(result.getJsonString(), GetRequestResponse.class);
 
-                    if (clearListAfterLoading || pendingMoneyRequestClasses == null) {
-                        pendingMoneyRequestClasses = mGetPendingRequestResponse.getAllNotifications();
+                    if (clearListAfterLoading || pendingMoneyRequests == null) {
+                        pendingMoneyRequests = mGetPendingRequestResponse.getAllNotifications();
                         clearListAfterLoading = false;
                     } else {
-                        List<MoneyRequestClass> tempPendingMoneyRequestClasses;
-                        tempPendingMoneyRequestClasses = mGetPendingRequestResponse.getAllNotifications();
-                        pendingMoneyRequestClasses.addAll(tempPendingMoneyRequestClasses);
+                        List<MoneyRequest> tempPendingMoneyRequests;
+                        tempPendingMoneyRequests = mGetPendingRequestResponse.getAllNotifications();
+                        pendingMoneyRequests.addAll(tempPendingMoneyRequests);
                     }
 
                     hasNext = mGetPendingRequestResponse.isHasNext();
@@ -213,9 +213,9 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
                     // Refresh the pending list
-                    if (pendingMoneyRequestClasses != null)
-                        pendingMoneyRequestClasses.clear();
-                    pendingMoneyRequestClasses = null;
+                    if (pendingMoneyRequests != null)
+                        pendingMoneyRequests.clear();
+                    pendingMoneyRequests = null;
                     pageCount = 0;
                     getPendingRequests();
                 } catch (Exception e) {
@@ -233,7 +233,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
             mCancelRequestTask = null;
         }
 
-        if (pendingMoneyRequestClasses != null && pendingMoneyRequestClasses.size() == 0) {
+        if (pendingMoneyRequests != null && pendingMoneyRequests.size() == 0) {
             mEmptyListTextView.setVisibility(View.VISIBLE);
         } else mEmptyListTextView.setVisibility(View.GONE);
     }
@@ -270,17 +270,17 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
 
             public void bindView(int pos) {
 
-                final long id = pendingMoneyRequestClasses.get(pos).getId();
-                String time = Utilities.formatDateWithTime(pendingMoneyRequestClasses.get(pos).getRequestTime());
-                final String name = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserName();
-                final String imageUrl = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserProfilePicture();
-                final String mobileNumber = pendingMoneyRequestClasses.get(pos).getReceiverProfile().getUserMobileNumber();
-                final String description = pendingMoneyRequestClasses.get(pos).getDescription();
-                final BigDecimal amount = pendingMoneyRequestClasses.get(pos).getAmount();
+                final long id = pendingMoneyRequests.get(pos).getId();
+                String time = Utilities.formatDateWithTime(pendingMoneyRequests.get(pos).getRequestTime());
+                final String name = pendingMoneyRequests.get(pos).getReceiverProfile().getUserName();
+                final String imageUrl = pendingMoneyRequests.get(pos).getReceiverProfile().getUserProfilePicture();
+                final String mobileNumber = pendingMoneyRequests.get(pos).getReceiverProfile().getUserMobileNumber();
+                final String description = pendingMoneyRequests.get(pos).getDescription();
+                final BigDecimal amount = pendingMoneyRequests.get(pos).getAmount();
 
                 mTime.setText(time);
                 mSenderNumber.setText(name);
-                mDescriptionView.setText(Utilities.formatTaka(pendingMoneyRequestClasses.get(pos).getAmount()));
+                mDescriptionView.setText(Utilities.formatTaka(pendingMoneyRequests.get(pos).getAmount()));
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -366,10 +366,10 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
 
         @Override
         public int getItemCount() {
-            if (pendingMoneyRequestClasses == null || pendingMoneyRequestClasses.isEmpty())
+            if (pendingMoneyRequests == null || pendingMoneyRequests.isEmpty())
                 return 0;
             else
-                return pendingMoneyRequestClasses.size() + 1;
+                return pendingMoneyRequests.size() + 1;
         }
 
         @Override

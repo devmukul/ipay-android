@@ -4,13 +4,13 @@ import java.util.List;
 
 public class GetRequestResponse {
 
-    private List<MoneyRequestClass> requests;
+    private List<MoneyRequest> requests;
     private boolean hasNext;
 
     public GetRequestResponse() {
     }
 
-    public List<MoneyRequestClass> getAllNotifications() {
+    public List<MoneyRequest> getAllNotifications() {
         return requests;
     }
 

@@ -26,7 +26,7 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetRequestResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.MoneyRequestClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.MoneyRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -42,7 +42,7 @@ public class MyTicketsFragment extends ProgressFragment implements HttpResponseL
     private MyEventsListAdapter mMyTicketsAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     // TODO: Change the class name
-    private List<MoneyRequestClass> listOfMyTickets;
+    private List<MoneyRequest> listOfMyTickets;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyListTextView;
 
@@ -142,9 +142,9 @@ public class MyTicketsFragment extends ProgressFragment implements HttpResponseL
                     if (listOfMyTickets == null) {
                         listOfMyTickets = mGetPendingRequestResponse.getAllNotifications();
                     } else {
-                        List<MoneyRequestClass> tempPendingMoneyRequestClasses;
-                        tempPendingMoneyRequestClasses = mGetPendingRequestResponse.getAllNotifications();
-                        listOfMyTickets.addAll(tempPendingMoneyRequestClasses);
+                        List<MoneyRequest> tempPendingMoneyRequests;
+                        tempPendingMoneyRequests = mGetPendingRequestResponse.getAllNotifications();
+                        listOfMyTickets.addAll(tempPendingMoneyRequests);
                     }
 
                     mMyTicketsAdapter.notifyDataSetChanged();
