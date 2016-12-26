@@ -39,7 +39,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class ReceivedRequestPaymentDetailsFragment extends ReviewFragment implements HttpResponseListener {
+public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mAcceptPaymentTask = null;
     private PaymentAcceptRejectOrCancelResponse mPaymentAcceptPaymentResponse;

@@ -37,7 +37,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SentRequestPaymentDetailsFragment extends ReviewFragment implements HttpResponseListener {
+public class SentPaymentRequestDetailsFragment extends ReviewFragment implements HttpResponseListener {
 
     private final int ACTION_CANCEL_REQUEST = 0;
 

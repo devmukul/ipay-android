@@ -46,7 +46,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class ReceivedRequestPaymentsFragment extends ProgressFragment implements HttpResponseListener {
+public class ReceivedPaymentRequestsFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mGetAllNotificationsTask = null;
     private GetMoneyAndPaymentRequestResponse mGetMoneyAndPaymentRequestResponse;
@@ -491,7 +491,7 @@ public class ReceivedRequestPaymentsFragment extends ProgressFragment implements
             else
                 bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
 
-            ((PaymentActivity) getActivity()).switchToReceivedRequestPaymentDetailsFragment(bundle);
+            ((PaymentActivity) getActivity()).switchToReceivedPaymentRequestDetailsFragment(bundle);
         }
     }
 

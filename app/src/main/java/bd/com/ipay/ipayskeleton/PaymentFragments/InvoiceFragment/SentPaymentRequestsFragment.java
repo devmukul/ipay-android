@@ -36,7 +36,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SentRequestPaymentsFragment extends ProgressFragment implements HttpResponseListener {
+public class SentPaymentRequestsFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mPendingInvoicesTask = null;
     private GetPendingPaymentsResponse mGetPendingPaymentsResponse;
@@ -69,7 +69,7 @@ public class SentRequestPaymentsFragment extends ProgressFragment implements Htt
         View v = inflater.inflate(R.layout.fragment_sent_invoice, container, false);
         getActivity().setTitle(R.string.request_payment);
 
-        ((RequestPaymentActivity) getActivity()).mFabCreateInvoice.setVisibility(View.VISIBLE);
+        ((RequestPaymentActivity) getActivity()).mFabNewRequestPayment.setVisibility(View.VISIBLE);
 
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mProgressDialog = new ProgressDialog(getActivity());
@@ -399,7 +399,7 @@ public class SentRequestPaymentsFragment extends ProgressFragment implements Htt
         else
             bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
 
-        ((RequestPaymentActivity) getActivity()).switchToSentRequestPaymentDetailsFragment(bundle);
+        ((RequestPaymentActivity) getActivity()).switchToSentPaymentRequestDetailsFragment(bundle);
 
     }
 }
