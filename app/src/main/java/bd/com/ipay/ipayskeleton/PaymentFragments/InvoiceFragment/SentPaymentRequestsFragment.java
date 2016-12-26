@@ -309,7 +309,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
 
                 TextView loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 if (hasNext) loadMoreTextView.setText(R.string.load_more);
-                
+
                 else loadMoreTextView.setText(R.string.no_more_results);
             }
         }
@@ -367,6 +367,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
             if (pendingPaymentClasses == null || pendingPaymentClasses.size() == 0) {
                 return 0;
             } else {
+                // Count 1 is added for load more footer
                 return 1 + pendingPaymentClasses.size();
             }
 
