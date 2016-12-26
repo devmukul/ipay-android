@@ -85,7 +85,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
             @Override
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity())) {
-                    refreshInvoicesPendingList();
+                    refreshPaymentRequestsPendingList();
                 }
             }
         });
@@ -105,7 +105,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
         }
     }
 
-    private void refreshInvoicesPendingList() {
+    private void refreshPaymentRequestsPendingList() {
         if (Utilities.isConnectionAvailable(getActivity())) {
             historyPageCount = 0;
             clearListAfterLoading = true;
