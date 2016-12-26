@@ -124,7 +124,6 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
         } else {
             acceptPaymentRequest(requestId, null);
         }
-
     }
 
     private void acceptPaymentRequest(long id, String pin) {

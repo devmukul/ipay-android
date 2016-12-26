@@ -284,7 +284,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
                     }
                 });
             }
-            
+
             public void bindViewFooter() {
                 if (hasNext) loadMoreTextView.setText(R.string.load_more);
                 else loadMoreTextView.setText(R.string.no_more_results);
