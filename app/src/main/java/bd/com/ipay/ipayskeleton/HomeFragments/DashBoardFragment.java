@@ -18,6 +18,7 @@ import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryHolderFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class DashBoardFragment extends Fragment {
@@ -81,7 +82,7 @@ public class DashBoardFragment extends Fragment {
                 if (tab.getPosition() == TRANSACTION_HISTORY_TAB) {
 
                     LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-                    Intent i = new Intent("TAG_REFRESH");
+                    Intent i = new Intent(Constants.TAG_REFRESH);
                     lbm.sendBroadcast(i);
                 }
             }

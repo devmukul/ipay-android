@@ -48,6 +48,7 @@ public class Constants {
     public static final String MONEY_REQUEST_ID = "MONEY REQUESTS ID";
     public static final String MONEY_REQUEST_DETAILS = "MONEY REQUESTS DETAILS";
     public static final String MONEY_REQUEST_SERVICE_ID = "SERVICE_ID";
+    public static final String TAG_REFRESH = "TAG_REFRESH";
 
     public static final String VERIFIED_USERS_ONLY = "VERIFIED_USERS_ONLY";
     public static final String IPAY_MEMBERS_ONLY = "IPAY_MEMBERS_ONLY";

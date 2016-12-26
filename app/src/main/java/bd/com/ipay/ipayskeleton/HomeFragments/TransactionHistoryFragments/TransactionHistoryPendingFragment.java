@@ -196,7 +196,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
         pendingTransactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(pendingTransactionHistoryBroadcastReceiver,
-                new IntentFilter("TAG_REFRESH"));
+                new IntentFilter(Constants.TAG_REFRESH));
     }
 
     @Override

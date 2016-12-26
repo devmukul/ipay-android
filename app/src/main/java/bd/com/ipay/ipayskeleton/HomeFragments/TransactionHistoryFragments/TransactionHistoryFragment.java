@@ -200,7 +200,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
         completedTransactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(completedTransactionHistoryBroadcastReceiver,
-                new IntentFilter("TAG_REFRESH"));
+                new IntentFilter(Constants.TAG_REFRESH));
     }
 
     @Override
