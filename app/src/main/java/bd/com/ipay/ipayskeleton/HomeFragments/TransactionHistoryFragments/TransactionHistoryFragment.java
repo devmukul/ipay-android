@@ -208,7 +208,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         super.onPause();
 
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
-
     }
 
     @Override
@@ -238,7 +237,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         menuInflater.inflate(R.menu.clear_filter, menu);
         this.menu = menu;
         menu.findItem(R.id.action_clear_filter).setVisible(false);
-
     }
 
     @Override
