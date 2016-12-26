@@ -30,7 +30,7 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetPendingPaymentsRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetPendingPaymentsResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PendingPaymentClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -54,7 +54,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
     private BigDecimal mAmount;
     private BigDecimal mVat;
     private long mId;
-    private List<ItemList> mItemList;
+    private List<InvoiceItem> mInvoiceItemList;
     private String mReceiverName;
     private String mReceiverMobileNumber;
     private String mPhotoUri;
@@ -229,7 +229,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
                 final String descriptionofRequest = pendingPaymentClasses.get(pos).getDescriptionofRequest();
                 final String description = pendingPaymentClasses.get(pos).getDescription();
                 final long id = pendingPaymentClasses.get(pos).getId();
-                final ItemList[] itemList = pendingPaymentClasses.get(pos).getItemList();
+                final InvoiceItem[] itemList = pendingPaymentClasses.get(pos).getItemList();
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
@@ -274,7 +274,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
                             mAmount = amount;
                             mVat = vat;
                             if (itemList != null)
-                                mItemList = Arrays.asList(itemList);
+                                mInvoiceItemList = Arrays.asList(itemList);
                             if (title.equals("Invoice")) mDescription = description;
                             else mDescription = descriptionofRequest;
                             mStatus = status;
@@ -396,8 +396,8 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
         bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
         bundle.putString(Constants.NAME, mReceiverName);
 
-        if (mItemList != null)
-            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
+        if (mInvoiceItemList != null)
+            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mInvoiceItemList));
         else
             bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
 

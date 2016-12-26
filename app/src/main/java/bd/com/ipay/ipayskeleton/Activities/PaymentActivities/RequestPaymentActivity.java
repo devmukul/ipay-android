@@ -21,7 +21,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetSinglePaymentRequestDetailRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PendingPaymentClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.CreateInvoiceFragmentStepOne;
@@ -48,11 +48,10 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
 
     private String mTime;
     private String mDescription;
-    private int mStatus;
     private BigDecimal mAmount;
     private BigDecimal mVat;
     private long mRequestID;
-    private List<ItemList> mItemList;
+    private List<InvoiceItem> mInvoiceItemList;
 
     private String mName;
     private String mMobileNumber;
@@ -85,7 +84,7 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
             switchedFromTransactionHistory = true;
             getSinglePaymentRequestDetails();
         } else
-            switchToSentRequestPaymentsFragment();
+            switchToSentPaymentRequestsFragment();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -110,7 +109,7 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
 
     }
 
-    public void switchToSentRequestPaymentsFragment() {
+    public void switchToSentPaymentRequestsFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStackImmediate();
         }
@@ -120,19 +119,6 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
                 .commit();
         mFabNewRequestPayment.setVisibility(View.VISIBLE);
 
-    }
-
-    private void switchToCreateInvoiceStepOneFragment() {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            getSupportFragmentManager().popBackStackImmediate();
-        }
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new CreateInvoiceFragmentStepOne())
-                .addToBackStack(null)
-                .commit();
-
-        mFabNewRequestPayment.setVisibility(View.GONE);
     }
 
     public void switchToCreateInvoiceStepTwoFragment(Bundle bundle) {
@@ -216,7 +202,7 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                    mItemList = Arrays.asList(mGetSingleRequestPaymentDetailsResponse.getItemList());
+                    mInvoiceItemList = Arrays.asList(mGetSingleRequestPaymentDetailsResponse.getItemList());
                     mDescription = mGetSingleRequestPaymentDetailsResponse.description;
                     mTime = Utilities.formatDateWithTime(mGetSingleRequestPaymentDetailsResponse.getRequestTime());
                     mRequestID = mGetSingleRequestPaymentDetailsResponse.getId();
@@ -264,8 +250,8 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
         bundle.putString(Constants.TITLE, mTitle);
         bundle.putInt(Constants.STATUS, Constants.INVOICE_STATUS_PROCESSING);
 
-        if (mItemList != null)
-            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
+        if (mInvoiceItemList != null)
+            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mInvoiceItemList));
         else
             bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
         bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
@@ -285,8 +271,8 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
         bundle.putString(Constants.TITLE, mTitle);
         bundle.putInt(Constants.STATUS, Constants.INVOICE_STATUS_PROCESSING);
 
-        if (mItemList != null)
-            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
+        if (mInvoiceItemList != null)
+            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mInvoiceItemList));
         else
             bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
         bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);

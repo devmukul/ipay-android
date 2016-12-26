@@ -183,7 +183,7 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CREATE_INVOICE_REVIEW && resultCode == Activity.RESULT_OK) {
-            ((RequestPaymentActivity) getActivity()).switchToSentRequestPaymentsFragment();
+            ((RequestPaymentActivity) getActivity()).switchToSentPaymentRequestsFragment();
         }
     }
 }

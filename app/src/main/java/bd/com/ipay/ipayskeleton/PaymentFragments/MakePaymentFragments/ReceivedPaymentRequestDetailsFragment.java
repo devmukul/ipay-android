@@ -29,7 +29,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
@@ -51,7 +51,7 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
     private RecyclerView mReviewRecyclerView;
     private PaymentReviewAdapter paymentReviewAdapter;
 
-    private List<ItemList> mItemList;
+    private List<InvoiceItem> mInvoiceItemList;
     private BigDecimal mTotal;
     private BigDecimal mAmount;
     private BigDecimal mNetAmount;
@@ -96,7 +96,7 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
         this.mTotal = new BigDecimal(bundle.getString(Constants.AMOUNT));
         this.mTitle = bundle.getString(Constants.TITLE);
         this.mDescription = bundle.getString(Constants.DESCRIPTION);
-        this.mItemList = bundle.getParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG);
+        this.mInvoiceItemList = bundle.getParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG);
 
         mReviewRecyclerView.setAdapter(paymentReviewAdapter);
 
@@ -319,14 +319,14 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
                 // Decrease pos by 1 as there is a header view now.
                 pos = pos - 1;
 
-                mItemNameView.setText(mItemList.get(pos).getItem());
-                mQuantityView.setText(mItemList.get(pos).getQuantity().toString());
-                mAmountView.setText(Utilities.formatTaka(mItemList.get(pos).getAmount()));
+                mItemNameView.setText(mInvoiceItemList.get(pos).getItem());
+                mQuantityView.setText(mInvoiceItemList.get(pos).getQuantity().toString());
+                mAmountView.setText(Utilities.formatTaka(mInvoiceItemList.get(pos).getAmount()));
             }
 
             public void bindViewForHeader() {
 
-                if (mItemList == null || mItemList.size() == 0) {
+                if (mInvoiceItemList == null || mInvoiceItemList.size() == 0) {
                     headerView.setVisibility(View.GONE);
                 }
 
@@ -441,22 +441,22 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
 
         @Override
         public int getItemCount() {
-            if (mItemList == null || mItemList.size() == 0)  return HEADER_FOOTER_VIEW_COUNT;
-            if (mItemList.size() > 0)
-                return 1 + mItemList.size() + 1;
+            if (mInvoiceItemList == null || mInvoiceItemList.size() == 0)  return HEADER_FOOTER_VIEW_COUNT;
+            if (mInvoiceItemList.size() > 0)
+                return 1 + mInvoiceItemList.size() + 1;
             else return 0;
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (mItemList == null || mItemList.size() == 0) {
+            if (mInvoiceItemList == null || mInvoiceItemList.size() == 0) {
                 if (position == 0) return NOTIFICATION_REVIEW_LIST_HEADER_VIEW;
                 else return NOTIFICATION_REVIEW_LIST_FOOTER_VIEW;
             }
 
-            if (mItemList.size() > 0) {
+            if (mInvoiceItemList.size() > 0) {
                 if (position == 0) return NOTIFICATION_REVIEW_LIST_HEADER_VIEW;
-                else if (position == mItemList.size() + 1)
+                else if (position == mInvoiceItemList.size() + 1)
                     return NOTIFICATION_REVIEW_LIST_FOOTER_VIEW;
                 else return NOTIFICATION_REVIEW_LIST_ITEM_VIEW;
             }

@@ -29,7 +29,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
@@ -49,7 +49,7 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
     private InvoiceReviewAdapter invoiceReviewAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private ItemList[] mItemList;
+    private InvoiceItem[] mInvoiceItemArray;
     private BigDecimal mTotal;
     private BigDecimal mAmount;
     private BigDecimal mNetAmount;
@@ -92,11 +92,11 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
         switchedFromTransactionHistory = getActivity().getIntent()
                 .getBooleanExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, false);
 
-        List<ItemList> temporaryItemList;
+        List<InvoiceItem> temporaryItemList;
         temporaryItemList = bundle.getParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG);
 
-        if (mItemList != null)
-            this.mItemList = temporaryItemList.toArray(new ItemList[temporaryItemList.size()]);
+        if (mInvoiceItemArray != null)
+            this.mInvoiceItemArray = temporaryItemList.toArray(new InvoiceItem[temporaryItemList.size()]);
 
         mProgressDialog = new ProgressDialog(getActivity());
         mReviewRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice);
@@ -182,7 +182,7 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
                         getActivity().setResult(Activity.RESULT_OK, intent);
                         getActivity().finish();
                     } else
-                        ((RequestPaymentActivity) getActivity()).switchToSentRequestPaymentsFragment();
+                        ((RequestPaymentActivity) getActivity()).switchToSentPaymentRequestsFragment();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -261,14 +261,14 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
                 // Decrease pos by 1 as there is a header view now.
                 pos = pos - 1;
 
-                mItemNameView.setText(mItemList[pos].getItem());
-                mQuantityView.setText(mItemList[pos].getQuantity().toString());
-                mAmountView.setText(Utilities.formatTaka(mItemList[pos].getAmount()));
+                mItemNameView.setText(mInvoiceItemArray[pos].getItem());
+                mQuantityView.setText(mInvoiceItemArray[pos].getQuantity().toString());
+                mAmountView.setText(Utilities.formatTaka(mInvoiceItemArray[pos].getAmount()));
             }
 
             public void bindViewForHeader() {
 
-                if (mItemList == null || mItemList.length == 0) {
+                if (mInvoiceItemArray == null || mInvoiceItemArray.length == 0) {
                     headerView.setVisibility(View.GONE);
                 }
 
@@ -387,23 +387,23 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
 
         @Override
         public int getItemCount() {
-            if (mItemList == null || mItemList.length == 0)
+            if (mInvoiceItemArray == null || mInvoiceItemArray.length == 0)
                 return HEADER_FOOTER_VIEW_COUNT;
-            if (mItemList.length > 0)
-                return 1 + mItemList.length + 1;
+            if (mInvoiceItemArray.length > 0)
+                return 1 + mInvoiceItemArray.length + 1;
             else return 0;
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (mItemList == null || mItemList.length == 0) {
+            if (mInvoiceItemArray == null || mInvoiceItemArray.length == 0) {
                 if (position == 0) return INVOICE_DETAILS_LIST_HEADER_VIEW;
                 else return INVOICE_DETAILS_LIST_FOOTER_VIEW;
             }
-            if (mItemList.length > 0) {
+            if (mInvoiceItemArray.length > 0) {
                 if (position == 0) return INVOICE_DETAILS_LIST_HEADER_VIEW;
 
-                else if (position == mItemList.length + 1)
+                else if (position == mInvoiceItemArray.length + 1)
                     return INVOICE_DETAILS_LIST_FOOTER_VIEW;
 
                 else return INVOICE_DETAILS_LIST_ITEM_VIEW;

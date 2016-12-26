@@ -277,7 +277,7 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
                 Toast.makeText(getActivity(), getString(R.string.no_contact_selected),
                         Toast.LENGTH_SHORT).show();
         } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CREATE_INVOICE_REVIEW)
-            ((RequestPaymentActivity) getActivity()).switchToSentRequestPaymentsFragment();
+            ((RequestPaymentActivity) getActivity()).switchToSentPaymentRequestsFragment();
     }
 
     @Override

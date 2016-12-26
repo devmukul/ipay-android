@@ -38,7 +38,7 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewMakePaymentDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.MoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetMoneyRequest;
@@ -68,7 +68,7 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
     private boolean clearListAfterLoading;
 
     // These variables hold the information needed to populate the review dialog
-    private List<ItemList> mItemList;
+    private List<InvoiceItem> mInvoiceItemList;
     private BigDecimal mAmount;
     private BigDecimal mVat;
     private String mReceiverName;
@@ -285,10 +285,10 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
                         mPhotoUri = mGetSingleInvoiceResponse.originatorProfile.getUserProfilePicture();
                         mTitle = mGetSingleInvoiceResponse.getTitle();
                         mVat = mGetSingleInvoiceResponse.getVat();
-                        mItemList = mGetSingleInvoiceResponse.getItemList();
+                        mInvoiceItemList = mGetSingleInvoiceResponse.getItemList();
 
                         ReviewMakePaymentDialog dialog = new ReviewMakePaymentDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
-                                mReceiverName, mPhotoUri, mAmount, mTitle, Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
+                                mReceiverName, mPhotoUri, mAmount, mTitle, Constants.SERVICE_ID_REQUEST_MONEY, mVat, mInvoiceItemList,
                                 new ReviewDialogFinishListener() {
                                     @Override
                                     public void onReviewFinish() {
@@ -359,7 +359,7 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
                 final String title = moneyRequest.getTitle();
                 final BigDecimal amount = moneyRequest.getAmount();
                 final BigDecimal vat = moneyRequest.getVat();
-                final List<ItemList> itemList = moneyRequest.getItemList();
+                final List<InvoiceItem> itemList = moneyRequest.getItemList();
 
                 mDescriptionView.setText(Utilities.formatTaka(amount));
                 mTimeView.setText(time);
@@ -377,7 +377,7 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
                         mPhotoUri = imageUrl;
                         mTitle = title;
                         mVat = vat;
-                        mItemList = itemList;
+                        mInvoiceItemList = itemList;
                         mDescription = description;
                         launchInvoiceHistoryFragment();
                     }
@@ -486,8 +486,8 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
             bundle.putString(Constants.TITLE, mTitle);
             bundle.putString(Constants.DESCRIPTION, mDescription);
 
-            if (mItemList != null)
-                bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
+            if (mInvoiceItemList != null)
+                bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mInvoiceItemList));
             else
                 bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
 
