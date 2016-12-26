@@ -599,12 +599,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
                 if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
                     statusDescriptionView.setTextColor(getResources().getColor(R.color.bottle_green));
-                    if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY
-                            || serviceId == Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT
-                            || serviceId == Constants.TRANSACTION_HISTORY_INVOICE) {
-                        if (statusCode != Constants.TRANSACTION_STATUS_ACCEPTED)
-                            mBalanceView.setVisibility(View.GONE);
-                    }
                 } else {
                     if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP
                             && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
@@ -790,7 +784,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         public void onReceive(Context context, Intent intent) {
             if (Constants.DEBUG)
                 Log.w("Broadcast received", "Transaction History");
-            
+
             refreshTransactionHistory();
         }
     }
