@@ -19,7 +19,7 @@ import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetSingleInvoiceRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetSinglePaymentRequestDetailRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PendingPaymentClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
@@ -69,7 +69,7 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
         requestPaymentID = getIntent().getLongExtra(Constants.REQUEST_ID, REQUEST_PAYMENT_TAG);
         if (requestPaymentID != REQUEST_PAYMENT_TAG) {
             switchedFromTransactionHistory = true;
-            getSingleInvoiceDetails();
+            getSinglePaymentRequestDetails();
         } else
             switchToSentRequestPaymentsFragment();
 
@@ -173,14 +173,14 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
         mFabNewRequestPayment.setVisibility(View.GONE);
     }
 
-    private void getSingleInvoiceDetails() {
+    private void getSinglePaymentRequestDetails() {
         if (mGetSingleRequestPaymentDetailsTask != null) {
             return;
         }
         mProgressDialog.setMessage(getString(R.string.loading));
         mProgressDialog.show();
 
-        String mUri = new GetSingleInvoiceRequestBuilder(requestPaymentID).getGeneratedUri();
+        String mUri = new GetSinglePaymentRequestDetailRequestBuilder(requestPaymentID).getGeneratedUri();
         mGetSingleRequestPaymentDetailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SINGLE_INVOICE,
                 mUri, this, this);
 

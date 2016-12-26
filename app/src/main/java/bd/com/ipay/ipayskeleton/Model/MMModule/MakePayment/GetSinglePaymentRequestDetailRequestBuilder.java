@@ -4,11 +4,11 @@ import android.net.Uri;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class GetSingleInvoiceRequestBuilder {
+public class GetSinglePaymentRequestDetailRequestBuilder {
     private final long invoiceId;
     private String generatedUri;
 
-    public GetSingleInvoiceRequestBuilder(long invoiceId) {
+    public GetSinglePaymentRequestDetailRequestBuilder(long invoiceId) {
         this.invoiceId = invoiceId;
         generateUri();
     }
