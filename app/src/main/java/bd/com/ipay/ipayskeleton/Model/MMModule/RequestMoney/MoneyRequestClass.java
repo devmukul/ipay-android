@@ -33,7 +33,9 @@ public class MoneyRequestClass {
         return requestTime;
     }
 
-    public String getTitle() { return title; }
+    public String getTitle() {
+        return title;
+    }
 
     public UserProfile getOriginatorProfile() {
         return originatorProfile;
@@ -57,16 +59,6 @@ public class MoneyRequestClass {
 
 
     public String getDescription() {
-
         return description;
-        /*String customDescription = "";
-
-        if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) {
-            customDescription = getOriginatorProfile().getUserName() + " requested " + amount + " Tk.";
-        } else if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) {
-            customDescription = description + ": " + getOriginatorProfile().getUserName() + " sent an invoice of " + amount + " Tk.";
-        }
-
-        return customDescription;*/
     }
 }
