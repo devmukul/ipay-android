@@ -242,9 +242,7 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
                         if (switchedFromTransactionHistory) {
-                            Intent intent = new Intent();
-                            getActivity().setResult(Activity.RESULT_OK, intent);
-                            getActivity().finish();
+                            finishLauncherActivity();
                         } else
                             getActivity().onBackPressed();
                     }
@@ -440,7 +438,8 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
 
         @Override
         public int getItemCount() {
-            if (mInvoiceItemList == null || mInvoiceItemList.size() == 0)  return HEADER_FOOTER_VIEW_COUNT;
+            if (mInvoiceItemList == null || mInvoiceItemList.size() == 0)
+                return HEADER_FOOTER_VIEW_COUNT;
             if (mInvoiceItemList.size() > 0)
                 // Count 2 added for header and footer view
                 return 1 + mInvoiceItemList.size() + 1;
@@ -463,6 +462,12 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
 
             return super.getItemViewType(position);
         }
+    }
+
+    private void finishLauncherActivity() {
+        Intent intent = new Intent();
+        getActivity().setResult(Activity.RESULT_OK, intent);
+        getActivity().finish();
     }
 }
 

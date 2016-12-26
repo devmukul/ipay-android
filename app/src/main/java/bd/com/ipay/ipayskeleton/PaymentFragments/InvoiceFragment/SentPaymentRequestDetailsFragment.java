@@ -178,9 +178,7 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
                     if (switchedFromTransactionHistory) {
-                        Intent intent = new Intent();
-                        getActivity().setResult(Activity.RESULT_OK, intent);
-                        getActivity().finish();
+                        finishLauncherActivity();
                     } else
                         ((RequestPaymentActivity) getActivity()).switchToSentPaymentRequestsFragment();
 
@@ -432,7 +430,12 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
 
             alertDialogue.show();
         }
+    }
 
+    private void finishLauncherActivity() {
+        Intent intent = new Intent();
+        getActivity().setResult(Activity.RESULT_OK, intent);
+        getActivity().finish();
     }
 }
 
