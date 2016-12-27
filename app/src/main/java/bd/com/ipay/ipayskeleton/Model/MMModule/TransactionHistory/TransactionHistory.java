@@ -89,7 +89,8 @@ public class TransactionHistory implements Parcelable {
     }
 
     public String getNetAmountFormatted(String userMobileNumber) {
-        if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null || receiverInfo == null)
+        if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null
+                || serviceID != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK && receiverInfo == null)
             return Utilities.formatTakaWithComma(netAmount);
 
         /* **** Service charge effect ****
