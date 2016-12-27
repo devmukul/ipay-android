@@ -88,7 +88,6 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
         View v = inflater.inflate(R.layout.fragment_recommendation_review, container, false);
 
         getActivity().setTitle(R.string.Introducer);
-
         Bundle bundle = getArguments();
 
         mRequestID = bundle.getLong(Constants.REQUEST_ID);
@@ -217,11 +216,15 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
             }
         });
 
-        if (mAddress != null) {
-            getDistrictList();
-        } else
-            setContentShown(true);
         return v;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (mAddress != null)
+            getDistrictList();
+        else setContentShown(true);
     }
 
     @Override
@@ -262,13 +265,12 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     }
 
     private void loadAddresses() {
-        if (mAddress == null) {
+        if (mAddress == null)
             mAddressView.setVisibility(View.GONE);
-        } else {
+        else
             mAddressView.setText(mAddress.toString(mThanaList, mDistrictList));
-        }
-        setContentShown(true);
 
+        if (this.isAdded()) setContentShown(true);
     }
 
     private void addFriend(String name, String phoneNumber, String relationship) {

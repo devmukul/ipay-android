@@ -67,7 +67,6 @@ public class NotificationActivity extends BaseActivity {
     }
 
     public void switchToRecommendationReviewFragment(Bundle bundle) {
-
         RecommendationReviewFragment recommendationReviewFragment = new RecommendationReviewFragment();
         recommendationReviewFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recommendationReviewFragment).commit();

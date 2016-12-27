@@ -582,7 +582,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private final BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("Broadcast received", "Home Fragment");
             refreshBalance();
         }
     };
