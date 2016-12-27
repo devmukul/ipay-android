@@ -676,4 +676,10 @@ public class Utilities {
             mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
         }
     }
+
+    public static void finishLauncherActivity(Activity activity) {
+        Intent intent = new Intent();
+        activity.setResult(Activity.RESULT_OK, intent);
+        activity.finish();
+    }
 }

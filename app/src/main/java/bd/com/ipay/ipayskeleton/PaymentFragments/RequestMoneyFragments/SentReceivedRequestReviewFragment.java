@@ -397,7 +397,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
                             if (switchedFromTransactionHistory) {
-                                finishLauncherActivity();
+                                Utilities.finishLauncherActivity(getActivity());
                             } else
                                 getActivity().onBackPressed();
                         }
@@ -438,13 +438,6 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
     @Override
     public void onPinLoadFinished(boolean isPinRequired) {
-
         this.isPinRequired = isPinRequired;
-    }
-
-    private void finishLauncherActivity() {
-        Intent intent = new Intent();
-        getActivity().setResult(Activity.RESULT_OK, intent);
-        getActivity().finish();
     }
 }

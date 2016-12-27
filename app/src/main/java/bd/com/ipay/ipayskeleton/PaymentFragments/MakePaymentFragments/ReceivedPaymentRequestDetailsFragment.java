@@ -147,7 +147,7 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
         mAcceptPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void rejectRequestMoney(long id) {
+    private void rejectPaymentRequest(long id) {
         if (mRejectRequestTask != null)
             return;
 
@@ -213,7 +213,7 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
                         if (switchedFromTransactionHistory)
-                            finishLauncherActivity();
+                            Utilities.finishLauncherActivity(getActivity());
                         else
                             getActivity().onBackPressed();
                     }
@@ -241,7 +241,7 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
                         if (switchedFromTransactionHistory)
-                            finishLauncherActivity();
+                            Utilities.finishLauncherActivity(getActivity());
                         else
                             getActivity().onBackPressed();
                     }
@@ -366,7 +366,7 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
                         rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                rejectRequestMoney(requestId);
+                                rejectPaymentRequest(requestId);
                             }
                         });
                         rejectDialog.show();
@@ -458,12 +458,6 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
 
             return super.getItemViewType(position);
         }
-    }
-
-    private void finishLauncherActivity() {
-        Intent intent = new Intent();
-        getActivity().setResult(Activity.RESULT_OK, intent);
-        getActivity().finish();
     }
 }
 
