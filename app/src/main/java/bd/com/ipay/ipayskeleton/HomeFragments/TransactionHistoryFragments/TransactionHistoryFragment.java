@@ -125,9 +125,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             }
         });
 
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
-                new IntentFilter(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST));
-
         return v;
     }
 
@@ -214,13 +211,12 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
 
         transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
-                new IntentFilter(Constants.TAG_REFRESH));
+                new IntentFilter(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST));
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
     }
 
@@ -239,7 +235,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     @Override
     public void onDestroyView() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
-
         super.onDestroyView();
     }
 
@@ -789,9 +784,6 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private class TransactionHistoryBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (Constants.DEBUG)
-                Log.w("Broadcast received", "Transaction History");
-
             refreshTransactionHistory();
         }
     }

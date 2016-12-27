@@ -79,11 +79,8 @@ public class DashBoardFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
 
-                if (tab.getPosition() == TRANSACTION_HISTORY_TAB) {
-                    LocalBroadcastManager refreshTransactionHistoryBroadcast = LocalBroadcastManager.getInstance(getActivity());
-                    Intent refreshIntent = new Intent(Constants.TAG_REFRESH);
-                    refreshTransactionHistoryBroadcast.sendBroadcast(refreshIntent);
-                }
+                if (tab.getPosition() == TRANSACTION_HISTORY_TAB)
+                    Utilities.sendBroadcast(getActivity(), Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST);
             }
 
             @Override

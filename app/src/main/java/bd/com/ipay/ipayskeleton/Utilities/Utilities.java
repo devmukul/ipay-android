@@ -16,6 +16,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -232,6 +233,11 @@ public class Utilities {
         } catch (IOException ex) {
             return null;
         }*/
+    }
+
+    public static void sendBroadcast(Context context, String intentFilter) {
+        Intent intent = new Intent(intentFilter);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     public static String streamToString(InputStream is) {

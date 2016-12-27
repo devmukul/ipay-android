@@ -129,9 +129,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             }
         });
 
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
-                new IntentFilter(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST));
-
         return view;
     }
 
@@ -209,7 +206,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
         transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
-                new IntentFilter(Constants.TAG_REFRESH));
+                new IntentFilter(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST));
     }
 
     @Override
@@ -234,7 +231,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     @Override
     public void onDestroyView() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
-
         super.onDestroyView();
     }
 
@@ -808,7 +804,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private class TransactionHistoryBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.w("Broadcast received", "Transaction History");
             refreshTransactionHistory();
         }
     }
