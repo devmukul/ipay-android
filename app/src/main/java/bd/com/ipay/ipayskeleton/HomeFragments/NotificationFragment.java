@@ -182,7 +182,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         GetMoneyAndPaymentRequest mGetMoneyAndPaymentRequest = new GetMoneyAndPaymentRequest();
         // Get only pending requests
-        mGetMoneyAndPaymentRequest.setStatus(Constants.REQUEST_STATUS_PROCESSING);
+        mGetMoneyAndPaymentRequest.setStatus(Constants.MONEY_REQUEST_STATUS_PROCESSING);
 
         Gson gson = new Gson();
         String json = gson.toJson(mGetMoneyAndPaymentRequest);

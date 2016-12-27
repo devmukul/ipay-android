@@ -202,7 +202,7 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
         }
 
         GetMoneyRequest mMoneyRequest = new GetMoneyRequest(pageCount,
-                Constants.SERVICE_ID_REQUEST_PAYMENT, Constants.REQUEST_STATUS_PROCESSING);
+                Constants.SERVICE_ID_REQUEST_PAYMENT, Constants.MONEY_REQUEST_STATUS_PROCESSING);
         Gson gson = new Gson();
         String json = gson.toJson(mMoneyRequest);
         mGetAllNotificationsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_REQUESTS,

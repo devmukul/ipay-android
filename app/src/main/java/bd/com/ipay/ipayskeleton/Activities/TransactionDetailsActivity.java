@@ -16,8 +16,6 @@ import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.Transa
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.SingleTransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.SingleTransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -41,7 +39,7 @@ public class TransactionDetailsActivity extends BaseActivity {
         setContentView(R.layout.activity_transaction_details);
         status = getIntent().getIntExtra(Constants.STATUS, 0);
 
-        if (status == Constants.REQUEST_STATUS_ALL) {
+        if (status == Constants.PAYMENT_REQUEST_STATUS_ALL) {
             requestID = getIntent().getStringExtra(Constants.MONEY_REQUEST_ID);
             getTransactionHistory();
         } else {

@@ -451,7 +451,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     toDate.setTime(fromDate.getTime());
                     toDate.add(Calendar.DATE, 1);
 
-                    String fromDateStr = String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year);
+                    String fromDateStr = String.format(Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year);
 
                     mFromDateButton.setText(fromDateStr);
                     mToDateButton.setText(fromDateStr);
@@ -474,7 +474,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                     // Simplest way to do this is to just show all transactions until 12:00 am in the next day.
                     toDate.add(Calendar.DATE, 1);
 
-                    String toDateStr = String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year);
+                    String toDateStr = String.format(Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year);
 
                     mToDateButton.setText(toDateStr);
                 }

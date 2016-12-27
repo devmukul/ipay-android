@@ -126,7 +126,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
 
         GetMoneyRequest mMoneyRequest = new GetMoneyRequest(pageCount,
                 Constants.SERVICE_ID_REQUEST_MONEY,
-                Constants.REQUEST_STATUS_PROCESSING);
+                Constants.MONEY_REQUEST_STATUS_PROCESSING);
         Gson gson = new Gson();
         String json = gson.toJson(mMoneyRequest);
         mPendingRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_REQUESTS_ME,
