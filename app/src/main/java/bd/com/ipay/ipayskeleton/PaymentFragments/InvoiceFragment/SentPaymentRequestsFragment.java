@@ -100,9 +100,8 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
         if (pendingPaymentClasses == null) {
             setContentShown(false);
             getPendingPaymentRequests();
-        } else {
+        } else
             setContentShown(true);
-        }
     }
 
     private void refreshPaymentRequestsPendingList() {
@@ -116,9 +115,8 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
     }
 
     private void getPendingPaymentRequests() {
-        if (mPendingInvoicesTask != null) {
+        if (mPendingInvoicesTask != null)
             return;
-        }
 
         GetPendingPaymentsRequest mGetPendingPaymentsRequest = new GetPendingPaymentsRequest(historyPageCount, Constants.SERVICE_ID_REQUEST_PAYMENT);
         Gson gson = new Gson();
@@ -273,7 +271,9 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
                             mVat = vat;
                             if (itemList != null)
                                 mInvoiceItemList = Arrays.asList(itemList);
-                            if (title.equals("Invoice")) mDescription = description;
+                            if (title.equals(getString(R.string.invoice)))
+                                mDescription = description;
+
                             else mDescription = descriptionofRequest;
                             mStatus = status;
                             mReceiverName = name;
@@ -286,7 +286,9 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
             }
 
             public void bindViewFooter() {
-                if (hasNext) loadMoreTextView.setText(R.string.load_more);
+                if (hasNext)
+                    loadMoreTextView.setText(R.string.load_more);
+
                 else loadMoreTextView.setText(R.string.no_more_results);
             }
         }
@@ -361,9 +363,9 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
         @Override
         public int getItemCount() {
 
-            if (pendingPaymentClasses == null || pendingPaymentClasses.size() == 0) {
+            if (pendingPaymentClasses == null || pendingPaymentClasses.size() == 0)
                 return 0;
-            } else {
+            else {
                 // Count 1 is added for load more footer
                 return 1 + pendingPaymentClasses.size();
             }

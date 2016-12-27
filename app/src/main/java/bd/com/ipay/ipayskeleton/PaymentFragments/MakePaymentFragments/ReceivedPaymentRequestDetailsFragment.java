@@ -86,17 +86,7 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
         switchedFromTransactionHistory = getActivity().getIntent()
                 .getBooleanExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, false);
 
-        Bundle bundle = getArguments();
-
-        this.requestId = bundle.getLong(Constants.MONEY_REQUEST_ID);
-        this.mReceiverMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
-        this.mReceiverName = bundle.getString(Constants.NAME);
-        this.mPhotoUri = bundle.getString(Constants.PHOTO_URI);
-        this.mVat = new BigDecimal(bundle.getString(Constants.VAT));
-        this.mTotal = new BigDecimal(bundle.getString(Constants.AMOUNT));
-        this.mTitle = bundle.getString(Constants.TITLE);
-        this.mDescription = bundle.getString(Constants.DESCRIPTION);
-        this.mInvoiceItemList = bundle.getParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG);
+        initializeValues();
 
         mReviewRecyclerView.setAdapter(paymentReviewAdapter);
 
@@ -109,7 +99,7 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
         super.onActivityCreated(savedInstanceState);
     }
 
-    private void attempAcceptPaymentRequestWithPinCheck() {
+    private void attemptAcceptPaymentRequestWithPinCheck() {
         if (this.isPinRequired) {
             final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
@@ -121,16 +111,28 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
             });
 
             pinInputDialogBuilder.build().show();
-        } else {
+        } else
             acceptPaymentRequest(requestId, null);
-        }
+    }
+
+    private void initializeValues() {
+        Bundle bundle = getArguments();
+
+        this.requestId = bundle.getLong(Constants.MONEY_REQUEST_ID);
+        this.mReceiverMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
+        this.mReceiverName = bundle.getString(Constants.NAME);
+        this.mPhotoUri = bundle.getString(Constants.PHOTO_URI);
+        this.mVat = new BigDecimal(bundle.getString(Constants.VAT));
+        this.mTotal = new BigDecimal(bundle.getString(Constants.AMOUNT));
+        this.mTitle = bundle.getString(Constants.TITLE);
+        this.mDescription = bundle.getString(Constants.DESCRIPTION);
+        this.mInvoiceItemList = bundle.getParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG);
     }
 
     private void acceptPaymentRequest(long id, String pin) {
 
-        if (mAcceptPaymentTask != null) {
+        if (mAcceptPaymentTask != null)
             return;
-        }
 
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_accepted));
         mProgressDialog.show();
@@ -146,9 +148,8 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
     }
 
     private void rejectRequestMoney(long id) {
-        if (mRejectRequestTask != null) {
+        if (mRejectRequestTask != null)
             return;
-        }
 
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_rejecting));
         mProgressDialog.show();
@@ -211,11 +212,9 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
-                        if (switchedFromTransactionHistory) {
-                            Intent intent = new Intent();
-                            getActivity().setResult(Activity.RESULT_OK, intent);
-                            getActivity().finish();
-                        } else
+                        if (switchedFromTransactionHistory)
+                            finishLauncherActivity();
+                        else
                             getActivity().onBackPressed();
                     }
 
@@ -241,9 +240,9 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
-                        if (switchedFromTransactionHistory) {
+                        if (switchedFromTransactionHistory)
                             finishLauncherActivity();
-                        } else
+                        else
                             getActivity().onBackPressed();
                     }
 
@@ -323,15 +322,13 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
 
             public void bindViewForHeader() {
 
-                if (mInvoiceItemList == null || mInvoiceItemList.size() == 0) {
+                if (mInvoiceItemList == null || mInvoiceItemList.size() == 0)
                     headerView.setVisibility(View.GONE);
-                }
 
-                if (mReceiverName == null || mReceiverName.isEmpty()) {
+                if (mReceiverName == null || mReceiverName.isEmpty())
                     mNameView.setVisibility(View.GONE);
-                } else {
+                else
                     mNameView.setText(mReceiverName);
-                }
 
                 mMobileNumberView.setText(mReceiverMobileNumber);
                 mProfileImageView.setProfilePicture(mPhotoUri, false);
@@ -347,16 +344,15 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
                 mServiceChargeView.setText(Utilities.formatTaka(mServiceCharge));
                 mTotalView.setText(Utilities.formatTaka(mTotal));
 
-                if (mTitle.equals("Invoice")) {
+                if (mTitle.equals("Invoice"))
                     mLinearLayoutDescriptionHolder.setVisibility(View.GONE);
-                } else {
+                else
                     mDescriptionView.setText(mDescription);
-                }
 
                 mAcceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        attempAcceptPaymentRequestWithPinCheck();
+                        attemptAcceptPaymentRequestWithPinCheck();
                     }
                 });
 
