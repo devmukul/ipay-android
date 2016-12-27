@@ -364,9 +364,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
                             if (switchedFromTransactionHistory) {
-                                Intent intent = new Intent();
-                                getActivity().setResult(Activity.RESULT_OK, intent);
-                                getActivity().finish();
+                                Utilities.finishLauncherActivity(getActivity());
                             } else
                                 getActivity().onBackPressed();
                         }

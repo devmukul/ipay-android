@@ -369,6 +369,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
             if (pendingMoneyRequests == null || pendingMoneyRequests.isEmpty())
                 return 0;
             else
+                // Count 1 is added for load more footer
                 return pendingMoneyRequests.size() + 1;
         }
 
