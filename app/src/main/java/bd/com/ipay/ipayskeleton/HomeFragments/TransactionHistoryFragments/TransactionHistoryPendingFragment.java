@@ -112,62 +112,13 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_pending_transaction_history, container, false);
+        View view = inflater.inflate(R.layout.fragment_pending_transaction_history, container, false);
         getActivity().setTitle(R.string.transaction_history);
 
-        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
-
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
-
-        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
-        mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
-
-        mTransactionHistoryAdapter = new TransactionHistoryAdapter();
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mTransactionHistoryRecyclerView.setLayoutManager(mLayoutManager);
-        mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAdapter);
-
-        serviceFilterLayout = (LinearLayout) v.findViewById(R.id.service_filters_layout);
-        dateFilterLayout = (LinearLayout) v.findViewById(R.id.date_filter_layout);
-        mClearServiceFilterButton = (Button) v.findViewById(R.id.button_clear_filter_service);
-
-        mFilterRequestMoney = (CheckBox) v.findViewById(R.id.filter_request_money);
-        mFilterAddMoney = (CheckBox) v.findViewById(R.id.filter_add_money);
-        mFilterWithdrawMoney = (CheckBox) v.findViewById(R.id.filter_withdraw_money);
-        mFilterTopUp = (CheckBox) v.findViewById(R.id.filter_top_up);
-        mFilterRequestPayment = (CheckBox) v.findViewById(R.id.filter_request_payment);
-
-        mCheckBoxTypeMap = new HashMap<>();
-        mCheckBoxTypeMap.put(mFilterRequestMoney, Constants.TRANSACTION_HISTORY_REQUEST_MONEY);
-        mCheckBoxTypeMap.put(mFilterAddMoney, Constants.TRANSACTION_HISTORY_ADD_MONEY);
-        mCheckBoxTypeMap.put(mFilterWithdrawMoney, Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY);
-        mCheckBoxTypeMap.put(mFilterTopUp, Constants.TRANSACTION_HISTORY_TOP_UP);
-        mCheckBoxTypeMap.put(mFilterRequestPayment, Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT);
-
-        mFromDateButton = (Button) v.findViewById(R.id.fromButton);
-        mToDateButton = (Button) v.findViewById(R.id.toButton);
-        clearDateFilterButton = (Button) v.findViewById(R.id.button_clear_filter_date);
-        filterByDateButton = (Button) v.findViewById(R.id.button_filter_date);
-
-        setActionsForServiceTypeFilter();
-        setActionsForDateFilter();
-
-        // Handle back press action when action mode is on.
-        v.setFocusableInTouchMode(true);
-        v.requestFocus();
-        v.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    if (dateFilterLayout.getVisibility() == View.VISIBLE)
-                        dateFilterLayout.setVisibility(View.GONE);
-                    else if (serviceFilterLayout.getVisibility() == View.VISIBLE)
-                        serviceFilterLayout.setVisibility(View.GONE);
-                    else return false;
-                }
-                return true;
-            }
-        });
+        initializeViews(view);
+        setupViewsAndActions();
+        handleBackPressWhenFilterIsOn(view);
 
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -181,7 +132,69 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
                 new IntentFilter(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST));
 
-        return v;
+        return view;
+    }
+
+    private void initializeViews(View view) {
+        mEmptyListTextView = (TextView) view.findViewById(R.id.empty_list_text);
+        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        mTransactionHistoryRecyclerView = (RecyclerView) view.findViewById(R.id.list_transaction_history);
+        serviceFilterLayout = (LinearLayout) view.findViewById(R.id.service_filters_layout);
+        dateFilterLayout = (LinearLayout) view.findViewById(R.id.date_filter_layout);
+        mClearServiceFilterButton = (Button) view.findViewById(R.id.button_clear_filter_service);
+
+        mFilterRequestMoney = (CheckBox) view.findViewById(R.id.filter_request_money);
+        mFilterAddMoney = (CheckBox) view.findViewById(R.id.filter_add_money);
+        mFilterWithdrawMoney = (CheckBox) view.findViewById(R.id.filter_withdraw_money);
+        mFilterTopUp = (CheckBox) view.findViewById(R.id.filter_top_up);
+        mFilterRequestPayment = (CheckBox) view.findViewById(R.id.filter_request_payment);
+
+        mFromDateButton = (Button) view.findViewById(R.id.fromButton);
+        mToDateButton = (Button) view.findViewById(R.id.toButton);
+        clearDateFilterButton = (Button) view.findViewById(R.id.button_clear_filter_date);
+        filterByDateButton = (Button) view.findViewById(R.id.button_filter_date);
+    }
+
+    private void setupViewsAndActions() {
+        setupRecyclerView();
+        setupCheckboxTypeMap();
+        setActionsForServiceTypeFilter();
+        setActionsForDateFilter();
+    }
+
+    private void setupRecyclerView() {
+        mTransactionHistoryAdapter = new TransactionHistoryAdapter();
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mTransactionHistoryRecyclerView.setLayoutManager(mLayoutManager);
+        mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAdapter);
+    }
+
+    private void setupCheckboxTypeMap() {
+        mCheckBoxTypeMap = new HashMap<>();
+        mCheckBoxTypeMap.put(mFilterRequestMoney, Constants.TRANSACTION_HISTORY_REQUEST_MONEY);
+        mCheckBoxTypeMap.put(mFilterAddMoney, Constants.TRANSACTION_HISTORY_ADD_MONEY);
+        mCheckBoxTypeMap.put(mFilterWithdrawMoney, Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY);
+        mCheckBoxTypeMap.put(mFilterTopUp, Constants.TRANSACTION_HISTORY_TOP_UP);
+        mCheckBoxTypeMap.put(mFilterRequestPayment, Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT);
+    }
+
+    private void handleBackPressWhenFilterIsOn(View view) {
+        // Handle back press action when action mode is on.
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    if (dateFilterLayout.getVisibility() == View.VISIBLE)
+                        dateFilterLayout.setVisibility(View.GONE);
+                    else if (serviceFilterLayout.getVisibility() == View.VISIBLE)
+                        serviceFilterLayout.setVisibility(View.GONE);
+                    else return false;
+                }
+                return true;
+            }
+        });
     }
 
     @Override
