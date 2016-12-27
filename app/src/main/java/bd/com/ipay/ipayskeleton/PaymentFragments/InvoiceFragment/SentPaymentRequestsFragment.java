@@ -99,7 +99,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
 
         if (pendingPaymentClasses == null) {
             setContentShown(false);
-            getInvoicesPendingRequests();
+            getPendingPaymentRequests();
         } else {
             setContentShown(true);
         }
@@ -109,13 +109,13 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
         if (Utilities.isConnectionAvailable(getActivity())) {
             historyPageCount = 0;
             clearListAfterLoading = true;
-            getInvoicesPendingRequests();
+            getPendingPaymentRequests();
 
         } else if (getActivity() != null)
             Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
     }
 
-    private void getInvoicesPendingRequests() {
+    private void getPendingPaymentRequests() {
         if (mPendingInvoicesTask != null) {
             return;
         }
@@ -299,7 +299,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
                     public void onClick(View v) {
                         if (hasNext) {
                             historyPageCount = historyPageCount + 1;
-                            getInvoicesPendingRequests();
+                            getPendingPaymentRequests();
                         }
                     }
                 });
