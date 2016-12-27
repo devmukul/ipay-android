@@ -81,8 +81,8 @@ public class DashBoardFragment extends Fragment {
 
                 if (tab.getPosition() == TRANSACTION_HISTORY_TAB) {
                     LocalBroadcastManager refreshTransactionHistoryBroadcast = LocalBroadcastManager.getInstance(getActivity());
-                    Intent i = new Intent(Constants.TAG_REFRESH);
-                    refreshTransactionHistoryBroadcast.sendBroadcast(i);
+                    Intent refreshIntent = new Intent(Constants.TAG_REFRESH);
+                    refreshTransactionHistoryBroadcast.sendBroadcast(refreshIntent);
                 }
             }
 
@@ -117,15 +117,11 @@ public class DashBoardFragment extends Fragment {
 
     private void setupCustomViewsForTabLayout() {
         homeTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-
         contactsTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-
         transactionHistoryTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
-
         payTabView = getActivity().getLayoutInflater().inflate(R.layout.view_single_tab_background, null);
 
         setTabViews();
-
     }
 
     private void setTabViews() {
@@ -135,17 +131,14 @@ public class DashBoardFragment extends Fragment {
         contactsTab.setCustomView(contactsTabView);
         transactionHistoryTab.setCustomView(transactionHistoryTabView);
         payTab.setCustomView(payTabView);
-
     }
 
     private void setTitle() {
         ((HomeActivity) getActivity()).getSupportActionBar().setDisplayUseLogoEnabled(true);
         ((HomeActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-
     }
 
     private void setTabIconsWithTexts() {
-
         ((ImageView) homeTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_walletw);
         ((ImageView) contactsTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_contact);
         ((ImageView) transactionHistoryTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_transaction);
@@ -155,7 +148,6 @@ public class DashBoardFragment extends Fragment {
         ((TextView) contactsTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.contacts));
         ((TextView) payTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.pay));
         ((TextView) transactionHistoryTabView.findViewById(R.id.tab_text)).setText(getActivity().getResources().getString(R.string.transaction));
-
     }
 
     private class DashBoardTabAdapter extends FragmentPagerAdapter {
