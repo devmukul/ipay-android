@@ -4,13 +4,13 @@ import java.util.List;
 
 public class TransactionHistoryResponse {
 
-    private List<TransactionHistoryClass> transactions;
+    private List<TransactionHistory> transactions;
     private boolean hasNext;
 
     public TransactionHistoryResponse() {
     }
 
-    public List<TransactionHistoryClass> getTransactions() {
+    public List<TransactionHistory> getTransactions() {
         return transactions;
     }
 

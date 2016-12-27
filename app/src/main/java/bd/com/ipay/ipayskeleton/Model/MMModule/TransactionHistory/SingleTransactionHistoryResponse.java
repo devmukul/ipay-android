@@ -2,16 +2,16 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory;
 
 public class SingleTransactionHistoryResponse {
 
-    private TransactionHistoryClass transaction;
+    private TransactionHistory transaction;
 
     public SingleTransactionHistoryResponse() {
     }
 
-    public TransactionHistoryClass getTransaction() {
+    public TransactionHistory getTransaction() {
         return transaction;
     }
 
-    public void setTransaction(TransactionHistoryClass transaction) {
+    public void setTransaction(TransactionHistory transaction) {
         this.transaction = transaction;
     }
 }
