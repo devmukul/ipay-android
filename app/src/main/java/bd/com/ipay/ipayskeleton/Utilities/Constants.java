@@ -5,9 +5,6 @@ import bd.com.ipay.ipayskeleton.BuildConfig;
 public class Constants {
     public static final String ApplicationTag = "iPay";
     public static final String ApplicationPackage = "bd.com.ipay.android";
-    public static final String PICTURE_FOLDER = "/iPay";
-    public static final String GENDER_MALE = "M";
-    public static final String GENDER_FEMALE = "F";
     public static final String USERID = "USERID";
     public static final String USER_BALANCE = "USER_BALANCE";
     public static final String USER_NAME = "USER_NAME";
@@ -29,7 +26,6 @@ public class Constants {
     public static final String SIGNED_OUT = "SIGNED OUT";
     public static final String DOCUMENT_URL = "DOCUMENT_URL";
     public static final String FILE_EXTENSION = "FILE_EXTENSION";
-    public static final String DEVICE_ID = "DEVICE_ID";
     public static final String TICKET_ID = "TICKET_ID";
     public static final String STRING_TO_ENCODE = "STRING_TO_ENCODE";
     public static final String ACTIVITY_TITLE = "ACTIVITY_TITLE";
@@ -40,15 +36,12 @@ public class Constants {
     public static final String STATUS = "STATUS";
     public static final String TAG = "TAG";
     public static final String INVOICE = "INVOICE";
-    public static final String INVOICE_ID = "INVOICE_ID";
     public static final String REQUEST = "REQUEST";
     public static final String RECOMMENDATION = "RECOMMENDATION";
     public static final String BUSINESS = "BUSINESS";
     public static final String TRANSACTION_DETAILS = "TRANSACTION_DETAILS";
     public static final String MONEY_REQUEST_ID = "MONEY REQUESTS ID";
-    public static final String MONEY_REQUEST_DETAILS = "MONEY REQUESTS DETAILS";
     public static final String MONEY_REQUEST_SERVICE_ID = "SERVICE_ID";
-    public static final String TAG_REFRESH = "TAG_REFRESH";
 
     public static final String VERIFIED_USERS_ONLY = "VERIFIED_USERS_ONLY";
     public static final String IPAY_MEMBERS_ONLY = "IPAY_MEMBERS_ONLY";
@@ -56,8 +49,6 @@ public class Constants {
     public static final String SHOW_INVITED_ONLY = "SHOW_INVITED_ONLY";
     public static final String SHOW_NON_INVITED_NON_MEMBERS_ONLY = "SHOW_NON_INVITED_NON_MEMBERS_ONLY";
     public static final String SHOW_ALL_MEMBERS = "SHOW_ALL_MEMBERS";
-    public static final String SEARCH_SPECIFIC_NUMBER_ONLY = "SEARCH_SPECIFIC_NUMBER_ONLY";
-    public static final String HIDE_STATUSES = "HIDE_STATUSES";
 
     public static final String SMS_READER_BROADCAST_RECEIVER_PDUS = "pdus";
     public static final String PROFILE_INFO_UPDATE_BROADCAST = "PROFILE_INFO_UPDATE_BROADCAST";
@@ -86,10 +77,7 @@ public class Constants {
     public static final String IS_IN_CONTACTS = "is-in-contacts";
     public static final String SWITCHED_FROM_TRANSACTION_HISTORY = "switched_from_transaction_history";
     public static final String MOBILE_ANDROID = "mobile-android-";
-    public static final String THANA = "thana";
-    public static final String DISTRICT = "district";
     public static final String MULTIPART_FORM_DATA_NAME = "file";
-    public static final String STARTING_DATE_OF_IPAY = "01/01/2016";
     public static final String MOBILE_NUMBER_TYPE = "mobile_number_type";
     public static final String OPERATOR_CODE = "operator_code";
     public static final String COUNTRY_CODE = "country_code";
@@ -106,11 +94,9 @@ public class Constants {
     public static final String DESIGNATION = "DESIGNATION";
     public static final String BUSINESS_NAME = "BUSINESS_NAME";
 
-    public static final String BUSINESS_EMAIL = "BUSINESS_EMAIL";
     public static final String BUSINESS_MOBILE_NUMBER = "BUSINESS_MOBILE_NUMBER";
     public static final String BUSINESS_TYPE = "BUSINESS_TYPE";
     public static final String BUSINESS_TYPE_LIST = "BUSINESS_TYPE_LIST";
-    public static final String SELECTED_BUSINESS_TYPE = "SELECTED_BUSINESS_TYPE";
     public static final String FATHERS_NAME = "FATHERS_NAME";
 
     public static final String MOTHERS_NAME = "MOTHERS_NAME";
@@ -372,7 +358,6 @@ public class Constants {
     public static final String URL_GET_TRUSTED_PERSONS = "trustednetwork/trustedpersons/";
     public static final String URL_POST_TRUSTED_PERSONS = "trustednetwork/trustedpersons/";
     public static final String URL_REMOVE_TRUSTED_PERSON = "trustednetwork/trustedpersons/";
-    public static final String URL_SET_RECOVERY_PERSON = "recovery";
 
     // User Rest
     public static final String URL_GET_USER_INFO = "user/userinfo";
