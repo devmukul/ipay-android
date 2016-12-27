@@ -178,7 +178,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             }
         });
 
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mTransactionHistoryBroadcastReceiver,
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
                 new IntentFilter(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST));
 
         return v;
@@ -220,7 +220,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
     @Override
     public void onDestroyView() {
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mTransactionHistoryBroadcastReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
 
         super.onDestroyView();
     }
@@ -512,7 +512,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 refreshTransactionHistory();
             }
         }
-
     }
 
     @Override
@@ -650,7 +649,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                     }
 
                 });
-
             }
 
             public void bindViewFooter() {
@@ -710,7 +708,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
             try {
                 if (holder instanceof NormalViewHolder) {
                     NormalViewHolder vh = (NormalViewHolder) holder;
@@ -794,15 +791,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
         startActivityForResult(intent, REQUEST_PAYMENT_REVIEW_REQUEST);
     }
-
-
-    private final BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d("Broadcast received", "Transaction History");
-            refreshTransactionHistory();
-        }
-    };
 
     private class TransactionHistoryBroadcastReceiver extends BroadcastReceiver {
         @Override
