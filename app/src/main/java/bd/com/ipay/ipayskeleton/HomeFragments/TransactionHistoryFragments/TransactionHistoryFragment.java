@@ -44,7 +44,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -60,7 +60,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
     private RecyclerView mTransactionHistoryRecyclerView;
     private TransactionHistoryAdapter mTransactionHistoryAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<TransactionHistoryClass> userTransactionHistoryClasses;
+    private List<TransactionHistory> userTransactionHistories;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
     private String mMobileNumber;
@@ -500,18 +500,18 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses, boolean hasNext) {
-        if (clearListAfterLoading || userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
-            userTransactionHistoryClasses = transactionHistoryClasses;
+    private void loadTransactionHistory(List<TransactionHistory> transactionHistories, boolean hasNext) {
+        if (clearListAfterLoading || userTransactionHistories == null || userTransactionHistories.size() == 0) {
+            userTransactionHistories = transactionHistories;
             clearListAfterLoading = false;
         } else {
-            List<TransactionHistoryClass> tempTransactionHistoryClasses;
-            tempTransactionHistoryClasses = transactionHistoryClasses;
-            userTransactionHistoryClasses.addAll(tempTransactionHistoryClasses);
+            List<TransactionHistory> tempTransactionHistories;
+            tempTransactionHistories = transactionHistories;
+            userTransactionHistories.addAll(tempTransactionHistories);
         }
 
         this.hasNext = hasNext;
-        if (userTransactionHistoryClasses != null && userTransactionHistoryClasses.size() > 0)
+        if (userTransactionHistories != null && userTransactionHistories.size() > 0)
             mEmptyListTextView.setVisibility(View.GONE);
         else
             mEmptyListTextView.setVisibility(View.VISIBLE);
@@ -591,7 +591,7 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
             }
 
             public void bindView(int pos) {
-                final TransactionHistoryClass transactionHistory = userTransactionHistoryClasses.get(pos);
+                final TransactionHistory transactionHistory = userTransactionHistories.get(pos);
 
                 final String description = transactionHistory.getShortDescription(mMobileNumber);
                 final String receiver = transactionHistory.getReceiver();
@@ -750,14 +750,14 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
         @Override
         public int getItemCount() {
             // Return +1 as there's an extra footer (Load more...)
-            if (userTransactionHistoryClasses != null && !userTransactionHistoryClasses.isEmpty())
-                return userTransactionHistoryClasses.size() + 1;
+            if (userTransactionHistories != null && !userTransactionHistories.isEmpty())
+                return userTransactionHistories.size() + 1;
             else return 0;
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (position == userTransactionHistoryClasses.size()) {
+            if (position == userTransactionHistories.size()) {
                 return FOOTER_VIEW;
             }
 

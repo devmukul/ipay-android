@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class TransactionHistoryClass implements Parcelable {
+public class TransactionHistory implements Parcelable {
 
     private final String originatingMobileNumber;
     private final String receiverInfo;
@@ -558,7 +558,7 @@ public class TransactionHistoryClass implements Parcelable {
 
     @Override
     public String toString() {
-        return "TransactionHistoryClass{" +
+        return "TransactionHistory{" +
                 "originatingMobileNumber='" + originatingMobileNumber + '\'' +
                 ", receiverInfo='" + receiverInfo + '\'' +
                 ", amount=" + amount +
@@ -604,7 +604,7 @@ public class TransactionHistoryClass implements Parcelable {
         dest.writeParcelable(this.additionalInfo, flags);
     }
 
-    protected TransactionHistoryClass(Parcel in) {
+    protected TransactionHistory(Parcel in) {
         this.originatingMobileNumber = in.readString();
         this.receiverInfo = in.readString();
         this.amount = in.readDouble();
@@ -624,15 +624,15 @@ public class TransactionHistoryClass implements Parcelable {
         this.additionalInfo = in.readParcelable(TransactionHistoryAdditionalInfo.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<TransactionHistoryClass> CREATOR = new Parcelable.Creator<TransactionHistoryClass>() {
+    public static final Parcelable.Creator<TransactionHistory> CREATOR = new Parcelable.Creator<TransactionHistory>() {
         @Override
-        public TransactionHistoryClass createFromParcel(Parcel source) {
-            return new TransactionHistoryClass(source);
+        public TransactionHistory createFromParcel(Parcel source) {
+            return new TransactionHistory(source);
         }
 
         @Override
-        public TransactionHistoryClass[] newArray(int size) {
-            return new TransactionHistoryClass[size];
+        public TransactionHistory[] newArray(int size) {
+            return new TransactionHistory[size];
         }
     };
 }

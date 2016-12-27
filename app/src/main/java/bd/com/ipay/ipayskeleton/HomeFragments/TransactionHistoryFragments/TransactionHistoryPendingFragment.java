@@ -49,7 +49,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -65,7 +65,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private RecyclerView mTransactionHistoryRecyclerView;
     private TransactionHistoryAdapter mTransactionHistoryAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<TransactionHistoryClass> userTransactionHistoryClasses;
+    private List<TransactionHistory> userTransactionHistories;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
     private String mMobileNumber;
@@ -498,18 +498,18 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses, boolean hasNext) {
-        if (clearListAfterLoading || userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
-            userTransactionHistoryClasses = transactionHistoryClasses;
+    private void loadTransactionHistory(List<TransactionHistory> transactionHistories, boolean hasNext) {
+        if (clearListAfterLoading || userTransactionHistories == null || userTransactionHistories.size() == 0) {
+            userTransactionHistories = transactionHistories;
             clearListAfterLoading = false;
         } else {
-            List<TransactionHistoryClass> tempTransactionHistoryClasses;
-            tempTransactionHistoryClasses = transactionHistoryClasses;
-            userTransactionHistoryClasses.addAll(tempTransactionHistoryClasses);
+            List<TransactionHistory> tempTransactionHistories;
+            tempTransactionHistories = transactionHistories;
+            userTransactionHistories.addAll(tempTransactionHistories);
         }
 
         this.hasNext = hasNext;
-        if (userTransactionHistoryClasses != null && userTransactionHistoryClasses.size() > 0)
+        if (userTransactionHistories != null && userTransactionHistories.size() > 0)
             mEmptyListTextView.setVisibility(View.GONE);
         else
             mEmptyListTextView.setVisibility(View.VISIBLE);
@@ -596,7 +596,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             }
 
             public void bindView(int pos) {
-                final TransactionHistoryClass transactionHistory = userTransactionHistoryClasses.get(pos);
+                final TransactionHistory transactionHistory = userTransactionHistories.get(pos);
 
                 final String description = transactionHistory.getShortDescription(mMobileNumber);
                 final String receiver = transactionHistory.getReceiver();
@@ -736,15 +736,15 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
         @Override
         public int getItemCount() {
-            if (userTransactionHistoryClasses != null && !userTransactionHistoryClasses.isEmpty())
-                return userTransactionHistoryClasses.size() + 1;
+            if (userTransactionHistories != null && !userTransactionHistories.isEmpty())
+                return userTransactionHistories.size() + 1;
             else return 0;
         }
 
         @Override
         public int getItemViewType(int position) {
 
-            if (position == userTransactionHistoryClasses.size()) {
+            if (position == userTransactionHistories.size()) {
                 return FOOTER_VIEW;
             }
 
@@ -773,7 +773,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         }
     }
 
-    private void launchRequestMoneyReviewPage(TransactionHistoryClass transactionHistory) {
+    private void launchRequestMoneyReviewPage(TransactionHistory transactionHistory) {
 
         Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
@@ -797,7 +797,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
     }
 
-    private void launchRequestPaymentReviewPage(TransactionHistoryClass transactionHistory) {
+    private void launchRequestPaymentReviewPage(TransactionHistory transactionHistory) {
         Intent intent = new Intent(getActivity(), RequestPaymentActivity.class);
         intent.putExtra(Constants.REQUEST_ID, transactionHistory.getId());
         intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);

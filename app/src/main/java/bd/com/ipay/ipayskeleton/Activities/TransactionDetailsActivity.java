@@ -15,7 +15,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionDetailsFragment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.SingleTransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.SingleTransactionHistoryResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -24,7 +24,7 @@ public class TransactionDetailsActivity extends BaseActivity {
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private SingleTransactionHistoryResponse mTransactionHistoryResponse;
 
-    private TransactionHistoryClass transactionHistoryClass;
+    private TransactionHistory transactionHistory;
     private int status;
     private String requestID = null;
 
@@ -43,11 +43,11 @@ public class TransactionDetailsActivity extends BaseActivity {
             requestID = getIntent().getStringExtra(Constants.MONEY_REQUEST_ID);
             getTransactionHistory();
         } else {
-            transactionHistoryClass = getIntent().getParcelableExtra(Constants.TRANSACTION_DETAILS);
+            transactionHistory = getIntent().getParcelableExtra(Constants.TRANSACTION_DETAILS);
             TransactionDetailsFragment transactionDetailsFragment = new TransactionDetailsFragment();
 
             Bundle bundle = new Bundle();
-            bundle.putParcelable(Constants.TRANSACTION_DETAILS, transactionHistoryClass);
+            bundle.putParcelable(Constants.TRANSACTION_DETAILS, transactionHistory);
             transactionDetailsFragment.setArguments(bundle);
 
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, transactionDetailsFragment).commit();
@@ -105,12 +105,12 @@ public class TransactionDetailsActivity extends BaseActivity {
 
                 try {
                     mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), SingleTransactionHistoryResponse.class);
-                    transactionHistoryClass = mTransactionHistoryResponse.getTransaction();
-                    if (transactionHistoryClass != null) {
+                    transactionHistory = mTransactionHistoryResponse.getTransaction();
+                    if (transactionHistory != null) {
                         TransactionDetailsFragment transactionDetailsFragment = new TransactionDetailsFragment();
 
                         Bundle bundle = new Bundle();
-                        bundle.putParcelable(Constants.TRANSACTION_DETAILS, transactionHistoryClass);
+                        bundle.putParcelable(Constants.TRANSACTION_DETAILS, transactionHistory);
                         transactionDetailsFragment.setArguments(bundle);
 
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, transactionDetailsFragment).commit();
