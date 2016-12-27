@@ -38,8 +38,7 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewMakePaymentDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequest;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.MoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetMoneyRequest;
@@ -47,7 +46,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class InvoicePaymentFragment extends ProgressFragment implements HttpResponseListener {
+public class ReceivedPaymentRequestsFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mGetAllNotificationsTask = null;
     private GetMoneyAndPaymentRequestResponse mGetMoneyAndPaymentRequestResponse;
@@ -69,7 +68,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
     private boolean clearListAfterLoading;
 
     // These variables hold the information needed to populate the review dialog
-    private List<ItemList> mItemList;
+    private List<InvoiceItem> mInvoiceItemList;
     private BigDecimal mAmount;
     private BigDecimal mVat;
     private String mReceiverName;
@@ -203,7 +202,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
         }
 
         GetMoneyRequest mMoneyRequest = new GetMoneyRequest(pageCount,
-                Constants.SERVICE_ID_REQUEST_INVOICE,Constants.REQUEST_STATUS_PROCESSING);
+                Constants.SERVICE_ID_REQUEST_PAYMENT, Constants.MONEY_REQUEST_STATUS_PROCESSING);
         Gson gson = new Gson();
         String json = gson.toJson(mMoneyRequest);
         mGetAllNotificationsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_REQUESTS,
@@ -234,7 +233,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             mGetAllNotificationsTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(),  R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -286,10 +285,10 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                         mPhotoUri = mGetSingleInvoiceResponse.originatorProfile.getUserProfilePicture();
                         mTitle = mGetSingleInvoiceResponse.getTitle();
                         mVat = mGetSingleInvoiceResponse.getVat();
-                        mItemList = mGetSingleInvoiceResponse.getItemList();
+                        mInvoiceItemList = mGetSingleInvoiceResponse.getItemList();
 
                         ReviewMakePaymentDialog dialog = new ReviewMakePaymentDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
-                                mReceiverName, mPhotoUri, mAmount, mTitle, Constants.SERVICE_ID_REQUEST_MONEY, mVat, mItemList,
+                                mReceiverName, mPhotoUri, mAmount, mTitle, Constants.SERVICE_ID_REQUEST_MONEY, mVat, mInvoiceItemList,
                                 new ReviewDialogFinishListener() {
                                     @Override
                                     public void onReviewFinish() {
@@ -360,7 +359,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                 final String title = moneyRequest.getTitle();
                 final BigDecimal amount = moneyRequest.getAmount();
                 final BigDecimal vat = moneyRequest.getVat();
-                final List<ItemList> itemList = moneyRequest.getItemList();
+                final List<InvoiceItem> itemList = moneyRequest.getItemList();
 
                 mDescriptionView.setText(Utilities.formatTaka(amount));
                 mTimeView.setText(time);
@@ -378,7 +377,7 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
                         mPhotoUri = imageUrl;
                         mTitle = title;
                         mVat = vat;
-                        mItemList = itemList;
+                        mInvoiceItemList = itemList;
                         mDescription = description;
                         launchInvoiceHistoryFragment();
                     }
@@ -486,9 +485,13 @@ public class InvoicePaymentFragment extends ProgressFragment implements HttpResp
             bundle.putString(Constants.AMOUNT, mAmount.toString());
             bundle.putString(Constants.TITLE, mTitle);
             bundle.putString(Constants.DESCRIPTION, mDescription);
-            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
 
-            ((PaymentActivity) getActivity()).switchToInvoiceHistoryFragment(bundle);
+            if (mInvoiceItemList != null)
+                bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mInvoiceItemList));
+            else
+                bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
+
+            ((PaymentActivity) getActivity()).switchToReceivedPaymentRequestDetailsFragment(bundle);
         }
     }
 

@@ -26,7 +26,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -40,7 +40,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
     private PaymentReviewAdapter paymentReviewAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private final List<ItemList> mItemList;
+    private final List<InvoiceItem> mInvoiceItemList;
     private final BigDecimal mAmount;
     private BigDecimal mNetAmount;
     private final BigDecimal mVat;
@@ -55,7 +55,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
     private final ReviewDialogFinishListener mReviewFinishListener;
 
     public ReviewMakePaymentDialog(Context context, long moneyRequestId, String receiverMobileNumber, String receiverName, String photoUri, BigDecimal amount,
-                                   String title, int serviceID, BigDecimal vat, List<ItemList> itemList, ReviewDialogFinishListener reviewFinishListener) {
+                                   String title, int serviceID, BigDecimal vat, List<InvoiceItem> itemList, ReviewDialogFinishListener reviewFinishListener) {
         super(context);
         this.requestId = moneyRequestId;
         this.mReceiverMobileNumber = receiverMobileNumber;
@@ -66,7 +66,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
         this.mTitle = title;
         this.mReviewFinishListener = reviewFinishListener;
         this.mServiceID = serviceID;
-        this.mItemList = itemList;
+        this.mInvoiceItemList = itemList;
 
         initializeView();
     }
@@ -223,9 +223,9 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
                 // Decrease pos by 1 as there is a header view now.
                 pos = pos - 1;
 
-                mItemNameView.setText(mItemList.get(pos).getItem());
-                mQuantityView.setText(mItemList.get(pos).getQuantity().toString());
-                mAmountView.setText(Utilities.formatTaka(mItemList.get(pos).getAmount()));
+                mItemNameView.setText(mInvoiceItemList.get(pos).getItem());
+                mQuantityView.setText(mInvoiceItemList.get(pos).getQuantity().toString());
+                mAmountView.setText(Utilities.formatTaka(mInvoiceItemList.get(pos).getAmount()));
             }
 
             public void bindViewForHeader() {
@@ -316,26 +316,26 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
 
         @Override
         public int getItemCount() {
-            if (mItemList == null) return 0;
-            if (mItemList.size() == 0) return 2;
-            if (mItemList.size() > 0)
-                return 1 + mItemList.size() + 1;
+            if (mInvoiceItemList == null) return 0;
+            if (mInvoiceItemList.size() == 0) return 2;
+            if (mInvoiceItemList.size() > 0)
+                return 1 + mInvoiceItemList.size() + 1;
             else return 0;
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (mItemList == null) return super.getItemViewType(position);
+            if (mInvoiceItemList == null) return super.getItemViewType(position);
 
-            if (mItemList.size() == 0) {
+            if (mInvoiceItemList.size() == 0) {
                 if (position == 0) return NOTIFICATION_REVIEW_LIST_HEADER_VIEW;
                 else return NOTIFICATION_REVIEW_LIST_FOOTER_VIEW;
 
             }
 
-            if (mItemList.size() > 0) {
+            if (mInvoiceItemList.size() > 0) {
                 if (position == 0) return NOTIFICATION_REVIEW_LIST_HEADER_VIEW;
-                else if (position == mItemList.size() + 1)
+                else if (position == mInvoiceItemList.size() + 1)
                     return NOTIFICATION_REVIEW_LIST_FOOTER_VIEW;
                 else return NOTIFICATION_REVIEW_LIST_ITEM_VIEW;
             }

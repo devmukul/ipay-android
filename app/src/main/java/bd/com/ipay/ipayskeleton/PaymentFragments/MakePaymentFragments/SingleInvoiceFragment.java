@@ -28,7 +28,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.MoneyAndPaymentRequest;
@@ -56,7 +56,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
     private HttpRequestPostAsyncTask mRejectRequestTask = null;
     private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
 
-    private List<ItemList> mItemList;
+    private List<InvoiceItem> mInvoiceItemList;
     private BigDecimal mAmount;
     private BigDecimal mNetAmount;
     private BigDecimal mVat;
@@ -222,7 +222,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
                         mRequestId = mGetSingleInvoiceResponse.getId();
                         mAmount = mGetSingleInvoiceResponse.getAmount();
                         mVat = mGetSingleInvoiceResponse.getVat();
-                        mItemList = mGetSingleInvoiceResponse.getItemList();
+                        mInvoiceItemList = mGetSingleInvoiceResponse.getItemList();
 
                         mReviewRecyclerView.setAdapter(paymentReviewAdapter);
 
@@ -352,13 +352,13 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
                 // Decrease pos by 1 as there is a header view now.
                 pos = pos - 1;
 
-                mItemNameView.setText(mItemList.get(pos).getItem());
-                mQuantityView.setText(mItemList.get(pos).getQuantity().toString());
-                mAmountView.setText(Utilities.formatTaka(mItemList.get(pos).getAmount()));
+                mItemNameView.setText(mInvoiceItemList.get(pos).getItem());
+                mQuantityView.setText(mInvoiceItemList.get(pos).getQuantity().toString());
+                mAmountView.setText(Utilities.formatTaka(mInvoiceItemList.get(pos).getAmount()));
             }
 
             public void bindViewForHeader() {
-                if (mItemList == null || mItemList.size() == 0) {
+                if (mInvoiceItemList == null || mInvoiceItemList.size() == 0) {
                     headerView.setVisibility(View.GONE);
                 }
 
@@ -479,26 +479,26 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
 
         @Override
         public int getItemCount() {
-            if (mItemList == null) return 0;
-            if (mItemList.size() == 0) return 2;
-            if (mItemList.size() > 0)
-                return 1 + mItemList.size() + 1;
+            if (mInvoiceItemList == null) return 0;
+            if (mInvoiceItemList.size() == 0) return 2;
+            if (mInvoiceItemList.size() > 0)
+                return 1 + mInvoiceItemList.size() + 1;
             else return 0;
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (mItemList == null) return super.getItemViewType(position);
+            if (mInvoiceItemList == null) return super.getItemViewType(position);
 
-            if (mItemList.size() == 0) {
+            if (mInvoiceItemList.size() == 0) {
                 if (position == 0) return NOTIFICATION_REVIEW_LIST_HEADER_VIEW;
                 else return NOTIFICATION_REVIEW_LIST_FOOTER_VIEW;
 
             }
 
-            if (mItemList.size() > 0) {
+            if (mInvoiceItemList.size() > 0) {
                 if (position == 0) return NOTIFICATION_REVIEW_LIST_HEADER_VIEW;
-                else if (position == mItemList.size() + 1)
+                else if (position == mInvoiceItemList.size() + 1)
                     return NOTIFICATION_REVIEW_LIST_FOOTER_VIEW;
                 else return NOTIFICATION_REVIEW_LIST_ITEM_VIEW;
             }

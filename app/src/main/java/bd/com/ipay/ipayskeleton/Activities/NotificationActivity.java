@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessEmployeeReviewFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.InvoiceHistoryFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.ReceivedPaymentRequestDetailsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.SentReceivedRequestReviewFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.RecommendationReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -21,7 +21,7 @@ public class NotificationActivity extends BaseActivity {
         String tag = getIntent().getStringExtra(Constants.TAG);
 
         if (tag != null && tag.equals(Constants.INVOICE))
-            switchToInvoiceHistoryFragment(getIntent().getExtras());
+            switchToReceivedPaymentRequestDetailsFragment(getIntent().getExtras());
         else if (tag != null && tag.equals(Constants.REQUEST))
             switchToReceivedRequestReviewFragment();
         else if (tag != null && tag.equals(Constants.RECOMMENDATION))
@@ -50,11 +50,11 @@ public class NotificationActivity extends BaseActivity {
                 .replace(R.id.fragment_container, HomeActivity.mNotificationFragment).commit();
     }
 
-    public void switchToInvoiceHistoryFragment(Bundle bundle) {
+    public void switchToReceivedPaymentRequestDetailsFragment(Bundle bundle) {
 
-        InvoiceHistoryFragment invoiceHistoryFragment = new InvoiceHistoryFragment();
-        invoiceHistoryFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, invoiceHistoryFragment).commit();
+        ReceivedPaymentRequestDetailsFragment receivedPaymentRequestDetailsFragment = new ReceivedPaymentRequestDetailsFragment();
+        receivedPaymentRequestDetailsFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, receivedPaymentRequestDetailsFragment).commit();
     }
 
     private void switchToReceivedRequestReviewFragment() {

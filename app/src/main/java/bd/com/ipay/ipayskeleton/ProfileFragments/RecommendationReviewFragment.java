@@ -63,7 +63,8 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     private String mIntroductionMessage;
 
     private AddressClass mAddress;
-    private boolean mIsInContacts;
+
+    private boolean isInContacts;
 
     private List<Thana> mThanaList;
     private List<District> mDistrictList;
@@ -97,7 +98,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
         mMothersname = bundle.getString(Constants.MOTHERS_NAME);
         mFathersName = bundle.getString(Constants.FATHERS_NAME);
         mAddress = (AddressClass) getArguments().getSerializable(Constants.ADDRESS);
-        mIsInContacts = bundle.getBoolean(Constants.IS_IN_CONTACTS, false);
+        isInContacts = bundle.getBoolean(Constants.IS_IN_CONTACTS, false);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mSenderNameView = (TextView) v.findViewById(R.id.textview_name);
@@ -129,7 +130,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
             mMothersNameView.setText(mMothersname);
         }
 
-        if (!mIsInContacts) {
+        if (!isInContacts) {
             mAddInContactsCheckBox.setVisibility(View.VISIBLE);
             mAddInContactsCheckBox.setChecked(true);
         }

@@ -123,27 +123,6 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/divider_space"
-                android:background="@color/colorDivider" />
-
-            <CheckBox
-                android:id="@+id/filter_opening_balance"
-                style="@style/TransactionHistoryFilterCheckboxStyle"
-                android:text="@string/filter_opening_balance" />
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/divider_space"
-                android:background="@color/colorDivider" />
-
-            <CheckBox
-                android:id="@+id/filter_send_money"
-                style="@style/TransactionHistoryFilterCheckboxStyle"
-                android:text="@string/filter_send_money" />
-
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/divider_space"
@@ -190,29 +169,9 @@
                 android:background="@color/colorDivider" />
 
             <CheckBox
-                android:id="@+id/filter_payment"
-                style="@style/TransactionHistoryFilterCheckboxStyle"
-                android:text="@string/filter_payment" />
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/divider_space"
-                android:background="@color/colorDivider" />
-
-            <CheckBox
                 android:id="@+id/filter_request_payment"
                 style="@style/TransactionHistoryFilterCheckboxStyle"
                 android:text="@string/filter_request_payment" />
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/divider_space"
-                android:background="@color/colorDivider" />
-
-            <CheckBox
-                android:id="@+id/filter_education"
-                style="@style/TransactionHistoryFilterCheckboxStyle"
-                android:text="@string/filter_education" />
 
             <View
                 android:layout_width="wrap_content"

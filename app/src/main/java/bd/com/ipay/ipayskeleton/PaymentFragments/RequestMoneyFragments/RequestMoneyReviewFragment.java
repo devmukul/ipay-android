@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.AddFriendAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -47,6 +48,9 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
     private String mPhotoUri;
     private String mDescription;
     private boolean mIsInContacts;
+    private String mTitle;
+
+    private boolean isInContacts;
 
     private ProfileImageView mProfileImageView;
     private TextView mNameView;
@@ -72,7 +76,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
 
-        mIsInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
+        isInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
@@ -106,7 +110,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
         mAmountView.setText(Utilities.formatTaka(mAmount));
 
-        if (!mIsInContacts) {
+        if (!isInContacts){
             mAddInContactsCheckBox.setVisibility(View.VISIBLE);
             mAddInContactsCheckBox.setChecked(true);
         }
@@ -121,9 +125,9 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
             }
         });
 
-        if (!Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
-                && !Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
+        if (!Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
+                && !Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
+            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_REQUEST_MONEY);
         else
             attemptGetServiceCharge();
         return v;
@@ -205,7 +209,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
     @Override
     public int getServiceID() {
-        return Constants.SERVICE_ID_SEND_MONEY;
+        return Constants.SERVICE_ID_REQUEST_MONEY;
     }
 
     @Override

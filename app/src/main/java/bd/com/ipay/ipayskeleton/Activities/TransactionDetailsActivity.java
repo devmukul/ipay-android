@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,9 +15,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionDetailsFragment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.SingleTransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.SingleTransactionHistoryResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -25,26 +24,30 @@ public class TransactionDetailsActivity extends BaseActivity {
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private SingleTransactionHistoryResponse mTransactionHistoryResponse;
 
-    private TransactionHistoryClass transactionHistoryClass;
+    private TransactionHistory transactionHistory;
     private int status;
     private String requestID = null;
+
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mProgressDialog = new ProgressDialog(this);
+
         setContentView(R.layout.activity_transaction_details);
         status = getIntent().getIntExtra(Constants.STATUS, 0);
 
-        if (status == Constants.REQUEST_STATUS_ACCEPTED) {
+        if (status == Constants.PAYMENT_REQUEST_STATUS_ALL) {
             requestID = getIntent().getStringExtra(Constants.MONEY_REQUEST_ID);
             getTransactionHistory();
         } else {
-            transactionHistoryClass = getIntent().getParcelableExtra(Constants.TRANSACTION_DETAILS);
+            transactionHistory = getIntent().getParcelableExtra(Constants.TRANSACTION_DETAILS);
             TransactionDetailsFragment transactionDetailsFragment = new TransactionDetailsFragment();
 
             Bundle bundle = new Bundle();
-            bundle.putParcelable(Constants.TRANSACTION_DETAILS, transactionHistoryClass);
+            bundle.putParcelable(Constants.TRANSACTION_DETAILS, transactionHistory);
             transactionDetailsFragment.setArguments(bundle);
 
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, transactionDetailsFragment).commit();
@@ -69,6 +72,9 @@ public class TransactionDetailsActivity extends BaseActivity {
         if (mTransactionHistoryTask != null) {
             return;
         }
+        mProgressDialog.setMessage(getString(R.string.loading));
+        mProgressDialog.show();
+
         SingleTransactionHistoryRequest mTransactionHistoryRequest;
         mTransactionHistoryRequest = new SingleTransactionHistoryRequest(requestID);
 
@@ -99,12 +105,12 @@ public class TransactionDetailsActivity extends BaseActivity {
 
                 try {
                     mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), SingleTransactionHistoryResponse.class);
-                    transactionHistoryClass = mTransactionHistoryResponse.getTransaction();
-                    if (transactionHistoryClass != null) {
+                    transactionHistory = mTransactionHistoryResponse.getTransaction();
+                    if (transactionHistory != null) {
                         TransactionDetailsFragment transactionDetailsFragment = new TransactionDetailsFragment();
 
                         Bundle bundle = new Bundle();
-                        bundle.putParcelable(Constants.TRANSACTION_DETAILS, transactionHistoryClass);
+                        bundle.putParcelable(Constants.TRANSACTION_DETAILS, transactionHistory);
                         transactionDetailsFragment.setArguments(bundle);
 
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, transactionDetailsFragment).commit();
@@ -122,6 +128,7 @@ public class TransactionDetailsActivity extends BaseActivity {
                     Toast.makeText(this, R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
             }
 
+            mProgressDialog.dismiss();
             mTransactionHistoryTask = null;
         }
     }

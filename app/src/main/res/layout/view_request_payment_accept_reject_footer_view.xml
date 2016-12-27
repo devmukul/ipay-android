@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical">
 
@@ -77,46 +77,58 @@
             style="@style/TextViewInfoColorPrimaryReview" />
     </LinearLayout>
 
-    <View style="@style/Divider" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/value4"
+        android:background="@color/colorDividerGapGray" />
 
-    <LinearLayout style="@style/LinearLayoutHolder">
+    <LinearLayout
+        android:id="@+id/layout_description_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical">
 
         <TextView
-            style="@style/TextViewInfoLabel"
-            android:text="@string/status" />
+            style="@style/ListHeaderStyle"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.5"
+            android:text="@string/description" />
 
         <TextView
-            android:id="@+id/status"
-            style="@style/TextViewInfoColorPrimary" />
-
+            android:id="@+id/textview_description"
+            style="@style/TextViewDescription" />
     </LinearLayout>
 
-    <View style="@style/Divider" />
-
-    <android.support.design.widget.TextInputLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_horizontal_margin_card">
+        android:background="@android:color/white"
+        android:paddingBottom="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_horizontal_margin">
 
-        <EditText
-            android:id="@+id/pin"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/button_reject"
+            style="@style/PrimaryMediumButtonRejectNoMargin"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_pin"
-            android:inputType="numberPassword"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:visibility="gone">
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/value4"
+            android:layout_weight="1"
+            android:text="@string/reject" />
 
-            <requestFocus />
-        </EditText>
-    </android.support.design.widget.TextInputLayout>
-
-    <Button
-        android:id="@+id/button_cancel"
-        style="@style/PrimaryMediumButtonReject"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/cancel"
-        android:visibility="gone" />
+        <Button
+            android:id="@+id/button_accept"
+            style="@style/ButtonStyleMedium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/value4"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_weight="1"
+            android:text="@string/accept" />
+    </LinearLayout>
 </LinearLayout>

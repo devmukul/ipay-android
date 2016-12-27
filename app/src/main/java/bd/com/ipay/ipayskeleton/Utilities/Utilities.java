@@ -455,6 +455,13 @@ public class Utilities {
         return String.format("\u09F3%s", numberFormat.format(amount));
     }
 
+    public static String formatTakaWithSignAndComma(String sign, double amount) {
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMaximumFractionDigits(2);
+        return sign + String.format("\u09F3%s", numberFormat.format(amount));
+    }
+
     public static String takaWithComma(double amount) {
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
         numberFormat.setMinimumFractionDigits(2);
@@ -668,5 +675,11 @@ public class Utilities {
         } catch (android.content.ActivityNotFoundException anfe) {
             mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
         }
+    }
+
+    public static void finishLauncherActivity(Activity activity) {
+        Intent intent = new Intent();
+        activity.setResult(Activity.RESULT_OK, intent);
+        activity.finish();
     }
 }

@@ -214,6 +214,17 @@
         <item name="android:gravity">left</item>
     </style>
 
+    <style name="TextViewInfoLabelWithNoMargin" parent="@android:style/Widget.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingTop">@dimen/value5</item>
+        <item name="android:paddingBottom">@dimen/value5</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:textSize">@dimen/text_size_small_medium</item>
+        <item name="android:layout_weight">0.5</item>
+        <item name="android:gravity">left</item>
+    </style>
+
     <style name="TextViewInfoLabelReview" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
@@ -270,6 +281,18 @@
         <item name="android:gravity">right</item>
     </style>
 
+    <style name="TextViewInfoColorPrimaryWithNoMargin" parent="@android:style/Widget.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingTop">@dimen/value5</item>
+        <item name="android:paddingBottom">@dimen/value5</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:textSize">@dimen/text_size_small_medium</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:layout_weight">0.5</item>
+        <item name="android:gravity">right</item>
+    </style>
+
     <style name="TextViewInfoColorPrimaryReview" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
@@ -316,7 +339,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
-        <item name="android:layout_marginBottom">@dimen/value6</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
     </style>
@@ -324,8 +346,6 @@
     <style name="TextViewUserInfoSecondary" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
-        <item name="android:textSize">@dimen/text_size_small_medium</item>
     </style>
 
     <style name="TextViewUserInfoSecondaryWidthWrapContent" parent="@android:style/Widget.TextView">
@@ -624,6 +644,14 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:textSize">@dimen/text_size_small_medium</item>
+        <item name="android:paddingTop">@dimen/value10</item>
+        <item name="android:paddingBottom">@dimen/value10</item>
+    </style>
+
+    <style name="ReviewItemLabelSmall" parent="@android:style/Widget.TextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:paddingTop">@dimen/value10</item>
         <item name="android:paddingBottom">@dimen/value10</item>
     </style>

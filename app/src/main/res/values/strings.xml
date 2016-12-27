@@ -413,7 +413,7 @@
     <string name="transaction_rejected">Rejected</string>
     <string name="save_not_send">Saved but not send</string>
     <string name="pending">Pending</string>
-    <string name="processed">Processed</string>
+    <string name="completed">Completed</string>
     <string name="filter_by_date">Filter by date</string>
     <string name="filter_by_service">Filter by service</string>
     <string name="filter_by_event">Filter by event</string>
@@ -476,10 +476,12 @@
     <string name="identification_documents">Identification Documents</string>
     <string name="action_search">Search</string>
     <string name="filter_send_money">Money Sent/Received</string>
+    <string name="filter_request_money">Request Money</string>
     <string name="filter_add_money">Money Added</string>
     <string name="filter_withdraw_money">Money Withdrawn</string>
     <string name="filter_top_up">Top Up</string>
     <string name="filter_payment">Payment</string>
+    <string name="filter_request_payment">Request Payment</string>
     <string name="filter_opening_balance">Opening Balance</string>
     <string name="filter_education">Education</string>
     <string name="basic_info">Basic Information</string>
@@ -617,6 +619,7 @@
     <string name="failed_add_friend">Add friend failed</string>
     <string name="failed_invite_friend">Invite friend failed</string>
     <string name="failed_update_friend">Update friend failed</string>
+    <string name="confirm_request_accept">Are you sure you want to accept this request?</string>
     <string name="confirm_request_rejection">Are you sure you want to reject this request?</string>
     <string name="contacts_sync_failed">Contacts Sync Failed</string>
     <string name="business_contacts_sync_failed">Fail to fetch business contacts</string>
