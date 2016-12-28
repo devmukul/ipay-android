@@ -113,130 +113,125 @@
                 android:background="@color/colorDivider" />
         </LinearLayout>
 
-        <ScrollView
+        <LinearLayout
+            android:id="@+id/service_filters_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-            <LinearLayout
-                android:id="@+id/service_filters_layout"
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:background="@color/colorDivider" />
+
+            <CheckBox
+                android:id="@+id/filter_opening_balance"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:text="@string/filter_opening_balance" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:background="@color/colorDivider" />
+
+            <CheckBox
+                android:id="@+id/filter_send_money"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:text="@string/filter_send_money" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:background="@color/colorDivider" />
+
+            <CheckBox
+                android:id="@+id/filter_request_money"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:text="@string/filter_request_money" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:background="@color/colorDivider" />
+
+            <CheckBox
+                android:id="@+id/filter_add_money"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:text="@string/filter_add_money" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:background="@color/colorDivider" />
+
+            <CheckBox
+                android:id="@+id/filter_withdraw_money"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:text="@string/filter_withdraw_money" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:background="@color/colorDivider" />
+
+            <CheckBox
+                android:id="@+id/filter_top_up"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:text="@string/filter_top_up" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:background="@color/colorDivider" />
+
+            <CheckBox
+                android:id="@+id/filter_payment"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:text="@string/filter_payment" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:background="@color/colorDivider" />
+
+            <CheckBox
+                android:id="@+id/filter_request_payment"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:text="@string/filter_request_payment" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:background="@color/colorDivider" />
+
+            <CheckBox
+                android:id="@+id/filter_education"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:text="@string/filter_education" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:background="@color/colorDivider" />
+
+            <Button
+                android:id="@+id/button_clear_filter_service"
+                style="@style/PrimaryMediumButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:background="@android:color/white"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:text="@string/clear_filter" />
 
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:background="@color/colorDivider" />
 
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/divider_space"
-                    android:background="@color/colorDivider" />
-
-                <CheckBox
-                    android:id="@+id/filter_opening_balance"
-                    style="@style/TransactionHistoryFilterCheckboxStyle"
-                    android:text="@string/filter_opening_balance" />
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/divider_space"
-                    android:background="@color/colorDivider" />
-
-                <CheckBox
-                    android:id="@+id/filter_send_money"
-                    style="@style/TransactionHistoryFilterCheckboxStyle"
-                    android:text="@string/filter_send_money" />
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/divider_space"
-                    android:background="@color/colorDivider" />
-
-                <CheckBox
-                    android:id="@+id/filter_request_money"
-                    style="@style/TransactionHistoryFilterCheckboxStyle"
-                    android:text="@string/filter_request_money" />
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/divider_space"
-                    android:background="@color/colorDivider" />
-
-                <CheckBox
-                    android:id="@+id/filter_add_money"
-                    style="@style/TransactionHistoryFilterCheckboxStyle"
-                    android:text="@string/filter_add_money" />
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/divider_space"
-                    android:background="@color/colorDivider" />
-
-                <CheckBox
-                    android:id="@+id/filter_withdraw_money"
-                    style="@style/TransactionHistoryFilterCheckboxStyle"
-                    android:text="@string/filter_withdraw_money" />
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/divider_space"
-                    android:background="@color/colorDivider" />
-
-                <CheckBox
-                    android:id="@+id/filter_top_up"
-                    style="@style/TransactionHistoryFilterCheckboxStyle"
-                    android:text="@string/filter_top_up" />
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/divider_space"
-                    android:background="@color/colorDivider" />
-
-                <CheckBox
-                    android:id="@+id/filter_payment"
-                    style="@style/TransactionHistoryFilterCheckboxStyle"
-                    android:text="@string/filter_payment" />
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/divider_space"
-                    android:background="@color/colorDivider" />
-
-                <CheckBox
-                    android:id="@+id/filter_request_payment"
-                    style="@style/TransactionHistoryFilterCheckboxStyle"
-                    android:text="@string/filter_request_payment" />
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/divider_space"
-                    android:background="@color/colorDivider" />
-
-                <CheckBox
-                    android:id="@+id/filter_education"
-                    style="@style/TransactionHistoryFilterCheckboxStyle"
-                    android:text="@string/filter_education" />
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/divider_space"
-                    android:background="@color/colorDivider" />
-
-                <Button
-                    android:id="@+id/button_clear_filter_service"
-                    style="@style/PrimaryMediumButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/clear_filter" />
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/divider_space"
-                    android:background="@color/colorDivider" />
-
-            </LinearLayout>
-        </ScrollView>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/content_container"
