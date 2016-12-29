@@ -197,7 +197,6 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
             return;
         }
 
-
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_SEND_INVOICE)) {
