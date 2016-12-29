@@ -50,13 +50,16 @@ public class MoneyAndPaymentRequest implements Notification {
     }
 
     public String getNotificationTitle() {
-        if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) return "Payment Request";
-        else if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) return "Money Request";
+        if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE
+                || serviceID == Constants.SERVICE_ID_REQUEST_PAYMENT)
+            return "Payment Request";
+        else if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
+            return "Money Request";
         else return title;
     }
 
     public String getTitle() {
-       return title;
+        return title;
     }
 
     public UserProfile getOriginatorProfile() {
