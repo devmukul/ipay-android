@@ -67,7 +67,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     private TextView mDescriptionView;
     private TextView mAmountView;
     private TextView mServiceChargeView;
-    private TextView mNetReceivedView;
+    private TextView mNetAmountView;
     private Button mSendMoneyButton;
     private CheckBox mAddInContactsCheckBox;
 
@@ -92,7 +92,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
-        mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
+        mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
         mSendMoneyButton = (Button) v.findViewById(R.id.button_send_money);
         mAddInContactsCheckBox = (CheckBox) v.findViewById(R.id.add_in_contacts);
 
@@ -227,7 +227,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mNetReceivedView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
     }
 
     @Override

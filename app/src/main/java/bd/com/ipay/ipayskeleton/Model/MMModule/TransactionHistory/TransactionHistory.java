@@ -13,7 +13,7 @@ public class TransactionHistory implements Parcelable {
     private final double amount;
     private final double fee;
     private final double netAmount;
-    private final double balance;
+    private final Double balance;
     private final int serviceID;
     private final int statusCode;
     private final String purpose;
@@ -170,7 +170,7 @@ public class TransactionHistory implements Parcelable {
         return netAmount;
     }
 
-    public double getBalance() {
+    public Double getBalance() {
         return balance;
     }
 
@@ -591,7 +591,12 @@ public class TransactionHistory implements Parcelable {
         dest.writeDouble(this.amount);
         dest.writeDouble(this.fee);
         dest.writeDouble(this.netAmount);
-        dest.writeDouble(this.balance);
+        if (this.balance != null)
+            dest.writeDouble(this.balance);
+        else {
+            Double balance = new Double(0.0);
+            dest.writeDouble(balance);
+        }
         dest.writeInt(this.serviceID);
         dest.writeInt(this.statusCode);
         dest.writeString(this.purpose);

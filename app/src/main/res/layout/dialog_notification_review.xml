@@ -135,7 +135,7 @@
                     android:text="@string/net_amount" />
 
                 <TextView
-                    android:id="@+id/textview_net_received"
+                    android:id="@+id/textview_net_amount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/ReviewItemStyle.Dialog"

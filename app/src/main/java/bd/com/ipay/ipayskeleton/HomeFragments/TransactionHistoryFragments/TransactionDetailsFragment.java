@@ -90,7 +90,8 @@ public class TransactionDetailsFragment extends Fragment {
         feeTextView.setText(Utilities.formatTaka(transactionHistory.getFee()));
         transactionIDTextView.setText(transactionHistory.getTransactionID());
         netAmountTextView.setText(Utilities.formatTaka(transactionHistory.getNetAmount()));
-        balanceTextView.setText(Utilities.formatTaka(transactionHistory.getBalance()));
+        if (transactionHistory.getBalance() != null)
+            balanceTextView.setText(Utilities.formatTaka(transactionHistory.getBalance()));
         mobileNumberTextView.setText(ProfileInfoCacheManager.getMobileNumber());
 
         int serviceId = transactionHistory.getServiceID();

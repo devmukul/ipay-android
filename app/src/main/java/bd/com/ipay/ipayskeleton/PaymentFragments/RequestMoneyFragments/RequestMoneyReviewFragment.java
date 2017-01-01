@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.AddFriendAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -60,7 +59,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
     private View mDescriptionHolder;
     private TextView mAmountView;
     private TextView mServiceChargeView;
-    private TextView mNetReceivedView;
+    private TextView mNetAmountView;
     private Button mRequestMoneyButton;
     private CheckBox mAddInContactsCheckBox;
 
@@ -86,7 +85,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mDescriptionHolder = v.findViewById(R.id.layout_description_holder);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
-        mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
+        mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
         mRequestMoneyButton = (Button) v.findViewById(R.id.button_request_money);
         mAddInContactsCheckBox = (CheckBox) v.findViewById(R.id.add_in_contacts);
 
@@ -220,7 +219,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mNetReceivedView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
     }
 
     @Override
