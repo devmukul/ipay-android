@@ -11,10 +11,6 @@ import com.google.gson.Gson;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.os.Handler;
-
-import java.util.logging.LogRecord;
-
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -43,7 +39,7 @@ public class MyApplication extends Application implements HttpResponseListener {
     private static MyApplication myApplicationInstance;
 
     // 5 Minutes inactive time
-    private final long AUTO_LOGOUT_TIMEOUT = 30000;
+    private final long AUTO_LOGOUT_TIMEOUT = 60*1000;
 
     @Override
     public void onCreate() {
