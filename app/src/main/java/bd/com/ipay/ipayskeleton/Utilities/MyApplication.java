@@ -183,7 +183,6 @@ public class MyApplication extends Application implements HttpResponseListener {
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
-
             try {
                 mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
@@ -202,7 +201,6 @@ public class MyApplication extends Application implements HttpResponseListener {
             mLogoutTask = null;
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_REFRESH_TOKEN)) {
-
             try {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     // Do nothing
