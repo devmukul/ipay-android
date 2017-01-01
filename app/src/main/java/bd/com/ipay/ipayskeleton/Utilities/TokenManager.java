@@ -46,6 +46,10 @@ public class TokenManager {
         return token;
     }
 
+    public static void invalidateToken() {
+        token = "";
+    }
+
     public static void setToken(String token) {
         TokenManager.token = token;
     }

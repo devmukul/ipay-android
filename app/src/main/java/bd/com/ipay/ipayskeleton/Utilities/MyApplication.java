@@ -140,12 +140,9 @@ public class MyApplication extends Application implements HttpResponseListener {
     }
 
     private void forceLogoutForInactivity() {
-        if (Utilities.isConnectionAvailable(getApplicationContext()))
-            attemptLogout();
+        if (Utilities.isConnectionAvailable(getApplicationContext())) attemptLogout();
+        else launchLoginPage(getString(R.string.please_log_in_again));
 
-        else {
-            launchLoginPage(getString(R.string.please_log_in_again));
-        }
     }
 
     // Launch login page for token timeout/un-authorized/logout called for user inactivity
@@ -166,8 +163,14 @@ public class MyApplication extends Application implements HttpResponseListener {
             startActivity(intent);
         }
 
+        clearTokenAndTimer();
+    }
+
+    // Clear token and timer after logout
+    public void clearTokenAndTimer() {
         stopUserInactivityDetectorTimer();
         stopTokenTimer();
+        TokenManager.invalidateToken();
     }
 
     @Override
@@ -185,13 +188,11 @@ public class MyApplication extends Application implements HttpResponseListener {
         if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
             try {
                 mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
+                launchLoginPage(getApplicationContext().getString(R.string.please_log_in_again));
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    launchLoginPage(getApplicationContext().getString(R.string.please_log_in_again));
-
-                } else {
+                // Launched login page for both success and failure case. Handled the failure here.
+                if (result.getStatus() != Constants.HTTP_RESPONSE_STATUS_OK)
                     Toast.makeText(getApplicationContext(), mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
-                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -202,11 +203,8 @@ public class MyApplication extends Application implements HttpResponseListener {
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_REFRESH_TOKEN)) {
             try {
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    // Do nothing
-                } else {
+                if (result.getStatus() != Constants.HTTP_RESPONSE_STATUS_OK)
                     launchLoginPage(getString(R.string.please_log_in_again));
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

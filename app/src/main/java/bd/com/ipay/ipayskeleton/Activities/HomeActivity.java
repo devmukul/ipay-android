@@ -376,7 +376,6 @@ public class HomeActivity extends BaseActivity
                 }
 
                 break;
-
         }
     }
 
@@ -497,6 +496,7 @@ public class HomeActivity extends BaseActivity
                                 attemptLogout();
                             } else {
                                 ProfileInfoCacheManager.setLoggedInStatus(false);
+                                ((MyApplication) HomeActivity.this.getApplication()).clearTokenAndTimer();
                                 finish();
                             }
                         }
@@ -602,6 +602,7 @@ public class HomeActivity extends BaseActivity
                             ((MyApplication) this.getApplication()).launchLoginPage(null);
                         } else {
                             // Exit the application
+                            ((MyApplication) this.getApplication()).clearTokenAndTimer();
                             finish();
                         }
                     } else {
