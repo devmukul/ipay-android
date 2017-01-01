@@ -77,7 +77,6 @@ public class MyApplication extends Application implements HttpResponseListener {
         if (this.mUserInactiveTimer != null) {
             this.mUserInactiveTimer.cancel();
         }
-
     }
 
     public void attemptLogout() {
@@ -145,7 +144,7 @@ public class MyApplication extends Application implements HttpResponseListener {
     private void forceLogoutForInactivity() {
         if (Utilities.isConnectionAvailable(getApplicationContext()))
             attemptLogout();
-
+        
         else {
             launchLoginPage(getString(R.string.please_log_in_again));
         }
@@ -215,7 +214,6 @@ public class MyApplication extends Application implements HttpResponseListener {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-
             }
 
             mRefreshTokenAsyncTask = null;
