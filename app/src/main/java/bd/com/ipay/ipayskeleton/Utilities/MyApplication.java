@@ -27,7 +27,8 @@ public class MyApplication extends Application implements HttpResponseListener {
     // Variables for user inactivity
     private Timer mUserInactiveTimer;
     private TimerTask mUserInactiveTimerTask;
-    public boolean logoutForInactivity;
+
+    public boolean isAppInBackground = false;
 
     // Variables for token timer
     private Timer mTokenTimer;
@@ -39,7 +40,7 @@ public class MyApplication extends Application implements HttpResponseListener {
     private static MyApplication myApplicationInstance;
 
     // 5 Minutes inactive time
-    private final long AUTO_LOGOUT_TIMEOUT = 60*1000;
+    private final long AUTO_LOGOUT_TIMEOUT = 5 * 60 * 1000;
 
     @Override
     public void onCreate() {
@@ -60,8 +61,6 @@ public class MyApplication extends Application implements HttpResponseListener {
         this.mUserInactiveTimer = new Timer();
         this.mUserInactiveTimerTask = new TimerTask() {
             public void run() {
-
-                MyApplication.this.logoutForInactivity = true;
                 forceLogoutForInactivity();
             }
         };
@@ -79,7 +78,6 @@ public class MyApplication extends Application implements HttpResponseListener {
             this.mUserInactiveTimer.cancel();
         }
 
-        this.logoutForInactivity = false;
     }
 
     public void attemptLogout() {
@@ -147,8 +145,10 @@ public class MyApplication extends Application implements HttpResponseListener {
     private void forceLogoutForInactivity() {
         if (Utilities.isConnectionAvailable(getApplicationContext()))
             attemptLogout();
-        else
+
+        else {
             launchLoginPage(getString(R.string.please_log_in_again));
+        }
     }
 
     // Launch login page for token timeout/un-authorized/logout called for user inactivity
@@ -159,13 +159,16 @@ public class MyApplication extends Application implements HttpResponseListener {
         // Return from here
         if (!loggedIn) return;
 
-        ProfileInfoCacheManager.setLoggedInStatus(false);
-        Intent intent = new Intent(getApplicationContext(), SignupOrLoginActivity.class);
-        if (message != null)
-            intent.putExtra(Constants.MESSAGE, message);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        if (!isAppInBackground) {
+            ProfileInfoCacheManager.setLoggedInStatus(false);
 
-        startActivity(intent);
+            Intent intent = new Intent(getApplicationContext(), SignupOrLoginActivity.class);
+            if (message != null)
+                intent.putExtra(Constants.MESSAGE, message);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+
         stopUserInactivityDetectorTimer();
         stopTokenTimer();
     }
@@ -190,6 +193,7 @@ public class MyApplication extends Application implements HttpResponseListener {
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     launchLoginPage(getApplicationContext().getString(R.string.please_log_in_again));
+
                 } else {
                     Toast.makeText(getApplicationContext(), mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }

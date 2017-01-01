@@ -20,6 +20,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onResume();
 
         MyApplication myApp = (MyApplication) this.getApplication();
+        myApp.isAppInBackground = false;
         myApp.stopUserInactivityDetectorTimer();
     }
 
@@ -27,6 +28,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
 
+        ((MyApplication) this.getApplication()).isAppInBackground = true;
         ((MyApplication) this.getApplication()).startUserInactivityDetectorTimer();
     }
 
