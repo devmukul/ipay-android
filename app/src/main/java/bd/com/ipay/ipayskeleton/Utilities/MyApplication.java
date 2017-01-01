@@ -57,7 +57,6 @@ public class MyApplication extends Application implements HttpResponseListener {
     }
 
     public void startUserInactivityDetectorTimer() {
-
         this.mUserInactiveTimer = new Timer();
         this.mUserInactiveTimerTask = new TimerTask() {
             public void run() {
@@ -122,7 +121,6 @@ public class MyApplication extends Application implements HttpResponseListener {
     }
 
     private void refreshToken() {
-
         if (Constants.DEBUG)
             Log.w("Token_Timer", "Refresh token called");
 
@@ -144,7 +142,7 @@ public class MyApplication extends Application implements HttpResponseListener {
     private void forceLogoutForInactivity() {
         if (Utilities.isConnectionAvailable(getApplicationContext()))
             attemptLogout();
-        
+
         else {
             launchLoginPage(getString(R.string.please_log_in_again));
         }
@@ -187,7 +185,6 @@ public class MyApplication extends Application implements HttpResponseListener {
         if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
 
             try {
-
                 mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
