@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.Api;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -20,9 +19,8 @@ import org.apache.http.util.EntityUtils;
 import java.io.File;
 import java.nio.charset.Charset;
 
-import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -88,13 +86,8 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Htt
 
         if (result != null) {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
-                // Set the preference first
-                ProfileInfoCacheManager.setLoggedInStatus(false);
-
-                // In case of un-authorization go to login activity
-                Intent intent = new Intent(mContext, SignupOrLoginActivity.class);
-                mContext.startActivity(intent);
-
+                MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
+                myApplicationInstance.launchLoginPage(null);
             } else
                 mHttpResponseListener.httpResponseReceiver(result);
 

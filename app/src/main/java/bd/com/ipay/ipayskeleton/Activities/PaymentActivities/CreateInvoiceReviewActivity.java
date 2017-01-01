@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
@@ -21,7 +22,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class CreateInvoiceReviewActivity extends BaseActivity {
+public class CreateInvoiceReviewActivity extends BaseActivity implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
