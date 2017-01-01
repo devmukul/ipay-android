@@ -599,25 +599,23 @@ public class TransactionHistoryFragment extends ProgressFragment implements Http
                 final String responseTime = Utilities.formatDateWithTime(transactionHistory.getResponseTime());
                 final String netAmountWithSign = transactionHistory.getNetAmountFormatted(transactionHistory.getAdditionalInfo().getUserMobileNumber());
                 final Integer statusCode = transactionHistory.getStatusCode();
-                final double balance = transactionHistory.getBalance();
+                final Double balance = transactionHistory.getBalance();
                 final String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();
                 final int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
                 final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
                 final int serviceId = transactionHistory.getServiceID();
                 final String status = transactionHistory.getStatus();
 
-                mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
                 statusDescriptionView.setText(status);
-                mBalanceView.setVisibility(View.VISIBLE);
+
+                if (balance != null) {
+                    mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
+                    mBalanceView.setVisibility(View.VISIBLE);
+                } else mBalanceView.setVisibility(View.GONE);
 
                 if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
                     statusDescriptionView.setTextColor(getResources().getColor(R.color.bottle_green));
                 } else {
-                    if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP
-                            && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
-                            && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY) {
-                        mBalanceView.setVisibility(View.GONE);
-                    }
                     statusDescriptionView.setTextColor(getResources().getColor(R.color.background_red));
                 }
 

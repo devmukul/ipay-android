@@ -707,6 +707,7 @@
     <string name="session">Session</string>
     <string name="student_name">Student Name</string>
     <string name="net_amount">Net Amount</string>
+    <string name="recipient_net_amount">Recipient will get</string>
     <string name="status">Status</string>
     <string name="time">Time</string>
     <string name="topup_rollback">TopUp Rollback</string>

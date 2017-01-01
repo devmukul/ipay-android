@@ -68,7 +68,8 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     private View mDescriptionHolder;
     private TextView mAmountView;
     private TextView mServiceChargeView;
-    private TextView mNetReceivedView;
+    private TextView mNetAmountTitleView;
+    private TextView mNetAmountView;
     private Button mRejectButton;
     private Button mAcceptButton;
     private Button mCancelButton;
@@ -103,7 +104,8 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mDescriptionHolder = v.findViewById(R.id.layout_description_holder);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
-        mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
+        mNetAmountTitleView = (TextView) v.findViewById(R.id.net_amount_title);
+        mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
         mAddInContactsCheckBox = (CheckBox) v.findViewById(R.id.add_in_contacts);
 
         mAcceptButton = (Button) v.findViewById(R.id.button_accept);
@@ -112,9 +114,10 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-        if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST)
+        if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST) {
             getActivity().setTitle(R.string.send_money);
-        else
+            mNetAmountTitleView.setText(getString(R.string.recipient_net_amount));
+        } else
             getActivity().setTitle(R.string.request_money);
 
         mProfileImageView.setProfilePicture(mPhotoUri, false);
@@ -431,7 +434,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mNetReceivedView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
     }
 
     @Override
