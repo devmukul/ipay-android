@@ -619,6 +619,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                     mReceiverView.setVisibility(View.VISIBLE);
                     mReceiverView.setText(receiver);
                 } else mReceiverView.setVisibility(View.GONE);
+
                 netAmountView.setText(netAmountWithSign);
                 mTimeView.setText(responseTime);
 
