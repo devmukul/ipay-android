@@ -31,8 +31,8 @@ public class MyApplication extends Application implements HttpResponseListener {
     public boolean isAppInBackground = false;
 
     // Variables for token timer
-    private Timer mTokenTimer;
-    private TimerTask mTokenTimerTask;
+    private static Timer mTokenTimer;
+    private static TimerTask mTokenTimerTask;
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private HttpRequestPostAsyncTask mRefreshTokenAsyncTask = null;
     private LogoutResponse mLogOutResponse;
@@ -57,6 +57,9 @@ public class MyApplication extends Application implements HttpResponseListener {
     }
 
     public void startUserInactivityDetectorTimer() {
+        if (mUserInactiveTimer != null)
+            mUserInactiveTimer.cancel();
+
         this.mUserInactiveTimer = new Timer();
         this.mUserInactiveTimerTask = new TimerTask() {
             public void run() {
@@ -69,12 +72,9 @@ public class MyApplication extends Application implements HttpResponseListener {
     }
 
     public void stopUserInactivityDetectorTimer() {
-        if (this.mUserInactiveTimerTask != null) {
-            this.mUserInactiveTimerTask.cancel();
-        }
-
         if (this.mUserInactiveTimer != null) {
             this.mUserInactiveTimer.cancel();
+            this.mUserInactiveTimer = null;
         }
     }
 
