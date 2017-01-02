@@ -1,6 +1,6 @@
 package bd.com.ipay.ipayskeleton.Api;
 
-import android.os.CountDownTimer;
+import android.content.Context;
 import android.util.Log;
 
 import org.apache.http.Header;
@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -20,6 +21,7 @@ public class HttpResponseParser {
     private HttpResponseObject mHttpResponseObject = null;
     private HttpResponse mHttpResponse;
     private String API_COMMAND = "";
+    private Context mContext;
 
     public HttpResponseParser() {
     }
@@ -46,15 +48,10 @@ public class HttpResponseParser {
                     TokenManager.setToken(header.getValue());
                     TokenManager.setiPayTokenTimeInMs(Utilities.getTimeFromBase64Token(TokenManager.getToken()));
 
-                    CountDownTimer tokenTimer = TokenManager.getTokenTimer();
+                    // Start the timer for token.
+                    MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
+                    myApplicationInstance.startTokenTimer();
 
-                    if (tokenTimer != null) {
-                        if (Constants.DEBUG)
-                            Log.w("Token_Timer", "Starting... " + TokenManager.getiPayTokenTimeInMs());
-
-                        tokenTimer.cancel();
-                        tokenTimer.start();
-                    }
                 } else if (header.getName().equals(Constants.REFRESH_TOKEN)) {
                     TokenManager.setRefreshToken(header.getValue());
                     if (Constants.DEBUG)
@@ -96,5 +93,9 @@ public class HttpResponseParser {
 
     public void setHttpResponse(HttpResponse mHttpResponse) {
         this.mHttpResponse = mHttpResponse;
+    }
+
+    public void setContext(Context mContext) {
+        this.mContext = mContext;
     }
 }

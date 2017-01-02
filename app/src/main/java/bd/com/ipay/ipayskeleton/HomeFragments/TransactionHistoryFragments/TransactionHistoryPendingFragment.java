@@ -609,17 +609,17 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
                 final int serviceId = transactionHistory.getServiceID();
 
-                mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
-                mBalanceView.setVisibility(View.VISIBLE);
-
-                if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY)
-                    mBalanceView.setVisibility(View.GONE);
+                if (balance !=null) {
+                    mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
+                    mBalanceView.setVisibility(View.VISIBLE);
+                } else mBalanceView.setVisibility(View.GONE);
 
                 mTransactionDescriptionView.setText(description);
                 if (receiver != null && !receiver.equals("")) {
                     mReceiverView.setVisibility(View.VISIBLE);
                     mReceiverView.setText(receiver);
                 } else mReceiverView.setVisibility(View.GONE);
+
                 netAmountView.setText(netAmountWithSign);
                 mTimeView.setText(responseTime);
 

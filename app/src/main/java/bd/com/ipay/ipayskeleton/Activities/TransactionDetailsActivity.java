@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionDetailsFragment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.SingleTransactionHistoryRequest;
@@ -19,7 +20,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHis
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class TransactionDetailsActivity extends BaseActivity {
+public class TransactionDetailsActivity extends BaseActivity implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private SingleTransactionHistoryResponse mTransactionHistoryResponse;

@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,18 +20,13 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
-import bd.com.ipay.ipayskeleton.Api.AddFriendAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
-import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
@@ -65,7 +59,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     private TextView mDescriptionView;
     private TextView mAmountView;
     private TextView mServiceChargeView;
-    private TextView mNetReceivedView;
+    private TextView mNetAmountView;
     private TextView mRefNumberView;
 
     private View mLinearLayoutDescriptionHolder;
@@ -94,7 +88,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
-        mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
+        mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
         mRefNumberView = (TextView) v.findViewById(R.id.textview_reference_number);
         mLinearLayoutRefNumberHolder = v.findViewById(R.id.reference_number_holder);
         mRefNumberDivider = v.findViewById(R.id.reference_number_divider);
@@ -222,7 +216,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mNetReceivedView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
     }
 
     @Override

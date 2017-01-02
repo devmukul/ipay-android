@@ -54,7 +54,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
     private TextView mTitleView;
     private TextView mAmountView;
     private TextView mServiceChargeView;
-    private TextView mNetReceivedView;
+    private TextView mNetAmountView;
     private EditText mPinField;
 
     public RequestMoneyReviewDialog(Context context, long moneyRequestId, String receiverMobileNumber,
@@ -90,7 +90,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
         mTitleView = (TextView) v.findViewById(R.id.textview_title);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
-        mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
+        mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
         mPinField = (EditText) v.findViewById(R.id.pin);
 
         mProfileImageView.setProfilePicture(mPhotoUri, false);
@@ -111,7 +111,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
 
         mAmountView.setText(Utilities.formatTaka(mAmount));
         mServiceChargeView.setText(Utilities.formatTaka(mServiceCharge));
-        mNetReceivedView.setText(Utilities.formatTaka(mAmount.subtract(mServiceCharge)));
+        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(mServiceCharge)));
 
         positiveText(R.string.send_money);
         negativeText(R.string.cancel);

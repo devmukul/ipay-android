@@ -1,10 +1,7 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,7 +13,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
-import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -26,6 +22,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 
 public class SecuritySettingsFragment extends Fragment implements HttpResponseListener {
 
@@ -39,7 +36,6 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
     private IconifiedTextViewWithButton logoutHeader;
 
     private ProgressDialog mProgressDialog;
-    private SharedPreferences pref;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -115,13 +111,9 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
         mProgressDialog.show();
 
-        pref = getContext().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         LogoutRequest mLogoutModel = new LogoutRequest(ProfileInfoCacheManager.getMobileNumber());
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
-
-        // Set the preference
-        ProfileInfoCacheManager.setLoggedInStatus(false);
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT_from_all_device, json, getActivity());
@@ -154,8 +146,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
                 mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    Intent intent = new Intent(getActivity(), SignupOrLoginActivity.class);
-                    startActivity(intent);
+                    ((MyApplication) getActivity().getApplication()).launchLoginPage(null);
                 } else {
                     Toast.makeText(getActivity(), mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }

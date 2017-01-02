@@ -54,7 +54,7 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
     private TextView mVatView;
     private TextView mTotalView;
     private TextView mServiceChargeView;
-    private TextView mNetReceivedView;
+    private TextView mNetAmountView;
 
     private TextView mDescriptionView;
     private Button mCreateInvoiceButton;
@@ -81,7 +81,7 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         mVatView = (TextView) v.findViewById(R.id.textview_vat);
         mTotalView = (TextView) v.findViewById(R.id.textview_total);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
-        mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
+        mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
 
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mCreateInvoiceButton = (Button) v.findViewById(R.id.button_create_invoice);
@@ -178,7 +178,7 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mNetReceivedView.setText(Utilities.formatTaka(mTotal.subtract(serviceCharge)));
+        mNetAmountView.setText(Utilities.formatTaka(mTotal.subtract(serviceCharge)));
     }
 
     @Override
