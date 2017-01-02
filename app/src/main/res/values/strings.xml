@@ -745,7 +745,7 @@
     <string name="failed_adding_comment">Failed to add comment</string>
     <string name="comment">Comment</string>
     <string name="add_comment">Add Comment</string>
-    <string name="comment_cannot_be_empty">Comment cannot be empty</string>
+    <string name="comment_cannot_be_empty">Please enter your message.</string>
     <string name="not_available">Not available</string>
     <string name="accepted">Accepted</string>
     <string name="canceled">Canceled</string>
