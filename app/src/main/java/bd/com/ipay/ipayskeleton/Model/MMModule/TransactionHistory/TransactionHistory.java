@@ -262,7 +262,7 @@ public class TransactionHistory implements Parcelable {
                     }
                 case (Constants.TRANSACTION_HISTORY_REQUEST_MONEY):
                 case (Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT):
-                    if (originatingMobileNumber.equals(userMobileNumber)){
+                    if (originatingMobileNumber.equals(userMobileNumber)) {
                         if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
                             return "Request to receive " + Utilities.formatTaka(getNetAmount()) + " accepted by " + additionalInfo.getUserName();
                         else if (statusCode == Constants.TRANSACTION_STATUS_REJECTED)
@@ -423,10 +423,13 @@ public class TransactionHistory implements Parcelable {
                         return "Rejected";
                 }
             } else {
-                if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
+                if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK)
                     return "Successful";
-                } else
+                else if (statusCode == Constants.HTTP_RESPONSE_STATUS_PROCESSING)
+                    return "In Progress";
+                else
                     return "Failed";
+
             }
         } catch (Exception e) {
             e.printStackTrace();
