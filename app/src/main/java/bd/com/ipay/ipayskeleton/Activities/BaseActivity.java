@@ -36,7 +36,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         ((MyApplication) this.getApplication()).stopUserInactivityDetectorTimer();
         ((MyApplication) this.getApplication()).startUserInactivityDetectorTimer();
-
     }
 
 }
