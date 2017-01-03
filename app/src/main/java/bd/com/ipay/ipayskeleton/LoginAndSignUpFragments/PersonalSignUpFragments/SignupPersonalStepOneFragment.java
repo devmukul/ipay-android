@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -25,8 +27,8 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.CheckPromoCodeRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.CheckPromoCodeResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestPersonalSignup;
+import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponsePersonalSignup;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -35,9 +37,8 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SignupPersonalStepOneFragment extends Fragment implements HttpResponseListener {
-
-    private HttpRequestPostAsyncTask mCheckPromoCodeTask = null;
-    private CheckPromoCodeResponse mCheckPromoCodeResponse;
+    private HttpRequestPostAsyncTask mRequestOTPTask = null;
+    private OTPResponsePersonalSignup mOtpResponsePersonalSignup;
 
     private EditText mPasswordView;
     private EditText mConfirmPasswordView;
@@ -47,14 +48,18 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     private Button mNextButton;
     private CheckBox mMaleCheckBox;
     private CheckBox mFemaleCheckBox;
-    private EditText mPromoCodeEditText;
     private EditText mBirthdayEditText;
     private EditText mGenderEditText;
     private ImageView mCrossButton;
     private Button mLoginButton;
+    private TextView mTermsConditions;
+    private TextView mPrivacyPolicy;
+    private CheckBox mAgreementCheckBox;
+
+    private ProgressDialog mProgressDialog;
+
     private String mDeviceID;
     private String mDOB;
-    private ProgressDialog mProgressDialog;
 
     private int mYear;
     private int mMonth;
@@ -75,9 +80,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_signup_personal_step_one, container, false);
 
-        mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_validating_promo_code));
-
         mNameView = (EditText) v.findViewById(R.id.user_name);
         mPasswordView = (EditText) v.findViewById(R.id.password);
         mConfirmPasswordView = (EditText) v.findViewById(R.id.confirm_password);
@@ -85,13 +87,21 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mNextButton = (Button) v.findViewById(R.id.personal_sign_in_button);
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
-        mPromoCodeEditText = (EditText) v.findViewById(R.id.promo_code_edittext);
         mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
         mGenderEditText = (EditText) v.findViewById(R.id.genderEditText);
         mCrossButton = (ImageView) v.findViewById(R.id.button_cross);
         mLoginButton = (Button) v.findViewById(R.id.button_log_in);
+        mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
+        mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
+        mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
+
+        mProgressDialog = new ProgressDialog(getActivity());
 
         mNameView.requestFocus();
+
+        // Enable hyperlinked
+        mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
+        mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
         final DatePickerDialog dialog = new DatePickerDialog(
                 getActivity(), mDateSetListener, 1990, 0, 1);
@@ -135,7 +145,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Utilities.isConnectionAvailable(getActivity())) attemptCheckPromoCode();
+                if (Utilities.isConnectionAvailable(getActivity())) attemptRequestOTP();
                 else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
@@ -188,10 +198,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 }
             };
 
-    private void attemptCheckPromoCode() {
-        if (mCheckPromoCodeTask != null) {
-            return;
-        }
+    private void attemptRequestOTP() {
 
         // Reset errors.
         mNameView.setError(null);
@@ -207,7 +214,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         SignupOrLoginActivity.mMobileNumber = ContactEngine.formatMobileNumberBD(
                 mMobileNumberView.getText().toString().trim());
         SignupOrLoginActivity.mAccountType = Constants.PERSONAL_ACCOUNT_TYPE;
-        SignupOrLoginActivity.mPromoCode = mPromoCodeEditText.getText().toString().trim();
         // Check for a valid password, if the user entered one.
         String passwordValidationMsg = InputValidator.isPasswordValid(SignupOrLoginActivity.mPassword);
 
@@ -239,16 +245,15 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             focusView = mConfirmPasswordView;
             cancel = true;
 
-        } else if (mPromoCodeEditText.getText().toString().trim().length() == 0) {
-            mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
-            focusView = mPromoCodeEditText;
-            cancel = true;
-
         } else if (SignupOrLoginActivity.mBirthday == null || SignupOrLoginActivity.mBirthday.length() == 0) {
             mBirthdayEditText.setError(getString(R.string.error_invalid_birthday));
             focusView = mBirthdayEditText;
             cancel = true;
 
+        } else if (!mAgreementCheckBox.isChecked()) {
+            cancel = true;
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.please_check_terms_and_conditions, Toast.LENGTH_LONG).show();
         }
 
         if (cancel) {
@@ -259,14 +264,14 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             mProgressDialog.show();
-            CheckPromoCodeRequest mCheckPromoCodeRequest = new CheckPromoCodeRequest(SignupOrLoginActivity.mMobileNumber,
-                    Constants.MOBILE_ANDROID + mDeviceID, SignupOrLoginActivity.mPromoCode, null);
+            OTPRequestPersonalSignup mOtpRequestPersonalSignup = new OTPRequestPersonalSignup(SignupOrLoginActivity.mMobileNumber,
+                    Constants.MOBILE_ANDROID + mDeviceID, Constants.PERSONAL_ACCOUNT_TYPE);
             Gson gson = new Gson();
-            String json = gson.toJson(mCheckPromoCodeRequest);
-            mCheckPromoCodeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CHECK_PROMO_CODE,
-                    Constants.BASE_URL_MM + Constants.URL_CHECK_PROMO_CODE, json, getActivity());
-            mCheckPromoCodeTask.mHttpResponseListener = this;
-            mCheckPromoCodeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            String json = gson.toJson(mOtpRequestPersonalSignup);
+            mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
+                    Constants.BASE_URL_MM + Constants.URL_OTP_REQUEST, json, getActivity());
+            mRequestOTPTask.mHttpResponseListener = this;
+            mRequestOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -276,21 +281,21 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
-            mCheckPromoCodeTask = null;
+            mRequestOTPTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.try_again_later, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.otp_request_failed, Toast.LENGTH_SHORT).show();
             return;
         }
 
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_CHECK_PROMO_CODE)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_OTP_VERIFICATION)) {
 
             String message;
             try {
-                mCheckPromoCodeResponse = gson.fromJson(result.getJsonString(), CheckPromoCodeResponse.class);
-                message = mCheckPromoCodeResponse.getMessage();
+                mOtpResponsePersonalSignup = gson.fromJson(result.getJsonString(), OTPResponsePersonalSignup.class);
+                message = mOtpResponsePersonalSignup.getMessage();
             } catch (Exception e) {
                 e.printStackTrace();
                 message = getString(R.string.server_down);
@@ -298,8 +303,19 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
 
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                // Move to step two
-                ((SignupOrLoginActivity) getActivity()).switchToSignupPersonalStepTwoFragment();
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.otp_going_to_send, Toast.LENGTH_LONG).show();
+
+                SignupOrLoginActivity.otpDuration = mOtpResponsePersonalSignup.getOtpValidFor();
+                ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
+
+            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+
+                // Previous OTP has not been expired yet
+                SignupOrLoginActivity.otpDuration = mOtpResponsePersonalSignup.getOtpValidFor();
+                ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
 
             } else {
                 if (getActivity() != null)
@@ -307,8 +323,9 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             }
 
             mProgressDialog.dismiss();
-            mCheckPromoCodeTask = null;
+            mRequestOTPTask = null;
         }
     }
+
 }
 

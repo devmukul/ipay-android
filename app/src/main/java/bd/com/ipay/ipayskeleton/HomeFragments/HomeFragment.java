@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Random;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
@@ -224,7 +224,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mCreateInvoiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), InvoiceActivity.class);
+                Intent intent = new Intent(getActivity(), RequestPaymentActivity.class);
                 startActivity(intent);
             }
         });
@@ -371,6 +371,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         super.onPrepareOptionsMenu(menu);
         if (menu.findItem(R.id.action_search_contacts) != null)
             menu.findItem(R.id.action_search_contacts).setVisible(false);
+
+        if (menu.findItem(R.id.action_filter_by_service) != null)
+            menu.findItem(R.id.action_filter_by_service).setVisible(false);
+        if (menu.findItem(R.id.action_filter_by_date) != null)
+            menu.findItem(R.id.action_filter_by_date).setVisible(false);
     }
 
     private void updateProfileData() {
@@ -396,7 +401,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                 mProfileCompletionMessageView.setText("Your profile is " +
                         mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
-                        + "complete. Complete profile to get verified.");
+                        + "complete.\nSubmit documents and other information to improve your profile.");
 
                 mProgressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
 
@@ -577,7 +582,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private final BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("Broadcast received", "Home Fragment");
             refreshBalance();
         }
     };

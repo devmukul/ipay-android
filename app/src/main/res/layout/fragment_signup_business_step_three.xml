@@ -181,13 +181,15 @@
                     android:id="@+id/checkBoxTermsConditions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="-5dp"
+                    android:layout_alignParentLeft="true"
+                    android:backgroundTintMode="@android:color/white"
                     android:buttonTint="@android:color/white" />
 
                 <LinearLayout
                     android:id="@+id/signUpTermsWrapperLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/checkBoxTermsConditions"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:visibility="visible">
@@ -218,6 +220,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/signUpTermsWrapperLayout"
+                    android:layout_toRightOf="@id/checkBoxTermsConditions"
                     android:gravity="center_horizontal">
 
                     <TextView

@@ -26,7 +26,7 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetRequestResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestsSentClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.MoneyRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -42,7 +42,7 @@ public class MyEventsFragment extends ProgressFragment implements HttpResponseLi
     private MyEventsListAdapter mMyEventsAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     // TODO: Change the class name
-    private List<RequestsSentClass> listOfMyEvents;
+    private List<MoneyRequest> listOfMyEvents;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyListTextView;
 
@@ -143,9 +143,9 @@ public class MyEventsFragment extends ProgressFragment implements HttpResponseLi
                     if (listOfMyEvents == null) {
                         listOfMyEvents = mGetPendingRequestResponse.getAllNotifications();
                     } else {
-                        List<RequestsSentClass> tempPendingMoneyRequestClasses;
-                        tempPendingMoneyRequestClasses = mGetPendingRequestResponse.getAllNotifications();
-                        listOfMyEvents.addAll(tempPendingMoneyRequestClasses);
+                        List<MoneyRequest> tempPendingMoneyRequests;
+                        tempPendingMoneyRequests = mGetPendingRequestResponse.getAllNotifications();
+                        listOfMyEvents.addAll(tempPendingMoneyRequests);
                     }
 
                     mMyEventsAdapter.notifyDataSetChanged();
@@ -201,7 +201,7 @@ public class MyEventsFragment extends ProgressFragment implements HttpResponseLi
                 if (pos == listOfMyEvents.size() - 1) divider.setVisibility(View.GONE);
 
                 final long id = listOfMyEvents.get(pos).getId();
-                String time = Utilities.getDateFormat(listOfMyEvents.get(pos).getRequestTime());
+                String time = Utilities.formatDateWithTime(listOfMyEvents.get(pos).getRequestTime());
                 String name = listOfMyEvents.get(pos).getReceiverProfile().getUserName();
                 String imageUrl = listOfMyEvents.get(pos).getReceiverProfile().getUserProfilePicture();
                 mTime.setText(time);

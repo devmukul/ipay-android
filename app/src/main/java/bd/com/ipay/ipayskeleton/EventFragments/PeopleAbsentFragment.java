@@ -26,7 +26,7 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetRequestResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestsSentClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.MoneyRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -42,7 +42,7 @@ public class PeopleAbsentFragment extends ProgressFragment implements HttpRespon
     private AbsentsListAdapter mAbsentsAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     // TODO: Change the class name
-    private List<RequestsSentClass> listOfAbsents;
+    private List<MoneyRequest> listOfAbsents;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyListTextView;
 
@@ -149,9 +149,9 @@ public class PeopleAbsentFragment extends ProgressFragment implements HttpRespon
                     if (listOfAbsents == null) {
                         listOfAbsents = mGetPendingRequestResponse.getAllNotifications();
                     } else {
-                        List<RequestsSentClass> tempPendingMoneyRequestClasses;
-                        tempPendingMoneyRequestClasses = mGetPendingRequestResponse.getAllNotifications();
-                        listOfAbsents.addAll(tempPendingMoneyRequestClasses);
+                        List<MoneyRequest> tempPendingMoneyRequests;
+                        tempPendingMoneyRequests = mGetPendingRequestResponse.getAllNotifications();
+                        listOfAbsents.addAll(tempPendingMoneyRequests);
                     }
 
                     mAbsentsAdapter.notifyDataSetChanged();
@@ -205,7 +205,7 @@ public class PeopleAbsentFragment extends ProgressFragment implements HttpRespon
 
                 if (pos == listOfAbsents.size() - 1) divider.setVisibility(View.GONE);
 
-                String time = Utilities.getDateFormat(listOfAbsents.get(pos).getRequestTime());
+                String time = Utilities.formatDateWithTime(listOfAbsents.get(pos).getRequestTime());
                 String name = listOfAbsents.get(pos).getReceiverProfile().getUserName();
                 String imageUrl = listOfAbsents.get(pos).getReceiverProfile().getUserProfilePicture();
                 mTime.setText(time);

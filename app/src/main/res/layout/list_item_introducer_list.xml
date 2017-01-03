@@ -41,7 +41,6 @@
 
         <TextView
             android:id="@+id/time"
-            style="@style/TextStyleSecondarySmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

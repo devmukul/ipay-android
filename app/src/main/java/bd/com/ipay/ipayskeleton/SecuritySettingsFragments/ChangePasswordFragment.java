@@ -81,9 +81,6 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
 
     private void attemptChangePassword() {
 
-        //hiding keyboard after save button pressed in change password
-        Utilities.hideKeyboard(getActivity());
-
         if (mChangePasswordTask != null) {
             return;
         }
@@ -116,6 +113,8 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
             // form field with an error.
             focusView.requestFocus();
         } else {
+            // Hiding keyboard after save button pressed in change password
+            Utilities.hideKeyboard(getActivity());
 
             String newPassword = mEnterNewPasswordEditText.getText().toString().trim();
             String password = mEnterCurrentPasswordEditText.getText().toString().trim();

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MoneyRequestListHolderFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -20,16 +21,14 @@ public class RequestMoneyActivity extends BaseActivity {
 
     private FloatingActionButton mFabRequestMoney;
     private boolean switchedToPendingList = true;
-    public static boolean switchedToSentRequestFragment = false;
-    public static boolean switchedToReceivedRequestFragment = true;
-
-    private Menu menu;
 
     /**
      * If this value is set in the intent extras,
      * you would be taken directly to the new request page
      */
     public static final String LAUNCH_NEW_REQUEST = "LAUNCH_NEW_REQUEST";
+
+    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +87,7 @@ public class RequestMoneyActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, moneyRequestListHolderFragment).commit();
 
+        setTitle(R.string.request_money);
         mFabRequestMoney.setVisibility(View.VISIBLE);
         switchedToPendingList = true;
     }
@@ -95,6 +95,8 @@ public class RequestMoneyActivity extends BaseActivity {
     public void switchToRequestMoneyFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new RequestMoneyFragment()).commit();
+
+        setTitle(R.string.request_money);
         mFabRequestMoney.setVisibility(View.GONE);
         switchedToPendingList = false;
     }

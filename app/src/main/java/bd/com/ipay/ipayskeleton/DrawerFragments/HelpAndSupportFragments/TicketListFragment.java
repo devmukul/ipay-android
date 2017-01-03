@@ -42,7 +42,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     private RecyclerView.LayoutManager mLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private FloatingActionButton mNewTicketButton;
+    private FloatingActionButton mFabCreateNewTicket;
     private TextView mEmptyListTextView;
 
     private List<Ticket> mTickets;
@@ -53,12 +53,11 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_ticket_list, container, false);
 
-
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
 
-        mNewTicketButton = (FloatingActionButton) v.findViewById(R.id.fab_new_ticket);
+        mFabCreateNewTicket = (FloatingActionButton) v.findViewById(R.id.fab_new_ticket);
 
-        mNewTicketButton.setOnClickListener(new View.OnClickListener() {
+        mFabCreateNewTicket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((HelpAndSupportActivity) getActivity()).switchToCreateTicketFragment();
@@ -102,7 +101,6 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     }
 
     private void showErrorDialog() {
-
         new MaterialDialog.Builder(getActivity())
                 .title(R.string.sorry)
                 .content(R.string.support_not_available)
@@ -143,6 +141,8 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
             case Constants.COMMAND_GET_TICKETS:
                 if (isAdded())
                     setContentShown(true);
+                mFabCreateNewTicket.setVisibility(View.VISIBLE);
+
                 try {
                     mGetTicketsResponse = gson.fromJson(result.getJsonString(), GetTicketsResponse.class);
 
@@ -161,6 +161,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND ||
                             result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
                         mEmptyListTextView.setVisibility(View.VISIBLE);
+
                         if (getActivity() != null) {
                             showErrorDialog();
                         }
@@ -179,14 +180,12 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
 
                 mGetTicketsTask = null;
                 break;
-
         }
     }
 
     private class TicketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int ITEM_TYPE_TICKET = 1;
-        private static final int ITEM_TYPE_FOOTER = 2;
 
         private class TicketViewHolder extends RecyclerView.ViewHolder {
 
@@ -209,7 +208,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
 
                 subjectView.setText(ticket.getSubject());
                 descriptionView.setText(ticket.getDescription());
-                timeView.setText(Utilities.getDateFormat(ticket.getCreatedAt()));
+                timeView.setText(Utilities.formatDateWithTime(ticket.getCreatedAt()));
                 statusView.setText(ticket.getStatus().toUpperCase());
 
                 switch (ticket.getStatus()) {

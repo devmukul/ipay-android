@@ -29,7 +29,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
-public class SignupBusinessStepOneFragment extends Fragment implements HttpResponseListener {
+public class SignupBusinessStepOneFragment extends Fragment {
 
     private HttpRequestPostAsyncTask mCheckPromoCodeTask = null;
     private CheckPromoCodeResponse mCheckPromoCodeResponse;
@@ -42,10 +42,7 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
     private Button mLoginButton;
     private ImageView mCrossButton;
 
-    private EditText mPromoCodeEditText;
-
     private String mDeviceID;
-    private ProgressDialog mProgressDialog;
 
     @Override
     public void onResume() {
@@ -58,13 +55,10 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_signup_business_step_one, container, false);
 
-        mProgressDialog = new ProgressDialog(getActivity());
-
         mPasswordView = (EditText) v.findViewById(R.id.password);
         mConfirmPasswordView = (EditText) v.findViewById(R.id.confirm_password);
         mBusinessEmailView = (EditText) v.findViewById(R.id.email);
         mBusinessMobileNumberView = (EditText) v.findViewById(R.id.business_mobile_number);
-        mPromoCodeEditText = (EditText) v.findViewById(R.id.promo_code_edittext);
 
         mNextButton = (Button) v.findViewById(R.id.business_next_button);
         mCrossButton = (ImageView) v.findViewById(R.id.button_cross);
@@ -115,7 +109,6 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
         SignupOrLoginActivity.mMobileNumberBusiness = ContactEngine.formatMobileNumberBD(
                 mBusinessMobileNumberView.getText().toString().trim());  // TODO: change Bangladesh
         SignupOrLoginActivity.mAccountType = Constants.BUSINESS_ACCOUNT_TYPE;
-        SignupOrLoginActivity.mPromoCode = mPromoCodeEditText.getText().toString().trim();
 
         boolean cancel = false;
         View focusView = null;
@@ -138,72 +131,16 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
             focusView = mConfirmPasswordView;
             cancel = true;
 
-        } else if (mPromoCodeEditText.getText().toString().trim().length() == 0) {
-            mPromoCodeEditText.setError(getActivity().getString(R.string.error_promo_code_empty));
-            focusView = mPromoCodeEditText;
-            cancel = true;
         }
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             if (focusView != null) focusView.requestFocus();
         } else {
-
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            mProgressDialog.show();
-            CheckPromoCodeRequest mCheckPromoCodeRequest = new CheckPromoCodeRequest(SignupOrLoginActivity.mMobileNumberBusiness,
-                    Constants.MOBILE_ANDROID + mDeviceID, SignupOrLoginActivity.mPromoCode, null);
-            Gson gson = new Gson();
-            String json = gson.toJson(mCheckPromoCodeRequest);
-            mCheckPromoCodeTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CHECK_PROMO_CODE,
-                    Constants.BASE_URL_MM + Constants.URL_CHECK_PROMO_CODE, json, getActivity());
-            mCheckPromoCodeTask.mHttpResponseListener = this;
-            mCheckPromoCodeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
+            ((SignupOrLoginActivity) getActivity()).switchToBusinessStepTwoFragment();
         }
     }
 
-    @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
-
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.dismiss();
-            mCheckPromoCodeTask = null;
-            if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-
-        Gson gson = new Gson();
-
-        if (result.getApiCommand().equals(Constants.COMMAND_CHECK_PROMO_CODE)) {
-
-            String message;
-            try {
-                mCheckPromoCodeResponse = gson.fromJson(result.getJsonString(), CheckPromoCodeResponse.class);
-                message = mCheckPromoCodeResponse.getMessage();
-            } catch (Exception e) {
-                e.printStackTrace();
-                message = getString(R.string.server_down);
-            }
-
-
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                // Move to step two
-                ((SignupOrLoginActivity) getActivity()).switchToBusinessStepTwoFragment();
-
-            } else {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-            }
-
-            mProgressDialog.dismiss();
-            mCheckPromoCodeTask = null;
-        }
-    }
 }
 
 

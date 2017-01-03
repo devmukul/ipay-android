@@ -24,7 +24,6 @@ import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments.LoginFrag
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments.OTPVerificationTrustFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.OTPVerificationPersonalFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.SignupPersonalStepOneFragment;
-import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.SignupPersonalStepTwoFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SelectAccountTypeFragment;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.R;
@@ -52,7 +51,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public static String mBirthdayBusinessHolder;
     public static String mMobileNumberPersonal;
     public static long mTypeofBusiness;
-    public static String mPromoCode;
     public static long otpDuration;
 
     public static AddressClass mAddressBusiness;
@@ -158,14 +156,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         }
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SignupPersonalStepOneFragment()).addToBackStack(null).commit();
-    }
-
-    public void switchToSignupPersonalStepTwoFragment() {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 2) {
-            getSupportFragmentManager().popBackStackImmediate();
-        }
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SignupPersonalStepTwoFragment()).addToBackStack(null).commit();
     }
 
     public void switchToOTPVerificationBusinessFragment() {

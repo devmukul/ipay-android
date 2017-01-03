@@ -1,18 +1,15 @@
 package bd.com.ipay.ipayskeleton.Api;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
@@ -20,17 +17,15 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Arrays;
 
-import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.BuildConfig;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Configuration.ApiVersionResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -55,70 +50,29 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
     @Override
     protected HttpResponseObject doInBackground(Void... params) {
 
-        if (Utilities.isConnectionAvailable(mContext))
-            mHttpResponse = makeRequest();
-        else {
-            if (Constants.DEBUG) Log.d(Constants.ERROR, API_COMMAND);
-            error = true;
-            return null;
-        }
-
-        InputStream inputStream = null;
         HttpResponseObject mHttpResponseObject = null;
 
         try {
-            HttpEntity entity = mHttpResponse.getEntity();
-            int status = mHttpResponse.getStatusLine().getStatusCode();
-            Header[] headers = mHttpResponse.getAllHeaders();
+            if (Utilities.isConnectionAvailable(mContext)) {
+                if (Constants.IS_API_VERSION_CHECKED) {
+                    mHttpResponse = makeRequest();
+                    mHttpResponseObject = parseHttpResponse(mHttpResponse);
+                    mHttpResponseObject.setUpdateNeeded(false);
+                } else {
+                    mHttpResponse = makeApiVersionCheckRequest();
+                    mHttpResponseObject = parseHttpResponse(mHttpResponse);
 
-            if (headers.length > 0) {
-                for (Header header : headers) {
-                    if (header.getName().equals(Constants.TOKEN)) {
-                        TokenManager.setToken(header.getValue());
-                        TokenManager.setiPayTokenTimeInMs(Utilities.getTimeFromBase64Token(TokenManager.getToken()));
-
-                        CountDownTimer tokenTimer = TokenManager.getTokenTimer();
-
-                        if (tokenTimer != null) {
-                            if (Constants.DEBUG)
-                                Log.w("Token_Timer", "Starting... " + TokenManager.getiPayTokenTimeInMs());
-
-                            tokenTimer.cancel();
-                            tokenTimer.start();
-                        }
-                    } else if (header.getName().equals(Constants.REFRESH_TOKEN)) {
-                        TokenManager.setRefreshToken(header.getValue());
-                        if (Constants.DEBUG)
-                            Log.d(Constants.REFRESH_TOKEN, TokenManager.getRefreshToken());
-                    }
+                    // Validate the Api version and set whether the update is required or not
+                    mHttpResponseObject = validateApiVersion(mHttpResponseObject);
                 }
+
+            } else {
+                if (Constants.DEBUG) Log.d(Constants.ERROR, API_COMMAND);
+                error = true;
+                return null;
             }
-
-            inputStream = entity.getContent();
-            // json is UTF-8 by default
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
-            StringBuilder sb = new StringBuilder();
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-
-            mHttpResponseObject = new HttpResponseObject();
-            mHttpResponseObject.setStatus(status);
-            mHttpResponseObject.setApiCommand(API_COMMAND);
-            mHttpResponseObject.setJsonString(sb.toString());
-            mHttpResponseObject.setHeaders(Arrays.asList(mHttpResponse.getAllHeaders()));
-
-
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (inputStream != null) inputStream.close();
-            } catch (Exception squish) {
-                squish.printStackTrace();
-            }
         }
 
         return mHttpResponseObject;
@@ -152,24 +106,11 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
                 }
 
                 try {
-                    // Stop the Token Timer here
-                    CountDownTimer tokenTimer = TokenManager.getTokenTimer();
-                    if (tokenTimer != null) {
-                        tokenTimer.cancel();
-                        TokenManager.setTokenTimer(null);
-                    }
-
+                    MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
                     boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
 
                     if (loggedIn) {
-                        // Set the preference first
-                        ProfileInfoCacheManager.setLoggedInStatus(false);
-
-                        // Switch back to login activity because the user is unauthorized
-                        Intent intent = new Intent(mContext, SignupOrLoginActivity.class);
-                        intent.putExtra(Constants.MESSAGE, message);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        mContext.startActivity(intent);
+                        myApplicationInstance.launchLoginPage(message);
 
                     } else {
                         // Wrong user name or password returns HTTP_RESPONSE_STATUS_UNAUTHORIZED too
@@ -189,7 +130,6 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
             if (mHttpResponseListener != null)
                 mHttpResponseListener.httpResponseReceiver(null);
         }
-
     }
 
     @Override
@@ -219,6 +159,74 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
             e.printStackTrace();
         }
         return null;
+    }
+
+    private HttpResponse makeApiVersionCheckRequest() {
+        try {
+            HttpRequestBase httpRequest = new HttpGet(Constants.BASE_URL_MM + Constants.URL_GET_MIN_API_VERSION_REQUIRED);
+
+            httpRequest.setHeader(Constants.USER_AGENT, Constants.USER_AGENT_MOBILE_ANDROID);
+            httpRequest.setHeader("Accept", "application/json");
+            httpRequest.setHeader("Content-type", "application/json");
+
+            HttpParams httpParams = new BasicHttpParams();
+            HttpProtocolParams.setContentCharset(httpParams, HTTP.UTF_8);
+            HttpProtocolParams.setHttpElementCharset(httpParams, HTTP.UTF_8);
+            HttpClient client = new DefaultHttpClient(httpParams);
+
+            return client.execute(httpRequest);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private HttpResponseObject parseHttpResponse(HttpResponse mHttpResponse) {
+        HttpResponseObject mHttpResponseObject = null;
+
+        if (mHttpResponse == null)
+            return mHttpResponseObject;
+
+        HttpResponseParser mHttpResponseParser = new HttpResponseParser();
+        mHttpResponseParser.setAPI_COMMAND(API_COMMAND);
+        mHttpResponseParser.setHttpResponse(mHttpResponse);
+        mHttpResponseParser.setContext(mContext);
+
+        mHttpResponseObject = mHttpResponseParser.parseHttpResponse();
+
+        // Set the context, after response is parsed.
+        mHttpResponseObject.setContext(mContext);
+
+        return mHttpResponseObject;
+    }
+
+    private HttpResponseObject validateApiVersion(HttpResponseObject mHttpResponseObject) {
+
+        Gson gson = new Gson();
+
+        try {
+            ApiVersionResponse mApiVersionResponse = gson.fromJson(mHttpResponseObject.getJsonString(), ApiVersionResponse.class);
+
+            if (mHttpResponseObject.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                if (mApiVersionResponse != null) {
+                    int requiredAPIVersion = mApiVersionResponse.getAndroid();
+                    int availableAPIVersion = BuildConfig.VERSION_CODE;
+
+                    if (availableAPIVersion < requiredAPIVersion) {
+                        mHttpResponseObject.setUpdateNeeded(true);
+                    } else {
+                        Constants.IS_API_VERSION_CHECKED = true;
+                        mHttpResponse = makeRequest();
+                        mHttpResponseObject = parseHttpResponse(mHttpResponse);
+                        mHttpResponseObject.setUpdateNeeded(false);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return mHttpResponseObject;
     }
 
     Context getContext() {

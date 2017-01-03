@@ -117,24 +117,6 @@
 
             <View style="@style/DividerOnly" />
 
-            <android.support.design.widget.TextInputLayout
-                style="@style/CustomTextInputLayoutWithMargin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/CustomTextInputLayout">
-
-                <EditText
-                    android:id="@+id/promo_code_edittext"
-                    style="@style/CustomEditTextLogInSignUp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/enter_promo_code"
-                    android:inputType="number"
-                    android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
-
-            <View style="@style/DividerOnly" />
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -212,8 +194,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:visibility="gone">
+            android:layout_marginTop="@dimen/activity_horizontal_margin">
 
             <CheckBox
                 android:id="@+id/checkBoxTermsConditions"

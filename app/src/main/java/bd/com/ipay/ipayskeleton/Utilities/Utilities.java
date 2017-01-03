@@ -3,9 +3,12 @@ package bd.com.ipay.ipayskeleton.Utilities;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -13,9 +16,11 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -32,6 +37,10 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.face.Face;
+import com.google.android.gms.vision.face.FaceDetector;
 import com.google.gson.Gson;
 
 import java.io.BufferedInputStream;
@@ -49,10 +58,8 @@ import java.net.NetworkInterface;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -217,7 +224,8 @@ public class Utilities {
                 return buf.toString();
             }
         } catch (Exception ignored) {
-        } // for now eat exceptions
+            // For now eat exceptions
+        }
         return "";
         /*try {
             // this is so Linux hack
@@ -225,6 +233,11 @@ public class Utilities {
         } catch (IOException ex) {
             return null;
         }*/
+    }
+
+    public static void sendBroadcast(Context context, String intentFilter) {
+        Intent intent = new Intent(intentFilter);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     public static String streamToString(InputStream is) {
@@ -373,7 +386,7 @@ public class Utilities {
         return filePath;
     }
 
-    public static String getFilePathfromData(Context context, Uri uri) {
+    public static String getFilePathFromData(Context context, Uri uri) {
         String[] projection = new String[]{"_data"};
         Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
         String filePath = null;
@@ -448,6 +461,13 @@ public class Utilities {
         return String.format("\u09F3%s", numberFormat.format(amount));
     }
 
+    public static String formatTakaWithSignAndComma(String sign, double amount) {
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMaximumFractionDigits(2);
+        return sign + String.format("\u09F3%s", numberFormat.format(amount));
+    }
+
     public static String takaWithComma(double amount) {
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
         numberFormat.setMinimumFractionDigits(2);
@@ -507,8 +527,12 @@ public class Utilities {
         });
     }
 
-    public static String getDateFormat(long time) {
+    public static String formatDateWithTime(long time) {
         return new SimpleDateFormat("MMM d, yyyy, h:mm a").format(time);
+    }
+
+    public static String formatDateWithoutTime(long time) {
+        return new SimpleDateFormat("MMM d, yyyy").format(time);
     }
 
     public static boolean checkPlayServices(Context context) {
@@ -527,6 +551,71 @@ public class Utilities {
 
     public static String[] parseEventTicket(String qrcodeEncoded) {
         return qrcodeEncoded.split(":");
+    }
+
+    /**
+     * Checks if a profile picture is proper or not.
+     *
+     * @param context, selectedImageUri
+     * @return Returns null when its a valid profile picture.
+     * Else returns String stating the problem in the picture which is selected to upload.
+     */
+    public static String validateProfilePicture(Context context, String selectedImageUri) {
+
+        String result;
+        FaceDetector detector;
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        Bitmap bitmap = BitmapFactory.decodeFile(selectedImageUri, options);
+
+        // First, check if the file selected is an image.
+        if (options.outWidth != -1 && options.outHeight != -1) {
+            // This is an image file
+            // Now initialize the face detector
+            detector = new FaceDetector.Builder(context)
+                    .setTrackingEnabled(false)
+                    .setLandmarkType(FaceDetector.ALL_LANDMARKS)
+                    .build();
+
+            // This is a temporary workaround for a bug in the face detector with respect to operating
+            // on very small images.  This will be fixed in a future release.  But in the near term, use
+            // of the SafeFaceDetector class will patch the issue.
+            Detector<Face> safeDetector = new SafeFaceDetector(detector);
+
+            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+            SparseArray<Face> faces = safeDetector.detect(frame);
+
+            // Check if the face detection is operational.
+            if (!safeDetector.isOperational()) {
+                // Face detector needs a native library to be downloaded before it works perfectly.
+                // If the download interrupts, it may fail to initialize and will return erroneous value.
+                // We can not stop user from uploading profile picture if the face detector library is not available. So return valid instead.
+                // So return null
+                result = null;
+            } else {
+                // Face detection is operational
+                switch (faces.size()) {
+                    case 0:
+                        result = Constants.NO_FACE_DETECTED;
+                        break;
+                    case 1:
+                        result = null; // Set null value when a single face is detected. VALID PROFILE PICTURE
+                        break;
+                    default:
+                        result = Constants.MULTIPLE_FACES;
+                        break;
+                }
+            }
+
+            // When it is no longer needed in order to free native resources.
+            safeDetector.release();
+
+        } else {
+            // This is not an image file
+            result = Constants.NOT_AN_IMAGE;
+        }
+
+        return result;
     }
 
     public static String getImage(List<UserProfilePictureClass> profilePictureClasses, String quality) {
@@ -583,5 +672,20 @@ public class Utilities {
 
     public static BigDecimal bigDecimalPercentage(BigDecimal base, BigDecimal pct) {
         return base.multiply(pct).divide(new BigDecimal(100));
+    }
+
+    public static void goToiPayInAppStore(Context mContext) {
+        final String appPackageName = mContext.getPackageName();
+        try {
+            mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
+    }
+
+    public static void finishLauncherActivity(Activity activity) {
+        Intent intent = new Intent();
+        activity.setResult(Activity.RESULT_OK, intent);
+        activity.finish();
     }
 }

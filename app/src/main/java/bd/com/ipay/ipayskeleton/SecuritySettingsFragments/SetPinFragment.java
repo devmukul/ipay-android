@@ -46,7 +46,7 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
         mEnterPasswordEditText = (EditText) v.findViewById(R.id.password);
         mSetPINButton = (Button) v.findViewById(R.id.save_pin);
 
-        mEnterPasswordEditText.requestFocus();
+        mEnterPINEditText.requestFocus();
         final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
@@ -62,9 +62,6 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
     }
 
     private void attemptSavePIN() {
-
-        //hiding keyboard after save button pressed in set pin
-        Utilities.hideKeyboard(getActivity());
 
         if (mSavePINTask != null) {
             return;
@@ -96,6 +93,9 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
             // form field with an error.
             focusView.requestFocus();
         } else {
+            // Hiding keyboard after save button pressed in set pin
+            Utilities.hideKeyboard(getActivity());
+
             String pin = mEnterPINEditText.getText().toString().trim();
             String password = mEnterPasswordEditText.getText().toString().trim();
 

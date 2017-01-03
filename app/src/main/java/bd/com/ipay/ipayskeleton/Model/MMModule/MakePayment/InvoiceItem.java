@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import java.math.BigDecimal;
 
-public class ItemList implements Parcelable {
+public class InvoiceItem implements Parcelable {
     private Long id;
     private BigDecimal rate;
     private BigDecimal quantity;
@@ -13,7 +13,7 @@ public class ItemList implements Parcelable {
     private String description;
     private BigDecimal amount;
 
-    public ItemList() {
+    public InvoiceItem() {
     }
 
     public Long getId() {
@@ -55,7 +55,7 @@ public class ItemList implements Parcelable {
         dest.writeSerializable(this.amount);
     }
 
-    protected ItemList(Parcel in) {
+    protected InvoiceItem(Parcel in) {
         this.id = (Long) in.readValue(Long.class.getClassLoader());
         this.rate = (BigDecimal) in.readSerializable();
         this.quantity = (BigDecimal) in.readSerializable();
@@ -64,15 +64,15 @@ public class ItemList implements Parcelable {
         this.amount = (BigDecimal) in.readSerializable();
     }
 
-    public static final Parcelable.Creator<ItemList> CREATOR = new Parcelable.Creator<ItemList>() {
+    public static final Parcelable.Creator<InvoiceItem> CREATOR = new Parcelable.Creator<InvoiceItem>() {
         @Override
-        public ItemList createFromParcel(Parcel source) {
-            return new ItemList(source);
+        public InvoiceItem createFromParcel(Parcel source) {
+            return new InvoiceItem(source);
         }
 
         @Override
-        public ItemList[] newArray(int size) {
-            return new ItemList[size];
+        public InvoiceItem[] newArray(int size) {
+            return new InvoiceItem[size];
         }
     };
 }

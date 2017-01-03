@@ -26,7 +26,7 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetRequestResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestsSentClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.MoneyRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -42,7 +42,7 @@ public class PeopleParticipatedFragment extends ProgressFragment implements Http
     private MyParticipantsListAdapter mParticipantsAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     // TODO: Change the class name
-    private List<RequestsSentClass> listOfParticipants;
+    private List<MoneyRequest> listOfParticipants;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyListTextView;
 
@@ -149,9 +149,9 @@ public class PeopleParticipatedFragment extends ProgressFragment implements Http
                     if (listOfParticipants == null) {
                         listOfParticipants = mGetPendingRequestResponse.getAllNotifications();
                     } else {
-                        List<RequestsSentClass> tempPendingMoneyRequestClasses;
-                        tempPendingMoneyRequestClasses = mGetPendingRequestResponse.getAllNotifications();
-                        listOfParticipants.addAll(tempPendingMoneyRequestClasses);
+                        List<MoneyRequest> tempPendingMoneyRequests;
+                        tempPendingMoneyRequests = mGetPendingRequestResponse.getAllNotifications();
+                        listOfParticipants.addAll(tempPendingMoneyRequests);
                     }
 
                     mParticipantsAdapter.notifyDataSetChanged();
@@ -205,7 +205,7 @@ public class PeopleParticipatedFragment extends ProgressFragment implements Http
 
                 if (pos == listOfParticipants.size() - 1) divider.setVisibility(View.GONE);
 
-                String time = Utilities.getDateFormat(listOfParticipants.get(pos).getRequestTime());
+                String time = Utilities.formatDateWithTime(listOfParticipants.get(pos).getRequestTime());
                 String name = listOfParticipants.get(pos).getReceiverProfile().getUserName();
                 String imageUrl = listOfParticipants.get(pos).getReceiverProfile().getUserProfilePicture();
                 mTime.setText(time);

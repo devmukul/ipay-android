@@ -175,8 +175,13 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
                             if (mIntroducerList.size() < MINIMUM_INTRODUCER_COUNT) {
                                 mCompleteIntroducerHeaderLayout.setVisibility(View.VISIBLE);
+
+                                String mIntroducerMessage = getString(R.string.introducers_to_complete_the_account_verification_process);
+                                if (MINIMUM_INTRODUCER_COUNT == 1)
+                                    mIntroducerMessage = mIntroducerMessage.replace(getString(R.string.introducers), getString(R.string.introducer));
+
                                 mIntroducerStatusTextView.setText(getString(R.string.you_need_to_have) + MINIMUM_INTRODUCER_COUNT
-                                        + getString(R.string.introducers_to_complete_the_account_verification_process));
+                                        + mIntroducerMessage);
                             } else mCompleteIntroducerHeaderLayout.setVisibility(View.GONE);
 
                             mAskForRecommendation.setOnClickListener(new View.OnClickListener() {
@@ -344,7 +349,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 final String introducerName = mIntroducerList.get(pos).getName();
                 final String introducerMobileNumber = mIntroducerList.get(pos).getMobileNumber();
                 final long introducedTime = mIntroducerList.get(pos).getIntroducedDate();
-                final String time = Utilities.getDateFormat(mIntroducerList.get(pos).getIntroducedDate());
+                final String time = Utilities.formatDateWithoutTime(mIntroducerList.get(pos).getIntroducedDate());
                 String imageUrl = mIntroducerList.get(pos).getProfilePictureUrl();
                 mIntroducerProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                 mIntroducerName.setText(introducerName);

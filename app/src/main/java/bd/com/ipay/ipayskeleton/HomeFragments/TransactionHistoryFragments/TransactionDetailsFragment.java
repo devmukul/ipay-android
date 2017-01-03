@@ -19,13 +19,12 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.InviteActivity;
 import bd.com.ipay.ipayskeleton.Api.AddFriendAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
 import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
 import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -34,7 +33,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TransactionDetailsFragment extends Fragment {
 
-    private TransactionHistoryClass transactionHistory;
+    private TransactionHistory transactionHistory;
 
     private TextView descriptionTextView;
     private TextView timeTextView;
@@ -86,12 +85,13 @@ public class TransactionDetailsFragment extends Fragment {
         String mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         if (transactionHistory.getDescription(mMobileNumber) != null)
             descriptionTextView.setText(transactionHistory.getDescription(mMobileNumber));
-        timeTextView.setText(Utilities.getDateFormat(transactionHistory.getResponseTime()));
+        timeTextView.setText(Utilities.formatDateWithTime(transactionHistory.getResponseTime()));
         amountTextView.setText(Utilities.formatTaka(transactionHistory.getAmount()));
         feeTextView.setText(Utilities.formatTaka(transactionHistory.getFee()));
         transactionIDTextView.setText(transactionHistory.getTransactionID());
         netAmountTextView.setText(Utilities.formatTaka(transactionHistory.getNetAmount()));
-        balanceTextView.setText(Utilities.formatTaka(transactionHistory.getBalance()));
+        if (transactionHistory.getBalance() != null)
+            balanceTextView.setText(Utilities.formatTaka(transactionHistory.getBalance()));
         mobileNumberTextView.setText(ProfileInfoCacheManager.getMobileNumber());
 
         int serviceId = transactionHistory.getServiceID();
@@ -196,27 +196,28 @@ public class TransactionDetailsFragment extends Fragment {
         }
 
         final Integer statusCode = transactionHistory.getStatusCode();
+        final String status = transactionHistory.getStatus();
 
         if (statusCode != Constants.TRANSACTION_STATUS_ACCEPTED && statusCode != Constants.TRANSACTION_STATUS_PROCESSING) {
             final String status_description = transactionHistory.getStatusDescription();
             failureCauseTextView.setText(status_description);
             failureCauseTextView.setTextColor(getResources().getColor(R.color.background_red));
             failureCauseLayout.setVisibility(View.VISIBLE);
-
         } else
             failureCauseLayout.setVisibility(View.GONE);
 
+        statusTextView.setText(status);
+
         if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
-            statusTextView.setText(getString(R.string.transaction_successful));
             statusTextView.setTextColor(getResources().getColor(R.color.bottle_green));
         } else if (statusCode == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
-            statusTextView.setText(getString(R.string.in_progress));
             statusTextView.setTextColor(getResources().getColor(R.color.colorAmber));
         } else {
-            if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY) {
+            if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP
+                    && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
+                    && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY) {
                 balanceTextView.setText(getString(R.string.not_applicable));
             }
-            statusTextView.setText(getString(R.string.transaction_failed));
             statusTextView.setTextColor(getResources().getColor(R.color.background_red));
         }
 

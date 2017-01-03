@@ -29,7 +29,6 @@
         android:id="@+id/info_holder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/status_holder"
         android:layout_toRightOf="@+id/profile_picture_holder">
 
         <TextView

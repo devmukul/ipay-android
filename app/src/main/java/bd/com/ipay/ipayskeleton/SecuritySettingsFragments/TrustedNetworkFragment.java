@@ -1,11 +1,13 @@
 package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,15 +20,19 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
+import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.GetTrustedPersonsResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.RemoveTrustedPersonResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.TrustedPerson;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -37,6 +43,9 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
 
     private HttpRequestGetAsyncTask mGetTrustedPersonsTask = null;
     private GetTrustedPersonsResponse mGetTrustedPersonsResponse = null;
+
+    private HttpRequestDeleteAsyncTask mRemoveTrustedPersonTask = null;
+    private RemoveTrustedPersonResponse mRemoveTrustedPersonResponse = null;
 
     private List<TrustedPerson> mTrustedPersons;
     private TrustedPersonListAdapter mTrustedPersonListAdapter;
@@ -126,6 +135,43 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         }
     }
 
+    public void setTitle() {
+        getActivity().setTitle(R.string.trusted_person);
+    }
+
+    private void processGetTrustedPersonList(String json) {
+        try {
+            Gson gson = new Gson();
+            mGetTrustedPersonsResponse = gson.fromJson(json, GetTrustedPersonsResponse.class);
+
+            mTrustedPersons = mGetTrustedPersonsResponse.getTrustedPersons();
+            mTrustedPersonListAdapter.notifyDataSetChanged();
+
+            setContentShown(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showTrustedDeviceRemoveConfirmationDialog(final long personID) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        dialog
+                .setMessage(getString(R.string.confirmation_remove_trusted_person))
+                .setPositiveButton(getString(R.string.remove), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        removeTrustedPerson(personID);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).show();
+    }
+
     private void getTrustedPersons() {
         if (mGetTrustedPersonsTask != null) {
             return;
@@ -138,8 +184,16 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         mGetTrustedPersonsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public void setTitle() {
-        getActivity().setTitle(R.string.trusted_person);
+    private void removeTrustedPerson(long personID) {
+        if (mRemoveTrustedPersonTask != null)
+            return;
+
+        mProgressDialog.setMessage(getString(R.string.remove_trusted_person_message));
+        mProgressDialog.show();
+
+        mRemoveTrustedPersonTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_TRUSTED_PERSON,
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_TRUSTED_PERSON + personID, getActivity(), this);
+        mRemoveTrustedPersonTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -150,6 +204,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetTrustedPersonsTask = null;
+            mRemoveTrustedPersonTask =null;
 
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
@@ -183,6 +238,36 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
 
             mSwipeRefreshLayout.setRefreshing(false);
             mGetTrustedPersonsTask = null;
+
+        } else if (result.getApiCommand().equals(Constants.COMMAND_REMOVE_TRUSTED_PERSON)) {
+
+            try {
+                mRemoveTrustedPersonResponse = gson.fromJson(result.getJsonString(), RemoveTrustedPersonResponse.class);
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.success_remove, Toast.LENGTH_LONG).show();
+                    }
+
+                    mProgressDialog.setMessage(getString(R.string.progress_dialog_loading_trusted_devices));
+                    mProgressDialog.show();
+
+                    getTrustedPersons();
+                } else {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mRemoveTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null) {
+                    Toast.makeText(getActivity(), mRemoveTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            mProgressDialog.cancel();
+            mRemoveTrustedPersonTask = null;
+
         }
         if (mTrustedPersons.isEmpty()) {
             mEmptyListTextView.setVisibility(View.VISIBLE);
@@ -191,26 +276,12 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         }
     }
 
-    private void processGetTrustedPersonList(String json) {
-        try {
-            Gson gson = new Gson();
-            mGetTrustedPersonsResponse = gson.fromJson(json, GetTrustedPersonsResponse.class);
-
-            mTrustedPersons = mGetTrustedPersonsResponse.getTrustedPersons();
-            mTrustedPersonListAdapter.notifyDataSetChanged();
-
-            setContentShown(true);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public class TrustedPersonListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int FOOTER_VIEW = 1;
         private static final int TRUSTED_LIST_ITEM_VIEW = 2;
+        private int ACTION_REMOVE = 0;
 
         public TrustedPersonListAdapter() {
         }
@@ -220,6 +291,9 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
             private TextView mMobileNumberView;
             private TextView mRelationshipView;
             private final View divider;
+
+            private List<String> mTrustedPersonActionList;
+            private CustomSelectorDialog mCustomSelectorDialog;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -241,6 +315,25 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                     divider.setVisibility(View.GONE);
                 else
                     divider.setVisibility(View.VISIBLE);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mTrustedPersonActionList = Arrays.asList(getResources().getStringArray(R.array.trusted_device_or_network_action));
+                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), trustedPerson.getName(), mTrustedPersonActionList);
+                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+                            @Override
+                            public void onResourceSelected(int selectedIndex, String mName) {
+                                if (selectedIndex == ACTION_REMOVE) {
+                                    showTrustedDeviceRemoveConfirmationDialog(
+                                            trustedPerson.getPersonId());
+                                }
+                            }
+                        });
+                        mCustomSelectorDialog.show();
+
+                    }
+                });
             }
         }
 

@@ -56,11 +56,6 @@ public class Business implements Notification {
     }
 
     @Override
-    public String getDescription() {
-        return getMobileNumber();
-    }
-
-    @Override
     public String getImageUrl() {
         return getProfilePictureUrl();
     }

@@ -18,10 +18,10 @@ public class PendingPaymentClass {
     private int status;
     private BigDecimal vat;
     private BigDecimal total;
-    private ItemList[] itemList;
+    private InvoiceItem[] itemList;
 
 
-    public ItemList[] getItemList() {
+    public InvoiceItem[] getItemList() {
         return itemList;
     }
 
@@ -54,7 +54,7 @@ public class PendingPaymentClass {
         return title;
     }
 
-    private UserProfile getOriginatorProfile() {
+    public UserProfile getOriginatorProfile() {
         return originatorProfile;
     }
 

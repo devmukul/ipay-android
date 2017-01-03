@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.Api;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.apache.http.Header;
@@ -12,9 +13,27 @@ public class HttpResponseObject {
     private int status;
     private String apiCommand;
     private String jsonString;
+    private boolean isUpdateNeeded;
+    private Context context;
     private List<Header> headers;
 
     public HttpResponseObject() {
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public boolean isUpdateNeeded() {
+        return isUpdateNeeded;
+    }
+
+    public void setUpdateNeeded(boolean updateNeeded) {
+        isUpdateNeeded = updateNeeded;
     }
 
     public int getStatus() {

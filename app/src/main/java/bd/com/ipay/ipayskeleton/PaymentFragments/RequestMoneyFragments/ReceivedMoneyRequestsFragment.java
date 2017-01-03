@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -49,8 +47,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
     private List<MoneyAndPaymentRequest> moneyRequestList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private ProgressDialog mProgressDialog;
-
     private int pageCount = 0;
     private boolean hasNext = false;
     private boolean clearListAfterLoading;
@@ -61,7 +57,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
     private String mReceiverMobileNumber;
     private String mPhotoUri;
     private long mMoneyRequestId;
-    private String mTitle;
     private String mDescription;
     private TextView mEmptyListTextView;
 
@@ -71,7 +66,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mNotificationsRecyclerView = (RecyclerView) v.findViewById(R.id.list_notification);
-        mProgressDialog = new ProgressDialog(getActivity());
 
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mReceivedMoneyRequestListAdapter = new ReceivedMoneyRequestListAdapter();
@@ -121,7 +115,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
             return;
         }
         GetMoneyRequest mMoneyRequest = new GetMoneyRequest(pageCount,
-                Constants.SERVICE_ID_REQUEST_MONEY,Constants.REQUEST_STATUS_PROCESSING);
+                Constants.SERVICE_ID_REQUEST_MONEY,Constants.MONEY_REQUEST_STATUS_PROCESSING);
         Gson gson = new Gson();
         String json = gson.toJson(mMoneyRequest);
         mGetMoneyRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_REQUESTS,
@@ -139,7 +133,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
             mGetMoneyRequestTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null) {
-                Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(),  R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
             }
             return;
         }
@@ -218,7 +212,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                 final String name = moneyRequest.originatorProfile.getUserName();
                 final String mobileNumber = moneyRequest.originatorProfile.getUserMobileNumber();
                 final String description = moneyRequest.getDescriptionofRequest();
-                final String time = Utilities.getDateFormat(moneyRequest.getRequestTime());
+                final String time = Utilities.formatDateWithTime(moneyRequest.getRequestTime());
                 final String title = moneyRequest.getTitle();
                 final BigDecimal amount = moneyRequest.getAmount();
 
@@ -239,7 +233,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                         mReceiverName = name;
                         mReceiverMobileNumber = mobileNumber;
                         mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
-                        mTitle = title;
                         mDescription = description;
 
                         launchReviewPage();
@@ -337,7 +330,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
             intent.putExtra(Constants.AMOUNT, mAmount);
             intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
             intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, mDescription);
-            intent.putExtra(Constants.INVOICE_TITLE_TAG, mTitle);
             intent.putExtra(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
             intent.putExtra(Constants.NAME, mReceiverName);
             intent.putExtra(Constants.PHOTO_URI, mPhotoUri);

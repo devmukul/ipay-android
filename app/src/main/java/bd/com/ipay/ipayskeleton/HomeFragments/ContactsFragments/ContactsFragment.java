@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -23,11 +24,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
@@ -47,6 +51,7 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
+import bd.com.ipay.ipayskeleton.Model.Friend.InviteFriend;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.AskForIntroductionResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -242,6 +247,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         ImageView searchIconImageView = (ImageView) mSearchView.findViewById(searchImgId);
         searchIconImageView.setImageResource(R.drawable.ic_search);
         resetSearchKeyword();
+
     }
 
     private void setItemsVisibility(Menu menu, MenuItem exception, boolean visible) {
@@ -249,6 +255,14 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             MenuItem item = menu.getItem(i);
             if (item != null && item != exception) item.setVisible(visible);
         }
+
+        if (menu.findItem(R.id.action_filter_by_service) != null)
+            menu.findItem(R.id.action_filter_by_service).setVisible(false);
+        if (menu.findItem(R.id.action_filter_by_date) != null)
+            menu.findItem(R.id.action_filter_by_date).setVisible(false);
+        if (menu.findItem(R.id.action_clear_filter) != null)
+            menu.findItem(R.id.action_clear_filter).setVisible(false);
+
     }
 
     @Override
@@ -428,23 +442,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                         mBottomSheetLayout.dismissSheet();
                     }
 
-                    mInviteMessage = getString(R.string.are_you_sure_to_invite);
-                    if (!mSelectedName.isEmpty())
-                        mInviteMessage = mInviteMessage.replace(getString(R.string.this_person), mSelectedName);
-
-                    new android.app.AlertDialog.Builder(getActivity())
-                            .setMessage(mInviteMessage)
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    sendInvite(mSelectedNumber);
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // Do nothing
-                                }
-                            })
-                            .show();
+                    showInviteDialog(mSelectedName, mSelectedNumber);
                 }
             });
         }
@@ -524,7 +522,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         mAskForRecommendationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void sendInvite(String phoneNumber) {
+    private void sendInvite(String phoneNumber, boolean wantToIntroduce) {
         int numberOfInvitees = ContactsHolderFragment.mGetInviteInfoResponse.invitees.size();
         if (numberOfInvitees >= ContactsHolderFragment.mGetInviteInfoResponse.totalLimit) {
             Toast.makeText(getActivity(), R.string.invitaiton_limit_exceeded,
@@ -533,8 +531,11 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_sending_invite));
             mProgressDialog.show();
 
+            InviteFriend inviteFriend = new InviteFriend(phoneNumber, wantToIntroduce);
+            Gson gson = new Gson();
+            String json = gson.toJson(inviteFriend, InviteFriend.class);
             mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
-                    Constants.BASE_URL_MM + Constants.URL_SEND_INVITE + phoneNumber, null, getActivity(), this);
+                    Constants.BASE_URL_MM + Constants.URL_SEND_INVITE, json, getActivity(), this);
             mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -641,14 +642,58 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         selectedBottomSheetView = mSheetViewNonIpayMember;
 
         Button inviteButton = (Button) mSheetViewNonIpayMember.findViewById(R.id.button_invite);
+
+        // You can send invite to the person who is invited by you again for now.
+        // Following segment disables this feature
+        /*
+        // Can not send invite to person who is invited already
         if (ContactsHolderFragment.mGetInviteInfoResponse.getInvitees().contains(mobileNumber))
             inviteButton.setEnabled(false);
         else
             inviteButton.setEnabled(true);
+        */
 
         mBottomSheetLayout.showWithSheetView(mSheetViewNonIpayMember);
         mBottomSheetLayout.expandSheet();
     }
+
+    public void showInviteDialog(String name, final String mobileNumber) {
+        mInviteMessage = getString(R.string.are_you_sure_to_invite);
+        if (!name.isEmpty())
+            mInviteMessage = mInviteMessage.replace(getString(R.string.this_person), name);
+
+        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                .title(R.string.invite_to_ipay)
+                .customView(R.layout.dialog_invite_friend_with_introduction, true)
+                .positiveText(R.string.yes)
+                .negativeText(R.string.no)
+                .show();
+
+        View view = dialog.getCustomView();
+        final TextView mInviteText = (TextView) view.findViewById(R.id.textviewInviteMessage);
+        final CheckBox introduceCheckbox = (CheckBox) view.findViewById(R.id.introduceCheckbox);
+
+        mInviteText.setText(mInviteMessage);
+
+        dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                boolean wantToIntroduce = introduceCheckbox.isChecked();
+
+                sendInvite(mobileNumber, wantToIntroduce);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.getBuilder().onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
+            }
+        });
+    }
+
 
     private void setSelectedName(String name) {
         this.mSelectedName = name;
@@ -781,23 +826,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                             else setSelectedName(name);
                             setSelectedNumber(mobileNumber);
 
-                            mInviteMessage = getString(R.string.are_you_sure_to_invite);
-                            if (!name.isEmpty())
-                                mInviteMessage = mInviteMessage.replace(getString(R.string.this_person), name);
-
-                            new android.app.AlertDialog.Builder(getActivity())
-                                    .setMessage(mInviteMessage)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            sendInvite(mobileNumber);
-                                        }
-                                    })
-                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            // Do nothing
-                                        }
-                                    })
-                                    .show();
+                            showInviteDialog(name, mobileNumber);
                         } else {
                             if (originalName != null && !originalName.isEmpty())
                                 setSelectedName(originalName);

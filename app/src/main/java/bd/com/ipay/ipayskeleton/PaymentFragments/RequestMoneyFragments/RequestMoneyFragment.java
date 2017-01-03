@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,6 +38,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -53,7 +55,6 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
     private EditText mMobileNumberEditText;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
-    private EditText mTitleEditText;
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -67,11 +68,12 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
 
+        // Allow user to write not more than two digits after decimal point for an input of an amount
+        mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
+
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
             mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
         }
-
-        mTitleEditText = (EditText) v.findViewById(R.id.title_request);
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.submitting_request_money));
@@ -108,7 +110,7 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
         });
 
         // Get business rule
-        attemptGetBusinessRule(Constants.SERVICE_ID_SEND_MONEY);
+        attemptGetBusinessRule(Constants.SERVICE_ID_REQUEST_MONEY);
 
         return v;
     }
@@ -148,13 +150,6 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
-        if (!(mTitleEditText.getText().toString().trim().length() > 0)) {
-            focusView = mTitleEditText;
-            mTitleEditText.setError(getString(R.string.please_write_title));
-            cancel = true;
-
-        }
-
         // validation check of amount
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
             focusView = mAmountEditText;
@@ -162,13 +157,13 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
             cancel = true;
 
         } else if ((mAmountEditText.getText().toString().trim().length() > 0)
-                && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+                && Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                && Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
-            BigDecimal maxAmount = SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT();
+            BigDecimal maxAmount = RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT();
 
             String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                    SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
+                    RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
 
             if (error_message != null) {
                 focusView = mAmountEditText;
@@ -205,14 +200,12 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
     private void launchReviewPage() {
         String receiver = mMobileNumberEditText.getText().toString().trim();
         BigDecimal amount = new BigDecimal(mAmountEditText.getText().toString().trim());
-        String title = mTitleEditText.getText().toString().trim();
         String description = mDescriptionEditText.getText().toString().trim();
 
         Intent intent = new Intent(getActivity(), RequestMoneyReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, amount);
         intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(receiver));
         intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
-        intent.putExtra(Constants.INVOICE_TITLE_TAG, title);
         intent.putExtra(Constants.IS_IN_CONTACTS, new SearchContactClass(getActivity()).searchMobileNumber(receiver));
 
         startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
@@ -263,11 +256,11 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
                     if (businessRuleArray != null) {
 
                         for (BusinessRule rule : businessRuleArray) {
-                            if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                                SendMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            if (rule.getRuleID().equals(Constants.SERVICE_RULE_REQUEST_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
+                                RequestMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
 
-                            } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                                SendMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_REQUEST_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
+                                RequestMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                             }
                         }
                     }
@@ -275,12 +268,12 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             }
 
             mGetBusinessRuleTask = null;

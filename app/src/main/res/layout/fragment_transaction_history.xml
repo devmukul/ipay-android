@@ -150,6 +150,16 @@
                 android:background="@color/colorDivider" />
 
             <CheckBox
+                android:id="@+id/filter_request_money"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:text="@string/filter_request_money" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:background="@color/colorDivider" />
+
+            <CheckBox
                 android:id="@+id/filter_add_money"
                 style="@style/TransactionHistoryFilterCheckboxStyle"
                 android:text="@string/filter_add_money" />
@@ -183,6 +193,16 @@
                 android:id="@+id/filter_payment"
                 style="@style/TransactionHistoryFilterCheckboxStyle"
                 android:text="@string/filter_payment" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/divider_space"
+                android:background="@color/colorDivider" />
+
+            <CheckBox
+                android:id="@+id/filter_request_payment"
+                style="@style/TransactionHistoryFilterCheckboxStyle"
+                android:text="@string/filter_request_payment" />
 
             <View
                 android:layout_width="wrap_content"
@@ -226,7 +246,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/activity_horizontal_margin"
-                android:text="@string/empty_transaction_history" />
+                android:text="@string/empty_transaction_history"
+                android:visibility="gone" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_transaction_history"
