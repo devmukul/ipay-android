@@ -196,27 +196,28 @@ public class TransactionDetailsFragment extends Fragment {
         }
 
         final Integer statusCode = transactionHistory.getStatusCode();
+        final String status = transactionHistory.getStatus();
 
         if (statusCode != Constants.TRANSACTION_STATUS_ACCEPTED && statusCode != Constants.TRANSACTION_STATUS_PROCESSING) {
             final String status_description = transactionHistory.getStatusDescription();
             failureCauseTextView.setText(status_description);
             failureCauseTextView.setTextColor(getResources().getColor(R.color.background_red));
             failureCauseLayout.setVisibility(View.VISIBLE);
-
         } else
             failureCauseLayout.setVisibility(View.GONE);
 
+        statusTextView.setText(status);
+
         if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
-            statusTextView.setText(getString(R.string.transaction_successful));
             statusTextView.setTextColor(getResources().getColor(R.color.bottle_green));
         } else if (statusCode == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
-            statusTextView.setText(getString(R.string.in_progress));
             statusTextView.setTextColor(getResources().getColor(R.color.colorAmber));
         } else {
-            if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY) {
+            if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP
+                    && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
+                    && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY) {
                 balanceTextView.setText(getString(R.string.not_applicable));
             }
-            statusTextView.setText(getString(R.string.transaction_failed));
             statusTextView.setTextColor(getResources().getColor(R.color.background_red));
         }
 
