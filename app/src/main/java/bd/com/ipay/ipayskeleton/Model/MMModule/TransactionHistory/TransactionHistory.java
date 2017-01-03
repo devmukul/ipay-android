@@ -113,32 +113,32 @@ public class TransactionHistory implements Parcelable {
                     return Utilities.formatTakaWithSignAndComma("+", netAmount);
                 } else if (receiverInfo.equals(userMobileNumber))
                     // Service charge effect
-                    return Utilities.formatTakaWithSignAndComma("-", amount);
+                    return Utilities.formatTakaWithSignAndComma("-", netAmount);
             case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
                 return Utilities.formatTakaWithSignAndComma("+", netAmount);
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
-                return Utilities.formatTakaWithSignAndComma("-", amount); // Service charge effect
+                return Utilities.formatTakaWithSignAndComma("-", netAmount);
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
-                return Utilities.formatTakaWithSignAndComma("-", amount); // Service charge effect
+                return Utilities.formatTakaWithSignAndComma("-", netAmount);
             case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber))
                     return Utilities.formatTakaWithSignAndComma("+", netAmount);
                 else if (receiverInfo.equals(userMobileNumber))
-                    return Utilities.formatTakaWithSignAndComma("-", amount); // Service charge effect
+                    return Utilities.formatTakaWithSignAndComma("-", netAmount);
             case (Constants.TRANSACTION_HISTORY_REQUEST_MONEY):
                 if (originatingMobileNumber.equals(userMobileNumber)) {
                     switch (statusCode) {
                         case (Constants.TRANSACTION_STATUS_ACCEPTED):
-                            return Utilities.formatTakaWithSignAndComma("-", amount);
+                            return Utilities.formatTakaWithSignAndComma("-", netAmount);
                         default:
-                            return Utilities.formatTakaWithComma(amount);
+                            return Utilities.formatTakaWithComma(netAmount);
                     }
                 } else if (receiverInfo.equals(userMobileNumber)) {
                     switch (statusCode) {
                         case (Constants.TRANSACTION_STATUS_ACCEPTED):
                             return Utilities.formatTakaWithSignAndComma("+", netAmount);
                         default:
-                            return Utilities.formatTakaWithComma(amount);
+                            return Utilities.formatTakaWithComma(netAmount);
                     }
                 }
             case (Constants.TRANSACTION_HISTORY_INVOICE):
@@ -146,20 +146,20 @@ public class TransactionHistory implements Parcelable {
                 if (originatingMobileNumber.equals(userMobileNumber)) {
                     switch (statusCode) {
                         case (Constants.TRANSACTION_STATUS_ACCEPTED):
-                            return Utilities.formatTakaWithSignAndComma("-", amount);
+                            return Utilities.formatTakaWithSignAndComma("-", netAmount);
                         default:
-                            return Utilities.formatTakaWithComma(amount);
+                            return Utilities.formatTakaWithComma(netAmount);
                     }
                 } else if (receiverInfo.equals(userMobileNumber)) {
                     switch (statusCode) {
                         case (Constants.TRANSACTION_STATUS_ACCEPTED):
                             return Utilities.formatTakaWithSignAndComma("+", netAmount);
                         default:
-                            return Utilities.formatTakaWithComma(amount);
+                            return Utilities.formatTakaWithComma(netAmount);
                     }
                 }
             case (Constants.TRANSACTION_HISTORY_EDUCATION):
-                return Utilities.formatTakaWithSignAndComma("-", amount); // Service charge effect
+                return Utilities.formatTakaWithSignAndComma("-", netAmount);
         }
 
         return Utilities.formatTakaWithComma(netAmount);
