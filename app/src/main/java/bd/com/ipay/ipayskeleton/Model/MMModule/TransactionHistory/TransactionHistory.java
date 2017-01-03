@@ -117,14 +117,14 @@ public class TransactionHistory implements Parcelable {
             case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
                 return Utilities.formatTakaWithSignAndComma("+", netAmount);
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
-                return Utilities.formatTakaWithSignAndComma("-", netAmount); // Service charge effect
+                return Utilities.formatTakaWithSignAndComma("-", netAmount);
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
-                return Utilities.formatTakaWithSignAndComma("-", netAmount); // Service charge effect
+                return Utilities.formatTakaWithSignAndComma("-", netAmount);
             case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber))
                     return Utilities.formatTakaWithSignAndComma("+", netAmount);
                 else if (receiverInfo.equals(userMobileNumber))
-                    return Utilities.formatTakaWithSignAndComma("-", netAmount); // Service charge effect
+                    return Utilities.formatTakaWithSignAndComma("-", netAmount);
             case (Constants.TRANSACTION_HISTORY_REQUEST_MONEY):
                 if (originatingMobileNumber.equals(userMobileNumber)) {
                     switch (statusCode) {
@@ -159,7 +159,7 @@ public class TransactionHistory implements Parcelable {
                     }
                 }
             case (Constants.TRANSACTION_HISTORY_EDUCATION):
-                return Utilities.formatTakaWithSignAndComma("-", netAmount); // Service charge effect
+                return Utilities.formatTakaWithSignAndComma("-", netAmount);
         }
 
         return Utilities.formatTakaWithComma(netAmount);
