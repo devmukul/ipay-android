@@ -7,12 +7,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
@@ -86,7 +89,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         logoutHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new android.app.AlertDialog.Builder(getContext())
+               /* new android.app.AlertDialog.Builder(getContext())
                         .setMessage(R.string.logout_from_all_device_warning)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -97,7 +100,32 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
                             public void onClick(DialogInterface dialog, int which) {
                             }
                         })
-                        .show();
+                        .show();*/
+                MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
+                dialog
+                        .content(R.string.logout_from_all_device_warning)
+                        .cancelable(false)
+                        .content(getString(R.string.can_not_add_bank_if_not_verified))
+                        .positiveText(R.string.yes)
+                        .negativeText(R.string.cancel);
+
+                dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                                      @Override
+                                      public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                          logOutFromAllDevices();
+                                      }
+                                  }
+                );
+                dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
+                                      @Override
+                                      public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                                      }
+                                  }
+                );
+
+
+                dialog.show();
             }
         });
 
