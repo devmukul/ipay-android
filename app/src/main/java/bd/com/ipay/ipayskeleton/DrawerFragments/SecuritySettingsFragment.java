@@ -113,13 +113,6 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
                 logOutFromAllDevices();
             }
         });
-        dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
-                              @Override
-                              public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
-                              }
-                          }
-        );
 
         dialog.show();
     }
