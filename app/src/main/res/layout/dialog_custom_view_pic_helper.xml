@@ -1,40 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:background="@color/divider_gray"
+        android:paddingBottom="@dimen/value10">
 
-        <RelativeLayout
+        <TextView
+            android:id="@+id/pro_pic_help_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/divider_gray"
-            android:paddingBottom="@dimen/value10">
+            android:layout_margin="@dimen/value10"
+            android:text="@string/profile_pic_help_text"
+            android:textSize="@dimen/text_size_small_medium" />
 
-            <TextView
-                android:id="@+id/pro_pic_help_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/value10"
-                android:text="@string/profile_pic_help_text"
-                android:textSize="@dimen/text_size_small_medium" />
-
-            <ImageView
-                android:id="@+id/pro_pic_helper_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/pro_pic_help_text_view"
-                android:src="@drawable/profile_photo_guide" />
-
-        </RelativeLayout>
-
-        <ListView
-            android:id="@+id/custom_list"
-            android:layout_width="fill_parent"
+        <ImageView
+            android:id="@+id/pro_pic_helper_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:dividerHeight="1px" />
-    </LinearLayout>
-</ScrollView>
+            android:layout_below="@id/pro_pic_help_text_view"
+            android:src="@drawable/profile_photo_guide" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/custom_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:dividerHeight="1px" />
+</LinearLayout>

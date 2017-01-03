@@ -112,7 +112,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
             @Override
             public void onClick(View v) {
                 if (!ProfileInfoCacheManager.isAccountVerified()) {
-
                     customUploadPickerDialog = new CustomUploadPickerDialogPicHelper(getActivity(), getString(R.string.select_an_image), mPickerList);
                     customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialogPicHelper.OnResourceSelectedListener() {
                         @Override
