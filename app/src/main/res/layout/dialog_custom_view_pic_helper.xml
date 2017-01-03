@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/pro_pic_help_text_view"
-            android:src="@drawable/pro_pic_helper" />
+            android:src="@drawable/profile_photo_guide" />
 
     </RelativeLayout>
 
