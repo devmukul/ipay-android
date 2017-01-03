@@ -89,43 +89,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         logoutHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* new android.app.AlertDialog.Builder(getContext())
-                        .setMessage(R.string.logout_from_all_device_warning)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                logOutFromAllDevices();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        })
-                        .show();*/
-                MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
-                dialog
-                        .content(R.string.logout_from_all_device_warning)
-                        .cancelable(false)
-                        .content(getString(R.string.can_not_add_bank_if_not_verified))
-                        .positiveText(R.string.yes)
-                        .negativeText(R.string.cancel);
-
-                dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                                      @Override
-                                      public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                          logOutFromAllDevices();
-                                      }
-                                  }
-                );
-                dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
-                                      @Override
-                                      public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
-                                      }
-                                  }
-                );
-
-
-                dialog.show();
+                showLogoutFromAllDevicesDialog();
             }
         });
 
@@ -133,6 +97,31 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
             setPINHeader.performClick();
         }
         return v;
+    }
+
+    private void showLogoutFromAllDevicesDialog() {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
+        dialog
+                .content(R.string.logout_from_all_device_warning)
+                .cancelable(false)
+                .positiveText(R.string.yes)
+                .negativeText(R.string.no);
+
+        dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                logOutFromAllDevices();
+            }
+        });
+        dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
+                              @Override
+                              public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                              }
+                          }
+        );
+
+        dialog.show();
     }
 
     private void logOutFromAllDevices() {
