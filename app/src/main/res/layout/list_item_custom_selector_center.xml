@@ -8,10 +8,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:paddingTop="@dimen/value15"
         android:paddingBottom="@dimen/value15"
-        android:paddingLeft="@dimen/activity_vertical_margin_double"
+        android:paddingLeft="@dimen/value15"
         android:paddingRight="@dimen/value15"
+        android:paddingTop="@dimen/value15"
         android:textSize="@dimen/text_size_small_medium" />
 </RelativeLayout>
 
