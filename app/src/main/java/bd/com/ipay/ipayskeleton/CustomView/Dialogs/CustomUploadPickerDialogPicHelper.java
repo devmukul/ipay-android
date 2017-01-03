@@ -44,7 +44,6 @@ public class CustomUploadPickerDialogPicHelper extends AlertDialog {
         this.setView(view);
 
         setItems(resources);
-
     }
 
     public void setItems(final List<String> resources) {

@@ -118,14 +118,12 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                     customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialogPicHelper.OnResourceSelectedListener() {
                         @Override
                         public void onResourceSelected(int mActionId, String action) {
-
-                            if (Constants.ACTION_TYPE_TAKE_PICTURE.equals(action) || Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action))
-                                if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
-                                    selectProfilePictureIntent(mActionId);
-                                } else {
-                                    mPickerActionId = mActionId;
-                                    DocumentPicker.requestRequiredPermissions(AccountFragment.this, REQUEST_CODE_PERMISSION);
-                                }
+                            if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
+                                selectProfilePictureIntent(mActionId);
+                            } else {
+                                mPickerActionId = mActionId;
+                                DocumentPicker.requestRequiredPermissions(AccountFragment.this, REQUEST_CODE_PERMISSION);
+                            }
                         }
                     });
                     customUploadPickerDialog.show();
@@ -133,8 +131,9 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                 } else {
                     Toast.makeText(getActivity(), R.string.can_not_change_picture, Toast.LENGTH_LONG).show();
                 }
-            });
-        }
+            }
+        });
+
 
         mBasicInfo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,15 +215,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void selectImageToUpload() {
-        if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
-            Intent imageChooserIntent = DocumentPicker.getPickImageIntent(getContext(), getString(R.string.select_an_image));
-            startActivityForResult(imageChooserIntent, ACTION_PICK_PROFILE_PICTURE);
-        } else {
-            DocumentPicker.requestRequiredPermissions(AccountFragment.this, REQUEST_CODE_PERMISSION);
-        }
-    }
-
     private void updateProfilePicture(Uri selectedImageUri) {
         mProgressDialog.setMessage(getString(R.string.uploading_profile_picture));
         mProgressDialog.show();
@@ -286,7 +276,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        selectImageToUpload();
+                       customUploadPickerDialog.show();
                     }
                 });
         mProfilePictureErrorDialog = mProfilePictureErrorDialogBuilder.build();

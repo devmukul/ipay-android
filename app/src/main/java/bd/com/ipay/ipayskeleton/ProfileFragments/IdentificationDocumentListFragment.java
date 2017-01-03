@@ -171,8 +171,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             DOCUMENT_HINT_TYPES = getResources().getStringArray(R.array.business_document_id);
         } else
             DOCUMENT_HINT_TYPES = getResources().getStringArray(R.array.personal_document_id);
-
-
     }
 
     @Override
@@ -265,11 +263,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
                 mIdentificationDocumentDetails[i] = new IdentificationDocumentDetails(DOCUMENT_TYPES[i],
                         getString(DOCUMENT_TYPE_NAMES[i]), documentId, verificationStatus, documentUrl);
-
             }
         }
-
-
     }
 
     private void getIdentificationDocuments() {
@@ -438,7 +433,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                             } else
                                 getIdentificationDocuments();
                         }
-
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -544,7 +538,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mSelectFile = (EditText) itemView.findViewById(R.id.select_file);
                 mUploadButton = (Button) itemView.findViewById(R.id.button_upload);
                 mPicker = (ImageView) itemView.findViewById(R.id.button_select_file);
-
             }
 
             public void bindView(final int pos) {
