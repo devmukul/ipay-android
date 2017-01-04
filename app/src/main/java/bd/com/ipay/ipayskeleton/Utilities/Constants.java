@@ -42,6 +42,7 @@ public class Constants {
     public static final String TRANSACTION_DETAILS = "TRANSACTION_DETAILS";
     public static final String MONEY_REQUEST_ID = "MONEY REQUESTS ID";
     public static final String MONEY_REQUEST_SERVICE_ID = "SERVICE_ID";
+    public static final String TRANSACTION_ID = "TRANSACTION_ID";
 
     public static final String VERIFIED_USERS_ONLY = "VERIFIED_USERS_ONLY";
     public static final String IPAY_MEMBERS_ONLY = "IPAY_MEMBERS_ONLY";
@@ -188,7 +189,7 @@ public class Constants {
             BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_FRIEND = "http://10.15.40.14:1337/v1/";
-            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
+            BASE_URL_ADMIN = "http://10.15.40.15:8085/api/v1/support/";
             BASE_URL_WEB = "http://test.ipay.com.bd";
             SERVER_NAME = "test";
 
