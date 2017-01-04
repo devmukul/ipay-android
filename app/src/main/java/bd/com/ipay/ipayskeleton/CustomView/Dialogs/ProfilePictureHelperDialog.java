@@ -14,43 +14,40 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.R;
 
-public class CustomUploadPickerDialogPicHelper extends AlertDialog {
+public class ProfilePictureHelperDialog extends AlertDialog {
     private Context context;
-
-    private List<String> resources;
-    private String mTitle;
 
     private OnResourceSelectedListener onResourceSelectedListener;
 
     private LayoutInflater inflater;
-    private View view, viewTitle;
-    private TextView textViewTitle;
+
+    private View selectImageHeaderView;
+    private TextView selectImageHeaderTitle;
     private ListView popUpList;
 
-
-    public CustomUploadPickerDialogPicHelper(Context context, String mTitle, List<String> resources) {
+    public ProfilePictureHelperDialog(Context context, String mTitle, List<String> resources) {
         super(context);
 
+        View v = inflater.inflate(R.layout.dialog_custom_view_pic_helper, null);
         this.context = context;
-        this.resources = resources;
-        this.mTitle = mTitle;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        viewTitle = inflater.inflate(R.layout.dialog_selector_header, null);
-        textViewTitle = (TextView) viewTitle.findViewById(R.id.textviewTitle);
-        textViewTitle.setText(mTitle);
-        this.setCustomTitle(viewTitle);
+        selectImageHeaderView = inflater.inflate(R.layout.dialog_selector_header, null);
+        selectImageHeaderTitle = (TextView) selectImageHeaderView.findViewById(R.id.textviewTitle);
+        selectImageHeaderTitle.setText(mTitle);
 
-        view = inflater.inflate(R.layout.dialog_custom_view_pic_helper, null);
-        this.setView(view);
+        this.setCustomTitle(selectImageHeaderView);
+        this.setView(v);
 
-        setItems(resources);
+        setItems(resources, v);
     }
 
-    public void setItems(final List<String> resources) {
+    public void setItems(final List<String> resources, final View view) {
 
         popUpList = (ListView) view.findViewById(R.id.custom_list);
+
         SelectorAdapter adapter = new SelectorAdapter(context, resources);
         popUpList.setAdapter(adapter);
+
         popUpList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -86,7 +83,7 @@ public class CustomUploadPickerDialogPicHelper extends AlertDialog {
             View view = convertView;
 
             if (view == null)
-                view = inflater.inflate(R.layout.list_item_custom_selector_center, null);
+                view = inflater.inflate(R.layout.custom_selector_list_item_centered, null);
 
             TextView selectorView = (TextView) view.findViewById(R.id.textViewSelectorName);
             selectorView.setText(mSelectorName);
