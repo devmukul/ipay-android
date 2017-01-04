@@ -83,7 +83,7 @@
 
                 <TextView
                     style="@style/TextViewInfoLabelReview"
-                    android:text="@string/net_amount" />
+                    android:text="@string/recipient_net_amount" />
 
                 <TextView
                     android:id="@+id/textview_net_amount"
