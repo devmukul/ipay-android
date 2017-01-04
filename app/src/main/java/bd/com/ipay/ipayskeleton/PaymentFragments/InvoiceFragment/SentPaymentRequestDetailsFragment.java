@@ -1,10 +1,8 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -349,11 +347,11 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
 
             View v;
             if (viewType == INVOICE_DETAILS_LIST_HEADER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.sent_invoice_details_header, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.sent_payment_request_details_header, parent, false);
                 return new ListHeaderViewHolder(v);
 
             } else if (viewType == INVOICE_DETAILS_LIST_FOOTER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.sent_invoice_details_footer, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.sent_payment_request_details_footer, parent, false);
                 return new ListFooterViewHolder(v);
 
             } else {
