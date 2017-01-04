@@ -28,7 +28,7 @@ public class ProfilePictureHelperDialog extends AlertDialog {
     public ProfilePictureHelperDialog(Context context, String mTitle, List<String> resources) {
         super(context);
 
-        View v = inflater.inflate(R.layout.dialog_custom_view_pic_helper, null);
+        View v = inflater.inflate(R.layout.dialog_profile_picture_helper, null);
         this.context = context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         selectImageHeaderView = inflater.inflate(R.layout.dialog_selector_header, null);
@@ -43,7 +43,7 @@ public class ProfilePictureHelperDialog extends AlertDialog {
 
     public void setItems(final List<String> resources, final View view) {
 
-        imageSelectorOptionsListView = (ListView) view.findViewById(R.id.custom_list);
+        imageSelectorOptionsListView = (ListView) view.findViewById(R.id.image_selection_option_list);
 
         SelectorAdapter adapter = new SelectorAdapter(context, resources);
         imageSelectorOptionsListView.setAdapter(adapter);

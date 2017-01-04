@@ -29,7 +29,7 @@
     </RelativeLayout>
 
     <ListView
-        android:id="@+id/custom_list"
+        android:id="@+id/image_selection_option_list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:dividerHeight="1px" />
