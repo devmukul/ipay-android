@@ -12,6 +12,7 @@ public class PendingPaymentClass {
     private Long requestTime;
     private String title;
     private Long serviceID;
+    private String transactionID;
     public String description;
     private UserProfile originatorProfile;
     private UserProfile receiverProfile;
@@ -64,6 +65,10 @@ public class PendingPaymentClass {
 
     public Long getServiceID() {
         return serviceID;
+    }
+
+    public String getTransactionID() {
+        return transactionID;
     }
 
     public int getStatus() {

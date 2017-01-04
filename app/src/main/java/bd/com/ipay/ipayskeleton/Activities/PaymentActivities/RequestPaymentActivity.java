@@ -51,6 +51,7 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
     private BigDecimal mAmount;
     private BigDecimal mVat;
     private long mRequestID;
+    private String mTransactionID;
     private List<InvoiceItem> mInvoiceItemList;
 
     private String mName;
@@ -206,6 +207,7 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
                     mDescription = mGetSingleRequestPaymentDetailsResponse.description;
                     mTime = Utilities.formatDateWithTime(mGetSingleRequestPaymentDetailsResponse.getRequestTime());
                     mRequestID = mGetSingleRequestPaymentDetailsResponse.getId();
+                    mTransactionID = mGetSingleRequestPaymentDetailsResponse.getTransactionID();
                     mAmount = mGetSingleRequestPaymentDetailsResponse.getAmount();
                     mVat = mGetSingleRequestPaymentDetailsResponse.getVat();
                     mTitle = mGetSingleRequestPaymentDetailsResponse.getTitle();
@@ -270,6 +272,7 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
         bundle.putString(Constants.VAT, mVat.toString());
         bundle.putString(Constants.TITLE, mTitle);
         bundle.putInt(Constants.STATUS, Constants.INVOICE_STATUS_PROCESSING);
+        bundle.putString(Constants.TRANSACTION_ID, mTransactionID);
 
         if (mInvoiceItemList != null)
             bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mInvoiceItemList));

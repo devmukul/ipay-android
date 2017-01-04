@@ -53,7 +53,8 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
     private int mStatus;
     private BigDecimal mAmount;
     private BigDecimal mVat;
-    private long mId;
+    private long mID;
+    private String mTransactionID;
     private List<InvoiceItem> mInvoiceItemList;
     private String mReceiverName;
     private String mReceiverMobileNumber;
@@ -226,6 +227,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
                 final String description = pendingPaymentClasses.get(pos).getDescription();
                 final long id = pendingPaymentClasses.get(pos).getId();
                 final InvoiceItem[] itemList = pendingPaymentClasses.get(pos).getItemList();
+                final String transactionID = pendingPaymentClasses.get(pos).getTransactionID();
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
@@ -266,7 +268,8 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing()) {
                             mTime = time;
-                            mId = id;
+                            mID = id;
+                            mTransactionID = transactionID;
                             mAmount = amount;
                             mVat = vat;
                             if (itemList != null)
@@ -387,13 +390,14 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
         Bundle bundle = new Bundle();
         bundle.putString(Constants.DESCRIPTION, mDescription);
         bundle.putString(Constants.TIME, mTime);
-        bundle.putLong(Constants.MONEY_REQUEST_ID, mId);
+        bundle.putLong(Constants.MONEY_REQUEST_ID, mID);
         bundle.putString(Constants.AMOUNT, mAmount.toString());
         bundle.putString(Constants.VAT, mVat.toString());
         bundle.putInt(Constants.STATUS, mStatus);
         bundle.putString(Constants.PHOTO_URI, mPhotoUri);
         bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
         bundle.putString(Constants.NAME, mReceiverName);
+        bundle.putString(Constants.TRANSACTION_ID, mTransactionID);
 
         if (mInvoiceItemList != null)
             bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mInvoiceItemList));

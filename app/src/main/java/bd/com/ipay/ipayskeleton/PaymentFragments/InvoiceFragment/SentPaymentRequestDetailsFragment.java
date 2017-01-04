@@ -57,6 +57,7 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
     private String mDescription;
     private String mTime;
     private long mID;
+    private String mTransactionID;
     private int status;
     private String mReceiverName;
     private String mReceiverMobileNumber;
@@ -81,6 +82,7 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
         this.mDescription = bundle.getString(Constants.DESCRIPTION);
         this.mTime = bundle.getString(Constants.TIME);
         this.mID = bundle.getLong(Constants.MONEY_REQUEST_ID);
+        this.mTransactionID = bundle.getString(Constants.TRANSACTION_ID);
         this.status = bundle.getInt(Constants.STATUS);
         this.mReceiverMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
         this.mReceiverName = bundle.getString(Constants.NAME);
@@ -209,7 +211,7 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
 
             final TextView descriptionTextView;
             final TextView timeTextView;
-            final TextView invoiceIDTextView;
+            final TextView transactionIDTextView;
 
             private final TextView mItemNameView;
             private final TextView mQuantityView;
@@ -237,7 +239,7 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
 
                 descriptionTextView = (TextView) itemView.findViewById(R.id.description);
                 timeTextView = (TextView) itemView.findViewById(R.id.time);
-                invoiceIDTextView = (TextView) itemView.findViewById(R.id.invoice_id);
+                transactionIDTextView = (TextView) itemView.findViewById(R.id.invoice_id);
 
                 mItemNameView = (TextView) itemView.findViewById(R.id.textview_item);
                 mQuantityView = (TextView) itemView.findViewById(R.id.textview_quantity);
@@ -279,7 +281,7 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
 
                 descriptionTextView.setText(mDescription);
                 timeTextView.setText(mTime);
-                invoiceIDTextView.setText(String.valueOf(mID));
+                transactionIDTextView.setText(String.valueOf(mTransactionID));
             }
 
             public void bindViewForFooter() {
