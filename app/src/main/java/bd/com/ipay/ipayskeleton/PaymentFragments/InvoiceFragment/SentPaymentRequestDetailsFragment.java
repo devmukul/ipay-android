@@ -57,6 +57,7 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
     private String mDescription;
     private String mTime;
     private long mID;
+    private String mTransactionID;
     private int status;
     private String mReceiverName;
     private String mReceiverMobileNumber;
@@ -81,6 +82,7 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
         this.mDescription = bundle.getString(Constants.DESCRIPTION);
         this.mTime = bundle.getString(Constants.TIME);
         this.mID = bundle.getLong(Constants.MONEY_REQUEST_ID);
+        this.mTransactionID = bundle.getString(Constants.TRANSACTION_ID);
         this.status = bundle.getInt(Constants.STATUS);
         this.mReceiverMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
         this.mReceiverName = bundle.getString(Constants.NAME);
@@ -207,15 +209,15 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            final TextView descriptionTextView;
-            final TextView timeTextView;
-            final TextView invoiceIDTextView;
+            final TextView mDescriptionTextView;
+            final TextView mTimeTextView;
+            final TextView mTransactionIDTextView;
 
             private final TextView mItemNameView;
             private final TextView mQuantityView;
             private final TextView mAmountView;
 
-            private final View headerView;
+            private final View mHeaderView;
 
             private final ProfileImageView mProfileImageView;
             private final TextView mNameView;
@@ -235,15 +237,15 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
                 mNameView = (TextView) itemView.findViewById(R.id.textview_name);
                 mMobileNumberView = (TextView) itemView.findViewById(R.id.textview_mobile_number);
 
-                descriptionTextView = (TextView) itemView.findViewById(R.id.description);
-                timeTextView = (TextView) itemView.findViewById(R.id.time);
-                invoiceIDTextView = (TextView) itemView.findViewById(R.id.invoice_id);
+                mDescriptionTextView = (TextView) itemView.findViewById(R.id.description);
+                mTimeTextView = (TextView) itemView.findViewById(R.id.time);
+                mTransactionIDTextView = (TextView) itemView.findViewById(R.id.invoice_id);
 
                 mItemNameView = (TextView) itemView.findViewById(R.id.textview_item);
                 mQuantityView = (TextView) itemView.findViewById(R.id.textview_quantity);
                 mAmountView = (TextView) itemView.findViewById(R.id.textview_amount);
                 mServiceChargeView = (TextView) itemView.findViewById(R.id.textview_service_charge);
-                headerView = itemView.findViewById(R.id.header);
+                mHeaderView = itemView.findViewById(R.id.header);
 
                 mNetAmountView = (TextView) itemView.findViewById(R.id.textview_net_amount);
                 mVatView = (TextView) itemView.findViewById(R.id.textview_vat);
@@ -265,7 +267,7 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
             public void bindViewForHeader() {
 
                 if (mInvoiceItemArray == null || mInvoiceItemArray.length == 0) {
-                    headerView.setVisibility(View.GONE);
+                    mHeaderView.setVisibility(View.GONE);
                 }
 
                 if (mReceiverName == null || mReceiverName.isEmpty()) {
@@ -277,9 +279,9 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
                 mMobileNumberView.setText(mReceiverMobileNumber);
                 mProfileImageView.setProfilePicture(mPhotoUri, false);
 
-                descriptionTextView.setText(mDescription);
-                timeTextView.setText(mTime);
-                invoiceIDTextView.setText(String.valueOf(mID));
+                mDescriptionTextView.setText(mDescription);
+                mTimeTextView.setText(mTime);
+                mTransactionIDTextView.setText(String.valueOf(mTransactionID));
             }
 
             public void bindViewForFooter() {
