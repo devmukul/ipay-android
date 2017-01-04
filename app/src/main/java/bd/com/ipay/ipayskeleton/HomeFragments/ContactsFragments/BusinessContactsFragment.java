@@ -217,6 +217,7 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
                         if (businessType.getId() == businessTypeID) {
                             businessTypeView.setText(businessType.getName());
                             businessTypeView.setVisibility(View.VISIBLE);
+                            break;
                         }
                     }
                 }
