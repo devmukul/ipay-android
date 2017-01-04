@@ -209,15 +209,15 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            final TextView descriptionTextView;
-            final TextView timeTextView;
-            final TextView transactionIDTextView;
+            final TextView mDescriptionTextView;
+            final TextView mTimeTextView;
+            final TextView mTransactionIDTextView;
 
             private final TextView mItemNameView;
             private final TextView mQuantityView;
             private final TextView mAmountView;
 
-            private final View headerView;
+            private final View mHeaderView;
 
             private final ProfileImageView mProfileImageView;
             private final TextView mNameView;
@@ -237,15 +237,15 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
                 mNameView = (TextView) itemView.findViewById(R.id.textview_name);
                 mMobileNumberView = (TextView) itemView.findViewById(R.id.textview_mobile_number);
 
-                descriptionTextView = (TextView) itemView.findViewById(R.id.description);
-                timeTextView = (TextView) itemView.findViewById(R.id.time);
-                transactionIDTextView = (TextView) itemView.findViewById(R.id.invoice_id);
+                mDescriptionTextView = (TextView) itemView.findViewById(R.id.description);
+                mTimeTextView = (TextView) itemView.findViewById(R.id.time);
+                mTransactionIDTextView = (TextView) itemView.findViewById(R.id.invoice_id);
 
                 mItemNameView = (TextView) itemView.findViewById(R.id.textview_item);
                 mQuantityView = (TextView) itemView.findViewById(R.id.textview_quantity);
                 mAmountView = (TextView) itemView.findViewById(R.id.textview_amount);
                 mServiceChargeView = (TextView) itemView.findViewById(R.id.textview_service_charge);
-                headerView = itemView.findViewById(R.id.header);
+                mHeaderView = itemView.findViewById(R.id.header);
 
                 mNetAmountView = (TextView) itemView.findViewById(R.id.textview_net_amount);
                 mVatView = (TextView) itemView.findViewById(R.id.textview_vat);
@@ -267,7 +267,7 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
             public void bindViewForHeader() {
 
                 if (mInvoiceItemArray == null || mInvoiceItemArray.length == 0) {
-                    headerView.setVisibility(View.GONE);
+                    mHeaderView.setVisibility(View.GONE);
                 }
 
                 if (mReceiverName == null || mReceiverName.isEmpty()) {
@@ -279,9 +279,9 @@ public class SentPaymentRequestDetailsFragment extends ReviewFragment implements
                 mMobileNumberView.setText(mReceiverMobileNumber);
                 mProfileImageView.setProfilePicture(mPhotoUri, false);
 
-                descriptionTextView.setText(mDescription);
-                timeTextView.setText(mTime);
-                transactionIDTextView.setText(String.valueOf(mTransactionID));
+                mDescriptionTextView.setText(mDescription);
+                mTimeTextView.setText(mTime);
+                mTransactionIDTextView.setText(String.valueOf(mTransactionID));
             }
 
             public void bindViewForFooter() {
