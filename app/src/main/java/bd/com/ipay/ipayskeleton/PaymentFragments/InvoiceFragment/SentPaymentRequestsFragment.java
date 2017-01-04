@@ -223,8 +223,8 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
                 final int status = pendingPaymentClasses.get(pos).getStatus();
                 final BigDecimal amount = pendingPaymentClasses.get(pos).getAmount();
                 final BigDecimal vat = pendingPaymentClasses.get(pos).getVat();
-                final String descriptionofRequest = pendingPaymentClasses.get(pos).getDescriptionofRequest();
-                final String description = pendingPaymentClasses.get(pos).getDescription();
+                final String descriptionofRequest = pendingPaymentClasses.get(pos).getDescriptionOfRequest();
+                final String description = pendingPaymentClasses.get(pos).getCustomizedDescription();
                 final long id = pendingPaymentClasses.get(pos).getId();
                 final InvoiceItem[] itemList = pendingPaymentClasses.get(pos).getItemList();
                 final String transactionID = pendingPaymentClasses.get(pos).getTransactionID();
