@@ -11,10 +11,10 @@ public class DocumentPreviewDetails {
     private Uri selectedDocumentUri = null;
     private String selectedFilePath = "";
     private String documentId = "";
-    private boolean mIsViewOpen;
+    private boolean isViewOpen;
 
     public DocumentPreviewDetails() {
-        this.mIsViewOpen = false;
+        this.isViewOpen = false;
     }
 
     public String getDocumentType() {
@@ -49,14 +49,6 @@ public class DocumentPreviewDetails {
         this.documentUrl = documentUrl;
     }
 
-    public boolean ismIsViewOpen() {
-        return mIsViewOpen;
-    }
-
-    public void setmIsViewOpen(boolean mIsViewOpen) {
-        this.mIsViewOpen = mIsViewOpen;
-    }
-
     public Uri getSelectedDocumentUri() {
         return selectedDocumentUri;
     }
@@ -82,10 +74,10 @@ public class DocumentPreviewDetails {
     }
 
     public boolean isViewOpen() {
-        return mIsViewOpen;
+        return isViewOpen;
     }
 
     public void setIsViewOpen(boolean mIsViewOpen) {
-        this.mIsViewOpen = mIsViewOpen;
+        this.isViewOpen = mIsViewOpen;
     }
 }
