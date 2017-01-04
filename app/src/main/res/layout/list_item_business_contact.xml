@@ -29,6 +29,7 @@
         android:id="@+id/info_holder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/status_holder"
         android:layout_toRightOf="@+id/profile_picture_holder">
 
         <TextView
@@ -53,7 +54,8 @@
             android:paddingBottom="2dp"
             android:singleLine="true"
             android:textColor="@color/colorTextPrimary"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/mobile_number"
