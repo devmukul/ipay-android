@@ -212,9 +212,14 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
                 mobileNumberView.setText(mobileNumber);
                 profilePictureView.setProfilePicture(profilePictureUrl, false);
 
-                for (BusinessType businessType : CommonData.getBusinessTypes()) {
-                    if (businessType.getId() == businessTypeID)
-                        businessTypeView.setText(businessType.getName());
+                if (CommonData.getBusinessTypes() != null) {
+                    for (BusinessType businessType : CommonData.getBusinessTypes()) {
+                        if (businessType.getId() == businessTypeID) {
+                            businessTypeView.setText(businessType.getName());
+                            businessTypeView.setVisibility(View.VISIBLE);
+                            break;
+                        }
+                    }
                 }
 
                 itemView.setOnClickListener(new View.OnClickListener() {

@@ -53,7 +53,8 @@
             android:paddingBottom="2dp"
             android:singleLine="true"
             android:textColor="@color/colorTextPrimary"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/mobile_number"
