@@ -204,7 +204,7 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                     mInvoiceItemList = Arrays.asList(mGetSingleRequestPaymentDetailsResponse.getItemList());
-                    mDescription = mGetSingleRequestPaymentDetailsResponse.description;
+                    mDescription = mGetSingleRequestPaymentDetailsResponse.getDescriptionOfRequest();
                     mTime = Utilities.formatDateWithTime(mGetSingleRequestPaymentDetailsResponse.getRequestTime());
                     mRequestID = mGetSingleRequestPaymentDetailsResponse.getId();
                     mTransactionID = mGetSingleRequestPaymentDetailsResponse.getTransactionID();

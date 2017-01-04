@@ -13,7 +13,7 @@ public class PendingPaymentClass {
     private String title;
     private Long serviceID;
     private String transactionID;
-    public String description;
+    private String description;
     private UserProfile originatorProfile;
     private UserProfile receiverProfile;
     private int status;
