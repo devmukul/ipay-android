@@ -23,7 +23,7 @@ public class ProfilePictureHelperDialog extends AlertDialog {
 
     private View selectImageHeaderView;
     private TextView selectImageHeaderTitle;
-    private ListView popUpList;
+    private ListView imageSelectorOptionsListView;
 
     public ProfilePictureHelperDialog(Context context, String mTitle, List<String> resources) {
         super(context);
@@ -43,12 +43,12 @@ public class ProfilePictureHelperDialog extends AlertDialog {
 
     public void setItems(final List<String> resources, final View view) {
 
-        popUpList = (ListView) view.findViewById(R.id.custom_list);
+        imageSelectorOptionsListView = (ListView) view.findViewById(R.id.custom_list);
 
         SelectorAdapter adapter = new SelectorAdapter(context, resources);
-        popUpList.setAdapter(adapter);
+        imageSelectorOptionsListView.setAdapter(adapter);
 
-        popUpList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        imageSelectorOptionsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String name = resources.get(i);
