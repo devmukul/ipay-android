@@ -23,37 +23,36 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class CustomSearchViewEditText extends FrameLayout {
+public class CustomSearchViewBusinessContact extends FrameLayout {
 
     private CustomAutoCompleteView mCustomAutoCompleteView;
     private TextView mMobileNumberHintView;
 
-    private ContactListAdapter mAdapter;
+    private BusinessContactListAdapter mAdapter;
 
     private Cursor mCursor;
+    private String mQuery = "";
 
     private int businessNameIndex;
     private int phoneNumberIndex;
     private int profilePictureUrlIndex;
     private int businessTypeIndex;
 
-    private String mQuery = "";
-
     private Context context;
 
     private List<BusinessContact> mBusinessContacts;
 
-    public CustomSearchViewEditText(Context context, AttributeSet attrs, int defStyle) {
+    public CustomSearchViewBusinessContact(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView(context, attrs);
     }
 
-    public CustomSearchViewEditText(Context context, AttributeSet attrs) {
+    public CustomSearchViewBusinessContact(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView(context, attrs);
     }
 
-    public CustomSearchViewEditText(Context context) {
+    public CustomSearchViewBusinessContact(Context context) {
         super(context);
         initView(context, null);
     }
@@ -63,7 +62,7 @@ public class CustomSearchViewEditText extends FrameLayout {
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflater.inflate(R.layout.view_custom_search_view_edit_text, this, true);
+        View v = inflater.inflate(R.layout.view_business_contact_search_view, this, true);
 
         mCustomAutoCompleteView = (CustomAutoCompleteView) v.findViewById(R.id.auto_complete_view);
         mMobileNumberHintView = (TextView) v.findViewById(R.id.mobile_number_hint);
@@ -72,13 +71,11 @@ public class CustomSearchViewEditText extends FrameLayout {
 
         mBusinessContacts = new ArrayList<>();
 
-        mAdapter = new ContactListAdapter(context, mBusinessContacts);
+        mAdapter = new BusinessContactListAdapter(context, mBusinessContacts);
         mCustomAutoCompleteView.setAdapter(mAdapter);
-
     }
 
     public class CustomAutoCompleteTextChangedListener implements TextWatcher {
-
 
         public CustomAutoCompleteTextChangedListener() {
         }
@@ -86,19 +83,16 @@ public class CustomSearchViewEditText extends FrameLayout {
         @Override
         public void afterTextChanged(Editable s) {
             // TODO Auto-generated method stub
-
         }
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count,
                                       int after) {
             // TODO Auto-generated method stub
-
         }
 
         @Override
         public void onTextChanged(CharSequence userInput, int start, int before, int count) {
-
             if (userInput.length() > 0)
                 mMobileNumberHintView.setVisibility(VISIBLE);
             else
@@ -107,8 +101,7 @@ public class CustomSearchViewEditText extends FrameLayout {
             mQuery = userInput.toString();
 
             // Query the database based on the user input
-            readContactsFromDB();
-
+            readBusinessContactsFromDB();
         }
     }
 
@@ -125,7 +118,7 @@ public class CustomSearchViewEditText extends FrameLayout {
     }
 
 
-    public void readContactsFromDB() {
+    public void readBusinessContactsFromDB() {
 
         DataHelper dataHelper = DataHelper.getInstance(context);
 
@@ -161,16 +154,15 @@ public class CustomSearchViewEditText extends FrameLayout {
 
                 } while (mCursor.moveToNext());
 
-            mAdapter = new ContactListAdapter(context, mBusinessContacts);
+            mAdapter = new BusinessContactListAdapter(context, mBusinessContacts);
             mCustomAutoCompleteView.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
         }
 
         mCursor.close();
-
     }
 
-    public class ContactListAdapter extends ArrayAdapter<BusinessContact> {
+    public class BusinessContactListAdapter extends ArrayAdapter<BusinessContact> {
 
         private LayoutInflater inflater;
 
@@ -179,7 +171,7 @@ public class CustomSearchViewEditText extends FrameLayout {
         private TextView mobileNumberView;
         private ProfileImageView profilePictureView;
 
-        public ContactListAdapter(Context context, List<BusinessContact> objects) {
+        public BusinessContactListAdapter(Context context, List<BusinessContact> objects) {
             super(context, 0, objects);
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
@@ -202,11 +194,13 @@ public class CustomSearchViewEditText extends FrameLayout {
             final String businessType = businessContact.getBusinessType();
             final String profilePictureUrl = Constants.BASE_URL_FTP_SERVER + businessContact.getProfilePictureUrl();
 
-            if (businessName != null && !businessName.isEmpty()) {
+            if (businessName != null && !businessName.isEmpty())
                 businessNameView.setText(businessName);
-            }
 
-            businessTypeView.setText(businessType);
+            if (businessType != null) {
+                businessTypeView.setText(businessType);
+                businessTypeView.setVisibility(VISIBLE);
+            }
             mobileNumberView.setText(mobileNumber);
             profilePictureView.setProfilePicture(profilePictureUrl, false);
 

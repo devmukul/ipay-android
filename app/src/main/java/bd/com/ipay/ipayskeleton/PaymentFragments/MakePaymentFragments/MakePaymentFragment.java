@@ -32,8 +32,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentReviewActivi
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.CustomView.CustomSearchViewEditText;
-import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
+import bd.com.ipay.ipayskeleton.CustomView.CustomSearchViewBusinessContact;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
@@ -53,7 +52,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
     private Button buttonPayment;
     private ImageView buttonSelectFromContacts;
     private ImageView buttonScanQRCode;
-    private CustomSearchViewEditText mMobileNumberEditText;
+    private CustomSearchViewBusinessContact mMobileNumberEditText;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
     private EditText mRefNumberEditText;
@@ -69,7 +68,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_make_payment, container, false);
         getActivity().setTitle(R.string.make_payment);
-        mMobileNumberEditText = (CustomSearchViewEditText) v.findViewById(R.id.mobile_number);
+        mMobileNumberEditText = (CustomSearchViewBusinessContact) v.findViewById(R.id.mobile_number);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mRefNumberEditText = (EditText) v.findViewById(R.id.reference_number);

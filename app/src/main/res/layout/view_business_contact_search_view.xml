@@ -14,7 +14,7 @@
         android:fontFamily="sans-serif-light"
         android:text="@string/mobile_number"
         android:textSize="@dimen/text_size_extra_small"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
     <bd.com.ipay.ipayskeleton.CustomView.CustomAutoCompleteView
         android:id="@+id/auto_complete_view"
@@ -23,7 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/mobile_number_hint"
         android:completionThreshold="1"
-        android:hint="@string/mobile_number">
+        android:hint="@string/mobile_number"
+        android:singleLine="true">
     </bd.com.ipay.ipayskeleton.CustomView.CustomAutoCompleteView>
 
 </RelativeLayout>
