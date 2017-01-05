@@ -3,9 +3,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HelpAndSupportFragments;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,11 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -59,7 +56,8 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     private CommentListAdapter mCommentListAdapter;
 
     private TextView mSubjectView;
-    private FloatingActionButton mSubmitCommentButton;
+    private ImageButton mSendCommentButton;
+    private EditText mUserCommentEditText;
 
     private ProgressDialog mProgressDialog;
 
@@ -71,7 +69,8 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         ticketId = getArguments().getLong(Constants.TICKET_ID);
 
         mSubjectView = (TextView) v.findViewById(R.id.textview_subject);
-        mSubmitCommentButton = (FloatingActionButton) v.findViewById(R.id.fab_new_comment);
+        mUserCommentEditText = (EditText) v.findViewById(R.id.user_comment_text);
+        mSendCommentButton = (ImageButton) v.findViewById(R.id.btn_send);
 
         mCommentListAdapter = new CommentListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -93,10 +92,10 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-        mSubmitCommentButton.setOnClickListener(new View.OnClickListener() {
+        mSendCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAddCommentDialog();
+                addUserComment();
             }
         });
 
@@ -109,40 +108,22 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         getTicketDetails();
     }
 
-    private void showAddCommentDialog() {
-        MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
-        dialog
-                .title(R.string.add_comment)
-                .customView(R.layout.dialog_add_comment, false)
-                .autoDismiss(false)
-                .positiveText(R.string.submit)
-                .negativeText(R.string.cancel);
+    private boolean validateUserComment() {
+        if (mUserCommentEditText.getText().toString().trim().isEmpty()) return false;
+        else return true;
+    }
 
-        final EditText commentEditText = (EditText) dialog.build().getCustomView().findViewById(R.id.comment);
-        dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                String comment = commentEditText.getText().toString();
-                if (comment.isEmpty()) {
-                    commentEditText.setError(getString(R.string.comment_cannot_be_empty));
-                } else {
-                    addComment(comment);
-                    Utilities.hideKeyboard(getActivity(), commentEditText);
-                    dialog.dismiss();
-                }
-            }
-        });
+    private void addUserComment() {
+        if (validateUserComment()) {
+            String comment = mUserCommentEditText.getText().toString().trim();
+            sendComment(comment);
 
-        dialog.onNegative(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                Utilities.hideKeyboard(getActivity(), commentEditText);
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-        Utilities.showKeyboard(getActivity());
+            mUserCommentEditText.getText().clear();
+            Utilities.hideKeyboard(getActivity(), mUserCommentEditText);
+        } else {
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.comment_cannot_be_empty, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void getTicketDetails() {
@@ -156,7 +137,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         mGetTicketDetailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void addComment(String comment) {
+    private void sendComment(String comment) {
         if (mNewCommentTask != null)
             return;
 
@@ -213,7 +194,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                         if (ticketStatus.equals(Constants.TICKET_STATUS_NEW)
                                 || ticketStatus.equals(Constants.TICKET_STATUS_SOLVED)
                                 || ticketStatus.equals(Constants.TICKET_STATUS_CLOSED)) {
-                            mSubmitCommentButton.setVisibility(View.GONE);
+                            mSendCommentButton.setVisibility(View.GONE);
                         }
 
                         if (isAdded())
@@ -286,7 +267,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                 if (comment.getAuthorId().equals(requesterId)) {
                     profilePictureView.setProfilePicture(ProfileInfoCacheManager.getProfileImageUrl(), false);
                 } else {
-                    profilePictureView.setProfilePicture(R.drawable.ic_logo);
+                    profilePictureView.setProfilePicture(R.drawable.ic_transaction_ipaylogo);
                 }
                 commentView.setText(comment.getBody());
                 timeView.setText(Utilities.formatDateWithTime(comment.getCreatedAt()));

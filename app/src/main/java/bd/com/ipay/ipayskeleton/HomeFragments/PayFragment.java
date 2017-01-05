@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -26,8 +25,7 @@ import com.google.zxing.integration.android.IntentResult;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationPaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SingleInvoiceActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
@@ -132,6 +130,11 @@ public class PayFragment extends Fragment {
         super.onPrepareOptionsMenu(menu);
         if (menu.findItem(R.id.action_search_contacts) != null)
             menu.findItem(R.id.action_search_contacts).setVisible(false);
+
+        if (menu.findItem(R.id.action_filter_by_service) != null)
+            menu.findItem(R.id.action_filter_by_service).setVisible(false);
+        if (menu.findItem(R.id.action_filter_by_date) != null)
+            menu.findItem(R.id.action_filter_by_date).setVisible(false);
     }
 
     private class WalletActionListAdapter extends ArrayAdapter<ServiceAction> {
@@ -169,7 +172,7 @@ public class PayFragment extends Fragment {
                                     @Override
                                     public void ifPinAdded() {
                                         Intent intent;
-                                        intent = new Intent(getActivity(), InvoiceActivity.class);
+                                        intent = new Intent(getActivity(), RequestPaymentActivity.class);
                                         startActivity(intent);
                                     }
                                 });

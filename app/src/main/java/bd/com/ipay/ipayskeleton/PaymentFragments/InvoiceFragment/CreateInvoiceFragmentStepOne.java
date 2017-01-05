@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -145,7 +145,7 @@ public class CreateInvoiceFragmentStepOne extends Fragment {
         bundle.putString(Constants.INVOICE_DESCRIPTION_TAG, description);
         bundle.putString(Constants.INVOICE_QUANTITY_TAG, quantity);
 
-        ((InvoiceActivity)getActivity()).switchToCreateInvoiceStepTwoFragment(bundle);
+        ((RequestPaymentActivity)getActivity()).switchToCreateInvoiceStepTwoFragment(bundle);
     }
 
     @Override

@@ -3,7 +3,7 @@ package bd.com.ipay.ipayskeleton.Model.MMModule.Notification;
 import java.math.BigDecimal;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class MoneyAndPaymentRequest implements Notification {
@@ -17,7 +17,7 @@ public class MoneyAndPaymentRequest implements Notification {
     public UserProfile originatorProfile;
     private UserProfile receiverProfile;
     private BigDecimal vat;
-    private List<ItemList> itemList;
+    private List<InvoiceItem> itemList;
     private int status;
     private String transactionID;
 
@@ -25,7 +25,7 @@ public class MoneyAndPaymentRequest implements Notification {
     public MoneyAndPaymentRequest() {
     }
 
-    public List<ItemList> getItemList() {
+    public List<InvoiceItem> getItemList() {
         return itemList;
     }
 
@@ -50,13 +50,16 @@ public class MoneyAndPaymentRequest implements Notification {
     }
 
     public String getNotificationTitle() {
-        if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) return "Payment Request";
-        else if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) return "Money Request";
+        if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE
+                || serviceID == Constants.SERVICE_ID_REQUEST_PAYMENT)
+            return "Payment Request";
+        else if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
+            return "Money Request";
         else return title;
     }
 
     public String getTitle() {
-       return title;
+        return title;
     }
 
     public UserProfile getOriginatorProfile() {
@@ -81,20 +84,6 @@ public class MoneyAndPaymentRequest implements Notification {
 
     public String getDescriptionofRequest() {
         return description;
-    }
-
-    @Override
-    public String getDescription() {
-
-        String customDescription = "";
-
-        if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) {
-            customDescription = getOriginatorProfile().getUserName() + " requested " + amount + " Tk.";
-        } else if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) {
-            customDescription = getOriginatorProfile().getUserName() + " sent an invoice of " + amount + " Tk.";
-        }
-
-        return customDescription;
     }
 
     @Override

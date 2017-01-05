@@ -18,7 +18,7 @@ import android.widget.Toast;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.CreateInvoiceReviewActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -183,7 +183,7 @@ public class CreateInvoiceFragmentStepTwo extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CREATE_INVOICE_REVIEW && resultCode == Activity.RESULT_OK) {
-            ((InvoiceActivity) getActivity()).switchToInvoicesSentFragment();
+            ((RequestPaymentActivity) getActivity()).switchToSentPaymentRequestsFragment();
         }
     }
 }

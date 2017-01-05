@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -55,7 +54,7 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
     private TextView mVatView;
     private TextView mTotalView;
     private TextView mServiceChargeView;
-    private TextView mNetReceivedView;
+    private TextView mNetAmountView;
 
     private TextView mDescriptionView;
     private Button mCreateInvoiceButton;
@@ -82,7 +81,7 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         mVatView = (TextView) v.findViewById(R.id.textview_vat);
         mTotalView = (TextView) v.findViewById(R.id.textview_total);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
-        mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
+        mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
 
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mCreateInvoiceButton = (Button) v.findViewById(R.id.button_create_invoice);
@@ -110,11 +109,11 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
             @Override
             public void onClick(View v) {
 
-                if (Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                        && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+                if (Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                        && Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
                     mError_message = InputValidator.isValidAmount(getActivity(), mTotal,
-                            PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                            PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+                            RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                            RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
                     if (mError_message == null) {
                         attemptSendInvoice();
@@ -127,9 +126,9 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         });
 
         // Check if min or max amount is available
-        if (!Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
-                && !Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_MAKE_PAYMENT);
+        if (!Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
+                && !Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
+            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_REQUEST_PAYMENT);
         else
             attemptGetServiceCharge();
         return v;
@@ -168,7 +167,7 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
 
     @Override
     public int getServiceID() {
-        return Constants.SERVICE_ID_MAKE_PAYMENT;
+        return Constants.SERVICE_ID_REQUEST_PAYMENT;
     }
 
     @Override
@@ -179,12 +178,12 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mNetReceivedView.setText(Utilities.formatTaka(mTotal.subtract(serviceCharge)));
+        mNetAmountView.setText(Utilities.formatTaka(mTotal.subtract(serviceCharge)));
     }
 
     @Override
     public void onPinLoadFinished(boolean isPinRequired) {
-        PaymentActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
+        RequestPaymentActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
     }
 
     @Override
@@ -197,7 +196,6 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
-
 
         Gson gson = new Gson();
 

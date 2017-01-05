@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.UserProfile;
 
-public class RequestsSentClass {
+public class MoneyRequest {
 
     private Long id;
     private BigDecimal amount;
@@ -17,7 +17,7 @@ public class RequestsSentClass {
     private int status;
     private String transactionID;
 
-    public RequestsSentClass() {
+    public MoneyRequest() {
     }
 
     public Long getId() {
@@ -33,9 +33,11 @@ public class RequestsSentClass {
         return requestTime;
     }
 
-    public String getTitle() { return title; }
+    public String getTitle() {
+        return title;
+    }
 
-    private UserProfile getOriginatorProfile() {
+    public UserProfile getOriginatorProfile() {
         return originatorProfile;
     }
 
@@ -55,17 +57,8 @@ public class RequestsSentClass {
         return transactionID;
     }
 
+
     public String getDescription() {
-
         return description;
-        /*String customDescription = "";
-
-        if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY) {
-            customDescription = getOriginatorProfile().getUserName() + " requested " + amount + " Tk.";
-        } else if (serviceID == Constants.SERVICE_ID_REQUEST_INVOICE) {
-            customDescription = description + ": " + getOriginatorProfile().getUserName() + " sent an invoice of " + amount + " Tk.";
-        }
-
-        return customDescription;*/
     }
 }

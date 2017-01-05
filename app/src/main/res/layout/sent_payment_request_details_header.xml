@@ -42,7 +42,7 @@
         <TextView
             style="@style/TextViewInfoLabelReview"
             android:layout_weight=".8"
-            android:text="@string/invoice_id" />
+            android:text="@string/transaction_id" />
 
         <TextView
             android:id="@+id/invoice_id"

@@ -1,9 +1,7 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,8 +23,7 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -163,7 +160,7 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
         });
 
         // Get business rule
-        attemptGetBusinessRule(Constants.SERVICE_ID_MAKE_PAYMENT);
+        attemptGetBusinessRule(Constants.SERVICE_ID_REQUEST_PAYMENT);
 
         return v;
     }
@@ -208,12 +205,12 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
         }
 
         if ((totalAmount.trim().length() > 0)
-                && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+                && Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                && Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
             String error_message = InputValidator.isValidAmount(getActivity(), mTotal,
-                    PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                    PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+                    RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                    RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
             if (error_message != null) {
                 error_message = error_message.replace(getString(R.string.payment_amount), getString(R.string.payment_total_amount));
@@ -280,7 +277,7 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
                 Toast.makeText(getActivity(), getString(R.string.no_contact_selected),
                         Toast.LENGTH_SHORT).show();
         } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CREATE_INVOICE_REVIEW)
-            ((InvoiceActivity) getActivity()).switchToInvoicesSentFragment();
+            ((RequestPaymentActivity) getActivity()).switchToSentPaymentRequestsFragment();
     }
 
     @Override
@@ -302,11 +299,11 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
                     if (businessRuleArray != null) {
                         for (BusinessRule rule : businessRuleArray) {
                             String ruleID = rule.getRuleID();
-                            if (ruleID.equals(Constants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT)) {
-                                PaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            if (ruleID.equals(Constants.SERVICE_RULE_REQUEST_PAYMENT_MAX_AMOUNT_PER_PAYMENT)) {
+                                RequestPaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
 
-                            } else if (ruleID.equals(Constants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
-                                PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            } else if (ruleID.equals(Constants.SERVICE_RULE_REQUEST_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
+                                RequestPaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                             }
                         }
                     }
@@ -314,12 +311,12 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             }
 
             mGetBusinessRuleTask = null;

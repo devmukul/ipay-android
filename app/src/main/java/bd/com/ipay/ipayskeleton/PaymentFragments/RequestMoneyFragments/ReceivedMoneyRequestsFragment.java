@@ -115,7 +115,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
             return;
         }
         GetMoneyRequest mMoneyRequest = new GetMoneyRequest(pageCount,
-                Constants.SERVICE_ID_REQUEST_MONEY,Constants.REQUEST_STATUS_PROCESSING);
+                Constants.SERVICE_ID_REQUEST_MONEY,Constants.MONEY_REQUEST_STATUS_PROCESSING);
         Gson gson = new Gson();
         String json = gson.toJson(mMoneyRequest);
         mGetMoneyRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_REQUESTS,
@@ -133,7 +133,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
             mGetMoneyRequestTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null) {
-                Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(),  R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
             }
             return;
         }

@@ -99,7 +99,7 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
 
         GetMoneyRequest mMoneyRequest = new GetMoneyRequest(pageCount,
                 Constants.SERVICE_ID_REQUEST_MONEY,
-                Constants.REQUEST_STATUS_ALL);
+                Constants.PAYMENT_REQUEST_STATUS_ALL);
         Gson gson = new Gson();
         String json = gson.toJson(mMoneyRequest);
         mReceivedRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_REQUESTS,
@@ -111,7 +111,7 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
     private void removeProcessingList() {
         List<MoneyAndPaymentRequest> tempMoneyRequestClasses = new ArrayList<MoneyAndPaymentRequest>();
         for (MoneyAndPaymentRequest paymentClass : moneyRequestList) {
-            if (paymentClass.getStatus() == Constants.REQUEST_STATUS_PROCESSING)
+            if (paymentClass.getStatus() == Constants.MONEY_REQUEST_STATUS_PROCESSING)
                 tempMoneyRequestClasses.add(paymentClass);
         }
 
@@ -217,9 +217,9 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (moneyRequestList.get(pos).getStatus() == Constants.REQUEST_STATUS_ACCEPTED) {
+                        if (moneyRequestList.get(pos).getStatus() == Constants.MONEY_REQUEST_STATUS_ACCEPTED) {
                             Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
-                            intent.putExtra(Constants.STATUS, Constants.REQUEST_STATUS_ACCEPTED);
+                            intent.putExtra(Constants.STATUS, Constants.MONEY_REQUEST_STATUS_ACCEPTED);
                             intent.putExtra(Constants.MONEY_REQUEST_ID, moneyRequest.getTransactionID());
                             startActivity(intent);
                         }

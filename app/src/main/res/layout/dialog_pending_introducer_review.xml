@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/content_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/request_to_introduce_detail" />
+
+                <LinearLayout
+                    android:id="@+id/profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                        android:id="@+id/profile_picture"
+                        style="@style/ReviewImageStyleDialog">
+
+                    </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textview_name"
+                            style="@style/TextViewUserInfoPrimary"
+                            android:ellipsize="end"
+                            android:singleLine="true" />
+
+                        <TextView
+                            android:id="@+id/textview_mobile_number"
+                            style="@style/TextViewUserInfoSecondary" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/add_in_contacts"
+                    style="@style/CheckboxRightStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+                    android:drawableTint="@color/colorPrimary"
+                    android:text="@string/add_to_contacts"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/activity_horizontal_margin">
+
+                    <Button
+                        android:id="@+id/button_reject"
+                        style="@style/PrimaryMediumButtonRejectNoMargin"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginRight="@dimen/value4"
+                        android:layout_weight="1"
+                        android:text="@string/reject" />
+
+                    <Button
+                        android:id="@+id/button_accept"
+                        style="@style/ButtonStyleMedium"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="@dimen/value4"
+                        android:layout_weight="1"
+                        android:text="@string/accept" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>

@@ -132,11 +132,9 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
             case Constants.PUSH_NOTIFICATION_TAG_TRANSACTION:
                 if (isForeground() && isLoggedIn) {
                     Log.d("Transaction", "Sending broadcast");
-                    Intent intent = new Intent(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST);
-                    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+                    Utilities.sendBroadcast(this, Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST);
                 }
         }
-
     }
 
     private void createNotification(String title, String message) {

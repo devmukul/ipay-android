@@ -69,7 +69,7 @@ public class ForgetPasswordFragment extends Fragment implements HttpResponseList
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 mDateOfBirthEditText.setText(
-                        String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year));
+                        String.format(Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year));
             }
         }, 1990, 0, 1);
 

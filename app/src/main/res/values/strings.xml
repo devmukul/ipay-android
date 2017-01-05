@@ -139,7 +139,7 @@
     <string name="confirm_query">Are you sure?</string>
     <string name="introduction_request_review_dialog_content">You are ensuring the authenticity and credibility of \'this person\' when you introduce him/her.
         Do you want to introduce \'this person\'?</string>
-    <string name="introduction_request_reject_dialog_content">You want to reject the request</string>
+    <string name="introduction_request_reject_dialog_content">You want to reject the request?</string>
     <string name="introduction_request_spam_dialog_content">This is a spam request</string>
     <string name="profile_info_save_failed">Failed to save profile information.</string>
     <string name="profile_picture_set_failed">Failed to set profile picture.</string>
@@ -239,6 +239,8 @@
     <string name="sending_for_verification">Sending for verification...</string>
     <string name="sending_for_verification_with_amount">Bank verification in progress...</string>
     <string name="verifying_user">Verifying user...</string>
+    <string name="adding_introducer">"Adding the person as an introducer... "</string>
+    <string name="removing_introducer">"Rejecting... "</string>
     <string name="add">Add</string>
     <string name="add_email">Add Email</string>
     <string name="confirm">Confirm</string>
@@ -400,7 +402,10 @@
     <string name="Introducer">Introducer</string>
     <string name="introducer">introducer</string>
     <string name="introducers">introducers</string>
+    <string name="introducer_request">Introducer request</string>
     <string name="introduce_this_person">Introduce this person</string>
+    <string name="request_to_introduce">Request to introduce you</string>
+    <string name="request_to_introduce_detail">This person wants to be your introducer to iPay. You can accept or reject this request.</string>
     <string name="business_invitation">Business Invitation</string>
     <string name="in_progress">In Progress</string>
     <string name="transaction_failed">Failed</string>
@@ -408,7 +413,7 @@
     <string name="transaction_rejected">Rejected</string>
     <string name="save_not_send">Saved but not send</string>
     <string name="pending">Pending</string>
-    <string name="processed">Processed</string>
+    <string name="completed">Completed</string>
     <string name="filter_by_date">Filter by date</string>
     <string name="filter_by_service">Filter by service</string>
     <string name="filter_by_event">Filter by event</string>
@@ -471,10 +476,12 @@
     <string name="identification_documents">Identification Documents</string>
     <string name="action_search">Search</string>
     <string name="filter_send_money">Money Sent/Received</string>
+    <string name="filter_request_money">Request Money</string>
     <string name="filter_add_money">Money Added</string>
     <string name="filter_withdraw_money">Money Withdrawn</string>
     <string name="filter_top_up">Top Up</string>
     <string name="filter_payment">Payment</string>
+    <string name="filter_request_payment">Request Payment</string>
     <string name="filter_opening_balance">Opening Balance</string>
     <string name="filter_education">Education</string>
     <string name="basic_info">Basic Information</string>
@@ -612,6 +619,7 @@
     <string name="failed_add_friend">Add friend failed</string>
     <string name="failed_invite_friend">Invite friend failed</string>
     <string name="failed_update_friend">Update friend failed</string>
+    <string name="confirm_request_accept">Are you sure you want to accept this request?</string>
     <string name="confirm_request_rejection">Are you sure you want to reject this request?</string>
     <string name="contacts_sync_failed">Contacts Sync Failed</string>
     <string name="business_contacts_sync_failed">Fail to fetch business contacts</string>
@@ -699,6 +707,7 @@
     <string name="session">Session</string>
     <string name="student_name">Student Name</string>
     <string name="net_amount">Net Amount</string>
+    <string name="recipient_net_amount">Recipient will get</string>
     <string name="status">Status</string>
     <string name="time">Time</string>
     <string name="topup_rollback">TopUp Rollback</string>
@@ -736,7 +745,7 @@
     <string name="failed_adding_comment">Failed to add comment</string>
     <string name="comment">Comment</string>
     <string name="add_comment">Add Comment</string>
-    <string name="comment_cannot_be_empty">Comment cannot be empty</string>
+    <string name="comment_cannot_be_empty">Please enter your message.</string>
     <string name="not_available">Not available</string>
     <string name="accepted">Accepted</string>
     <string name="canceled">Canceled</string>

@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,43 +22,52 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
+import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class InvoiceDetailsFragment extends Fragment implements HttpResponseListener {
+public class SentPaymentRequestDetailsFragment extends ReviewFragment implements HttpResponseListener {
 
     private final int ACTION_CANCEL_REQUEST = 0;
 
     private HttpRequestPostAsyncTask mCancelPaymentRequestTask = null;
-    private PaymentAcceptRejectOrCancelResponse mPaymentAcceptRejectOrCancelResponse;
+    private PaymentAcceptRejectOrCancelResponse mPaymentCancelResponse;
 
     private ProgressDialog mProgressDialog;
     private RecyclerView mReviewRecyclerView;
     private InvoiceReviewAdapter invoiceReviewAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private ItemList[] mItemList;
+    private InvoiceItem[] mInvoiceItemArray;
+    private BigDecimal mTotal;
     private BigDecimal mAmount;
     private BigDecimal mNetAmount;
     private BigDecimal mVat;
+    public BigDecimal mServiceCharge = new BigDecimal(-1);
 
     private String mDescription;
     private String mTime;
-    private long id;
+    private long mID;
+    private String mTransactionID;
     private int status;
     private String mReceiverName;
     private String mReceiverMobileNumber;
     private String mPhotoUri;
     private Context context;
+    private boolean isPinRequired = true;
+
+    private boolean switchedFromTransactionHistory = false;
+
+    private final int HEADER_FOOTER_VIEW_COUNT = 2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,18 +78,25 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
         context = getContext();
 
         this.mVat = new BigDecimal(bundle.getString(Constants.VAT));
-        this.mAmount = new BigDecimal(bundle.getString(Constants.AMOUNT));
+        this.mTotal = new BigDecimal(bundle.getString(Constants.AMOUNT));
         this.mDescription = bundle.getString(Constants.DESCRIPTION);
         this.mTime = bundle.getString(Constants.TIME);
-        this.id = bundle.getLong(Constants.MONEY_REQUEST_ID);
+        this.mID = bundle.getLong(Constants.MONEY_REQUEST_ID);
+        this.mTransactionID = bundle.getString(Constants.TRANSACTION_ID);
         this.status = bundle.getInt(Constants.STATUS);
         this.mReceiverMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
         this.mReceiverName = bundle.getString(Constants.NAME);
         this.mPhotoUri = bundle.getString(Constants.PHOTO_URI);
 
-        List<ItemList> temporaryItemList;
+
+        switchedFromTransactionHistory = getActivity().getIntent()
+                .getBooleanExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, false);
+
+        List<InvoiceItem> temporaryItemList;
         temporaryItemList = bundle.getParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG);
-        this.mItemList = temporaryItemList.toArray(new ItemList[temporaryItemList.size()]);
+
+        if (mInvoiceItemArray != null)
+            this.mInvoiceItemArray = temporaryItemList.toArray(new InvoiceItem[temporaryItemList.size()]);
 
         mProgressDialog = new ProgressDialog(getActivity());
         mReviewRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice);
@@ -89,6 +104,8 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
         mLayoutManager = new LinearLayoutManager(this.getContext());
         mReviewRecyclerView.setLayoutManager(mLayoutManager);
         mReviewRecyclerView.setAdapter(invoiceReviewAdapter);
+
+        attemptGetServiceCharge();
         return v;
     }
 
@@ -116,8 +133,30 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    protected int getServiceID() {
+        return Constants.SERVICE_ID_REQUEST_PAYMENT;
+    }
 
+    @Override
+    protected BigDecimal getAmount() {
+        return mTotal;
+    }
+
+    @Override
+    protected void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
+
+        this.mServiceCharge = serviceCharge;
+        invoiceReviewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onPinLoadFinished(boolean isPinRequired) {
+        this.isPinRequired = isPinRequired;
+    }
+
+    @Override
+    public void httpResponseReceiver(HttpResponseObject result) {
+        super.httpResponseReceiver(result);
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -132,13 +171,16 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 try {
-                    mPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                    mPaymentCancelResponse = gson.fromJson(result.getJsonString(),
                             PaymentAcceptRejectOrCancelResponse.class);
-                    String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
+                    String message = mPaymentCancelResponse.getMessage();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
-                    ((InvoiceActivity) getActivity()).switchToInvoicesSentFragment();
+                    if (switchedFromTransactionHistory) {
+                        Utilities.finishLauncherActivity(getActivity());
+                    } else
+                        ((RequestPaymentActivity) getActivity()).switchToSentPaymentRequestsFragment();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -167,15 +209,15 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            final TextView descriptionTextView;
-            final TextView timeTextView;
-            final TextView invoiceIDTextView;
+            final TextView mDescriptionTextView;
+            final TextView mTimeTextView;
+            final TextView mTransactionIDTextView;
 
             private final TextView mItemNameView;
             private final TextView mQuantityView;
             private final TextView mAmountView;
 
-            private final View headerView;
+            private final View mHeaderView;
 
             private final ProfileImageView mProfileImageView;
             private final TextView mNameView;
@@ -184,8 +226,9 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
             private final TextView mNetAmountView;
             private final TextView mVatView;
             private final TextView mTotalView;
+            private final TextView mServiceChargeView;
             private final TextView mStatusView;
-            private final Button mRejectButton;
+            private final Button mCancelButton;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -194,21 +237,21 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
                 mNameView = (TextView) itemView.findViewById(R.id.textview_name);
                 mMobileNumberView = (TextView) itemView.findViewById(R.id.textview_mobile_number);
 
-                descriptionTextView = (TextView) itemView.findViewById(R.id.description);
-                timeTextView = (TextView) itemView.findViewById(R.id.time);
-                invoiceIDTextView = (TextView) itemView.findViewById(R.id.invoice_id);
+                mDescriptionTextView = (TextView) itemView.findViewById(R.id.description);
+                mTimeTextView = (TextView) itemView.findViewById(R.id.time);
+                mTransactionIDTextView = (TextView) itemView.findViewById(R.id.invoice_id);
 
                 mItemNameView = (TextView) itemView.findViewById(R.id.textview_item);
                 mQuantityView = (TextView) itemView.findViewById(R.id.textview_quantity);
                 mAmountView = (TextView) itemView.findViewById(R.id.textview_amount);
-
-                headerView = itemView.findViewById(R.id.header);
+                mServiceChargeView = (TextView) itemView.findViewById(R.id.textview_service_charge);
+                mHeaderView = itemView.findViewById(R.id.header);
 
                 mNetAmountView = (TextView) itemView.findViewById(R.id.textview_net_amount);
                 mVatView = (TextView) itemView.findViewById(R.id.textview_vat);
                 mTotalView = (TextView) itemView.findViewById(R.id.textview_total);
                 mStatusView = (TextView) itemView.findViewById(R.id.status);
-                mRejectButton = (Button) itemView.findViewById(R.id.button_reject);
+                mCancelButton = (Button) itemView.findViewById(R.id.button_cancel);
 
             }
 
@@ -216,15 +259,15 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
                 // Decrease pos by 1 as there is a header view now.
                 pos = pos - 1;
 
-                mItemNameView.setText(mItemList[pos].getItem());
-                mQuantityView.setText(mItemList[pos].getQuantity().toString());
-                mAmountView.setText(Utilities.formatTaka(mItemList[pos].getAmount()));
+                mItemNameView.setText(mInvoiceItemArray[pos].getItem());
+                mQuantityView.setText(mInvoiceItemArray[pos].getQuantity().toString());
+                mAmountView.setText(Utilities.formatTaka(mInvoiceItemArray[pos].getAmount()));
             }
 
             public void bindViewForHeader() {
 
-                if (mItemList == null || mItemList.length == 0) {
-                    headerView.setVisibility(View.GONE);
+                if (mInvoiceItemArray == null || mInvoiceItemArray.length == 0) {
+                    mHeaderView.setVisibility(View.GONE);
                 }
 
                 if (mReceiverName == null || mReceiverName.isEmpty()) {
@@ -236,16 +279,21 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
                 mMobileNumberView.setText(mReceiverMobileNumber);
                 mProfileImageView.setProfilePicture(mPhotoUri, false);
 
-                descriptionTextView.setText(mDescription);
-                timeTextView.setText(mTime);
-                invoiceIDTextView.setText(String.valueOf(id));
+                mDescriptionTextView.setText(mDescription);
+                mTimeTextView.setText(mTime);
+                mTransactionIDTextView.setText(String.valueOf(mTransactionID));
             }
 
             public void bindViewForFooter() {
-                mNetAmount = mAmount.subtract(mVat);
+                mAmount = mTotal.subtract(mVat);
+                mNetAmount = mTotal.subtract(mServiceCharge);
+
+                mAmountView.setText(Utilities.formatTaka(mAmount));
                 mNetAmountView.setText(Utilities.formatTaka(mNetAmount));
                 mVatView.setText(Utilities.formatTaka(mVat));
-                mTotalView.setText(Utilities.formatTaka(mAmount));
+                mServiceChargeView.setText(Utilities.formatTaka(mServiceCharge));
+                mTotalView.setText(Utilities.formatTaka(mTotal));
+
                 if (status == Constants.INVOICE_STATUS_ACCEPTED) {
                     mStatusView.setText(context.getString(R.string.transaction_successful));
                     mStatusView.setTextColor(context.getResources().getColor(R.color.bottle_green));
@@ -266,12 +314,12 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
                 }
 
                 if (status == Constants.INVOICE_STATUS_PROCESSING || status == Constants.INVOICE_STATUS_DRAFT)
-                    mRejectButton.setVisibility(View.VISIBLE);
+                    mCancelButton.setVisibility(View.VISIBLE);
 
-                mRejectButton.setOnClickListener(new View.OnClickListener() {
+                mCancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showAlertDialogue(getString(R.string.cancel_payment_request_confirm), ACTION_CANCEL_REQUEST, id);
+                        showAlertDialogue(getString(R.string.cancel_payment_request_confirm), ACTION_CANCEL_REQUEST, mID);
                     }
                 });
             }
@@ -301,11 +349,11 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
 
             View v;
             if (viewType == INVOICE_DETAILS_LIST_HEADER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.sent_invoice_details_header, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.sent_payment_request_details_header, parent, false);
                 return new ListHeaderViewHolder(v);
 
             } else if (viewType == INVOICE_DETAILS_LIST_FOOTER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.sent_invoice_details_footer, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.sent_payment_request_details_footer, parent, false);
                 return new ListFooterViewHolder(v);
 
             } else {
@@ -337,31 +385,29 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
 
         @Override
         public int getItemCount() {
-            if (mItemList == null)
-                return 0;
-            if (mItemList.length >= 0)
-                return 1 + mItemList.length + 1;
+            if (mInvoiceItemArray == null || mInvoiceItemArray.length == 0)
+                return HEADER_FOOTER_VIEW_COUNT;
+            if (mInvoiceItemArray.length > 0)
+                return 1 + mInvoiceItemArray.length + 1;
             else return 0;
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (mItemList == null) return super.getItemViewType(position);
-
-            if (mItemList.length > 0) {
-                if (position == 0) return INVOICE_DETAILS_LIST_HEADER_VIEW;
-
-                else if (position == mItemList.length + 1)
-                    return INVOICE_DETAILS_LIST_FOOTER_VIEW;
-
-                else return INVOICE_DETAILS_LIST_ITEM_VIEW;
-            } else if (mItemList.length == 0) {
+            if (mInvoiceItemArray == null || mInvoiceItemArray.length == 0) {
                 if (position == 0) return INVOICE_DETAILS_LIST_HEADER_VIEW;
                 else return INVOICE_DETAILS_LIST_FOOTER_VIEW;
             }
+            if (mInvoiceItemArray.length > 0) {
+                if (position == 0) return INVOICE_DETAILS_LIST_HEADER_VIEW;
+
+                else if (position == mInvoiceItemArray.length + 1)
+                    return INVOICE_DETAILS_LIST_FOOTER_VIEW;
+
+                else return INVOICE_DETAILS_LIST_ITEM_VIEW;
+            }
             return super.getItemViewType(position);
         }
-
 
         private void showAlertDialogue(String msg, final int action, final long id) {
             AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
@@ -373,7 +419,6 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
 
                     if (action == ACTION_CANCEL_REQUEST)
                         cancelRequest(id);
-
                 }
             });
 
@@ -385,7 +430,6 @@ public class InvoiceDetailsFragment extends Fragment implements HttpResponseList
 
             alertDialogue.show();
         }
-
     }
 }
 

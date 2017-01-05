@@ -90,7 +90,7 @@
                     android:text="@string/net_amount" />
 
                 <TextView
-                    android:id="@+id/textview_net_received"
+                    android:id="@+id/textview_net_amount"
                     style="@style/TextViewInfoColorPrimaryReview" />
 
             </LinearLayout>

@@ -63,7 +63,8 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     private String mIntroductionMessage;
 
     private AddressClass mAddress;
-    private boolean mIsInContacts;
+
+    private boolean isInContacts;
 
     private List<Thana> mThanaList;
     private List<District> mDistrictList;
@@ -87,7 +88,6 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
         View v = inflater.inflate(R.layout.fragment_recommendation_review, container, false);
 
         getActivity().setTitle(R.string.Introducer);
-
         Bundle bundle = getArguments();
 
         mRequestID = bundle.getLong(Constants.REQUEST_ID);
@@ -97,7 +97,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
         mMothersname = bundle.getString(Constants.MOTHERS_NAME);
         mFathersName = bundle.getString(Constants.FATHERS_NAME);
         mAddress = (AddressClass) getArguments().getSerializable(Constants.ADDRESS);
-        mIsInContacts = bundle.getBoolean(Constants.IS_IN_CONTACTS, false);
+        isInContacts = bundle.getBoolean(Constants.IS_IN_CONTACTS, false);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mSenderNameView = (TextView) v.findViewById(R.id.textview_name);
@@ -129,7 +129,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
             mMothersNameView.setText(mMothersname);
         }
 
-        if (!mIsInContacts) {
+        if (!isInContacts) {
             mAddInContactsCheckBox.setVisibility(View.VISIBLE);
             mAddInContactsCheckBox.setChecked(true);
         }
@@ -216,11 +216,15 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
             }
         });
 
-        if (mAddress != null) {
-            getDistrictList();
-        } else
-            setContentShown(true);
         return v;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (mAddress != null)
+            getDistrictList();
+        else setContentShown(true);
     }
 
     @Override
@@ -261,13 +265,12 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     }
 
     private void loadAddresses() {
-        if (mAddress == null) {
+        if (mAddress == null)
             mAddressView.setVisibility(View.GONE);
-        } else {
+        else
             mAddressView.setText(mAddress.toString(mThanaList, mDistrictList));
-        }
-        setContentShown(true);
 
+        if (this.isAdded()) setContentShown(true);
     }
 
     private void addFriend(String name, String phoneNumber, String relationship) {
