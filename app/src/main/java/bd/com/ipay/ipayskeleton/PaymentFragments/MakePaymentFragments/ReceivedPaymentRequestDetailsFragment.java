@@ -1,6 +1,8 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,7 +29,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
@@ -37,19 +39,20 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class InvoiceHistoryFragment extends ReviewFragment implements HttpResponseListener {
+public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mAcceptPaymentTask = null;
-    private PaymentAcceptRejectOrCancelResponse mPaymentAcceptRejectOrCancelResponse;
+    private PaymentAcceptRejectOrCancelResponse mPaymentAcceptPaymentResponse;
 
     private HttpRequestPostAsyncTask mRejectRequestTask = null;
-    private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
+    private RequestMoneyAcceptRejectOrCancelResponse mPaymentRejectResponse;
 
     private LinearLayoutManager mLayoutManager;
     private RecyclerView mReviewRecyclerView;
     private PaymentReviewAdapter paymentReviewAdapter;
 
-    private List<ItemList> mItemList;
+    private List<InvoiceItem> mInvoiceItemList;
+    private BigDecimal mTotal;
     private BigDecimal mAmount;
     private BigDecimal mNetAmount;
     private BigDecimal mVat;
@@ -60,9 +63,13 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
     private long requestId;
     private String mTitle;
     private String mDescription;
+
     private boolean isPinRequired = true;
+    private boolean switchedFromTransactionHistory = false;
 
     private ProgressDialog mProgressDialog;
+
+    private final int HEADER_FOOTER_VIEW_COUNT = 2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,17 +83,10 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-        Bundle bundle = getArguments();
+        switchedFromTransactionHistory = getActivity().getIntent()
+                .getBooleanExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, false);
 
-        this.requestId = bundle.getLong(Constants.MONEY_REQUEST_ID);
-        this.mReceiverMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
-        this.mReceiverName = bundle.getString(Constants.NAME);
-        this.mPhotoUri = bundle.getString(Constants.PHOTO_URI);
-        this.mVat = new BigDecimal(bundle.getString(Constants.VAT));
-        this.mAmount = new BigDecimal(bundle.getString(Constants.AMOUNT));
-        this.mTitle = bundle.getString(Constants.TITLE);
-        this.mDescription = bundle.getString(Constants.DESCRIPTION);
-        this.mItemList = bundle.getParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG);
+        initializeValues();
 
         mReviewRecyclerView.setAdapter(paymentReviewAdapter);
 
@@ -99,7 +99,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
         super.onActivityCreated(savedInstanceState);
     }
 
-    private void attempAccepttPaymentRequestWithPinCheck() {
+    private void attemptAcceptPaymentRequestWithPinCheck() {
         if (this.isPinRequired) {
             final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
 
@@ -111,17 +111,28 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
             });
 
             pinInputDialogBuilder.build().show();
-        } else {
+        } else
             acceptPaymentRequest(requestId, null);
-        }
+    }
 
+    private void initializeValues() {
+        Bundle bundle = getArguments();
+
+        this.requestId = bundle.getLong(Constants.MONEY_REQUEST_ID);
+        this.mReceiverMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
+        this.mReceiverName = bundle.getString(Constants.NAME);
+        this.mPhotoUri = bundle.getString(Constants.PHOTO_URI);
+        this.mVat = new BigDecimal(bundle.getString(Constants.VAT));
+        this.mTotal = new BigDecimal(bundle.getString(Constants.AMOUNT));
+        this.mTitle = bundle.getString(Constants.TITLE);
+        this.mDescription = bundle.getString(Constants.DESCRIPTION);
+        this.mInvoiceItemList = bundle.getParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG);
     }
 
     private void acceptPaymentRequest(long id, String pin) {
 
-        if (mAcceptPaymentTask != null) {
+        if (mAcceptPaymentTask != null)
             return;
-        }
 
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_accepted));
         mProgressDialog.show();
@@ -136,10 +147,9 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
         mAcceptPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void rejectRequestMoney(long id) {
-        if (mRejectRequestTask != null) {
+    private void rejectPaymentRequest(long id) {
+        if (mRejectRequestTask != null)
             return;
-        }
 
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_rejecting));
         mProgressDialog.show();
@@ -156,12 +166,12 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
 
     @Override
     protected int getServiceID() {
-        return Constants.SERVICE_ID_MAKE_PAYMENT;
+        return Constants.SERVICE_ID_REQUEST_PAYMENT;
     }
 
     @Override
     protected BigDecimal getAmount() {
-        return mAmount;
+        return mTotal;
     }
 
     @Override
@@ -195,18 +205,22 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
         if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST)) {
 
             try {
-                mPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                mPaymentAcceptPaymentResponse = gson.fromJson(result.getJsonString(),
                         PaymentAcceptRejectOrCancelResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
+                    String message = mPaymentAcceptPaymentResponse.getMessage();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        getActivity().onBackPressed();
+
+                        if (switchedFromTransactionHistory)
+                            Utilities.finishLauncherActivity(getActivity());
+                        else
+                            getActivity().onBackPressed();
                     }
 
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), mPaymentAcceptPaymentResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -219,18 +233,22 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
         } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
 
             try {
-                mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                mPaymentRejectResponse = gson.fromJson(result.getJsonString(),
                         RequestMoneyAcceptRejectOrCancelResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
+                    String message = mPaymentRejectResponse.getMessage();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        getActivity().onBackPressed();
+
+                        if (switchedFromTransactionHistory)
+                            Utilities.finishLauncherActivity(getActivity());
+                        else
+                            getActivity().onBackPressed();
                     }
 
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), mPaymentRejectResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -264,7 +282,6 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
             private final TextView mNetAmountView;
             private final TextView mVatView;
             private final View headerView;
-            private View mServiceChargeHolder;
             private final TextView mServiceChargeView;
             private final TextView mTotalView;
             private Button mAcceptButton;
@@ -285,7 +302,6 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                 mNetAmountView = (TextView) itemView.findViewById(R.id.textview_net_amount);
                 mVatView = (TextView) itemView.findViewById(R.id.textview_vat);
                 headerView = itemView.findViewById(R.id.header);
-                mServiceChargeHolder = itemView.findViewById(R.id.service_charge_layout);
                 mServiceChargeView = (TextView) itemView.findViewById(R.id.textview_service_charge);
                 mTotalView = (TextView) itemView.findViewById(R.id.textview_total);
                 mAcceptButton = (Button) itemView.findViewById(R.id.button_accept);
@@ -299,53 +315,44 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                 // Decrease pos by 1 as there is a header view now.
                 pos = pos - 1;
 
-                mItemNameView.setText(mItemList.get(pos).getItem());
-                mQuantityView.setText(mItemList.get(pos).getQuantity().toString());
-                mAmountView.setText(Utilities.formatTaka(mItemList.get(pos).getAmount()));
+                mItemNameView.setText(mInvoiceItemList.get(pos).getItem());
+                mQuantityView.setText(mInvoiceItemList.get(pos).getQuantity().toString());
+                mAmountView.setText(Utilities.formatTaka(mInvoiceItemList.get(pos).getAmount()));
             }
 
             public void bindViewForHeader() {
 
-                if (mItemList == null || mItemList.size() == 0) {
+                if (mInvoiceItemList == null || mInvoiceItemList.size() == 0)
                     headerView.setVisibility(View.GONE);
-                }
 
-                if (mReceiverName == null || mReceiverName.isEmpty()) {
+                if (mReceiverName == null || mReceiverName.isEmpty())
                     mNameView.setVisibility(View.GONE);
-                } else {
+                else
                     mNameView.setText(mReceiverName);
-                }
 
                 mMobileNumberView.setText(mReceiverMobileNumber);
                 mProfileImageView.setProfilePicture(mPhotoUri, false);
             }
 
             public void bindViewForFooter() {
-                mNetAmount = mAmount.subtract(mVat);
+                mAmount = mTotal.subtract(mVat);
+                mNetAmount = mTotal.subtract(mServiceCharge);
 
-                if (mServiceCharge.compareTo(BigDecimal.ZERO) <= 0) {
-                    mServiceChargeHolder.setVisibility(View.GONE);
-
-                } else {
-                    mServiceChargeHolder.setVisibility(View.VISIBLE);
-                    mServiceChargeView.setText(Utilities.formatTaka(mServiceCharge));
-                    mNetAmount = mAmount.subtract(mServiceCharge);
-
-                }
+                mAmountView.setText(Utilities.formatTaka(mAmount));
                 mNetAmountView.setText(Utilities.formatTaka(mNetAmount));
                 mVatView.setText(Utilities.formatTaka(mVat));
-                mTotalView.setText(Utilities.formatTaka(mAmount));
+                mServiceChargeView.setText(Utilities.formatTaka(mServiceCharge));
+                mTotalView.setText(Utilities.formatTaka(mTotal));
 
-                if (mTitle.equals("Invoice")) {
+                if (mTitle.equals("Invoice"))
                     mLinearLayoutDescriptionHolder.setVisibility(View.GONE);
-                } else {
+                else
                     mDescriptionView.setText(mDescription);
-                }
 
                 mAcceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        attempAccepttPaymentRequestWithPinCheck();
+                        attemptAcceptPaymentRequestWithPinCheck();
                     }
                 });
 
@@ -359,7 +366,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                         rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                rejectRequestMoney(requestId);
+                                rejectPaymentRequest(requestId);
                             }
                         });
                         rejectDialog.show();
@@ -395,7 +402,7 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
                 return new ListHeaderViewHolder(v);
 
             } else if (viewType == NOTIFICATION_REVIEW_LIST_FOOTER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_make_payment_notification_review_footer, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_request_payment_accept_reject_footer_view, parent, false);
                 return new ListFooterViewHolder(v);
 
             } else {
@@ -427,26 +434,24 @@ public class InvoiceHistoryFragment extends ReviewFragment implements HttpRespon
 
         @Override
         public int getItemCount() {
-            if (mItemList == null) return 0;
-            if (mItemList.size() == 0) return 2;
-            if (mItemList.size() > 0)
-                return 1 + mItemList.size() + 1;
+            if (mInvoiceItemList == null || mInvoiceItemList.size() == 0)
+                return HEADER_FOOTER_VIEW_COUNT;
+            if (mInvoiceItemList.size() > 0)
+                // Count 2 added for header and footer view
+                return 1 + mInvoiceItemList.size() + 1;
             else return 0;
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (mItemList == null) return super.getItemViewType(position);
-
-            if (mItemList.size() == 0) {
+            if (mInvoiceItemList == null || mInvoiceItemList.size() == 0) {
                 if (position == 0) return NOTIFICATION_REVIEW_LIST_HEADER_VIEW;
                 else return NOTIFICATION_REVIEW_LIST_FOOTER_VIEW;
-
             }
 
-            if (mItemList.size() > 0) {
+            if (mInvoiceItemList.size() > 0) {
                 if (position == 0) return NOTIFICATION_REVIEW_LIST_HEADER_VIEW;
-                else if (position == mItemList.size() + 1)
+                else if (position == mInvoiceItemList.size() + 1)
                     return NOTIFICATION_REVIEW_LIST_FOOTER_VIEW;
                 else return NOTIFICATION_REVIEW_LIST_ITEM_VIEW;
             }

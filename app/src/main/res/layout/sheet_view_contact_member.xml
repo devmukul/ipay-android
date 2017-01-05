@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_action_make_payment"
             android:text="@string/make_payment" />
-m
+
         <Button
             android:id="@+id/button_ask_for_introduction"
             style="@style/SheetButton"

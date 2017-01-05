@@ -54,7 +54,7 @@ public class TransactionHistoryHolderFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        switchToProcessedTransactionsFragment();
+        switchToPendingTransactionsFragment();
     }
 
     @Override
@@ -64,6 +64,11 @@ public class TransactionHistoryHolderFragment extends Fragment {
         // Remove search action of contacts
         if (menu.findItem(R.id.action_search_contacts) != null)
             menu.findItem(R.id.action_search_contacts).setVisible(false);
+
+        if (menu.findItem(R.id.action_filter_by_service) != null)
+            menu.findItem(R.id.action_filter_by_service).setVisible(true);
+        if (menu.findItem(R.id.action_filter_by_date) != null)
+            menu.findItem(R.id.action_filter_by_date).setVisible(true);
     }
 
     private void switchToProcessedTransactionsFragment() {

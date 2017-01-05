@@ -12,9 +12,6 @@
         <FrameLayout
             android:id="@+id/fragment_container_contacts"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/contact_header">
-
-        </FrameLayout>
+            android:layout_height="match_parent" />
     </RelativeLayout>
 </com.flipboard.bottomsheet.BottomSheetLayout>

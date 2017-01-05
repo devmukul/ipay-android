@@ -46,6 +46,10 @@ public class TokenManager {
         return token;
     }
 
+    public static void invalidateToken() {
+        token = "";
+    }
+
     public static void setToken(String token) {
         TokenManager.token = token;
     }
@@ -56,18 +60,6 @@ public class TokenManager {
 
     public static void setRefreshToken(String refreshToken) {
         TokenManager.refreshToken = refreshToken;
-    }
-
-    public static CountDownTimer getTokenTimer() {
-        return BaseActivity.tokenTimer;
-    }
-
-    public static void setTokenTimer(CountDownTimer tokenTimer) {
-        BaseActivity.tokenTimer = tokenTimer;
-    }
-
-    public static void stopTokenTimer() {
-        BaseActivity.tokenTimer.cancel();
     }
 
     public static long getiPayTokenTimeInMs() {

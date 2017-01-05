@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -30,6 +31,7 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,13 +40,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
+import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
+import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -60,7 +65,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private RecyclerView mTransactionHistoryRecyclerView;
     private TransactionHistoryAdapter mTransactionHistoryAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<TransactionHistoryClass> userTransactionHistoryClasses;
+    private List<TransactionHistory> userTransactionHistories;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
     private String mMobileNumber;
@@ -68,14 +73,11 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private LinearLayout serviceFilterLayout;
     private LinearLayout dateFilterLayout;
 
-    private CheckBox mFilterOpeningBalance;
-    private CheckBox mFilterSendMoney;
     private CheckBox mFilterRequestMoney;
     private CheckBox mFilterAddMoney;
     private CheckBox mFilterWithdrawMoney;
     private CheckBox mFilterTopUp;
-    private CheckBox mFilterPayment;
-    private CheckBox mFilterEducation;
+    private CheckBox mFilterRequestPayment;
     private Button mClearServiceFilterButton;
 
     private Button mFromDateButton;
@@ -92,66 +94,92 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private boolean hasNext = false;
     private boolean clearListAfterLoading;
 
+    private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
+    private final int REQUEST_PAYMENT_REVIEW_REQUEST = 102;
+
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
 
     private Menu menu;
 
+    private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_transaction_history, container, false);
+        View view = inflater.inflate(R.layout.fragment_pending_transaction_history, container, false);
         getActivity().setTitle(R.string.transaction_history);
 
-        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
-
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
+        initializeViews(view);
+        setupViewsAndActions();
+        handleBackPressWhenFilterIsOn(view);
 
-        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
-        mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
+        mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (Utilities.isConnectionAvailable(getActivity())) {
+                    refreshTransactionHistory();
+                }
+            }
+        });
 
+        return view;
+    }
+
+    private void initializeViews(View view) {
+        mEmptyListTextView = (TextView) view.findViewById(R.id.empty_list_text);
+        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        mTransactionHistoryRecyclerView = (RecyclerView) view.findViewById(R.id.list_transaction_history);
+        serviceFilterLayout = (LinearLayout) view.findViewById(R.id.service_filters_layout);
+        dateFilterLayout = (LinearLayout) view.findViewById(R.id.date_filter_layout);
+        mClearServiceFilterButton = (Button) view.findViewById(R.id.button_clear_filter_service);
+
+        mFilterRequestMoney = (CheckBox) view.findViewById(R.id.filter_request_money);
+        mFilterAddMoney = (CheckBox) view.findViewById(R.id.filter_add_money);
+        mFilterWithdrawMoney = (CheckBox) view.findViewById(R.id.filter_withdraw_money);
+        mFilterTopUp = (CheckBox) view.findViewById(R.id.filter_top_up);
+        mFilterRequestPayment = (CheckBox) view.findViewById(R.id.filter_request_payment);
+
+        mFromDateButton = (Button) view.findViewById(R.id.fromButton);
+        mToDateButton = (Button) view.findViewById(R.id.toButton);
+        clearDateFilterButton = (Button) view.findViewById(R.id.button_clear_filter_date);
+        filterByDateButton = (Button) view.findViewById(R.id.button_filter_date);
+    }
+
+    private void setupViewsAndActions() {
+        setupRecyclerView();
+        setupCheckboxTypeMap();
+        setActionsForServiceTypeFilter();
+        setActionsForDateFilter();
+    }
+
+    private void setupRecyclerView() {
         mTransactionHistoryAdapter = new TransactionHistoryAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mTransactionHistoryRecyclerView.setLayoutManager(mLayoutManager);
         mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAdapter);
+    }
 
-        serviceFilterLayout = (LinearLayout) v.findViewById(R.id.service_filters_layout);
-        dateFilterLayout = (LinearLayout) v.findViewById(R.id.date_filter_layout);
-        mClearServiceFilterButton = (Button) v.findViewById(R.id.button_clear_filter_service);
-
-        mFilterOpeningBalance = (CheckBox) v.findViewById(R.id.filter_opening_balance);
-        mFilterSendMoney = (CheckBox) v.findViewById(R.id.filter_send_money);
-        mFilterAddMoney = (CheckBox) v.findViewById(R.id.filter_add_money);
-        mFilterWithdrawMoney = (CheckBox) v.findViewById(R.id.filter_withdraw_money);
-        mFilterTopUp = (CheckBox) v.findViewById(R.id.filter_top_up);
-        mFilterPayment = (CheckBox) v.findViewById(R.id.filter_payment);
-        mFilterEducation = (CheckBox) v.findViewById(R.id.filter_education);
-
+    private void setupCheckboxTypeMap() {
         mCheckBoxTypeMap = new HashMap<>();
-        mCheckBoxTypeMap.put(mFilterOpeningBalance, Constants.TRANSACTION_HISTORY_OPENING_BALANCE);
-        mCheckBoxTypeMap.put(mFilterSendMoney, Constants.TRANSACTION_HISTORY_SEND_MONEY);
+        mCheckBoxTypeMap.put(mFilterRequestMoney, Constants.TRANSACTION_HISTORY_REQUEST_MONEY);
         mCheckBoxTypeMap.put(mFilterAddMoney, Constants.TRANSACTION_HISTORY_ADD_MONEY);
         mCheckBoxTypeMap.put(mFilterWithdrawMoney, Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY);
         mCheckBoxTypeMap.put(mFilterTopUp, Constants.TRANSACTION_HISTORY_TOP_UP);
-        mCheckBoxTypeMap.put(mFilterPayment, Constants.TRANSACTION_HISTORY_MAKE_PAYMENT);
-        mCheckBoxTypeMap.put(mFilterEducation, Constants.TRANSACTION_HISTORY_EDUCATION);
+        mCheckBoxTypeMap.put(mFilterRequestPayment, Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT);
+    }
 
-        mFromDateButton = (Button) v.findViewById(R.id.fromButton);
-        mToDateButton = (Button) v.findViewById(R.id.toButton);
-        clearDateFilterButton = (Button) v.findViewById(R.id.button_clear_filter_date);
-        filterByDateButton = (Button) v.findViewById(R.id.button_filter_date);
-
-        setActionsForServiceTypeFilter();
-        setActionsForDateFilter();
-
+    private void handleBackPressWhenFilterIsOn(View view) {
         // Handle back press action when action mode is on.
-        v.setFocusableInTouchMode(true);
-        v.requestFocus();
-        v.setOnKeyListener(new View.OnKeyListener() {
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -164,26 +192,33 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 return true;
             }
         });
-
-        mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity())) {
-                    refreshTransactionHistory();
-                }
-            }
-        });
-
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mTransactionHistoryBroadcastReceiver,
-                new IntentFilter(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST));
-
-        return v;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getTransactionHistory();
+        getPendingTransactionHistory();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
+                new IntentFilter(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            mSwipeRefreshLayout.destroyDrawingCache();
+            mSwipeRefreshLayout.clearAnimation();
+        }
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
     }
 
     @Override
@@ -200,19 +235,18 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
     @Override
     public void onDestroyView() {
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mTransactionHistoryBroadcastReceiver);
-
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
         super.onDestroyView();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        /*MenuInflater menuInflater = getActivity().getMenuInflater();
+        MenuInflater menuInflater = getActivity().getMenuInflater();
         menuInflater.inflate(R.menu.activity_transaction_history, menu);
         menuInflater.inflate(R.menu.clear_filter, menu);
         this.menu = menu;
-        menu.findItem(R.id.action_clear_filter).setVisible(false);*/
+        menu.findItem(R.id.action_clear_filter).setVisible(false);
 
     }
 
@@ -223,6 +257,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         // Remove search action of contacts
         if (menu.findItem(R.id.action_search_contacts) != null)
             menu.findItem(R.id.action_search_contacts).setVisible(false);
+
     }
 
     @Override
@@ -253,7 +288,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private void refreshTransactionHistory() {
         historyPageCount = 0;
         clearListAfterLoading = true;
-        getTransactionHistory();
+        getPendingTransactionHistory();
     }
 
     private boolean verifyDateFilter() {
@@ -314,7 +349,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 }
             }
         });
-
 
         mToDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -416,7 +450,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                     toDate.setTime(fromDate.getTime());
                     toDate.add(Calendar.DATE, 1);
 
-                    String fromDateStr = String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year);
+                    String fromDateStr = String.format(Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year);
 
                     mFromDateButton.setText(fromDateStr);
                     mToDateButton.setText(fromDateStr);
@@ -439,13 +473,13 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                     // Simplest way to do this is to just show all transactions until 12:00 am in the next day.
                     toDate.add(Calendar.DATE, 1);
 
-                    String toDateStr = String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year);
+                    String toDateStr = String.format(Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year);
 
                     mToDateButton.setText(toDateStr);
                 }
             };
 
-    private void getTransactionHistory() {
+    private void getPendingTransactionHistory() {
         if (mTransactionHistoryTask != null) {
             return;
         }
@@ -459,30 +493,39 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
-        mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
+        mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_TRANSACTION_HISTORY,
                 Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY_PENDING, json, getActivity());
         mTransactionHistoryTask.mHttpResponseListener = this;
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void loadTransactionHistory(List<TransactionHistoryClass> transactionHistoryClasses, boolean hasNext) {
-        if (clearListAfterLoading || userTransactionHistoryClasses == null || userTransactionHistoryClasses.size() == 0) {
-            userTransactionHistoryClasses = transactionHistoryClasses;
+    private void loadTransactionHistory(List<TransactionHistory> transactionHistories, boolean hasNext) {
+        if (clearListAfterLoading || userTransactionHistories == null || userTransactionHistories.size() == 0) {
+            userTransactionHistories = transactionHistories;
             clearListAfterLoading = false;
         } else {
-            List<TransactionHistoryClass> tempTransactionHistoryClasses;
-            tempTransactionHistoryClasses = transactionHistoryClasses;
-            userTransactionHistoryClasses.addAll(tempTransactionHistoryClasses);
+            List<TransactionHistory> tempTransactionHistories;
+            tempTransactionHistories = transactionHistories;
+            userTransactionHistories.addAll(tempTransactionHistories);
         }
 
         this.hasNext = hasNext;
-        if (userTransactionHistoryClasses != null && userTransactionHistoryClasses.size() > 0)
+        if (userTransactionHistories != null && userTransactionHistories.size() > 0)
             mEmptyListTextView.setVisibility(View.GONE);
         else
             mEmptyListTextView.setVisibility(View.VISIBLE);
 
         mTransactionHistoryAdapter.notifyDataSetChanged();
         setContentShown(true);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_MONEY_REVIEW_REQUEST || requestCode == REQUEST_PAYMENT_REVIEW_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                refreshTransactionHistory();
+            }
+        }
     }
 
     @Override
@@ -498,7 +541,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_PENDING_TRANSACTION_HISTORY)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
@@ -534,11 +577,10 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             private final TextView mReceiverView;
             private final TextView loadMoreTextView;
             private final TextView mAmountTextView;
-            private final TextView statusDescriptionView;
             private final TextView netAmountView;
             private final ImageView otherImageView;
             private final ProfileImageView mProfileImageView;
-            private final View divider;
+            private final View mBalanceView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -549,33 +591,35 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
                 netAmountView = (TextView) itemView.findViewById(R.id.net_amount);
-                statusDescriptionView = (TextView) itemView.findViewById(R.id.status_description);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 otherImageView = (ImageView) itemView.findViewById(R.id.other_image);
-                divider = itemView.findViewById(R.id.divider);
+                mBalanceView = itemView.findViewById(R.id.balance_holder);
             }
 
             public void bindView(int pos) {
-                final TransactionHistoryClass transactionHistory = userTransactionHistoryClasses.get(pos);
+                final TransactionHistory transactionHistory = userTransactionHistories.get(pos);
 
                 final String description = transactionHistory.getShortDescription(mMobileNumber);
                 final String receiver = transactionHistory.getReceiver();
                 final String responseTime = Utilities.formatDateWithTime(transactionHistory.getResponseTime());
                 final String netAmountWithSign = transactionHistory.getNetAmountFormatted(transactionHistory.getAdditionalInfo().getUserMobileNumber());
-                final Integer statusCode = transactionHistory.getStatusCode();
-                final double balance = transactionHistory.getBalance();
+                final Double balance = transactionHistory.getBalance();
                 final String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();
                 final int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
                 final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
                 final int serviceId = transactionHistory.getServiceID();
 
-                mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
+                if (balance !=null) {
+                    mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
+                    mBalanceView.setVisibility(View.VISIBLE);
+                } else mBalanceView.setVisibility(View.GONE);
 
                 mTransactionDescriptionView.setText(description);
                 if (receiver != null && !receiver.equals("")) {
                     mReceiverView.setVisibility(View.VISIBLE);
                     mReceiverView.setText(receiver);
                 } else mReceiverView.setVisibility(View.GONE);
+
                 netAmountView.setText(netAmountWithSign);
                 mTimeView.setText(responseTime);
 
@@ -584,26 +628,18 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                     otherImageView.setVisibility(View.VISIBLE);
                     if (bankCode != null) otherImageView.setImageResource(bankIcon);
                     else otherImageView.setImageResource(R.drawable.ic_tran_add);
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK) {
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
                     if (bankCode != null) otherImageView.setImageResource(bankIcon);
                     else otherImageView.setImageResource(R.drawable.ic_tran_withdraw);
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
-                    mProfileImageView.setVisibility(View.INVISIBLE);
-                    otherImageView.setVisibility(View.VISIBLE);
-                    otherImageView.setImageResource(R.drawable.ic_transaction_ipaylogo);
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     otherImageView.setVisibility(View.VISIBLE);
                     if (ContactEngine.isValidNumber(receiver)) {
                         int mIcon = getOperatorIcon(receiver);
                         otherImageView.setImageResource(mIcon);
                     } else otherImageView.setImageResource(R.drawable.ic_top_up);
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_EDUCATION) {
-                    mProfileImageView.setVisibility(View.INVISIBLE);
-                    otherImageView.setVisibility(View.VISIBLE);
-                    otherImageView.setImageResource(R.drawable.ic_transaction_education);
                 } else {
                     otherImageView.setVisibility(View.INVISIBLE);
                     mProfileImageView.setVisibility(View.VISIBLE);
@@ -614,14 +650,19 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                     @Override
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing()) {
-                            Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
-                            intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
-                            startActivity(intent);
+                            if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY)
+                                launchRequestMoneyReviewPage(transactionHistory);
+                            else if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT || serviceId == Constants.TRANSACTION_HISTORY_INVOICE)
+                                launchRequestPaymentReviewPage(transactionHistory);
+                            else {
+                                Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
+                                intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
+                                startActivity(intent);
+                            }
                         }
-
                     }
-                });
 
+                });
             }
 
             public void bindViewFooter() {
@@ -638,7 +679,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                     public void onClick(View v) {
                         if (hasNext) {
                             historyPageCount = historyPageCount + 1;
-                            getTransactionHistory();
+                            getPendingTransactionHistory();
                         }
                     }
                 });
@@ -681,7 +722,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
             try {
                 if (holder instanceof NormalViewHolder) {
                     NormalViewHolder vh = (NormalViewHolder) holder;
@@ -697,15 +737,15 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
         @Override
         public int getItemCount() {
-            if (userTransactionHistoryClasses != null && !userTransactionHistoryClasses.isEmpty())
-                return userTransactionHistoryClasses.size() + 1;
+            if (userTransactionHistories != null && !userTransactionHistories.isEmpty())
+                return userTransactionHistories.size() + 1;
             else return 0;
         }
 
         @Override
         public int getItemViewType(int position) {
 
-            if (position == userTransactionHistoryClasses.size()) {
+            if (position == userTransactionHistories.size()) {
                 return FOOTER_VIEW;
             }
 
@@ -734,12 +774,43 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         }
     }
 
-    private final BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
+    private void launchRequestMoneyReviewPage(TransactionHistory transactionHistory) {
+
+        Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
+        intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
+        intent.putExtra(Constants.INVOICE_RECEIVER_TAG,
+                ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getUserMobileNumber()));
+
+        intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, transactionHistory.getPurpose());
+        intent.putExtra(Constants.MONEY_REQUEST_ID, transactionHistory.getId());
+        intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
+        intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());
+        intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
+
+        if (ProfileInfoCacheManager.getMobileNumber().equals(transactionHistory.getOriginatingMobileNumber())) {
+            intent.putExtra(Constants.IS_IN_CONTACTS,
+                    new SearchContactClass(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getUserMobileNumber()));
+            intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
+        } else {
+            intent.putExtra(Constants.IS_IN_CONTACTS,
+                    new SearchContactClass(getActivity()).searchMobileNumber(transactionHistory.getOriginatingMobileNumber()));
+        }
+        startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
+    }
+
+    private void launchRequestPaymentReviewPage(TransactionHistory transactionHistory) {
+        Intent intent = new Intent(getActivity(), RequestPaymentActivity.class);
+        intent.putExtra(Constants.REQUEST_ID, transactionHistory.getId());
+        intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
+
+        startActivityForResult(intent, REQUEST_PAYMENT_REVIEW_REQUEST);
+    }
+
+    private class TransactionHistoryBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("Broadcast received", "Transaction History");
             refreshTransactionHistory();
         }
-    };
+    }
 }
 

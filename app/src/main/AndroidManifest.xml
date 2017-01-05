@@ -97,7 +97,7 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".Activities.PaymentActivities.InvoiceActivity"
+            android:name=".Activities.PaymentActivities.RequestPaymentActivity"
             android:label="@string/create_invoice"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
@@ -273,13 +273,6 @@
         <activity
             android:name=".Activities.HelpAndSupportActivity"
             android:label="@string/help"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ActionBarNoElevation"
-            android:windowSoftInputMode="adjustPan" />
-
-        <activity
-            android:name=".Activities.PaymentActivities.RequestMoneyHistoryActivity"
-            android:label="@string/history"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustPan" />

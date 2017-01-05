@@ -1,22 +1,21 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
-import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
@@ -26,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 
 public class SecuritySettingsFragment extends Fragment implements HttpResponseListener {
 
@@ -39,7 +39,6 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
     private IconifiedTextViewWithButton logoutHeader;
 
     private ProgressDialog mProgressDialog;
-    private SharedPreferences pref;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -86,18 +85,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         logoutHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new android.app.AlertDialog.Builder(getContext())
-                        .setMessage(R.string.logout_from_all_device_warning)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                logOutFromAllDevices();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        })
-                        .show();
+                showLogoutFromAllDevicesDialog();
             }
         });
 
@@ -105,6 +93,24 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
             setPINHeader.performClick();
         }
         return v;
+    }
+
+    private void showLogoutFromAllDevicesDialog() {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
+        dialog
+                .content(R.string.logout_from_all_device_warning)
+                .cancelable(false)
+                .positiveText(R.string.yes)
+                .negativeText(R.string.no);
+
+        dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                logOutFromAllDevices();
+            }
+        });
+
+        dialog.show();
     }
 
     private void logOutFromAllDevices() {
@@ -115,13 +121,9 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
         mProgressDialog.show();
 
-        pref = getContext().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         LogoutRequest mLogoutModel = new LogoutRequest(ProfileInfoCacheManager.getMobileNumber());
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
-
-        // Set the preference
-        ProfileInfoCacheManager.setLoggedInStatus(false);
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT_from_all_device, json, getActivity());
@@ -154,8 +156,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
                 mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    Intent intent = new Intent(getActivity(), SignupOrLoginActivity.class);
-                    startActivity(intent);
+                    ((MyApplication) getActivity().getApplication()).launchLoginPage(null);
                 } else {
                     Toast.makeText(getActivity(), mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }

@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.Utilities;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -15,6 +16,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -231,6 +233,11 @@ public class Utilities {
         } catch (IOException ex) {
             return null;
         }*/
+    }
+
+    public static void sendBroadcast(Context context, String intentFilter) {
+        Intent intent = new Intent(intentFilter);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     public static String streamToString(InputStream is) {
@@ -454,6 +461,13 @@ public class Utilities {
         return String.format("\u09F3%s", numberFormat.format(amount));
     }
 
+    public static String formatTakaWithSignAndComma(String sign, double amount) {
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMaximumFractionDigits(2);
+        return sign + String.format("\u09F3%s", numberFormat.format(amount));
+    }
+
     public static String takaWithComma(double amount) {
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
         numberFormat.setMinimumFractionDigits(2);
@@ -658,5 +672,20 @@ public class Utilities {
 
     public static BigDecimal bigDecimalPercentage(BigDecimal base, BigDecimal pct) {
         return base.multiply(pct).divide(new BigDecimal(100));
+    }
+
+    public static void goToiPayInAppStore(Context mContext) {
+        final String appPackageName = mContext.getPackageName();
+        try {
+            mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
+    }
+
+    public static void finishLauncherActivity(Activity activity) {
+        Intent intent = new Intent();
+        activity.setResult(Activity.RESULT_OK, intent);
+        activity.finish();
     }
 }

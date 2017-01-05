@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -25,8 +27,8 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.CheckPromoCodeRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.CheckPromoCodeResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestPersonalSignup;
+import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponsePersonalSignup;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -34,7 +36,9 @@ import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SignupPersonalStepOneFragment extends Fragment {
+public class SignupPersonalStepOneFragment extends Fragment implements HttpResponseListener {
+    private HttpRequestPostAsyncTask mRequestOTPTask = null;
+    private OTPResponsePersonalSignup mOtpResponsePersonalSignup;
 
     private EditText mPasswordView;
     private EditText mConfirmPasswordView;
@@ -48,6 +52,12 @@ public class SignupPersonalStepOneFragment extends Fragment {
     private EditText mGenderEditText;
     private ImageView mCrossButton;
     private Button mLoginButton;
+    private TextView mTermsConditions;
+    private TextView mPrivacyPolicy;
+    private CheckBox mAgreementCheckBox;
+
+    private ProgressDialog mProgressDialog;
+
     private String mDeviceID;
     private String mDOB;
 
@@ -81,8 +91,17 @@ public class SignupPersonalStepOneFragment extends Fragment {
         mGenderEditText = (EditText) v.findViewById(R.id.genderEditText);
         mCrossButton = (ImageView) v.findViewById(R.id.button_cross);
         mLoginButton = (Button) v.findViewById(R.id.button_log_in);
+        mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
+        mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
+        mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
+
+        mProgressDialog = new ProgressDialog(getActivity());
 
         mNameView.requestFocus();
+
+        // Enable hyperlinked
+        mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
+        mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
         final DatePickerDialog dialog = new DatePickerDialog(
                 getActivity(), mDateSetListener, 1990, 0, 1);
@@ -126,7 +145,7 @@ public class SignupPersonalStepOneFragment extends Fragment {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Utilities.isConnectionAvailable(getActivity())) attemptCheckPromoCode();
+                if (Utilities.isConnectionAvailable(getActivity())) attemptRequestOTP();
                 else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
@@ -179,7 +198,7 @@ public class SignupPersonalStepOneFragment extends Fragment {
                 }
             };
 
-    private void attemptCheckPromoCode() {
+    private void attemptRequestOTP() {
 
         // Reset errors.
         mNameView.setError(null);
@@ -226,11 +245,15 @@ public class SignupPersonalStepOneFragment extends Fragment {
             focusView = mConfirmPasswordView;
             cancel = true;
 
-        }  else if (SignupOrLoginActivity.mBirthday == null || SignupOrLoginActivity.mBirthday.length() == 0) {
+        } else if (SignupOrLoginActivity.mBirthday == null || SignupOrLoginActivity.mBirthday.length() == 0) {
             mBirthdayEditText.setError(getString(R.string.error_invalid_birthday));
             focusView = mBirthdayEditText;
             cancel = true;
 
+        } else if (!mAgreementCheckBox.isChecked()) {
+            cancel = true;
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.please_check_terms_and_conditions, Toast.LENGTH_LONG).show();
         }
 
         if (cancel) {
@@ -238,7 +261,69 @@ public class SignupPersonalStepOneFragment extends Fragment {
             // form field with an error.
             if (focusView != null) focusView.requestFocus();
         } else {
-            ((SignupOrLoginActivity) getActivity()).switchToSignupPersonalStepTwoFragment();
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            mProgressDialog.show();
+            OTPRequestPersonalSignup mOtpRequestPersonalSignup = new OTPRequestPersonalSignup(SignupOrLoginActivity.mMobileNumber,
+                    Constants.MOBILE_ANDROID + mDeviceID, Constants.PERSONAL_ACCOUNT_TYPE);
+            Gson gson = new Gson();
+            String json = gson.toJson(mOtpRequestPersonalSignup);
+            mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
+                    Constants.BASE_URL_MM + Constants.URL_OTP_REQUEST, json, getActivity());
+            mRequestOTPTask.mHttpResponseListener = this;
+            mRequestOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    @Override
+    public void httpResponseReceiver(HttpResponseObject result) {
+
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            mProgressDialog.dismiss();
+            mRequestOTPTask = null;
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.otp_request_failed, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        Gson gson = new Gson();
+
+        if (result.getApiCommand().equals(Constants.COMMAND_OTP_VERIFICATION)) {
+
+            String message;
+            try {
+                mOtpResponsePersonalSignup = gson.fromJson(result.getJsonString(), OTPResponsePersonalSignup.class);
+                message = mOtpResponsePersonalSignup.getMessage();
+            } catch (Exception e) {
+                e.printStackTrace();
+                message = getString(R.string.server_down);
+            }
+
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.otp_going_to_send, Toast.LENGTH_LONG).show();
+
+                SignupOrLoginActivity.otpDuration = mOtpResponsePersonalSignup.getOtpValidFor();
+                ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
+
+            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+
+                // Previous OTP has not been expired yet
+                SignupOrLoginActivity.otpDuration = mOtpResponsePersonalSignup.getOtpValidFor();
+                ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+            }
+
+            mProgressDialog.dismiss();
+            mRequestOTPTask = null;
         }
     }
 

@@ -31,25 +31,29 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PendingIntroducerReviewDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.Business;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.GetBusinessListResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
+import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.MoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.Notification;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.BusinessListRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetPendingIntroducerListResponse;
+import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.PendingIntroducer;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.GetIntroductionRequestsResponse;
 import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroductionRequestClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class NotificationFragment extends ProgressFragment implements HttpResponseListener {
@@ -66,6 +70,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private HttpRequestGetAsyncTask mGetBusinessInvitationTask = null;
     private GetBusinessListResponse mGetBusinessListResponse;
 
+    private HttpRequestGetAsyncTask mGetPendingIntroducerListTask = null;
+    private GetPendingIntroducerListResponse mPendingIntroducerListResponse;
 
     private RecyclerView mNotificationsRecyclerView;
     private NotificationListAdapter mNotificationListAdapter;
@@ -78,9 +84,10 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private List<MoneyAndPaymentRequest> mMoneyAndPaymentRequests;
     private List<IntroductionRequestClass> mIntroductionRequests;
     private List<Business> mBusinessInvitations;
+    private List<PendingIntroducer> mPendingIntroducerList;
 
     // These variables hold the information needed to populate the review dialog
-    private List<ItemList> mItemList;
+    private List<InvoiceItem> mInvoiceItemList;
     private BigDecimal mAmount;
     private BigDecimal mVat;
     private BigDecimal mServiceCharge;
@@ -89,7 +96,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private String mPhotoUri;
     private long mMoneyRequestId;
     private String mTitle;
-    private String mDescriptionofRequest;
+    private String mDescriptionOfRequest;
 
     private OnNotificationUpdateListener mOnNotificationUpdateListener;
 
@@ -117,9 +124,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             @Override
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity())) {
-                    refreshMoneyAndPaymentRequestList();
-                    refreshIntroductionRequestList();
-                    refreshBusinessInvitationList();
+                    refreshNotificationLists(getActivity());
                 }
             }
         });
@@ -130,9 +135,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     public void onResume() {
         super.onResume();
         if (Utilities.isConnectionAvailable(getActivity())) {
-            refreshBusinessInvitationList();
-            refreshIntroductionRequestList();
-            refreshMoneyAndPaymentRequestList();
+            refreshNotificationLists(getActivity());
         }
     }
 
@@ -155,6 +158,14 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         getMoneyAndPaymentRequest(context);
         getIntroductionRequestList(context);
         getBusinessInvitationList(context);
+        getPendingIntroducersList(context);
+    }
+
+    public void refreshNotificationLists(Context context) {
+        refreshBusinessInvitationList(context);
+        refreshIntroductionRequestList(context);
+        refreshMoneyAndPaymentRequestList(context);
+        refreshPendingIntroducerList(context);
     }
 
     @Override
@@ -171,7 +182,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         GetMoneyAndPaymentRequest mGetMoneyAndPaymentRequest = new GetMoneyAndPaymentRequest();
         // Get only pending requests
-        mGetMoneyAndPaymentRequest.setStatus(Constants.REQUEST_STATUS_PROCESSING);
+        mGetMoneyAndPaymentRequest.setStatus(Constants.MONEY_REQUEST_STATUS_PROCESSING);
 
         Gson gson = new Gson();
         String json = gson.toJson(mGetMoneyAndPaymentRequest);
@@ -201,6 +212,16 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mGetBusinessInvitationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getPendingIntroducersList(Context context) {
+        if (mGetPendingIntroducerListTask != null) {
+            return;
+        }
+
+        mGetPendingIntroducerListTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PENDING_INTRODUCER_LIST,
+                Constants.BASE_URL_MM + Constants.URL_GET_PENDING_INTRODUCER, context, this);
+        mGetPendingIntroducerListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private void attemptGetServiceCharge(int serviceId) {
 
         if (mServiceChargeTask != null) {
@@ -222,24 +243,31 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mServiceChargeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void refreshMoneyAndPaymentRequestList() {
-        if (Utilities.isConnectionAvailable(getActivity())) {
+    private void refreshMoneyAndPaymentRequestList(Context context) {
+        if (Utilities.isConnectionAvailable(context)) {
             mMoneyAndPaymentRequests = null;
-            getMoneyAndPaymentRequest(getActivity());
+            getMoneyAndPaymentRequest(context);
         }
     }
 
-    private void refreshIntroductionRequestList() {
-        if (Utilities.isConnectionAvailable(getActivity())) {
+    private void refreshIntroductionRequestList(Context context) {
+        if (Utilities.isConnectionAvailable(context)) {
             mIntroductionRequests = null;
-            getIntroductionRequestList(getActivity());
+            getIntroductionRequestList(context);
         }
     }
 
-    private void refreshBusinessInvitationList() {
-        if (Utilities.isConnectionAvailable(getActivity())) {
+    private void refreshBusinessInvitationList(Context context) {
+        if (Utilities.isConnectionAvailable(context)) {
             mBusinessInvitations = null;
-            getBusinessInvitationList(getActivity());
+            getBusinessInvitationList(context);
+        }
+    }
+
+    private void refreshPendingIntroducerList(Context context) {
+        if (Utilities.isConnectionAvailable(context)) {
+            mPendingIntroducerList = null;
+            getPendingIntroducersList(context);
         }
     }
 
@@ -255,6 +283,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             notifications.addAll(mIntroductionRequests);
         if (mBusinessInvitations != null)
             notifications.addAll(mBusinessInvitations);
+        if (mPendingIntroducerList != null)
+            notifications.addAll(mPendingIntroducerList);
 
         // Date wise sort all notifications
         Collections.sort(notifications, new Comparator<Notification>() {
@@ -296,7 +326,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private void launchInvoiceHistoryFragment() {
-
         Bundle bundle = new Bundle();
         bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
         bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
@@ -306,9 +335,13 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         bundle.putString(Constants.PHOTO_URI, mPhotoUri);
         bundle.putString(Constants.AMOUNT, mAmount.toString());
         bundle.putString(Constants.TITLE, mTitle);
-        bundle.putString(Constants.DESCRIPTION, mDescriptionofRequest);
-        bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mItemList));
+        bundle.putString(Constants.DESCRIPTION, mDescriptionOfRequest);
         bundle.putString(Constants.TAG, Constants.INVOICE);
+
+        if (mInvoiceItemList != null)
+            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mInvoiceItemList));
+        else
+            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
 
         Intent intent = new Intent(this.getContext(), NotificationActivity.class);
         intent.putExtras(bundle);
@@ -320,7 +353,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         bundle.putInt(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
         bundle.putSerializable(Constants.AMOUNT, mAmount);
         bundle.putString(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
-        bundle.putString(Constants.INVOICE_DESCRIPTION_TAG, mDescriptionofRequest);
+        bundle.putString(Constants.INVOICE_DESCRIPTION_TAG, mDescriptionOfRequest);
         bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
         bundle.putString(Constants.NAME, mReceiverName);
         bundle.putString(Constants.PHOTO_URI, mPhotoUri);
@@ -330,6 +363,56 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         intent.putExtras(bundle);
         intent.putExtra(Constants.IS_IN_CONTACTS,
                 new SearchContactClass(getActivity()).searchMobileNumber(mReceiverMobileNumber));
+        startActivity(intent);
+    }
+
+    private void launchBusinessInvitationReviewFragment(final Business businessInvitation) {
+        final String senderName = businessInvitation.getName();
+        final String senderMobileNumber = businessInvitation.getMobileNumber();
+        final String photoUri = businessInvitation.getImageUrl();
+        final String designation = businessInvitation.getDesignation();
+        final long associationId = businessInvitation.getAssociationId();
+        final int roleId = businessInvitation.getRoleId();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.NAME, senderName);
+        bundle.putString(Constants.PHOTO_URI, photoUri);
+        bundle.putString(Constants.MOBILE_NUMBER, senderMobileNumber);
+        bundle.putString(Constants.DESIGNATION, designation);
+        bundle.putLong(Constants.ASSOCIATION_ID, associationId);
+        bundle.putInt(Constants.ROLE_ID, roleId);
+        bundle.putString(Constants.TAG, Constants.BUSINESS);
+
+        Intent intent = new Intent(getActivity(), NotificationActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    private void launchIntroductionRequestReviewFragment(final IntroductionRequestClass introductionRequest) {
+        final long requestID = introductionRequest.getId();
+
+        final String senderName = introductionRequest.getName();
+        final String senderMobileNumber = introductionRequest.getSenderMobileNumber();
+        final String photoUri = introductionRequest.getImageUrl();
+
+        final AddressClass mAddress = introductionRequest.getPresentAddress();
+        final String fathersName = introductionRequest.getFather();
+        final String mothersName = introductionRequest.getMother();
+
+        Bundle bundle = new Bundle();
+        bundle.putLong(Constants.REQUEST_ID, requestID);
+        bundle.putString(Constants.NAME, senderName);
+        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + photoUri);
+        bundle.putString(Constants.MOBILE_NUMBER, senderMobileNumber);
+        bundle.putString(Constants.FATHERS_NAME, fathersName);
+        bundle.putString(Constants.MOTHERS_NAME, mothersName);
+        bundle.putSerializable(Constants.ADDRESS, mAddress);
+        bundle.putString(Constants.TAG, Constants.RECOMMENDATION);
+        bundle.putBoolean(Constants.IS_IN_CONTACTS,
+                new SearchContactClass(getActivity()).searchMobileNumber(senderMobileNumber));
+
+        Intent intent = new Intent(getActivity(), NotificationActivity.class);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 
@@ -346,6 +429,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             mServiceChargeTask = null;
             mGetBusinessInvitationTask = null;
             mGetIntroductionRequestTask = null;
+            mGetPendingIntroducerListTask = null;
 
             if (isAdded()) {
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -382,8 +466,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 mGetMoneyAndPaymentRequestTask = null;
                 postProcessNotificationList();
-
                 break;
+
             case Constants.COMMAND_GET_RECOMMENDATION_REQUESTS:
                 try {
                     mIntroductionRequestsResponse = gson.fromJson(result.getJsonString(), GetIntroductionRequestsResponse.class);
@@ -401,8 +485,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 mGetIntroductionRequestTask = null;
                 postProcessNotificationList();
-
                 break;
+
             case Constants.COMMAND_GET_BUSINESS_LIST:
                 try {
                     mGetBusinessListResponse = gson.fromJson(result.getJsonString(), GetBusinessListResponse.class);
@@ -420,8 +504,27 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 mGetBusinessInvitationTask = null;
                 postProcessNotificationList();
-
                 break;
+
+            case Constants.COMMAND_GET_PENDING_INTRODUCER_LIST:
+                try {
+                    mPendingIntroducerListResponse = gson.fromJson(result.getJsonString(), GetPendingIntroducerListResponse.class);
+
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mPendingIntroducerList = mPendingIntroducerListResponse.getWantToBeIntroducers();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                }
+
+                mGetPendingIntroducerListTask = null;
+                postProcessNotificationList();
+                break;
+
             case Constants.COMMAND_GET_SERVICE_CHARGE:
                 mProgressDialog.dismiss();
                 try {
@@ -453,6 +556,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 mServiceChargeTask = null;
                 break;
+
+            default:
+                break;
         }
     }
 
@@ -478,8 +584,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 Notification notification = mNotifications.get(pos);
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + notification.getImageUrl(), false);
-
                 mNameView.setText(notification.getName());
+
                 mTimeView.setText(Utilities.formatDateWithTime(notification.getTime()));
 
                 if (notification.getNotificationTitle() != null && !notification.getNotificationTitle().equals("")) {
@@ -512,36 +618,39 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 final String imageUrl = moneyAndPaymentRequest.getOriginatorProfile().getUserProfilePicture();
                 final String name = moneyAndPaymentRequest.originatorProfile.getUserName();
                 final String mobileNumber = moneyAndPaymentRequest.originatorProfile.getUserMobileNumber();
-                final String descriptionofRequest = moneyAndPaymentRequest.getDescriptionofRequest();
+                final String descriptionOfRequest = moneyAndPaymentRequest.getDescriptionofRequest();
                 final String title = moneyAndPaymentRequest.getTitle();
                 final long id = moneyAndPaymentRequest.getId();
                 final BigDecimal amount = moneyAndPaymentRequest.getAmount();
                 final int serviceID = moneyAndPaymentRequest.getServiceID();
                 final BigDecimal vat = moneyAndPaymentRequest.getVat();
-                final List<ItemList> itemList = moneyAndPaymentRequest.getItemList();
+                final List<InvoiceItem> itemList = moneyAndPaymentRequest.getItemList();
 
                 mAmountView.setText(Utilities.formatTaka(amount));
-
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         mMoneyRequestId = id;
                         mAmount = amount;
                         mReceiverName = name;
                         mReceiverMobileNumber = mobileNumber;
                         mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
                         mTitle = title;
-                        mDescriptionofRequest = descriptionofRequest;
+                        mDescriptionOfRequest = descriptionOfRequest;
                         mVat = vat;
-                        mItemList = itemList;
+                        mInvoiceItemList = itemList;
 
-                        if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
-                            attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
-                        else {
-                            launchInvoiceHistoryFragment();
-                        }
+                        PinChecker moneyAndPaymentRequestPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                            @Override
+                            public void ifPinAdded() {
+                                if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
+                                    attemptGetServiceCharge(Constants.SERVICE_ID_REQUEST_MONEY);
+                                else
+                                    launchInvoiceHistoryFragment();
+                            }
+                        });
+                        moneyAndPaymentRequestPinChecker.execute();
                     }
                 });
 
@@ -552,44 +661,16 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
             public IntroductionRequestViewHolder(final View itemView) {
                 super(itemView);
-
             }
 
             @Override
-            public void bindView(int pos) {
+            public void bindView(final int pos) {
                 super.bindView(pos);
-
-                final IntroductionRequestClass introductionRequest = (IntroductionRequestClass) mNotifications.get(pos);
-
-                final long requestID = introductionRequest.getId();
-
-                final String senderName = introductionRequest.getName();
-                final String senderMobileNumber = introductionRequest.getSenderMobileNumber();
-                final String photoUri = introductionRequest.getImageUrl();
-
-                final AddressClass mAddress = introductionRequest.getPresentAddress();
-                final String fathersName = introductionRequest.getFather();
-                final String mothersName = introductionRequest.getMother();
-
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Bundle bundle = new Bundle();
-                        bundle.putLong(Constants.REQUEST_ID, requestID);
-                        bundle.putString(Constants.NAME, senderName);
-                        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + photoUri);
-                        bundle.putString(Constants.MOBILE_NUMBER, senderMobileNumber);
-                        bundle.putString(Constants.FATHERS_NAME, fathersName);
-                        bundle.putString(Constants.MOTHERS_NAME, mothersName);
-                        bundle.putSerializable(Constants.ADDRESS, mAddress);
-                        bundle.putString(Constants.TAG, Constants.RECOMMENDATION);
-                        bundle.putBoolean(Constants.IS_IN_CONTACTS,
-                                new SearchContactClass(getActivity()).searchMobileNumber(senderMobileNumber));
-
-                        Intent intent = new Intent(getActivity(), NotificationActivity.class);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
+                        launchIntroductionRequestReviewFragment((IntroductionRequestClass) mNotifications.get(pos));
                     }
                 });
             }
@@ -606,38 +687,47 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             }
 
             @Override
-            public void bindView(int pos) {
+            public void bindView(final int pos) {
                 super.bindView(pos);
-                final Business businessInvitation = (Business) mNotifications.get(pos);
-
-
-                final String senderName = businessInvitation.getName();
-                final String senderMobileNumber = businessInvitation.getMobileNumber();
-                final String photoUri = businessInvitation.getImageUrl();
-                final String designation = businessInvitation.getDesignation();
-                final long associationId = businessInvitation.getAssociationId();
-                final int roleId = businessInvitation.getRoleId();
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        Bundle bundle = new Bundle();
-                        bundle.putString(Constants.NAME, senderName);
-                        bundle.putString(Constants.PHOTO_URI, photoUri);
-                        bundle.putString(Constants.MOBILE_NUMBER, senderMobileNumber);
-                        bundle.putString(Constants.DESIGNATION, designation);
-                        bundle.putLong(Constants.ASSOCIATION_ID, associationId);
-                        bundle.putInt(Constants.ROLE_ID, roleId);
-                        bundle.putString(Constants.TAG, Constants.BUSINESS);
-
-                        Intent intent = new Intent(getActivity(), NotificationActivity.class);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-
+                        launchBusinessInvitationReviewFragment((Business) mNotifications.get(pos));
                     }
                 });
             }
+        }
+
+        public class PendingIntroductionListViewHolder extends NotificationViewHolder {
+
+            public PendingIntroductionListViewHolder(final View itemView) {
+                super(itemView);
+
+            }
+
+            @Override
+            public void bindView(int pos) {
+                super.bindView(pos);
+
+                final PendingIntroducer pendingIntroducer = (PendingIntroducer) mNotifications.get(pos);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new PendingIntroducerReviewDialog(getActivity(), pendingIntroducer).setActionCheckerListener(
+                                new PendingIntroducerReviewDialog.ActionCheckerListener() {
+                                    @Override
+                                    public void ifFinishNeeded() {
+                                        if (Utilities.isConnectionAvailable(getActivity())) {
+                                            refreshNotificationLists(getActivity());
+                                        }
+                                    }
+                                });
+                    }
+                });
+            }
+
         }
 
         @Override
@@ -652,6 +742,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             } else if (viewType == Constants.NOTIFICATION_TYPE_BUSINESS_ACCOUNT_INVITE) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_business_invitation, parent, false);
                 return new BusinessInvitationViewHolder(v);
+            } else if (viewType == Constants.NOTIFICATION_TYPE_PENDING_INTRODUCER_REQUEST) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_requests_notification, parent, false);
+                return new PendingIntroductionListViewHolder(v);
             } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_and_make_payment_request, parent, false);
                 return new MoneyAndPaymentRequestViewHolder(v);

@@ -231,7 +231,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                 public void onDateSet(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {
                     mDateOfBirthEditText.setText(
-                            String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year));
+                            String.format(Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year));
                 }
             };
 

@@ -7,13 +7,12 @@
     <LinearLayout style="@style/LinearLayoutHolder">
 
         <TextView
-            style="@style/TextViewInfoLabel"
-            android:text="@string/total_amount" />
+            style="@style/TextViewInfoLabelReview"
+            android:text="@string/AMOUNT" />
 
         <TextView
-            android:id="@+id/textview_net_amount"
-            style="@style/TextViewInfoColorPrimary" />
-
+            android:id="@+id/textview_amount"
+            style="@style/TextViewInfoColorPrimaryReview" />
     </LinearLayout>
 
     <View style="@style/Divider" />
@@ -21,12 +20,12 @@
     <LinearLayout style="@style/LinearLayoutHolder">
 
         <TextView
-            style="@style/TextViewInfoLabel"
+            style="@style/TextViewInfoLabelReview"
             android:text="@string/vat" />
 
         <TextView
             android:id="@+id/textview_vat"
-            style="@style/TextViewInfoColorPrimary" />
+            style="@style/TextViewInfoColorPrimaryReview" />
 
     </LinearLayout>
 
@@ -35,13 +34,47 @@
     <LinearLayout style="@style/LinearLayoutHolder">
 
         <TextView
-            style="@style/TextViewInfoLabel"
-            android:text="@string/net_amount" />
+            style="@style/TextViewInfoLabelReview"
+            android:text="@string/TOTAL" />
 
         <TextView
             android:id="@+id/textview_total"
-            style="@style/TextViewInfoColorPrimary" />
+            style="@style/TextViewInfoColorPrimaryReview" />
 
+    </LinearLayout>
+
+    <View style="@style/Divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/service_charge_layout">
+
+        <TextView
+            style="@style/TextViewInfoLabelReview"
+            android:text="@string/service_charge" />
+
+        <TextView
+            android:id="@+id/textview_service_charge"
+            style="@style/TextViewInfoColorPrimaryReview" />
+
+    </LinearLayout>
+
+    <View style="@style/Divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/TextViewInfoLabelReview"
+            android:text="@string/net_amount" />
+
+        <TextView
+            android:id="@+id/textview_net_amount"
+            style="@style/TextViewInfoColorPrimaryReview" />
     </LinearLayout>
 
     <View style="@style/Divider" />
@@ -80,7 +113,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:id="@+id/button_reject"
+        android:id="@+id/button_cancel"
         style="@style/PrimaryMediumButtonReject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
