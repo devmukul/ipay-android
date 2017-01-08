@@ -60,10 +60,11 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_login_page);
-
         Utilities.showKeyboard(getActivity());
 
-        if (pref.contains(Constants.USERID)) {
+        // If UUID exists, it means device was set as trusted before.
+        // Set the login username so that user can't change it.
+        if (pref.contains(Constants.UUID)) {
             mPasswordEditText.setText("");
             mPasswordEditText.requestFocus();
             mUserNameEditText.setEnabled(false);
@@ -117,7 +118,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 // Hiding the keyboard after login button pressed
                 Utilities.hideKeyboard(getActivity());
 
@@ -135,7 +135,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
                 intent.setData(Uri.parse(Constants.BASE_URL_WEB + Constants.URL_FORGET_PASSWORD));
                 startActivity(intent);
-                //((SignupOrLoginActivity) getActivity()).switchToForgetPasswordFragment();
             }
         });
 
@@ -149,7 +148,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mInfoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 new AlertDialog.Builder(getContext())
                         .setMessage(R.string.login_info)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -163,8 +161,9 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         });
 
         if (!ProfileInfoCacheManager.getProfileImageUrl().isEmpty()) {
+            if (Constants.DEBUG)
+                Log.d("Profile Picture", ProfileInfoCacheManager.getProfileImageUrl());
 
-            Log.d("Profile Picture", ProfileInfoCacheManager.getProfileImageUrl());
             mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
                     ProfileInfoCacheManager.getProfileImageUrl(), false);
         } else {
@@ -305,7 +304,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-
 
             } catch (Exception e) {
                 e.printStackTrace();
