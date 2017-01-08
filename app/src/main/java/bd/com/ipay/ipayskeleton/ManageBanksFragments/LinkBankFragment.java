@@ -74,6 +74,9 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
     private ResourceSelectorDialog<Bank> bankSelectorDialog;
     private CustomSelectorDialog districtSelectorDialog;
     private CustomSelectorDialog bankBranchSelectorDialog;
+
+    private String mSelectedBankName;
+    private String mBankAccountNumber;
     private int mSelectedBranchId = -1;
     private int mSelectedBankId = -1;
     private int mSelectedDistrictId = -1;
@@ -103,7 +106,7 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
         mAccountNameEditText = (EditText) v.findViewById(R.id.bank_account_name);
         mAccountNumberEditText = (EditText) v.findViewById(R.id.bank_account_number);
         addBank = (Button) v.findViewById(R.id.button_add_bank);
-        mBankBranchEditTextProgressBar=(EditTextWithProgressBar) v.findViewById(R.id.editText_with_progressBar_branch);
+        mBankBranchEditTextProgressBar = (EditTextWithProgressBar) v.findViewById(R.id.editText_with_progressBar_branch);
         mBankBranchSelection = mBankBranchEditTextProgressBar.getEditText();
 
         mSelectedBankId = -1;
@@ -116,41 +119,35 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
         addBank.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // The first position is "Select One"
-                View focusView;
-                if (mSelectedBankId < 0) {
-                    mBankListSelection.setError(getContext().getString(R.string.please_select_a_bank));
-                } else if (mSelectedDistrictId < 0) {
-                    mDistrictSelection.setError(getContext().getString(R.string.please_select_a_district));
-                } else if (mSelectedBranchId < 0) {
-                    mBankBranchSelection.setError(getContext().getString(R.string.please_select_a_branch));
-                } else if (mAccountNameEditText.getText().toString().trim().length() == 0) {
-                    if (getActivity() != null) {
-                        mAccountNameEditText.setError(getContext().getString(R.string.please_enter_an_account_name));
-                        focusView = mAccountNameEditText;
-                        focusView.requestFocus();
-                    }
-                } else if (mAccountNumberEditText.getText().toString().trim().length() == 0) {
-                    if (getActivity() != null) {
-                        mAccountNumberEditText.setError(getContext().getString(R.string.please_enter_an_account_number));
-                        focusView = mAccountNumberEditText;
-                        focusView.requestFocus();
-                    }
-                } else if (mAccountNumberEditText.getText().toString().trim().length() < 8) {
-                    if (getActivity() != null) {
-                        mAccountNumberEditText.setError(getContext().getString(R.string.please_enter_an_account_number_of_minimum_digit));
-                        focusView = mAccountNumberEditText;
-                        focusView.requestFocus();
-                    }
-                } else {
-                    Utilities.hideKeyboard(getContext(), v);
-                    showBankAgreementDialog();
-                }
-
+                verifyUserInputs();
             }
         });
 
         return v;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        ((ManageBanksActivity) getActivity()).mSelectedBankId = mSelectedBankId;
+        ((ManageBanksActivity) getActivity()).mSelectedDistrictId = mSelectedDistrictId;
+        ((ManageBanksActivity) getActivity()).mSelectedBranchId = mSelectedBranchId;
+        ((ManageBanksActivity) getActivity()).mDistrictNames = mDistrictNames;
+        ((ManageBanksActivity) getActivity()).mBranches = mBranches;
+        ((ManageBanksActivity) getActivity()).mBranchNames = mBranchNames;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mSelectedBankId = ((ManageBanksActivity) getActivity()).mSelectedBankId;
+        mSelectedDistrictId = ((ManageBanksActivity) getActivity()).mSelectedDistrictId;
+        mSelectedBranchId = ((ManageBanksActivity) getActivity()).mSelectedBranchId;
+        mDistrictNames = ((ManageBanksActivity) getActivity()).mDistrictNames;
+        mBranches = ((ManageBanksActivity) getActivity()).mBranches;
+        mBranchNames = ((ManageBanksActivity) getActivity()).mBranchNames;
     }
 
     private void setBankAdapter(List<Bank> bankList) {
@@ -163,6 +160,7 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
                 mBankListSelection.setText(name);
                 mSelectedBankId = id;
                 mSelectedDistrictId = -1;
+                mSelectedBankName = name;
                 getBankBranches(mSelectedBankId);
             }
         });
@@ -184,7 +182,6 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
                 mDistrictSelection.setError(null);
                 mDistrictSelection.setText(name);
                 mSelectedDistrictId = id;
-
                 mSelectedBranchId = -1;
 
                 mBranches = new ArrayList<>();
@@ -229,27 +226,50 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
         });
     }
 
-    public void showBankAgreementDialog() {
-        new MaterialDialog.Builder(getActivity())
-                .title(R.string.are_you_sure)
-                .content(R.string.start_date)
-                .positiveText(R.string.yes)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        BankBranch bankBranch = mBranches.get(mSelectedBranchId);
-                        attemptAddBank(bankBranch.getRoutingNumber(), 0,
-                                mAccountNameEditText.getText().toString().trim(), mAccountNumberEditText.getText().toString().trim());
-                    }
-                })
-                .negativeText(R.string.no)
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        // Do nothing
-                    }
-                })
-                .show();
+    private void verifyUserInputs() {
+        // The first position is "Select One"
+        View focusView;
+        if (mSelectedBankId < 0) {
+            mBankListSelection.setError(getContext().getString(R.string.please_select_a_bank));
+        } else if (mSelectedDistrictId < 0) {
+            mDistrictSelection.setError(getContext().getString(R.string.please_select_a_district));
+        } else if (mSelectedBranchId < 0) {
+            mBankBranchSelection.setError(getContext().getString(R.string.please_select_a_branch));
+        } else if (mAccountNameEditText.getText().toString().trim().length() == 0) {
+            if (getActivity() != null) {
+                mAccountNameEditText.setError(getContext().getString(R.string.please_enter_an_account_name));
+                focusView = mAccountNameEditText;
+                focusView.requestFocus();
+            }
+        } else if (mAccountNumberEditText.getText().toString().trim().length() == 0) {
+            if (getActivity() != null) {
+                mAccountNumberEditText.setError(getContext().getString(R.string.please_enter_an_account_number));
+                focusView = mAccountNumberEditText;
+                focusView.requestFocus();
+            }
+        } else if (mAccountNumberEditText.getText().toString().trim().length() < 8) {
+            if (getActivity() != null) {
+                mAccountNumberEditText.setError(getContext().getString(R.string.please_enter_an_account_number_of_minimum_digit));
+                focusView = mAccountNumberEditText;
+                focusView.requestFocus();
+            }
+        } else {
+            Utilities.hideKeyboard(getActivity());
+            launchAddBankAgreementPage();
+        }
+    }
+
+    private void launchAddBankAgreementPage() {
+        BankBranch bankBranch = mBranches.get(mSelectedBranchId);
+        mBankAccountNumber = mAccountNumberEditText.getText().toString().trim();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.BANK_NAME, mSelectedBankName);
+        bundle.putParcelable(Constants.BANK_BRANCH, bankBranch);
+        bundle.putString(Constants.BANK_ACCOUNT_NUMBER, mBankAccountNumber);
+        bundle.putBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION, startedFromProfileCompletion);
+
+        ((ManageBanksActivity) getActivity()).switchToAddBankAgreementFragment(bundle);
     }
 
     private void getBankBranches(long bankID) {

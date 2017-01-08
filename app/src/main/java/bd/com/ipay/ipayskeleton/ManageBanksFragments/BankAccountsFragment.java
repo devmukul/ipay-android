@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -81,6 +82,11 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_bank_accounts, container, false);
         getActivity().setTitle(R.string.bank_list);
+
+       /* // Check if the account is verified before adding a bank account.
+        if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED))
+            ((ManageBanksActivity) getActivity()).mFabAddNewBank.setVisibility(View.VISIBLE);
+        else ((ManageBanksActivity) getActivity()).mFabAddNewBank.setVisibility(View.GONE);*/
 
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mBankListRecyclerView = (RecyclerView) v.findViewById(R.id.list_bank);

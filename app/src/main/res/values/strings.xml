@@ -369,7 +369,11 @@
     <string name="next">Next</string>
     <string name="continue_sign_up">Continue</string>
     <string name="bank_list">Banks</string>
+    <string name="add_bank_agreement_title">Declaration by iPay Member for the linked bank account</string>
+    <string name="add_bank_agreement">I am hereby authorizing iPay Systems Ltd to debit or credit my below mentioned bank account for bank transaction instructions generated from the settlement bank of iPay Systems Ltd.</string>
+    <string name="add_bank_agreement_additional_message">We will deposit a random amount in your bank account as a part of verification process. You need to provide the deposited verification amount to link the bank with your iPay account. Please note that, bank verification process may take up to 3 working days.</string>
     <string name="bank_branch">Branch</string>
+    <string name="i_agree">I agree</string>
     <string name="logout">Log Out</string>
     <string name="bdt">BDT</string>
     <string name="make_payment">Make Payment</string>
