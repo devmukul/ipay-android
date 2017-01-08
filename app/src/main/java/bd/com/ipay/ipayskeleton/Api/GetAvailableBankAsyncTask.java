@@ -6,9 +6,9 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BankRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetAvailableBankResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Bank;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetAvailableBankResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -27,7 +27,7 @@ public class GetAvailableBankAsyncTask extends HttpRequestGetAsyncTask {
 
         this.mHttpResponseListener = new HttpResponseListener() {
             @Override
-            public void httpResponseReceiver(HttpResponseObject result) {
+            public void httpResponseReceiver(GenericHttpResponse result) {
                 if (result == null)
                     return;
 

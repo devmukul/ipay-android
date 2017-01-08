@@ -22,7 +22,7 @@ import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, HttpResponseObject> {
+public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, GenericHttpResponse> {
 
     private final Context mContext;
     private final String imagePath;
@@ -36,16 +36,16 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, HttpRes
     }
 
     @Override
-    protected HttpResponseObject doInBackground(Void... params) {
+    protected GenericHttpResponse doInBackground(Void... params) {
 
-        HttpResponseObject mHttpResponseObject;
+        GenericHttpResponse mGenericHttpResponse;
 
         if (Utilities.isConnectionAvailable(mContext))
-            mHttpResponseObject = uploadImage(imagePath);
+            mGenericHttpResponse = uploadImage(imagePath);
         else
             return null;
 
-        return mHttpResponseObject;
+        return mGenericHttpResponse;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, HttpRes
     }
 
     @Override
-    protected void onPostExecute(final HttpResponseObject result) {
+    protected void onPostExecute(final GenericHttpResponse result) {
 
         if (result != null) {
             if (Constants.DEBUG)
@@ -75,7 +75,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, HttpRes
 
     }
 
-    private HttpResponseObject uploadImage(String selectedImagePath) {
+    private GenericHttpResponse uploadImage(String selectedImagePath) {
         if (Constants.DEBUG)
             Log.w("Uploading image", selectedImagePath);
 
@@ -103,12 +103,12 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, HttpRes
 
             int status = response.getStatusLine().getStatusCode();
 
-            HttpResponseObject mHttpResponseObject = new HttpResponseObject();
-            mHttpResponseObject.setStatus(status);
-            mHttpResponseObject.setApiCommand(API_COMMAND);
-            mHttpResponseObject.setJsonString(EntityUtils.toString(httpEntity));
+            GenericHttpResponse mGenericHttpResponse = new GenericHttpResponse();
+            mGenericHttpResponse.setStatus(status);
+            mGenericHttpResponse.setApiCommand(API_COMMAND);
+            mGenericHttpResponse.setJsonString(EntityUtils.toString(httpEntity));
 
-            return mHttpResponseObject;
+            return mGenericHttpResponse;
 
         } catch (Exception e) {
             e.printStackTrace();

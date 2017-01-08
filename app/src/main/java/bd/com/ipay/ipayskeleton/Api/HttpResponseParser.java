@@ -18,7 +18,7 @@ import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HttpResponseParser {
-    private HttpResponseObject mHttpResponseObject = null;
+    private GenericHttpResponse mGenericHttpResponse = null;
     private HttpResponse mHttpResponse;
     private String API_COMMAND = "";
     private Context mContext;
@@ -26,19 +26,19 @@ public class HttpResponseParser {
     public HttpResponseParser() {
     }
 
-    public HttpResponseObject parseHttpResponse() {
+    public GenericHttpResponse parseHttpResponse() {
 
         setTokenTimerAndRefreshToken(mHttpResponse.getAllHeaders());
         int status = mHttpResponse.getStatusLine().getStatusCode();
         String responseJsonString = getResponseBody(mHttpResponse.getEntity());
 
-        mHttpResponseObject = new HttpResponseObject();
-        mHttpResponseObject.setStatus(status);
-        mHttpResponseObject.setApiCommand(API_COMMAND);
-        mHttpResponseObject.setJsonString(responseJsonString);
-        mHttpResponseObject.setHeaders(Arrays.asList(mHttpResponse.getAllHeaders()));
+        mGenericHttpResponse = new GenericHttpResponse();
+        mGenericHttpResponse.setStatus(status);
+        mGenericHttpResponse.setApiCommand(API_COMMAND);
+        mGenericHttpResponse.setJsonString(responseJsonString);
+        mGenericHttpResponse.setHeaders(Arrays.asList(mHttpResponse.getAllHeaders()));
 
-        return mHttpResponseObject;
+        return mGenericHttpResponse;
     }
 
     private void setTokenTimerAndRefreshToken(Header[] headers) {

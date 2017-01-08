@@ -18,15 +18,15 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.GetUserAddressResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.District;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.DistrictRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetDistrictResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetThanaResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.ThanaRequestBuilder;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.GetUserAddressResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.District;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.DistrictRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetDistrictResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetThanaResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Thana;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.ThanaRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -203,7 +203,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
