@@ -22,7 +22,7 @@ import bd.com.ipay.ipayskeleton.Activities.ForgotPasswordActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ForgetPassword.ForgetPasswordRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ForgetPassword.ForgetPasswordResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -153,7 +153,7 @@ public class ForgetPasswordFragment extends Fragment implements HttpResponseList
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mProgressDialog.dismiss();

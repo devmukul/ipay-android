@@ -20,7 +20,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivi
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.GetBusinessRuleWithServiceChargeRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.GetBusinessRulesWithServiceChargeResponse;
@@ -102,7 +102,7 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
 
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (mProgressDialog != null && isAdded())
             mProgressDialog.dismiss();

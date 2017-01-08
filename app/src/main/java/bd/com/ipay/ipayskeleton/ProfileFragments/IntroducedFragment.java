@@ -21,7 +21,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
@@ -116,7 +116,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) throws RuntimeException {
+    public void httpResponseReceiver(GenericHttpResponse result) throws RuntimeException {
 
 
         mGetRecommendationRequestsTask = null;

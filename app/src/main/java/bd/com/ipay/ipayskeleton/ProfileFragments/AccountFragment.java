@@ -28,7 +28,7 @@ import bd.com.ipay.ipayskeleton.Activities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.UploadProfilePictureAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ProfilePictureHelperDialog;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
@@ -329,7 +329,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         }
     }
 
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         if (getActivity() != null) {
             mProgressDialog.dismiss();
         }

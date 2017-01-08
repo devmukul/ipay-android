@@ -9,7 +9,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class HttpResponseObject {
+public class GenericHttpResponse {
     private int status;
     private String apiCommand;
     private String jsonString;
@@ -17,7 +17,7 @@ public class HttpResponseObject {
     private Context context;
     private List<Header> headers;
 
-    public HttpResponseObject() {
+    public GenericHttpResponse() {
     }
 
     public Context getContext() {

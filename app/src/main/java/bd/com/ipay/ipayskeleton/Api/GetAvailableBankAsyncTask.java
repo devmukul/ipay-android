@@ -27,7 +27,7 @@ public class GetAvailableBankAsyncTask extends HttpRequestGetAsyncTask {
 
         this.mHttpResponseListener = new HttpResponseListener() {
             @Override
-            public void httpResponseReceiver(HttpResponseObject result) {
+            public void httpResponseReceiver(GenericHttpResponse result) {
                 if (result == null)
                     return;
 

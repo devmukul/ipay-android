@@ -27,7 +27,7 @@ public class GetBusinessTypesAsyncTask extends HttpRequestGetAsyncTask {
 
         this.mHttpResponseListener = new HttpResponseListener() {
             @Override
-            public void httpResponseReceiver(HttpResponseObject result) {
+            public void httpResponseReceiver(GenericHttpResponse result) {
 
                 try {
                     Gson gson = new Gson();

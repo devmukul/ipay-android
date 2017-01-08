@@ -26,7 +26,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.HelpAndSupportActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketsResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.Ticket;
 import bd.com.ipay.ipayskeleton.R;
@@ -116,7 +116,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         if (getActivity() != null) {
             mSwipeRefreshLayout.setRefreshing(false);
         }

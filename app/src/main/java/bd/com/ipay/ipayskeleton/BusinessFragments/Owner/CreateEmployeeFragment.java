@@ -21,7 +21,7 @@ import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogAc
 import bd.com.ipay.ipayskeleton.Activities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -173,7 +173,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         mProgressDialog.dismiss();
 
