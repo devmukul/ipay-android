@@ -185,8 +185,8 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-        } else {
 
+        } else {
             String otp = mOTPEditText.getText().toString().trim();
             String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
 
