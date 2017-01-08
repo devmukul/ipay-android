@@ -437,12 +437,6 @@ public class HomeActivity extends BaseActivity
             startActivity(intent);
             switchedToHomeFragment = false;
 
-        } else if (id == R.id.nav_event) {
-
-            Intent intent = new Intent(HomeActivity.this, EventActivity.class);
-            startActivity(intent);
-            switchedToHomeFragment = false;
-
         } else if (id == R.id.nav_security_settings) {
 
             Intent intent = new Intent(HomeActivity.this, SecuritySettingsActivity.class);

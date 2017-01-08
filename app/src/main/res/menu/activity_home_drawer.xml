@@ -35,11 +35,6 @@
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_drawer_about"
             android:title="@string/about" />
-        <item
-            android:id="@+id/nav_event"
-            android:icon="@drawable/ic_event_black_24dp"
-            android:title="@string/events"
-            android:visible="false" />
     </group>
     <item
         android:id="@+id/nav_logout"

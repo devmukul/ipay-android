@@ -549,10 +549,6 @@ public class Utilities {
             return "";
     }
 
-    public static String[] parseEventTicket(String qrcodeEncoded) {
-        return qrcodeEncoded.split(":");
-    }
-
     /**
      * Checks if a profile picture is proper or not.
      *
