@@ -86,6 +86,13 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".Activities.DeviceTrustActivity"
+            android:label="@string/trust_this_device"
+            android:screenOrientation="portrait"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".Activities.PaymentActivities.SendMoneyActivity"
             android:label="@string/send_money"
             android:screenOrientation="portrait"

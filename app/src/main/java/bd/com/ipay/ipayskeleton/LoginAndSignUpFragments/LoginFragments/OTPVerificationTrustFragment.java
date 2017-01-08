@@ -235,7 +235,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                         pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumberBusiness).apply();
 
                     if (getActivity() != null)
-                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
 
                 } else {
                     if (getActivity() != null)

@@ -41,6 +41,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GetBusinessTypesAsyncTask;
@@ -48,7 +49,6 @@ import bd.com.ipay.ipayskeleton.Api.GetFriendsAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
@@ -62,8 +62,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
@@ -84,9 +82,6 @@ public class HomeActivity extends BaseActivity
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
-
-    private HttpRequestPostAsyncTask mAddTrustedDeviceTask = null;
-    private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
 
     private HttpRequestGetAsyncTask mGetBusinessInformationAsyncTask;
     private GetBusinessInformationResponse mGetBusinessInformationResponse;
@@ -193,12 +188,6 @@ public class HomeActivity extends BaseActivity
             startService(intent);
         }
 
-        // Add to trusted device
-        if (!pref.contains(Constants.UUID)) {
-            if (Utilities.isConnectionAvailable(this))
-                addToTrustedDeviceList();
-        }
-
         if (Constants.DEBUG) {
             Log.w("Token", TokenManager.getToken());
         }
@@ -257,12 +246,10 @@ public class HomeActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
             case R.id.action_notification:
                 Intent intent = new Intent(this, NotificationActivity.class);
                 startActivity(intent);
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -318,26 +305,6 @@ public class HomeActivity extends BaseActivity
             bundle.putString(AnalyticsConstants.DEVICE_LONG_LAT, longLat);
 
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
-    }
-
-    private void addToTrustedDeviceList() {
-        if (mAddTrustedDeviceTask != null) {
-            return;
-        }
-
-        String mDeviceID = DeviceInfoFactory.getDeviceId(this);
-        String mDeviceName = DeviceInfoFactory.getDeviceName();
-
-        String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
-
-        AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
-                Constants.MOBILE_ANDROID + mDeviceID, pushRegistrationID);
-        Gson gson = new Gson();
-        String json = gson.toJson(mAddToTrustedDeviceRequest);
-        mAddTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_DEVICE,
-                Constants.BASE_URL_MM + Constants.URL_ADD_TRUSTED_DEVICE, json, this);
-        mAddTrustedDeviceTask.mHttpResponseListener = this;
-        mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void todoCheckList(int storedCriticalPreferenceVersion) {
@@ -578,7 +545,6 @@ public class HomeActivity extends BaseActivity
             mProgressDialog.dismiss();
             mLogoutTask = null;
             mGetProfileInfoTask = null;
-            mAddTrustedDeviceTask = null;
             mGetBusinessInformationAsyncTask = null;
             Toast.makeText(HomeActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
@@ -664,26 +630,6 @@ public class HomeActivity extends BaseActivity
                 }
 
                 mGetBusinessInformationAsyncTask = null;
-                break;
-            case Constants.COMMAND_ADD_TRUSTED_DEVICE:
-
-                try {
-                    mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        String UUID = mAddToTrustedDeviceResponse.getUUID();
-                        pref.edit().putString(Constants.UUID, UUID).apply();
-                    } else {
-                        Toast.makeText(this, mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
-                }
-
-                mAddTrustedDeviceTask = null;
-
                 break;
         }
     }

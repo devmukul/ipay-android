@@ -22,9 +22,9 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
@@ -273,7 +273,11 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                     pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).apply();
                     // When user logs in, we want that by default he would log in to his default account
                     TokenManager.deactivateEmployerAccount();
-                    ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+
+                    // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
+                    if (!pref.contains(Constants.UUID))
+                        ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
+                    else ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
 //                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
