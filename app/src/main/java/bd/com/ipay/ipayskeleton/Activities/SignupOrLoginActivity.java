@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import bd.com.ipay.ipayskeleton.ForgotPasswordFragments.ForgetPasswordFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.OTPVerificationBusinessFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepOneFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepThreeFragment;
@@ -171,11 +170,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public void switchToAccountSelectionFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
-    }
-
-    public void switchToForgetPasswordFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new ForgetPasswordFragment()).addToBackStack(null).commit();
     }
 
     public void switchToHomeActivity() {

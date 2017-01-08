@@ -303,8 +303,6 @@ public class Constants {
 
     // Settings REST
     public static final String URL_CHANGE_PASSWORD = "settings/password";
-    public static final String URL_SEND_OTP_FORGET_PASSWORD = "settings/password/forget";
-    public static final String URL_CONFIRM_OTP_FORGET_PASSWORD = "settings/password/forget/confirmation";
     public static final String URL_GET_SECURITY_ALL_QUESTIONS = "settings/security/allquestions/";
     public static final String URL_GET_SECURITY_QUESTIONS = "settings/security/questions";
     public static final String URL_SET_SECURITY_ANSWERS = "settings/security/answers";
@@ -313,15 +311,15 @@ public class Constants {
     public static final String URL_GET_PIN_INFO = "settings/pin";
     public static final String URL_SET_PIN = "settings/pin";
 
-    // Signin Rest
+    // Sign in Rest
     public static final String URL_GET_REFRESH_TOKEN = "signin/refreshToken";
     public static final String URL_LOGIN = "signin";
 
-    // Signout Rest
+    // Sign out Rest
     public static final String URL_LOG_OUT = "signout";
     public static final String URL_LOG_OUT_from_all_device = "signout/formAllDevice";
 
-    // Signup Rest
+    // Sign up Rest
     public static final String URL_SIGN_UP = "signup/activation";
     public static final String URL_SIGN_UP_BUSINESS = "signup/business/activation";
     public static final String URL_OTP_REQUEST = "signup";
@@ -447,8 +445,6 @@ public class Constants {
     public static final String COMMAND_SIGN_UP_BUSINESS = "COMMAND_SIGN_UP_BUSINESS";
     public static final String COMMAND_LOG_IN = "COMMAND_LOG_IN";
     public static final String COMMAND_ASK_FOR_RECOMMENDATION = "COMMAND_ASK_FOR_RECOMMENDATION";
-    public static final String COMMAND_FORGET_PASSWORD_SEND_OTP = "COMMAND_FORGET_PASSWORD_SEND_OTP";
-    public static final String COMMAND_FORGET_PASSWORD_CONFIRM_OTP = "COMMAND_FORGET_PASSWORD_CONFIRM_OTP";
     public static final String COMMAND_LOG_OUT = "COMMAND_LOG_OUT";
     public static final String COMMAND_SEND_MONEY = "COMMAND_SEND_MONEY";
     public static final String COMMAND_PAYMENT = "COMMAND_PAYMENT";
