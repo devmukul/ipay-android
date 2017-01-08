@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Model.Security;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Security;
 
 import java.util.List;
 

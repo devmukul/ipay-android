@@ -1,18 +1,18 @@
-package bd.com.ipay.ipayskeleton.Model.Security;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Security;
 
 import android.net.Uri;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class GetAllSecurityQuestionRequestBuilder {
+public class GetPreviousSelectedSecurityQuestionRequestBuilder {
     private String generatedUri;
 
-    public GetAllSecurityQuestionRequestBuilder() {
+    public GetPreviousSelectedSecurityQuestionRequestBuilder() {
         generateUri();
     }
 
     private void generateUri() {
-        Uri uri = Uri.parse(Constants.BASE_URL_MM + Constants.URL_GET_SECURITY_ALL_QUESTIONS)
+        Uri uri = Uri.parse(Constants.BASE_URL_MM + Constants.URL_GET_SECURITY_QUESTIONS)
                 .buildUpon()
                 .build();
 

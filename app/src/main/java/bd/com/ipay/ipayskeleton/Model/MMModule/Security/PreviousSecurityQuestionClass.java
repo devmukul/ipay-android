@@ -1,9 +1,7 @@
-package bd.com.ipay.ipayskeleton.Model.Security;
+package bd.com.ipay.ipayskeleton.Model.MMModule.Security;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import java.io.Serializable;
 
 public class PreviousSecurityQuestionClass implements Parcelable {
 
