@@ -349,7 +349,8 @@ public class HomeActivity extends BaseActivity
             case 0:
                 // Migration code from 0 to 1
                 // Get Business contacts
-                GetAllBusinessContactRequestBuilder mGetAllBusinessContactRequestBuilder = new GetAllBusinessContactRequestBuilder();
+                // For the first time load, the lastBusinessId is 0
+                GetAllBusinessContactRequestBuilder mGetAllBusinessContactRequestBuilder = new GetAllBusinessContactRequestBuilder(0);
                 new GetAllBusinessListAsyncTask(this, mGetAllBusinessContactRequestBuilder.getGeneratedUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 break;
         }
