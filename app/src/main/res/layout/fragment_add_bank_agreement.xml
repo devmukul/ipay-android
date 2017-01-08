@@ -24,7 +24,7 @@
                 android:text="@string/add_bank_agreement_title"
                 android:textAlignment="center"
                 android:textSize="@dimen/text_size_medium"
-                android:textStyle="bold" />
+                android:fontFamily="sans-serif-medium" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -44,7 +44,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".8"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:text="@string/account_name" />
+                    android:text="@string/account_name"
+                    android:fontFamily="sans-serif-medium"/>
 
                 <TextView
                     android:id="@+id/bank_account_name"
@@ -66,7 +67,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".8"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:text="@string/bank_name" />
+                    android:text="@string/bank_name"
+                    android:fontFamily="sans-serif-medium"/>
 
                 <TextView
                     android:id="@+id/bank_name"
@@ -88,7 +90,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".8"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:text="@string/bank_branch" />
+                    android:text="@string/bank_branch"
+                    android:fontFamily="sans-serif-medium"/>
 
                 <TextView
                     android:id="@+id/bank_branch_name"
@@ -110,7 +113,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".8"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:text="@string/account_number" />
+                    android:text="@string/account_number"
+                    android:fontFamily="sans-serif-medium"/>
 
                 <TextView
                     android:id="@+id/bank_account_number"
@@ -126,8 +130,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/activity_horizontal_margin"
-                android:text="@string/add_bank_agreement_additional_message"
-                android:textColor="@color/colorPrimary" />
+                android:text="@string/add_bank_agreement_additional_message" />
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

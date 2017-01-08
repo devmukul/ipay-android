@@ -82,7 +82,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_bank_accounts, container, false);
         getActivity().setTitle(R.string.bank_list);
-        
+
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         mBankListRecyclerView = (RecyclerView) v.findViewById(R.id.list_bank);
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
