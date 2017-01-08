@@ -7,7 +7,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 
 @Aspect
@@ -27,10 +27,10 @@ public class ApiValidatorAspect {
         Log.d("Aspect", "Masud aspected something here");
 
         try {
-            HttpResponseObject mHttpResponseObject = (HttpResponseObject) args[0];
+            GenericHttpResponse mGenericHttpResponse = (GenericHttpResponse) args[0];
 
-            if (mHttpResponseObject != null && mHttpResponseObject.isUpdateNeeded()) {
-                DialogUtils.showAppUpdateRequiredDialog(mHttpResponseObject.getContext());
+            if (mGenericHttpResponse != null && mGenericHttpResponse.isUpdateNeeded()) {
+                DialogUtils.showAppUpdateRequiredDialog(mGenericHttpResponse.getContext());
             } else {
                 result = joinPoint.proceed();
             }
