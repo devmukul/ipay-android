@@ -104,12 +104,6 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".Activities.ForgotPasswordActivity"
-            android:label="@string/password_recovery"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity
             android:name=".Activities.PaymentActivities.AddMoneyActivity"
             android:label="@string/add_money"
             android:screenOrientation="portrait"
