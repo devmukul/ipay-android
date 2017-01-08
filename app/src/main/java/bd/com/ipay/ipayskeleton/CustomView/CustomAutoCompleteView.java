@@ -31,8 +31,6 @@ public class CustomAutoCompleteView extends AutoCompleteTextView {
     @Override
     public void replaceText(final CharSequence text) {
         super.replaceText(text);
-
     }
-
 }
 

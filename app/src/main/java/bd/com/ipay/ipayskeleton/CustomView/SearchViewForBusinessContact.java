@@ -23,7 +23,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class CustomSearchViewBusinessContact extends FrameLayout {
+public class SearchViewForBusinessContact extends FrameLayout {
 
     private CustomAutoCompleteView mCustomAutoCompleteView;
     private TextView mMobileNumberHintView;
@@ -42,17 +42,17 @@ public class CustomSearchViewBusinessContact extends FrameLayout {
 
     private List<BusinessContact> mBusinessContacts;
 
-    public CustomSearchViewBusinessContact(Context context, AttributeSet attrs, int defStyle) {
+    public SearchViewForBusinessContact(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView(context, attrs);
     }
 
-    public CustomSearchViewBusinessContact(Context context, AttributeSet attrs) {
+    public SearchViewForBusinessContact(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView(context, attrs);
     }
 
-    public CustomSearchViewBusinessContact(Context context) {
+    public SearchViewForBusinessContact(Context context) {
         super(context);
         initView(context, null);
     }
@@ -82,13 +82,11 @@ public class CustomSearchViewBusinessContact extends FrameLayout {
 
         @Override
         public void afterTextChanged(Editable s) {
-            // TODO Auto-generated method stub
         }
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count,
                                       int after) {
-            // TODO Auto-generated method stub
         }
 
         @Override
