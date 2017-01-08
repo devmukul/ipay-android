@@ -2,21 +2,21 @@ package bd.com.ipay.ipayskeleton.Model.BusinessContact;
 
 import android.net.Uri;
 
-import java.net.URLEncoder;
-
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class GetAllBusinessContactRequestBuilder {
 
     private String generatedUri;
+    private String PARAM_LAST_BUSINESS_ID = "lastBusinessId";
 
-    public GetAllBusinessContactRequestBuilder() {
-        generateUri();
+    public GetAllBusinessContactRequestBuilder(int lastBusinessId) {
+        generateUri(lastBusinessId);
     }
 
-    private void generateUri() {
+    private void generateUri(int lastBusinessId) {
         Uri uri = Uri.parse(Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_LIST_ALL)
                 .buildUpon()
+                .appendQueryParameter(PARAM_LAST_BUSINESS_ID, lastBusinessId + "")
                 .build();
 
         setGeneratedUri(uri.toString());

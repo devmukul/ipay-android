@@ -79,7 +79,7 @@ public class DataHelper {
         }
     }
 
-    public void createBusinessAccounts(List<BusinessAccountEntry> businessAccountEntries) {
+    public void createBusinessAccountsList(List<BusinessAccountEntry> businessAccountEntries) {
         if (businessAccountEntries != null && !businessAccountEntries.isEmpty()) {
 
             SQLiteDatabase db = dOpenHelper.getWritableDatabase();
@@ -217,6 +217,32 @@ public class DataHelper {
         }
 
         return cursor;
+    }
+
+    public int getLastAddedBusinessId() {
+        Cursor cursor = null;
+        int columnIndexForMaxBusinessId = 0;
+
+        try {
+            SQLiteDatabase db = dOpenHelper.getReadableDatabase();
+
+            String queryString = "SELECT MAX(" + DBConstants.KEY_BUSINESS_ACCOUNT_ID +
+                    ") FROM " + DBConstants.DB_TABLE_BUSINESS_ACCOUNTS;
+
+            if (Constants.DEBUG)
+                Log.w("Query", queryString);
+
+            cursor = db.rawQuery(queryString, null);
+
+            if (cursor != null) {
+                cursor.moveToFirst();
+                return cursor.getInt(columnIndexForMaxBusinessId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 
     public void updatePushEvents(String tagName, String jsonString) {

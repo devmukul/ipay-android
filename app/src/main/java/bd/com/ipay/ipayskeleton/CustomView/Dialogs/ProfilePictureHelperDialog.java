@@ -27,10 +27,10 @@ public class ProfilePictureHelperDialog extends AlertDialog {
 
     public ProfilePictureHelperDialog(Context context, String mTitle, List<String> resources) {
         super(context);
-
-        View v = inflater.inflate(R.layout.dialog_profile_picture_helper, null);
         this.context = context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View v = inflater.inflate(R.layout.dialog_profile_picture_helper, null);
         selectImageHeaderView = inflater.inflate(R.layout.dialog_selector_header, null);
         selectImageHeaderTitle = (TextView) selectImageHeaderView.findViewById(R.id.textviewTitle);
         selectImageHeaderTitle.setText(mTitle);
