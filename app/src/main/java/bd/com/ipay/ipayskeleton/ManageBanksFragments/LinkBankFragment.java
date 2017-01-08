@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -141,9 +144,7 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
                     }
                 } else {
                     Utilities.hideKeyboard(getContext(), v);
-                    BankBranch bankBranch = mBranches.get(mSelectedBranchId);
-                    attemptAddBank(bankBranch.getRoutingNumber(), 0,
-                            mAccountNameEditText.getText().toString().trim(), mAccountNumberEditText.getText().toString().trim());
+                    showBankAgreementDialog();
                 }
 
             }
@@ -226,6 +227,29 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
                 bankBranchSelectorDialog.show();
             }
         });
+    }
+
+    public void showBankAgreementDialog() {
+        new MaterialDialog.Builder(getActivity())
+                .title(R.string.are_you_sure)
+                .content(R.string.start_date)
+                .positiveText(R.string.yes)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        BankBranch bankBranch = mBranches.get(mSelectedBranchId);
+                        attemptAddBank(bankBranch.getRoutingNumber(), 0,
+                                mAccountNameEditText.getText().toString().trim(), mAccountNumberEditText.getText().toString().trim());
+                    }
+                })
+                .negativeText(R.string.no)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        // Do nothing
+                    }
+                })
+                .show();
     }
 
     private void getBankBranches(long bankID) {
