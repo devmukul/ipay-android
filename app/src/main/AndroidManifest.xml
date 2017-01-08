@@ -157,12 +157,6 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".Activities.EventActivity"
-            android:label="@string/events"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name=".Activities.PaymentActivities.EducationPaymentActivity"
             android:label="@string/education"
             android:screenOrientation="portrait"
@@ -170,7 +164,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.ManageBanksActivity"
-            android:label="@string/events"
+            android:label="@string/manage_bank_accounts"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize" />

@@ -14,13 +14,13 @@ import java.util.HashMap;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EmployeeDetailsFragment;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.CreateEmployeeFragment;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EmployeeManagementFragment;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EmployeePrivilegeFragment;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.GetRolesResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.Role;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.GetRolesResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.Role;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -150,7 +150,7 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
         return ManagePeopleActivity.this;
     }
 
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetRolesAsyncTask = null;
             Toast.makeText(ManagePeopleActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();

@@ -22,12 +22,12 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.EmployeeDetails;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.GetEmployeeDetailsResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.PrivilegeConstants;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.Role;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.EmployeeDetails;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.GetEmployeeDetailsResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.PrivilegeConstants;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.Role;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -89,7 +89,7 @@ public class EmployeeDetailsFragment extends Fragment implements HttpResponseLis
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
