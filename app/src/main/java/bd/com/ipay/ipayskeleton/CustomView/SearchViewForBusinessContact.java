@@ -18,7 +18,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.BusinessContact;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -62,10 +62,10 @@ public class SearchViewForBusinessContact extends FrameLayout {
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflater.inflate(R.layout.view_business_contact_search_view, this, true);
+        View view = inflater.inflate(R.layout.view_business_contact_search_view, this, true);
 
-        mCustomAutoCompleteView = (CustomAutoCompleteView) v.findViewById(R.id.auto_complete_view);
-        mMobileNumberHintView = (TextView) v.findViewById(R.id.mobile_number_hint);
+        mCustomAutoCompleteView = (CustomAutoCompleteView) view.findViewById(R.id.auto_complete_view);
+        mMobileNumberHintView = (TextView) view.findViewById(R.id.mobile_number_hint);
 
         mCustomAutoCompleteView.addTextChangedListener(new CustomAutoCompleteTextChangedListener());
 
