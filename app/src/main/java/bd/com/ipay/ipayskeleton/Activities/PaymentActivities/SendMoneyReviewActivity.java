@@ -13,9 +13,9 @@ import com.google.gson.Gson;
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteToiPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -100,7 +100,7 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetProfileInfoTask = null;
             Toast.makeText(this, R.string.service_not_available, Toast.LENGTH_LONG).show();

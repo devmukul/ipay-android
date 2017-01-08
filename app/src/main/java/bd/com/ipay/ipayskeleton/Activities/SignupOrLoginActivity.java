@@ -25,7 +25,7 @@ import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments.OTPVerifi
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.OTPVerificationPersonalFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.SignupPersonalStepOneFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SelectAccountTypeFragment;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;

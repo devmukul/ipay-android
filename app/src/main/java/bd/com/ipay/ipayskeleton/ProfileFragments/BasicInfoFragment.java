@@ -22,13 +22,13 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetParentInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetProfileInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetOccupationResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Occupation;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.OccupationRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetParentInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetOccupationResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Occupation;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.OccupationRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -245,7 +245,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR

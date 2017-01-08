@@ -7,7 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.ReceivedPaymentRequestDetailsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.ReceivedPaymentRequestsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.MakePaymentFragment;

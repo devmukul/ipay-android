@@ -27,12 +27,12 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TopUp.TopupRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -241,7 +241,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);
 
         if (isAdded())

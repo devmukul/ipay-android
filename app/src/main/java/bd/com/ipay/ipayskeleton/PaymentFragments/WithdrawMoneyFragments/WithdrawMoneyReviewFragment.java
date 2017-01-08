@@ -26,10 +26,10 @@ import java.math.BigDecimal;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.WithdrawMoneyRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.AddOrWithdrawMoney.WithdrawMoneyResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -197,7 +197,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR

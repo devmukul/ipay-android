@@ -18,7 +18,7 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputSignUpView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;

@@ -29,7 +29,6 @@ public class Constants {
     public static final String TICKET_ID = "TICKET_ID";
     public static final String STRING_TO_ENCODE = "STRING_TO_ENCODE";
     public static final String ACTIVITY_TITLE = "ACTIVITY_TITLE";
-    public static final String EVENT_ID = "EVENT_ID";
     public static final String TITLE = "TITLE";
     public static final String DESCRIPTION = "DESCRIPTION";
     public static final String TIME = "TIME";
@@ -256,10 +255,7 @@ public class Constants {
     public static final String URL_UPLOAD_DOCUMENTS = "docs/identification/documents";
     public static final String URL_UPLOAD_BUSINESS_DOCUMENTS = "docs/identification/documents/business";
     public static final String URL_GET_DOCUMENT_ACCESS_TOKEN = "user/contentAccessToken";
-    // Event Controller
-    public static final String URL_EVENT_LIST = "events/user/eventList/";
 
-    public static final String URL_EVENT_CATEGORIES = "categories";
     // Fee Charge REST
     public static final String URL_SERVICE_CHARGE = "feecharge";
 
@@ -508,7 +504,6 @@ public class Constants {
     public static final String COMMAND_INTRODUCE_ACTION = "COMMAND_INTRODUCE_ACTION";
     public static final String COMMAND_GET_USER_INFO = "COMMAND_GET_USER_INFO";
     public static final String COMMAND_WITHDRAW_MONEY = "COMMAND_WITHDRAW_MONEY";
-    public static final String COMMAND_EVENT_CATEGORIES = "COMMAND_EVENT_CATEGORIES";
     public static final String COMMAND_UPLOAD_DOCUMENT = "COMMAND_UPLOAD_DOCUMENT";
     public static final String COMMAND_GET_DOCUMENT_ACCESS_TOKEN = "COMMAND_GET_DOCUMENT_ACCESS_TOKEN";
     public static final String COMMAND_GET_PIN_INFO = "COMMAND_GET_PIN_INFO";
@@ -722,8 +717,8 @@ public class Constants {
     public static final String ACTION_TYPE_MAKE_PRIMARY = "Make Primary";
     public static final String ACTION_TYPE_EDIT = "Edit";
     public static final String ACTION_TYPE_VIEW = "View";
-    public static final String ACTION_TYPE_TAKE_PICTURE = "Take a Picture";
-    public static final String ACTION_TYPE_SELECT_FROM_GALLERY = "Select from Gallery";
+    public static final String ACTION_TYPE_TAKE_PICTURE = "Take a picture";
+    public static final String ACTION_TYPE_SELECT_FROM_GALLERY = "Select from gallery";
 
     public static final String SERVICE_ACTION_REQUEST_PAYMENT = "Request Payment";
     public static final String SERVICE_ACTION_MAKE_PAYMENT = "Make Payment";
