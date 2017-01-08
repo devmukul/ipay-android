@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.ManageBanksFragments;
 
 import android.app.ProgressDialog;
-import android.app.usage.ConfigurationStats;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -132,9 +131,8 @@ public class AddBankAgreementFragment extends Fragment implements HttpResponseLi
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_LONG).show();
 
-                    if (!startedFromProfileCompletion) {
+                    if (!startedFromProfileCompletion)
                         ((ManageBanksActivity) getActivity()).switchToBankAccountsFragment();
-                    }
                     else
                         Toast.makeText(getActivity(), R.string.bank_successfully_placed_for_verification, Toast.LENGTH_LONG).show();
 
