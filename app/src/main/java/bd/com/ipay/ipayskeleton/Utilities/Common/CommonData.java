@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Bank;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 
 public class CommonData {
     private static List<Bank> availableBanks;

@@ -6,9 +6,9 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessTypeRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetBusinessTypeResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessTypeRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetBusinessTypeResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 

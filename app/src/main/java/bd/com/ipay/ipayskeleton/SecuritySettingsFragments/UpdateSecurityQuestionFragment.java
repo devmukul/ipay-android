@@ -22,10 +22,10 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Security.PreviousSecurityQuestionClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Security.UpdateSecurityQuestionAnswerClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Security.UpdateSecurityAnswerRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Security.UpdateSecurityAnswerResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.PreviousSecurityQuestionClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.UpdateSecurityQuestionAnswerClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.UpdateSecurityAnswerRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.UpdateSecurityAnswerResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 

@@ -14,9 +14,9 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionDetailsFragment;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.SingleTransactionHistoryRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.SingleTransactionHistoryResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistory;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.SingleTransactionHistoryRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.SingleTransactionHistoryResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 

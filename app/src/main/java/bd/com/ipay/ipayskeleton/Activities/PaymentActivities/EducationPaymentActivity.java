@@ -12,10 +12,10 @@ import bd.com.ipay.ipayskeleton.EducationFragments.PayEducationFeesFragment;
 import bd.com.ipay.ipayskeleton.EducationFragments.ReviewEducationFeePaymentFragment;
 import bd.com.ipay.ipayskeleton.EducationFragments.SelectInstitutionFragment;
 import bd.com.ipay.ipayskeleton.EducationFragments.ShowStudentInfoFragment;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Education.EventParticipant;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Education.Institution;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Education.PayableItem;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Education.SemesterOrSession;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.EventParticipant;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.Institution;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.PayableItem;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.SemesterOrSession;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 

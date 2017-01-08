@@ -20,8 +20,8 @@ import org.apache.http.protocol.HTTP;
 import java.io.IOException;
 
 import bd.com.ipay.ipayskeleton.BuildConfig;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Configuration.ApiVersionResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Configuration.ApiVersionResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;

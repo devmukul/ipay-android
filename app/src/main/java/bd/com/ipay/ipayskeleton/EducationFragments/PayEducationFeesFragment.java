@@ -27,8 +27,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Education.GetEnabledPayablesRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Education.PayableItem;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.GetEnabledPayablesRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.PayableItem;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 

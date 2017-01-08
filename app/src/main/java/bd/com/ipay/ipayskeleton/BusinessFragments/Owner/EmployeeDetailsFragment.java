@@ -24,10 +24,10 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.EmployeeDetails;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.GetEmployeeDetailsResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.PrivilegeConstants;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.Role;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.EmployeeDetails;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.GetEmployeeDetailsResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.PrivilegeConstants;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.Role;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 

@@ -28,11 +28,11 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.ConfirmBusinessInvitationRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.ConfirmBusinessInvitationResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.GetRolesResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.PrivilegeConstants;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.Role;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.ConfirmBusinessInvitationRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.ConfirmBusinessInvitationResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.GetRolesResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.PrivilegeConstants;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.Role;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
