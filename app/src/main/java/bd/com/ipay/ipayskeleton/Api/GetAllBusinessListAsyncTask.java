@@ -24,7 +24,6 @@ public class GetAllBusinessListAsyncTask extends HttpRequestGetAsyncTask impleme
         this.context = context;
     }
 
-
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
@@ -42,7 +41,7 @@ public class GetAllBusinessListAsyncTask extends HttpRequestGetAsyncTask impleme
 
                 // Save the list fetched from the server into the database
                 DataHelper dataHelper = DataHelper.getInstance(context);
-                dataHelper.createBusinessAccounts(mBusinessContacts);
+                dataHelper.createBusinessAccountsList(mBusinessContacts);
             } else {
                 if (getContext() != null) {
                     Toast.makeText(getContext(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG).show();

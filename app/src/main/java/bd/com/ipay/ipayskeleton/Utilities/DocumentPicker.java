@@ -57,10 +57,12 @@ public class DocumentPicker {
 
         Intent pickIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        File tempFile = getTempFile(context);
 
         Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         takePhotoIntent.putExtra("return-data", true);
-        takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(context)));
+        if (tempFile != null)
+            takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile));
 
         intentList = addIntentsToList(context, intentList, takePhotoIntent);
         intentList = addIntentsToList(context, intentList, pickIntent);
@@ -74,10 +76,12 @@ public class DocumentPicker {
 
         Intent pickIntent = new Intent(Intent.ACTION_GET_CONTENT);
         pickIntent.setType("image/*|application/pdf");
+        File tempFile = getTempFile(context);
 
         Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         takePhotoIntent.putExtra("return-data", true);
-        takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(context)));
+        if (tempFile != null)
+            takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile));
 
         intentList = addIntentsToList(context, intentList, takePhotoIntent);
         intentList = addIntentsToList(context, intentList, pickIntent);
@@ -96,8 +100,11 @@ public class DocumentPicker {
             intentList = addIntentsToList(context, intentList, pickIntent);
         } else {
             Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File tempFile = getTempFile(context);
+
             takePhotoIntent.putExtra("return-data", true);
-            takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(context)));
+            if (tempFile != null)
+                takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile));
             intentList = addIntentsToList(context, intentList, takePhotoIntent);
         }
         return getChooserIntent(intentList, chooserTitle);
@@ -191,7 +198,9 @@ public class DocumentPicker {
 
     private static File getTempFile(Context context) {
         File documentFile = new File(context.getExternalCacheDir(), TEMP_DOCUMENT_NAME);
-        documentFile.getParentFile().mkdirs();
-        return documentFile;
+        if (documentFile != null) {
+            documentFile.getParentFile().mkdirs();
+            return documentFile;
+        } else return null;
     }
 }
