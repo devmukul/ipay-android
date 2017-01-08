@@ -174,7 +174,6 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
                         } else if (getActivity() != null)
                             Toast.makeText(getActivity(), getResources().getString(
                                     R.string.please_scan_a_valid_pin), Toast.LENGTH_SHORT).show();
-
                     }
                 });
             }
