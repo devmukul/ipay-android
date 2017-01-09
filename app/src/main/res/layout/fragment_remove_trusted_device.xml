@@ -11,7 +11,7 @@
     <ListView
         android:id="@+id/list_trusted_devices"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:divider="@null"
         android:dividerHeight="0dp" />
 
@@ -19,6 +19,9 @@
         android:id="@+id/button_logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/logout" />
-
+        android:text="@string/logout"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/list_trusted_devices"
+        style="@style/ButtonStyleMedium"
+        />
 </RelativeLayout>
