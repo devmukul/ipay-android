@@ -26,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class AddBankAgreementFragment extends Fragment implements HttpResponseListener {
+
     private HttpRequestPostAsyncTask mAddBankTask = null;
     private AddBankResponse mAddBankResponse;
 
@@ -43,7 +44,6 @@ public class AddBankAgreementFragment extends Fragment implements HttpResponseLi
     private String mBankName;
     private String mBranchName;
     private String mBankAccountNumber;
-
     private BankBranch mBankBranch;
 
     private boolean startedFromProfileCompletion = false;
@@ -74,7 +74,7 @@ public class AddBankAgreementFragment extends Fragment implements HttpResponseLi
         mBankAccountNumber = getArguments().getString(Constants.BANK_ACCOUNT_NUMBER);
         mAccountName = ProfileInfoCacheManager.getName();
 
-        startedFromProfileCompletion =getArguments().getBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION);
+        startedFromProfileCompletion = getArguments().getBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION);
 
         mAccountNameTextView.setText(mAccountName);
         mBankNameTextView.setText(mBankName);
@@ -148,7 +148,6 @@ public class AddBankAgreementFragment extends Fragment implements HttpResponseLi
 
             mProgressDialog.dismiss();
             mAddBankTask = null;
-
         }
     }
 }

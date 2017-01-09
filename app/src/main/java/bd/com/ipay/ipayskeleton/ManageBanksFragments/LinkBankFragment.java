@@ -50,9 +50,6 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
     private HttpRequestGetAsyncTask mGetBankBranchesTask = null;
     private GetBankBranchesResponse mGetBankBranchesResponse;
 
-    private HttpRequestPostAsyncTask mAddBankTask = null;
-    private AddBankResponse mAddBankResponse;
-
     private ProgressDialog mProgressDialog;
     private List<UserBankClass> mListUserBankClasses;
 
@@ -273,9 +270,8 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
     }
 
     private void getBankBranches(long bankID) {
-        if (mGetBankBranchesTask != null) {
+        if (mGetBankBranchesTask != null)
             return;
-        }
 
         mBankBranchEditTextProgressBar.showProgressBar();
         BankBranchRequestBuilder mBankBranchRequestBuilder = new BankBranchRequestBuilder(bankID);
@@ -288,25 +284,11 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
         mGetBankBranchesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void attemptAddBank(String branchRoutingNumber, int accountType, String accountName, String accountNumber) {
-
-        mProgressDialog.setMessage(getString(R.string.adding_bank));
-        mProgressDialog.show();
-        AddBankRequest mAddBankRequest = new AddBankRequest(branchRoutingNumber, accountType, accountName, accountNumber);
-        Gson gson = new Gson();
-        String json = gson.toJson(mAddBankRequest);
-        mAddBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_A_BANK,
-                Constants.BASE_URL_MM + Constants.URL_ADD_A_BANK, json, getActivity());
-        mAddBankTask.mHttpResponseListener = this;
-        mAddBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
-            mAddBankTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
@@ -315,37 +297,6 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
         Gson gson = new Gson();
 
         switch (result.getApiCommand()) {
-            case Constants.COMMAND_ADD_A_BANK:
-
-                try {
-                    mAddBankResponse = gson.fromJson(result.getJsonString(), AddBankResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_LONG).show();
-
-                        // Refresh bank list
-                        if (mListUserBankClasses != null)
-                            mListUserBankClasses.clear();
-                        mListUserBankClasses = null;
-
-                        if (!startedFromProfileCompletion)
-                            ((ManageBanksActivity) getActivity()).switchToBankAccountsFragment();
-                        else
-                            Toast.makeText(getActivity(), R.string.bank_successfully_placed_for_verification, Toast.LENGTH_LONG).show();
-
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                mProgressDialog.dismiss();
-                mAddBankTask = null;
-
-                break;
             case Constants.COMMAND_GET_BANK_BRANCH_LIST:
 
                 try {
@@ -379,6 +330,9 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
                 mProgressDialog.dismiss();
                 mGetBankBranchesTask = null;
 
+                break;
+
+            default:
                 break;
         }
     }

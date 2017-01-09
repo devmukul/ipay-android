@@ -41,13 +41,13 @@ public class ManageBanksActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         switched_From_Bank_Validation = getIntent().getBooleanExtra(Constants.SWITCHED_FROM_BANK_VALIDATION, false);
-        mFabAddNewBank = (FloatingActionButton) findViewById(R.id.fab_add_new_bank);
 
         mDistrictNames = new ArrayList<>();
         mBranches = new ArrayList<>();
         mBranchNames = new ArrayList<>();
         bankNames = new ArrayList<>();
 
+        mFabAddNewBank = (FloatingActionButton) findViewById(R.id.fab_add_new_bank);
         mFabAddNewBank.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
