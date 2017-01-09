@@ -18,18 +18,18 @@ public class CustomAutoCompleteView extends AutoCompleteTextView {
         super(context);
     }
 
-    // This is how to disable AutoCompleteTextView filter
     @Override
-    public void performFiltering(final CharSequence text, final int keyCode) {
-        String filterText = "";
-        super.performFiltering(filterText, keyCode);
+    public void performFiltering(CharSequence text, int keyCode) {
+        // Empty string for using only the content from edit text as filter
+        text = "";
+        super.performFiltering(text, keyCode);
     }
 
     /*
      * After a selection we have to capture the new value and append to the existing text
      */
     @Override
-    public void replaceText(final CharSequence text) {
+    public void replaceText(CharSequence text) {
         super.replaceText(text);
     }
 }

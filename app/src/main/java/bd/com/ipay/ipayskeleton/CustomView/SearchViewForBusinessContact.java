@@ -18,7 +18,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.BusinessContact;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -28,19 +28,11 @@ public class SearchViewForBusinessContact extends FrameLayout {
     private CustomAutoCompleteView mCustomAutoCompleteView;
     private TextView mMobileNumberHintView;
 
-    private BusinessContactListAdapter mAdapter;
-
-    private Cursor mCursor;
+    private List<BusinessContact> mBusinessContactList;
+    private BusinessContactListAdapter mBusinessContactsAdapter;
     private String mQuery = "";
 
-    private int businessNameIndex;
-    private int phoneNumberIndex;
-    private int profilePictureUrlIndex;
-    private int businessTypeIndex;
-
     private Context context;
-
-    private List<BusinessContact> mBusinessContacts;
 
     public SearchViewForBusinessContact(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -69,10 +61,8 @@ public class SearchViewForBusinessContact extends FrameLayout {
 
         mCustomAutoCompleteView.addTextChangedListener(new CustomAutoCompleteTextChangedListener());
 
-        mBusinessContacts = new ArrayList<>();
-
-        mAdapter = new BusinessContactListAdapter(context, mBusinessContacts);
-        mCustomAutoCompleteView.setAdapter(mAdapter);
+        mBusinessContactList = new ArrayList<>();
+        setBusinessContactAdapter(mBusinessContactList);
     }
 
     public class CustomAutoCompleteTextChangedListener implements TextWatcher {
@@ -115,28 +105,28 @@ public class SearchViewForBusinessContact extends FrameLayout {
         mCustomAutoCompleteView.setError(error);
     }
 
+    private List<BusinessContact> getBusinessContactList(Cursor cursor) {
+        List<BusinessContact> mBusinessContacts;
+        int businessNameIndex;
+        int phoneNumberIndex;
+        int profilePictureUrlIndex;
+        int businessTypeIndex;
 
-    public void readBusinessContactsFromDB() {
+        mBusinessContacts = new ArrayList<>();
 
-        DataHelper dataHelper = DataHelper.getInstance(context);
-
-        mCursor = dataHelper.searchBusinessContacts(mQuery);
-
-        if (mCursor != null) {
+        if (cursor != null) {
             mBusinessContacts.clear();
+            businessNameIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_NAME);
+            phoneNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
+            profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_PROFILE_PICTURE);
+            businessTypeIndex = cursor.getColumnIndex(DBConstants.KEY_BUSINESS_TYPE);
 
-            businessNameIndex = mCursor.getColumnIndex(DBConstants.KEY_BUSINESS_NAME);
-            phoneNumberIndex = mCursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
-            profilePictureUrlIndex = mCursor.getColumnIndex(DBConstants.KEY_BUSINESS_PROFILE_PICTURE);
-            businessTypeIndex = mCursor.getColumnIndex(DBConstants.KEY_BUSINESS_TYPE);
-
-            // Looping through all rows and adding to list
-            if (mCursor.moveToFirst())
+            if (cursor.moveToFirst())
                 do {
-                    String businessName = mCursor.getString(businessNameIndex);
-                    String mobileNumber = mCursor.getString(phoneNumberIndex);
-                    String profilePictureUrl = mCursor.getString(profilePictureUrlIndex);
-                    int businessTypeID = mCursor.getInt(businessTypeIndex);
+                    String businessName = cursor.getString(businessNameIndex);
+                    String mobileNumber = cursor.getString(phoneNumberIndex);
+                    String profilePictureUrl = cursor.getString(profilePictureUrlIndex);
+                    int businessTypeID = cursor.getInt(businessTypeIndex);
 
                     BusinessContact businessContact = new BusinessContact();
                     businessContact.setBusinessName(businessName);
@@ -148,16 +138,35 @@ public class SearchViewForBusinessContact extends FrameLayout {
                             if (businessType.getId() == businessTypeID)
                                 businessContact.setBusinessType(businessType.getName());
                         }
+
                     mBusinessContacts.add(businessContact);
 
-                } while (mCursor.moveToNext());
-
-            mAdapter = new BusinessContactListAdapter(context, mBusinessContacts);
-            mCustomAutoCompleteView.setAdapter(mAdapter);
-            mAdapter.notifyDataSetChanged();
+                } while (cursor.moveToNext());
         }
 
-        mCursor.close();
+        return mBusinessContacts;
+    }
+
+    private void readBusinessContactsFromDB() {
+        Cursor mCursor;
+        DataHelper dataHelper = DataHelper.getInstance(context);
+        mCursor = dataHelper.searchBusinessContacts(mQuery);
+
+        try {
+            if (mCursor != null) {
+                mBusinessContactList = getBusinessContactList(mCursor);
+                setBusinessContactAdapter(mBusinessContactList);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            mCursor.close();
+        }
+    }
+
+    private void setBusinessContactAdapter(List<BusinessContact> businessContactList) {
+        mBusinessContactsAdapter = new BusinessContactListAdapter(context, businessContactList);
+        mCustomAutoCompleteView.setAdapter(mBusinessContactsAdapter);
     }
 
     public class BusinessContactListAdapter extends ArrayAdapter<BusinessContact> {
@@ -212,8 +221,8 @@ public class SearchViewForBusinessContact extends FrameLayout {
                     mCustomAutoCompleteView.setFocusable(true);
                     mCustomAutoCompleteView.setFocusableInTouchMode(true);
 
-                    mBusinessContacts.clear();
-                    mAdapter.notifyDataSetChanged();
+                    mBusinessContactList.clear();
+                    mBusinessContactsAdapter.notifyDataSetChanged();
                 }
             });
 
