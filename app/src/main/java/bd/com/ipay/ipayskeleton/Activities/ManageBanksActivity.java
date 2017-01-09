@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.AddBankAgreementFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.LinkBankFragment;
@@ -20,6 +19,8 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ManageBanksActivity extends BaseActivity {
+
+    private boolean switched_From_Bank_Validation = false;
 
     public FloatingActionButton mFabAddNewBank;
 
@@ -39,6 +40,7 @@ public class ManageBanksActivity extends BaseActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        switched_From_Bank_Validation = getIntent().getBooleanExtra(Constants.SWITCHED_FROM_BANK_VALIDATION, false);
         mFabAddNewBank = (FloatingActionButton) findViewById(R.id.fab_add_new_bank);
 
         mDistrictNames = new ArrayList<>();
@@ -53,7 +55,10 @@ public class ManageBanksActivity extends BaseActivity {
             }
         });
 
-        switchToBankAccountsFragment();
+        if (switched_From_Bank_Validation)
+            switchToAddNewBankFragment();
+        else
+            switchToBankAccountsFragment();
     }
 
     @Override
@@ -69,12 +74,14 @@ public class ManageBanksActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        // If back to bank account fragment then set the visibility of add bank button
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            // Check if the account is verified before adding a bank account.
-            if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED))
-                mFabAddNewBank.setVisibility(View.VISIBLE);
-            else mFabAddNewBank.setVisibility(View.GONE);
+        if (!switched_From_Bank_Validation) {
+            // If back to bank account fragment then set the visibility of add bank button
+            if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                // Check if the account is verified before adding a bank account.
+                if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED))
+                    mFabAddNewBank.setVisibility(View.VISIBLE);
+                else mFabAddNewBank.setVisibility(View.GONE);
+            }
         }
 
         if (getSupportFragmentManager().getBackStackEntryCount() > 0)
@@ -96,18 +103,28 @@ public class ManageBanksActivity extends BaseActivity {
         else mFabAddNewBank.setVisibility(View.GONE);
     }
 
-    private void switchToAddNewBankFragment() {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
-            getSupportFragmentManager().popBackStackImmediate();
+    public void switchToAddNewBankFragment() {
+        if (!switched_From_Bank_Validation) {
+            while (getSupportFragmentManager().getBackStackEntryCount() > 1)
+                getSupportFragmentManager().popBackStackImmediate();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new LinkBankFragment()).addToBackStack(null).commit();
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new LinkBankFragment()).commit();
+        }
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new LinkBankFragment()).addToBackStack(null).commit();
         mFabAddNewBank.setVisibility(View.GONE);
     }
 
     public void switchToAddBankAgreementFragment(Bundle bundle) {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 2)
-            getSupportFragmentManager().popBackStackImmediate();
+        if (!switched_From_Bank_Validation) {
+            while (getSupportFragmentManager().getBackStackEntryCount() > 2)
+                getSupportFragmentManager().popBackStackImmediate();
+        } else {
+            while (getSupportFragmentManager().getBackStackEntryCount() > 1)
+                getSupportFragmentManager().popBackStackImmediate();
+        }
 
         AddBankAgreementFragment addBankAgreementFragment = new AddBankAgreementFragment();
         addBankAgreementFragment.setArguments(bundle);

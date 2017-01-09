@@ -37,7 +37,7 @@ public class AddBankAgreementFragment extends Fragment implements HttpResponseLi
     private TextView mBankAccountNumberTextView;
 
     private Button mAgreeButton;
-    private Button mCancelButton;
+    private Button mDisagreeButton;
 
     private String mAccountName;
     private String mBankName;
@@ -57,6 +57,7 @@ public class AddBankAgreementFragment extends Fragment implements HttpResponseLi
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_add_bank_agreement, container, false);
+        getActivity().setTitle(R.string.link_bank_agreement);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -65,7 +66,7 @@ public class AddBankAgreementFragment extends Fragment implements HttpResponseLi
         mBranchNameTextView = (TextView) v.findViewById(R.id.bank_branch_name);
         mBankAccountNumberTextView = (TextView) v.findViewById(R.id.bank_account_number);
         mAgreeButton = (Button) v.findViewById(R.id.button_agree);
-        mCancelButton = (Button) v.findViewById(R.id.button_cancel);
+        mDisagreeButton = (Button) v.findViewById(R.id.button_disagree);
 
         mBankName = getArguments().getString(Constants.BANK_NAME);
         mBankBranch = getArguments().getParcelable(Constants.BANK_BRANCH);
@@ -88,7 +89,7 @@ public class AddBankAgreementFragment extends Fragment implements HttpResponseLi
             }
         });
 
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
+        mDisagreeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();

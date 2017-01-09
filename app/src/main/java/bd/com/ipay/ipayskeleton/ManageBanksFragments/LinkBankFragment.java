@@ -247,7 +247,7 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
                 focusView = mAccountNumberEditText;
                 focusView.requestFocus();
             }
-        } else if (mAccountNumberEditText.getText().toString().trim().length() < 8) {
+        } else if (mAccountNumberEditText.getText().toString().trim().length() < 10) {
             if (getActivity() != null) {
                 mAccountNumberEditText.setError(getContext().getString(R.string.please_enter_an_account_number_of_minimum_digit));
                 focusView = mAccountNumberEditText;
