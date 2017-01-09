@@ -133,7 +133,6 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
     }
 
     @Override
@@ -211,12 +210,10 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
                 profilePictureView.setProfilePicture(profilePictureUrl, false);
 
                 if (CommonData.getBusinessTypes() != null) {
-                    for (BusinessType businessType : CommonData.getBusinessTypes()) {
-                        if (businessType.getId() == businessTypeID) {
-                            businessTypeView.setText(businessType.getName());
-                            businessTypeView.setVisibility(View.VISIBLE);
-                            break;
-                        }
+                    BusinessType businessType = CommonData.getBusinessTypeById(businessTypeID);
+                    if (businessType != null) {
+                        businessTypeView.setText(businessType.getName());
+                        businessTypeView.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -230,7 +227,6 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
                         intent.putExtra(Constants.PROFILE_PICTURE, profilePictureUrl);
                         getActivity().setResult(Activity.RESULT_OK, intent);
                         getActivity().finish();
-
                     }
                 });
             }

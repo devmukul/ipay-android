@@ -37,6 +37,7 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
+import bd.com.ipay.ipayskeleton.CustomView.SearchViewForBusinessContact;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -54,7 +55,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
     private Button buttonPayment;
     private ImageView buttonSelectFromContacts;
     private ImageView buttonScanQRCode;
-    private EditText mMobileNumberEditText;
+    private SearchViewForBusinessContact mMobileNumberEditText;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
     private EditText mRefNumberEditText;
@@ -70,7 +71,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_make_payment, container, false);
         getActivity().setTitle(R.string.make_payment);
-        mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
+        mMobileNumberEditText = (SearchViewForBusinessContact) v.findViewById(R.id.mobile_number);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mRefNumberEditText = (EditText) v.findViewById(R.id.reference_number);
@@ -83,10 +84,6 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         buttonPayment = (Button) v.findViewById(R.id.button_payment);
 
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-
-        if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
-            mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
-        }
 
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,7 +203,6 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
             focusView = mDescriptionEditText;
             mDescriptionEditText.setError(getString(R.string.please_write_note));
             cancel = true;
-
         }
 
         //validation check of amount
@@ -221,9 +217,9 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
 
             String amount = mAmountEditText.getText().toString();
 
-            if (new BigDecimal(amount).compareTo(new BigDecimal(balance)) > 0) {
+            if (new BigDecimal(amount).compareTo(new BigDecimal(balance)) > 0)
                 error_message = getString(R.string.insufficient_balance);
-            } else {
+            else {
                 maxAmount = PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
 
                 error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
@@ -250,9 +246,8 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         if (cancel) {
             focusView.requestFocus();
             return false;
-        } else {
+        } else
             return true;
-        }
     }
 
     private void launchReviewPage() {
@@ -269,14 +264,12 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         intent.putExtra(Constants.REFERENCE_NUMBER, referenceNumber);
 
         startActivityForResult(intent, PAYMENT_REVIEW_REQUEST);
-
     }
 
     private void attemptGetBusinessRule(int serviceID) {
 
-        if (mGetBusinessRuleTask != null) {
+        if (mGetBusinessRuleTask != null)
             return;
-        }
 
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
@@ -325,5 +318,4 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
             mGetBusinessRuleTask = null;
         }
     }
-
 }
