@@ -5,9 +5,9 @@
     android:orientation="vertical">
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/scrollView">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -17,14 +17,14 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
                 android:paddingBottom="@dimen/activity_horizontal_margin_card"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_horizontal_margin"
                 android:text="@string/add_bank_agreement_title"
                 android:textAlignment="center"
-                android:textSize="@dimen/text_size_medium"
-                android:fontFamily="sans-serif-medium" />
+                android:textSize="@dimen/text_size_medium" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -43,9 +43,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight=".8"
+                    android:fontFamily="sans-serif-medium"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:text="@string/account_name"
-                    android:fontFamily="sans-serif-medium"/>
+                    android:text="@string/account_name" />
 
                 <TextView
                     android:id="@+id/bank_account_name"
@@ -66,9 +66,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight=".8"
+                    android:fontFamily="sans-serif-medium"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:text="@string/bank_name"
-                    android:fontFamily="sans-serif-medium"/>
+                    android:text="@string/bank_name" />
 
                 <TextView
                     android:id="@+id/bank_name"
@@ -89,9 +89,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight=".8"
+                    android:fontFamily="sans-serif-medium"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:text="@string/bank_branch"
-                    android:fontFamily="sans-serif-medium"/>
+                    android:text="@string/bank_branch" />
 
                 <TextView
                     android:id="@+id/bank_branch_name"
@@ -112,9 +112,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight=".8"
+                    android:fontFamily="sans-serif-medium"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:text="@string/account_number"
-                    android:fontFamily="sans-serif-medium"/>
+                    android:text="@string/account_number" />
 
                 <TextView
                     android:id="@+id/bank_account_number"
@@ -138,6 +138,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_below="@id/scrollView"
         android:paddingBottom="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_horizontal_margin">
@@ -150,8 +151,8 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
             android:layout_marginRight="@dimen/value2"
             android:layout_weight="1"
-            android:text="@string/disagree"
-            android:background="@color/background_red"/>
+            android:background="@color/background_red"
+            android:text="@string/disagree" />
 
         <Button
             android:id="@+id/button_agree"
