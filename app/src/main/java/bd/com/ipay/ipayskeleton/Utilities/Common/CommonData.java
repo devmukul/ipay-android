@@ -44,8 +44,6 @@ public class CommonData {
         }
     }
 
-
-
     public static List<BusinessType> getBusinessTypes() {
         return businessTypes;
     }

@@ -133,13 +133,11 @@ public class SearchViewForBusinessContact extends FrameLayout {
                     businessContact.setMobileNumber(mobileNumber);
                     businessContact.setProfilePictureUrl(profilePictureUrl);
 
-                    if (CommonData.getBusinessTypes() != null)
-                        for (BusinessType businessType : CommonData.getBusinessTypes()) {
-                            if (businessType.getId() == businessTypeID) {
-                                businessContact.setBusinessType(businessType.getName());
-                                break;
-                            }
-                        }
+                    if (CommonData.getBusinessTypes() != null) {
+                        BusinessType businessType = CommonData.getBusinessTypeById(businessTypeID);
+                        if(businessType !=null)
+                        businessContact.setBusinessType(businessType.getName());
+                    }
 
                     mBusinessContacts.add(businessContact);
 
