@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -39,8 +41,8 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
     private ProgressDialog mProgressDialog;
     private SharedPreferences pref;
 
-    private IconifiedTextViewWithButton mAddTrustedDeviceButton;
-    private IconifiedTextViewWithButton mLogoutButton;
+    private Button mAddTrustedDeviceButton;
+    private TextView mLogoutButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,8 +52,8 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
         mProgressDialog = new ProgressDialog(getActivity());
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
-        mAddTrustedDeviceButton = (IconifiedTextViewWithButton) v.findViewById(R.id.button_add_trusted_device);
-        mLogoutButton = (IconifiedTextViewWithButton) v.findViewById(R.id.button_logout);
+        mAddTrustedDeviceButton = (Button) v.findViewById(R.id.button_add_trusted_device);
+        mLogoutButton = (TextView) v.findViewById(R.id.button_logout);
 
         setButtonActions();
 

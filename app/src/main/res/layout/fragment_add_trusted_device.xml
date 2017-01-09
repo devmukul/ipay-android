@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_alignParentTop="true"
-    android:background="@color/colorBackground"
+    android:background="@color/colorWhite"
     android:fillViewport="true">
 
     <RelativeLayout
@@ -16,73 +16,68 @@
             android:id="@+id/content_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/value50"
+                android:background="@drawable/add_device" />
+
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="230dp"
-                android:background="@drawable/bg_home">
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:paddingLeft="@dimen/activity_horizontal_margin_semi_double"
+                android:paddingRight="@dimen/activity_horizontal_margin_semi_double"
+                android:paddingTop="@dimen/activity_horizontal_margin_semi_double"
+                android:text="@string/you_need_to_upload_identification_documents_to_get_verified"
+                android:textAlignment="center"
+                android:textSize="@dimen/text_size_small_medium" />
 
-                <ImageView
-                    android:id="@+id/iPay_logo"
-                    android:layout_width="@dimen/value110"
-                    android:layout_height="@dimen/value110"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/value5"
-                    android:src="@drawable/ic_logo_ipay_full_size" />
-
-                <TextView
-                    android:id="@+id/iPay_name"
-                    style="@style/TextStylePrimaryLarge"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/iPay_logo"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="@dimen/value5"
-                    android:text="@string/iPay_system"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_size_medium" />
-
-                <TextView
-                    android:id="@+id/textview_build_number"
-                    style="@style/TextStyleSecondaryMedium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/iPay_name"
-                    android:gravity="center"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_size_extra_small" />
-
-            </RelativeLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:padding="@dimen/activity_horizontal_margin_semi_double"
+                android:text="@string/you_need_to_upload_identification_documents_to_get_verified"
+                android:textAlignment="center" />
 
             <LinearLayout
-                style="@style/ProfileCardLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:orientation="vertical">
 
-                <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
+                <Button
                     android:id="@+id/button_add_trusted_device"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_contact3x"
-                    android:paddingBottom="@dimen/value4"
-                    android:paddingLeft="@dimen/activity_horizontal_margin_card"
-                    android:paddingTop="@dimen/value4"
-                    android:text="Add this device as trusted" />
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin_double"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin_double"
+                    android:background="@color/colorPrimary"
+                    android:text="Add this device as trusted"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/text_size_small_medium" />
 
-                <View style="@style/Divider" />
-
-                <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
+                <TextView
                     android:id="@+id/button_logout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_terms3x"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin_double"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin_double"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
                     android:paddingBottom="@dimen/value4"
                     android:paddingLeft="@dimen/activity_horizontal_margin_card"
-                    android:paddingTop="@dimen/value4"
-                    android:text="Log out" />
+                    android:paddingTop="@dimen/activity_horizontal_margin"
+                    android:text="@string/logout_from_this_device"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_small_medium" />
 
-                <View style="@style/Divider" />
             </LinearLayout>
 
         </LinearLayout>
