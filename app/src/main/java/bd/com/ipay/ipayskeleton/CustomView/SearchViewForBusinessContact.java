@@ -135,8 +135,8 @@ public class SearchViewForBusinessContact extends FrameLayout {
 
                     if (CommonData.getBusinessTypes() != null) {
                         BusinessType businessType = CommonData.getBusinessTypeById(businessTypeID);
-                        if(businessType !=null)
-                        businessContact.setBusinessType(businessType.getName());
+                        if (businessType != null)
+                            businessContact.setBusinessType(businessType.getName());
                     }
 
                     mBusinessContacts.add(businessContact);
