@@ -40,19 +40,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".8"
-                    android:fontFamily="sans-serif-medium"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    style="@style/TextViewLeftAlignMedium"
                     android:text="@string/account_name" />
 
                 <TextView
                     android:id="@+id/bank_account_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".8"
-                    android:paddingRight="@dimen/activity_horizontal_margin" />
+                    style="@style/TextViewRightAlignMedium" />
             </LinearLayout>
 
             <View style="@style/Divider" />
@@ -63,19 +56,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".8"
-                    android:fontFamily="sans-serif-medium"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    style="@style/TextViewLeftAlignMedium"
                     android:text="@string/bank_name" />
 
                 <TextView
                     android:id="@+id/bank_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".8"
-                    android:paddingRight="@dimen/activity_horizontal_margin" />
+                    style="@style/TextViewRightAlignMedium" />
             </LinearLayout>
 
             <View style="@style/Divider" />
@@ -86,19 +72,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".8"
-                    android:fontFamily="sans-serif-medium"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    style="@style/TextViewLeftAlignMedium"
                     android:text="@string/bank_branch" />
 
                 <TextView
                     android:id="@+id/bank_branch_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".8"
-                    android:paddingRight="@dimen/activity_horizontal_margin" />
+                    style="@style/TextViewRightAlignMedium" />
             </LinearLayout>
 
             <View style="@style/Divider" />
@@ -109,19 +88,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".8"
-                    android:fontFamily="sans-serif-medium"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    style="@style/TextViewLeftAlignMedium"
                     android:text="@string/account_number" />
 
                 <TextView
                     android:id="@+id/bank_account_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".8"
-                    android:paddingRight="@dimen/activity_horizontal_margin" />
+                    style="@style/TextViewRightAlignMedium" />
             </LinearLayout>
 
             <View style="@style/Divider" />
