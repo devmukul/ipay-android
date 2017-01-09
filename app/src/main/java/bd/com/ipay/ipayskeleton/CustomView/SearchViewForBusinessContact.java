@@ -32,7 +32,7 @@ public class SearchViewForBusinessContact extends FrameLayout {
     private BusinessContactListAdapter mBusinessContactsAdapter;
     private String mQuery = "";
 
-    private Context context;
+    private Context mContext;
 
     public SearchViewForBusinessContact(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -50,7 +50,7 @@ public class SearchViewForBusinessContact extends FrameLayout {
     }
 
     private void initView(Context context, AttributeSet attrs) {
-        this.context = context;
+        this.mContext = context;
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -135,8 +135,10 @@ public class SearchViewForBusinessContact extends FrameLayout {
 
                     if (CommonData.getBusinessTypes() != null)
                         for (BusinessType businessType : CommonData.getBusinessTypes()) {
-                            if (businessType.getId() == businessTypeID)
+                            if (businessType.getId() == businessTypeID) {
                                 businessContact.setBusinessType(businessType.getName());
+                                break;
+                            }
                         }
 
                     mBusinessContacts.add(businessContact);
@@ -149,7 +151,7 @@ public class SearchViewForBusinessContact extends FrameLayout {
 
     private void readBusinessContactsFromDB() {
         Cursor mCursor;
-        DataHelper dataHelper = DataHelper.getInstance(context);
+        DataHelper dataHelper = DataHelper.getInstance(mContext);
         mCursor = dataHelper.searchBusinessContacts(mQuery);
 
         try {
@@ -165,7 +167,7 @@ public class SearchViewForBusinessContact extends FrameLayout {
     }
 
     private void setBusinessContactAdapter(List<BusinessContact> businessContactList) {
-        mBusinessContactsAdapter = new BusinessContactListAdapter(context, businessContactList);
+        mBusinessContactsAdapter = new BusinessContactListAdapter(mContext, businessContactList);
         mCustomAutoCompleteView.setAdapter(mBusinessContactsAdapter);
     }
 
