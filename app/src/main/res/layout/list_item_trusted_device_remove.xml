@@ -19,14 +19,15 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
             android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_horizontal_margin_card" />
+            android:paddingRight="@dimen/activity_horizontal_margin" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/value5"
             android:layout_toRightOf="@+id/trusted_device_imageView"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -56,11 +57,11 @@
             android:id="@+id/remove_trusted_device_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="@null"
-            android:paddingRight="@dimen/activity_horizontal_margin_card"
-            android:src="@drawable/ic_delete" />
+            android:src="@drawable/ic_delete_grey"
+            android:tint="@color/colorGray" />
     </LinearLayout>
 
     <View
