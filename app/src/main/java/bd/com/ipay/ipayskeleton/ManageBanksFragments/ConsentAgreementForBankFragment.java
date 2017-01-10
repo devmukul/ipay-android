@@ -59,28 +59,15 @@ public class ConsentAgreementForBankFragment extends Fragment implements HttpRes
         View view = inflater.inflate(R.layout.fragment_add_bank_agreement, container, false);
         getActivity().setTitle(R.string.bank_consent_agreement);
 
-        mProgressDialog = new ProgressDialog(getActivity());
+        initializeViews(view);
+        initializeBankInfo(getArguments());
+        populateViews();
+        setOnClickListeners();
 
-        mAccountNameTextView = (TextView) view.findViewById(R.id.bank_account_name);
-        mBankNameTextView = (TextView) view.findViewById(R.id.bank_name);
-        mBranchNameTextView = (TextView) view.findViewById(R.id.bank_branch_name);
-        mBankAccountNumberTextView = (TextView) view.findViewById(R.id.bank_account_number);
-        mAgreeButton = (Button) view.findViewById(R.id.button_agree);
-        mDisagreeButton = (Button) view.findViewById(R.id.button_disagree);
+        return view;
+    }
 
-        mBankName = getArguments().getString(Constants.BANK_NAME);
-        mBankBranch = getArguments().getParcelable(Constants.BANK_BRANCH);
-        mBranchName = mBankBranch.getName();
-        mBankAccountNumber = getArguments().getString(Constants.BANK_ACCOUNT_NUMBER);
-        mAccountName = ProfileInfoCacheManager.getName();
-
-        startedFromProfileCompletion = getArguments().getBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION);
-
-        mAccountNameTextView.setText(mAccountName);
-        mBankNameTextView.setText(mBankName);
-        mBranchNameTextView.setText(mBranchName);
-        mBankAccountNumberTextView.setText(mBankAccountNumber);
-
+    private void setOnClickListeners() {
         mAgreeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,8 +82,33 @@ public class ConsentAgreementForBankFragment extends Fragment implements HttpRes
                 getActivity().onBackPressed();
             }
         });
+    }
 
-        return view;
+    private void populateViews() {
+        mAccountNameTextView.setText(mAccountName);
+        mBankNameTextView.setText(mBankName);
+        mBranchNameTextView.setText(mBranchName);
+        mBankAccountNumberTextView.setText(mBankAccountNumber);
+    }
+
+    private void initializeBankInfo(Bundle bundle) {
+        mBankName = bundle.getString(Constants.BANK_NAME);
+        mBankBranch = bundle.getParcelable(Constants.BANK_BRANCH);
+        mBranchName = mBankBranch.getName();
+        mBankAccountNumber = bundle.getString(Constants.BANK_ACCOUNT_NUMBER);
+        mAccountName = ProfileInfoCacheManager.getName();
+
+        startedFromProfileCompletion = bundle.getBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION);
+    }
+
+    private void initializeViews(View view) {
+        mProgressDialog = new ProgressDialog(getActivity());
+        mAccountNameTextView = (TextView) view.findViewById(R.id.bank_account_name);
+        mBankNameTextView = (TextView) view.findViewById(R.id.bank_name);
+        mBranchNameTextView = (TextView) view.findViewById(R.id.bank_branch_name);
+        mBankAccountNumberTextView = (TextView) view.findViewById(R.id.bank_account_number);
+        mAgreeButton = (Button) view.findViewById(R.id.button_agree);
+        mDisagreeButton = (Button) view.findViewById(R.id.button_disagree);
     }
 
     private void attemptAddBank(String branchRoutingNumber, int accountType, String accountName, String accountNumber) {
