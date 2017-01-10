@@ -19,7 +19,6 @@ import bd.com.ipay.ipayskeleton.Activities.DeviceTrustActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceRequest;
@@ -41,8 +40,12 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
     private ProgressDialog mProgressDialog;
     private SharedPreferences pref;
 
+    private TextView mDeviceNameTextView;
     private Button mAddTrustedDeviceButton;
-    private TextView mLogoutButton;
+    private Button mLogoutButton;
+
+    private String mDeviceID;
+    private String mDeviceName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,8 +55,14 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
         mProgressDialog = new ProgressDialog(getActivity());
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
+        mDeviceNameTextView = (TextView) v.findViewById(R.id.device_name);
         mAddTrustedDeviceButton = (Button) v.findViewById(R.id.button_add_trusted_device);
-        mLogoutButton = (TextView) v.findViewById(R.id.button_logout);
+        mLogoutButton = (Button) v.findViewById(R.id.button_logout);
+
+        mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
+        mDeviceName = DeviceInfoFactory.getDeviceName();
+
+        mDeviceNameTextView.setText(mDeviceName);
 
         setButtonActions();
 
@@ -61,9 +70,8 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
     }
 
     private void attemptLogout() {
-        if (mLogoutTask != null) {
+        if (mLogoutTask != null)
             return;
-        }
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
         mProgressDialog.show();
@@ -79,12 +87,8 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
     }
 
     private void attemptAddTrustedDevice() {
-        if (mAddTrustedDeviceTask != null) {
+        if (mAddTrustedDeviceTask != null)
             return;
-        }
-
-        String mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
-        String mDeviceName = DeviceInfoFactory.getDeviceName();
 
         String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
 
@@ -162,11 +166,10 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
 
                         // Launch HomeActivity from here on successful trusted device add
                         ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)
                         ((DeviceTrustActivity) getActivity()).switchToRemoveTrustedDeviceFragment();
-                    } else {
+                    else
                         Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();

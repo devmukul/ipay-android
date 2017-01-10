@@ -205,7 +205,7 @@
     <string name="signup_successful">Sign up successful. Welcome to iPay</string>
     <string name="login_failed">Login failed. Please check your user name and password.</string>
     <string name="logout_failed">Could not sign out properly</string>
-    <string name="logout_from_this_device">Logout From This Device</string>
+    <string name="logout_from_this_device">Logout from this device</string>
     <string name="enter_otp">Enter Code</string>
     <string name="enter_promo_code">Invitation Code</string>
     <string name="failed_to_reset_password">Failed to reset password. Please try again.</string>
@@ -356,7 +356,11 @@
     <string name="events_get_failed">Could not fetch my events</string>
     <string name="recharging_balance">Processing mobile recharge...</string>
     <string name="saving_pin">Saving PIN...</string>
+    <string name="device_name">device name</string>
     <string name="trusted_device_limit_exceed_text">You have reached the limit of your trusted device. To add a new device, please remove minimum one device from the following list.</string>
+    <string name="add_trusted_device_alert">Do you want to add this device as trusted?</string>
+    <string name="add_trusted_device_alert_detail">You can use iPay mobile application from trusted device only. Please add this device as trusted to continue.</string>
+    <string name="add_this_as_trusted_device">Add this device as trusted</string>
     <string name="failed_add_trusted_device">Could not add trusted device</string>
     <string name="change_password_progress">Change password on progress...</string>
     <string name="enter_current_pass">Enter current password</string>
