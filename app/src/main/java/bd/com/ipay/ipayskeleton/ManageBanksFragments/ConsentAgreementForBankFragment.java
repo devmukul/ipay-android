@@ -57,7 +57,7 @@ public class ConsentAgreementForBankFragment extends Fragment implements HttpRes
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_bank_agreement, container, false);
-        getActivity().setTitle(R.string.link_bank_agreement);
+        getActivity().setTitle(R.string.bank_consent_agreement);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
