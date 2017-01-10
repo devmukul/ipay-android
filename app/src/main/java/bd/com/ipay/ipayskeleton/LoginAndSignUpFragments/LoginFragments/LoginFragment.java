@@ -304,9 +304,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                     // Two situation might arise here. Wrong user name or password throws 401
                     // Login request from an untrusted device with invalid UUID throws 401 too.
                     // We need to handle both case. In case of wrong username or password just showing the response message is enough.
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
-
                     if (mLoginResponseModel.getMessage().contains(Constants.DEVICE_IS_NOT_TRUSTED)) {
                         // Logged in from an untrusted device with invalid UUID.
                         // Remove the saved UUID and send the login request again.
@@ -315,6 +312,9 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                         // Attempt login
                         mLoginTask = null;
                         attemptLogin();
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
