@@ -25,7 +25,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class AddBankAgreementFragment extends Fragment implements HttpResponseListener {
+public class ConsentAgreementForBankFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mAddBankTask = null;
     private AddBankResponse mAddBankResponse;

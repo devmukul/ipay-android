@@ -8,7 +8,7 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-import bd.com.ipay.ipayskeleton.ManageBanksFragments.AddBankAgreementFragment;
+import bd.com.ipay.ipayskeleton.ManageBanksFragments.ConsentAgreementForBankFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.LinkBankFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Bank;
@@ -126,9 +126,9 @@ public class ManageBanksActivity extends BaseActivity {
                 getSupportFragmentManager().popBackStackImmediate();
         }
 
-        AddBankAgreementFragment addBankAgreementFragment = new AddBankAgreementFragment();
-        addBankAgreementFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, addBankAgreementFragment).addToBackStack(null).commit();
+        ConsentAgreementForBankFragment consentAgreementForBankFragment = new ConsentAgreementForBankFragment();
+        consentAgreementForBankFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, consentAgreementForBankFragment).addToBackStack(null).commit();
     }
 
     @Override
