@@ -227,29 +227,23 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
         // The first position is "Select One"
         View focusView;
         if (mSelectedBankId < 0) {
-            mBankListSelection.setError(getContext().getString(R.string.please_select_a_bank));
+            mBankListSelection.setError(getString(R.string.please_select_a_bank));
         } else if (mSelectedDistrictId < 0) {
-            mDistrictSelection.setError(getContext().getString(R.string.please_select_a_district));
+            mDistrictSelection.setError(getString(R.string.please_select_a_district));
         } else if (mSelectedBranchId < 0) {
-            mBankBranchSelection.setError(getContext().getString(R.string.please_select_a_branch));
+            mBankBranchSelection.setError(getString(R.string.please_select_a_branch));
         } else if (mAccountNameEditText.getText().toString().trim().length() == 0) {
-            if (getActivity() != null) {
-                mAccountNameEditText.setError(getContext().getString(R.string.please_enter_an_account_name));
-                focusView = mAccountNameEditText;
-                focusView.requestFocus();
-            }
+            mAccountNameEditText.setError(getString(R.string.please_enter_an_account_name));
+            focusView = mAccountNameEditText;
+            focusView.requestFocus();
         } else if (mAccountNumberEditText.getText().toString().trim().length() == 0) {
-            if (getActivity() != null) {
-                mAccountNumberEditText.setError(getContext().getString(R.string.please_enter_an_account_number));
-                focusView = mAccountNumberEditText;
-                focusView.requestFocus();
-            }
+            mAccountNumberEditText.setError(getString(R.string.please_enter_an_account_number));
+            focusView = mAccountNumberEditText;
+            focusView.requestFocus();
         } else if (mAccountNumberEditText.getText().toString().trim().length() < 10) {
-            if (getActivity() != null) {
-                mAccountNumberEditText.setError(getContext().getString(R.string.please_enter_an_account_number_of_minimum_digit));
-                focusView = mAccountNumberEditText;
-                focusView.requestFocus();
-            }
+            mAccountNumberEditText.setError(getString(R.string.please_enter_an_account_number_of_minimum_digit));
+            focusView = mAccountNumberEditText;
+            focusView.requestFocus();
         } else {
             Utilities.hideKeyboard(getActivity());
             launchAddBankAgreementPage();
