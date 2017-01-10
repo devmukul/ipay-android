@@ -56,17 +56,17 @@ public class AddBankAgreementFragment extends Fragment implements HttpResponseLi
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_add_bank_agreement, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_bank_agreement, container, false);
         getActivity().setTitle(R.string.link_bank_agreement);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-        mAccountNameTextView = (TextView) v.findViewById(R.id.bank_account_name);
-        mBankNameTextView = (TextView) v.findViewById(R.id.bank_name);
-        mBranchNameTextView = (TextView) v.findViewById(R.id.bank_branch_name);
-        mBankAccountNumberTextView = (TextView) v.findViewById(R.id.bank_account_number);
-        mAgreeButton = (Button) v.findViewById(R.id.button_agree);
-        mDisagreeButton = (Button) v.findViewById(R.id.button_disagree);
+        mAccountNameTextView = (TextView) view.findViewById(R.id.bank_account_name);
+        mBankNameTextView = (TextView) view.findViewById(R.id.bank_name);
+        mBranchNameTextView = (TextView) view.findViewById(R.id.bank_branch_name);
+        mBankAccountNumberTextView = (TextView) view.findViewById(R.id.bank_account_number);
+        mAgreeButton = (Button) view.findViewById(R.id.button_agree);
+        mDisagreeButton = (Button) view.findViewById(R.id.button_disagree);
 
         mBankName = getArguments().getString(Constants.BANK_NAME);
         mBankBranch = getArguments().getParcelable(Constants.BANK_BRANCH);
@@ -96,7 +96,7 @@ public class AddBankAgreementFragment extends Fragment implements HttpResponseLi
             }
         });
 
-        return v;
+        return view;
     }
 
     private void attemptAddBank(String branchRoutingNumber, int accountType, String accountName, String accountNumber) {
