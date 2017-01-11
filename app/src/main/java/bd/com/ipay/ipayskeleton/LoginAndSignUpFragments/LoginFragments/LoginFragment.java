@@ -62,8 +62,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         getActivity().setTitle(R.string.title_login_page);
         Utilities.showKeyboard(getActivity());
 
-        // If UUID exists, it means device was set as trusted before.
-        // Set the login username so that user can't change it.
+        /**
+         * If UUID exists, it means device was set as trusted before.
+         * Set the login username so that user can't change it.
+         */
         if (pref.contains(Constants.UUID)) {
             mPasswordEditText.setText("");
             mPasswordEditText.requestFocus();
@@ -210,14 +212,13 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
+            // There was an error; don't attempt login and focus the first form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-
-            // Save user's login information while trying to login
+            /**
+             * Show a progress spinner, and kick off a background task to perform the user login attempt.
+             * Save user's login information while trying to login
+             */
             SignupOrLoginActivity.mMobileNumber = mUserNameLogin;
             SignupOrLoginActivity.mPassword = mPasswordLogin;
             SignupOrLoginActivity.mMobileNumberBusiness = mUserNameLogin;
@@ -279,9 +280,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                     else ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
-//                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-//                        pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).commit();
-
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
 
@@ -300,13 +298,16 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                     ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
-
-                    // Two situation might arise here. Wrong user name or password throws 401
-                    // Login request from an untrusted device with invalid UUID throws 401 too.
-                    // We need to handle both case. In case of wrong username or password just showing the response message is enough.
+                    /**
+                     * Two situation might arise here. Wrong user name or password throws 401
+                     * Login request from an untrusted device with invalid UUID throws 401 too.
+                     * We need to handle both case. In case of wrong username or password just showing the response message is enough.
+                     */
                     if (mLoginResponseModel.getMessage().contains(Constants.DEVICE_IS_NOT_TRUSTED)) {
-                        // Logged in from an untrusted device with invalid UUID.
-                        // Remove the saved UUID and send the login request again.
+                        /**
+                         *  Logged in from an untrusted device with invalid UUID.
+                         *  Remove the saved UUID and send the login request again.
+                         */
                         pref.edit().remove(Constants.UUID).apply();
 
                         // Attempt login
