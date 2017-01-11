@@ -84,6 +84,7 @@ public class ManageBanksActivity extends BaseActivity {
             }
         }
 
+        // Clear the fragment back stack
         if (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStack();
         else
@@ -118,10 +119,13 @@ public class ManageBanksActivity extends BaseActivity {
     }
 
     public void switchToAddBankAgreementFragment(Bundle bundle) {
+        // If started from manage bank or profile completion page
         if (!switched_From_Bank_Validation) {
             while (getSupportFragmentManager().getBackStackEntryCount() > 2)
                 getSupportFragmentManager().popBackStackImmediate();
-        } else {
+        }
+        // If switched from bank validator of add or withdraw money
+        else {
             while (getSupportFragmentManager().getBackStackEntryCount() > 1)
                 getSupportFragmentManager().popBackStackImmediate();
         }
