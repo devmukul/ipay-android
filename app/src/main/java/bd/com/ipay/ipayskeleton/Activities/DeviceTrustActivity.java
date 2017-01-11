@@ -101,7 +101,7 @@ public class DeviceTrustActivity extends BaseActivity implements HttpResponseLis
                     mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK)
-                        ((MyApplication) this.getApplication()).launchLoginPage(null);
+                        ((MyApplication) this.getApplication()).launchLoginPage(null); // No message to display
                     else
                         Toast.makeText(DeviceTrustActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
 
