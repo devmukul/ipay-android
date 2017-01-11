@@ -8,11 +8,9 @@
 
     <include layout="@layout/layout_progress_container" />
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/list_trusted_devices"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@null"
-        android:dividerHeight="0dp" />
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

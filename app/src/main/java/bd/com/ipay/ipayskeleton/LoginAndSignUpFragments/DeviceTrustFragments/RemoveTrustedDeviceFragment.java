@@ -64,7 +64,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
     private TrustedDeviceAdapter mTrustedDeviceAdapter;
 
     private RecyclerView.LayoutManager mLayoutManager;
-    private RecyclerView mTrustedDevicesRecylerView;
+    private RecyclerView mTrustedDevicesRecyclerView;
 
     private ProgressDialog mProgressDialog;
     private Button mLogOutButton;
@@ -74,8 +74,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         View v = inflater.inflate(R.layout.fragment_remove_trusted_device, container, false);
         setTitle();
 
-        // TODO: The code was copied from TrustedDeviceFragment. We need to change there too.
-        mTrustedDevicesRecylerView = (RecyclerView) v.findViewById(R.id.list_trusted_devices);
+        mTrustedDevicesRecyclerView = (RecyclerView) v.findViewById(R.id.list_trusted_devices);
         mProgressDialog = new ProgressDialog(getActivity());
         mLogOutButton = (Button) v.findViewById(R.id.button_logout);
 
@@ -313,8 +312,8 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
 
         mTrustedDeviceAdapter = new TrustedDeviceAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
-        mTrustedDevicesRecylerView.setLayoutManager(mLayoutManager);
-        mTrustedDevicesRecylerView.setAdapter(mTrustedDeviceAdapter);
+        mTrustedDevicesRecyclerView.setLayoutManager(mLayoutManager);
+        mTrustedDevicesRecyclerView.setAdapter(mTrustedDeviceAdapter);
 
         setContentShown(true);
     }
@@ -326,19 +325,19 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         }
 
         public class TrustedDeviceViewHolder extends RecyclerView.ViewHolder {
-            private final ImageView deviceImageView;
-            private final TextView deviceNameView;
-            private final TextView grantTimeView;
-            private final ImageButton removeTrustedDeviceButton;
+            private final ImageView mDeviceImageView;
+            private final TextView mDeviceNameView;
+            private final TextView mGrantTimeView;
+            private final ImageButton mRemoveTrustedDeviceButton;
 
 
             public TrustedDeviceViewHolder(final View itemView) {
                 super(itemView);
 
-                deviceImageView = (ImageView) itemView.findViewById(R.id.trusted_device_imageView);
-                deviceNameView = (TextView) itemView.findViewById(R.id.textview_device_name);
-                grantTimeView = (TextView) itemView.findViewById(R.id.textview_time);
-                removeTrustedDeviceButton = (ImageButton) itemView.findViewById(R.id.remove_trusted_device_button);
+                mDeviceImageView = (ImageView) itemView.findViewById(R.id.trusted_device_imageView);
+                mDeviceNameView = (TextView) itemView.findViewById(R.id.textview_device_name);
+                mGrantTimeView = (TextView) itemView.findViewById(R.id.textview_time);
+                mRemoveTrustedDeviceButton = (ImageButton) itemView.findViewById(R.id.remove_trusted_device_button);
             }
 
             public void bindView(int pos) {
@@ -357,16 +356,16 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                 String browser = getString(R.string.browser);
 
                 if (deviceID.toLowerCase().contains(android.toLowerCase()))
-                    deviceImageView.setImageResource(images[1]);
+                    mDeviceImageView.setImageResource(images[1]);
                 else if (deviceID.toLowerCase().contains(ios.toLowerCase()))
-                    deviceImageView.setImageResource(images[1]);
+                    mDeviceImageView.setImageResource(images[1]);
                 else if (deviceID.toLowerCase().contains(browser.toLowerCase()))
-                    deviceImageView.setImageResource(images[0]);
+                    mDeviceImageView.setImageResource(images[0]);
 
-                deviceNameView.setText(trustedDevice.getDeviceName());
-                grantTimeView.setText(trustedDevice.getCreatedTimeString());
+                mDeviceNameView.setText(trustedDevice.getDeviceName());
+                mGrantTimeView.setText(trustedDevice.getCreatedTimeString());
 
-                removeTrustedDeviceButton.setOnClickListener(new View.OnClickListener() {
+                mRemoveTrustedDeviceButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         showDeviceRemoveConfirmationDialog(trustedDevice.getId());

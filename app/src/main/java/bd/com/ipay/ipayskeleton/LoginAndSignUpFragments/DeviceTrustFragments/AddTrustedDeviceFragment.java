@@ -38,7 +38,7 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
     private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
 
     private ProgressDialog mProgressDialog;
-    private SharedPreferences pref;
+    private SharedPreferences mSharedPreferences;
 
     private TextView mDeviceNameTextView;
     private Button mAddTrustedDeviceButton;
@@ -53,7 +53,7 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
         View v = inflater.inflate(R.layout.fragment_add_trusted_device, container, false);
 
         mProgressDialog = new ProgressDialog(getActivity());
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mDeviceNameTextView = (TextView) v.findViewById(R.id.device_name);
         mAddTrustedDeviceButton = (Button) v.findViewById(R.id.button_add_trusted_device);
@@ -90,7 +90,7 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
         if (mAddTrustedDeviceTask != null)
             return;
 
-        String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+        String pushRegistrationID = mSharedPreferences.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
 
         AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
                 Constants.MOBILE_ANDROID + mDeviceID, pushRegistrationID);
@@ -162,7 +162,7 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         String UUID = mAddToTrustedDeviceResponse.getUUID();
-                        pref.edit().putString(Constants.UUID, UUID).apply();
+                        mSharedPreferences.edit().putString(Constants.UUID, UUID).apply();
 
                         // Launch HomeActivity from here on successful trusted device add
                         ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
