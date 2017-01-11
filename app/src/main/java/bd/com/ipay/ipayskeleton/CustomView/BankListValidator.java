@@ -56,7 +56,7 @@ public class BankListValidator {
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         activity.onBackPressed();
                         Intent intent = new Intent(activity, ManageBanksActivity.class);
-                        intent.putExtra(Constants.SWITCHED_FROM_BANK_VALIDATION, true);
+                        intent.putExtra(Constants.SWITCHED_FROM_BANK_VERIFICATION, true);
                         activity.startActivity(intent);
                     }
                 })

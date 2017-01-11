@@ -8,7 +8,7 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-import bd.com.ipay.ipayskeleton.ManageBanksFragments.AddBankAgreementFragment;
+import bd.com.ipay.ipayskeleton.ManageBanksFragments.ConsentAgreementForBankFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.LinkBankFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Bank;
@@ -20,7 +20,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ManageBanksActivity extends BaseActivity {
 
-    private boolean switched_From_Bank_Validation = false;
+    private boolean switchedFromBankVerification = false;
 
     public FloatingActionButton mFabAddNewBank;
 
@@ -40,7 +40,7 @@ public class ManageBanksActivity extends BaseActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        switched_From_Bank_Validation = getIntent().getBooleanExtra(Constants.SWITCHED_FROM_BANK_VALIDATION, false);
+        switchedFromBankVerification = getIntent().getBooleanExtra(Constants.SWITCHED_FROM_BANK_VERIFICATION, false);
 
         mDistrictNames = new ArrayList<>();
         mBranches = new ArrayList<>();
@@ -55,7 +55,7 @@ public class ManageBanksActivity extends BaseActivity {
             }
         });
 
-        if (switched_From_Bank_Validation)
+        if (switchedFromBankVerification)
             switchToAddNewBankFragment();
         else
             switchToBankAccountsFragment();
@@ -74,7 +74,7 @@ public class ManageBanksActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (!switched_From_Bank_Validation) {
+        if (!switchedFromBankVerification) {
             // If back to bank account fragment then set the visibility of add bank button
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
                 // Check if the account is verified before adding a bank account.
@@ -105,7 +105,7 @@ public class ManageBanksActivity extends BaseActivity {
     }
 
     public void switchToAddNewBankFragment() {
-        if (!switched_From_Bank_Validation) {
+        if (!switchedFromBankVerification) {
             while (getSupportFragmentManager().getBackStackEntryCount() > 1)
                 getSupportFragmentManager().popBackStackImmediate();
             getSupportFragmentManager().beginTransaction()
@@ -120,7 +120,7 @@ public class ManageBanksActivity extends BaseActivity {
 
     public void switchToAddBankAgreementFragment(Bundle bundle) {
         // If started from manage bank or profile completion page
-        if (!switched_From_Bank_Validation) {
+        if (!switchedFromBankVerification) {
             while (getSupportFragmentManager().getBackStackEntryCount() > 2)
                 getSupportFragmentManager().popBackStackImmediate();
         }
@@ -130,9 +130,9 @@ public class ManageBanksActivity extends BaseActivity {
                 getSupportFragmentManager().popBackStackImmediate();
         }
 
-        AddBankAgreementFragment addBankAgreementFragment = new AddBankAgreementFragment();
-        addBankAgreementFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, addBankAgreementFragment).addToBackStack(null).commit();
+        ConsentAgreementForBankFragment consentAgreementForBankFragment = new ConsentAgreementForBankFragment();
+        consentAgreementForBankFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, consentAgreementForBankFragment).addToBackStack(null).commit();
     }
 
     @Override

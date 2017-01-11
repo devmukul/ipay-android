@@ -574,7 +574,7 @@
     <string name="confirmation_remove_email_address">Remove this email address?</string>
     <string name="confirmation_add_to_contacts">Add this number to contacts?</string>
     <string name="link_bank">Link Bank</string>
-    <string name="link_bank_agreement">Link Bank Agreement</string>
+    <string name="bank_consent_agreement">Bank consent agreement</string>
     <string name="progress_dialog_if_pin_exists">Preparing. Please wait...</string>
     <string name="failed_loading_pin">Failed loading PIN</string>
     <string name="add_a_trusted_person">Add a trusted person</string>
