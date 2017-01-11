@@ -27,7 +27,6 @@ public class ManageBanksActivity extends BaseActivity {
     public ArrayList<String> mDistrictNames;
     public ArrayList<BankBranch> mBranches;
     public ArrayList<String> mBranchNames;
-    public ArrayList<Bank> bankNames;
 
     public int mSelectedBranchId = -1;
     public int mSelectedBankId = -1;
@@ -45,7 +44,6 @@ public class ManageBanksActivity extends BaseActivity {
         mDistrictNames = new ArrayList<>();
         mBranches = new ArrayList<>();
         mBranchNames = new ArrayList<>();
-        bankNames = new ArrayList<>();
 
         mFabAddNewBank = (FloatingActionButton) findViewById(R.id.fab_add_new_bank);
         mFabAddNewBank.setOnClickListener(new View.OnClickListener() {
