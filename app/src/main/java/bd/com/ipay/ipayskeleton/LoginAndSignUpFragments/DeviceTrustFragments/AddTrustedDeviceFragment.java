@@ -50,14 +50,14 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_add_trusted_device, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_trusted_device, container, false);
 
         mProgressDialog = new ProgressDialog(getActivity());
         mSharedPreferences = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
-        mDeviceNameTextView = (TextView) v.findViewById(R.id.device_name);
-        mAddTrustedDeviceButton = (Button) v.findViewById(R.id.button_add_trusted_device);
-        mLogoutButton = (Button) v.findViewById(R.id.button_logout);
+        mDeviceNameTextView = (TextView) view.findViewById(R.id.device_name);
+        mAddTrustedDeviceButton = (Button) view.findViewById(R.id.button_add_trusted_device);
+        mLogoutButton = (Button) view.findViewById(R.id.button_logout);
 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
         mDeviceName = DeviceInfoFactory.getDeviceName();
@@ -66,7 +66,7 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
 
         setButtonActions();
 
-        return v;
+        return view;
     }
 
     private void attemptLogout() {
@@ -131,7 +131,8 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
             mProgressDialog.dismiss();
             mLogoutTask = null;
             mAddTrustedDeviceTask = null;
-            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -177,6 +178,10 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
                 }
 
                 mAddTrustedDeviceTask = null;
+                break;
+            default:
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                 break;
         }
     }
