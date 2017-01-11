@@ -40,7 +40,7 @@
     <color name="background_violet">#C15562</color>
     <color name="background_magenta">#AE7575</color>
     <color name="background_default">#547bca</color>
-    <color name="background_red">#F41051</color>
+    <color name="background_red">#ef5350</color>
 
     <color name="verified_background">#009688</color>
     <color name="background_iconified_button_icon">#26A69A</color>

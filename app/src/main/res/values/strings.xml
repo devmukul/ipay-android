@@ -168,7 +168,7 @@
     <string name="please_select_a_district">Please select a district</string>
     <string name="please_select_a_branch">Please select a branch</string>
     <string name="please_enter_an_account_number">Please provide your Account Number and try again</string>
-    <string name="please_enter_an_account_number_of_minimum_digit">Account number must be at least 8 digit long</string>
+    <string name="please_enter_an_account_number_of_minimum_digit">Account number must be at least 10 digits long</string>
     <string name="business_information">Business Information</string>
     <string name="account_holder_information">Information of Account Holder</string>
     <string name="yes">Yes</string>
@@ -369,7 +369,12 @@
     <string name="next">Next</string>
     <string name="continue_sign_up">Continue</string>
     <string name="bank_list">Banks</string>
+    <string name="add_bank_agreement_title">Declaration by iPay Member for the linked bank account</string>
+    <string name="add_bank_agreement">I am hereby authorizing iPay Systems Ltd to debit or credit my below mentioned bank account for bank transaction instructions generated from the settlement bank of iPay Systems Ltd.</string>
+    <string name="add_bank_agreement_additional_message">We will deposit a random amount in your bank account as a part of verification process. You need to provide the deposited verification amount to link the bank with your iPay account. Please note that, bank verification process may take up to 3 working days.</string>
     <string name="bank_branch">Branch</string>
+    <string name="i_agree">I agree</string>
+    <string name="disagree">Disagree</string>
     <string name="logout">Log Out</string>
     <string name="bdt">BDT</string>
     <string name="make_payment">Make Payment</string>
@@ -569,6 +574,7 @@
     <string name="confirmation_remove_email_address">Remove this email address?</string>
     <string name="confirmation_add_to_contacts">Add this number to contacts?</string>
     <string name="link_bank">Link Bank</string>
+    <string name="bank_consent_agreement">Bank consent agreement</string>
     <string name="progress_dialog_if_pin_exists">Preparing. Please wait...</string>
     <string name="failed_loading_pin">Failed loading PIN</string>
     <string name="add_a_trusted_person">Add a trusted person</string>
