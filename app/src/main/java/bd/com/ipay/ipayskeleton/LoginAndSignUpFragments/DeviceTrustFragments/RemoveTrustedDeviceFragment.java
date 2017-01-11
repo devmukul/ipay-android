@@ -152,7 +152,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         getActivity().setTitle(R.string.browsers_and_apps);
     }
 
-    private void attemptAddTrustedDevice() {
+    private void attemptTrustedDeviceAdd() {
         if (mAddTrustedDeviceTask != null) {
             return;
         }
@@ -248,7 +248,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                     mProgressDialog.show();
 
                     // Add the device as trusted immediately after removing any device
-                    attemptAddTrustedDevice();
+                    attemptTrustedDeviceAdd();
                 } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mRemoveTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();

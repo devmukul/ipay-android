@@ -86,7 +86,7 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void attemptAddTrustedDevice() {
+    private void attemptTrustedDeviceAdd() {
         if (mAddTrustedDeviceTask != null)
             return;
 
@@ -115,7 +115,7 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
         mAddTrustedDeviceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                attemptAddTrustedDevice();
+                attemptTrustedDeviceAdd();
             }
         });
     }
