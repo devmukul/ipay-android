@@ -322,10 +322,8 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                     String message = mLoginResponseModel.getMessage();
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
                         ProfileInfoCacheManager.setLoggedInStatus(true);
-
-                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
 
                     } else {
                         if (getActivity() != null)

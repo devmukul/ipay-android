@@ -316,7 +316,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         ProfileInfoCacheManager.setLoggedInStatus(true);
 
-                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
 
                     } else {
                         if (getActivity() != null)

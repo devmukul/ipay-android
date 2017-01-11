@@ -179,6 +179,13 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         this.finish();
     }
 
+    public void switchToDeviceTrustActivity() {
+        Intent intent = new Intent(SignupOrLoginActivity.this, DeviceTrustActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        this.finish();
+    }
+
     public void switchToTourActivity() {
         Utilities.hideKeyboard(this);
         Intent intent = new Intent(SignupOrLoginActivity.this, TourActivity.class);

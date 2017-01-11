@@ -1,48 +1,64 @@
-package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
+package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.DeviceTrustFragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.DeviceTrustActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.GetTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.RemoveTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.TrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 
-public class TrustedDeviceFragment extends ProgressFragment implements HttpResponseListener {
+public class RemoveTrustedDeviceFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetTrustedDeviceTask = null;
     private GetTrustedDeviceResponse mGetTrustedDeviceResponse = null;
 
     private HttpRequestDeleteAsyncTask mRemoveTrustedDeviceTask = null;
     private RemoveTrustedDeviceResponse mRemoveTrustedDeviceResponse = null;
+
+    private HttpRequestPostAsyncTask mAddTrustedDeviceTask = null;
+    private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
+
+    private HttpRequestPostAsyncTask mLogoutTask = null;
+    private LogoutResponse mLogOutResponse;
 
     private ArrayList<TrustedDevice> mTrustedDeviceList;
     private TrustedDeviceAdapter mTrustedDeviceAdapter;
@@ -51,20 +67,23 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
     private RecyclerView mTrustedDevicesRecyclerView;
 
     private ProgressDialog mProgressDialog;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
+    private Button mLogOutButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_trusted_devices, container, false);
+        View v = inflater.inflate(R.layout.fragment_remove_trusted_device, container, false);
         setTitle();
 
         mTrustedDevicesRecyclerView = (RecyclerView) v.findViewById(R.id.list_trusted_devices);
         mProgressDialog = new ProgressDialog(getActivity());
+        mLogOutButton = (Button) v.findViewById(R.id.button_logout);
+
+        mLogOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                attemptLogout();
+            }
+        });
 
         return v;
     }
@@ -89,22 +108,22 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
         }
     }
 
-    private void showTrustedDeviceRemoveConfirmationDialog(final long id) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog
-                .setMessage(getString(R.string.confirmation_remove_trusted_device))
-                .setPositiveButton(getString(R.string.remove), new DialogInterface.OnClickListener() {
+    private void showDeviceRemoveConfirmationDialog(final long id) {
+        MaterialDialog.Builder mRemoveConfirmationDialogBuilder;
+        MaterialDialog mRemoveConfirmationDialog;
+        mRemoveConfirmationDialogBuilder = new MaterialDialog.Builder(getActivity())
+                .content(getString(R.string.confirmation_remove_trusted_device))
+                .cancelable(true)
+                .positiveText(R.string.remove)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         removeTrustedDevice(id);
                     }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                });
 
-                    }
-                }).show();
+        mRemoveConfirmationDialog = mRemoveConfirmationDialogBuilder.build();
+        mRemoveConfirmationDialog.show();
     }
 
     private void getTrustedDeviceList() {
@@ -129,8 +148,47 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
         mRemoveTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public void setTitle() {
+    private void setTitle() {
         getActivity().setTitle(R.string.browsers_and_apps);
+    }
+
+    private void attemptTrustedDeviceAdd() {
+        if (mAddTrustedDeviceTask != null) {
+            return;
+        }
+
+        String mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
+        String mDeviceName = DeviceInfoFactory.getDeviceName();
+
+        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+        String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+
+        AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
+                Constants.MOBILE_ANDROID + mDeviceID, pushRegistrationID);
+        Gson gson = new Gson();
+        String json = gson.toJson(mAddToTrustedDeviceRequest);
+        mAddTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_DEVICE,
+                Constants.BASE_URL_MM + Constants.URL_ADD_TRUSTED_DEVICE, json, getActivity());
+        mAddTrustedDeviceTask.mHttpResponseListener = this;
+        mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void attemptLogout() {
+        if (mLogoutTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
+        mProgressDialog.show();
+        LogoutRequest mLogoutModel = new LogoutRequest(ProfileInfoCacheManager.getMobileNumber());
+        Gson gson = new Gson();
+        String json = gson.toJson(mLogoutModel);
+
+        mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
+                Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, getActivity());
+        mLogoutTask.mHttpResponseListener = this;
+
+        mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -140,12 +198,13 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mGetTrustedDeviceTask = null;
+            mAddTrustedDeviceTask = null;
+            mLogoutTask = null;
             mRemoveTrustedDeviceTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
-
 
         Gson gson = new Gson();
 
@@ -188,7 +247,8 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                     mProgressDialog.setMessage(getString(R.string.progress_dialog_loading_trusted_devices));
                     mProgressDialog.show();
 
-                    getTrustedDeviceList();
+                    // Add the device as trusted immediately after removing any device
+                    attemptTrustedDeviceAdd();
                 } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mRemoveTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -203,8 +263,46 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
 
             mProgressDialog.cancel();
             mRemoveTrustedDeviceTask = null;
-        }
 
+        } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_TRUSTED_DEVICE)) {
+            try {
+                mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    String UUID = mAddToTrustedDeviceResponse.getUUID();
+                    SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                    pref.edit().putString(Constants.UUID, UUID).apply();
+
+                    // Launch HomeActivity from here on successful trusted device add
+                    ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+                } else {
+                    Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
+            }
+
+            mAddTrustedDeviceTask = null;
+
+        } else if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
+            try {
+                mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK)
+                    ((MyApplication) getActivity().getApplication()).launchLoginPage(null);
+                else
+                    Toast.makeText(getActivity(), mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
+            }
+
+            mProgressDialog.dismiss();
+            mLogoutTask = null;
+        }
     }
 
     private void processTrustedDeviceList(String json) {
@@ -220,7 +318,8 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
         setContentShown(true);
     }
 
-    public class TrustedDeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class TrustedDeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
 
         public TrustedDeviceAdapter() {
         }
@@ -229,11 +328,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
             private final ImageView mDeviceImageView;
             private final TextView mDeviceNameView;
             private final TextView mGrantTimeView;
-            private final TextView mThisDeviceView;
-
-            private List<String> mTrustedDeviceActionList;
-            private int ACTION_REMOVE = 0;
-            private CustomSelectorDialog mCustomSelectorDialog;
+            private final ImageButton mRemoveTrustedDeviceButton;
 
 
             public TrustedDeviceViewHolder(final View itemView) {
@@ -242,7 +337,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                 mDeviceImageView = (ImageView) itemView.findViewById(R.id.trusted_device_imageView);
                 mDeviceNameView = (TextView) itemView.findViewById(R.id.textview_device_name);
                 mGrantTimeView = (TextView) itemView.findViewById(R.id.textview_time);
-                mThisDeviceView = (TextView) itemView.findViewById(R.id.textview_this_device);
+                mRemoveTrustedDeviceButton = (ImageButton) itemView.findViewById(R.id.remove_trusted_device_button);
             }
 
             public void bindView(int pos) {
@@ -255,51 +350,25 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                         R.drawable.ic_android3x,
                 };
 
-                final String deviceID = trustedDevice.getDeviceId();
-                String Android = getString(R.string.android);
-                String IOS = getString(R.string.ios);
-                String Computer = getString(R.string.browser);
+                final String deviceID = trustedDevice != null ? trustedDevice.getDeviceId() : null;
+                String android = getString(R.string.android);
+                String ios = getString(R.string.ios);
+                String browser = getString(R.string.browser);
 
-                if (deviceID.toLowerCase().contains(Android.toLowerCase()))
+                if (deviceID.toLowerCase().contains(android.toLowerCase()))
                     mDeviceImageView.setImageResource(images[1]);
-
-                else if (deviceID.toLowerCase().contains(IOS.toLowerCase()))
+                else if (deviceID.toLowerCase().contains(ios.toLowerCase()))
                     mDeviceImageView.setImageResource(images[1]);
-
-                else if (deviceID.toLowerCase().contains(Computer.toLowerCase()))
+                else if (deviceID.toLowerCase().contains(browser.toLowerCase()))
                     mDeviceImageView.setImageResource(images[0]);
-
-                final String myDeviceID = getString(R.string.mobile_android).concat(DeviceInfoFactory.getDeviceId(getActivity()));
 
                 mDeviceNameView.setText(trustedDevice.getDeviceName());
                 mGrantTimeView.setText(trustedDevice.getCreatedTimeString());
 
-                if (myDeviceID.equals(deviceID)) {
-                    mDeviceNameView.setText(trustedDevice.getDeviceName());
-                    mThisDeviceView.setVisibility(View.VISIBLE);
-                    mDeviceNameView.setTextColor(getResources().getColor(R.color.colorPrimary));
-                } else {
-                    mThisDeviceView.setVisibility(View.GONE);
-                    mDeviceNameView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
-                }
-
-                itemView.setOnClickListener(new View.OnClickListener() {
+                mRemoveTrustedDeviceButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!myDeviceID.equals(deviceID)) {
-                            mTrustedDeviceActionList = Arrays.asList(getResources().getStringArray(R.array.trusted_device_or_network_action));
-                            mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), trustedDevice.getDeviceName(), mTrustedDeviceActionList);
-                            mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
-                                @Override
-                                public void onResourceSelected(int selectedIndex, String mName) {
-                                    if (selectedIndex == ACTION_REMOVE) {
-                                        showTrustedDeviceRemoveConfirmationDialog(
-                                                trustedDevice.getId());
-                                    }
-                                }
-                            });
-                            mCustomSelectorDialog.show();
-                        }
+                        showDeviceRemoveConfirmationDialog(trustedDevice.getId());
                     }
                 });
             }
@@ -308,7 +377,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v;
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trusted_device,
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trusted_device_remove,
                     parent, false);
 
             return new TrustedDeviceViewHolder(v);
@@ -331,6 +400,6 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                 return mTrustedDeviceList.size();
             else return 0;
         }
-
     }
+
 }
