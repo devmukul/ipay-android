@@ -2,20 +2,19 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.DeviceTrustFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +24,6 @@ import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DeviceTrustActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
@@ -62,8 +60,11 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
 
-    private ListView mTrustedDevicesListView;
+    private ArrayList<TrustedDevice> mTrustedDeviceList;
     private TrustedDeviceAdapter mTrustedDeviceAdapter;
+
+    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView mTrustedDevicesRecylerView;
 
     private ProgressDialog mProgressDialog;
     private Button mLogOutButton;
@@ -73,9 +74,8 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         View v = inflater.inflate(R.layout.fragment_remove_trusted_device, container, false);
         setTitle();
 
-        // TODO: Make the implementation with RecyclerView
         // TODO: The code was copied from TrustedDeviceFragment. We need to change there too.
-        mTrustedDevicesListView = (ListView) v.findViewById(R.id.list_trusted_devices);
+        mTrustedDevicesRecylerView = (RecyclerView) v.findViewById(R.id.list_trusted_devices);
         mProgressDialog = new ProgressDialog(getActivity());
         mLogOutButton = (Button) v.findViewById(R.id.button_logout);
 
@@ -309,64 +309,97 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
     private void processTrustedDeviceList(String json) {
         Gson gson = new Gson();
         mGetTrustedDeviceResponse = gson.fromJson(json, GetTrustedDeviceResponse.class);
+        mTrustedDeviceList = (ArrayList<TrustedDevice>) mGetTrustedDeviceResponse.getDevices();
 
-        ArrayList<TrustedDevice> mTrustedDeviceList = (ArrayList<TrustedDevice>) mGetTrustedDeviceResponse.getDevices();
-        mTrustedDeviceAdapter = new TrustedDeviceAdapter(getActivity(), mTrustedDeviceList);
-        mTrustedDevicesListView.setAdapter(mTrustedDeviceAdapter);
+        mTrustedDeviceAdapter = new TrustedDeviceAdapter();
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mTrustedDevicesRecylerView.setLayoutManager(mLayoutManager);
+        mTrustedDevicesRecylerView.setAdapter(mTrustedDeviceAdapter);
 
         setContentShown(true);
     }
 
-    private class TrustedDeviceAdapter extends ArrayAdapter<TrustedDevice> {
+    private class TrustedDeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private final LayoutInflater inflater;
 
-        public TrustedDeviceAdapter(Context context, List<TrustedDevice> objects) {
-            super(context, 0, objects);
-            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        public TrustedDeviceAdapter() {
+        }
+
+        public class TrustedDeviceViewHolder extends RecyclerView.ViewHolder {
+            private final ImageView deviceImageView;
+            private final TextView deviceNameView;
+            private final TextView grantTimeView;
+            private final ImageButton removeTrustedDeviceButton;
+
+
+            public TrustedDeviceViewHolder(final View itemView) {
+                super(itemView);
+
+                deviceImageView = (ImageView) itemView.findViewById(R.id.trusted_device_imageView);
+                deviceNameView = (TextView) itemView.findViewById(R.id.textview_device_name);
+                grantTimeView = (TextView) itemView.findViewById(R.id.textview_time);
+                removeTrustedDeviceButton = (ImageButton) itemView.findViewById(R.id.remove_trusted_device_button);
+            }
+
+            public void bindView(int pos) {
+
+                final TrustedDevice trustedDevice = mTrustedDeviceList.get(pos);
+
+                //Setting the correct image based on trusted device type
+                int[] images = {
+                        R.drawable.ic_browser3x,
+                        R.drawable.ic_android3x,
+                };
+
+                final String deviceID = trustedDevice != null ? trustedDevice.getDeviceId() : null;
+                String android = getString(R.string.android);
+                String ios = getString(R.string.ios);
+                String browser = getString(R.string.browser);
+
+                if (deviceID.toLowerCase().contains(android.toLowerCase()))
+                    deviceImageView.setImageResource(images[1]);
+                else if (deviceID.toLowerCase().contains(ios.toLowerCase()))
+                    deviceImageView.setImageResource(images[1]);
+                else if (deviceID.toLowerCase().contains(browser.toLowerCase()))
+                    deviceImageView.setImageResource(images[0]);
+
+                deviceNameView.setText(trustedDevice.getDeviceName());
+                grantTimeView.setText(trustedDevice.getCreatedTimeString());
+
+                removeTrustedDeviceButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDeviceRemoveConfirmationDialog(trustedDevice.getId());
+                    }
+                });
+            }
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final TrustedDevice trustedDevice = getItem(position);
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v;
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trusted_device_remove,
+                    parent, false);
 
-            View view = convertView;
-            if (view == null)
-                view = inflater.inflate(R.layout.list_item_trusted_device_remove, null);
+            return new TrustedDeviceViewHolder(v);
+        }
 
-            ImageView deviceImageView = (ImageView) view.findViewById(R.id.trusted_device_imageView);
-            TextView deviceNameView = (TextView) view.findViewById(R.id.textview_device_name);
-            TextView grantTimeView = (TextView) view.findViewById(R.id.textview_time);
-            ImageButton removeTrustedDeviceButton = (ImageButton) view.findViewById(R.id.remove_trusted_device_button);
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+                TrustedDeviceViewHolder vh = (TrustedDeviceViewHolder) holder;
+                vh.bindView(position);
 
-            //Setting the correct image based on trusted device type
-            int[] images = {
-                    R.drawable.ic_browser3x,
-                    R.drawable.ic_android3x,
-            };
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-            final String deviceID = trustedDevice != null ? trustedDevice.getDeviceId() : null;
-            String android = getString(R.string.android);
-            String ios = getString(R.string.ios);
-            String browser = getString(R.string.browser);
-
-            if (deviceID.toLowerCase().contains(android.toLowerCase()))
-                deviceImageView.setImageResource(images[1]);
-            else if (deviceID.toLowerCase().contains(ios.toLowerCase()))
-                deviceImageView.setImageResource(images[1]);
-            else if (deviceID.toLowerCase().contains(browser.toLowerCase()))
-                deviceImageView.setImageResource(images[0]);
-
-            deviceNameView.setText(trustedDevice.getDeviceName());
-            grantTimeView.setText(trustedDevice.getCreatedTimeString());
-
-            removeTrustedDeviceButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showDeviceRemoveConfirmationDialog(trustedDevice.getId());
-                }
-            });
-            return view;
+        @Override
+        public int getItemCount() {
+            if (mTrustedDeviceList != null)
+                return mTrustedDeviceList.size();
+            else return 0;
         }
     }
 
