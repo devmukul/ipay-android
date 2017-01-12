@@ -473,9 +473,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     }
 
     private void refreshBalance() {
-        if (mRefreshBalanceTask != null) {
+        if (mRefreshBalanceTask != null || getActivity() == null)
             return;
-        }
 
         Animation rotation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotation);
         rotation.setRepeatCount(Animation.INFINITE);
