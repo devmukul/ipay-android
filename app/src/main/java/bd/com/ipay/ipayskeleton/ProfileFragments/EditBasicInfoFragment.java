@@ -161,9 +161,11 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             mNameEditText.setError(getString(R.string.error_invalid_first_name));
             focusView = mNameEditText;
             cancel = true;
-        }
-
-        if (!InputValidator.isValidName(mName)) {
+        } else if (mName.length() < 5) {
+            mNameEditText.setError(getString(R.string.error_invalid_name_length));
+            focusView = mNameEditText;
+            cancel = true;
+        } else if (!InputValidator.isValidName(mName)) {
             mNameEditText.setError(getString(R.string.please_enter_valid_name));
             focusView = mNameEditText;
             cancel = true;

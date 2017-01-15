@@ -142,7 +142,7 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
         boolean cancel = false;
         View focusView = null;
 
-        mBusinessName = mBusinessNameEditText.getText().toString();
+        mBusinessName = mBusinessNameEditText.getText().toString().trim();
         mBusinessMobileNumber = ContactEngine.formatMobileNumberBD(mBusinessMobileNumberEditText.getText().toString());
         /** mBusinessTypeId has already been selected when the user picked an item from the dialog **/
 
@@ -150,9 +150,11 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
             mBusinessNameEditText.setError(getString(R.string.error_invalid_name));
             cancel = true;
             focusView = mBusinessNameEditText;
-        }
-        
-        if (!InputValidator.isValidName(mBusinessName)) {
+        } else if (mBusinessName.length() < 5) {
+            mBusinessNameEditText.setError(getString(R.string.error_invalid_business_holder_name_length));
+            cancel = true;
+            focusView = mBusinessNameEditText;
+        } else if (!InputValidator.isValidName(mBusinessName)) {
             mBusinessNameEditText.setError(getString(R.string.please_enter_valid_name));
             focusView = mBusinessNameEditText;
             cancel = true;

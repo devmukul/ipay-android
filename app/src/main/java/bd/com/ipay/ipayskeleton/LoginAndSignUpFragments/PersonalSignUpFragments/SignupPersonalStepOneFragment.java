@@ -205,8 +205,10 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mMobileNumberView.setError(null);
         mPasswordView.setError(null);
 
+        String name = mNameView.getText().toString().trim();
+
         // Store values at the time of the login attempt.
-        SignupOrLoginActivity.mName = mNameView.getText().toString().trim();
+        SignupOrLoginActivity.mName = name;
         SignupOrLoginActivity.mBirthday = mDOB;
 
         // Store values at the time of the login attempt.
@@ -217,15 +219,21 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         // Check for a valid password, if the user entered one.
         String passwordValidationMsg = InputValidator.isPasswordValid(SignupOrLoginActivity.mPassword);
 
+
         boolean cancel = false;
         View focusView = null;
 
-        if (mNameView.getText().toString().trim().length() == 0) {
+        if (name.length() == 0) {
             mNameView.setError(getString(R.string.error_invalid_first_name));
             focusView = mNameView;
             cancel = true;
 
-        } else if (!InputValidator.isValidName(mNameView.getText().toString().trim())) {
+        } else if (name.length() < 5) {
+            mNameView.setError(getString(R.string.error_invalid_name_length));
+            focusView = mNameView;
+            cancel = true;
+
+        } else if (!InputValidator.isValidName(name)) {
             mNameView.setError(getString(R.string.please_enter_valid_name));
             focusView = mNameView;
             cancel = true;
