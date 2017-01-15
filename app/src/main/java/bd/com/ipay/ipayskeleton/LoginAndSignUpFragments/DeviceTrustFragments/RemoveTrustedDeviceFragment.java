@@ -94,18 +94,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
 
         setContentShown(false);
 
-        if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE))
-            getTrustedDeviceList();
-        else {
-            DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE);
-
-            if (json == null)
-                getTrustedDeviceList();
-            else {
-                processTrustedDeviceList(json);
-            }
-        }
+        getTrustedDeviceList();
     }
 
     private void showDeviceRemoveConfirmationDialog(final long id) {
