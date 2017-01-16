@@ -26,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.GetTrustedDeviceResponse;
@@ -35,6 +36,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TrustedDeviceFragment extends ProgressFragment implements HttpResponseListener {
 
@@ -43,6 +45,8 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
 
     private HttpRequestDeleteAsyncTask mRemoveTrustedDeviceTask = null;
     private RemoveTrustedDeviceResponse mRemoveTrustedDeviceResponse = null;
+
+    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
     private ArrayList<TrustedDevice> mTrustedDeviceList;
     private TrustedDeviceAdapter mTrustedDeviceAdapter;
@@ -60,13 +64,14 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_trusted_devices, container, false);
+        View view = inflater.inflate(R.layout.fragment_trusted_devices, container, false);
         setTitle();
 
-        mTrustedDevicesRecyclerView = (RecyclerView) v.findViewById(R.id.list_trusted_devices);
+        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        mTrustedDevicesRecyclerView = (RecyclerView) view.findViewById(R.id.list_trusted_devices);
         mProgressDialog = new ProgressDialog(getActivity());
 
-        return v;
+        return view;
     }
 
     @Override
@@ -74,6 +79,14 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
         super.onActivityCreated(savedInstanceState);
 
         setContentShown(false);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (Utilities.isConnectionAvailable(getActivity()))
+                    getTrustedDeviceList();
+            }
+        });
 
         if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE))
             getTrustedDeviceList();
@@ -172,6 +185,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                 }
             }
 
+            mSwipeRefreshLayout.setRefreshing(false);
             mProgressDialog.dismiss();
             mGetTrustedDeviceTask = null;
 
