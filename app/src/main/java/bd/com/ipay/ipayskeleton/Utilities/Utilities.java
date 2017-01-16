@@ -58,8 +58,10 @@ import java.net.NetworkInterface;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -533,6 +535,18 @@ public class Utilities {
 
     public static String formatDateWithoutTime(long time) {
         return new SimpleDateFormat("MMM d, yyyy").format(time);
+    }
+
+    public static Date formatDateFromString(String dateString) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date newDate = null;
+        try {
+            newDate = format.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return newDate;
     }
 
     public static boolean checkPlayServices(Context context) {

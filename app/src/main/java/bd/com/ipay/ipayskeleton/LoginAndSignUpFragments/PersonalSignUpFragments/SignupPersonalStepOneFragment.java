@@ -16,8 +16,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
 
 import java.util.Calendar;
@@ -103,15 +105,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
         mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
-        final DatePickerDialog dialog = new DatePickerDialog(
-                getActivity(), mDateSetListener, 1990, 0, 1);
-
-        mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-            }
-        });
+        initDatePickerDialog();
 
         if (mMaleCheckBox.isChecked())
             mMaleCheckBox.setTextColor((Color.WHITE));
@@ -197,6 +191,35 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                     mBirthdayEditText.setText(mWeekArray[dayofweek - 1] + " , " + mDay + " " + mMonthArray[mMonth - 1] + " , " + mYear);
                 }
             };
+
+    private void initDatePickerDialog() {
+        final Calendar calendar = Calendar.getInstance();
+
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        int minYear = currentYear - Constants.MIN_AGE_LIMIT;
+        int minMonth = currentMonth;
+        int minDay = currentDay;
+
+        calendar.set(minYear, minMonth, minDay);
+        long minDateInMilliSeconds = calendar.getTimeInMillis();
+
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(
+                getActivity(), mDateSetListener, minYear, minMonth, minDay);
+
+        // Set 18 years from today as max limit of date picker
+        datePickerDialog.getDatePicker().setMaxDate(minDateInMilliSeconds);
+        datePickerDialog.setTitle(null);
+
+        mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePickerDialog.show();
+            }
+        });
+    }
 
     private void attemptRequestOTP() {
 

@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -52,6 +54,8 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private ProgressDialog mProgressDialog;
 
     private String mName = "";
+
+    private DatePickerDialog datePickerDialog;
     private String mDateOfBirth = "";
 
     private int mOccupation = -1;
@@ -120,14 +124,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             }
         });
 
-        final DatePickerDialog dialog = new DatePickerDialog(
-                getActivity(), mDateSetListener, 1990, 0, 1);
-        mDateOfBirthEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-            }
-        });
+        initDatePickerDialog();
 
         setProfileInformation();
 
@@ -135,6 +132,47 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         setOccupation();
 
         return v;
+    }
+
+    private void setUserDateOfBirth() {
+        Date dateofBirth = Utilities.formatDateFromString(mDateOfBirth);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dateofBirth);
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        datePickerDialog = new DatePickerDialog(
+                getActivity(), mDateSetListener, year, month, day);
+    }
+
+    private void initDatePickerDialog() {
+        setUserDateOfBirth();
+
+        final Calendar calendar = Calendar.getInstance();
+
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        int minYear = currentYear - Constants.MIN_AGE_LIMIT;
+        int minMonth = currentMonth;
+        int minDay = currentDay;
+
+        calendar.set(minYear, minMonth, minDay);
+        long minDateInMilliSeconds = calendar.getTimeInMillis();
+
+        // Set 18 years from today as max limit of date picker
+        datePickerDialog.getDatePicker().setMaxDate(minDateInMilliSeconds);
+        datePickerDialog.setTitle(null);
+
+        mDateOfBirthEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePickerDialog.show();
+            }
+        });
     }
 
     private boolean verifyUserInputs() {

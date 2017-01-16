@@ -65,16 +65,6 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     private ProgressDialog mProgressDialog;
 
     @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().setTitle(R.string.title_signup_business_page);
-        if (mMaleCheckBox.isChecked())
-            mMaleCheckBox.setTextColor((Color.WHITE));
-        if (mFemaleCheckBox.isChecked())
-            mFemaleCheckBox.setTextColor((Color.WHITE));
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_signup_business_step_three, container, false);
@@ -99,15 +89,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
                 getString(R.string.address_line_2));
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
-        final DatePickerDialog dialog = new DatePickerDialog(
-                getActivity(), mDateSetListener, 1990, 0, 1);
-
-        mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-            }
-        });
+        initDatePickerDialog();
 
         // Enable hyperlinked
         mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
@@ -157,6 +139,45 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         });
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.title_signup_business_page);
+        if (mMaleCheckBox.isChecked())
+            mMaleCheckBox.setTextColor((Color.WHITE));
+        if (mFemaleCheckBox.isChecked())
+            mFemaleCheckBox.setTextColor((Color.WHITE));
+    }
+
+    private void initDatePickerDialog() {
+        final Calendar calendar = Calendar.getInstance();
+
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        int minYear = currentYear - Constants.MIN_AGE_LIMIT;
+        int minMonth = currentMonth;
+        int minDay = currentDay;
+
+        calendar.set(minYear, minMonth, minDay);
+        long minDateInMilliSeconds = calendar.getTimeInMillis();
+
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(
+                getActivity(), mDateSetListener, minYear, minMonth, minDay);
+
+        // Set 18 years from today as max limit of date picker
+        datePickerDialog.getDatePicker().setMaxDate(minDateInMilliSeconds);
+        datePickerDialog.setTitle(null);
+
+        mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePickerDialog.show();
+            }
+        });
     }
 
     private void attemptRequestOTP() {
