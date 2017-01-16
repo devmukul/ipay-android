@@ -183,13 +183,8 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
             focusView = mBusinessHolderFullNameView;
             cancel = true;
 
-        } else if (businessHoldersName.length() < 5) {
-            mBusinessHolderFullNameView.setError(getString(R.string.error_invalid_business_holder_name_length));
-            focusView = mBusinessHolderFullNameView;
-            cancel = true;
-
-        } else if (!InputValidator.isValidName(businessHoldersName)) {
-            mBusinessHolderFullNameView.setError(getString(R.string.please_enter_valid_name));
+        } else if (!InputValidator.isValidNameWithRequiredLength(businessHoldersName)) {
+            mBusinessHolderFullNameView.setError(getString(R.string.error_invalid_name_with_required_length));
             focusView = mBusinessHolderFullNameView;
             cancel = true;
 

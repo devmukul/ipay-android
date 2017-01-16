@@ -49,6 +49,11 @@ public class InputValidator {
         return true;
     }
 
+    public static boolean isValidNameWithRequiredLength(String name) {
+        if (name.matches(".*[0-9]+.*") || name.length() < 5) return false;
+        return true;
+    }
+
     public static String isValidAmount(Context context, BigDecimal amount, BigDecimal minAmount, BigDecimal maxAmount) {
         String errorMessage = null;
 

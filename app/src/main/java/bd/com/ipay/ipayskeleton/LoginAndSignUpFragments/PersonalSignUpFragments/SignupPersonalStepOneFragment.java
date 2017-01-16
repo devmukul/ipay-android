@@ -228,13 +228,8 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             focusView = mNameView;
             cancel = true;
 
-        } else if (name.length() < 5) {
-            mNameView.setError(getString(R.string.error_invalid_name_length));
-            focusView = mNameView;
-            cancel = true;
-
-        } else if (!InputValidator.isValidName(name)) {
-            mNameView.setError(getString(R.string.please_enter_valid_name));
+        } else if (!InputValidator.isValidNameWithRequiredLength(name)) {
+            mNameView.setError(getString(R.string.error_invalid_name_with_required_length));
             focusView = mNameView;
             cancel = true;
 

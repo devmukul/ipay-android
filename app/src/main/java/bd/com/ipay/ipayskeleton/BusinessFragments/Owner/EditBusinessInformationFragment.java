@@ -150,16 +150,11 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
             mBusinessNameEditText.setError(getString(R.string.error_invalid_name));
             cancel = true;
             focusView = mBusinessNameEditText;
-        } else if (mBusinessName.length() < 5) {
-            mBusinessNameEditText.setError(getString(R.string.error_invalid_business_holder_name_length));
-            cancel = true;
-            focusView = mBusinessNameEditText;
-        } else if (!InputValidator.isValidName(mBusinessName)) {
-            mBusinessNameEditText.setError(getString(R.string.please_enter_valid_name));
+        } else if (!InputValidator.isValidNameWithRequiredLength(mBusinessName)) {
+            mBusinessNameEditText.setError(getString(R.string.error_invalid_name_with_required_length));
             focusView = mBusinessNameEditText;
             cancel = true;
         }
-
         if (!ContactEngine.isValidNumber(mBusinessMobileNumber)) {
             mBusinessMobileNumberEditText.setError(getString(R.string.error_invalid_mobile_number));
             cancel = true;
