@@ -64,14 +64,14 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_trusted_devices, container, false);
+        View view = inflater.inflate(R.layout.fragment_trusted_devices, container, false);
         setTitle();
 
-        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
-        mTrustedDevicesRecyclerView = (RecyclerView) v.findViewById(R.id.list_trusted_devices);
+        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        mTrustedDevicesRecyclerView = (RecyclerView) view.findViewById(R.id.list_trusted_devices);
         mProgressDialog = new ProgressDialog(getActivity());
 
-        return v;
+        return view;
     }
 
     @Override
