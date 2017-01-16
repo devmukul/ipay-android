@@ -55,8 +55,9 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
     private String mName = "";
 
-    private DatePickerDialog datePickerDialog;
+    private DatePickerDialog mDatePickerDialog;
     private String mDateOfBirth = "";
+    private Date mDate;
 
     private int mOccupation = -1;
     private String mGender = null;
@@ -93,13 +94,23 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
         mProgressDialog = new ProgressDialog(getActivity());
 
+        mDate = Utilities.formatDateFromString(mDateOfBirth);
+        mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), mDate, mDateSetListener);
+
+        mDateOfBirthEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDatePickerDialog.show();
+            }
+        });
+
         mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mMaleCheckBox.setChecked(true);
                 mFemaleCheckBox.setChecked(false);
-                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mMaleCheckBox.setTextColor((Color.WHITE));
+
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         });
 
@@ -108,9 +119,8 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             public void onClick(View view) {
                 mFemaleCheckBox.setChecked(true);
                 mMaleCheckBox.setChecked(false);
-                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mFemaleCheckBox.setTextColor((Color.WHITE));
 
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         });
 
@@ -124,8 +134,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             }
         });
 
-        initDatePickerDialog();
-
         setProfileInformation();
 
         setOccupationAdapter();
@@ -134,45 +142,16 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         return v;
     }
 
-    private void setUserDateOfBirth() {
-        Date dateofBirth = Utilities.formatDateFromString(mDateOfBirth);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(dateofBirth);
+    private void setGenderCheckBoxTextColor(boolean maleCheckBoxChecked, boolean femaleCheckBoxChecked) {
+        if (maleCheckBoxChecked)
+            mMaleCheckBox.setTextColor((Color.WHITE));
+        else
+            mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
 
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        datePickerDialog = new DatePickerDialog(
-                getActivity(), mDateSetListener, year, month, day);
-    }
-
-    private void initDatePickerDialog() {
-        setUserDateOfBirth();
-
-        final Calendar calendar = Calendar.getInstance();
-
-        int currentYear = calendar.get(Calendar.YEAR);
-        int currentMonth = calendar.get(Calendar.MONTH);
-        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-        int minYear = currentYear - Constants.MIN_AGE_LIMIT;
-        int minMonth = currentMonth;
-        int minDay = currentDay;
-
-        calendar.set(minYear, minMonth, minDay);
-        long minDateInMilliSeconds = calendar.getTimeInMillis();
-
-        // Set 18 years from today as max limit of date picker
-        datePickerDialog.getDatePicker().setMaxDate(minDateInMilliSeconds);
-        datePickerDialog.setTitle(null);
-
-        mDateOfBirthEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datePickerDialog.show();
-            }
-        });
+        if (femaleCheckBoxChecked)
+            mFemaleCheckBox.setTextColor((Color.WHITE));
+        else
+            mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
     }
 
     private boolean verifyUserInputs() {
@@ -249,14 +228,14 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                     genderArray[0]))) {
                 mMaleCheckBox.setChecked(true);
                 mFemaleCheckBox.setChecked(false);
-                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mMaleCheckBox.setTextColor((Color.WHITE));
+
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             } else if (mGender.equals(GenderList.genderNameToCodeMap.get(
                     genderArray[1]))) {
                 mMaleCheckBox.setChecked(false);
                 mFemaleCheckBox.setChecked(true);
-                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mFemaleCheckBox.setTextColor((Color.WHITE));
+
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         }
     }

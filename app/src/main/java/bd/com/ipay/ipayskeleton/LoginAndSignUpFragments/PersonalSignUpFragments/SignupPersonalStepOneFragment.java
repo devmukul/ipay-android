@@ -61,6 +61,8 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     private ProgressDialog mProgressDialog;
 
     private String mDeviceID;
+
+    private DatePickerDialog mDatePickerDialog;
     private String mDOB;
 
     private int mYear;
@@ -105,12 +107,16 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
         mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
-        initDatePickerDialog();
+        setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
 
-        if (mMaleCheckBox.isChecked())
-            mMaleCheckBox.setTextColor((Color.WHITE));
-        if (mFemaleCheckBox.isChecked())
-            mFemaleCheckBox.setTextColor((Color.WHITE));
+        mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), null, mDateSetListener);
+
+        mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDatePickerDialog.show();
+            }
+        });
 
         mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,8 +124,8 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 mGenderEditText.setError(null);
                 mMaleCheckBox.setChecked(true);
                 mFemaleCheckBox.setChecked(false);
-                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mMaleCheckBox.setTextColor((Color.WHITE));
+
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         });
 
@@ -129,9 +135,8 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 mGenderEditText.setError(null);
                 mFemaleCheckBox.setChecked(true);
                 mMaleCheckBox.setChecked(false);
-                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mFemaleCheckBox.setTextColor((Color.WHITE));
 
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         });
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
@@ -192,33 +197,16 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 }
             };
 
-    private void initDatePickerDialog() {
-        final Calendar calendar = Calendar.getInstance();
+    private void setGenderCheckBoxTextColor(boolean maleCheckBoxChecked, boolean femaleCheckBoxChecked) {
+        if (maleCheckBoxChecked)
+            mMaleCheckBox.setTextColor((Color.WHITE));
+        else
+            mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
 
-        int currentYear = calendar.get(Calendar.YEAR);
-        int currentMonth = calendar.get(Calendar.MONTH);
-        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-        int minYear = currentYear - Constants.MIN_AGE_LIMIT;
-        int minMonth = currentMonth;
-        int minDay = currentDay;
-
-        calendar.set(minYear, minMonth, minDay);
-        long minDateInMilliSeconds = calendar.getTimeInMillis();
-
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(
-                getActivity(), mDateSetListener, minYear, minMonth, minDay);
-
-        // Set 18 years from today as max limit of date picker
-        datePickerDialog.getDatePicker().setMaxDate(minDateInMilliSeconds);
-        datePickerDialog.setTitle(null);
-
-        mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datePickerDialog.show();
-            }
-        });
+        if (femaleCheckBoxChecked)
+            mFemaleCheckBox.setTextColor((Color.WHITE));
+        else
+            mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
     }
 
     private void attemptRequestOTP() {
@@ -310,7 +298,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             return;
         }
 
-
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_OTP_VERIFICATION)) {
@@ -323,7 +310,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 e.printStackTrace();
                 message = getString(R.string.server_down);
             }
-
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 if (getActivity() != null)

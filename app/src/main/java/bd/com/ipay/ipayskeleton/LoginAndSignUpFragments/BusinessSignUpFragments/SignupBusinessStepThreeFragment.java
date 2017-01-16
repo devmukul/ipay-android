@@ -61,7 +61,10 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     private AddressInputSignUpView mPersonalAddressView;
 
     private String mDeviceID;
+
+    private DatePickerDialog mDatePickerDialog;
     private String mDOB;
+
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -89,12 +92,18 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
                 getString(R.string.address_line_2));
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
-        initDatePickerDialog();
+        mDatePickerDialog =Utilities.getDatePickerDialog(getActivity(),null,mDateSetListener);
 
         // Enable hyperlinked
         mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
         mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
+        mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDatePickerDialog.show();
+            }
+        });
         mSignupBusinessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,8 +130,8 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
                 mGenderEditText.setError(null);
                 mMaleCheckBox.setChecked(true);
                 mFemaleCheckBox.setChecked(false);
-                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mMaleCheckBox.setTextColor((Color.WHITE));
+
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         });
 
@@ -132,9 +141,8 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
                 mGenderEditText.setError(null);
                 mFemaleCheckBox.setChecked(true);
                 mMaleCheckBox.setChecked(false);
-                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mFemaleCheckBox.setTextColor((Color.WHITE));
 
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         });
 
@@ -145,39 +153,19 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_signup_business_page);
-        if (mMaleCheckBox.isChecked())
-            mMaleCheckBox.setTextColor((Color.WHITE));
-        if (mFemaleCheckBox.isChecked())
-            mFemaleCheckBox.setTextColor((Color.WHITE));
+        setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
     }
 
-    private void initDatePickerDialog() {
-        final Calendar calendar = Calendar.getInstance();
+    private void setGenderCheckBoxTextColor(boolean maleCheckBoxChecked, boolean femaleCheckBoxChecked) {
+        if (maleCheckBoxChecked)
+            mMaleCheckBox.setTextColor((Color.WHITE));
+        else
+            mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
 
-        int currentYear = calendar.get(Calendar.YEAR);
-        int currentMonth = calendar.get(Calendar.MONTH);
-        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-        int minYear = currentYear - Constants.MIN_AGE_LIMIT;
-        int minMonth = currentMonth;
-        int minDay = currentDay;
-
-        calendar.set(minYear, minMonth, minDay);
-        long minDateInMilliSeconds = calendar.getTimeInMillis();
-
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(
-                getActivity(), mDateSetListener, minYear, minMonth, minDay);
-
-        // Set 18 years from today as max limit of date picker
-        datePickerDialog.getDatePicker().setMaxDate(minDateInMilliSeconds);
-        datePickerDialog.setTitle(null);
-
-        mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datePickerDialog.show();
-            }
-        });
+        if (femaleCheckBoxChecked)
+            mFemaleCheckBox.setTextColor((Color.WHITE));
+        else
+            mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
     }
 
     private void attemptRequestOTP() {

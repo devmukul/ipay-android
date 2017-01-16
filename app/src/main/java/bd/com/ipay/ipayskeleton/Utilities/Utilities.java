@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -60,6 +61,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -674,6 +676,58 @@ public class Utilities {
                 break;
         }
         return "";
+    }
+
+    public static DatePickerDialog setDateInDatePicker(Context context, Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {
+        final Calendar calendar = Calendar.getInstance();
+
+        if (date == null) {
+            int currentYear = calendar.get(Calendar.YEAR);
+            int currentMonth = calendar.get(Calendar.MONTH);
+            int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+            int minYear = currentYear - Constants.MIN_AGE_LIMIT;
+            int minMonth = currentMonth;
+            int minDay = currentDay;
+
+            calendar.set(minYear, minMonth, minDay);
+        } else
+            calendar.setTime(date);
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                context, onDateSetListener, year, month, day);
+
+        return datePickerDialog;
+    }
+
+    private static void setMaxMinLimitInDatePicker(DatePickerDialog datePickerDialog) {
+        final Calendar calendar = Calendar.getInstance();
+
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        int minYear = currentYear - Constants.MIN_AGE_LIMIT;
+        int minMonth = currentMonth;
+        int minDay = currentDay;
+
+        calendar.set(minYear, minMonth, minDay);
+        long minDateInMilliSeconds = calendar.getTimeInMillis();
+
+        // Set 18 years from today as max limit of date picker
+        datePickerDialog.getDatePicker().setMaxDate(minDateInMilliSeconds);
+        datePickerDialog.setTitle(null);
+    }
+
+    public static DatePickerDialog getDatePickerDialog(Context context, Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {
+        final DatePickerDialog datePickerDialog = setDateInDatePicker(context, date, onDateSetListener);
+
+        setMaxMinLimitInDatePicker(datePickerDialog);
+        return datePickerDialog;
     }
 
     public static void setActionBarTitle(Activity activity, String title) {
