@@ -50,8 +50,8 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     private EditText mGenderEditText;
     private CheckBox mMaleCheckBox;
     private CheckBox mFemaleCheckBox;
-    private TextView mTermsConditions;
-    private TextView mPrivacyPolicy;
+    private TextView mTermsConditionsView;
+    private TextView mPrivacyPolicyView;
     private CheckBox mAgreementCheckBox;
 
     private int mYear;
@@ -82,8 +82,8 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
         mAddressCheckbox = (CheckBox) v.findViewById(R.id.checkboxBusinessAddress);
-        mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
-        mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
+        mTermsConditionsView = (TextView) v.findViewById(R.id.textViewTermsConditions);
+        mPrivacyPolicyView = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
         mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
 
         mPersonalAddressView = (AddressInputSignUpView) v.findViewById(R.id.personal_address);
@@ -95,8 +95,8 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         mDatePickerDialog =Utilities.getDatePickerDialog(getActivity(),null,mDateSetListener);
 
         // Enable hyperlinked
-        mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
-        mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
+        mTermsConditionsView.setMovementMethod(LinkMovementMethod.getInstance());
+        mPrivacyPolicyView.setMovementMethod(LinkMovementMethod.getInstance());
 
         mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
             @Override
