@@ -1,6 +1,8 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments;
 
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,21 +13,25 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.CheckPromoCodeResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.SignUpCheckUserRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.SignUpCheckUserResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
-import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
-public class SignupBusinessStepOneFragment extends Fragment {
+public class SignupBusinessStepOneFragment extends Fragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mCheckPromoCodeTask = null;
-    private CheckPromoCodeResponse mCheckPromoCodeResponse;
+    private HttpRequestPostAsyncTask mSignUpCheckUserTask = null;
+    private SignUpCheckUserResponse mSignUpCheckUserResponse;
 
     private EditText mBusinessEmailView;
     private EditText mPasswordView;
@@ -35,7 +41,7 @@ public class SignupBusinessStepOneFragment extends Fragment {
     private Button mLoginButton;
     private ImageView mCrossButton;
 
-    private String mDeviceID;
+    private ProgressDialog mProgressDialog;
 
     @Override
     public void onResume() {
@@ -48,6 +54,8 @@ public class SignupBusinessStepOneFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_signup_business_step_one, container, false);
 
+        mProgressDialog = new ProgressDialog(getActivity());
+
         mPasswordView = (EditText) v.findViewById(R.id.password);
         mConfirmPasswordView = (EditText) v.findViewById(R.id.confirm_password);
         mBusinessEmailView = (EditText) v.findViewById(R.id.email);
@@ -57,14 +65,12 @@ public class SignupBusinessStepOneFragment extends Fragment {
         mCrossButton = (ImageView) v.findViewById(R.id.button_cross);
         mLoginButton = (Button) v.findViewById(R.id.button_log_in);
 
-        mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
-
         mBusinessMobileNumberView.requestFocus();
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Utilities.isConnectionAvailable(getActivity())) attemptCheckPromoCode();
+                if (Utilities.isConnectionAvailable(getActivity())) verifyUserInputs();
                 else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
@@ -88,11 +94,7 @@ public class SignupBusinessStepOneFragment extends Fragment {
         return v;
     }
 
-    private void attemptCheckPromoCode() {
-        if (mCheckPromoCodeTask != null) {
-            return;
-        }
-
+    private void verifyUserInputs() {
         // Reset errors.
         mPasswordView.setError(null);
 
@@ -130,7 +132,58 @@ public class SignupBusinessStepOneFragment extends Fragment {
             // form field with an error.
             if (focusView != null) focusView.requestFocus();
         } else {
-            ((SignupOrLoginActivity) getActivity()).switchToBusinessStepTwoFragment();
+            signUpCheckUser();
+        }
+    }
+
+    private void signUpCheckUser() {
+        mProgressDialog.show();
+
+        SignUpCheckUserRequestBuilder signUpCheckUserRequestBuilder = new SignUpCheckUserRequestBuilder(SignupOrLoginActivity.mMobileNumberBusiness);
+        String mUri = signUpCheckUserRequestBuilder.getGeneratedUri();
+        mSignUpCheckUserTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SIGN_UP_CHECK_USER,
+                mUri, null, getActivity());
+        mSignUpCheckUserTask.mHttpResponseListener = this;
+        mSignUpCheckUserTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    public void httpResponseReceiver(GenericHttpResponse result) {
+
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            mProgressDialog.dismiss();
+            mSignUpCheckUserTask = null;
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        Gson gson = new Gson();
+
+        if (result.getApiCommand().equals(Constants.COMMAND_SIGN_UP_CHECK_USER)) {
+
+            String message;
+            try {
+                mSignUpCheckUserResponse = gson.fromJson(result.getJsonString(), SignUpCheckUserResponse.class);
+                message = mSignUpCheckUserResponse.getMessage();
+            } catch (Exception e) {
+                e.printStackTrace();
+                message = getString(R.string.server_down);
+            }
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                // Move to step two
+                ((SignupOrLoginActivity) getActivity()).switchToBusinessStepTwoFragment();
+
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+            }
+
+            mProgressDialog.dismiss();
+            mSignUpCheckUserTask = null;
         }
     }
 
