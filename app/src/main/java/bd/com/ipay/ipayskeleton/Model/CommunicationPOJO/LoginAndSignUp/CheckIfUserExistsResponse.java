@@ -1,10 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp;
 
-public class SignUpCheckUserResponse {
+public class CheckIfUserExistsResponse {
     private String message;
-
-    public SignUpCheckUserResponse() {
-    }
 
     public String getMessage() {
         return message;

@@ -19,8 +19,8 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.SignUpCheckUserRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.SignUpCheckUserResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.CheckIfUserExistsRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.CheckIfUserExistsResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -30,8 +30,8 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SignupBusinessStepOneFragment extends Fragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mSignUpCheckUserTask = null;
-    private SignUpCheckUserResponse mSignUpCheckUserResponse;
+    private HttpRequestPostAsyncTask mCheckIfUserExistsTask = null;
+    private CheckIfUserExistsResponse mCheckIfUserExistsResponse;
 
     private EditText mBusinessEmailView;
     private EditText mPasswordView;
@@ -132,19 +132,19 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
             // form field with an error.
             if (focusView != null) focusView.requestFocus();
         } else {
-            signUpCheckUser();
+            proceedToNextIfUserNotExists();
         }
     }
 
-    private void signUpCheckUser() {
+    private void proceedToNextIfUserNotExists() {
         mProgressDialog.show();
 
-        SignUpCheckUserRequestBuilder signUpCheckUserRequestBuilder = new SignUpCheckUserRequestBuilder(SignupOrLoginActivity.mMobileNumberBusiness);
-        String mUri = signUpCheckUserRequestBuilder.getGeneratedUri();
-        mSignUpCheckUserTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SIGN_UP_CHECK_USER,
+        CheckIfUserExistsRequestBuilder checkIfUserExistsRequestBuilder = new CheckIfUserExistsRequestBuilder(SignupOrLoginActivity.mMobileNumberBusiness);
+        String mUri = checkIfUserExistsRequestBuilder.getGeneratedUri();
+        mCheckIfUserExistsTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CHECK_IF_USER_EXISTS,
                 mUri, null, getActivity());
-        mSignUpCheckUserTask.mHttpResponseListener = this;
-        mSignUpCheckUserTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mCheckIfUserExistsTask.mHttpResponseListener = this;
+        mCheckIfUserExistsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -153,28 +153,27 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
-            mSignUpCheckUserTask = null;
+            mCheckIfUserExistsTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
 
-
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_SIGN_UP_CHECK_USER)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_CHECK_IF_USER_EXISTS)) {
 
             String message;
             try {
-                mSignUpCheckUserResponse = gson.fromJson(result.getJsonString(), SignUpCheckUserResponse.class);
-                message = mSignUpCheckUserResponse.getMessage();
+                mCheckIfUserExistsResponse = gson.fromJson(result.getJsonString(), CheckIfUserExistsResponse.class);
+                message = mCheckIfUserExistsResponse.getMessage();
             } catch (Exception e) {
                 e.printStackTrace();
                 message = getString(R.string.server_down);
             }
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                // Move to step two
+                // Proceed to next page in case user not exists
                 ((SignupOrLoginActivity) getActivity()).switchToBusinessStepTwoFragment();
 
             } else {
@@ -183,7 +182,7 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
             }
 
             mProgressDialog.dismiss();
-            mSignUpCheckUserTask = null;
+            mCheckIfUserExistsTask = null;
         }
     }
 

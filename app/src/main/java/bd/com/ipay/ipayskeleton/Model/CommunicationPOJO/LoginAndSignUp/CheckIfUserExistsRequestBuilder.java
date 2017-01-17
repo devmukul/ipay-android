@@ -4,18 +4,18 @@ import android.net.Uri;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class SignUpCheckUserRequestBuilder {
+public class CheckIfUserExistsRequestBuilder {
 
     private final String mobileNumber;
     private String generatedUri;
 
-    public SignUpCheckUserRequestBuilder(String mobileNumber) {
+    public CheckIfUserExistsRequestBuilder(String mobileNumber) {
         this.mobileNumber = mobileNumber;
         generateUri();
     }
 
     private void generateUri() {
-        Uri uri = Uri.parse(Constants.BASE_URL_MM + Constants.URL_SIGN_UP_CHECK_USER + mobileNumber);
+        Uri uri = Uri.parse(Constants.BASE_URL_MM + Constants.URL_CHECK_IF_USER_EXISTS + mobileNumber);
         setGeneratedUri(uri.toString());
     }
 
