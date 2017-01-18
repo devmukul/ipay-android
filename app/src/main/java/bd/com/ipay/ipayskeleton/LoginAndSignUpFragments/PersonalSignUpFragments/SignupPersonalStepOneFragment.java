@@ -16,8 +16,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
 
 import java.util.Calendar;
@@ -59,6 +61,8 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     private ProgressDialog mProgressDialog;
 
     private String mDeviceID;
+
+    private DatePickerDialog mDatePickerDialog;
     private String mDOB;
 
     private int mYear;
@@ -103,20 +107,16 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
         mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
-        final DatePickerDialog dialog = new DatePickerDialog(
-                getActivity(), mDateSetListener, 1990, 0, 1);
+        setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
+
+        mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), null, mDateSetListener);
 
         mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.show();
+                mDatePickerDialog.show();
             }
         });
-
-        if (mMaleCheckBox.isChecked())
-            mMaleCheckBox.setTextColor((Color.WHITE));
-        if (mFemaleCheckBox.isChecked())
-            mFemaleCheckBox.setTextColor((Color.WHITE));
 
         mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,8 +124,8 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 mGenderEditText.setError(null);
                 mMaleCheckBox.setChecked(true);
                 mFemaleCheckBox.setChecked(false);
-                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mMaleCheckBox.setTextColor((Color.WHITE));
+
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         });
 
@@ -135,9 +135,8 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 mGenderEditText.setError(null);
                 mFemaleCheckBox.setChecked(true);
                 mMaleCheckBox.setChecked(false);
-                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mFemaleCheckBox.setTextColor((Color.WHITE));
 
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         });
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
@@ -197,6 +196,18 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                     mBirthdayEditText.setText(mWeekArray[dayofweek - 1] + " , " + mDay + " " + mMonthArray[mMonth - 1] + " , " + mYear);
                 }
             };
+
+    private void setGenderCheckBoxTextColor(boolean maleCheckBoxChecked, boolean femaleCheckBoxChecked) {
+        if (maleCheckBoxChecked)
+            mMaleCheckBox.setTextColor((Color.WHITE));
+        else
+            mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+
+        if (femaleCheckBoxChecked)
+            mFemaleCheckBox.setTextColor((Color.WHITE));
+        else
+            mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+    }
 
     private void attemptRequestOTP() {
         // Reset errors.
@@ -288,7 +299,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             return;
         }
 
-
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_OTP_VERIFICATION)) {
@@ -301,7 +311,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 e.printStackTrace();
                 message = getString(R.string.server_down);
             }
-
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 if (getActivity() != null)

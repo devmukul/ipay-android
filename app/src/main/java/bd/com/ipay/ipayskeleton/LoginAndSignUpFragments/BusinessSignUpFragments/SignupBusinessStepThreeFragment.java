@@ -50,8 +50,8 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     private EditText mGenderEditText;
     private CheckBox mMaleCheckBox;
     private CheckBox mFemaleCheckBox;
-    private TextView mTermsConditions;
-    private TextView mPrivacyPolicy;
+    private TextView mTermsConditionsView;
+    private TextView mPrivacyPolicyView;
     private CheckBox mAgreementCheckBox;
 
     private int mYear;
@@ -61,18 +61,11 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
     private AddressInputSignUpView mPersonalAddressView;
 
     private String mDeviceID;
-    private String mDOB;
-    private ProgressDialog mProgressDialog;
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().setTitle(R.string.title_signup_business_page);
-        if (mMaleCheckBox.isChecked())
-            mMaleCheckBox.setTextColor((Color.WHITE));
-        if (mFemaleCheckBox.isChecked())
-            mFemaleCheckBox.setTextColor((Color.WHITE));
-    }
+    private DatePickerDialog mDatePickerDialog;
+    private String mDOB;
+
+    private ProgressDialog mProgressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,8 +82,8 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
         mAddressCheckbox = (CheckBox) v.findViewById(R.id.checkboxBusinessAddress);
-        mTermsConditions = (TextView) v.findViewById(R.id.textViewTermsConditions);
-        mPrivacyPolicy = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
+        mTermsConditionsView = (TextView) v.findViewById(R.id.textViewTermsConditions);
+        mPrivacyPolicyView = (TextView) v.findViewById(R.id.textViewPrivacyPolicy);
         mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
 
         mPersonalAddressView = (AddressInputSignUpView) v.findViewById(R.id.personal_address);
@@ -99,20 +92,18 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
                 getString(R.string.address_line_2));
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
-        final DatePickerDialog dialog = new DatePickerDialog(
-                getActivity(), mDateSetListener, 1990, 0, 1);
+        mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), null, mDateSetListener);
+
+        // Enable hyperlinked
+        mTermsConditionsView.setMovementMethod(LinkMovementMethod.getInstance());
+        mPrivacyPolicyView.setMovementMethod(LinkMovementMethod.getInstance());
 
         mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.show();
+                mDatePickerDialog.show();
             }
         });
-
-        // Enable hyperlinked
-        mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
-        mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
-
         mSignupBusinessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,8 +130,8 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
                 mGenderEditText.setError(null);
                 mMaleCheckBox.setChecked(true);
                 mFemaleCheckBox.setChecked(false);
-                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mMaleCheckBox.setTextColor((Color.WHITE));
+
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         });
 
@@ -150,13 +141,31 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
                 mGenderEditText.setError(null);
                 mFemaleCheckBox.setChecked(true);
                 mMaleCheckBox.setChecked(false);
-                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mFemaleCheckBox.setTextColor((Color.WHITE));
 
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         });
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.title_signup_business_page);
+        setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
+    }
+
+    private void setGenderCheckBoxTextColor(boolean maleCheckBoxChecked, boolean femaleCheckBoxChecked) {
+        if (maleCheckBoxChecked)
+            mMaleCheckBox.setTextColor((Color.WHITE));
+        else
+            mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+
+        if (femaleCheckBoxChecked)
+            mFemaleCheckBox.setTextColor((Color.WHITE));
+        else
+            mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
     }
 
     private void attemptRequestOTP() {
