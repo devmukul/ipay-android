@@ -14,7 +14,7 @@ public class GetBusinessRuleRequestBuilder {
     }
 
     private void generateUri(int serviceId) {
-        Uri uri = Uri.parse(Constants.BASE_URL_SM + Constants.URL_BUSINESS_RULE+"/"+serviceId);
+        Uri uri = Uri.parse(Constants.BASE_URL_SM + Constants.URL_BUSINESS_RULE + "/" + serviceId);
         setGeneratedUri(uri.toString());
     }
 

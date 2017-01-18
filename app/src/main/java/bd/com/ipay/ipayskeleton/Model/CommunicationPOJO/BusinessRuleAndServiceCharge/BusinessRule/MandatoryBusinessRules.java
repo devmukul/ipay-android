@@ -9,10 +9,9 @@ public class MandatoryBusinessRules {
     private boolean IS_PIN_REQUIRED;
 
     public MandatoryBusinessRules() {
-        MAX_AMOUNT_PER_PAYMENT=new BigDecimal("-1");
-        MIN_AMOUNT_PER_PAYMENT=new BigDecimal("-1");
-        IS_PIN_REQUIRED=true;
-
+        MAX_AMOUNT_PER_PAYMENT = new BigDecimal("-1");
+        MIN_AMOUNT_PER_PAYMENT = new BigDecimal("-1");
+        IS_PIN_REQUIRED = true;
     }
 
     public BigDecimal getMAX_AMOUNT_PER_PAYMENT() {
