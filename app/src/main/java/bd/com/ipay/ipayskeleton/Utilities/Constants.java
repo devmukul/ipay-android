@@ -327,6 +327,7 @@ public class Constants {
     public static final String URL_SIGN_UP_BUSINESS = "signup/business/activation";
     public static final String URL_OTP_REQUEST = "signup";
     public static final String URL_CHECK_PROMO_CODE = "signup/checkpromocode";
+    public static final String URL_CHECK_IF_USER_EXISTS = "signup/check/";
     public static final String URL_OTP_REQUEST_BUSINESS = "signup/business";
 
     // SM Payment REST
@@ -443,6 +444,7 @@ public class Constants {
 
     public static final String COMMAND_OTP_VERIFICATION = "COMMAND_OTP_VERIFICATION";
     public static final String COMMAND_CHECK_PROMO_CODE = "COMMAND_CHECK_PROMO_CODE";
+    public static final String COMMAND_CHECK_IF_USER_EXISTS = "COMMAND_CHECK_IF_USER_EXISTS";
     public static final String COMMAND_REFRESH_TOKEN = "COMMAND_REFRESH_TOKEN";
     public static final String COMMAND_SIGN_UP = "COMMAND_SIGN_UP";
     public static final String COMMAND_SIGN_UP_BUSINESS = "COMMAND_SIGN_UP_BUSINESS";
