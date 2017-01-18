@@ -92,7 +92,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
                 getString(R.string.address_line_2));
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
-        mDatePickerDialog =Utilities.getDatePickerDialog(getActivity(),null,mDateSetListener);
+        mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), null, mDateSetListener);
 
         // Enable hyperlinked
         mTermsConditionsView.setMovementMethod(LinkMovementMethod.getInstance());
