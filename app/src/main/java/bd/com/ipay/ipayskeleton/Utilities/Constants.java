@@ -76,7 +76,7 @@ public class Constants {
     public static final String IS_PIN_ADDED = "is-pin-added";
     public static final String IS_IN_CONTACTS = "is-in-contacts";
     public static final String SWITCHED_FROM_BANK_VERIFICATION = "switched_from_bank_validation";
-    public static final String IS_STARTED_FROM_PROFILE_COMPLETION= "is_started_from_profile_completion";
+    public static final String IS_STARTED_FROM_PROFILE_COMPLETION = "is_started_from_profile_completion";
     public static final String SWITCHED_FROM_TRANSACTION_HISTORY = "switched_from_transaction_history";
     public static final String MOBILE_ANDROID = "mobile-android-";
     public static final String MULTIPART_FORM_DATA_NAME = "file";
@@ -416,6 +416,7 @@ public class Constants {
     public static final String URL_CREATE_TICKET = "ticket/create";
     public static final String URL_GET_TICKETS = "ticket/list";
     public static final String URL_GET_TICKET_DETAILS = "ticket/by/id";
+    public static final String URL_GET_TICKET_CATEGORIES = "ticket/categories";
     public static final String URL_ADD_COMMENT = "ticket/add/comment";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
@@ -518,6 +519,7 @@ public class Constants {
     public static final String COMMAND_CREATE_TICKET = "COMMAND_CREATE_TICKET";
     public static final String COMMAND_GET_TICKETS = "COMMAND_GET_TICKETS";
     public static final String COMMAND_GET_TICKET_DETAILS = "COMMAND_GET_TICKET_DETAILS";
+    public static final String COMMAND_GET_TICKET_CATEGORIES = "COMMAND_GET_TICKET_CATEGORIES";
     public static final String COMMAND_ADD_COMMENT = "COMMAND_ADD_COMMENT";
 
     // Resource
