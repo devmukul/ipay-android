@@ -199,7 +199,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             };
 
     private void attemptRequestOTP() {
-
         // Reset errors.
         mNameView.setError(null);
         mMobileNumberView.setError(null);
@@ -218,7 +217,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         SignupOrLoginActivity.mAccountType = Constants.PERSONAL_ACCOUNT_TYPE;
         // Check for a valid password, if the user entered one.
         String passwordValidationMsg = InputValidator.isPasswordValid(SignupOrLoginActivity.mPassword);
-
 
         boolean cancel = false;
         View focusView = null;
