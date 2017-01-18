@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -52,7 +54,10 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private ProgressDialog mProgressDialog;
 
     private String mName = "";
+
+    private DatePickerDialog mDatePickerDialog;
     private String mDateOfBirth = "";
+    private Date mDate;
 
     private int mOccupation = -1;
     private String mGender = null;
@@ -89,13 +94,23 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
         mProgressDialog = new ProgressDialog(getActivity());
 
+        mDate = Utilities.formatDateFromString(mDateOfBirth);
+        mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), mDate, mDateSetListener);
+
+        mDateOfBirthEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDatePickerDialog.show();
+            }
+        });
+
         mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mMaleCheckBox.setChecked(true);
                 mFemaleCheckBox.setChecked(false);
-                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mMaleCheckBox.setTextColor((Color.WHITE));
+
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         });
 
@@ -104,9 +119,8 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             public void onClick(View view) {
                 mFemaleCheckBox.setChecked(true);
                 mMaleCheckBox.setChecked(false);
-                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mFemaleCheckBox.setTextColor((Color.WHITE));
 
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         });
 
@@ -120,21 +134,24 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             }
         });
 
-        final DatePickerDialog dialog = new DatePickerDialog(
-                getActivity(), mDateSetListener, 1990, 0, 1);
-        mDateOfBirthEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-            }
-        });
-
         setProfileInformation();
 
         setOccupationAdapter();
         setOccupation();
 
         return v;
+    }
+
+    private void setGenderCheckBoxTextColor(boolean maleCheckBoxChecked, boolean femaleCheckBoxChecked) {
+        if (maleCheckBoxChecked)
+            mMaleCheckBox.setTextColor((Color.WHITE));
+        else
+            mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+
+        if (femaleCheckBoxChecked)
+            mFemaleCheckBox.setTextColor((Color.WHITE));
+        else
+            mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
     }
 
     private boolean verifyUserInputs() {
@@ -211,14 +228,14 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                     genderArray[0]))) {
                 mMaleCheckBox.setChecked(true);
                 mFemaleCheckBox.setChecked(false);
-                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mMaleCheckBox.setTextColor((Color.WHITE));
+
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             } else if (mGender.equals(GenderList.genderNameToCodeMap.get(
                     genderArray[1]))) {
                 mMaleCheckBox.setChecked(false);
                 mFemaleCheckBox.setChecked(true);
-                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mFemaleCheckBox.setTextColor((Color.WHITE));
+
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         }
     }
