@@ -132,6 +132,7 @@ public class Constants {
     public static final double OFFICE_LONGITUDE = 90.4169212;
 
     public static final int MIN_AGE_LIMIT = 18;
+    public static final int MIN_VALID_NAME_LENGTH =5;
 
     public static final int STARTING_DATE = 01;
 

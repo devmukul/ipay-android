@@ -52,7 +52,8 @@ public class InputValidator {
     public static boolean isValidNameWithRequiredLength(String name) {
         name = name.replaceAll("\\s+", "");
 
-        if (name.matches(".*[0-9]+.*") || name.length() < 5) return false;
+        if (name.matches(".*[0-9]+.*") || name.length() < Constants.MIN_VALID_NAME_LENGTH)
+            return false;
         return true;
     }
 
