@@ -36,16 +36,8 @@ public class AboutFragment extends Fragment {
         mPrivacyView = (IconifiedTextViewWithButton) view.findViewById(R.id.text_view_privacy);
         mCopyRightTextView = (TextView) view.findViewById(R.id.text_view_copyright);
 
-        try {
-            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-            String version = pInfo.versionName;
-            mBuildNumberView.setText(getString(R.string.version) + ": " + version);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
         setButtonActions();
-        
+        setAppVersionView();
         setCopyRightFooterView();
 
         return view;
@@ -77,6 +69,16 @@ public class AboutFragment extends Fragment {
                 startActivity(intent);
             }
         });
+    }
+
+    private void setAppVersionView() {
+        try {
+            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+            String version = pInfo.versionName;
+            mBuildNumberView.setText(getString(R.string.version) + ": " + version);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setCopyRightFooterView() {
