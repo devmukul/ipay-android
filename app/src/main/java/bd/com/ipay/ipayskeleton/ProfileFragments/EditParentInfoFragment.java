@@ -151,12 +151,8 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
             mFathersNameEditText.setError(getString(R.string.error_invalid_first_name));
             focusView = mFathersNameEditText;
             cancel = true;
-        } else if (mFathersName.length() < 5) {
-            mFathersNameEditText.setError(getString(R.string.error_invalid_parent_name));
-            focusView = mFathersNameEditText;
-            cancel = true;
-        } else if (!InputValidator.isValidName(mFathersName)) {
-            mFathersNameEditText.setError(getString(R.string.please_enter_valid_name));
+        } else if (!InputValidator.isValidNameWithRequiredLength(mFathersName)) {
+            mFathersNameEditText.setError(getString(R.string.error_invalid_name_with_required_length));
             focusView = mFathersNameEditText;
             cancel = true;
         }
@@ -165,12 +161,8 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
             mMothersNameEditText.setError(getString(R.string.error_invalid_first_name));
             focusView = mMothersNameEditText;
             cancel = true;
-        } else if (mMothersName.length() < 5) {
-            mMothersNameEditText.setError(getString(R.string.error_invalid_parent_name));
-            focusView = mMothersNameEditText;
-            cancel = true;
-        } else if (!InputValidator.isValidName(mMothersName)) {
-            mMothersNameEditText.setError(getString(R.string.please_enter_valid_name));
+        } else if (!InputValidator.isValidNameWithRequiredLength(mMothersName)) {
+            mMothersNameEditText.setError(getString(R.string.error_invalid_name_with_required_length));
             focusView = mMothersNameEditText;
             cancel = true;
         }

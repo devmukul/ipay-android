@@ -210,14 +210,15 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     }
 
     private void attemptRequestOTP() {
-
         // Reset errors.
         mNameView.setError(null);
         mMobileNumberView.setError(null);
         mPasswordView.setError(null);
 
+        String name = mNameView.getText().toString().trim();
+
         // Store values at the time of the login attempt.
-        SignupOrLoginActivity.mName = mNameView.getText().toString().trim();
+        SignupOrLoginActivity.mName = name;
         SignupOrLoginActivity.mBirthday = mDOB;
 
         // Store values at the time of the login attempt.
@@ -231,13 +232,13 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         boolean cancel = false;
         View focusView = null;
 
-        if (mNameView.getText().toString().trim().length() == 0) {
+        if (name.length() == 0) {
             mNameView.setError(getString(R.string.error_invalid_first_name));
             focusView = mNameView;
             cancel = true;
 
-        } else if (!InputValidator.isValidName(mNameView.getText().toString().trim())) {
-            mNameView.setError(getString(R.string.please_enter_valid_name));
+        } else if (!InputValidator.isValidNameWithRequiredLength(name)) {
+            mNameView.setError(getString(R.string.error_invalid_name_with_required_length));
             focusView = mNameView;
             cancel = true;
 

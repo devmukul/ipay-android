@@ -173,13 +173,13 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
             return;
         }
 
-        String name = mBusinessHolderFullNameView.getText().toString().trim();
+        String businessHoldersName = mBusinessHolderFullNameView.getText().toString().trim();
 
         // Store values at the time of the login attempt.
         SignupOrLoginActivity.mMobileNumberPersonal = SignupOrLoginActivity.mMobileNumberBusiness;
         SignupOrLoginActivity.mAccountType = Constants.BUSINESS_ACCOUNT_TYPE;
         SignupOrLoginActivity.mBirthdayBusinessHolder = mDOB;
-        SignupOrLoginActivity.mNameBusiness = name;
+        SignupOrLoginActivity.mNameBusiness = businessHoldersName;
 
         boolean cancel = false;
         View focusView = null;
@@ -187,13 +187,13 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         mBirthdayEditText.setError(null);
         mBusinessHolderFullNameView.setError(null);
 
-        if (mBusinessHolderFullNameView.getText().toString().trim().length() == 0) {
+        if (businessHoldersName.length() == 0) {
             mBusinessHolderFullNameView.setError(getString(R.string.error_invalid_name));
             focusView = mBusinessHolderFullNameView;
             cancel = true;
 
-        } else if (!InputValidator.isValidName(mBusinessHolderFullNameView.getText().toString().trim())) {
-            mBusinessHolderFullNameView.setError(getString(R.string.please_enter_valid_name));
+        } else if (!InputValidator.isValidNameWithRequiredLength(businessHoldersName)) {
+            mBusinessHolderFullNameView.setError(getString(R.string.error_invalid_name_with_required_length));
             focusView = mBusinessHolderFullNameView;
             cancel = true;
 
