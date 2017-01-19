@@ -28,13 +28,13 @@ public class AboutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_about, container, false);
+        View view = inflater.inflate(R.layout.fragment_about, container, false);
 
-        mBuildNumberView = (TextView) v.findViewById(R.id.text_view_build_number);
-        mContactView = (IconifiedTextViewWithButton) v.findViewById(R.id.text_view_contact);
-        mTermView = (IconifiedTextViewWithButton) v.findViewById(R.id.text_view_terms_of_service);
-        mPrivacyView = (IconifiedTextViewWithButton) v.findViewById(R.id.text_view_privacy);
-        mCopyRightTextView = (TextView) v.findViewById(R.id.text_view_copyright);
+        mBuildNumberView = (TextView) view.findViewById(R.id.text_view_build_number);
+        mContactView = (IconifiedTextViewWithButton) view.findViewById(R.id.text_view_contact);
+        mTermView = (IconifiedTextViewWithButton) view.findViewById(R.id.text_view_terms_of_service);
+        mPrivacyView = (IconifiedTextViewWithButton) view.findViewById(R.id.text_view_privacy);
+        mCopyRightTextView = (TextView) view.findViewById(R.id.text_view_copyright);
 
         try {
             PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
@@ -44,8 +44,14 @@ public class AboutFragment extends Fragment {
             e.printStackTrace();
         }
 
+        setButtonActions();
+        
         setCopyRightFooterView();
 
+        return view;
+    }
+
+    private void setButtonActions() {
         mContactView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 ((AboutActivity) getActivity()).switchToAboutContactsFragment();
@@ -71,8 +77,6 @@ public class AboutFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-        return v;
     }
 
     private void setCopyRightFooterView() {
