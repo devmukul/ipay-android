@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Calendar;
+
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.R;
@@ -21,16 +23,18 @@ public class AboutFragment extends Fragment {
     private IconifiedTextViewWithButton mContactView;
     private IconifiedTextViewWithButton mTermView;
     private IconifiedTextViewWithButton mPrivacyView;
+    private TextView mCopyRightTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_about, container, false);
 
-        mBuildNumberView = (TextView) v.findViewById(R.id.textview_build_number);
-        mContactView = (IconifiedTextViewWithButton) v.findViewById(R.id.contact);
-        mTermView = (IconifiedTextViewWithButton) v.findViewById(R.id.terms_of_service);
-        mPrivacyView = (IconifiedTextViewWithButton) v.findViewById(R.id.privacy);
+        mBuildNumberView = (TextView) v.findViewById(R.id.text_view_build_number);
+        mContactView = (IconifiedTextViewWithButton) v.findViewById(R.id.text_view_contact);
+        mTermView = (IconifiedTextViewWithButton) v.findViewById(R.id.text_view_terms_of_service);
+        mPrivacyView = (IconifiedTextViewWithButton) v.findViewById(R.id.text_view_privacy);
+        mCopyRightTextView = (TextView) v.findViewById(R.id.text_view_copyright);
 
         try {
             PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
@@ -39,6 +43,8 @@ public class AboutFragment extends Fragment {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+
+        setCopyRightFooterView();
 
         mContactView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -67,6 +73,13 @@ public class AboutFragment extends Fragment {
         });
 
         return v;
+    }
+
+    private void setCopyRightFooterView() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+
+        mCopyRightTextView.setText(getString(R.string.copyright) + " " + year + " " + getString(R.string.iPay_system));
     }
 
 }
