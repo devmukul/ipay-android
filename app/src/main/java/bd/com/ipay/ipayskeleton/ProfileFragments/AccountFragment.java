@@ -13,7 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,13 +52,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private TextView mProfileCompletionStatusView;
     private ImageView mVerificationStatusView;
 
-    private String mName = "";
-    private String mMobileNumber = "";
-    private String mProfilePicture = "";
-    private String mSelectedImagePath = "";
-
-    private List<String> mOptionsForImageSelectionList;
-    private int mSelectedOptionForImage = -1;
+    private ImageButton mEditProfilePicButton;
 
     private IconifiedTextViewWithButton mBasicInfo;
     private IconifiedTextViewWithButton mEmail;
@@ -65,6 +61,15 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private IconifiedTextViewWithButton mAddress;
     private IconifiedTextViewWithButton mProfileCompleteness;
     private IconifiedTextViewWithButton mManageEmployee;
+
+    private String mName = "";
+    private String mMobileNumber = "";
+    private String mProfilePicture = "";
+    private String mSelectedImagePath = "";
+
+    private List<String> mOptionsForImageSelectionList;
+    private int mSelectedOptionForImage = -1;
+
 
     private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask = null;
     private SetProfilePictureResponse mSetProfilePictureResponse;
@@ -84,22 +89,23 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_account, container, false);
+        View view = inflater.inflate(R.layout.fragment_account, container, false);
         getActivity().setTitle(R.string.account);
 
-        mProfilePictureView = (ProfileImageView) v.findViewById(R.id.profile_picture);
-        mNameView = (TextView) v.findViewById(R.id.textview_name);
-        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mProfileCompletionStatusView = (TextView) v.findViewById(R.id.textview_profile_completion_status);
-        mVerificationStatusView = (ImageView) v.findViewById(R.id.textview_verification_status);
+        mProfilePictureView = (ProfileImageView) view.findViewById(R.id.profile_picture);
+        mNameView = (TextView) view.findViewById(R.id.textview_name);
+        mMobileNumberView = (TextView) view.findViewById(R.id.textview_mobile_number);
+        mProfileCompletionStatusView = (TextView) view.findViewById(R.id.textview_profile_completion_status);
+        mVerificationStatusView = (ImageView) view.findViewById(R.id.textview_verification_status);
+        mEditProfilePicButton = (ImageButton) view.findViewById(R.id.button_profile_picture_edit);
 
-        mBasicInfo = (IconifiedTextViewWithButton) v.findViewById(R.id.basic_info);
-        mEmail = (IconifiedTextViewWithButton) v.findViewById(R.id.email);
-        mAddress = (IconifiedTextViewWithButton) v.findViewById(R.id.present_address);
-        mIntroducer = (IconifiedTextViewWithButton) v.findViewById(R.id.introducer);
-        mDocuments = (IconifiedTextViewWithButton) v.findViewById(R.id.documents);
-        mProfileCompleteness = (IconifiedTextViewWithButton) v.findViewById(R.id.profile_completion);
-        mManageEmployee = (IconifiedTextViewWithButton) v.findViewById(R.id.manage_employees);
+        mBasicInfo = (IconifiedTextViewWithButton) view.findViewById(R.id.basic_info);
+        mEmail = (IconifiedTextViewWithButton) view.findViewById(R.id.email);
+        mAddress = (IconifiedTextViewWithButton) view.findViewById(R.id.present_address);
+        mIntroducer = (IconifiedTextViewWithButton) view.findViewById(R.id.introducer);
+        mDocuments = (IconifiedTextViewWithButton) view.findViewById(R.id.documents);
+        mProfileCompleteness = (IconifiedTextViewWithButton) view.findViewById(R.id.profile_completion);
+        mManageEmployee = (IconifiedTextViewWithButton) view.findViewById(R.id.manage_employees);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -107,31 +113,42 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         mProfilePicture = ProfileInfoCacheManager.getProfileImageUrl();
 
-        setProfileInformation();
-
         mOptionsForImageSelectionList = Arrays.asList(getResources().getStringArray(R.array.upload_picker_action));
 
+        setProfileInformation();
+        setEditProfilePicButtonVisibility();
+        initProfilePicHelperDialog();
+        setButtonActions();
+        getProfileCompletionStatus();
+
+        return view;
+    }
+
+    private void setEditProfilePicButtonVisibility() {
+        if (ProfileInfoCacheManager.isAccountVerified())
+            mEditProfilePicButton.setVisibility(View.GONE);
+        else
+            mEditProfilePicButton.setVisibility(View.VISIBLE);
+    }
+
+    private void setButtonActions() {
         mProfilePictureView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!ProfileInfoCacheManager.isAccountVerified()) {
-                    profilePictureHelperDialog = new ProfilePictureHelperDialog(getActivity(), getString(R.string.select_an_image), mOptionsForImageSelectionList);
-                    profilePictureHelperDialog.setOnResourceSelectedListener(new ProfilePictureHelperDialog.OnResourceSelectedListener() {
-                        @Override
-                        public void onResourceSelected(int mActionId, String action) {
-                            if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
-                                selectProfilePictureIntent(mActionId);
-                            } else {
-                                mSelectedOptionForImage = mActionId;
-                                DocumentPicker.requestRequiredPermissions(AccountFragment.this, REQUEST_CODE_PERMISSION);
-                            }
-                        }
-                    });
+                if (!ProfileInfoCacheManager.isAccountVerified())
                     profilePictureHelperDialog.show();
-
-                } else {
+                else
                     Toast.makeText(getActivity(), R.string.can_not_change_picture, Toast.LENGTH_LONG).show();
-                }
+            }
+        });
+
+        mEditProfilePicButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!ProfileInfoCacheManager.isAccountVerified())
+                    profilePictureHelperDialog.show();
+                else
+                    Toast.makeText(getActivity(), R.string.can_not_change_picture, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -187,45 +204,23 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                 startActivity(intent);
             }
         });
-
-        getProfileCompletionStatus();
-
-        return v;
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_PERMISSION:
-                if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
-                    selectProfilePictureIntent(mSelectedOptionForImage);
-                } else {
-                    Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
+    private void initProfilePicHelperDialog() {
+        if (!ProfileInfoCacheManager.isAccountVerified()) {
+            profilePictureHelperDialog = new ProfilePictureHelperDialog(getActivity(), getString(R.string.select_an_image), mOptionsForImageSelectionList);
+            profilePictureHelperDialog.setOnResourceSelectedListener(new ProfilePictureHelperDialog.OnResourceSelectedListener() {
+                @Override
+                public void onResourceSelected(int mActionId, String action) {
+                    if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
+                        selectProfilePictureIntent(mActionId);
+                    } else {
+                        mSelectedOptionForImage = mActionId;
+                        DocumentPicker.requestRequiredPermissions(AccountFragment.this, REQUEST_CODE_PERMISSION);
+                    }
                 }
+            });
         }
-    }
-
-    private void getProfileCompletionStatus() {
-        if (mGetProfileCompletionStatusTask != null) {
-            return;
-        }
-
-        mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
-                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
-        mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void updateProfilePicture(Uri selectedImageUri) {
-        mProgressDialog.setMessage(getString(R.string.uploading_profile_picture));
-        mProgressDialog.show();
-
-        mSelectedImagePath = selectedImageUri.getPath();
-
-        mUploadProfilePictureAsyncTask = new UploadProfilePictureAsyncTask(Constants.COMMAND_SET_PROFILE_PICTURE,
-                mSelectedImagePath, getActivity());
-        mUploadProfilePictureAsyncTask.mHttpResponseListener = this;
-        mUploadProfilePictureAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     private void selectProfilePictureIntent(int id) {
@@ -284,6 +279,18 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION:
+                if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
+                    selectProfilePictureIntent(mSelectedOptionForImage);
+                } else {
+                    Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
+                }
+        }
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case ACTION_PICK_PROFILE_PICTURE:
@@ -327,6 +334,29 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         } else {
             mVerificationStatusView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_not_verified));
         }
+    }
+
+    private void getProfileCompletionStatus() {
+        if (mGetProfileCompletionStatusTask != null) {
+            return;
+        }
+
+        mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
+        mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void updateProfilePicture(Uri selectedImageUri) {
+        mProgressDialog.setMessage(getString(R.string.uploading_profile_picture));
+        mProgressDialog.show();
+
+        mSelectedImagePath = selectedImageUri.getPath();
+
+        mUploadProfilePictureAsyncTask = new UploadProfilePictureAsyncTask(Constants.COMMAND_SET_PROFILE_PICTURE,
+                mSelectedImagePath, getActivity());
+        mUploadProfilePictureAsyncTask.mHttpResponseListener = this;
+        mUploadProfilePictureAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
     public void httpResponseReceiver(GenericHttpResponse result) {
