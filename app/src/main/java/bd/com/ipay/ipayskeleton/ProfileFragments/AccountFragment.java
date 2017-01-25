@@ -52,7 +52,8 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private TextView mProfileCompletionStatusView;
     private ImageView mVerificationStatusView;
 
-    private ImageButton mEditProfilePicButton;
+    private View mProfilePictureHolderView;
+    private ImageView mEditProfilePicButton;
 
     private IconifiedTextViewWithButton mBasicInfo;
     private IconifiedTextViewWithButton mEmail;
@@ -97,7 +98,8 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mMobileNumberView = (TextView) view.findViewById(R.id.textview_mobile_number);
         mProfileCompletionStatusView = (TextView) view.findViewById(R.id.textview_profile_completion_status);
         mVerificationStatusView = (ImageView) view.findViewById(R.id.textview_verification_status);
-        mEditProfilePicButton = (ImageButton) view.findViewById(R.id.button_profile_picture_edit);
+        mEditProfilePicButton = (ImageView) view.findViewById(R.id.button_profile_picture_edit);
+        mProfilePictureHolderView = view.findViewById(R.id.profile_picture_layout);
 
         mBasicInfo = (IconifiedTextViewWithButton) view.findViewById(R.id.basic_info);
         mEmail = (IconifiedTextViewWithButton) view.findViewById(R.id.email);
@@ -132,17 +134,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     }
 
     private void setButtonActions() {
-        mProfilePictureView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!ProfileInfoCacheManager.isAccountVerified())
-                    profilePictureHelperDialog.show();
-                else
-                    Toast.makeText(getActivity(), R.string.can_not_change_picture, Toast.LENGTH_LONG).show();
-            }
-        });
-
-        mEditProfilePicButton.setOnClickListener(new View.OnClickListener() {
+        mProfilePictureHolderView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!ProfileInfoCacheManager.isAccountVerified())
