@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -26,6 +28,9 @@ import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintActivity;
+import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintAuthActivity;
+import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintAuthenticationDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -61,7 +66,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         super.onResume();
         getActivity().setTitle(R.string.title_login_page);
         Utilities.showKeyboard(getActivity());
-
+        
         /**
          * If UUID exists, it means device was set as trusted before.
          * Set the login username so that user can't change it.
@@ -266,7 +271,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                 mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    ProfileInfoCacheManager.setLoggedInStatus(true);
+                    /*ProfileInfoCacheManager.setLoggedInStatus(true);
 
                     SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
                     pref.edit().putString(Constants.USERID, mUserNameLogin).apply();
@@ -277,8 +282,38 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                     // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
                     if (!pref.contains(Constants.UUID))
                         ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
-                    else ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                    else ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();*/
 
+                    /*// Finger print auth
+                    boolean isFingerPrintAuthOn = pref.getBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false);
+                    if (isFingerPrintAuthOn) {
+                        {
+                            if (pref.getString(Constants.KEY_PASSWORD, "") == "") {*/
+                    // If Finger Print option is on and finger print is not encrypted
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getActivity());
+                        fingerprintAuthenticationDialog.setFinishCheckerListener(new FingerprintAuthenticationDialog.FinishCheckerListener() {
+                            @Override
+                            public void ifFinished() {
+                                ProfileInfoCacheManager.setLoggedInStatus(true);
+
+                                SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                                pref.edit().putString(Constants.USERID, mUserNameLogin).apply();
+                                pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).apply();
+                                // When user logs in, we want that by default he would log in to his default account
+                                TokenManager.deactivateEmployerAccount();
+
+                                // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
+                                if (!pref.contains(Constants.UUID))
+                                    ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
+                                else ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                            }
+                        });
+                    }
+                          /*  }
+                        }
+                    }
+*/
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();

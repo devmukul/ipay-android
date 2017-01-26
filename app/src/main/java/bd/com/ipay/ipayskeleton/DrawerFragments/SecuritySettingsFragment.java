@@ -1,6 +1,8 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,11 +10,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
+
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -31,67 +36,98 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
 
-    private IconifiedTextViewWithButton setPINHeader;
-    private IconifiedTextViewWithButton changePasswordHeader;
-    private IconifiedTextViewWithButton trustedDevicesHeader;
-    private IconifiedTextViewWithButton passwordRecoveryHeader;
-    private IconifiedTextViewWithButton logoutHeader;
+    private IconifiedTextViewWithButton mSetPINHeader;
+    private IconifiedTextViewWithButton mChangePasswordHeader;
+    private IconifiedTextViewWithButton mTrustedDevicesHeader;
+    private IconifiedTextViewWithButton mPasswordRecoveryHeader;
+    private IconifiedTextViewWithButton mLogoutHeader;
+
+    private View mFingerPrintOptionLayout;
+    private CheckBox mFingerPrintAuthOptionCheckbox;
 
     private ProgressDialog mProgressDialog;
+    private SharedPreferences mPref;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_account_settings, container, false);
+        View view = inflater.inflate(R.layout.fragment_account_settings, container, false);
         setTitle();
 
-        setPINHeader = (IconifiedTextViewWithButton) v.findViewById(R.id.set_pin);
-        changePasswordHeader = (IconifiedTextViewWithButton) v.findViewById(R.id.change_password);
-        trustedDevicesHeader = (IconifiedTextViewWithButton) v.findViewById(R.id.trusted_device);
-        passwordRecoveryHeader = (IconifiedTextViewWithButton) v.findViewById(R.id.password_recovery);
-        logoutHeader = (IconifiedTextViewWithButton) v.findViewById(R.id.logout_from_all_devices);
+        mSetPINHeader = (IconifiedTextViewWithButton) view.findViewById(R.id.set_pin);
+        mChangePasswordHeader = (IconifiedTextViewWithButton) view.findViewById(R.id.change_password);
+        mTrustedDevicesHeader = (IconifiedTextViewWithButton) view.findViewById(R.id.trusted_device);
+        mPasswordRecoveryHeader = (IconifiedTextViewWithButton) view.findViewById(R.id.password_recovery);
+        mLogoutHeader = (IconifiedTextViewWithButton) view.findViewById(R.id.logout_from_all_devices);
+
+        mFingerPrintOptionLayout = view.findViewById(R.id.fingerprint_option_layout);
+        mFingerPrintAuthOptionCheckbox = (CheckBox) view.findViewById(R.id.fingerprint_option_checkbox);
 
         mProgressDialog = new ProgressDialog(getActivity());
+        mPref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
-        setPINHeader.setOnClickListener(new View.OnClickListener() {
+        setVisibilityOfFingerPrintOption();
+        setButtonActions();
+
+        if (getArguments() != null && getArguments().getBoolean(Constants.EXPAND_PIN, false)) {
+            mSetPINHeader.performClick();
+        }
+        return view;
+    }
+
+    private void setVisibilityOfFingerPrintOption() {
+        if (((SecuritySettingsActivity) getActivity()).isFingerPrintAvailable)
+            mFingerPrintOptionLayout.setVisibility(View.VISIBLE);
+        else
+            mFingerPrintOptionLayout.setVisibility(View.GONE);
+    }
+
+    private void setButtonActions() {
+        mSetPINHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((SecuritySettingsActivity) getActivity()).switchToSetPinFragment();
             }
         });
 
-        changePasswordHeader.setOnClickListener(new View.OnClickListener() {
+        mChangePasswordHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((SecuritySettingsActivity) getActivity()).switchToChangePasswordFragment();
             }
         });
 
-        trustedDevicesHeader.setOnClickListener(new View.OnClickListener() {
+        mTrustedDevicesHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((SecuritySettingsActivity) getActivity()).switchToTrustedDeviceFragment();
             }
         });
 
-        passwordRecoveryHeader.setOnClickListener(new View.OnClickListener() {
+        mPasswordRecoveryHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((SecuritySettingsActivity) getActivity()).switchToPasswordRecoveryFragment();
             }
         });
 
-        logoutHeader.setOnClickListener(new View.OnClickListener() {
+        mLogoutHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showLogoutFromAllDevicesDialog();
             }
         });
 
-        if (getArguments() != null && getArguments().getBoolean(Constants.EXPAND_PIN, false)) {
-            setPINHeader.performClick();
-        }
-        return v;
+        mFingerPrintAuthOptionCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked)
+                    mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, true).apply();
+                else
+                    mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false).apply();
+            }
+        });
     }
 
     private void showLogoutFromAllDevicesDialog() {

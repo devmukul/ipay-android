@@ -274,6 +274,13 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustPan" />
 
+        <activity
+            android:name=".FingerPrintAuthentication.FingerprintActivity"
+            android:label="@string/help"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ActionBarNoElevation"
+            android:windowSoftInputMode="adjustPan" />
+
         <!-- Receiver and service -->
 
         <receiver
