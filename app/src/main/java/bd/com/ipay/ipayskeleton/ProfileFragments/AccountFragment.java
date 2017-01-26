@@ -13,9 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,7 +69,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private List<String> mOptionsForImageSelectionList;
     private int mSelectedOptionForImage = -1;
 
-
     private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask = null;
     private SetProfilePictureResponse mSetProfilePictureResponse;
 
@@ -118,7 +115,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mOptionsForImageSelectionList = Arrays.asList(getResources().getStringArray(R.array.upload_picker_action));
 
         setProfileInformation();
-        setEditProfilePicButtonVisibility();
+        setVisibilityOfProfilePicUploadButton();
         initProfilePicHelperDialog();
         setButtonActions();
         getProfileCompletionStatus();
@@ -126,7 +123,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         return view;
     }
 
-    private void setEditProfilePicButtonVisibility() {
+    private void setVisibilityOfProfilePicUploadButton() {
         if (ProfileInfoCacheManager.isAccountVerified())
             mEditProfilePicButton.setVisibility(View.GONE);
         else
@@ -348,7 +345,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                 mSelectedImagePath, getActivity());
         mUploadProfilePictureAsyncTask.mHttpResponseListener = this;
         mUploadProfilePictureAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     public void httpResponseReceiver(GenericHttpResponse result) {
