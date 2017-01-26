@@ -23,6 +23,7 @@
     <dimen name="value20">20.0dip</dimen>
     <dimen name="value25">25.0dip</dimen>
     <dimen name="value30">30.0dip</dimen>
+    <dimen name="value34">34.0dip</dimen>
     <dimen name="value48">48.0dip</dimen>
     <dimen name="value50">50.0dip</dimen>
     <dimen name="value60">60.0dp</dimen>
