@@ -141,8 +141,9 @@ public class Constants {
     public static final int DEFAULT_USER_CLASS = 1;
 
     public static final String LOGIN_WITH_FINGERPRINT_AUTH = "LOGIN_WITH_FINGERPRINT_AUTH";
-    public static final String KEY_PASSWORD = "EncryptedPassword";
-    public static final String KEY_PASSWORD_IV = "EncryptedPasswordIV";
+    public static final String KEY_PASSWORD = "encrypted_password";
+    public static final String KEY_PASSWORD_IV = "encrypted_password_IV";
+    public static final String KEY_NAME = "key_name";
     /**
      * All requests and responses to server, as well as token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.

@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -315,9 +314,9 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                             if (pref.getString(Constants.KEY_PASSWORD, "") == "") {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                     FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getActivity(), FingerprintAuthenticationDialog.Stage.FINGERPRINT_ENCRYPT);
-                                    fingerprintAuthenticationDialog.setFinishCheckerListener(new FingerprintAuthenticationDialog.FinishCheckerListener() {
+                                    fingerprintAuthenticationDialog.setFinishCheckerListener(new FingerprintAuthenticationDialog.FinishEncryptionCheckerListener() {
                                         @Override
-                                        public void ifFinished() {
+                                        public void ifEncryptionFinished() {
                                             ProfileInfoCacheManager.setLoggedInStatus(true);
 
                                             SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);

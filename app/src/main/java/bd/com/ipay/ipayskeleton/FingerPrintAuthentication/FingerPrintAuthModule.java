@@ -52,14 +52,6 @@ public class FingerPrintAuthModule {
                     } else {
                         return true;
                     }
-                       /* generateKey();
-
-
-                        if (cipherInit()) {
-                            FingerprintManager.CryptoObject cryptoObject = new FingerprintManager.CryptoObject(cipher);
-                            FingerprintHandler helper = new FingerprintHandler(this);
-                            helper.startAuth(fingerprintManager, cryptoObject);
-                        }*/
                 }
             }
         }
