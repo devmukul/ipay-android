@@ -100,7 +100,7 @@ public class FingerPrintAuthenticationDialogFragment  extends DialogFragment {
         updateStage();
 
         FingerPrintHandler fingerPrintHandler = new FingerPrintHandler(getActivity());
-        FingerprintManager.CryptoObject cryptoObject = new FingerprintManager.CryptoObject(((FingerprintAuthActivity)getActivity()).mEncryptCipher);
+        FingerprintManager.CryptoObject cryptoObject = new FingerprintManager.CryptoObject(((FingerPrintAuthActivity)getActivity()).mEncryptCipher);
         FingerPrintHandler helper = new FingerPrintHandler(getActivity());
         fingerPrintHandler.setOnAuthenticationCallBackListener(new FingerPrintHandler.OnAuthenticationCallBackListener() {
             @Override

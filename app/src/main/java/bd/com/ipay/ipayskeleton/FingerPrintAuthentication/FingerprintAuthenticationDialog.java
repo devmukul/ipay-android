@@ -44,53 +44,46 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.InviteDialog;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class FingerprintAuthenticationDialog extends MaterialDialog.Builder{
+public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
 
     public FingerprintManager fingerprintManager;
     private KeyguardManager keyguardManager;
     private KeyStore keyStore;
     private KeyGenerator keyGenerator;
     private static final String KEY_NAME = "example_key";
+
     public Cipher mEncryptCipher;
+    public Cipher mDecryptCipher;
     private FingerprintManager.CryptoObject cryptoObject;
+
+    private Stage mStage = Stage.FINGERPRINT_ENCRYPT;
 
     private SharedPreferences mPref;
     private Context mContext;
 
     private FinishCheckerListener mFinishCheckerListener;
+    private FinishDecryptionCheckerListener mFinishDecryptionCheckerListener;
 
-    public FingerprintAuthenticationDialog(@NonNull Context context) {
+
+    public FingerprintAuthenticationDialog(@NonNull Context context, Stage ciperStage) {
         super(context);
-        this.mContext =context;
+        this.mContext = context;
 
+        this.mStage = ciperStage;
         initDialog();
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-   private void initDialog()
-    {
-        MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
-        dialog
-        .cancelable(false)
-                .customView(R.layout.fragment_fingerprint, true)
-                .negativeText(R.string.cancel)
-        .onNegative(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                mFinishCheckerListener.ifFinished();
-            }
-        });;
-
-        View dialogView = dialog.build().getCustomView();
+    private void initDialog() {
         keyguardManager =
                 (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
         fingerprintManager =
                 (FingerprintManager) context.getSystemService(Context.FINGERPRINT_SERVICE);
 
         mPref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        FingerprintAuthModule fingerprintAuthModule = new FingerprintAuthModule(context);
+        FingerPrintAuthModule fingerprintAuthModule = new FingerPrintAuthModule(context);
 
-        if(fingerprintAuthModule.checkIfFingerPrintSupported()) {
+        if (fingerprintAuthModule.checkIfFingerPrintSupported()) {
        /* if (!keyguardManager.isKeyguardSecure()) {
 
             Toast.makeText(getActivity(),
@@ -126,19 +119,63 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder{
 */
             generateKey();
 
-            if (cipherInit()) {
-                cryptoObject =
-                        new FingerprintManager.CryptoObject(mEncryptCipher);
-                FingerPrintHandler helper = new FingerPrintHandler(context);
-                helper.setOnAuthenticationCallBackListener(new FingerPrintHandler.OnAuthenticationCallBackListener() {
-                    @Override
-                    public void onAuthenticationCallBack(FingerprintManager.AuthenticationResult result) {
-                        tryEncrypt("qqqqqqq1");
-                    }
-                });
-                helper.startAuth(fingerprintManager, cryptoObject);
+            if (mStage == Stage.FINGERPRINT_ENCRYPT) {
+                MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
+                dialog
+                        .cancelable(false)
+                        .customView(R.layout.fragment_fingerprint, true)
+                        .negativeText(R.string.cancel)
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                mFinishCheckerListener.ifFinished();
+                            }
+                        });
+
+                View dialogView = dialog.build().getCustomView();
+
+                if (initEncryptCipher()) {
+                    cryptoObject =
+                            new FingerprintManager.CryptoObject(mEncryptCipher);
+                    FingerPrintHandler helper = new FingerPrintHandler(context);
+                    helper.setOnAuthenticationCallBackListener(new FingerPrintHandler.OnAuthenticationCallBackListener() {
+                        @Override
+                        public void onAuthenticationCallBack(FingerprintManager.AuthenticationResult result) {
+                            tryEncrypt("qqqqqqq1");
+                        }
+                    });
+                    helper.startAuth(fingerprintManager, cryptoObject);
+                    dialog.show();
+                }
+            } else {
+                MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
+                dialog
+                        .cancelable(false)
+                        .customView(R.layout.fragment_fingerprint, true)
+                        .negativeText(R.string.cancel)
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                mFinishDecryptionCheckerListener.ifDecryptionFinished(null);
+                            }
+                        });
+
+                View dialogView = dialog.build().getCustomView();
+
+                if (initDecryptCipher()) {
+                    cryptoObject =
+                            new FingerprintManager.CryptoObject(mDecryptCipher);
+                    FingerPrintHandler helper = new FingerPrintHandler(context);
+                    helper.setOnAuthenticationCallBackListener(new FingerPrintHandler.OnAuthenticationCallBackListener() {
+                        @Override
+                        public void onAuthenticationCallBack(FingerprintManager.AuthenticationResult result) {
+                            tryDecrypt();
+                        }
+                    });
+                    helper.startAuth(fingerprintManager, cryptoObject);
+                    dialog.show();
+                }
             }
-            dialog.show();
         }
 
        /* if(cipherInit()) {
@@ -189,7 +226,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder{
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    public boolean cipherInit() {
+    public boolean initEncryptCipher() {
         try {
             mEncryptCipher = Cipher.getInstance(
                     KeyProperties.KEY_ALGORITHM_AES + "/"
@@ -213,6 +250,39 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder{
                 | NoSuchAlgorithmException | InvalidKeyException e) {
             throw new RuntimeException("Failed to init Cipher", e);
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public boolean initDecryptCipher() {
+        try {
+            mDecryptCipher = Cipher.getInstance(
+                    KeyProperties.KEY_ALGORITHM_AES + "/"
+                            + KeyProperties.BLOCK_MODE_CBC + "/"
+                            + KeyProperties.ENCRYPTION_PADDING_PKCS7);
+        } catch (NoSuchAlgorithmException |
+                NoSuchPaddingException e) {
+            throw new RuntimeException("Failed to get Cipher", e);
+        }
+
+        try {
+            byte[] iv;
+            IvParameterSpec ivParams;
+            keyStore.load(null);
+            SecretKey key = (SecretKey) keyStore.getKey(KEY_NAME, null);
+            iv = Base64.decode(mPref.getString(Constants.KEY_PASSWORD_IV, ""), Base64.DEFAULT);
+            ivParams = new IvParameterSpec(iv);
+            mDecryptCipher.init(Cipher.DECRYPT_MODE, key, ivParams);
+            return true;
+        } catch (KeyPermanentlyInvalidatedException e) {
+            return false;
+        } catch (KeyStoreException | CertificateException
+                | UnrecoverableKeyException | IOException
+                | NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new RuntimeException("Failed to init Cipher", e);
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public boolean tryEncrypt(String secert) {
@@ -240,6 +310,22 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder{
         return false;
     }
 
+    public String tryDecrypt() {
+        try {
+
+            byte[] encodedData = Base64.decode(mPref.getString(Constants.KEY_PASSWORD, ""), Base64.DEFAULT);
+            byte[] decodedData = mDecryptCipher.doFinal(encodedData);
+            mFinishDecryptionCheckerListener.ifDecryptionFinished(new String(decodedData));
+            return new String(decodedData);
+
+        } catch (BadPaddingException | IllegalBlockSizeException e) {
+            Toast.makeText(context, "Failed to decrypt the data with the generated key. "
+                    + "Retry the purchase", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void setFinishCheckerListener(FinishCheckerListener finishCheckerListener) {
         mFinishCheckerListener = finishCheckerListener;
     }
@@ -248,6 +334,18 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder{
         void ifFinished();
     }
 
+    public void setFinishDecryptionCheckerListener(FinishDecryptionCheckerListener finishDecryptionCheckerListener) {
+        mFinishDecryptionCheckerListener = finishDecryptionCheckerListener;
+    }
+
+    public interface FinishDecryptionCheckerListener {
+        void ifDecryptionFinished(String decryptedData);
+    }
+
+    public enum Stage {
+        FINGERPRINT_ENCRYPT,
+        FINGERPRINT_DECRYPT,
+    }
 
 }
 

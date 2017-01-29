@@ -16,13 +16,13 @@ import java.security.NoSuchProviderException;
 import javax.crypto.KeyGenerator;
 import javax.net.ssl.KeyManager;
 
-public class FingerprintAuthModule {
+public class FingerPrintAuthModule {
 
     private Context mContext;
     private KeyguardManager mKeyguardManager;
     private FingerprintManager mFingerprintManager;
 
-    public FingerprintAuthModule(Context context) {
+    public FingerPrintAuthModule(Context context) {
         this.mContext = context;
         initFingerPrintManagager();
     }

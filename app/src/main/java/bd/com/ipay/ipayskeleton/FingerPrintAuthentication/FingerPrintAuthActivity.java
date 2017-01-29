@@ -35,9 +35,9 @@ import javax.crypto.spec.IvParameterSpec;
 
 import bd.com.ipay.ipayskeleton.R;
 
-public class FingerprintAuthActivity extends Activity {
+public class FingerPrintAuthActivity extends Activity {
 
-    private static final String TAG = FingerprintAuthActivity.class.getSimpleName();
+    private static final String TAG = FingerPrintAuthActivity.class.getSimpleName();
 
     private static final String DIALOG_FRAGMENT_TAG = "myFragment";
 
@@ -68,7 +68,7 @@ public class FingerprintAuthActivity extends Activity {
 
         setContentView(R.layout.activity_activity_log);
 
-        FingerprintAuthModule fingerprintAuthModule = new FingerprintAuthModule(this);
+        FingerPrintAuthModule fingerprintAuthModule = new FingerPrintAuthModule(this);
        /* mKeyStore = fingerprintAuthModule.getKeystore();
         mKeyGenerator = fingerprintAuthModule.getKeyGenerator();*/
         mKeyguardManager = fingerprintAuthModule.getKeyguardManager();
@@ -203,7 +203,7 @@ public class FingerprintAuthActivity extends Activity {
     }
 
     *//**
-     * Tries to decrypt some data with the generated key in {@link #createKey} which is
+     * Tries to decrypt some data with the generated key in {@link #} which is
      * only works if the user has just authenticated via fingerprint.
      *//*
     public String tryDecrypt() {

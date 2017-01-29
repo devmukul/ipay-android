@@ -69,7 +69,7 @@ public class FingerprintAuthFragment extends Fragment {
                 (FingerprintManager) getActivity().getSystemService(Context.FINGERPRINT_SERVICE);
 
         mPref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        FingerprintAuthModule fingerprintAuthModule = new FingerprintAuthModule(getActivity());
+        FingerPrintAuthModule fingerprintAuthModule = new FingerPrintAuthModule(getActivity());
 
         if(fingerprintAuthModule.checkIfFingerPrintSupported()) {
        /* if (!keyguardManager.isKeyguardSecure()) {

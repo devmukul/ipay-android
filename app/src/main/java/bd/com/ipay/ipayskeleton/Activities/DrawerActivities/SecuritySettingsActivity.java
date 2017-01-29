@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintAuthModule;
+import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerPrintAuthModule;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.AddTrustedPersonFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.ChangePasswordFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.PasswordRecoveryFragment;
@@ -59,7 +59,7 @@ public class SecuritySettingsActivity extends BaseActivity {
 
 private void initFingerPrintAuth()
 {
-    FingerprintAuthModule fingerprintAuthModule =new FingerprintAuthModule(this);
+    FingerPrintAuthModule fingerprintAuthModule =new FingerPrintAuthModule(this);
     if(fingerprintAuthModule.checkIfFingerPrintSupported())
         isFingerPrintAvailable = true;
 }
