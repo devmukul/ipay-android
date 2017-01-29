@@ -1,3 +1,4 @@
+/*
 package bd.com.ipay.ipayskeleton.FingerPrintAuthentication;
 
 import android.annotation.TargetApi;
@@ -55,9 +56,11 @@ public class FingerPrintAuthActivity extends Activity {
     public KeyguardManager mKeyguardManager;
     public FingerprintManager mFingerprintManager;
 
-    /**
+    */
+/**
      * Alias for our key in the Android Key Store
-     */
+     *//*
+
     private static final String KEY_NAME = "com.softllc.password.key";
     private static final String KEY_PASSWORD = "EncryptedPassword";
     private static final String KEY_PASSWORD_IV = "EncryptedPasswordIV";
@@ -69,8 +72,10 @@ public class FingerPrintAuthActivity extends Activity {
         setContentView(R.layout.activity_activity_log);
 
         FingerPrintAuthModule fingerprintAuthModule = new FingerPrintAuthModule(this);
-       /* mKeyStore = fingerprintAuthModule.getKeystore();
-        mKeyGenerator = fingerprintAuthModule.getKeyGenerator();*/
+       */
+/* mKeyStore = fingerprintAuthModule.getKeystore();
+        mKeyGenerator = fingerprintAuthModule.getKeyGenerator();*//*
+
         mKeyguardManager = fingerprintAuthModule.getKeyguardManager();
         mFingerprintManager = fingerprintAuthModule.getFingerprintManager();
 
@@ -78,7 +83,8 @@ public class FingerPrintAuthActivity extends Activity {
             if (StageEncrypt) {
                 generateKey();
                 if (cipherInit()) {
-                    /*mFragment.setEncryptCipher(mEncryptCipher);
+                    */
+/*mFragment.setEncryptCipher(mEncryptCipher);
 
                     // Case 2 :  If Logged in normally and finger password is not encrypted then show finger print dialog and encrypt with it
                     // Case 2 : If password is not encrypted then encrypt it
@@ -86,12 +92,14 @@ public class FingerPrintAuthActivity extends Activity {
                     Bundle bundle = new Bundle();
                     bundle.putString(KEY_PASSWORD, "qqqqqqq1");
                     mFragment.setArguments(bundle);
-                    mFragment.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);*/
+                    mFragment.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);*//*
+
                 }
             }
         }
 
-       /* if (!StageEncrypt)
+       */
+/* if (!StageEncrypt)
             if (initEncryptCipher()) {
                 mFragment.setEncryptCipher(mEncryptCipher);
 
@@ -107,16 +115,20 @@ public class FingerPrintAuthActivity extends Activity {
                         return;
                     }
                 }
-            }*/
+            }*//*
 
-               /* // Case 2 : If password is not encrypted then encrypt it
+
+               */
+/* // Case 2 : If password is not encrypted then encrypt it
                 mFragment.setStage(FingerprintAuthenticationDialogFragment.Stage.PASSWORD);
                 Bundle bundle = new Bundle();
                 bundle.putString(KEY_PASSWORD,password.getText().toString());
                 mFragment.setArguments(bundle);
-                mFragment.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);*/
+                mFragment.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);*//*
 
-        /*logInButton.setOnClickListener(new View.OnClickListener() {
+
+        */
+/*logInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 findViewById(R.id.encrypted_message).setVisibility(View.GONE);
@@ -137,11 +149,13 @@ public class FingerPrintAuthActivity extends Activity {
                 }
 
             }
-        });*/
+        });*//*
+
 
     }
 
-    /*private boolean initEncryptCipher() {
+    */
+/*private boolean initEncryptCipher() {
             generateKey();
 
         mEncryptCipher = getCipher(Cipher.ENCRYPT_MODE);
@@ -162,21 +176,33 @@ public class FingerPrintAuthActivity extends Activity {
     public void onPurchased(String password, boolean bDecrypt, boolean bEncrypt) {
         showConfirmation(password + (bDecrypt ? " (fingerprint decrypt)" : "") + (bEncrypt ? " (fingerprint encrypt)" : ""));
     }
-*/
+*//*
+
     // Show confirmation, - show the plain text password
     private void showConfirmation(String password) {
 
-        /*if (password != null) {
-           *//* TextView v = (TextView) findViewById(R.id.encrypted_message);*//*
+        */
+/*if (password != null) {
+           *//*
+*/
+/* TextView v = (TextView) findViewById(R.id.encrypted_message);*//*
+*/
+/*
             v.setVisibility(View.VISIBLE);
             v.setText(password);
-        }*/
+        }*//*
+
     }
 
-   /* *//**
+   */
+/* *//*
+*/
+/**
      * Tries to encrypt some data with the generated key in {@link #createKey} which is
      * only works if the user has just authenticated via fingerprint.
      *//*
+*/
+/*
     public boolean tryEncrypt(String secert) {
         try {
 
@@ -202,10 +228,14 @@ public class FingerPrintAuthActivity extends Activity {
         return false;
     }
 
-    *//**
+    *//*
+*/
+/**
      * Tries to decrypt some data with the generated key in {@link #} which is
      * only works if the user has just authenticated via fingerprint.
      *//*
+*/
+/*
     public String tryDecrypt() {
         try {
 
@@ -319,7 +349,8 @@ public class FingerPrintAuthActivity extends Activity {
             e.printStackTrace();
         }
         return null;
-    }*/
+    }*//*
+
 
     protected void generateKey() {
         try {
@@ -401,3 +432,4 @@ public class FingerPrintAuthActivity extends Activity {
         return false;
     }
 }
+*/

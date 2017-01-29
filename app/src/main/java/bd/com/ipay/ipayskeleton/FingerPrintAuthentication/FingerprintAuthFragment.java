@@ -1,3 +1,4 @@
+/*
 package bd.com.ipay.ipayskeleton.FingerPrintAuthentication;
 
 import android.Manifest;
@@ -72,7 +73,8 @@ public class FingerprintAuthFragment extends Fragment {
         FingerPrintAuthModule fingerprintAuthModule = new FingerPrintAuthModule(getActivity());
 
         if(fingerprintAuthModule.checkIfFingerPrintSupported()) {
-       /* if (!keyguardManager.isKeyguardSecure()) {
+       */
+/* if (!keyguardManager.isKeyguardSecure()) {
 
             Toast.makeText(getActivity(),
                     "Lock screen security not enabled in Settings",
@@ -104,7 +106,8 @@ public class FingerprintAuthFragment extends Fragment {
                     Toast.LENGTH_LONG).show();
             return;
         }
-*/
+*//*
+
             generateKey();
 
             if (cipherInit()) {
@@ -121,13 +124,15 @@ public class FingerprintAuthFragment extends Fragment {
             }
         }
 
-       /* if(cipherInit()) {
+       */
+/* if(cipherInit()) {
             mFragment = new FingerPrintAuthenticationDialogFragment();
             mFragment.setStage(FingerPrintAuthenticationDialogFragment.Stage.FINGERPRINT_ENCRYPT);
             Bundle bundle = new Bundle();
             bundle.putString(Constants.PASSWORD, "qqqqqqq1");
             mFragment.setArguments(bundle);
-        }*/
+        }*//*
+
 
         return v;
 
@@ -224,3 +229,4 @@ public class FingerprintAuthFragment extends Fragment {
         return false;
     }
 }
+*/

@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintAuthFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.OTPVerificationBusinessFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepOneFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepThreeFragment;
@@ -217,11 +216,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         }
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SignupBusinessStepThreeFragment()).addToBackStack(null).commit();
-    }
-
-    public void switchToFingerprintAuthFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new FingerprintAuthFragment()).addToBackStack(null).commit();
     }
 
     @Override

@@ -24,13 +24,19 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.spec.InvalidParameterSpecException;
+import java.security.spec.MGF1ParameterSpec;
+import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -39,6 +45,8 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.OAEPParameterSpec;
+import javax.crypto.spec.PSource;
 
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.InviteDialog;
 import bd.com.ipay.ipayskeleton.R;
@@ -50,6 +58,8 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
     private KeyguardManager keyguardManager;
     private KeyStore keyStore;
     private KeyGenerator keyGenerator;
+
+    private KeyPairGenerator mKeyPairGenerator;
     private static final String KEY_NAME = "example_key";
 
     public Cipher mEncryptCipher;
@@ -64,12 +74,15 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
     private FinishCheckerListener mFinishCheckerListener;
     private FinishDecryptionCheckerListener mFinishDecryptionCheckerListener;
 
+    MaterialDialog.Builder mEncryptionDialog;
+    MaterialDialog.Builder mDecryptionDialog;
 
-    public FingerprintAuthenticationDialog(@NonNull Context context, Stage ciperStage) {
+
+    public FingerprintAuthenticationDialog(@NonNull Context context, Stage cipherStage) {
         super(context);
         this.mContext = context;
 
-        this.mStage = ciperStage;
+        this.mStage = cipherStage;
         initDialog();
     }
 
@@ -117,11 +130,14 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
             return;
         }
 */
-            generateKey();
+           // generateKey();
+
+            keyStore = providesKeystore();
+            keyGenerator = providesKeyGenerator();
 
             if (mStage == Stage.FINGERPRINT_ENCRYPT) {
-                MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
-                dialog
+                mEncryptionDialog = new MaterialDialog.Builder(context);
+                mEncryptionDialog
                         .cancelable(false)
                         .customView(R.layout.fragment_fingerprint, true)
                         .negativeText(R.string.cancel)
@@ -132,7 +148,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
                             }
                         });
 
-                View dialogView = dialog.build().getCustomView();
+                View dialogView = mEncryptionDialog.build().getCustomView();
 
                 if (initEncryptCipher()) {
                     cryptoObject =
@@ -145,11 +161,11 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
                         }
                     });
                     helper.startAuth(fingerprintManager, cryptoObject);
-                    dialog.show();
+                    mEncryptionDialog.show();
                 }
             } else {
-                MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
-                dialog
+                mDecryptionDialog = new MaterialDialog.Builder(context);
+                mDecryptionDialog
                         .cancelable(false)
                         .customView(R.layout.fragment_fingerprint, true)
                         .negativeText(R.string.cancel)
@@ -160,21 +176,21 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
                             }
                         });
 
-                View dialogView = dialog.build().getCustomView();
+                View dialogView = mDecryptionDialog.build().getCustomView();
 
-                if (initDecryptCipher()) {
-                    cryptoObject =
-                            new FingerprintManager.CryptoObject(mDecryptCipher);
-                    FingerPrintHandler helper = new FingerPrintHandler(context);
-                    helper.setOnAuthenticationCallBackListener(new FingerPrintHandler.OnAuthenticationCallBackListener() {
-                        @Override
-                        public void onAuthenticationCallBack(FingerprintManager.AuthenticationResult result) {
-                            tryDecrypt();
-                        }
-                    });
-                    helper.startAuth(fingerprintManager, cryptoObject);
-                    dialog.show();
-                }
+                    if (initDecryptCipher()) {
+                        cryptoObject =
+                                new FingerprintManager.CryptoObject(mDecryptCipher);
+                        FingerPrintHandler helper = new FingerPrintHandler(context);
+                        helper.setOnAuthenticationCallBackListener(new FingerPrintHandler.OnAuthenticationCallBackListener() {
+                            @Override
+                            public void onAuthenticationCallBack(FingerprintManager.AuthenticationResult result) {
+                                tryDecrypt();
+                            }
+                        });
+                        helper.startAuth(fingerprintManager, cryptoObject);
+                        mDecryptionDialog.show();
+                    }
             }
         }
 
@@ -188,7 +204,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
 
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
+    /*@TargetApi(Build.VERSION_CODES.M)
     protected void generateKey() {
         try {
             keyStore = KeyStore.getInstance("AndroidKeyStore");
@@ -312,19 +328,16 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
 
     public String tryDecrypt() {
         try {
-
-            byte[] encodedData = Base64.decode(mPref.getString(Constants.KEY_PASSWORD, ""), Base64.DEFAULT);
-            byte[] decodedData = mDecryptCipher.doFinal(encodedData);
-            mFinishDecryptionCheckerListener.ifDecryptionFinished(new String(decodedData));
+            String encodedData = mPref.getString(Constants.KEY_PASSWORD, "");
+            byte[] decodedData = Base64.decode(encodedData, Base64.DEFAULT);
+            mFinishDecryptionCheckerListener.ifDecryptionFinished(new String(mDecryptCipher.doFinal(decodedData)));
             return new String(decodedData);
-
-        } catch (BadPaddingException | IllegalBlockSizeException e) {
-            Toast.makeText(context, "Failed to decrypt the data with the generated key. "
-                    + "Retry the purchase", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
-    }
+
+    }*/
 
     public void setFinishCheckerListener(FinishCheckerListener finishCheckerListener) {
         mFinishCheckerListener = finishCheckerListener;
@@ -346,6 +359,171 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
         FINGERPRINT_ENCRYPT,
         FINGERPRINT_DECRYPT,
     }
+
+
+
+ /*****/
+
+ public KeyStore providesKeystore() {
+     try {
+         return KeyStore.getInstance("AndroidKeyStore");
+     } catch (KeyStoreException e) {
+         throw new RuntimeException("Failed to get an instance of KeyStore", e);
+     }
+ }
+
+    public KeyGenerator providesKeyGenerator() {
+        try {
+            return KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
+        } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+            throw new RuntimeException("Failed to get an instance of KeyGenerator", e);
+        }
+    }
+
+    private boolean initEncryptCipher() {
+
+        mEncryptCipher = getCipher(Cipher.ENCRYPT_MODE);
+        if (mEncryptCipher == null) {
+            // try again after recreating the keystore
+            createKey();
+            mEncryptCipher = getCipher(Cipher.ENCRYPT_MODE);
+        }
+        return (mEncryptCipher != null);
+
+    }
+
+    public boolean initDecryptCipher() {
+        mDecryptCipher = getCipher(Cipher.DECRYPT_MODE);
+        return (mDecryptCipher != null);
+    }
+
+
+    public boolean tryEncrypt(String secert) {
+        try {
+
+            byte[] encrypted = mEncryptCipher.doFinal(secert.getBytes());
+
+            IvParameterSpec ivParams = mEncryptCipher.getParameters().getParameterSpec(IvParameterSpec.class);
+            String iv = Base64.encodeToString(ivParams.getIV(), Base64.DEFAULT);
+
+            SharedPreferences.Editor editor = mPref.edit();
+            editor.putString(Constants.KEY_PASSWORD, Base64.encodeToString(encrypted, Base64.DEFAULT));
+            editor.putString(Constants.KEY_PASSWORD_IV, iv);
+            editor.commit();
+            mFinishCheckerListener.ifFinished();
+            return true;
+
+
+        } catch (BadPaddingException | IllegalBlockSizeException e) {
+            Toast.makeText(context, "Failed to encrypt the data with the generated key. "
+                    + "Retry the purchase", Toast.LENGTH_LONG).show();
+        } catch (InvalidParameterSpecException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public String tryDecrypt() {
+        try {
+
+            byte[] encodedData = Base64.decode(mPref.getString(Constants.KEY_PASSWORD, ""), Base64.DEFAULT);
+            byte[] decodedData = mDecryptCipher.doFinal(encodedData);
+            mFinishDecryptionCheckerListener.ifDecryptionFinished(new String(decodedData));
+            return new String(decodedData);
+
+        } catch (BadPaddingException | IllegalBlockSizeException e) {
+            Toast.makeText(context, "Failed to decrypt the data with the generated key. "
+                    + "Retry the purchase", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    private SecretKey getKey() {
+        try {
+            keyStore.load(null);
+            SecretKey key = (SecretKey) keyStore.getKey(KEY_NAME, null);
+            if (key != null) return key;
+            return createKey();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (UnrecoverableKeyException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private SecretKey createKey() {
+        try {
+
+            // Set the alias of the entry in Android KeyStore where the key will appear
+            // and the constrains (purposes) in the constructor of the Builder
+            keyGenerator.init(new KeyGenParameterSpec.Builder(KEY_NAME,
+                    KeyProperties.PURPOSE_DECRYPT | KeyProperties.PURPOSE_ENCRYPT)
+                    .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
+                    // Require the user to authenticate with a fingerprint to authorize every use
+                    // of the key
+                    .setUserAuthenticationRequired(true)
+                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
+                    .build());
+            return keyGenerator.generateKey();
+
+        } catch (Exception e) {
+
+        }
+        return null;
+    }
+
+
+    public Cipher getCipher(int mode) {
+        Cipher cipher;
+
+        try {
+            keyStore.load(null);
+            byte[] iv;
+            cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/"
+                    + KeyProperties.BLOCK_MODE_CBC + "/"
+                    + KeyProperties.ENCRYPTION_PADDING_PKCS7);
+            IvParameterSpec ivParams;
+            if (mode == Cipher.ENCRYPT_MODE) {
+                cipher.init(mode, getKey());
+
+            } else {
+                SecretKey key = (SecretKey) keyStore.getKey(KEY_NAME, null);
+                iv = Base64.decode(mPref.getString(Constants.KEY_PASSWORD_IV, ""), Base64.DEFAULT);
+                ivParams = new IvParameterSpec(iv);
+                cipher.init(mode, key, ivParams);
+            }
+            return cipher;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (UnrecoverableKeyException e) {
+            e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+   /*****/
 
 }
 

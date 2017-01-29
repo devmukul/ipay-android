@@ -12,21 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License
- */
+ *//*
 
-/*
+
+
 package bd.com.ipay.ipayskeleton.FingerPrintAuthentication;
 
 import android.app.Application;
 import android.util.Log;
 
+import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintModule;
 import dagger.ObjectGraph;
-
-*/
-/**
- * The Application class of the sample which holds the ObjectGraph in Dagger and enables
- * dependency injection.
- *//*
 
 public class InjectedApplication extends Application {
 

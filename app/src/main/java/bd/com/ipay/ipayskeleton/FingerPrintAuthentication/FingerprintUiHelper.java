@@ -12,17 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License
- */
+ *//*
 
-/*
+
+
 package bd.com.ipay.ipayskeleton.FingerPrintAuthentication;
 
 
 import com.google.common.annotations.VisibleForTesting;
 
-import android.annotation.TargetApi;
 import android.hardware.fingerprint.FingerprintManager;
-import android.os.Build;
 import android.os.CancellationSignal;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -155,7 +154,7 @@ public class FingerprintUiHelper extends FingerprintManager.AuthenticationCallba
         mIcon.setImageResource(R.drawable.ic_fingerprint_error);
         mErrorTextView.setText(error);
         mErrorTextView.setTextColor(
-                mErrorTextView.getResources().getColor(R.color.background_yellow, null));
+                mErrorTextView.getResources().getColor(R.color.colorGray, null));
         mErrorTextView.removeCallbacks(mResetErrorTextRunnable);
         mErrorTextView.postDelayed(mResetErrorTextRunnable, ERROR_TIMEOUT_MILLIS);
     }
@@ -165,7 +164,7 @@ public class FingerprintUiHelper extends FingerprintManager.AuthenticationCallba
         @Override
         public void run() {
             mErrorTextView.setTextColor(
-                    mErrorTextView.getResources().getColor(R.color.background_red, null));
+                    mErrorTextView.getResources().getColor(R.color.colorPrimary, null));
             mErrorTextView.setText(
                     mErrorTextView.getResources().getString(R.string.fingerprint_hint));
             mIcon.setImageResource(R.drawable.fingerprint_icon);

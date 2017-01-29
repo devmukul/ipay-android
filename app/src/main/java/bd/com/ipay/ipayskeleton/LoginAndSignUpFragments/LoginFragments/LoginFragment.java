@@ -28,8 +28,6 @@ import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintActivity;
-import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerPrintAuthActivity;
 import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintAuthenticationDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
@@ -92,7 +90,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                             fingerprintAuthenticationDialog.setFinishDecryptionCheckerListener(new FingerprintAuthenticationDialog.FinishDecryptionCheckerListener() {
                                 @Override
                                 public void ifDecryptionFinished(String decryptedData) {
-                                    if (!decryptedData.isEmpty()) {
+                                    if (decryptedData !=null) {
                                         mPasswordEditText.setText(decryptedData);
                                         attemptLogin();
                                     }
@@ -337,7 +335,37 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                                     });
                                 }
                             }
+                            else {
+                                ProfileInfoCacheManager.setLoggedInStatus(true);
+
+                                SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                                pref.edit().putString(Constants.USERID, mUserNameLogin).apply();
+                                pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).apply();
+                                // When user logs in, we want that by default he would log in to his default account
+                                TokenManager.deactivateEmployerAccount();
+
+                                // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
+                                if (!pref.contains(Constants.UUID))
+                                    ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
+                                else
+                                    ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                            }
                         }
+                    }
+                    else {
+                        ProfileInfoCacheManager.setLoggedInStatus(true);
+
+                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+                        pref.edit().putString(Constants.USERID, mUserNameLogin).apply();
+                        pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).apply();
+                        // When user logs in, we want that by default he would log in to his default account
+                        TokenManager.deactivateEmployerAccount();
+
+                        // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
+                        if (!pref.contains(Constants.UUID))
+                            ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
+                        else
+                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                     }
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
                     if (getActivity() != null)
