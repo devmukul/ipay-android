@@ -41,6 +41,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
     private IconifiedTextViewWithButton mTrustedDevicesHeader;
     private IconifiedTextViewWithButton mPasswordRecoveryHeader;
     private IconifiedTextViewWithButton mLogoutHeader;
+    private IconifiedTextViewWithButton mFingerprintOptionHeader;
 
     private View mFingerPrintOptionLayout;
     private CheckBox mFingerPrintAuthOptionCheckbox;
@@ -60,6 +61,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         mTrustedDevicesHeader = (IconifiedTextViewWithButton) view.findViewById(R.id.trusted_device);
         mPasswordRecoveryHeader = (IconifiedTextViewWithButton) view.findViewById(R.id.password_recovery);
         mLogoutHeader = (IconifiedTextViewWithButton) view.findViewById(R.id.logout_from_all_devices);
+        mFingerprintOptionHeader = (IconifiedTextViewWithButton) view.findViewById(R.id.login_with_fingerprint);
 
         mFingerPrintOptionLayout = view.findViewById(R.id.fingerprint_option_layout);
         mFingerPrintAuthOptionCheckbox = (CheckBox) view.findViewById(R.id.fingerprint_option_checkbox);
@@ -78,9 +80,9 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
 
     private void setVisibilityOfFingerPrintOption() {
         if (((SecuritySettingsActivity) getActivity()).isFingerPrintAvailable)
-            mFingerPrintOptionLayout.setVisibility(View.VISIBLE);
+            mFingerprintOptionHeader.setVisibility(View.VISIBLE);
         else
-            mFingerPrintOptionLayout.setVisibility(View.GONE);
+            mFingerprintOptionHeader.setVisibility(View.GONE);
     }
 
     private void setButtonActions() {
@@ -119,7 +121,14 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
             }
         });
 
-        mFingerPrintAuthOptionCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mFingerprintOptionHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((SecuritySettingsActivity) getActivity()).switchToFingerprintAuthenticationSettingsFragment();
+            }
+        });
+
+        /*mFingerPrintAuthOptionCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked)
@@ -127,7 +136,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
                 else
                     mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false).apply();
             }
-        });
+        });*/
     }
 
     private void showLogoutFromAllDevicesDialog() {

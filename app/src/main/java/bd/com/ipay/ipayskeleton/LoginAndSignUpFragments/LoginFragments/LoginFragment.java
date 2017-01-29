@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.PasswordManager;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -77,15 +78,15 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             mUserNameEditText.setText(mobileNumber);
             mButtonJoinUs.setVisibility(View.GONE);
 
-            // Finger print auth
+            // If fingerprint auth option is on
             boolean isFingerPrintAuthOn = pref.getBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false);
             if (isFingerPrintAuthOn) {
                 {
                     // If Finger Print option is on and finger print is encrypted
-
                     if (pref.getString(Constants.KEY_PASSWORD, "") != "") {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getActivity(), FingerprintAuthenticationDialog.Stage.FINGERPRINT_DECRYPT);
+                            FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getActivity()
+                                    , FingerprintAuthenticationDialog.Stage.FINGERPRINT_DECRYPT);
                             fingerprintAuthenticationDialog.setFinishDecryptionCheckerListener(new FingerprintAuthenticationDialog.FinishDecryptionCheckerListener() {
                                 @Override
                                 public void ifDecryptionFinished(String decryptedData) {
@@ -292,7 +293,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                 mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    /*ProfileInfoCacheManager.setLoggedInStatus(true);
+                    ProfileInfoCacheManager.setLoggedInStatus(true);
 
                     SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
                     pref.edit().putString(Constants.USERID, mUserNameLogin).apply();
@@ -303,14 +304,13 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                     // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
                     if (!pref.contains(Constants.UUID))
                         ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
-                    else ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();*/
+                    else ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
-                    // Finger print auth
+              /*      // Finger print auth
                     boolean isFingerPrintAuthOn = pref.getBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false);
                     if (isFingerPrintAuthOn) {
                         {
                             // If Finger Print option is on and finger print is not encrypted
-
                             if (pref.getString(Constants.KEY_PASSWORD, "") == "") {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                     FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getActivity(), FingerprintAuthenticationDialog.Stage.FINGERPRINT_ENCRYPT);
@@ -365,7 +365,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                             ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
                         else
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
-                    }
+                    }*/
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();

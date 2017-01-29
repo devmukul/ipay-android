@@ -5,6 +5,7 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
+import android.os.Build;
 import android.security.keystore.KeyProperties;
 import android.support.v4.app.ActivityCompat;
 
@@ -35,6 +36,8 @@ public class FingerPrintAuthModule {
 
     public boolean checkIfFingerPrintSupported() {
         // Check whether the device has a Fingerprint sensor.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+            return false;
         if (!mFingerprintManager.isHardwareDetected()) {
             return false;
         } else {

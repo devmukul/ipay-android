@@ -60,7 +60,19 @@
 
         <View style="@style/Divider" />
 
-        <RelativeLayout
+        <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
+            android:id="@+id/login_with_fingerprint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_signup_number"
+            android:paddingBottom="@dimen/value4"
+            android:paddingLeft="@dimen/activity_horizontal_margin_card"
+            android:paddingTop="@dimen/value4"
+            android:text="@string/touch_id_for_login" />
+
+        <View style="@style/Divider" />
+
+       <!-- <RelativeLayout
             android:id="@+id/fingerprint_option_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -92,7 +104,7 @@
                 android:layout_below="@id/fingerprint_option_checkbox" />
 
         </RelativeLayout>
-
+-->
         <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
             android:id="@+id/logout_from_all_devices"
             android:layout_width="match_parent"
