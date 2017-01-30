@@ -83,68 +83,71 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
 
     @TargetApi(Build.VERSION_CODES.M)
     private void initDialog() {
-
         initFingerPrintAuthModule();
+
         mPref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         if (mFingerprintAuthModule.checkIfFingerPrintSupported()) {
-
             if (mStage == Stage.FINGERPRINT_ENCRYPT) {
-                mEncryptionDialog = new MaterialDialog.Builder(context);
-                mEncryptionDialog
-                        .cancelable(false)
-                        .customView(R.layout.dialog_fingerprint, true)
-                        .negativeText(R.string.cancel)
-                        .onNegative(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                mFinishEncryptionCheckerListener.ifEncryptionFinished();
-                            }
-                        });
-
-                if (initEncryptCipher()) {
-                    mCryptoObject =
-                            new FingerprintManager.CryptoObject(mEncryptCipher);
-                    FingerPrintHandler helper = new FingerPrintHandler(context);
-                    helper.setOnAuthenticationCallBackListener(new FingerPrintHandler.OnAuthenticationCallBackListener() {
-                        @Override
-                        public void onAuthenticationCallBack(FingerprintManager.AuthenticationResult result) {
-                            tryEncrypt(SignupOrLoginActivity.mPassword);
-                        }
-                    });
-                    helper.startAuth(mFingerprintManager, mCryptoObject);
-                    mEncryptionDialog.show();
-                }
-
+                setEncryptionStage();
             } else if (mStage == Stage.FINGERPRINT_DECRYPT) {
-                mDecryptionDialog = new MaterialDialog.Builder(context);
-                mDecryptionDialog
-                        .cancelable(false)
-                        .customView(R.layout.dialog_fingerprint, true)
-                        .negativeText(R.string.cancel)
-                        .onNegative(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                mFinishDecryptionCheckerListener.ifDecryptionFinished(null);
-                            }
-                        });
-
-                if (initDecryptCipher()) {
-                    mCryptoObject =
-                            new FingerprintManager.CryptoObject(mDecryptCipher);
-                    FingerPrintHandler helper = new FingerPrintHandler(context);
-                    helper.setOnAuthenticationCallBackListener(new FingerPrintHandler.OnAuthenticationCallBackListener() {
-                        @Override
-                        public void onAuthenticationCallBack(FingerprintManager.AuthenticationResult result) {
-                            tryDecrypt();
-                        }
-                    });
-                    helper.startAuth(mFingerprintManager, mCryptoObject);
-                    mDecryptionDialog.show();
-                }
+                setDecryptionStage();
             }
         }
+    }
 
+    private void setEncryptionStage() {
+        mEncryptionDialog = new MaterialDialog.Builder(context);
+        mEncryptionDialog
+                .cancelable(false)
+                .customView(R.layout.dialog_fingerprint, true)
+                .negativeText(R.string.cancel)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        mFinishEncryptionCheckerListener.ifEncryptionFinished();
+                    }
+                });
+
+        if (initEncryptCipher()) {
+            mCryptoObject = new FingerprintManager.CryptoObject(mEncryptCipher);
+            FingerPrintHandler helper = new FingerPrintHandler(context);
+            helper.setOnAuthenticationCallBackListener(new FingerPrintHandler.OnAuthenticationCallBackListener() {
+                @Override
+                public void onAuthenticationCallBack(FingerprintManager.AuthenticationResult result) {
+                    tryEncrypt(SignupOrLoginActivity.mPassword);
+                }
+            });
+            helper.startAuth(mFingerprintManager, mCryptoObject);
+            mEncryptionDialog.show();
+        }
+    }
+
+    private void setDecryptionStage() {
+        mDecryptionDialog = new MaterialDialog.Builder(context);
+        mDecryptionDialog
+                .cancelable(false)
+                .customView(R.layout.dialog_fingerprint, true)
+                .negativeText(R.string.cancel)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        mFinishDecryptionCheckerListener.ifDecryptionFinished(null);
+                    }
+                });
+
+        if (initDecryptCipher()) {
+            mCryptoObject = new FingerprintManager.CryptoObject(mDecryptCipher);
+            FingerPrintHandler helper = new FingerPrintHandler(context);
+            helper.setOnAuthenticationCallBackListener(new FingerPrintHandler.OnAuthenticationCallBackListener() {
+                @Override
+                public void onAuthenticationCallBack(FingerprintManager.AuthenticationResult result) {
+                    tryDecrypt();
+                }
+            });
+            helper.startAuth(mFingerprintManager, mCryptoObject);
+            mDecryptionDialog.show();
+        }
     }
 
     private boolean initEncryptCipher() {
@@ -300,7 +303,6 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
         FINGERPRINT_ENCRYPT,
         FINGERPRINT_DECRYPT,
     }
-
 }
 
 
