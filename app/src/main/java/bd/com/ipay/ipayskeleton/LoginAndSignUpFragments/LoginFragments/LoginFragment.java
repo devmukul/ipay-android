@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
@@ -215,6 +216,22 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         }
     }
 
+    private void removeFingerprintAuthentication() {
+        tryLogInWithTouchID = false;
+        ProfileInfoCacheManager.clearEncryptedPassword();
+        showLogInFailedWithFingerPrintAuthDialog();
+
+    }
+
+    private void showLogInFailedWithFingerPrintAuthDialog() {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
+        dialog
+                .content(R.string.login_failed_with_touch_id)
+                .cancelable(false)
+                .positiveText(R.string.ok)
+                .show();
+    }
+
     private void attemptLogin() {
         if (mLoginTask != null) {
             return;
@@ -349,13 +366,18 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                         mLoginTask = null;
                         attemptLogin();
                     } else {
+                        if (!tryLogInWithTouchID) {
+                            if (getActivity() != null)
+                                Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else
+                            removeFingerprintAuthentication();
+                    }
+                } else {
+                    if (!tryLogInWithTouchID) {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
+                    } else
+                        removeFingerprintAuthentication();
                 }
 
             } catch (Exception e) {
