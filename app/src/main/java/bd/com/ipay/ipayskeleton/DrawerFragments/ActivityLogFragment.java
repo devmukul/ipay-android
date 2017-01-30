@@ -569,31 +569,39 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             }
 
             public void bindView() {
-
-                if (isLoading) {
-                    mLoadMoreProgressBar.setVisibility(View.VISIBLE);
-                    mLoadMoreTextView.setVisibility(View.GONE);
-                } else {
-                    mLoadMoreProgressBar.setVisibility(View.GONE);
-                    mLoadMoreTextView.setVisibility(View.VISIBLE);
-                    if (hasNext)
-                        mLoadMoreTextView.setText(R.string.load_more);
-                    else
-                        mLoadMoreTextView.setText(R.string.no_more_results);
-                }
+                setItemVisibilityOfFooterView();
 
                 mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (hasNext) {
                             historyPageCount = historyPageCount + 1;
-                            isLoading = true;
-                            notifyDataSetChanged();
+                            changeViewWhileLoading();
                             getUserActivities();
 
                         }
                     }
                 });
+            }
+
+            private void setItemVisibilityOfFooterView() {
+                if (isLoading) {
+                    mLoadMoreProgressBar.setVisibility(View.VISIBLE);
+                    mLoadMoreTextView.setVisibility(View.GONE);
+                } else {
+                    mLoadMoreProgressBar.setVisibility(View.GONE);
+                    mLoadMoreTextView.setVisibility(View.VISIBLE);
+
+                    if (hasNext)
+                        mLoadMoreTextView.setText(R.string.load_more);
+                    else
+                        mLoadMoreTextView.setText(R.string.no_more_results);
+                }
+            }
+
+            private void changeViewWhileLoading() {
+                isLoading = true;
+                notifyDataSetChanged();
             }
         }
 

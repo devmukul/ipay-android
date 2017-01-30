@@ -679,18 +679,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             }
 
             public void bindViewFooter() {
-                if (isLoading) {
-                    mLoadMoreProgressBar.setVisibility(View.VISIBLE);
-                    mLoadMoreTextView.setVisibility(View.GONE);
-                } else {
-                    mLoadMoreProgressBar.setVisibility(View.GONE);
-                    mLoadMoreTextView.setVisibility(View.VISIBLE);
-
-                    if (hasNext)
-                        mLoadMoreTextView.setText(R.string.load_more);
-                    else
-                        mLoadMoreTextView.setText(R.string.no_more_results);
-                }
+                setItemVisibilityOfFooterView();
 
                 mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -703,6 +692,21 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                         }
                     }
                 });
+            }
+
+            private void setItemVisibilityOfFooterView() {
+                if (isLoading) {
+                    mLoadMoreProgressBar.setVisibility(View.VISIBLE);
+                    mLoadMoreTextView.setVisibility(View.GONE);
+                } else {
+                    mLoadMoreProgressBar.setVisibility(View.GONE);
+                    mLoadMoreTextView.setVisibility(View.VISIBLE);
+
+                    if (hasNext)
+                        mLoadMoreTextView.setText(R.string.load_more);
+                    else
+                        mLoadMoreTextView.setText(R.string.no_more_results);
+                }
             }
         }
 

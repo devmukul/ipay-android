@@ -691,6 +691,22 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             }
 
             public void bindViewFooter() {
+                setItemVisibilityOfFooterView();
+
+                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (hasNext) {
+                            historyPageCount = historyPageCount + 1;
+                            changeViewWhileLoading();
+                            notifyDataSetChanged();
+                            getTransactionHistory();
+                        }
+                    }
+                });
+            }
+
+            private void setItemVisibilityOfFooterView() {
                 if (isLoading) {
                     mLoadMoreProgressBar.setVisibility(View.VISIBLE);
                     mLoadMoreTextView.setVisibility(View.GONE);
@@ -703,18 +719,11 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     else
                         mLoadMoreTextView.setText(R.string.no_more_results);
                 }
+            }
 
-                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (hasNext) {
-                            historyPageCount = historyPageCount + 1;
-                            isLoading = true;
-                            notifyDataSetChanged();
-                            getTransactionHistory();
-                        }
-                    }
-                });
+            private void changeViewWhileLoading() {
+                isLoading = true;
+                notifyDataSetChanged();
             }
         }
 

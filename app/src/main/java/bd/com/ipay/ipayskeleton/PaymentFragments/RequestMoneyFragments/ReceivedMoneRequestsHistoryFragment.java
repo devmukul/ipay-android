@@ -243,6 +243,21 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
             }
 
             public void bindViewFooter() {
+                setItemVisibilityOfFooterView();
+
+                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (hasNext) {
+                            pageCount = pageCount + 1;
+                            changeViewWhileLoading();
+                            getReceivedRequests();
+                        }
+                    }
+                });
+            }
+
+            private void setItemVisibilityOfFooterView() {
                 if (isLoading) {
                     mLoadMoreProgressBar.setVisibility(View.VISIBLE);
                     mLoadMoreTextView.setVisibility(View.GONE);
@@ -256,17 +271,11 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
                         mLoadMoreTextView.setText(R.string.no_more_results);
                 }
 
-                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (hasNext) {
-                            pageCount = pageCount + 1;
-                            isLoading = true;
-                            notifyDataSetChanged();
-                            getReceivedRequests();
-                        }
-                    }
-                });
+            }
+
+            private void changeViewWhileLoading() {
+                isLoading = true;
+                notifyDataSetChanged();
             }
         }
 

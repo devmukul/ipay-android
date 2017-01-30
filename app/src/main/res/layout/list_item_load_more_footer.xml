@@ -14,10 +14,15 @@
 
     <ProgressBar
         android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:indeterminate="true"
+        android:maxHeight="@dimen/activity_horizontal_margin_double"
+        android:minHeight="@dimen/activity_horizontal_margin_double"
+        android:paddingBottom="@dimen/activity_horizontal_margin_card"
+        android:paddingTop="@dimen/activity_horizontal_margin_card"
         android:progressTint="@color/colorPrimary"
         android:visibility="gone" />
 </RelativeLayout>

@@ -386,13 +386,6 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
                     }
                 });
             }
-
-            /*public void bindViewFooter() {
-                if (hasNext)
-                    loadMoreTextView.setText(R.string.load_more);
-                else
-                    loadMoreTextView.setText(R.string.no_more_results);
-            }*/
         }
 
         public class FooterViewHolder extends ViewHolder {
@@ -407,6 +400,21 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
             }
 
             public void bindViewFooter() {
+                setItemVisibilityOfFooterView();
+
+                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (hasNext) {
+                            pageCount = pageCount + 1;
+                            changeViewWhileLoading();
+                            getMakePaymentRequests();
+                        }
+                    }
+                });
+            }
+
+            private void setItemVisibilityOfFooterView() {
                 if (isLoading) {
                     mLoadMoreProgressBar.setVisibility(View.VISIBLE);
                     mLoadMoreTextView.setVisibility(View.GONE);
@@ -420,17 +428,11 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
                         mLoadMoreTextView.setText(R.string.no_more_results);
                 }
 
-                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (hasNext) {
-                            pageCount = pageCount + 1;
-                            isLoading = true;
-                            notifyDataSetChanged();
-                            getMakePaymentRequests();
-                        }
-                    }
-                });
+            }
+
+            private void changeViewWhileLoading() {
+                isLoading = true;
+                notifyDataSetChanged();
             }
         }
 
@@ -515,5 +517,4 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
             ((PaymentActivity) getActivity()).switchToReceivedPaymentRequestDetailsFragment(bundle);
         }
     }
-
 }
