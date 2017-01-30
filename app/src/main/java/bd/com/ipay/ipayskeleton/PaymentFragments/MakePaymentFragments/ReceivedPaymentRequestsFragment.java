@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,6 +66,7 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
 
     private int pageCount = 0;
     private boolean hasNext = false;
+    private boolean isLoading = false;
     private boolean clearListAfterLoading;
 
     // These variables hold the information needed to populate the review dialog
@@ -233,7 +235,7 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
             mGetAllNotificationsTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
-                Toast.makeText(getActivity(),  R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -256,6 +258,7 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
                         }
 
                         hasNext = mGetMoneyAndPaymentRequestResponse.isHasNext();
+                        if (isLoading) isLoading = false;
                         mInvoiceListAdapter.notifyDataSetChanged();
 
                     } catch (Exception e) {
@@ -384,32 +387,50 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
                 });
             }
 
-            public void bindViewFooter() {
+            /*public void bindViewFooter() {
                 if (hasNext)
                     loadMoreTextView.setText(R.string.load_more);
                 else
                     loadMoreTextView.setText(R.string.no_more_results);
-            }
+            }*/
         }
 
         public class FooterViewHolder extends ViewHolder {
+            private TextView mLoadMoreTextView;
+            private ProgressBar mLoadMoreProgressBar;
+
             public FooterViewHolder(View itemView) {
                 super(itemView);
-                itemView.setOnClickListener(new View.OnClickListener() {
+
+                mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
+                mLoadMoreProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
+            }
+
+            public void bindViewFooter() {
+                if (isLoading) {
+                    mLoadMoreProgressBar.setVisibility(View.VISIBLE);
+                    mLoadMoreTextView.setVisibility(View.GONE);
+                } else {
+                    mLoadMoreProgressBar.setVisibility(View.GONE);
+                    mLoadMoreTextView.setVisibility(View.VISIBLE);
+
+                    if (hasNext)
+                        mLoadMoreTextView.setText(R.string.load_more);
+                    else
+                        mLoadMoreTextView.setText(R.string.no_more_results);
+                }
+
+                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (hasNext) {
                             pageCount = pageCount + 1;
+                            isLoading = true;
+                            notifyDataSetChanged();
                             getMakePaymentRequests();
                         }
                     }
                 });
-
-                TextView loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-                if (hasNext)
-                    loadMoreTextView.setText(R.string.load_more);
-                else
-                    loadMoreTextView.setText(R.string.no_more_results);
             }
         }
 

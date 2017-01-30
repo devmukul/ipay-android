@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
 
     private int pageCount = 0;
     private boolean hasNext = false;
+    private boolean isLoading = false;
     private boolean clearListAfterLoading;
 
 
@@ -152,6 +154,7 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
                     }
                     removeProcessingList();
                     hasNext = mGetReceivedRequestResponse.isHasNext();
+                    if (isLoading) isLoading = false;
                     mReceivedRequestsAdapter.notifyDataSetChanged();
 
                 } catch (Exception e) {
@@ -232,29 +235,40 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
         public class FooterViewHolder extends RecyclerView.ViewHolder {
 
             private TextView mLoadMoreTextView;
+            private ProgressBar mLoadMoreProgressBar;
 
             public FooterViewHolder(View itemView) {
                 super(itemView);
 
-                itemView.setOnClickListener(new View.OnClickListener() {
+                mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
+                mLoadMoreProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
+            }
+
+            public void bindViewFooter() {
+                if (isLoading) {
+                    mLoadMoreProgressBar.setVisibility(View.VISIBLE);
+                    mLoadMoreTextView.setVisibility(View.GONE);
+                } else {
+                    mLoadMoreProgressBar.setVisibility(View.GONE);
+                    mLoadMoreTextView.setVisibility(View.VISIBLE);
+
+                    if (hasNext)
+                        mLoadMoreTextView.setText(R.string.load_more);
+                    else
+                        mLoadMoreTextView.setText(R.string.no_more_results);
+                }
+
+                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (hasNext) {
                             pageCount = pageCount + 1;
+                            isLoading = true;
+                            notifyDataSetChanged();
                             getReceivedRequests();
                         }
                     }
                 });
-
-                mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-            }
-
-            public void bindView() {
-
-                if (hasNext)
-                    mLoadMoreTextView.setText(R.string.load_more);
-                else
-                    mLoadMoreTextView.setText(R.string.no_more_results);
             }
         }
 
@@ -284,7 +298,7 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
 
                 } else if (holder instanceof FooterViewHolder) {
                     FooterViewHolder vh = (FooterViewHolder) holder;
-                    vh.bindView();
+                    vh.bindViewFooter();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +63,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
 
     private int historyPageCount = 0;
     private boolean hasNext = false;
+    private boolean isLoading = false;
     private boolean clearListAfterLoading;
     private TextView mEmptyListTextView;
 
@@ -163,7 +165,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
                     }
 
                     hasNext = mGetPendingPaymentsResponse.isHasNext();
-
+                    if (isLoading) isLoading = false;
                     mInvoicesSentAdapter.notifyDataSetChanged();
 
                 } catch (Exception e) {
@@ -287,32 +289,44 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
                     }
                 });
             }
-
-            public void bindViewFooter() {
-                if (hasNext)
-                    loadMoreTextView.setText(R.string.load_more);
-
-                else loadMoreTextView.setText(R.string.no_more_results);
-            }
         }
 
         public class FooterViewHolder extends ViewHolder {
+            private TextView mLoadMoreTextView;
+            private ProgressBar mLoadMoreProgressBar;
+
             public FooterViewHolder(View itemView) {
                 super(itemView);
-                itemView.setOnClickListener(new View.OnClickListener() {
+
+                mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
+                mLoadMoreProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
+            }
+
+            public void bindViewFooter() {
+                if (isLoading) {
+                    mLoadMoreProgressBar.setVisibility(View.VISIBLE);
+                    mLoadMoreTextView.setVisibility(View.GONE);
+                } else {
+                    mLoadMoreProgressBar.setVisibility(View.GONE);
+                    mLoadMoreTextView.setVisibility(View.VISIBLE);
+
+                    if (hasNext)
+                        mLoadMoreTextView.setText(R.string.load_more);
+                    else
+                        mLoadMoreTextView.setText(R.string.no_more_results);
+                }
+
+                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (hasNext) {
                             historyPageCount = historyPageCount + 1;
+                            isLoading = true;
+                            notifyDataSetChanged();
                             getPendingPaymentRequests();
                         }
                     }
                 });
-
-                TextView loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-                if (hasNext) loadMoreTextView.setText(R.string.load_more);
-
-                else loadMoreTextView.setText(R.string.no_more_results);
             }
         }
 
