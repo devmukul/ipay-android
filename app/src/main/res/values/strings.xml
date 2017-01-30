@@ -464,7 +464,7 @@
     <string name="use_fingerprint_to_authenticate_title">Use fingerprint to authenticate</string>
     <string name="activate_fingerprint">Activate fingerprint</string>
     <string name="fingerprint_settings_description">You can link your finger print for faster login and keep active iPay app</string>
-
+    <string name="login_failed_with_touch_id">It seems you have changed your password since you logged in the last time from this device. Please enter your new password</string>
 
     <!-- PUSH -->
     <string name="push_profile_picture_updated_title">Profile Picture Changed</string>
