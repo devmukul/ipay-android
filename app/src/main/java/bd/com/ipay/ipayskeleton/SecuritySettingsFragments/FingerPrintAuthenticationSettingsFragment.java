@@ -2,59 +2,63 @@ package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.os.Build;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.Toast;
 
-import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintAuthenticationDialog;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 
 public class FingerPrintAuthenticationSettingsFragment extends Fragment {
-    private CheckBox mFingerPrintAuthOptionCheckbox;
+    Button mFingerPrintActivateButton;
 
     private SharedPreferences mPref;
+    private boolean isFingerPrintAuthOn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fingerprint_settings, container, false);
         setTitle();
 
-        mFingerPrintAuthOptionCheckbox = (CheckBox) view.findViewById(R.id.fingerprint_option_checkbox);
-
+        mFingerPrintActivateButton = (Button) view.findViewById(R.id.fingerprint_activate_button);
         mPref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
-        setCheckedStatusOfFingerprintAuth();
+        setFingerprintActivateButtonStatus();
         setFingerprintAuthCheckboxActions();
 
         return view;
     }
 
     public void setTitle() {
-        getActivity().setTitle(R.string.set_pin);
+        getActivity().setTitle(R.string.touch_id_for_login);
     }
 
-    private void setCheckedStatusOfFingerprintAuth() {
-        boolean isFingerPrintAuthOn = mPref.getBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false);
+    private void setFingerprintActivateButtonStatus() {
+        isFingerPrintAuthOn = mPref.getBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false);
+
         if (isFingerPrintAuthOn) {
-            mFingerPrintAuthOptionCheckbox.setChecked(true);
-        } else mFingerPrintAuthOptionCheckbox.setChecked(false);
+            mFingerPrintActivateButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            mFingerPrintActivateButton.setText(R.string.fingerprint_authentication_activated);
+            mFingerPrintActivateButton.setTextColor(getResources().getColor(R.color.colorWhite));
+        } else {
+            mFingerPrintActivateButton.setBackgroundColor(getResources().getColor(R.color.colorGray));
+            mFingerPrintActivateButton.setText(R.string.activate_fingerprint);
+            mFingerPrintActivateButton.setTextColor(Color.BLACK);
+        }
     }
 
     private void setFingerprintAuthCheckboxActions() {
-        mFingerPrintAuthOptionCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mFingerPrintActivateButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
+            public void onClick(View view) {
+                if (!isFingerPrintAuthOn) {
                     {
                         FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getContext(),
                                 FingerprintAuthenticationDialog.Stage.FINGERPRINT_ENCRYPT);
@@ -65,22 +69,16 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
                                     mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, true).apply();
                                 } else
                                     mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false).apply();
-                                setCheckedStatusOfFingerprintAuth();
+                                setFingerprintActivateButtonStatus();
                             }
                         });
                     }
                 } else {
                     ProfileInfoCacheManager.clearEncryptedPassword();
+                    setFingerprintActivateButtonStatus();
                 }
             }
         });
     }
-
-    /*private void clearEncryptedPassword() {
-        SharedPreferences.Editor editor = mPref.edit();
-        editor.putString(Constants.KEY_PASSWORD, "");
-        mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false).apply();
-        editor.commit();
-    }*/
 }
 
