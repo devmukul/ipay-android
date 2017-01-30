@@ -686,8 +686,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                     public void onClick(View v) {
                         if (hasNext) {
                             historyPageCount = historyPageCount + 1;
-                            isLoading = true;
-                            notifyDataSetChanged();
+                            showLoadingInFooter();
                             getPendingTransactionHistory();
                         }
                     }
@@ -707,6 +706,11 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                     else
                         mLoadMoreTextView.setText(R.string.no_more_results);
                 }
+            }
+
+            private void showLoadingInFooter() {
+                isLoading = true;
+                notifyDataSetChanged();
             }
         }
 

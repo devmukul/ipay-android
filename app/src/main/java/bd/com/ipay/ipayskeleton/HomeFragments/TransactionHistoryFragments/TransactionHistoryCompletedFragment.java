@@ -698,7 +698,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     public void onClick(View v) {
                         if (hasNext) {
                             historyPageCount = historyPageCount + 1;
-                            changeViewWhileLoading();
+                            showLoadingInFooter();
                             notifyDataSetChanged();
                             getTransactionHistory();
                         }
@@ -721,7 +721,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 }
             }
 
-            private void changeViewWhileLoading() {
+            private void showLoadingInFooter() {
                 isLoading = true;
                 notifyDataSetChanged();
             }

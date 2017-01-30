@@ -405,7 +405,7 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
                     public void onClick(View v) {
                         if (hasNext) {
                             pageCount = pageCount + 1;
-                            changeViewWhileLoading();
+                            showLoadingInFooter();
                             getMakePaymentRequests();
                         }
                     }
@@ -428,7 +428,7 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
 
             }
 
-            private void changeViewWhileLoading() {
+            private void showLoadingInFooter() {
                 isLoading = true;
                 notifyDataSetChanged();
             }

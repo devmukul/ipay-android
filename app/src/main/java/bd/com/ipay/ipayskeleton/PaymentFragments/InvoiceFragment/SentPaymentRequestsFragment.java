@@ -308,7 +308,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
                     public void onClick(View v) {
                         if (hasNext) {
                             historyPageCount = historyPageCount + 1;
-                            changeViewWhileLoading();
+                            showLoadingInFooter();
                             getPendingPaymentRequests();
                         }
                     }
@@ -330,7 +330,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
                 }
             }
 
-            private void changeViewWhileLoading() {
+            private void showLoadingInFooter() {
                 isLoading = true;
                 notifyDataSetChanged();
             }

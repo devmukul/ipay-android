@@ -250,7 +250,7 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
                     public void onClick(View v) {
                         if (hasNext) {
                             pageCount = pageCount + 1;
-                            changeViewWhileLoading();
+                            showLoadingInFooter();
                             getReceivedRequests();
                         }
                     }
@@ -273,7 +273,7 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
 
             }
 
-            private void changeViewWhileLoading() {
+            private void showLoadingInFooter() {
                 isLoading = true;
                 notifyDataSetChanged();
             }

@@ -576,7 +576,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     public void onClick(View v) {
                         if (hasNext) {
                             historyPageCount = historyPageCount + 1;
-                            changeViewWhileLoading();
+                            showLoadingInFooter();
                             getUserActivities();
 
                         }
@@ -599,7 +599,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 }
             }
 
-            private void changeViewWhileLoading() {
+            private void showLoadingInFooter() {
                 isLoading = true;
                 notifyDataSetChanged();
             }

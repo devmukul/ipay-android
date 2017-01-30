@@ -265,7 +265,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                     public void onClick(View v) {
                         if (hasNext) {
                             pageCount = pageCount + 1;
-                            changeViewWhileLoading();
+                            showLoadingInFooter();
                             getMoneyRequests();
                         }
                     }
@@ -287,7 +287,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                 }
             }
 
-            private void changeViewWhileLoading() {
+            private void showLoadingInFooter() {
                 isLoading = true;
                 notifyDataSetChanged();
             }
