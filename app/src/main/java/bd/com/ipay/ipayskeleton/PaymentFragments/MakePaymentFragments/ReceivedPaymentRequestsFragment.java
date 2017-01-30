@@ -336,7 +336,6 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
             private final TextView mDescriptionView;
             private final TextView mTitleView;
             private final TextView mTimeView;
-            private final TextView loadMoreTextView;
             private final ProfileImageView mProfileImageView;
 
             public ViewHolder(final View itemView) {
@@ -345,7 +344,6 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
                 // Money request list items
                 mDescriptionView = (TextView) itemView.findViewById(R.id.textview_description);
                 mTimeView = (TextView) itemView.findViewById(R.id.textview_time);
-                loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 mTitleView = (TextView) itemView.findViewById(R.id.textview_title);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
             }

@@ -254,12 +254,6 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
             private final TextView mTime;
             private final TextView mDescriptionView;
             private final ProfileImageView mProfileImageView;
-            private final View divider;
-
-            private final int ACTION_CANCEL = 0;
-
-            private CustomSelectorDialog mCustomSelectorDialog;
-            private List<String> mMyRequestActionList;
 
             public MoneyRequestViewHolder(final View itemView) {
                 super(itemView);
@@ -268,7 +262,6 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                 mTime = (TextView) itemView.findViewById(R.id.time);
                 mDescriptionView = (TextView) itemView.findViewById(R.id.description);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
-                divider = itemView.findViewById(R.id.divider);
             }
 
             public void bindView(int pos) {

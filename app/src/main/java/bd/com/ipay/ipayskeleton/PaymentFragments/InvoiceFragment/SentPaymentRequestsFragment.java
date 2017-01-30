@@ -201,7 +201,6 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
             private final TextView mAmountTextView;
             private final TextView mTimeTextView;
             private final TextView statusView;
-            private final TextView loadMoreTextView;
             private final ProfileImageView mProfileImageView;
 
             public ViewHolder(final View itemView) {
@@ -212,7 +211,6 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
                 mTimeTextView = (TextView) itemView.findViewById(R.id.time);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 statusView = (TextView) itemView.findViewById(R.id.status);
-                loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
             }
 
             public void bindView(int pos) {
