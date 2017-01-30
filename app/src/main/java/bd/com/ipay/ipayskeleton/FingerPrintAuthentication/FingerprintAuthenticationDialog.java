@@ -35,6 +35,7 @@ import javax.crypto.spec.IvParameterSpec;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
@@ -103,7 +104,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        clearEncryptedPassword();
+                        ProfileInfoCacheManager.clearEncryptedPassword();
                         mFinishEncryptionCheckerListener.ifEncryptionFinished();
                     }
                 });
@@ -150,12 +151,6 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
             helper.startAuth(mFingerprintManager, mCryptoObject);
             mDecryptionDialog.show();
         }
-    }
-
-    private void clearEncryptedPassword() {
-        SharedPreferences.Editor editor = mPref.edit();
-        editor.putString(Constants.KEY_PASSWORD, "");
-        editor.commit();
     }
 
     private boolean initEncryptCipher() {
