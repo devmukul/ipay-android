@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintAuthenticationDialog;
@@ -55,22 +56,31 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     {
-                        FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getActivity(),
+                        FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getContext(),
                                 FingerprintAuthenticationDialog.Stage.FINGERPRINT_ENCRYPT);
-                        fingerprintAuthenticationDialog.setFinishCheckerListener(new FingerprintAuthenticationDialog.FinishEncryptionCheckerListener() {
+                        fingerprintAuthenticationDialog.setFinishEncryptionCheckerListener(new FingerprintAuthenticationDialog.FinishEncryptionCheckerListener() {
                             @Override
                             public void ifEncryptionFinished() {
                                 if (mPref.getString(Constants.KEY_PASSWORD, "") != "") {
                                     mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, true).apply();
                                 } else
                                     mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false).apply();
+                                setCheckedStatusOfFingerprintAuth();
                             }
                         });
                     }
-                } else
-                    mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false).apply();
+                } else {
+                    ProfileInfoCacheManager.clearEncryptedPassword();
+                }
             }
         });
     }
+
+    /*private void clearEncryptedPassword() {
+        SharedPreferences.Editor editor = mPref.edit();
+        editor.putString(Constants.KEY_PASSWORD, "");
+        mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false).apply();
+        editor.commit();
+    }*/
 }
 

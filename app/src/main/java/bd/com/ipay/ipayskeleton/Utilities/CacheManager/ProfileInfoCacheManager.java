@@ -81,5 +81,12 @@ public class ProfileInfoCacheManager {
         return loggedIn;
     }
 
+    public static void clearEncryptedPassword() {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(Constants.KEY_PASSWORD, "");
+        pref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false).apply();
+        editor.commit();
+    }
+
 }
 

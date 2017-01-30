@@ -11,7 +11,6 @@ import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.support.annotation.NonNull;
 import android.util.Base64;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -37,8 +36,6 @@ import javax.crypto.spec.IvParameterSpec;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.PasswordManager;
-import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
 
@@ -47,22 +44,23 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
     private KeyStore mKeyStore;
     private KeyGenerator mKeyGenerator;
 
-    public Cipher mEncryptCipher;
-    public Cipher mDecryptCipher;
-
     private FingerprintManager.CryptoObject mCryptoObject;
 
-    private Stage mStage = Stage.FINGERPRINT_ENCRYPT;
-    private SharedPreferences mPref;
+    public Cipher mEncryptCipher;
+    public Cipher mDecryptCipher;
 
     private FinishEncryptionCheckerListener mFinishEncryptionCheckerListener;
     private FinishDecryptionCheckerListener mFinishDecryptionCheckerListener;
 
-    private MaterialDialog.Builder mEncryptionDialog;
-    private MaterialDialog.Builder mDecryptionDialog;
+    private MaterialDialog.Builder mEncryptionDialogBuilder;
+    private MaterialDialog.Builder mDecryptionDialogBuilder;
+    private MaterialDialog mEncryptionDialog;
+    private MaterialDialog mDecryptionDialog;
 
     private FingerPrintAuthModule mFingerprintAuthModule;
 
+    private Stage mStage = Stage.FINGERPRINT_ENCRYPT;
+    private SharedPreferences mPref;
 
     public FingerprintAuthenticationDialog(@NonNull Context context, Stage cipherStage) {
         super(context);
@@ -97,17 +95,20 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
     }
 
     private void setEncryptionStage() {
-        mEncryptionDialog = new MaterialDialog.Builder(context);
-        mEncryptionDialog
+        mEncryptionDialogBuilder = new MaterialDialog.Builder(context);
+        mEncryptionDialogBuilder
                 .cancelable(false)
-                .customView(R.layout.dialog_fingerprint, true)
+                .customView(R.layout.dialog_fingerprint_encryption, true)
                 .negativeText(R.string.cancel)
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        clearEncryptedPassword();
                         mFinishEncryptionCheckerListener.ifEncryptionFinished();
                     }
                 });
+
+        mEncryptionDialog = mEncryptionDialogBuilder.build();
 
         if (initEncryptCipher()) {
             mCryptoObject = new FingerprintManager.CryptoObject(mEncryptCipher);
@@ -124,17 +125,18 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
     }
 
     private void setDecryptionStage() {
-        mDecryptionDialog = new MaterialDialog.Builder(context);
-        mDecryptionDialog
+        mDecryptionDialogBuilder = new MaterialDialog.Builder(context);
+        mDecryptionDialogBuilder
                 .cancelable(false)
-                .customView(R.layout.dialog_fingerprint, true)
-                .negativeText(R.string.cancel)
+                .customView(R.layout.dialog_fingerprint_decryption, true)
+                .negativeText(R.string.use_password)
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         mFinishDecryptionCheckerListener.ifDecryptionFinished(null);
                     }
                 });
+        mDecryptionDialog = mDecryptionDialogBuilder.build();
 
         if (initDecryptCipher()) {
             mCryptoObject = new FingerprintManager.CryptoObject(mDecryptCipher);
@@ -150,10 +152,16 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
         }
     }
 
+    private void clearEncryptedPassword() {
+        SharedPreferences.Editor editor = mPref.edit();
+        editor.putString(Constants.KEY_PASSWORD, "");
+        editor.commit();
+    }
+
     private boolean initEncryptCipher() {
         mEncryptCipher = getCipher(Cipher.ENCRYPT_MODE);
         if (mEncryptCipher == null) {
-            // try again after recreating the keystore
+            // Try again after recreating the keystore
             createKey();
             mEncryptCipher = getCipher(Cipher.ENCRYPT_MODE);
         }
@@ -258,32 +266,28 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
             editor.putString(Constants.KEY_PASSWORD, Base64.encodeToString(encrypted, Base64.DEFAULT));
             editor.putString(Constants.KEY_PASSWORD_IV, iv);
             editor.commit();
+            mEncryptionDialog.dismiss();
             mFinishEncryptionCheckerListener.ifEncryptionFinished();
 
         } catch (BadPaddingException | IllegalBlockSizeException e) {
-            Toast.makeText(context, "Failed to encrypt the data with the generated key. "
-                    + "Retry the purchase", Toast.LENGTH_LONG).show();
         } catch (InvalidParameterSpecException e) {
             e.printStackTrace();
         }
     }
 
-    public String tryDecrypt() {
+    public void tryDecrypt() {
         try {
             byte[] encodedData = Base64.decode(mPref.getString(Constants.KEY_PASSWORD, ""), Base64.DEFAULT);
             byte[] decodedData = mDecryptCipher.doFinal(encodedData);
+            mDecryptionDialog.dismiss();
             mFinishDecryptionCheckerListener.ifDecryptionFinished(new String(decodedData));
-            return new String(decodedData);
 
         } catch (BadPaddingException | IllegalBlockSizeException e) {
-            Toast.makeText(context, "Failed to decrypt the data with the generated key. "
-                    + "Retry the purchase", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
-        return null;
     }
 
-    public void setFinishCheckerListener(FinishEncryptionCheckerListener finishEncryptionCheckerListener) {
+    public void setFinishEncryptionCheckerListener(FinishEncryptionCheckerListener finishEncryptionCheckerListener) {
         mFinishEncryptionCheckerListener = finishEncryptionCheckerListener;
     }
 

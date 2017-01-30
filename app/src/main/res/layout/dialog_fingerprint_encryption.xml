@@ -22,7 +22,7 @@
         android:layout_below="@+id/image"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-        android:text="@string/fingerprint_hint" />
+        android:text="@string/touch_sensor" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -30,6 +30,6 @@
         android:layout_below="@+id/touch_sensor_text_view"
         android:layout_centerHorizontal="true"
         android:paddingTop="@dimen/activity_horizontal_margin_card"
-        android:text="@string/fingerprint_description" />
+        android:text="@string/save_password_by_fingerprint" />
 
 </RelativeLayout>

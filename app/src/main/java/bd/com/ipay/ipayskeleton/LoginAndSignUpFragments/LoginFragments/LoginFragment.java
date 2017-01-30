@@ -36,7 +36,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
-import bd.com.ipay.ipayskeleton.Utilities.PasswordManager;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -59,6 +58,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     private String mDeviceID;
     private SharedPreferences pref;
 
+    private boolean tryLogInWithTouchID = false;
+
     @Override
     public void onResume() {
         super.onResume();
@@ -78,29 +79,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             mUserNameEditText.setText(mobileNumber);
             mButtonJoinUs.setVisibility(View.GONE);
 
-            // If fingerprint auth option is on
-            boolean isFingerPrintAuthOn = pref.getBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false);
-            if (isFingerPrintAuthOn) {
-                {
-                    // If Finger Print option is on and finger print is encrypted
-                    if (pref.getString(Constants.KEY_PASSWORD, "") != "") {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getActivity()
-                                    , FingerprintAuthenticationDialog.Stage.FINGERPRINT_DECRYPT);
-                            fingerprintAuthenticationDialog.setFinishDecryptionCheckerListener(new FingerprintAuthenticationDialog.FinishDecryptionCheckerListener() {
-                                @Override
-                                public void ifDecryptionFinished(String decryptedData) {
-                                    if (decryptedData !=null) {
-                                        mPasswordEditText.setText(decryptedData);
-                                        attemptLogin();
-                                    }
-                                }
-                            });
-
-                        }
-                    }
-                }
-            }
+            // Login with touch ID
+            attemptLoginWithTouchID();
         } else {
             mPasswordEditText.setText("");
             mUserNameEditText.setText("");
@@ -208,6 +188,33 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         Utilities.hideKeyboard(getContext(), getView());
     }
 
+    private void attemptLoginWithTouchID() {
+        // If fingerprint auth option is on
+        boolean isFingerPrintAuthOn = pref.getBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false);
+        if (isFingerPrintAuthOn) {
+            {
+                // If Finger Print option is on and finger print is encrypted
+                if (pref.getString(Constants.KEY_PASSWORD, "") != "") {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getActivity()
+                                , FingerprintAuthenticationDialog.Stage.FINGERPRINT_DECRYPT);
+                        fingerprintAuthenticationDialog.setFinishDecryptionCheckerListener(new FingerprintAuthenticationDialog.FinishDecryptionCheckerListener() {
+                            @Override
+                            public void ifDecryptionFinished(String decryptedData) {
+                                if (decryptedData != null) {
+                                    tryLogInWithTouchID = true;
+                                    mPasswordLogin = decryptedData;
+                                    attemptLogin();
+                                }
+                            }
+                        });
+
+                    }
+                }
+            }
+        }
+    }
+
     private void attemptLogin() {
         if (mLoginTask != null) {
             return;
@@ -218,8 +225,9 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         // Store values at the time of the login attempt.
 
-        mPasswordLogin = mPasswordEditText.getText().toString().trim();
         mUserNameLogin = ContactEngine.formatMobileNumberBD(mUserNameEditText.getText().toString().trim());
+        if (!tryLogInWithTouchID)
+            mPasswordLogin = mPasswordEditText.getText().toString().trim();
 
         boolean cancel = false;
         View focusView = null;
@@ -306,66 +314,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                         ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
                     else ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
-              /*      // Finger print auth
-                    boolean isFingerPrintAuthOn = pref.getBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false);
-                    if (isFingerPrintAuthOn) {
-                        {
-                            // If Finger Print option is on and finger print is not encrypted
-                            if (pref.getString(Constants.KEY_PASSWORD, "") == "") {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getActivity(), FingerprintAuthenticationDialog.Stage.FINGERPRINT_ENCRYPT);
-                                    fingerprintAuthenticationDialog.setFinishCheckerListener(new FingerprintAuthenticationDialog.FinishEncryptionCheckerListener() {
-                                        @Override
-                                        public void ifEncryptionFinished() {
-                                            ProfileInfoCacheManager.setLoggedInStatus(true);
-
-                                            SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                                            pref.edit().putString(Constants.USERID, mUserNameLogin).apply();
-                                            pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).apply();
-                                            // When user logs in, we want that by default he would log in to his default account
-                                            TokenManager.deactivateEmployerAccount();
-
-                                            // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
-                                            if (!pref.contains(Constants.UUID))
-                                                ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
-                                            else
-                                                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
-                                        }
-                                    });
-                                }
-                            }
-                            else {
-                                ProfileInfoCacheManager.setLoggedInStatus(true);
-
-                                SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                                pref.edit().putString(Constants.USERID, mUserNameLogin).apply();
-                                pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).apply();
-                                // When user logs in, we want that by default he would log in to his default account
-                                TokenManager.deactivateEmployerAccount();
-
-                                // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
-                                if (!pref.contains(Constants.UUID))
-                                    ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
-                                else
-                                    ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
-                            }
-                        }
-                    }
-                    else {
-                        ProfileInfoCacheManager.setLoggedInStatus(true);
-
-                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                        pref.edit().putString(Constants.USERID, mUserNameLogin).apply();
-                        pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).apply();
-                        // When user logs in, we want that by default he would log in to his default account
-                        TokenManager.deactivateEmployerAccount();
-
-                        // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
-                        if (!pref.contains(Constants.UUID))
-                            ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
-                        else
-                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
-                    }*/
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
