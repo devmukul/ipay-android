@@ -56,12 +56,12 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_sent_money_requests, container, false);
+        View view = inflater.inflate(R.layout.fragment_sent_money_requests, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
-        mReceivedListRecyclerView = (RecyclerView) v.findViewById(R.id.list_my_requests);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+        mReceivedListRecyclerView = (RecyclerView) view.findViewById(R.id.list_my_requests);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
 
-        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
+        mEmptyListTextView = (TextView) view.findViewById(R.id.empty_list_text);
         mReceivedRequestsAdapter = new ReceivedMoneyRequestListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mReceivedListRecyclerView.setLayoutManager(mLayoutManager);
@@ -76,7 +76,7 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
             }
         });
 
-        return v;
+        return view;
     }
 
     @Override
@@ -150,8 +150,8 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
                         List<MoneyAndPaymentRequest> tempPendingMoneyRequestClasses;
                         tempPendingMoneyRequestClasses = mGetReceivedRequestResponse.getAllMoneyAndPaymentRequests();
                         moneyRequestList.addAll(tempPendingMoneyRequestClasses);
-
                     }
+
                     removeProcessingList();
                     hasNext = mGetReceivedRequestResponse.isHasNext();
                     if (isLoading) isLoading = false;
@@ -170,7 +170,6 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
 
             mSwipeRefreshLayout.setRefreshing(false);
             mReceivedRequestTask = null;
-
         }
 
         if (moneyRequestList != null && moneyRequestList.size() == 0) {
@@ -233,7 +232,6 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
         }
 
         public class FooterViewHolder extends RecyclerView.ViewHolder {
-
             private TextView mLoadMoreTextView;
             private ProgressBar mLoadMoreProgressBar;
 
@@ -316,7 +314,6 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
 
         @Override
         public int getItemViewType(int position) {
-
             if (position == getItemCount() - 1) {
                 return FOOTER_VIEW;
             } else

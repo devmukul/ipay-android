@@ -74,12 +74,12 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_sent_money_requests, container, false);
+        View view = inflater.inflate(R.layout.fragment_sent_money_requests, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
-        mPendingListRecyclerView = (RecyclerView) v.findViewById(R.id.list_my_requests);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+        mPendingListRecyclerView = (RecyclerView) view.findViewById(R.id.list_my_requests);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
 
-        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
+        mEmptyListTextView = (TextView) view.findViewById(R.id.empty_list_text);
         mPendingRequestsAdapter = new SentMoneyRequestListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mPendingListRecyclerView.setLayoutManager(mLayoutManager);
@@ -94,7 +94,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
             }
         });
 
-        return v;
+        return view;
     }
 
     @Override
@@ -303,12 +303,10 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                 });
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
-
             }
         }
 
         public class FooterViewHolder extends RecyclerView.ViewHolder {
-
             private TextView mLoadMoreTextView;
             private ProgressBar mLoadMoreProgressBar;
 

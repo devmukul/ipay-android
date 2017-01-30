@@ -69,15 +69,15 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_sent_invoice, container, false);
+        View view = inflater.inflate(R.layout.fragment_sent_invoice, container, false);
         getActivity().setTitle(R.string.request_payment);
 
         ((RequestPaymentActivity) getActivity()).mFabNewRequestPayment.setVisibility(View.VISIBLE);
 
-        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
+        mEmptyListTextView = (TextView) view.findViewById(R.id.empty_list_text);
         mProgressDialog = new ProgressDialog(getActivity());
-        mPendingListRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice_sent);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+        mPendingListRecyclerView = (RecyclerView) view.findViewById(R.id.list_invoice_sent);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
 
         mInvoicesSentAdapter = new PendingListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -93,7 +93,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
             }
         });
 
-        return v;
+        return view;
     }
 
     @Override
