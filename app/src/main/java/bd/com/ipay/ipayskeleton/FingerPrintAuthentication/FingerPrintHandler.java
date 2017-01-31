@@ -22,17 +22,24 @@ public class FingerPrintHandler extends FingerprintManager.AuthenticationCallbac
     private Context context;
     private OnAuthenticationCallBackListener onAuthenticationCallBackListener;
 
+    private CancellationSignal cancellationSignal;
+
     // Constructor
     public FingerPrintHandler(Context mContext) {
         context = mContext;
     }
 
     public void startAuth(FingerprintManager manager, FingerprintManager.CryptoObject cryptoObject) {
-        CancellationSignal cancellationSignal = new CancellationSignal();
+        cancellationSignal = new CancellationSignal();
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         manager.authenticate(cryptoObject, cancellationSignal, 0, this, null);
+    }
+
+    public void stopAuth() {
+        if (cancellationSignal != null)
+            cancellationSignal.cancel();
     }
 
     @Override

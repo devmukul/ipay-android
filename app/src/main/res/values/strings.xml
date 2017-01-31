@@ -455,17 +455,19 @@
     <string name="set_security_answer">Saving answers</string>
 
     <!-- Finger Print Auth -->
-    <string name="touch_id_for_login">Use Touch ID For Login</string>
+    <string name="use_fingerprint_for_login">Use Fingerprint For Login</string>
+    <string name="fingerprint_authentication_for_login">Fingerprint Authentication</string>
     <string name="use_password">Use password</string>
-    <string name="save_password_by_fingerprint">Save password using your fingerprint</string>
+    <string name="save_password_by_fingerprint">Please enter any of your valid fingerprint to save your password.</string>
     <string name="touch_sensor">Touch sensor</string>
     <string name="fingerprint_recognized">Fingerprint authentication successful</string>
     <string name="fingerprint_not_recognized">Fingerprint not recognized. Try again</string>
-    <string name="use_fingerprint_to_authenticate_title">Use fingerprint to authenticate</string>
+    <string name="use_fingerprint_to_authenticate_title">Use fingerprint to login</string>
     <string name="activate_fingerprint">Activate fingerprint</string>
     <string name="deactivate_fingerprint">Deactivate fingerprint</string>
-    <string name="fingerprint_settings_description">You can link your finger print for faster login and keep active iPay app</string>
-    <string name="login_failed_with_touch_id">It seems you have changed your password since you logged in the last time from this device. Please enter your new password</string>
+    <string name="fingerprint_settings_description">You can link your finger print for faster login and keep active iPay app.</string>
+    <string name="login_failed_with_touch_id">It seems you have changed your password since you logged in the last time from this device. Please enter your new password.</string>
+    <string name="remove_fingerprint_authentication_alert_message">Are you sure you want to deactivate fingerprint authentication?</string>
     <string name="fingerprint_authentication_activated">Fingerprint Authentication activated</string>
 
     <!-- PUSH -->

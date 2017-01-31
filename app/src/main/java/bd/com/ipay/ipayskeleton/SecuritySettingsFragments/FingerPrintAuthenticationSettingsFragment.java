@@ -4,12 +4,16 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintAuthenticationDialog;
 import bd.com.ipay.ipayskeleton.R;
@@ -37,20 +41,20 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
     }
 
     public void setTitle() {
-        getActivity().setTitle(R.string.touch_id_for_login);
+        getActivity().setTitle(R.string.use_fingerprint_for_login);
     }
 
     private void setFingerprintActivateButtonStatus() {
         isFingerPrintAuthOn = mPref.getBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false);
 
         if (isFingerPrintAuthOn) {
-            mFingerPrintActivateButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            mFingerPrintActivateButton.setText(R.string.fingerprint_authentication_activated);
-            mFingerPrintActivateButton.setTextColor(getResources().getColor(R.color.colorWhite));
+            mFingerPrintActivateButton.setBackground(getResources().getDrawable(R.drawable.background_transparent_with_color_primary_border));
+            mFingerPrintActivateButton.setText(R.string.deactivate_fingerprint);
+            mFingerPrintActivateButton.setTextColor(getResources().getColor(R.color.colorPrimary));
         } else {
-            mFingerPrintActivateButton.setBackgroundColor(getResources().getColor(R.color.colorGray));
+            mFingerPrintActivateButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             mFingerPrintActivateButton.setText(R.string.activate_fingerprint);
-            mFingerPrintActivateButton.setTextColor(Color.BLACK);
+            mFingerPrintActivateButton.setTextColor(getResources().getColor(R.color.colorWhite));
         }
     }
 
@@ -67,6 +71,7 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
                             public void ifEncryptionFinished() {
                                 if (mPref.getString(Constants.KEY_PASSWORD, "") != "") {
                                     mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, true).apply();
+                                    getActivity().onBackPressed();
                                 } else
                                     mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false).apply();
                                 setFingerprintActivateButtonStatus();
@@ -74,11 +79,29 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
                         });
                     }
                 } else {
-                    ProfileInfoCacheManager.clearEncryptedPassword();
-                    setFingerprintActivateButtonStatus();
+                    showDeactivateFingerPrintAuthDialog();
                 }
             }
         });
+    }
+
+    private void showDeactivateFingerPrintAuthDialog() {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
+        dialog
+                .content(R.string.remove_fingerprint_authentication_alert_message)
+                .cancelable(false)
+                .positiveText(R.string.yes)
+                .negativeText(R.string.no)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        ProfileInfoCacheManager.clearEncryptedPassword();
+                        //setFingerprintActivateButtonStatus();
+                        getActivity().onBackPressed();
+                    }
+                })
+                .show();
+
     }
 }
 
