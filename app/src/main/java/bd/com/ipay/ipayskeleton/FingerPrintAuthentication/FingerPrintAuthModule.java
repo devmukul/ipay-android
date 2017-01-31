@@ -29,9 +29,11 @@ public class FingerPrintAuthModule {
     }
 
     public void initFingerPrintManagager() {
-        // Initializing both Android Keyguard Manager and Fingerprint Manager
-        mKeyguardManager = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
-        mFingerprintManager = (FingerprintManager) mContext.getSystemService(Context.FINGERPRINT_SERVICE);
+        if(checkIfFingerPrintSupported()) {
+            // Initializing both Android Keyguard Manager and Fingerprint Manager
+            mKeyguardManager = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
+            mFingerprintManager = (FingerprintManager) mContext.getSystemService(Context.FINGERPRINT_SERVICE);
+        }
     }
 
     public boolean checkIfFingerPrintSupported() {

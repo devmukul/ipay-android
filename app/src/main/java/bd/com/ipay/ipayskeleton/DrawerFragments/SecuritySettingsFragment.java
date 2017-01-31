@@ -42,6 +42,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
     private IconifiedTextViewWithButton mPasswordRecoveryHeader;
     private IconifiedTextViewWithButton mLogoutHeader;
     private IconifiedTextViewWithButton mFingerprintOptionHeader;
+    private View mFingerprintOptionHolder;
 
     private ProgressDialog mProgressDialog;
     private SharedPreferences mPref;
@@ -59,6 +60,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         mPasswordRecoveryHeader = (IconifiedTextViewWithButton) view.findViewById(R.id.password_recovery);
         mLogoutHeader = (IconifiedTextViewWithButton) view.findViewById(R.id.logout_from_all_devices);
         mFingerprintOptionHeader = (IconifiedTextViewWithButton) view.findViewById(R.id.login_with_fingerprint);
+        mFingerprintOptionHolder = view.findViewById(R.id.fingerprint_layout);
 
         mProgressDialog = new ProgressDialog(getActivity());
         mPref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
@@ -74,9 +76,9 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
 
     private void setVisibilityOfFingerPrintOption() {
         if (((SecuritySettingsActivity) getActivity()).isFingerPrintAvailable)
-            mFingerprintOptionHeader.setVisibility(View.VISIBLE);
+            mFingerprintOptionHolder.setVisibility(View.VISIBLE);
         else
-            mFingerprintOptionHeader.setVisibility(View.GONE);
+            mFingerprintOptionHolder.setVisibility(View.GONE);
     }
 
     private void setButtonActions() {
