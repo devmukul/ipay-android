@@ -70,7 +70,7 @@
                 android:id="@+id/login_with_fingerprint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_signup_pw"
+                android:drawableLeft="@drawable/ic_fingerprint"
                 android:paddingBottom="@dimen/value4"
                 android:paddingLeft="@dimen/activity_horizontal_margin_card"
                 android:paddingTop="@dimen/value4"

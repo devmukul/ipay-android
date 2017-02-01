@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -10,11 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerPrintAuthenticationManager;
 import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintAuthenticationDialog;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -62,30 +61,31 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
         mFingerPrintActivateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isFingerPrintAuthOn) {
-                    {
-                        FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getContext(),
-                                FingerprintAuthenticationDialog.Stage.FINGERPRINT_ENCRYPT);
-                        fingerprintAuthenticationDialog.setFinishEncryptionCheckerListener(new FingerprintAuthenticationDialog.FinishEncryptionCheckerListener() {
-                            @Override
-                            public void ifEncryptionFinished() {
-                                if (mPref.getString(Constants.KEY_PASSWORD, "") != "") {
-                                    mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, true).apply();
-                                    getActivity().onBackPressed();
-                                } else
-                                    mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false).apply();
-                                setFingerprintActivateButtonStatus();
-                            }
-                        });
-                    }
-                } else {
-                    showDeactivateFingerPrintAuthDialog();
-                }
+                if (!isFingerPrintAuthOn)
+                    showFingerprintActivationDialog();
+                else
+                    showFingerPrintDeactivationDialog();
             }
         });
     }
 
-    private void showDeactivateFingerPrintAuthDialog() {
+    private void showFingerprintActivationDialog() {
+        FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getContext(),
+                FingerprintAuthenticationDialog.Stage.FINGERPRINT_ENCRYPT);
+        fingerprintAuthenticationDialog.setFinishEncryptionCheckerListener(new FingerprintAuthenticationDialog.FinishEncryptionCheckerListener() {
+            @Override
+            public void ifEncryptionFinished() {
+                if (mPref.getString(Constants.KEY_PASSWORD, "") != "") {
+                    mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, true).apply();
+                    getActivity().onBackPressed();
+                } else
+                    mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false).apply();
+                setFingerprintActivateButtonStatus();
+            }
+        });
+    }
+
+    private void showFingerPrintDeactivationDialog() {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
         dialog
                 .content(R.string.remove_fingerprint_authentication_alert_message)

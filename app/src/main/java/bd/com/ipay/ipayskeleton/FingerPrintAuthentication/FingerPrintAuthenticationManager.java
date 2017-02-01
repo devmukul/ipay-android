@@ -15,47 +15,47 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 
 import javax.crypto.KeyGenerator;
-import javax.net.ssl.KeyManager;
 
-public class FingerPrintAuthModule {
+public class FingerPrintAuthenticationManager {
 
     private Context mContext;
     private KeyguardManager mKeyguardManager;
     private FingerprintManager mFingerprintManager;
 
-    public FingerPrintAuthModule(Context context) {
+    public FingerPrintAuthenticationManager(Context context) {
         this.mContext = context;
-        initFingerPrintManagager();
     }
 
-    public void initFingerPrintManagager() {
-        if(checkIfFingerPrintSupported()) {
-            // Initializing both Android Keyguard Manager and Fingerprint Manager
-            mKeyguardManager = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
-            mFingerprintManager = (FingerprintManager) mContext.getSystemService(Context.FINGERPRINT_SERVICE);
-        }
+    public void initFingerPrintAuthenticationManager() {
+        // Initializing both Android Keyguard Manager and Fingerprint Manager
+        mKeyguardManager = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
+        mFingerprintManager = (FingerprintManager) mContext.getSystemService(Context.FINGERPRINT_SERVICE);
     }
 
-    public boolean checkIfFingerPrintSupported() {
+    public boolean ifFingerprintAuthenticationSupports() {
         // Check whether the device has a Fingerprint sensor.
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return false;
-        if (!mFingerprintManager.isHardwareDetected()) {
-            return false;
-        } else {
-            // Checks whether fingerprint permission is set on manifest
-            if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+        else {
+            initFingerPrintAuthenticationManager();
+
+            if (!mFingerprintManager.isHardwareDetected()) {
                 return false;
             } else {
-                // Check whether at least one fingerprint is registered
-                if (!mFingerprintManager.hasEnrolledFingerprints()) {
+                // Checks whether fingerprint permission is set on manifest
+                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
                     return false;
                 } else {
-                    // Checks whether lock screen security is enabled or not
-                    if (!mKeyguardManager.isKeyguardSecure()) {
+                    // Check whether at least one fingerprint is registered
+                    if (!mFingerprintManager.hasEnrolledFingerprints()) {
                         return false;
                     } else {
-                        return true;
+                        // Checks whether lock screen security is enabled or not
+                        if (!mKeyguardManager.isKeyguardSecure()) {
+                            return false;
+                        } else {
+                            return true;
+                        }
                     }
                 }
             }

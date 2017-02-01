@@ -28,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerPrintAuthenticationManager;
 import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintAuthenticationDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
@@ -190,26 +191,28 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     }
 
     private void attemptLoginWithTouchID() {
-        // If fingerprint auth option is on
-        boolean isFingerPrintAuthOn = pref.getBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false);
-        if (isFingerPrintAuthOn) {
-            {
-                // If Finger Print option is on and finger print is encrypted
-                if (pref.getString(Constants.KEY_PASSWORD, "") != "") {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getActivity()
-                                , FingerprintAuthenticationDialog.Stage.FINGERPRINT_DECRYPT);
-                        fingerprintAuthenticationDialog.setFinishDecryptionCheckerListener(new FingerprintAuthenticationDialog.FinishDecryptionCheckerListener() {
-                            @Override
-                            public void ifDecryptionFinished(String decryptedData) {
-                                if (decryptedData != null) {
-                                    tryLogInWithTouchID = true;
-                                    mPasswordLogin = decryptedData;
-                                    attemptLogin();
+        FingerPrintAuthenticationManager fingerPrintAuthenticationManager = new FingerPrintAuthenticationManager(getActivity());
+        if (fingerPrintAuthenticationManager.ifFingerprintAuthenticationSupports()) {
+            // If fingerprint auth option is on
+            boolean isFingerPrintAuthOn = pref.getBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false);
+            if (isFingerPrintAuthOn) {
+                {
+                    // If Finger Print option is on and finger print is encrypted
+                    if (pref.getString(Constants.KEY_PASSWORD, "") != "") {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getActivity()
+                                    , FingerprintAuthenticationDialog.Stage.FINGERPRINT_DECRYPT);
+                            fingerprintAuthenticationDialog.setFinishDecryptionCheckerListener(new FingerprintAuthenticationDialog.FinishDecryptionCheckerListener() {
+                                @Override
+                                public void ifDecryptionFinished(String decryptedData) {
+                                    if (decryptedData != null) {
+                                        tryLogInWithTouchID = true;
+                                        mPasswordLogin = decryptedData;
+                                        attemptLogin();
+                                    }
                                 }
-                            }
-                        });
-
+                            });
+                        }
                     }
                 }
             }

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerPrintAuthModule;
+import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerPrintAuthenticationManager;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.AddTrustedPersonFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.ChangePasswordFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.FingerPrintAuthenticationSettingsFragment;
@@ -30,7 +30,6 @@ public class SecuritySettingsActivity extends BaseActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        initFingerPrintAuth();
         switchToAccountSettingsFragment();
     }
 
@@ -57,13 +56,6 @@ public class SecuritySettingsActivity extends BaseActivity {
         else
             super.onBackPressed();
     }
-
-private void initFingerPrintAuth()
-{
-    FingerPrintAuthModule fingerprintAuthModule =new FingerPrintAuthModule(this);
-    if(fingerprintAuthModule.checkIfFingerPrintSupported())
-        isFingerPrintAvailable = true;
-}
 
     public void switchToAccountSettingsFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0)
