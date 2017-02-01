@@ -13,7 +13,6 @@ import android.widget.Button;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerPrintAuthenticationManager;
 import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintAuthenticationDialog;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -44,7 +43,7 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
     }
 
     private void setFingerprintActivateButtonStatus() {
-        isFingerPrintAuthOn = mPref.getBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false);
+        isFingerPrintAuthOn = mPref.getBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false);
 
         if (isFingerPrintAuthOn) {
             mFingerPrintActivateButton.setBackground(getResources().getDrawable(R.drawable.background_transparent_with_color_primary_border));
@@ -76,10 +75,10 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
             @Override
             public void ifEncryptionFinished() {
                 if (mPref.getString(Constants.KEY_PASSWORD, "") != "") {
-                    mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, true).apply();
+                    mPref.edit().putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, true).apply();
                     getActivity().onBackPressed();
                 } else
-                    mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false).apply();
+                    mPref.edit().putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false).apply();
                 setFingerprintActivateButtonStatus();
             }
         });

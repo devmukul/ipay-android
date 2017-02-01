@@ -145,9 +145,9 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
             @Override
             public void ifEncryptionFinished() {
                 if (mPref.getString(Constants.KEY_PASSWORD, "") != "") {
-                    mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, true).apply();
+                    mPref.edit().putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, true).apply();
                 } else
-                    mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false).apply();
+                    mPref.edit().putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false).apply();
 
                 ((SecuritySettingsActivity) getActivity()).switchToAccountSettingsFragment();
             }
@@ -184,7 +184,7 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
                         Toast.makeText(getActivity(), mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
                     SignupOrLoginActivity.mPassword = mNewPassword;
 
-                    boolean isFingerPrintAuthOn = mPref.getBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false);
+                    boolean isFingerPrintAuthOn = mPref.getBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false);
                     if (isFingerPrintAuthOn) {
                         saveNewPasswordWithTouchID();
 

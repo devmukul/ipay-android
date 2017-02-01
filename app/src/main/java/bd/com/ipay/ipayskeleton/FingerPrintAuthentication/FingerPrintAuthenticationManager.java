@@ -62,9 +62,6 @@ public class FingerPrintAuthenticationManager {
         }
     }
 
-    public KeyguardManager getKeyguardManager() {
-        return mKeyguardManager;
-    }
 
     public FingerprintManager getFingerprintManager() {
         return mFingerprintManager;

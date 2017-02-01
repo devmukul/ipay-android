@@ -125,16 +125,6 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
                 ((SecuritySettingsActivity) getActivity()).switchToFingerprintAuthenticationSettingsFragment();
             }
         });
-
-        /*mFingerPrintAuthOptionCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked)
-                    mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, true).apply();
-                else
-                    mPref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false).apply();
-            }
-        });*/
     }
 
     private void showLogoutFromAllDevicesDialog() {

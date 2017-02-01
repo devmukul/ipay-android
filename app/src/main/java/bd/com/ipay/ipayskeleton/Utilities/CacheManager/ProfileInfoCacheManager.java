@@ -84,7 +84,7 @@ public class ProfileInfoCacheManager {
     public static void clearEncryptedPassword() {
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(Constants.KEY_PASSWORD, "");
-        pref.edit().putBoolean(Constants.LOGIN_WITH_FINGERPRINT_AUTH, false).apply();
+        pref.edit().putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false).apply();
         editor.commit();
     }
 

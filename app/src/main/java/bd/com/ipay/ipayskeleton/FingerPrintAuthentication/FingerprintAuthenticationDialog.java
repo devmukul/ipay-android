@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.FingerPrintAuthentication;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.hardware.fingerprint.FingerprintManager;
@@ -41,7 +40,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
 
     public FingerprintManager mFingerprintManager;
-    private KeyguardManager mKeyguardManager;
     private KeyStore mKeyStore;
     private KeyGenerator mKeyGenerator;
 
@@ -72,20 +70,9 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
         initDialog();
     }
 
-    private void initFingerPrintAuthModule() {
-        mFingerprintAuthenticationManager = new FingerPrintAuthenticationManager(context);
-
-        if (mFingerprintAuthenticationManager.ifFingerprintAuthenticationSupports()) {
-            mKeyguardManager = mFingerprintAuthenticationManager.getKeyguardManager();
-            mFingerprintManager = mFingerprintAuthenticationManager.getFingerprintManager();
-            mKeyStore = mFingerprintAuthenticationManager.getKeystore();
-            mKeyGenerator = mFingerprintAuthenticationManager.getKeyGenerator();
-        }
-    }
-
     @TargetApi(Build.VERSION_CODES.M)
     private void initDialog() {
-        initFingerPrintAuthModule();
+        initFingerPrintAuthenticationManager();
 
         mPref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
@@ -95,6 +82,16 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
             } else if (mStage == Stage.FINGERPRINT_DECRYPT) {
                 setDecryptionStage();
             }
+        }
+    }
+
+    private void initFingerPrintAuthenticationManager() {
+        mFingerprintAuthenticationManager = new FingerPrintAuthenticationManager(context);
+
+        if (mFingerprintAuthenticationManager.ifFingerprintAuthenticationSupports()) {
+            mFingerprintManager = mFingerprintAuthenticationManager.getFingerprintManager();
+            mKeyStore = mFingerprintAuthenticationManager.getKeystore();
+            mKeyGenerator = mFingerprintAuthenticationManager.getKeyGenerator();
         }
     }
 
