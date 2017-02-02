@@ -90,7 +90,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         MenuInflater menuInflater = getActivity().getMenuInflater();
-        menuInflater.inflate(R.menu.activity_history, menu);
+        menuInflater.inflate(R.menu.activity_log, menu);
         menuInflater.inflate(R.menu.clear_filter, menu);
         this.menu = menu;
         menu.findItem(R.id.action_clear_filter).setVisible(false);
