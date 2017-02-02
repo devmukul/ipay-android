@@ -61,6 +61,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     private SharedPreferences pref;
 
     private boolean tryLogInWithTouchID = false;
+    private FingerprintAuthenticationDialog mFingerprintAuthenticationDialog;
 
     @Override
     public void onResume() {
@@ -188,6 +189,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     public void onPause() {
         super.onPause();
         Utilities.hideKeyboard(getContext(), getView());
+
+        if (mFingerprintAuthenticationDialog != null) {
+            mFingerprintAuthenticationDialog.stopFingerprintHandler();
+        }
     }
 
     private void attemptLoginWithTouchID() {
@@ -198,9 +203,9 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             if (isFingerPrintAuthOn) {
                 // If Finger Print option is on and finger print is encrypted
                 if (pref.getString(Constants.KEY_PASSWORD, "") != "") {
-                    FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getActivity()
+                    mFingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getActivity()
                             , FingerprintAuthenticationDialog.Stage.FINGERPRINT_DECRYPT);
-                    fingerprintAuthenticationDialog.setFinishDecryptionCheckerListener(new FingerprintAuthenticationDialog.FinishDecryptionCheckerListener() {
+                    mFingerprintAuthenticationDialog.setFinishDecryptionCheckerListener(new FingerprintAuthenticationDialog.FinishDecryptionCheckerListener() {
                         @Override
                         public void ifDecryptionFinished(String decryptedData) {
                             if (decryptedData != null) {

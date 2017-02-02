@@ -120,6 +120,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
             mFingerPrintHandler.setOnAuthenticationCallBackListener(new FingerPrintHandler.OnAuthenticationCallBackListener() {
                 @Override
                 public void onAuthenticationCallBack(FingerprintManager.AuthenticationResult result) {
+
                     tryEncrypt(SignupOrLoginActivity.mPassword);
                 }
             });
@@ -286,6 +287,14 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
         } catch (BadPaddingException | IllegalBlockSizeException e) {
             e.printStackTrace();
         }
+    }
+
+    public void stopFingerprintHandler() {
+        if (mFingerPrintHandler != null)
+            mFingerPrintHandler.stopAuth();
+        if (mStage == Stage.FINGERPRINT_ENCRYPT)
+            mEncryptionDialog.dismiss();
+        else mDecryptionDialog.dismiss();
     }
 
     public void setFinishEncryptionCheckerListener(FinishEncryptionCheckerListener finishEncryptionCheckerListener) {

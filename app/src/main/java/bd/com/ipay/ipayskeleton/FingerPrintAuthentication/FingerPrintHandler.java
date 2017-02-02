@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 
 public class FingerPrintHandler extends FingerprintManager.AuthenticationCallback {
 

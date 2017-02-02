@@ -20,7 +20,8 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class FingerPrintAuthenticationSettingsFragment extends Fragment {
-    Button mFingerPrintActivateButton;
+    private Button mFingerPrintActivateButton;
+    private FingerprintAuthenticationDialog mFingerprintAuthenticationDialog;
 
     private SharedPreferences mPref;
     private boolean isFingerPrintAuthOn;
@@ -37,6 +38,15 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
         setFingerprintActivationButtonActions();
 
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mFingerprintAuthenticationDialog != null) {
+            mFingerprintAuthenticationDialog.stopFingerprintHandler();
+        }
     }
 
     public void setTitle() {
@@ -70,9 +80,9 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
     }
 
     private void showFingerprintActivationDialog() {
-        FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getContext(),
+        mFingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getContext(),
                 FingerprintAuthenticationDialog.Stage.FINGERPRINT_ENCRYPT);
-        fingerprintAuthenticationDialog.setFinishEncryptionCheckerListener(new FingerprintAuthenticationDialog.FinishEncryptionCheckerListener() {
+        mFingerprintAuthenticationDialog.setFinishEncryptionCheckerListener(new FingerprintAuthenticationDialog.FinishEncryptionCheckerListener() {
             @Override
             public void ifEncryptionFinished() {
                 if (mPref.getString(Constants.KEY_PASSWORD, "") != "") {
