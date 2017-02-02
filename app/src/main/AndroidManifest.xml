@@ -22,7 +22,7 @@
 
     <permission
         android:name="bd.com.ipay.android.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />b
+        android:protectionLevel="signature" />
 
     <uses-permission android:name="bd.com.ipay.android.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -273,7 +273,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustPan" />
-        
+
         <!-- Receiver and service -->
 
         <receiver
