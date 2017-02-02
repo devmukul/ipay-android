@@ -142,6 +142,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
                         mFinishDecryptionCheckerListener.ifDecryptionFinished(null);
                     }
                 });
+
         mDecryptionDialog = mDecryptionDialogBuilder.build();
 
         if (initDecryptCipher()) {

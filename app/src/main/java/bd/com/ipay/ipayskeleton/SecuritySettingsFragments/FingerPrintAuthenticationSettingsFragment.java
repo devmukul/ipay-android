@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -32,17 +33,17 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
         mFingerPrintActivateButton = (Button) view.findViewById(R.id.fingerprint_activate_button);
         mPref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
-        setFingerprintActivateButtonStatus();
-        setFingerprintAuthCheckboxActions();
+        setFingerprintActivationButtonView();
+        setFingerprintActivationButtonActions();
 
         return view;
     }
 
     public void setTitle() {
-        getActivity().setTitle(R.string.use_fingerprint_for_login);
+        getActivity().setTitle(R.string.fingerprint_authentication);
     }
 
-    private void setFingerprintActivateButtonStatus() {
+    private void setFingerprintActivationButtonView() {
         isFingerPrintAuthOn = mPref.getBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false);
 
         if (isFingerPrintAuthOn) {
@@ -56,7 +57,7 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
         }
     }
 
-    private void setFingerprintAuthCheckboxActions() {
+    private void setFingerprintActivationButtonActions() {
         mFingerPrintActivateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,7 +80,7 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
                     getActivity().onBackPressed();
                 } else
                     mPref.edit().putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false).apply();
-                setFingerprintActivateButtonStatus();
+                setFingerprintActivationButtonView();
             }
         });
     }
@@ -95,7 +96,8 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         ProfileInfoCacheManager.clearEncryptedPassword();
-                        //setFingerprintActivateButtonStatus();
+
+                        Toast.makeText(getActivity(), R.string.fingerprint_authentication_deactivated, Toast.LENGTH_LONG).show();
                         getActivity().onBackPressed();
                     }
                 })
