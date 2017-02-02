@@ -196,24 +196,20 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             // If fingerprint auth option is on
             boolean isFingerPrintAuthOn = pref.getBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false);
             if (isFingerPrintAuthOn) {
-                {
-                    // If Finger Print option is on and finger print is encrypted
-                    if (pref.getString(Constants.KEY_PASSWORD, "") != "") {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getActivity()
-                                    , FingerprintAuthenticationDialog.Stage.FINGERPRINT_DECRYPT);
-                            fingerprintAuthenticationDialog.setFinishDecryptionCheckerListener(new FingerprintAuthenticationDialog.FinishDecryptionCheckerListener() {
-                                @Override
-                                public void ifDecryptionFinished(String decryptedData) {
-                                    if (decryptedData != null) {
-                                        tryLogInWithTouchID = true;
-                                        mPasswordLogin = decryptedData;
-                                        attemptLogin();
-                                    }
-                                }
-                            });
+                // If Finger Print option is on and finger print is encrypted
+                if (pref.getString(Constants.KEY_PASSWORD, "") != "") {
+                    FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getActivity()
+                            , FingerprintAuthenticationDialog.Stage.FINGERPRINT_DECRYPT);
+                    fingerprintAuthenticationDialog.setFinishDecryptionCheckerListener(new FingerprintAuthenticationDialog.FinishDecryptionCheckerListener() {
+                        @Override
+                        public void ifDecryptionFinished(String decryptedData) {
+                            if (decryptedData != null) {
+                                tryLogInWithTouchID = true;
+                                mPasswordLogin = decryptedData;
+                                attemptLogin();
+                            }
                         }
-                    }
+                    });
                 }
             }
         }
