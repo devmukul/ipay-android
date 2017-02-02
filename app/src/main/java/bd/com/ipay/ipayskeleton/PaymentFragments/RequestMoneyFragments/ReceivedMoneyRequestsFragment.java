@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
 
     private int pageCount = 0;
     private boolean hasNext = false;
+    private boolean isLoading = false;
     private boolean clearListAfterLoading;
 
     // These variables hold the information needed to populate the review dialog
@@ -115,7 +117,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
             return;
         }
         GetMoneyRequest mMoneyRequest = new GetMoneyRequest(pageCount,
-                Constants.SERVICE_ID_REQUEST_MONEY,Constants.MONEY_REQUEST_STATUS_PROCESSING);
+                Constants.SERVICE_ID_REQUEST_MONEY, Constants.MONEY_REQUEST_STATUS_PROCESSING);
         Gson gson = new Gson();
         String json = gson.toJson(mMoneyRequest);
         mGetMoneyRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_MONEY_REQUESTS,
@@ -133,7 +135,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
             mGetMoneyRequestTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null) {
-                Toast.makeText(getActivity(),  R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
             }
             return;
         }
@@ -157,6 +159,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                         }
 
                         hasNext = mGetMoneyAndPaymentRequestResponse.isHasNext();
+                        if (isLoading) isLoading = false;
                         mReceivedMoneyRequestListAdapter.notifyDataSetChanged();
 
                     } catch (Exception e) {
@@ -245,29 +248,48 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
         public class FooterViewHolder extends RecyclerView.ViewHolder {
 
             private TextView mLoadMoreTextView;
+            private ProgressBar mLoadMoreProgressBar;
 
             public FooterViewHolder(View itemView) {
                 super(itemView);
 
-                itemView.setOnClickListener(new View.OnClickListener() {
+                mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
+                mLoadMoreProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
+            }
+
+            public void bindViewFooter() {
+                setItemVisibilityOfFooterView();
+
+                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (hasNext) {
                             pageCount = pageCount + 1;
+                            showLoadingInFooter();
                             getMoneyRequests();
                         }
                     }
                 });
-
-                mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
             }
 
-            public void bindView() {
+            private void setItemVisibilityOfFooterView() {
+                if (isLoading) {
+                    mLoadMoreProgressBar.setVisibility(View.VISIBLE);
+                    mLoadMoreTextView.setVisibility(View.GONE);
+                } else {
+                    mLoadMoreProgressBar.setVisibility(View.GONE);
+                    mLoadMoreTextView.setVisibility(View.VISIBLE);
 
-                if (hasNext)
-                    mLoadMoreTextView.setText(R.string.load_more);
-                else
-                    mLoadMoreTextView.setText(R.string.no_more_results);
+                    if (hasNext)
+                        mLoadMoreTextView.setText(R.string.load_more);
+                    else
+                        mLoadMoreTextView.setText(R.string.no_more_results);
+                }
+            }
+
+            private void showLoadingInFooter() {
+                isLoading = true;
+                notifyDataSetChanged();
             }
         }
 
@@ -297,7 +319,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
 
                 } else if (holder instanceof FooterViewHolder) {
                     FooterViewHolder vh = (FooterViewHolder) holder;
-                    vh.bindView();
+                    vh.bindViewFooter();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
