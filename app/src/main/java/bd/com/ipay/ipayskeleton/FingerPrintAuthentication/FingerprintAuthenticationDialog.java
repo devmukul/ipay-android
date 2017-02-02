@@ -76,7 +76,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
 
         mPref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
-        if (mFingerprintAuthenticationManager.ifFingerprintAuthenticationSupports()) {
+        if (mFingerprintAuthenticationManager.ifFingerprintAuthenticationSupported()) {
             if (mStage == Stage.FINGERPRINT_ENCRYPT) {
                 setEncryptionStage();
             } else if (mStage == Stage.FINGERPRINT_DECRYPT) {
@@ -88,7 +88,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
     private void initFingerPrintAuthenticationManager() {
         mFingerprintAuthenticationManager = new FingerPrintAuthenticationManager(context);
 
-        if (mFingerprintAuthenticationManager.ifFingerprintAuthenticationSupports()) {
+        if (mFingerprintAuthenticationManager.ifFingerprintAuthenticationSupported()) {
             mFingerprintManager = mFingerprintAuthenticationManager.getFingerprintManager();
             mKeyStore = mFingerprintAuthenticationManager.getKeystore();
             mKeyGenerator = mFingerprintAuthenticationManager.getKeyGenerator();

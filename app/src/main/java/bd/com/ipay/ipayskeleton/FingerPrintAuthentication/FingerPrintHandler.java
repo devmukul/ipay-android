@@ -5,41 +5,36 @@ import android.hardware.fingerprint.FingerprintManager;
 
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.hardware.fingerprint.FingerprintManager;
 import android.os.CancellationSignal;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import bd.com.ipay.ipayskeleton.R;
 
 public class FingerPrintHandler extends FingerprintManager.AuthenticationCallback {
 
-    private Context context;
-    private OnAuthenticationCallBackListener onAuthenticationCallBackListener;
+    private Context mContext;
+    private CancellationSignal mCancellationSignal;
 
-    private CancellationSignal cancellationSignal;
+    private OnAuthenticationCallBackListener onAuthenticationCallBackListener;
 
     // Constructor
     public FingerPrintHandler(Context mContext) {
-        context = mContext;
+        this.mContext = mContext;
     }
 
     public void startAuth(FingerprintManager manager, FingerprintManager.CryptoObject cryptoObject) {
-        cancellationSignal = new CancellationSignal();
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+        mCancellationSignal = new CancellationSignal();
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        manager.authenticate(cryptoObject, cancellationSignal, 0, this, null);
+        manager.authenticate(cryptoObject, mCancellationSignal, 0, this, null);
     }
 
     public void stopAuth() {
-        if (cancellationSignal != null)
-            cancellationSignal.cancel();
+        if (mCancellationSignal != null)
+            mCancellationSignal.cancel();
     }
 
     @Override
@@ -52,12 +47,12 @@ public class FingerPrintHandler extends FingerprintManager.AuthenticationCallbac
 
     @Override
     public void onAuthenticationFailed() {
-        Toast.makeText(context, R.string.fingerprint_not_recognized, Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, R.string.fingerprint_not_recognized, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
-        Toast.makeText(context, R.string.fingerprint_recognized, Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, R.string.fingerprint_recognized, Toast.LENGTH_LONG).show();
         onAuthenticationCallBackListener.onAuthenticationCallBack(result);
     }
 

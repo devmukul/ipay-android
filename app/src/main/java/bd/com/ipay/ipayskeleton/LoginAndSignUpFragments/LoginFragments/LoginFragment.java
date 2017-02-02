@@ -192,7 +192,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
     private void attemptLoginWithTouchID() {
         FingerPrintAuthenticationManager fingerPrintAuthenticationManager = new FingerPrintAuthenticationManager(getActivity());
-        if (fingerPrintAuthenticationManager.ifFingerprintAuthenticationSupports()) {
+        if (fingerPrintAuthenticationManager.ifFingerprintAuthenticationSupported()) {
             // If fingerprint auth option is on
             boolean isFingerPrintAuthOn = pref.getBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false);
             if (isFingerPrintAuthOn) {

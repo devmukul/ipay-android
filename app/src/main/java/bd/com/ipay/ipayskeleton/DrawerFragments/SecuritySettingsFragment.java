@@ -10,8 +10,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -77,7 +75,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
 
     private void setVisibilityOfFingerPrintOption() {
         FingerPrintAuthenticationManager fingerprintAuthenticationManager = new FingerPrintAuthenticationManager(getActivity());
-        if (fingerprintAuthenticationManager.ifFingerprintAuthenticationSupports())
+        if (fingerprintAuthenticationManager.ifFingerprintAuthenticationSupported())
             mFingerprintOptionHolder.setVisibility(View.VISIBLE);
         else
             mFingerprintOptionHolder.setVisibility(View.GONE);

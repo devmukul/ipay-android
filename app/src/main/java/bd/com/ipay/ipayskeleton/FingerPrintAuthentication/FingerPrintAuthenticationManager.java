@@ -32,13 +32,14 @@ public class FingerPrintAuthenticationManager {
         mFingerprintManager = (FingerprintManager) mContext.getSystemService(Context.FINGERPRINT_SERVICE);
     }
 
-    public boolean ifFingerprintAuthenticationSupports() {
-        // Check whether the device has a Fingerprint sensor.
+    public boolean ifFingerprintAuthenticationSupported() {
+        // Check whether the android version supports fingerprint authentication
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return false;
         else {
             initFingerPrintAuthenticationManager();
 
+            // Check whether the device has a Fingerprint sensor
             if (!mFingerprintManager.isHardwareDetected()) {
                 return false;
             } else {
