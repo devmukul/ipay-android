@@ -96,13 +96,13 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         if (result != null) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
-                String message = mContext.getString(R.string.please_log_in_again);
 
                 try {
                     MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
                     boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
 
                     if (loggedIn) {
+                        String message = mContext.getString(R.string.please_log_in_again);
                         myApplicationInstance.launchLoginPage(message);
 
                     } else {
