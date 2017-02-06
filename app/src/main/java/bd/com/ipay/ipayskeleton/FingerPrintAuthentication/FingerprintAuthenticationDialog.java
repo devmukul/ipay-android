@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.FingerPrintAuthentication;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
@@ -98,7 +99,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
     private void setEncryptionStage() {
         mEncryptionDialogBuilder = new MaterialDialog.Builder(context);
         mEncryptionDialogBuilder
-                .cancelable(false)
+                .canceledOnTouchOutside(false)
                 .customView(R.layout.dialog_fingerprint_encryption, true)
                 .negativeText(R.string.cancel)
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -113,6 +114,16 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
                 });
 
         mEncryptionDialog = mEncryptionDialogBuilder.build();
+        mEncryptionDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (mFingerPrintHandler != null)
+                    mFingerPrintHandler.stopAuth();
+
+                ProfileInfoCacheManager.clearEncryptedPassword();
+                mFinishEncryptionCheckerListener.ifEncryptionFinished();
+            }
+        });
 
         if (initEncryptCipher()) {
             mCryptoObject = new FingerprintManager.CryptoObject(mEncryptCipher);
@@ -132,7 +143,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
     private void setDecryptionStage() {
         mDecryptionDialogBuilder = new MaterialDialog.Builder(context);
         mDecryptionDialogBuilder
-                .cancelable(false)
+                .canceledOnTouchOutside(false)
                 .customView(R.layout.dialog_fingerprint_decryption, true)
                 .negativeText(R.string.use_password)
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -145,6 +156,14 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
                 });
 
         mDecryptionDialog = mDecryptionDialogBuilder.build();
+        mDecryptionDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (mFingerPrintHandler != null)
+                    mFingerPrintHandler.stopAuth();
+                mFinishDecryptionCheckerListener.ifDecryptionFinished(null);
+            }
+        });
 
         if (initDecryptCipher()) {
             mCryptoObject = new FingerprintManager.CryptoObject(mDecryptCipher);
