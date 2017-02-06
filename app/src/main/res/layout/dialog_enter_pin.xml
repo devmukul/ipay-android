@@ -19,8 +19,9 @@
             android:hint="@string/enter_pin"
             android:inputType="numberPassword"
             android:maxLines="1"
-            android:singleLine="true" >
-                <requestFocus/>
+            android:singleLine="true">
+
+            <requestFocus />
         </EditText>
 
     </android.support.design.widget.TextInputLayout>
