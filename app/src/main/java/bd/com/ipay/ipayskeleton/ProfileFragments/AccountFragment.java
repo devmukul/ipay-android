@@ -137,7 +137,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                 if (!ProfileInfoCacheManager.isAccountVerified())
                     profilePictureHelperDialog.show();
                 else
-                    Toast.makeText(getActivity(), R.string.can_not_change_picture, Toast.LENGTH_LONG).show();
+                    showProfilePictureUpdateRestrictionDialog();
             }
         });
 
@@ -193,6 +193,21 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                 startActivity(intent);
             }
         });
+    }
+
+    private void showProfilePictureUpdateRestrictionDialog() {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
+        dialog
+                .content(R.string.can_not_change_picture)
+                .cancelable(false)
+                .positiveText(R.string.got_it)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     private void initProfilePicHelperDialog() {
