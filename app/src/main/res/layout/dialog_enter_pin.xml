@@ -13,6 +13,7 @@
 
         <EditText
             android:id="@+id/enter_pin"
+            style="@style/CustomEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -25,5 +26,4 @@
         </EditText>
 
     </android.support.design.widget.TextInputLayout>
-
 </LinearLayout>
