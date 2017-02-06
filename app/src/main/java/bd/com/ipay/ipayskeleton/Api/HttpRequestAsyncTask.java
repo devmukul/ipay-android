@@ -99,13 +99,6 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                 String message = mContext.getString(R.string.please_log_in_again);
 
                 try {
-                    Gson gson = new Gson();
-                    message = gson.fromJson(result.getJsonString(), LoginResponse.class).getMessage();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                try {
                     MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
                     boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
 
