@@ -45,7 +45,7 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
         super.onPause();
 
         if (mFingerprintAuthenticationDialog != null) {
-            mFingerprintAuthenticationDialog.stopFingerprintHandler();
+            mFingerprintAuthenticationDialog.stopFingerprintAuthenticationListener();
         }
     }
 

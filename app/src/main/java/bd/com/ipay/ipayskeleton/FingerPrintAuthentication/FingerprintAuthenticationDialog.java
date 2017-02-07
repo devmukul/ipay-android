@@ -105,11 +105,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        if (mFingerPrintHandler != null)
-                            mFingerPrintHandler.stopAuth();
-
-                        ProfileInfoCacheManager.clearEncryptedPassword();
-                        mFinishEncryptionCheckerListener.ifEncryptionFinished();
+                        cancelFingerprintAuthentication();
                     }
                 });
 
@@ -117,11 +113,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
         mEncryptionDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                if (mFingerPrintHandler != null)
-                    mFingerPrintHandler.stopAuth();
-
-                ProfileInfoCacheManager.clearEncryptedPassword();
-                mFinishEncryptionCheckerListener.ifEncryptionFinished();
+                cancelFingerprintAuthentication();
             }
         });
 
@@ -149,9 +141,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        if (mFingerPrintHandler != null)
-                            mFingerPrintHandler.stopAuth();
-                        mFinishDecryptionCheckerListener.ifDecryptionFinished(null);
+                        cancelFingerprintAuthentication();
                     }
                 });
 
@@ -159,9 +149,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
         mDecryptionDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                if (mFingerPrintHandler != null)
-                    mFingerPrintHandler.stopAuth();
-                mFinishDecryptionCheckerListener.ifDecryptionFinished(null);
+                cancelFingerprintAuthentication();
             }
         });
 
@@ -308,12 +296,24 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
         }
     }
 
-    public void stopFingerprintHandler() {
+    public void stopFingerprintAuthenticationListener() {
         if (mFingerPrintHandler != null)
             mFingerPrintHandler.stopAuth();
+
         if (mStage == Stage.FINGERPRINT_ENCRYPT)
             mEncryptionDialog.dismiss();
         else mDecryptionDialog.dismiss();
+    }
+
+    public void cancelFingerprintAuthentication() {
+        if (mFingerPrintHandler != null)
+            mFingerPrintHandler.stopAuth();
+
+        if (mStage == Stage.FINGERPRINT_ENCRYPT) {
+            ProfileInfoCacheManager.clearEncryptedPassword();
+            mFinishEncryptionCheckerListener.ifEncryptionFinished();
+        } else
+            mFinishDecryptionCheckerListener.ifDecryptionFinished(null);
     }
 
     public void setFinishEncryptionCheckerListener(FinishEncryptionCheckerListener finishEncryptionCheckerListener) {

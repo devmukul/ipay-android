@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -191,7 +190,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         Utilities.hideKeyboard(getContext(), getView());
 
         if (mFingerprintAuthenticationDialog != null) {
-            mFingerprintAuthenticationDialog.stopFingerprintHandler();
+            mFingerprintAuthenticationDialog.stopFingerprintAuthenticationListener();
         }
     }
 
