@@ -248,7 +248,7 @@ public class SentPaymentRequestsFragment extends ProgressFragment implements Htt
                         break;
                     case Constants.INVOICE_STATUS_CANCELED:
                         statusView.setTextColor(Color.GRAY);
-                        statusView.setText(R.string.canceled);
+                        statusView.setText(R.string.cancelled);
                         break;
                     case Constants.INVOICE_STATUS_DRAFT:
                         statusView.setTextColor(Color.RED);
