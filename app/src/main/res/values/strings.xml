@@ -59,6 +59,7 @@
     <string name="postcode">Postcode</string>
     <string name="invalid_postcode">Please enter a valid 4-digit postcode</string>
     <string name="occupation">Occupation</string>
+    <string name="organization_name">Organization Name</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="phone_number">Phone Number</string>
     <string name="inception_date">Inception Date</string>

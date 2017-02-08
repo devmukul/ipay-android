@@ -70,74 +70,64 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private TextView mNameView;
     private TextView mMobileNumberView;
     private TextView mOccupationView;
+    private TextView mOrganizationNameView;
     private TextView mVerificationStatusView;
-
     private TextView mSignUpTimeView;
 
     private TextView mPresentAddressView;
-
     private View mPresentAddressHolder;
+    private AddressClass mPresentAddress;
 
     private ImageButton mPresentAddressEditButton;
-    private ImageButton mContactEditButton;
-
+    private ImageButton mContactInfoEditButton;
     private ImageButton mOfficeInfoEditButton;
-
-    private AddressClass mPresentAddress;
 
     private String mName = "";
     private String mMobileNumber = "";
     private String mProfileImageUrl = "";
-
     private String mDateOfBirth = "";
 
     private int mOccupation = 0;
-    private String occupation = "";
+    private String mOrganizationName = "";
     private String mGender;
     private String mSignUpTime = "";
     private String mVerificationStatus = null;
-
 
     private List<Thana> mThanaList;
     private List<District> mDistrictList;
     private List<BusinessType> mBusinessTypes;
     private List<Occupation> mOccupationList;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_business_information, container, false);
+        View view = inflater.inflate(R.layout.fragment_business_information, container, false);
         getActivity().setTitle(R.string.basic_info);
 
-        mBusinessNameView = (TextView) v.findViewById(R.id.textview_business_name);
-        mBusinessMobileNumberView = (TextView) v.findViewById(R.id.textview_business_mobile_number);
-        mBusinessTypeView = (TextView) v.findViewById(R.id.textview_business_type);
+        mBusinessNameView = (TextView) view.findViewById(R.id.textview_business_name);
+        mBusinessMobileNumberView = (TextView) view.findViewById(R.id.textview_business_mobile_number);
+        mBusinessTypeView = (TextView) view.findViewById(R.id.textview_business_type);
+        mNameView = (TextView) view.findViewById(R.id.textview_name);
+        mOccupationView = (TextView) view.findViewById(R.id.textview_occupation);
+        mOrganizationNameView = (TextView) view.findViewById(R.id.textview_organization_name);
+        mMobileNumberView = (TextView) view.findViewById(R.id.textview_mobile_number);
+        mVerificationStatusView = (TextView) view.findViewById(R.id.textview_verification_status);
+        mSignUpTimeView = (TextView) view.findViewById(R.id.textview_signup);
+        mPresentAddressView = (TextView) view.findViewById(R.id.textview_present_address);
+        mPresentAddressHolder = view.findViewById(R.id.present_address_holder);
 
-        mOfficeInfoEditButton = (ImageButton) v.findViewById(R.id.button_edit_office_information);
-
-        mNameView = (TextView) v.findViewById(R.id.textview_name);
-        mOccupationView = (TextView) v.findViewById(R.id.textview_occupation);
-        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mVerificationStatusView = (TextView) v.findViewById(R.id.textview_verification_status);
+        mOfficeInfoEditButton = (ImageButton) view.findViewById(R.id.button_edit_office_information);
+        mPresentAddressEditButton = (ImageButton) view.findViewById(R.id.button_edit_present_address);
+        mContactInfoEditButton = (ImageButton) view.findViewById(R.id.button_edit_contact_information);
 
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
 
-        mSignUpTimeView = (TextView) v.findViewById(R.id.textview_signup);
-
-        mPresentAddressView = (TextView) v.findViewById(R.id.textview_present_address);
-
-        mPresentAddressEditButton = (ImageButton) v.findViewById(R.id.button_edit_present_address);
-        mContactEditButton = (ImageButton) v.findViewById(R.id.button_edit_contact_information);
-
-        mPresentAddressHolder = v.findViewById(R.id.present_address_holder);
-
         if (ProfileInfoCacheManager.isAccountVerified()) {
             mOfficeInfoEditButton.setVisibility(View.GONE);
-            mContactEditButton.setVisibility(View.GONE);
+            mContactInfoEditButton.setVisibility(View.GONE);
         } else {
             mOfficeInfoEditButton.setVisibility(View.VISIBLE);
-            mContactEditButton.setVisibility(View.VISIBLE);
+            mContactInfoEditButton.setVisibility(View.VISIBLE);
         }
 
         mOfficeInfoEditButton.setOnClickListener(new View.OnClickListener() {
@@ -147,16 +137,16 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             }
         });
 
-        mContactEditButton.setOnClickListener(new View.OnClickListener() {
+        mContactInfoEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchEditFragment();
+                launchEditContactInformationFragment();
             }
         });
 
         setHasOptionsMenu(true);
 
-        return v;
+        return view;
     }
 
     @Override
@@ -182,7 +172,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     }
 
     private void loadAddresses() {
-
         if (mPresentAddress == null) {
             mPresentAddressView.setVisibility(View.GONE);
         } else {
@@ -227,7 +216,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     }
 
 
-    private void launchEditFragment() {
+    private void launchEditContactInformationFragment() {
         Bundle bundle = new Bundle();
 
         bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
@@ -236,16 +225,20 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
         bundle.putString(Constants.GENDER, mGender);
         bundle.putInt(Constants.OCCUPATION, mOccupation);
+        bundle.putString(Constants.ORGANIZATION_NAME, mOrganizationName);
         bundle.putParcelableArrayList(Constants.OCCUPATION_LIST, new ArrayList<>(mOccupationList));
         ((ProfileActivity) getActivity()).switchToEditBasicInfoFragment(bundle);
     }
 
     private void setProfileInformation() {
-
         mMobileNumberView.setText(getString(R.string.phone_number) + ": " + mMobileNumber);
         mNameView.setText(getString(R.string.name) + ": " + mName);
-
         mSignUpTimeView.setText(getString(R.string.member_since) + ": " + mSignUpTime);
+
+        if (mOrganizationName != null)
+            mOrganizationNameView.setText(getString(R.string.organization_name) + ": " + mOrganizationName);
+        else
+            mOrganizationNameView.setText(getString(R.string.organization_name) + ": " + getString(R.string.not_available));
 
         if (mVerificationStatus != null) {
             if (mVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
@@ -303,7 +296,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     }
 
     private void processBusinessInformationResponse() {
-
         mBusinessNameView.setText(mGetBusinessInformationResponse.getBusinessName());
         mBusinessMobileNumberView.setText(getString(R.string.phone_number) + ": " + mGetBusinessInformationResponse.getMobileNumber());
         mBusinessTypeView.setText(R.string.loading);
@@ -349,6 +341,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             }
 
             mOccupation = mGetProfileInfoResponse.getOccupation();
+            mOrganizationName = mGetProfileInfoResponse.getOrganizationName();
             mVerificationStatus = mGetProfileInfoResponse.getVerificationStatus();
 
             mProfileImageUrl = Utilities.getImage(mGetProfileInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
@@ -405,6 +398,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
                 mGetBusinessInformationAsyncTask = null;
                 break;
+
             case Constants.COMMAND_GET_OCCUPATIONS_REQUEST:
                 try {
                     mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
@@ -427,7 +421,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                 break;
 
             case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
-
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         processProfileInfoResponse(result.getJsonString());
@@ -450,6 +443,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
                 mGetProfileInfoTask = null;
                 break;
+
             case Constants.COMMAND_GET_USER_ADDRESS_REQUEST:
                 try {
                     mGetUserAddressResponse = gson.fromJson(result.getJsonString(), GetUserAddressResponse.class);
@@ -472,8 +466,8 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                 }
 
                 mGetUserAddressTask = null;
-
                 break;
+
             case Constants.COMMAND_GET_THANA_LIST:
                 try {
                     mGetThanaResponse = gson.fromJson(result.getJsonString(), GetThanaResponse.class);
@@ -497,6 +491,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
                 mGetThanaListAsyncTask = null;
                 break;
+
             case Constants.COMMAND_GET_DISTRICT_LIST:
                 try {
                     mGetDistrictResponse = gson.fromJson(result.getJsonString(), GetDistrictResponse.class);

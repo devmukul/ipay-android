@@ -63,6 +63,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
     private TextView mDateOfBirthView;
     private TextView mOccupationView;
+    private TextView mOrganizationNameView;
     private TextView mGenderView;
     private TextView mSignUpTimeView;
 
@@ -79,8 +80,8 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     private String mFathersMobile = "";
     private String mMothersMobile = "";
     private String occupation = "";
-
     private int mOccupation = 0;
+    private String mOrganizationName;
     private String mGender;
     private String mSignUpTime = "";
     private String mVerificationStatus = null;
@@ -112,6 +113,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mMothersMobileView = (TextView) v.findViewById(R.id.textview_mothers_mobile);
         mDateOfBirthView = (TextView) v.findViewById(R.id.textview_dob);
         mOccupationView = (TextView) v.findViewById(R.id.textview_occupation);
+        mOrganizationNameView = (TextView) v.findViewById(R.id.textview_organization_name);
         mGenderView = (TextView) v.findViewById(R.id.textview_gender);
         mSignUpTimeView = (TextView) v.findViewById(R.id.textview_signup);
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
@@ -173,6 +175,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
         bundle.putString(Constants.GENDER, mGender);
         bundle.putInt(Constants.OCCUPATION, mOccupation);
+        bundle.putString(Constants.ORGANIZATION_NAME, mOrganizationName);
         bundle.putParcelableArrayList(Constants.OCCUPATION_LIST, new ArrayList<>(mOccupationList));
         ((ProfileActivity) getActivity()).switchToEditBasicInfoFragment(bundle);
     }
@@ -189,16 +192,13 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     }
 
     private void setProfileInformation() {
-
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
-
-        if(mGender!= null)
-        mGenderView.setText(mGender);
-
         mDateOfBirthView.setText(mDateOfBirth);
-
         mSignUpTimeView.setText(mSignUpTime);
+
+        if (mOrganizationName != null)
+            mOrganizationNameView.setText(mOrganizationName);
 
         if (GenderList.genderCodeToNameMap.containsKey(mGender))
             mGenderView.setText(GenderList.genderCodeToNameMap.get(mGender));
@@ -283,6 +283,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
             mGetProfileInfoTask = null;
         }
+
         if (result.getApiCommand().equals(Constants.COMMAND_GET_PARENT_INFO_REQUEST)) {
 
             try {
@@ -360,9 +361,12 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             mGenderView.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
 
-        if (mGetProfileInfoResponse.getSignUpTime() != null) {
+        if (mGetProfileInfoResponse.getSignUpTime() != null)
             mSignUpTime = mGetProfileInfoResponse.getSignUpTime();
-        }
+
+        mOrganizationName = mGetProfileInfoResponse.getOrganizationName();
+        if (mOrganizationName != null)
+            mOrganizationNameView.setTextColor(getResources().getColor(R.color.colorPrimary));
 
         mOccupation = mGetProfileInfoResponse.getOccupation();
         mVerificationStatus = mGetProfileInfoResponse.getVerificationStatus();
@@ -373,6 +377,5 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
         setProfileInformation();
         getOccupationList();
-
     }
 }
