@@ -53,8 +53,8 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
 
     private Button mInfoSaveButton;
 
-    private final int PICK_FATHER_MOBILE_NUMBER_REQUEST = 100;
-    private final int PICK_MOTHER_MOBILE_NUMBER_REQUEST = 101;
+    private final int PICK_FATHERS_MOBILE_NUMBER_REQUEST = 100;
+    private final int PICK_MOTHERS_MOBILE_NUMBER_REQUEST = 101;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -93,7 +93,7 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
-                startActivityForResult(intent, PICK_FATHER_MOBILE_NUMBER_REQUEST);
+                startActivityForResult(intent, PICK_FATHERS_MOBILE_NUMBER_REQUEST);
             }
         });
 
@@ -101,7 +101,7 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
-                startActivityForResult(intent, PICK_MOTHER_MOBILE_NUMBER_REQUEST);
+                startActivityForResult(intent, PICK_MOTHERS_MOBILE_NUMBER_REQUEST);
             }
         });
 
@@ -120,14 +120,14 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICK_FATHER_MOBILE_NUMBER_REQUEST && resultCode == Activity.RESULT_OK) {
+        if (requestCode == PICK_FATHERS_MOBILE_NUMBER_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
                 if (mobileNumber != null)
                     mFathersMobileEditText.setText(mobileNumber);
                 mFathersMobileEditText.setError(null);
             }
-        } else if (requestCode == PICK_MOTHER_MOBILE_NUMBER_REQUEST && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == PICK_MOTHERS_MOBILE_NUMBER_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
                 if (mobileNumber != null)
