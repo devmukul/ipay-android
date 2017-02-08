@@ -81,6 +81,21 @@ public class ProfileInfoCacheManager {
         return loggedIn;
     }
 
+    public static boolean getFingerprintAuthenticationStatus(boolean defaultValue) {
+        boolean isFingerprintAuthOn = pref.getBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, defaultValue);
+        return isFingerprintAuthOn;
+    }
+
+    public static void setFingerprintAuthenticationStatus(boolean value) {
+        pref.edit().putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, value).apply();
+    }
+
+    public static boolean ifPasswordEncrypted() {
+        if (pref.getString(Constants.KEY_PASSWORD, "") != "")
+            return true;
+        return false;
+    }
+
     public static void clearEncryptedPassword() {
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(Constants.KEY_PASSWORD, "");

@@ -26,6 +26,7 @@ import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintAuthenticat
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -35,7 +36,6 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
     private ChangePasswordResponse mChangePasswordResponse;
 
     private ProgressDialog mProgressDialog;
-    private SharedPreferences mPref;
 
     private EditText mEnterCurrentPasswordEditText;
     private EditText mEnterNewPasswordEditText;
@@ -56,7 +56,6 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
         View v = inflater.inflate(R.layout.fragment_change_password, container, false);
         setTitle();
 
-        mPref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mEnterCurrentPasswordEditText = (EditText) v.findViewById(R.id.current_password);
         mEnterNewPasswordEditText = (EditText) v.findViewById(R.id.new_password);
@@ -144,10 +143,10 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
         fingerprintAuthenticationDialog.setFinishEncryptionCheckerListener(new FingerprintAuthenticationDialog.FinishEncryptionCheckerListener() {
             @Override
             public void ifEncryptionFinished() {
-                if (mPref.getString(Constants.KEY_PASSWORD, "") != "") {
-                    mPref.edit().putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, true).apply();
+                if (ProfileInfoCacheManager.ifPasswordEncrypted()) {
+                    ProfileInfoCacheManager.setFingerprintAuthenticationStatus(true);
                 } else
-                    mPref.edit().putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false).apply();
+                    ProfileInfoCacheManager.setFingerprintAuthenticationStatus(false);
 
                 ((SecuritySettingsActivity) getActivity()).switchToAccountSettingsFragment();
             }
@@ -184,7 +183,7 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
                         Toast.makeText(getActivity(), mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
                     SignupOrLoginActivity.mPassword = mNewPassword;
 
-                    boolean isFingerPrintAuthOn = mPref.getBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false);
+                    boolean isFingerPrintAuthOn = ProfileInfoCacheManager.getFingerprintAuthenticationStatus(false);
                     if (isFingerPrintAuthOn) {
                         saveNewPasswordWithTouchID();
 

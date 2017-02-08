@@ -81,7 +81,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             mUserNameEditText.setText(mobileNumber);
             mButtonJoinUs.setVisibility(View.GONE);
 
-            // Login with touch ID
+            // Login with fingerprint
             attemptLoginWithTouchID();
         } else {
             mPasswordEditText.setText("");
@@ -198,10 +198,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         FingerPrintAuthenticationManager fingerPrintAuthenticationManager = new FingerPrintAuthenticationManager(getActivity());
         if (fingerPrintAuthenticationManager.ifFingerprintAuthenticationSupported()) {
             // If fingerprint auth option is on
-            boolean isFingerPrintAuthOn = pref.getBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false);
+            boolean isFingerPrintAuthOn = ProfileInfoCacheManager.getFingerprintAuthenticationStatus(false);
             if (isFingerPrintAuthOn) {
-                // If Finger Print option is on and finger print is encrypted
-                if (pref.getString(Constants.KEY_PASSWORD, "") != "") {
+                // If Fingerprint option is on and fingerprint is encrypted
+                if (ProfileInfoCacheManager.ifPasswordEncrypted()) {
                     mFingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getActivity()
                             , FingerprintAuthenticationDialog.Stage.FINGERPRINT_DECRYPT);
                     mFingerprintAuthenticationDialog.setFinishDecryptionCheckerListener(new FingerprintAuthenticationDialog.FinishDecryptionCheckerListener() {

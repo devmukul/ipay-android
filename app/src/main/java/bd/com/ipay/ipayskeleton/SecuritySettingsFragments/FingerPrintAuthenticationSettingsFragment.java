@@ -23,7 +23,6 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
     private Button mFingerPrintActivateButton;
     private FingerprintAuthenticationDialog mFingerprintAuthenticationDialog;
 
-    private SharedPreferences mPref;
     private boolean isFingerPrintAuthOn;
 
     @Override
@@ -32,7 +31,6 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
         setTitle();
 
         mFingerPrintActivateButton = (Button) view.findViewById(R.id.fingerprint_activate_button);
-        mPref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         setFingerprintActivationButtonView();
         setFingerprintActivationButtonActions();
@@ -54,7 +52,7 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
     }
 
     private void setFingerprintActivationButtonView() {
-        isFingerPrintAuthOn = mPref.getBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false);
+        isFingerPrintAuthOn = ProfileInfoCacheManager.getFingerprintAuthenticationStatus(false);
 
         if (isFingerPrintAuthOn) {
             mFingerPrintActivateButton.setBackground(getResources().getDrawable(R.drawable.background_transparent_with_color_primary_border));
@@ -85,11 +83,11 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
         mFingerprintAuthenticationDialog.setFinishEncryptionCheckerListener(new FingerprintAuthenticationDialog.FinishEncryptionCheckerListener() {
             @Override
             public void ifEncryptionFinished() {
-                if (mPref.getString(Constants.KEY_PASSWORD, "") != "") {
-                    mPref.edit().putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, true).apply();
+                if (ProfileInfoCacheManager.ifPasswordEncrypted()) {
+                    ProfileInfoCacheManager.setFingerprintAuthenticationStatus(true);
                     getActivity().onBackPressed();
                 } else
-                    mPref.edit().putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false).apply();
+                    ProfileInfoCacheManager.setFingerprintAuthenticationStatus(false);
                 setFingerprintActivationButtonView();
             }
         });
