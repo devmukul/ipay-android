@@ -53,8 +53,8 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
 
     private Button mInfoSaveButton;
 
-    private final int PICK_FATHER_CONTACT_REQUEST = 100;
-    private final int PICK_MOTHER_CONTACT_REQUEST = 101;
+    private final int PICK_FATHER_MOBILE_NUMBER_REQUEST = 100;
+    private final int PICK_MOTHER_MOBILE_NUMBER_REQUEST = 101;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -65,7 +65,7 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_edit_parent_info, container, false);
+        View view = inflater.inflate(R.layout.fragment_edit_parent_info, container, false);
 
         getActivity().setTitle(getString(R.string.edit_parent_info));
         Bundle bundle = getArguments();
@@ -75,14 +75,14 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
         mFathersMobile = bundle.getString(Constants.FATHERS_MOBILE);
         mMothersMobile = bundle.getString(Constants.MOTHERS_MOBILE);
 
-        mFathersNameEditText = (EditText) v.findViewById(R.id.fathers_name);
-        mMothersNameEditText = (EditText) v.findViewById(R.id.mothers_name);
-        mFathersMobileEditText = (EditText) v.findViewById(R.id.fathers_mobile);
-        mMothersMobileEditText = (EditText) v.findViewById(R.id.mothers_mobile);
-        mSelectFatherMobileContactButton = (ImageView) v.findViewById(R.id.father_number);
-        mSelectMotherMobileContactButton = (ImageView) v.findViewById(R.id.mother_number);
+        mFathersNameEditText = (EditText) view.findViewById(R.id.fathers_name);
+        mMothersNameEditText = (EditText) view.findViewById(R.id.mothers_name);
+        mFathersMobileEditText = (EditText) view.findViewById(R.id.fathers_mobile);
+        mMothersMobileEditText = (EditText) view.findViewById(R.id.mothers_mobile);
+        mSelectFatherMobileContactButton = (ImageView) view.findViewById(R.id.father_number);
+        mSelectMotherMobileContactButton = (ImageView) view.findViewById(R.id.mother_number);
 
-        mInfoSaveButton = (Button) v.findViewById(R.id.button_save);
+        mInfoSaveButton = (Button) view.findViewById(R.id.button_save);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -93,7 +93,7 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
-                startActivityForResult(intent, PICK_FATHER_CONTACT_REQUEST);
+                startActivityForResult(intent, PICK_FATHER_MOBILE_NUMBER_REQUEST);
             }
         });
 
@@ -101,7 +101,7 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
-                startActivityForResult(intent, PICK_MOTHER_CONTACT_REQUEST);
+                startActivityForResult(intent, PICK_MOTHER_MOBILE_NUMBER_REQUEST);
             }
         });
 
@@ -115,19 +115,19 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
             }
         });
 
-        return v;
+        return view;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICK_FATHER_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
+        if (requestCode == PICK_FATHER_MOBILE_NUMBER_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
                 if (mobileNumber != null)
                     mFathersMobileEditText.setText(mobileNumber);
                 mFathersMobileEditText.setError(null);
             }
-        } else if (requestCode == PICK_MOTHER_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == PICK_MOTHER_MOBILE_NUMBER_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
                 if (mobileNumber != null)
