@@ -566,6 +566,7 @@
     <string name="your_number">Your Number</string>
     <string name="enter_pin">Enter PIN</string>
     <string name="ok">OK</string>
+    <string name="got_it">GOT IT</string>
     <string name="take_again">Take Again</string>
     <string name="confirm_ipay_invitation">Invite him/her to iPay?</string>
     <string name="amount_to_transfer">Amount to Transfer</string>
@@ -781,7 +782,7 @@
     <string name="comment_cannot_be_empty">Please enter your message.</string>
     <string name="not_available">Not available</string>
     <string name="accepted">Accepted</string>
-    <string name="canceled">Canceled</string>
+    <string name="cancelled">Cancelled</string>
     <string name="rejected">Rejected</string>
     <string name="draft">Draft</string>
 

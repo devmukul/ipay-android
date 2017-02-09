@@ -267,12 +267,12 @@ public class TransactionHistory implements Parcelable {
                             return "Request to receive " + Utilities.formatTaka(getNetAmount()) + " accepted by " + additionalInfo.getUserName();
                         else if (statusCode == Constants.TRANSACTION_STATUS_REJECTED)
                             return "Request to receive " + Utilities.formatTaka(getNetAmount()) + " rejected by " + additionalInfo.getUserName();
-                        else if (statusCode == Constants.TRANSACTION_STATUS_CANCELED)
+                        else if (statusCode == Constants.TRANSACTION_STATUS_CANCELLED)
                             return "Cancelled request for " + Utilities.formatTaka(getNetAmount()) + " to " + additionalInfo.getUserName();
                     } else if (receiverInfo.equals(userMobileNumber)) {
                         if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
                             return "Accepted request for " + Utilities.formatTaka(getNetAmount()) + " from " + additionalInfo.getUserName();
-                        else if (statusCode == Constants.TRANSACTION_STATUS_CANCELED)
+                        else if (statusCode == Constants.TRANSACTION_STATUS_CANCELLED)
                             return "Request for " + Utilities.formatTaka(getNetAmount()) + " cancelled by " + additionalInfo.getUserName();
                     } else {
                         return "No information available";
@@ -417,8 +417,8 @@ public class TransactionHistory implements Parcelable {
                 switch (statusCode) {
                     case (Constants.TRANSACTION_STATUS_ACCEPTED):
                         return "Accepted";
-                    case (Constants.TRANSACTION_STATUS_CANCELED):
-                        return "Canceled";
+                    case (Constants.TRANSACTION_STATUS_CANCELLED):
+                        return "Cancelled";
                     case (Constants.TRANSACTION_STATUS_REJECTED):
                         return "Rejected";
                 }
