@@ -32,7 +32,8 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyReviewActi
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
+import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
@@ -51,7 +52,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
     private Button buttonSend;
     private ImageView buttonSelectFromContacts;
     private ImageView buttonScanQRCode;
-    private EditText mMobileNumberEditText;
+    private ContactsSearchView mMobileNumberEditText;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
 
@@ -65,7 +66,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_send_money, container, false);
-        mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
+        mMobileNumberEditText = (ContactsSearchView) v.findViewById(R.id.mobile_number);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
@@ -76,6 +77,8 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
+
+        setMobileNumberSearchViewFilters();
 
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
             mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
@@ -173,6 +176,12 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         }
     }
 
+    private void setMobileNumberSearchViewFilters() {
+        ContactSearchHelper contactSearchHelper = new ContactSearchHelper(getActivity());
+        contactSearchHelper.setFilterByiPayMembers(true);
+        mMobileNumberEditText.setSearchViewFilters(contactSearchHelper);
+    }
+
     private boolean verifyUserInputs() {
         mAmountEditText.setError(null);
         mMobileNumberEditText.setError(null);
@@ -252,7 +261,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         intent.putExtra(Constants.AMOUNT, amount);
         intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(receiver));
         intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
-        intent.putExtra(Constants.IS_IN_CONTACTS, new SearchContactClass(getActivity()).searchMobileNumber(receiver));
+        intent.putExtra(Constants.IS_IN_CONTACTS, new ContactSearchHelper(getActivity()).searchMobileNumber(receiver));
 
         startActivityForResult(intent, SEND_MONEY_REVIEW_REQUEST);
 

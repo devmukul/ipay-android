@@ -28,8 +28,10 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentRevie
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -47,7 +49,7 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
 
     private Button buttonCreateInvoice;
     private ImageView buttonSelectFromContacts;
-    private EditText mMobileNumberEditText;
+    private ContactsSearchView mMobileNumberEditText;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
     private EditText mVatEditText;
@@ -64,7 +66,7 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
         View v = inflater.inflate(R.layout.fragment_request_payment, container, false);
         getActivity().setTitle(R.string.request_payment);
 
-        mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
+        mMobileNumberEditText = (ContactsSearchView) v.findViewById(R.id.mobile_number);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_sender_from_contacts);
         buttonCreateInvoice = (Button) v.findViewById(R.id.button_request_money);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
@@ -74,6 +76,8 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
+
+        setMobileNumberSearchViewFilters();
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.submitting_request_money));
@@ -163,6 +167,12 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
         attemptGetBusinessRule(Constants.SERVICE_ID_REQUEST_PAYMENT);
 
         return v;
+    }
+
+    private void setMobileNumberSearchViewFilters() {
+        ContactSearchHelper contactSearchHelper = new ContactSearchHelper(getActivity());
+        contactSearchHelper.setFilterByiPayMembers(true);
+        mMobileNumberEditText.setSearchViewFilters(contactSearchHelper);
     }
 
     private boolean verifyUserInputs() {

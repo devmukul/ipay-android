@@ -48,7 +48,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
@@ -813,11 +813,11 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
         if (ProfileInfoCacheManager.getMobileNumber().equals(transactionHistory.getOriginatingMobileNumber())) {
             intent.putExtra(Constants.IS_IN_CONTACTS,
-                    new SearchContactClass(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getUserMobileNumber()));
+                    new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getUserMobileNumber()));
             intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
         } else {
             intent.putExtra(Constants.IS_IN_CONTACTS,
-                    new SearchContactClass(getActivity()).searchMobileNumber(transactionHistory.getOriginatingMobileNumber()));
+                    new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getOriginatingMobileNumber()));
         }
         startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
     }
