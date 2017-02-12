@@ -13,9 +13,9 @@
 
         <EditText
             android:id="@+id/enter_pin"
-            style="@style/CustomEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
             android:gravity="center"
             android:hint="@string/enter_pin"
             android:inputType="numberPassword"
