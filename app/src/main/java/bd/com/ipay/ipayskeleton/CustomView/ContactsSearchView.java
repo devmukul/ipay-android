@@ -116,7 +116,7 @@ public class ContactsSearchView extends FrameLayout {
         mCustomAutoCompleteView.setError(error);
     }
 
-    public void dismissDropDown(String mobileNumber) {
+    public void hideSuggestionList(String mobileNumber) {
         mCustomAutoCompleteView.dismissDropDown();
         mCustomAutoCompleteView.setSelection(mobileNumber.length());
     }
@@ -263,7 +263,7 @@ public class ContactsSearchView extends FrameLayout {
                 @Override
                 public void onClick(View v) {
                     mCustomAutoCompleteView.setText(mobileNumber);
-                    dismissDropDown(mobileNumber);
+                    hideSuggestionList(mobileNumber);
                 }
             });
 

@@ -185,7 +185,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
 
     private void setMobileNumberFromPicker(String mobileNumber) {
         mMobileNumberEditText.setText(mobileNumber);
-        mMobileNumberEditText.dismissDropDown(mobileNumber);
+        mMobileNumberEditText.hideSuggestionList(mobileNumber);
         mMobileNumberEditText.setError(null);
     }
 

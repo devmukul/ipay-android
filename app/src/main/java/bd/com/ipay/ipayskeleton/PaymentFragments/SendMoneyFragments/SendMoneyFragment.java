@@ -184,7 +184,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
     private void setMobileNumberFromPicker(String mobileNumber) {
         mMobileNumberEditText.setText(mobileNumber);
-        mMobileNumberEditText.dismissDropDown(mobileNumber);
+        mMobileNumberEditText.hideSuggestionList(mobileNumber);
         mMobileNumberEditText.setError(null);
     }
 

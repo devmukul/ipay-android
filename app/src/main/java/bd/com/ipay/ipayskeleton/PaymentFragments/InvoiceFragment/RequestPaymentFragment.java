@@ -177,7 +177,7 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
 
     private void setMobileNumberFromPicker(String mobileNumber) {
         mMobileNumberEditText.setText(mobileNumber);
-        mMobileNumberEditText.dismissDropDown(mobileNumber);
+        mMobileNumberEditText.hideSuggestionList(mobileNumber);
         mMobileNumberEditText.setError(null);
     }
 
