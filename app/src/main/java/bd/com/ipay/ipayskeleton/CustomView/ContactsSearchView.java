@@ -257,18 +257,20 @@ public class ContactsSearchView extends FrameLayout {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mCustomAutoCompleteView.setFocusable(false);
-                    mCustomAutoCompleteView.setFocusableInTouchMode(false);
                     mCustomAutoCompleteView.setText(mobileNumber);
-                    mCustomAutoCompleteView.setFocusable(true);
-                    mCustomAutoCompleteView.setFocusableInTouchMode(true);
+                    mCustomAutoCompleteView.setSelection(mobileNumber.length());
+                    mCustomAutoCompleteView.dismissDropDown();
 
-                    mContactList.clear();
-                    mContactsAdapter.notifyDataSetChanged();
+                    hideSuggestionList();
                 }
             });
 
             return view;
+        }
+
+        private void hideSuggestionList() {
+            mContactList.clear();
+            mContactsAdapter.notifyDataSetChanged();
         }
     }
 }
