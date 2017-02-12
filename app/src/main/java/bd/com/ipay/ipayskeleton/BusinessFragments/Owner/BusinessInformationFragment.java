@@ -235,7 +235,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mNameView.setText(getString(R.string.name) + ": " + mName);
         mSignUpTimeView.setText(getString(R.string.member_since) + ": " + mSignUpTime);
 
-        if (mOrganizationName != null)
+        if (mOrganizationName != null && !mOrganizationName.isEmpty())
             mOrganizationNameView.setText(getString(R.string.organization_name) + ": " + mOrganizationName);
         else
             mOrganizationNameView.setText(getString(R.string.organization_name) + ": " + getString(R.string.not_available));

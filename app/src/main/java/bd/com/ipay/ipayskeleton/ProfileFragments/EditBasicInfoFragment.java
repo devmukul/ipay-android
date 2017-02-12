@@ -224,6 +224,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private void setProfileInformation() {
         mNameEditText.setText(mName);
         mDateOfBirthEditText.setText(mDateOfBirth);
+
         mOrganizationNameEditText.setText(mOrganizationName);
 
         String[] genderArray = GenderList.genderNames;

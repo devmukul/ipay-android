@@ -197,7 +197,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mDateOfBirthView.setText(mDateOfBirth);
         mSignUpTimeView.setText(mSignUpTime);
 
-        if (mOrganizationName != null)
+        if (mOrganizationName != null && !mOrganizationName.isEmpty())
             mOrganizationNameView.setText(mOrganizationName);
 
         if (GenderList.genderCodeToNameMap.containsKey(mGender))
@@ -365,7 +365,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             mSignUpTime = mGetProfileInfoResponse.getSignUpTime();
 
         mOrganizationName = mGetProfileInfoResponse.getOrganizationName();
-        if (mOrganizationName != null)
+        if (mOrganizationName != null && !mOrganizationName.isEmpty())
             mOrganizationNameView.setTextColor(getResources().getColor(R.color.colorPrimary));
 
         mOccupation = mGetProfileInfoResponse.getOccupation();
