@@ -175,6 +175,12 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
         mMobileNumberEditText.setSearchViewFilters(contactSearchHelper);
     }
 
+    private void setMobileNumberFromPicker(String mobileNumber) {
+        mMobileNumberEditText.setText(mobileNumber);
+        mMobileNumberEditText.dismissDropDown(mobileNumber);
+        mMobileNumberEditText.setError(null);
+    }
+
     private boolean verifyUserInputs() {
         boolean cancel = false;
         View focusView = null;
@@ -278,8 +284,7 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
             if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
                 String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
                 if (mobileNumber != null) {
-                    mMobileNumberEditText.setText(mobileNumber);
-                    mMobileNumberEditText.setError(null);
+                    setMobileNumberFromPicker(mobileNumber);
                 }
             }
         } else if (resultCode == Activity.RESULT_CANCELED && requestCode == PICK_CONTACT_REQUEST) {

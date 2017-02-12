@@ -116,6 +116,11 @@ public class ContactsSearchView extends FrameLayout {
         mCustomAutoCompleteView.setError(error);
     }
 
+    public void dismissDropDown(String mobileNumber) {
+        mCustomAutoCompleteView.dismissDropDown();
+        mCustomAutoCompleteView.setSelection(mobileNumber.length());
+    }
+
     private List<Contact> getContactList(Cursor cursor) {
         List<Contact> mContacts;
 
@@ -258,19 +263,11 @@ public class ContactsSearchView extends FrameLayout {
                 @Override
                 public void onClick(View v) {
                     mCustomAutoCompleteView.setText(mobileNumber);
-                    mCustomAutoCompleteView.setSelection(mobileNumber.length());
-                    mCustomAutoCompleteView.dismissDropDown();
-
-                    hideSuggestionList();
+                    dismissDropDown(mobileNumber);
                 }
             });
 
             return view;
-        }
-
-        private void hideSuggestionList() {
-            mContactList.clear();
-            mContactsAdapter.notifyDataSetChanged();
         }
     }
 }

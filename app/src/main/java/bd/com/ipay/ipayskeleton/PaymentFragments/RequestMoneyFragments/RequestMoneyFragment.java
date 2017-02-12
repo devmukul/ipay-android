@@ -149,6 +149,12 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
         mMobileNumberEditText.setSearchViewFilters(contactSearchHelper);
     }
 
+    private void setMobileNumberFromPicker(String mobileNumber) {
+        mMobileNumberEditText.setText(mobileNumber);
+        mMobileNumberEditText.dismissDropDown(mobileNumber);
+        mMobileNumberEditText.setError(null);
+    }
+
     private boolean verifyUserInputs() {
         mAmountEditText.setError(null);
         mMobileNumberEditText.setError(null);
@@ -224,8 +230,7 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
         if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             if (mobileNumber != null) {
-                mMobileNumberEditText.setText(mobileNumber);
-                mMobileNumberEditText.setError(null);
+                setMobileNumberFromPicker(mobileNumber);
             }
         } else if (requestCode == REQUEST_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             ((RequestMoneyActivity) getActivity()).switchToMoneyRequestListFragment(true);

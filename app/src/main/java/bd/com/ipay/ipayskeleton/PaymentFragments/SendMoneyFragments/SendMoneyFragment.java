@@ -148,8 +148,8 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             if (mobileNumber != null)
-                mMobileNumberEditText.setText(mobileNumber);
-            mMobileNumberEditText.setError(null);
+                setMobileNumberFromPicker(mobileNumber);
+
         } else if (requestCode == SEND_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
         } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
@@ -180,6 +180,12 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         ContactSearchHelper contactSearchHelper = new ContactSearchHelper(getActivity());
         contactSearchHelper.setFilterByiPayMembers(true);
         mMobileNumberEditText.setSearchViewFilters(contactSearchHelper);
+    }
+
+    private void setMobileNumberFromPicker(String mobileNumber) {
+        mMobileNumberEditText.setText(mobileNumber);
+        mMobileNumberEditText.dismissDropDown(mobileNumber);
+        mMobileNumberEditText.setError(null);
     }
 
     private boolean verifyUserInputs() {
