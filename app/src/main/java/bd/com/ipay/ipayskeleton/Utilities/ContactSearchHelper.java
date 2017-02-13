@@ -10,10 +10,6 @@ public class ContactSearchHelper {
     private String mQuery = "";
     private Activity activity;
 
-    private boolean mFilterByVerifiedMembers;
-    private boolean mFilterByiPayMembers;
-    private boolean mFilterByBusinessMembers;
-
     public ContactSearchHelper(Activity activity) {
         this.activity = activity;
     }
@@ -31,29 +27,5 @@ public class ContactSearchHelper {
         }
 
         return false;
-    }
-
-    public boolean isFilterByVerifiedMembers() {
-        return mFilterByVerifiedMembers;
-    }
-
-    public void setFilterByVerifiedMembers(boolean mFilterByVerifiedMembers) {
-        this.mFilterByVerifiedMembers = mFilterByVerifiedMembers;
-    }
-
-    public boolean isFilterByiPayMembers() {
-        return mFilterByiPayMembers;
-    }
-
-    public void setFilterByiPayMembers(boolean mFilterByiPayMembers) {
-        this.mFilterByiPayMembers = mFilterByiPayMembers;
-    }
-
-    public boolean isFilterByBusinessMembers() {
-        return mFilterByBusinessMembers;
-    }
-
-    public void setFilterByBusinessMembers(boolean mFilterByBusinessMembers) {
-        this.mFilterByBusinessMembers = mFilterByBusinessMembers;
     }
 }

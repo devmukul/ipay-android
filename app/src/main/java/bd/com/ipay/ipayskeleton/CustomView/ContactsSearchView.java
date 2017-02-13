@@ -20,7 +20,6 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.Friend.Contact;
-import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -32,12 +31,14 @@ public class ContactsSearchView extends FrameLayout {
     private List<Contact> mContactList;
     private ContactListAdapter mContactsAdapter;
 
-    private boolean mFilterByVerifiedUsersOnly;
-    private boolean mFilterByiPayMembersOnly;
-    private boolean mFilterByBusinessMembersOnly;
+    public boolean mFilterByVerifiedUsersOnly;
+    public boolean mFilterByiPayMembersOnly;
+    public boolean mFilterByBusinessMembersOnly;
 
     private String mQuery = "";
     private Context mContext;
+
+    private CustomTextChangeListener customTextChangeListener;
 
     public ContactsSearchView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -86,9 +87,13 @@ public class ContactsSearchView extends FrameLayout {
 
         @Override
         public void onTextChanged(CharSequence userInput, int start, int before, int count) {
-            if (userInput.length() > 0)
+            if (userInput.length() > 0) {
                 mMobileNumberHintView.setVisibility(VISIBLE);
-            else
+
+                if (TargetFragment() != null && TargetFragment().equals(Constants.TOP_UP)) {
+                    customTextChangeListener.onTextChange(userInput.toString());
+                }
+            } else
                 mMobileNumberHintView.setVisibility(INVISIBLE);
 
             mQuery = userInput.toString();
@@ -96,12 +101,6 @@ public class ContactsSearchView extends FrameLayout {
             // Query in database based on the user input
             readContactsFromDB();
         }
-    }
-
-    public void setSearchViewFilters(ContactSearchHelper contactSearchHelper) {
-        mFilterByVerifiedUsersOnly = contactSearchHelper.isFilterByVerifiedMembers();
-        mFilterByiPayMembersOnly = contactSearchHelper.isFilterByiPayMembers();
-        mFilterByBusinessMembersOnly = contactSearchHelper.isFilterByBusinessMembers();
     }
 
     public Editable getText() {
@@ -114,6 +113,14 @@ public class ContactsSearchView extends FrameLayout {
 
     public void setError(String error) {
         mCustomAutoCompleteView.setError(error);
+    }
+
+    public void setEnabledStatus(boolean status) {
+        mCustomAutoCompleteView.setEnabled(status);
+    }
+
+    public void setFocusableStatus(boolean status) {
+        mCustomAutoCompleteView.setFocusable(status);
     }
 
     public void hideSuggestionList(String mobileNumber) {
@@ -269,6 +276,18 @@ public class ContactsSearchView extends FrameLayout {
 
             return view;
         }
+    }
+
+    String TargetFragment() {
+        return null;
+    }
+
+    public interface CustomTextChangeListener {
+        void onTextChange(String inputText);
+    }
+
+    public void setCustomTextChangeListener(CustomTextChangeListener customTextChangeListener) {
+        this.customTextChangeListener = customTextChangeListener;
     }
 }
 
