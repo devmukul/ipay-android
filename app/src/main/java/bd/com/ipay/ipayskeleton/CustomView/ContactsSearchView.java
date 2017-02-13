@@ -90,7 +90,7 @@ public class ContactsSearchView extends FrameLayout {
             if (userInput.length() > 0) {
                 mMobileNumberHintView.setVisibility(VISIBLE);
 
-                if (FragmentTag() != null && FragmentTag().equals(Constants.TOP_UP)) {
+                if (CurrentFragmentTag() != null && CurrentFragmentTag().equals(Constants.TOP_UP)) {
                     customTextChangeListener.onTextChange(userInput.toString());
                 }
             } else
@@ -282,7 +282,7 @@ public class ContactsSearchView extends FrameLayout {
         }
     }
 
-    String FragmentTag() {
+    String CurrentFragmentTag() {
         return null;
     }
 

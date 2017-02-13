@@ -157,7 +157,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     }
 
     private void setMobileNumber() {
-        mMobileNumberEditText.setFragmentTag(Constants.TOP_UP);
+        mMobileNumberEditText.setCurrentFragmentTag(Constants.TOP_UP);
         mMobileNumberEditText.setCustomTextChangeListener(new ContactsSearchView.CustomTextChangeListener() {
             @Override
             public void onTextChange(String inputText) {
