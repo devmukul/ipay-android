@@ -105,6 +105,18 @@ public class BusinessContactsSearchView extends FrameLayout {
         mCustomAutoCompleteView.setError(error);
     }
 
+    public void setMobileNumber(String mobileNumber) {
+        mCustomAutoCompleteView.setText(mobileNumber);
+        mCustomAutoCompleteView.setSelection(mobileNumber.length());
+        mCustomAutoCompleteView.setError(null);
+
+        hideSuggestionList();
+    }
+
+    public void hideSuggestionList() {
+        mCustomAutoCompleteView.dismissDropDown();
+    }
+
     private List<BusinessContact> getBusinessContactList(Cursor cursor) {
         List<BusinessContact> mBusinessContacts;
         int businessNameIndex;
@@ -169,11 +181,6 @@ public class BusinessContactsSearchView extends FrameLayout {
         mCustomAutoCompleteView.setAdapter(mBusinessContactsAdapter);
     }
 
-    public void hideSuggestionList(String mobileNumber) {
-        mCustomAutoCompleteView.dismissDropDown();
-        mCustomAutoCompleteView.setSelection(mobileNumber.length());
-    }
-
     public class BusinessContactListAdapter extends ArrayAdapter<BusinessContact> {
         private LayoutInflater inflater;
 
@@ -223,8 +230,7 @@ public class BusinessContactsSearchView extends FrameLayout {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mCustomAutoCompleteView.setText(mobileNumber);
-                    hideSuggestionList(mobileNumber);
+                    setMobileNumber(mobileNumber);
                 }
             });
 

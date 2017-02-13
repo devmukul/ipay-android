@@ -45,9 +45,4 @@ public class CustomContactsSearchView extends ContactsSearchView {
         }
     }
 
-    public void setMobileNumberFromPicker(String mobileNumber) {
-        setText(mobileNumber);
-        hideSuggestionList(mobileNumber);
-        setError(null);
-    }
 }

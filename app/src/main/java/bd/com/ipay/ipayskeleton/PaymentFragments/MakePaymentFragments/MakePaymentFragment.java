@@ -150,7 +150,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             if (mobileNumber != null) {
-                setMobileNumberFromPicker(mobileNumber);
+                mMobileNumberEditText.setMobileNumber(mobileNumber);
             }
         } else if (requestCode == PAYMENT_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
@@ -181,12 +181,6 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         int lastBusinessId = DataHelper.getInstance(getActivity()).getLastAddedBusinessId();
         GetAllBusinessContactRequestBuilder mGetAllBusinessContactRequestBuilder = new GetAllBusinessContactRequestBuilder(lastBusinessId);
         new GetAllBusinessListAsyncTask(getActivity(), mGetAllBusinessContactRequestBuilder.getGeneratedUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void setMobileNumberFromPicker(String mobileNumber) {
-        mMobileNumberEditText.setText(mobileNumber);
-        mMobileNumberEditText.hideSuggestionList(mobileNumber);
-        mMobileNumberEditText.setError(null);
     }
 
     private boolean verifyUserInputs() {

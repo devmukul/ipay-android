@@ -115,7 +115,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA},
                             REQUEST_CODE_PERMISSION);
                 } else initiateScan();
-
             }
         });
 
@@ -148,7 +147,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             if (mobileNumber != null)
-                mMobileNumberEditText.setMobileNumberFromPicker(mobileNumber);
+                mMobileNumberEditText.setMobileNumber(mobileNumber);
 
         } else if (requestCode == SEND_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
@@ -169,7 +168,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                         } else if (getActivity() != null)
                             Toast.makeText(getActivity(), getResources().getString(
                                     R.string.please_scan_a_valid_pin), Toast.LENGTH_SHORT).show();
-
                     }
                 });
             }
@@ -258,7 +256,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         intent.putExtra(Constants.IS_IN_CONTACTS, new ContactSearchHelper(getActivity()).searchMobileNumber(receiver));
 
         startActivityForResult(intent, SEND_MONEY_REVIEW_REQUEST);
-
     }
 
     private void attemptGetBusinessRule(int serviceID) {

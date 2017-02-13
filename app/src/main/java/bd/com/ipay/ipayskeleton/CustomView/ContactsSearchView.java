@@ -123,9 +123,16 @@ public class ContactsSearchView extends FrameLayout {
         mCustomAutoCompleteView.setFocusable(status);
     }
 
-    public void hideSuggestionList(String mobileNumber) {
-        mCustomAutoCompleteView.dismissDropDown();
+    public void setMobileNumber(String mobileNumber) {
+        mCustomAutoCompleteView.setText(mobileNumber);
         mCustomAutoCompleteView.setSelection(mobileNumber.length());
+        mCustomAutoCompleteView.setError(null);
+
+        hideSuggestionList();
+    }
+
+    public void hideSuggestionList() {
+        mCustomAutoCompleteView.dismissDropDown();
     }
 
     private List<Contact> getContactList(Cursor cursor) {
@@ -194,8 +201,8 @@ public class ContactsSearchView extends FrameLayout {
     public class ContactListAdapter extends ArrayAdapter<Contact> {
         private LayoutInflater inflater;
 
-        private TextView name1View;
-        private TextView name2View;
+        private TextView primaryNameView;
+        private TextView secondaryNameView;
         private ProfileImageView profilePictureView;
         private TextView mobileNumberView;
         private ImageView memberStatusView;
@@ -215,8 +222,8 @@ public class ContactsSearchView extends FrameLayout {
             if (view == null)
                 view = inflater.inflate(R.layout.list_item_contact, null);
 
-            name1View = (TextView) view.findViewById(R.id.name1);
-            name2View = (TextView) view.findViewById(R.id.name2);
+            primaryNameView = (TextView) view.findViewById(R.id.name1);
+            secondaryNameView = (TextView) view.findViewById(R.id.name2);
             mobileNumberView = (TextView) view.findViewById(R.id.mobile_number);
             profilePictureView = (ProfileImageView) view.findViewById(R.id.profile_picture);
             memberStatusView = (ImageView) view.findViewById(R.id.is_member);
@@ -241,12 +248,12 @@ public class ContactsSearchView extends FrameLayout {
              * We need to show original name on the top if exists
              */
             if (originalName != null && !originalName.isEmpty()) {
-                name1View.setText(originalName);
-                name2View.setVisibility(View.VISIBLE);
-                name2View.setText(name);
+                primaryNameView.setText(originalName);
+                secondaryNameView.setVisibility(View.VISIBLE);
+                secondaryNameView.setText(name);
             } else {
-                name1View.setText(name);
-                name2View.setVisibility(View.GONE);
+                primaryNameView.setText(name);
+                secondaryNameView.setVisibility(View.GONE);
             }
 
             mobileNumberView.setText(mobileNumber);
@@ -269,8 +276,7 @@ public class ContactsSearchView extends FrameLayout {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mCustomAutoCompleteView.setText(mobileNumber);
-                    hideSuggestionList(mobileNumber);
+                    setMobileNumber(mobileNumber);
                 }
             });
 

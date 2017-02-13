@@ -261,7 +261,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             if (data != null) {
                 String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
                 if (mobileNumber != null)
-                    mMobileNumberEditText.setMobileNumberFromPicker(mobileNumber);
+                    mMobileNumberEditText.setMobileNumber(mobileNumber);
             }
         } else if (requestCode == MOBILE_TOPUP_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             if (getActivity() != null)
@@ -310,7 +310,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     }
 
     private void attemptGetBusinessRule(int serviceID) {
-
         if (mGetBusinessRuleTask != null) {
             return;
         }
