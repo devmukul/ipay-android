@@ -90,7 +90,7 @@ public class ContactsSearchView extends FrameLayout {
             if (userInput.length() > 0) {
                 mMobileNumberHintView.setVisibility(VISIBLE);
 
-                if (TargetFragment() != null && TargetFragment().equals(Constants.TOP_UP)) {
+                if (FragmentTag() != null && FragmentTag().equals(Constants.TOP_UP)) {
                     customTextChangeListener.onTextChange(userInput.toString());
                 }
             } else
@@ -261,17 +261,15 @@ public class ContactsSearchView extends FrameLayout {
             inviteStatusTextView.setVisibility(View.GONE);
             inviteButton.setVisibility(View.GONE);
 
-            if (isMember) {
+            if (isMember)
                 memberStatusView.setVisibility(View.VISIBLE);
-            } else {
+            else
                 memberStatusView.setVisibility(View.GONE);
-            }
 
-            if (isVerified) {
+            if (isVerified)
                 verificationStatusView.setVisibility(View.VISIBLE);
-            } else {
+            else
                 verificationStatusView.setVisibility(View.GONE);
-            }
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -284,7 +282,7 @@ public class ContactsSearchView extends FrameLayout {
         }
     }
 
-    String TargetFragment() {
+    String FragmentTag() {
         return null;
     }
 

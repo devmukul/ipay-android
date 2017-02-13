@@ -20,14 +20,14 @@ public class CustomContactsSearchView extends ContactsSearchView {
         super(context);
     }
 
-    public void setTag(String tag) {
+    public void setFragmentTag(String tag) {
         this.tag = tag;
 
         setFilters();
     }
 
     @Override
-    public String TargetFragment() {
+    public String FragmentTag() {
         return tag;
     }
 

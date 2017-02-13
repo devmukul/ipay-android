@@ -73,7 +73,7 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
         mVatEditText = (EditText) v.findViewById(R.id.vat);
         mTotalTextView = (TextView) v.findViewById(R.id.total);
 
-        mMobileNumberEditText.setTag(Constants.REQUEST_PAYMENT);
+        mMobileNumberEditText.setFragmentTag(Constants.REQUEST_PAYMENT);
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
