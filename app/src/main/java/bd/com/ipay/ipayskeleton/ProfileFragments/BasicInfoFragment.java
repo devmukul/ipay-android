@@ -99,28 +99,28 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_basic_info, container, false);
+        View view = inflater.inflate(R.layout.fragment_basic_info, container, false);
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         getActivity().setTitle(R.string.basic_info);
 
 
-        mNameView = (TextView) v.findViewById(R.id.textview_name);
-        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mVerificationStatusView = (TextView) v.findViewById(R.id.textview_verification_status);
-        mFathersNameView = (TextView) v.findViewById(R.id.textview_fathers_name);
-        mFathersMobileView = (TextView) v.findViewById(R.id.textview_fathers_mobile);
-        mMothersNameView = (TextView) v.findViewById(R.id.textview_mothers_name);
-        mMothersMobileView = (TextView) v.findViewById(R.id.textview_mothers_mobile);
-        mDateOfBirthView = (TextView) v.findViewById(R.id.textview_dob);
-        mOccupationView = (TextView) v.findViewById(R.id.textview_occupation);
-        mOrganizationNameView = (TextView) v.findViewById(R.id.textview_organization_name);
-        mGenderView = (TextView) v.findViewById(R.id.textview_gender);
-        mSignUpTimeView = (TextView) v.findViewById(R.id.textview_signup);
+        mNameView = (TextView) view.findViewById(R.id.textview_name);
+        mMobileNumberView = (TextView) view.findViewById(R.id.textview_mobile_number);
+        mVerificationStatusView = (TextView) view.findViewById(R.id.textview_verification_status);
+        mFathersNameView = (TextView) view.findViewById(R.id.textview_fathers_name);
+        mFathersMobileView = (TextView) view.findViewById(R.id.textview_fathers_mobile);
+        mMothersNameView = (TextView) view.findViewById(R.id.textview_mothers_name);
+        mMothersMobileView = (TextView) view.findViewById(R.id.textview_mothers_mobile);
+        mDateOfBirthView = (TextView) view.findViewById(R.id.textview_dob);
+        mOccupationView = (TextView) view.findViewById(R.id.textview_occupation);
+        mOrganizationNameView = (TextView) view.findViewById(R.id.textview_organization_name);
+        mGenderView = (TextView) view.findViewById(R.id.textview_gender);
+        mSignUpTimeView = (TextView) view.findViewById(R.id.textview_signup);
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         mDateOfBirth = pref.getString(Constants.BIRTHDAY, "");
         mProgressDialog = new ProgressDialog(getActivity());
-        mContactEditButton = (ImageButton) v.findViewById(R.id.button_edit_contact_information);
-        mParentInfoEditButton = (ImageButton) v.findViewById(R.id.button_edit_parent_information);
+        mContactEditButton = (ImageButton) view.findViewById(R.id.button_edit_contact_information);
+        mParentInfoEditButton = (ImageButton) view.findViewById(R.id.button_edit_parent_information);
 
         if (ProfileInfoCacheManager.isAccountVerified())
             mContactEditButton.setVisibility(View.GONE);
@@ -140,7 +140,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             }
         });
 
-        return v;
+        return view;
     }
 
     @Override
