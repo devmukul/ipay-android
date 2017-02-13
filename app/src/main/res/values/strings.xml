@@ -881,6 +881,7 @@
     </string-array>
 
     <string-array name="business_document_id">
+        <item>NID</item>
         <item>Business TIN ID</item>
         <item>Trade License ID</item>
         <item>VAT Registration Certificate ID</item>
