@@ -98,7 +98,6 @@
                     style="@style/TextViewInfoColorPrimary" />
             </LinearLayout>
 
-            <!-- Spinners -->
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -112,6 +111,23 @@
                     android:id="@+id/textview_occupation"
                     style="@style/TextViewInfoColorPrimary"
                     android:layout_weight=".3"
+                    android:text="@string/not_set"
+                    android:textColor="@color/background_red" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewInfoLabel"
+                    android:text="@string/organization_name" />
+
+                <TextView
+                    android:id="@+id/textview_organization_name"
+                    style="@style/TextViewInfoColorPrimary"
+                    android:layout_weight=".5"
                     android:text="@string/not_set"
                     android:textColor="@color/background_red" />
             </LinearLayout>

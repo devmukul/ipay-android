@@ -93,6 +93,7 @@ public class Constants {
 
     public static final String OCCUPATION = "OCCUPATION";
     public static final String OCCUPATION_LIST = "OCCUPATION_LIST";
+    public static final String ORGANIZATION_NAME = "ORGANIZATION_NAME";
     public static final String DESIGNATION = "DESIGNATION";
     public static final String BUSINESS_NAME = "BUSINESS_NAME";
 

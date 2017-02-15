@@ -63,6 +63,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
     private TextView mDateOfBirthView;
     private TextView mOccupationView;
+    private TextView mOrganizationNameView;
     private TextView mGenderView;
     private TextView mSignUpTimeView;
 
@@ -79,8 +80,8 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     private String mFathersMobile = "";
     private String mMothersMobile = "";
     private String occupation = "";
-
     private int mOccupation = 0;
+    private String mOrganizationName;
     private String mGender;
     private String mSignUpTime = "";
     private String mVerificationStatus = null;
@@ -98,27 +99,28 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_basic_info, container, false);
+        View view = inflater.inflate(R.layout.fragment_basic_info, container, false);
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         getActivity().setTitle(R.string.basic_info);
 
 
-        mNameView = (TextView) v.findViewById(R.id.textview_name);
-        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mVerificationStatusView = (TextView) v.findViewById(R.id.textview_verification_status);
-        mFathersNameView = (TextView) v.findViewById(R.id.textview_fathers_name);
-        mFathersMobileView = (TextView) v.findViewById(R.id.textview_fathers_mobile);
-        mMothersNameView = (TextView) v.findViewById(R.id.textview_mothers_name);
-        mMothersMobileView = (TextView) v.findViewById(R.id.textview_mothers_mobile);
-        mDateOfBirthView = (TextView) v.findViewById(R.id.textview_dob);
-        mOccupationView = (TextView) v.findViewById(R.id.textview_occupation);
-        mGenderView = (TextView) v.findViewById(R.id.textview_gender);
-        mSignUpTimeView = (TextView) v.findViewById(R.id.textview_signup);
+        mNameView = (TextView) view.findViewById(R.id.textview_name);
+        mMobileNumberView = (TextView) view.findViewById(R.id.textview_mobile_number);
+        mVerificationStatusView = (TextView) view.findViewById(R.id.textview_verification_status);
+        mFathersNameView = (TextView) view.findViewById(R.id.textview_fathers_name);
+        mFathersMobileView = (TextView) view.findViewById(R.id.textview_fathers_mobile);
+        mMothersNameView = (TextView) view.findViewById(R.id.textview_mothers_name);
+        mMothersMobileView = (TextView) view.findViewById(R.id.textview_mothers_mobile);
+        mDateOfBirthView = (TextView) view.findViewById(R.id.textview_dob);
+        mOccupationView = (TextView) view.findViewById(R.id.textview_occupation);
+        mOrganizationNameView = (TextView) view.findViewById(R.id.textview_organization_name);
+        mGenderView = (TextView) view.findViewById(R.id.textview_gender);
+        mSignUpTimeView = (TextView) view.findViewById(R.id.textview_signup);
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         mDateOfBirth = pref.getString(Constants.BIRTHDAY, "");
         mProgressDialog = new ProgressDialog(getActivity());
-        mContactEditButton = (ImageButton) v.findViewById(R.id.button_edit_contact_information);
-        mParentInfoEditButton = (ImageButton) v.findViewById(R.id.button_edit_parent_information);
+        mContactEditButton = (ImageButton) view.findViewById(R.id.button_edit_contact_information);
+        mParentInfoEditButton = (ImageButton) view.findViewById(R.id.button_edit_parent_information);
 
         if (ProfileInfoCacheManager.isAccountVerified())
             mContactEditButton.setVisibility(View.GONE);
@@ -138,7 +140,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             }
         });
 
-        return v;
+        return view;
     }
 
     @Override
@@ -173,6 +175,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
         bundle.putString(Constants.GENDER, mGender);
         bundle.putInt(Constants.OCCUPATION, mOccupation);
+        bundle.putString(Constants.ORGANIZATION_NAME, mOrganizationName);
         bundle.putParcelableArrayList(Constants.OCCUPATION_LIST, new ArrayList<>(mOccupationList));
         ((ProfileActivity) getActivity()).switchToEditBasicInfoFragment(bundle);
     }
@@ -189,16 +192,13 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     }
 
     private void setProfileInformation() {
-
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
-
-        if(mGender!= null)
-        mGenderView.setText(mGender);
-
         mDateOfBirthView.setText(mDateOfBirth);
-
         mSignUpTimeView.setText(mSignUpTime);
+
+        if (mOrganizationName != null && !mOrganizationName.isEmpty())
+            mOrganizationNameView.setText(mOrganizationName);
 
         if (GenderList.genderCodeToNameMap.containsKey(mGender))
             mGenderView.setText(GenderList.genderCodeToNameMap.get(mGender));
@@ -283,6 +283,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
             mGetProfileInfoTask = null;
         }
+
         if (result.getApiCommand().equals(Constants.COMMAND_GET_PARENT_INFO_REQUEST)) {
 
             try {
@@ -360,9 +361,12 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             mGenderView.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
 
-        if (mGetProfileInfoResponse.getSignUpTime() != null) {
+        if (mGetProfileInfoResponse.getSignUpTime() != null)
             mSignUpTime = mGetProfileInfoResponse.getSignUpTime();
-        }
+
+        mOrganizationName = mGetProfileInfoResponse.getOrganizationName();
+        if (mOrganizationName != null && !mOrganizationName.isEmpty())
+            mOrganizationNameView.setTextColor(getResources().getColor(R.color.colorPrimary));
 
         mOccupation = mGetProfileInfoResponse.getOccupation();
         mVerificationStatus = mGetProfileInfoResponse.getVerificationStatus();
@@ -373,6 +377,5 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
         setProfileInformation();
         getOccupationList();
-
     }
 }

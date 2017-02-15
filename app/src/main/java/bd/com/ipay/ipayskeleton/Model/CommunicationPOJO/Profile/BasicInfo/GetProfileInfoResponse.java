@@ -13,6 +13,7 @@ public class GetProfileInfoResponse {
     private String gender;
     private String dob;
     private int occupation;
+    private String organizationName;
     private int accountType;
     private String verificationStatus;
     private int verifiedByCount;
@@ -45,6 +46,8 @@ public class GetProfileInfoResponse {
     public int getOccupation() {
         return occupation;
     }
+
+    public String getOrganizationName() { return organizationName; }
 
     public int getAccountType() {
         return accountType;
