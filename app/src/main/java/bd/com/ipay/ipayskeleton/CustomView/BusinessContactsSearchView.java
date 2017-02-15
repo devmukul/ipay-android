@@ -198,8 +198,7 @@ public class BusinessContactsSearchView extends FrameLayout {
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = convertView;
 
-            if (view == null)
-                view = inflater.inflate(R.layout.list_item_business_contact, null);
+            if (view == null) view = inflater.inflate(R.layout.list_item_business_contact, null);
 
             businessNameView = (TextView) view.findViewById(R.id.business_name);
             businessTypeView = (TextView) view.findViewById(R.id.business_type);
