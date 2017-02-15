@@ -88,16 +88,6 @@ public class SecuritySettingsActivity extends BaseActivity {
                 .replace(R.id.fragment_container, new ChangePasswordFragment()).addToBackStack(null).commit();
     }
 
-    /*public void switchToOTPVerificationChangePasswordFragment(Bundle bundle) {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 2)
-            getSupportFragmentManager().popBackStackImmediate();
-
-        OTPVerificationChangePasswordFragment otpVerificationChangePasswordFragment = new OTPVerificationChangePasswordFragment();
-        otpVerificationChangePasswordFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, otpVerificationChangePasswordFragment).addToBackStack(null).commit();
-    }*/
-
     public void switchToTrustedDeviceFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 1)
             getSupportFragmentManager().popBackStackImmediate();

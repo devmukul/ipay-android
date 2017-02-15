@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,7 +40,6 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
     private String mPassword;
     private String mNewPassword;
 
-    private final int OTP_VERIFICATION_REQUEST = 100;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,7 +135,7 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
 
     private void launchOTPVerificationFragment() {
         SecuritySettingsActivity.otpDuration = mChangePasswordValidationResponse.getOtpValidFor();
-        new OTPVerificationChangePasswordFragment(getContext(), mPassword,mNewPassword);
+        new OTPVerificationChangePasswordDialog(getContext(), mPassword,mNewPassword);
     }
 
     @Override

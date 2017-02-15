@@ -35,7 +35,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class OTPVerificationChangePasswordFragment extends MaterialDialog.Builder implements HttpResponseListener {
+public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder implements HttpResponseListener {
     private HttpRequestPutAsyncTask mChangePasswordTask = null;
     private ChangePasswordResponse mChangePasswordResponse;
 
@@ -57,7 +57,7 @@ public class OTPVerificationChangePasswordFragment extends MaterialDialog.Builde
 
     private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
 
-    public OTPVerificationChangePasswordFragment(Context context , String password, String newPassword) {
+    public OTPVerificationChangePasswordDialog(Context context , String password, String newPassword) {
         super(context);
 
         this.context = context;
@@ -224,6 +224,7 @@ public class OTPVerificationChangePasswordFragment extends MaterialDialog.Builde
                     if (context != null)
                         Toast.makeText(context, mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
                     Utilities.hideKeyboard(context,view);
+
                     ((SecuritySettingsActivity) context).switchToAccountSettingsFragment();
                 } else {
                     if (context != null)
