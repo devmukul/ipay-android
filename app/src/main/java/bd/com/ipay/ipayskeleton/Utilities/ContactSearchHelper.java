@@ -1,16 +1,16 @@
-package bd.com.ipay.ipayskeleton.Model.Friend;
+package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.app.Activity;
 import android.database.Cursor;
 
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 
-public class SearchContactClass {
+public class ContactSearchHelper {
 
     private String mQuery = "";
     private Activity activity;
 
-    public SearchContactClass(Activity activity) {
+    public ContactSearchHelper(Activity activity) {
         this.activity = activity;
     }
 

@@ -42,6 +42,10 @@ public class Constants {
     public static final String MONEY_REQUEST_ID = "MONEY REQUESTS ID";
     public static final String MONEY_REQUEST_SERVICE_ID = "SERVICE_ID";
     public static final String TRANSACTION_ID = "TRANSACTION_ID";
+    public static final String TOP_UP = "TOP_UP";
+    public static final String SEND_MONEY = "SEND_MONEY";
+    public static final String REQUEST_MONEY = "REQUEST_MONEY";
+    public static final String REQUEST_PAYMENT = "REQUEST_PAYMENT";
 
     public static final String VERIFIED_USERS_ONLY = "VERIFIED_USERS_ONLY";
     public static final String IPAY_MEMBERS_ONLY = "IPAY_MEMBERS_ONLY";

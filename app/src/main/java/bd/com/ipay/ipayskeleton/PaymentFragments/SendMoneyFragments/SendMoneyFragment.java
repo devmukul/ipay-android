@@ -29,16 +29,17 @@ import java.math.BigDecimal;
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyReviewActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
+import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -51,7 +52,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
     private Button buttonSend;
     private ImageView buttonSelectFromContacts;
     private ImageView buttonScanQRCode;
-    private EditText mMobileNumberEditText;
+    private CustomContactsSearchView mMobileNumberEditText;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
 
@@ -65,7 +66,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_send_money, container, false);
-        mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
+        mMobileNumberEditText = (CustomContactsSearchView) v.findViewById(R.id.mobile_number);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
@@ -76,6 +77,8 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
+
+        mMobileNumberEditText.setCurrentFragmentTag(Constants.SEND_MONEY);
 
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
             mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
@@ -112,7 +115,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA},
                             REQUEST_CODE_PERMISSION);
                 } else initiateScan();
-
             }
         });
 
@@ -145,8 +147,8 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             if (mobileNumber != null)
-                mMobileNumberEditText.setText(mobileNumber);
-            mMobileNumberEditText.setError(null);
+                mMobileNumberEditText.setMobileNumber(mobileNumber);
+
         } else if (requestCode == SEND_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
         } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
@@ -166,7 +168,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                         } else if (getActivity() != null)
                             Toast.makeText(getActivity(), getResources().getString(
                                     R.string.please_scan_a_valid_pin), Toast.LENGTH_SHORT).show();
-
                     }
                 });
             }
@@ -252,10 +253,9 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         intent.putExtra(Constants.AMOUNT, amount);
         intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(receiver));
         intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
-        intent.putExtra(Constants.IS_IN_CONTACTS, new SearchContactClass(getActivity()).searchMobileNumber(receiver));
+        intent.putExtra(Constants.IS_IN_CONTACTS, new ContactSearchHelper(getActivity()).searchMobileNumber(receiver));
 
         startActivityForResult(intent, SEND_MONEY_REVIEW_REQUEST);
-
     }
 
     private void attemptGetBusinessRule(int serviceID) {

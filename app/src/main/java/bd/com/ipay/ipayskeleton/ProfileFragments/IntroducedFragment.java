@@ -23,7 +23,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.GetIntroducedListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.Introduced;
@@ -271,7 +271,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                         bundle.putString(Constants.MOTHERS_NAME, mothersName);
                         bundle.putSerializable(Constants.ADDRESS, mAddress);
                         bundle.putBoolean(Constants.IS_IN_CONTACTS,
-                                new SearchContactClass(getActivity()).searchMobileNumber(senderMobileNumber));
+                                new ContactSearchHelper(getActivity()).searchMobileNumber(senderMobileNumber));
 
                         ((ProfileActivity) getActivity()).switchToRecommendationReviewFragment(bundle);
                     }

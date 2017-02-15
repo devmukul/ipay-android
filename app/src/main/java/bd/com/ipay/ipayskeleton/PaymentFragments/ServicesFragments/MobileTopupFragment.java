@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +28,8 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpReviewActivity
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
+import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialogWithIcon;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
@@ -43,7 +43,9 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class MobileTopupFragment extends Fragment implements HttpResponseListener {
 
-    private EditText mMobileNumberEditText;
+    private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
+
+    private CustomContactsSearchView mMobileNumberEditText;
     private EditText mAmountEditText;
     private EditText mPackageEditText;
     private EditText mOperatorEditText;
@@ -62,26 +64,29 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
 
     private final int PICK_CONTACT_REQUEST = 100;
     private static final int MOBILE_TOPUP_REVIEW_REQUEST = 101;
+
     private int mSelectedPackageTypeId = -1;
     private int mSelectedOperatorTypeId = 0;
-
-
-    private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
+    private String mUserMobileNumber;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_mobile_topup, container, false);
+        View view = inflater.inflate(R.layout.fragment_mobile_topup, container, false);
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
-        mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
-        mAmountEditText = (EditText) v.findViewById(R.id.amount);
-        mPackageEditText = (EditText) v.findViewById(R.id.package_type);
-        mOperatorEditText = (EditText) v.findViewById(R.id.operator);
-        mSelectReceiverButton = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
-        mRechargeButton = (Button) v.findViewById(R.id.button_recharge);
-        mMobileTopUpInfoTextView = (TextView) v.findViewById(R.id.text_view_mobile_restriction_info);
+        mMobileNumberEditText = (CustomContactsSearchView) view.findViewById(R.id.mobile_number);
+        mAmountEditText = (EditText) view.findViewById(R.id.amount);
+        mPackageEditText = (EditText) view.findViewById(R.id.package_type);
+        mOperatorEditText = (EditText) view.findViewById(R.id.operator);
+        mSelectReceiverButton = (ImageView) view.findViewById(R.id.select_receiver_from_contacts);
+        mRechargeButton = (Button) view.findViewById(R.id.button_recharge);
+        mMobileTopUpInfoTextView = (TextView) view.findViewById(R.id.text_view_mobile_restriction_info);
 
+        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setMessage(getString(R.string.recharging_balance));
+
+        mUserMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         setOperatorAndPackageAdapter();
 
         int mobileNumberType = pref.getInt(Constants.MOBILE_NUMBER_TYPE, Constants.MOBILE_TYPE_PREPAID);
@@ -108,9 +113,8 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             }
         });
 
-        mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage(getString(R.string.recharging_balance));
-
+        setMobileNumber();
+        setOperator(mUserMobileNumber);
 
         mRechargeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,14 +130,9 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             }
         });
 
-        String userMobileNumber = ProfileInfoCacheManager.getMobileNumber();
-
-        mMobileNumberEditText.setText(userMobileNumber);
-        setOperator(userMobileNumber);
-
         if (!ProfileInfoCacheManager.isAccountVerified()) {
-            mMobileNumberEditText.setEnabled(false);
-            mMobileNumberEditText.setFocusable(false);
+            mMobileNumberEditText.setEnabledStatus(false);
+            mMobileNumberEditText.setFocusableStatus(false);
 
             mOperatorEditText.setEnabled(false);
             mSelectReceiverButton.setVisibility(View.GONE);
@@ -150,28 +149,22 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             });
 
             mMobileNumberEditText.requestFocus();
-
-            mMobileNumberEditText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    setOperator(s.toString());
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
         }
         // Get business rule
         attemptGetBusinessRule(Constants.SERVICE_ID_TOP_UP);
 
-        return v;
+        return view;
+    }
+
+    private void setMobileNumber() {
+        mMobileNumberEditText.setCurrentFragmentTag(Constants.TOP_UP);
+        mMobileNumberEditText.setCustomTextChangeListener(new ContactsSearchView.CustomTextChangeListener() {
+            @Override
+            public void onTextChange(String inputText) {
+                setOperator(inputText);
+            }
+        });
+        mMobileNumberEditText.setText(mUserMobileNumber);
     }
 
     private void setOperatorAndPackageAdapter() {
@@ -231,7 +224,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
             if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(new BigDecimal(balance)) > 0) {
-                maxAmount =  TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
+                maxAmount = TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
             } else
                 maxAmount = TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().max((new BigDecimal(balance)));
 
@@ -268,8 +261,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             if (data != null) {
                 String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
                 if (mobileNumber != null)
-                    mMobileNumberEditText.setText(mobileNumber);
-                mMobileNumberEditText.setError(null);
+                    mMobileNumberEditText.setMobileNumber(mobileNumber);
             }
         } else if (requestCode == MOBILE_TOPUP_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             if (getActivity() != null)
@@ -318,7 +310,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     }
 
     private void attemptGetBusinessRule(int serviceID) {
-
         if (mGetBusinessRuleTask != null) {
             return;
         }

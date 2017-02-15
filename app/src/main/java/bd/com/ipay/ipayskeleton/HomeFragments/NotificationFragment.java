@@ -33,7 +33,7 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PendingIntroducerReviewDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.Business;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeRequest;
@@ -362,7 +362,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         Intent intent = new Intent(this.getContext(), NotificationActivity.class);
         intent.putExtras(bundle);
         intent.putExtra(Constants.IS_IN_CONTACTS,
-                new SearchContactClass(getActivity()).searchMobileNumber(mReceiverMobileNumber));
+                new ContactSearchHelper(getActivity()).searchMobileNumber(mReceiverMobileNumber));
         startActivity(intent);
     }
 
@@ -409,7 +409,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         bundle.putSerializable(Constants.ADDRESS, mAddress);
         bundle.putString(Constants.TAG, Constants.RECOMMENDATION);
         bundle.putBoolean(Constants.IS_IN_CONTACTS,
-                new SearchContactClass(getActivity()).searchMobileNumber(senderMobileNumber));
+                new ContactSearchHelper(getActivity()).searchMobileNumber(senderMobileNumber));
 
         Intent intent = new Intent(getActivity(), NotificationActivity.class);
         intent.putExtras(bundle);

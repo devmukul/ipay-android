@@ -23,7 +23,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class SearchViewForBusinessContact extends FrameLayout {
+public class BusinessContactsSearchView extends FrameLayout {
 
     private CustomAutoCompleteView mCustomAutoCompleteView;
     private TextView mMobileNumberHintView;
@@ -34,17 +34,17 @@ public class SearchViewForBusinessContact extends FrameLayout {
 
     private Context mContext;
 
-    public SearchViewForBusinessContact(Context context, AttributeSet attrs, int defStyle) {
+    public BusinessContactsSearchView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView(context, attrs);
     }
 
-    public SearchViewForBusinessContact(Context context, AttributeSet attrs) {
+    public BusinessContactsSearchView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView(context, attrs);
     }
 
-    public SearchViewForBusinessContact(Context context) {
+    public BusinessContactsSearchView(Context context) {
         super(context);
         initView(context, null);
     }
@@ -54,7 +54,7 @@ public class SearchViewForBusinessContact extends FrameLayout {
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.view_business_contact_search_view, this, true);
+        View view = inflater.inflate(R.layout.view_contacts_search_view, this, true);
 
         mCustomAutoCompleteView = (CustomAutoCompleteView) view.findViewById(R.id.auto_complete_view);
         mMobileNumberHintView = (TextView) view.findViewById(R.id.mobile_number_hint);
@@ -103,6 +103,18 @@ public class SearchViewForBusinessContact extends FrameLayout {
 
     public void setError(String error) {
         mCustomAutoCompleteView.setError(error);
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        mCustomAutoCompleteView.setText(mobileNumber);
+        mCustomAutoCompleteView.setSelection(mobileNumber.length());
+        mCustomAutoCompleteView.setError(null);
+
+        hideSuggestionList();
+    }
+
+    public void hideSuggestionList() {
+        mCustomAutoCompleteView.dismissDropDown();
     }
 
     private List<BusinessContact> getBusinessContactList(Cursor cursor) {
@@ -170,7 +182,6 @@ public class SearchViewForBusinessContact extends FrameLayout {
     }
 
     public class BusinessContactListAdapter extends ArrayAdapter<BusinessContact> {
-
         private LayoutInflater inflater;
 
         private TextView businessNameView;
@@ -185,16 +196,20 @@ public class SearchViewForBusinessContact extends FrameLayout {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            BusinessContact businessContact = getItem(position);
             View view = convertView;
 
-            if (view == null)
-                view = inflater.inflate(R.layout.list_item_business_contact, null);
+            if (view == null) view = inflater.inflate(R.layout.list_item_business_contact, null);
 
             businessNameView = (TextView) view.findViewById(R.id.business_name);
             businessTypeView = (TextView) view.findViewById(R.id.business_type);
             mobileNumberView = (TextView) view.findViewById(R.id.mobile_number);
             profilePictureView = (ProfileImageView) view.findViewById(R.id.profile_picture);
+
+            return bindView(view, position);
+        }
+
+        public View bindView(View view, int position) {
+            BusinessContact businessContact = getItem(position);
 
             final String businessName = businessContact.getBusinessName();
             final String mobileNumber = businessContact.getMobileNumber();
@@ -214,15 +229,7 @@ public class SearchViewForBusinessContact extends FrameLayout {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    mCustomAutoCompleteView.setFocusable(false);
-                    mCustomAutoCompleteView.setFocusableInTouchMode(false);
-                    mCustomAutoCompleteView.setText(mobileNumber);
-                    mCustomAutoCompleteView.setFocusable(true);
-                    mCustomAutoCompleteView.setFocusableInTouchMode(true);
-
-                    mBusinessContactList.clear();
-                    mBusinessContactsAdapter.notifyDataSetChanged();
+                    setMobileNumber(mobileNumber);
                 }
             });
 
