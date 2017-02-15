@@ -1,11 +1,11 @@
-package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security;
+package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials;
 
-public class OTPResponseChangePassword {
+public class ChangePasswordValidationResponse {
 
     private String message;
     private long otpValidFor;
 
-    public OTPResponseChangePassword() {
+    public ChangePasswordValidationResponse() {
 
     }
 

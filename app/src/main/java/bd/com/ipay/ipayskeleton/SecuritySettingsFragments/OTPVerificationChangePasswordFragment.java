@@ -27,8 +27,8 @@ import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.EnableDisableSMSBroadcast
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.OTPRequestChangePassword;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.OTPResponseChangePassword;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordValidationRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordValidationResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -38,7 +38,7 @@ public class OTPVerificationChangePasswordFragment extends Fragment implements H
     private ChangePasswordResponse mChangePasswordResponse;
 
     private HttpRequestPutAsyncTask mRequestOTPTask = null;
-    private OTPResponseChangePassword mOtpResponseChangePassword;
+    private ChangePasswordValidationResponse mChangePasswordValidationResponse;
 
     private Button mActivateButton;
     private EditText mOTPEditText;
@@ -52,6 +52,11 @@ public class OTPVerificationChangePasswordFragment extends Fragment implements H
     private String mOTP;
 
     private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -155,7 +160,7 @@ public class OTPVerificationChangePasswordFragment extends Fragment implements H
 
         mProgressDialog.show();
 
-        OTPRequestChangePassword mChangePasswordRequest = new OTPRequestChangePassword(mPassword, mNewPassword);
+        ChangePasswordValidationRequest mChangePasswordRequest = new ChangePasswordValidationRequest(mPassword, mNewPassword);
         Gson gson = new Gson();
         String json = gson.toJson(mChangePasswordRequest);
         mRequestOTPTask = new HttpRequestPutAsyncTask(Constants.COMMAND_CHANGE_PASSWORD,
@@ -244,9 +249,9 @@ public class OTPVerificationChangePasswordFragment extends Fragment implements H
         } else if (result.getApiCommand().equals(Constants.COMMAND_OTP_VERIFICATION)) {
 
             try {
-                mOtpResponseChangePassword = gson.fromJson(result.getJsonString(), OTPResponseChangePassword.class);
-                SecuritySettingsActivity.otpDuration = mOtpResponseChangePassword.getOtpValidFor();
-                String message = mOtpResponseChangePassword.getMessage();
+                mChangePasswordValidationResponse = gson.fromJson(result.getJsonString(), ChangePasswordValidationResponse.class);
+                SecuritySettingsActivity.otpDuration = mChangePasswordValidationResponse.getOtpValidFor();
+                String message = mChangePasswordValidationResponse.getMessage();
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
                     if (getActivity() != null)
