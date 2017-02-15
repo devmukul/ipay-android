@@ -4,8 +4,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerPrintAuthenticationManager;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.AddTrustedPersonFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.ChangePasswordFragment;
+import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.FingerPrintAuthenticationSettingsFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.PasswordRecoveryFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.SecurityQuestionFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.SetPinFragment;
@@ -127,6 +129,14 @@ public class SecuritySettingsActivity extends BaseActivity {
         updateSecurityQuestionFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().
                 replace(R.id.fragment_container, updateSecurityQuestionFragment).addToBackStack(null).commit();
+    }
+
+    public void switchToFingerprintAuthenticationSettingsFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
+            getSupportFragmentManager().popBackStackImmediate();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new FingerPrintAuthenticationSettingsFragment()).addToBackStack(null).commit();
     }
 
     @Override

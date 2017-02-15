@@ -140,6 +140,11 @@ public class Constants {
     public static final int STARTING_MONTH = 01;
     public static final int STARTING_YEAR = 2016;
     public static final int DEFAULT_USER_CLASS = 1;
+
+    public static final String IS_FINGERPRINT_AUTHENTICATION_ON = "LOGIN_WITH_FINGERPRINT";
+    public static final String KEY_PASSWORD = "encrypted_password";
+    public static final String KEY_PASSWORD_IV = "encrypted_password_IV";
+    public static final String KEY_NAME = "key_name";
     /**
      * All requests and responses to server, as well as token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.

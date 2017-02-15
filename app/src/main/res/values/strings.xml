@@ -455,6 +455,23 @@
     <string name="answer">Answer</string>
     <string name="set_security_answer">Saving answers</string>
 
+    <!-- Finger Print Auth -->
+    <string name="use_fingerprint_for_login">Use Fingerprint for Login</string>
+    <string name="fingerprint_authentication">Fingerprint Authentication</string>
+    <string name="use_password">Use password</string>
+    <string name="save_password_by_fingerprint">Please enter any of your valid fingerprint to save your password.</string>
+    <string name="touch_sensor">Touch sensor</string>
+    <string name="fingerprint_recognized">Fingerprint authentication successful</string>
+    <string name="fingerprint_not_recognized">Fingerprint not recognized. Try again</string>
+    <string name="use_fingerprint_to_authenticate_title">Use fingerprint to login</string>
+    <string name="activate_fingerprint">Activate fingerprint</string>
+    <string name="deactivate_fingerprint">Deactivate fingerprint</string>
+    <string name="fingerprint_authentication_activated">Fingerprint Authentication activated</string>
+    <string name="fingerprint_authentication_deactivated">Fingerprint authentication deactivated</string>
+    <string name="fingerprint_settings_description">You can use your fingerprint for faster login. Your password will be safely stored.</string>
+    <string name="login_failed_with_touch_id">It seems you have changed your password since you logged in the last time from this device. Please enter your new password.</string>
+    <string name="remove_fingerprint_authentication_alert_message">Are you sure you want to deactivate fingerprint authentication?</string>
+
     <!-- PUSH -->
     <string name="push_profile_picture_updated_title">Profile Picture Changed</string>
     <string name="push_profile_picture_updated_message">You have changed your profile picture</string>
@@ -520,7 +537,7 @@
     <string name="invited">Invited</string>
     <string name="trusted_devices">Trusted Devices</string>
     <string name="trust_this_device">Trusted this device?</string>
-    <string name="logout_from_all_device">Log Out From All Devices</string>
+    <string name="logout_from_all_device">Log Out from All Devices</string>
     <string name="logout_from_all_device_warning">Are you sure you want to log out from all devices?</string>
     <string name="progress_dialog_loading_trusted_devices">Loading trusted device list</string>
     <string name="success_device_removed">Device removed successfully</string>
