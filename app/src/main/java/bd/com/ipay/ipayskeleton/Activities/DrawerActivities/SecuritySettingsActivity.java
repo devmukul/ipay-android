@@ -6,6 +6,7 @@ import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.AddTrustedPersonFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.ChangePasswordFragment;
+import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.OTPVerificationChangePasswordFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.PasswordRecoveryFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.SecurityQuestionFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.SetPinFragment;
@@ -18,6 +19,8 @@ import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.UpdateSecurityQuestion
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SecuritySettingsActivity extends BaseActivity {
+
+    public static long otpDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,16 @@ public class SecuritySettingsActivity extends BaseActivity {
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new ChangePasswordFragment()).addToBackStack(null).commit();
+    }
+
+    public void switchToOTPVerificationChangePasswordFragment(Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 2)
+            getSupportFragmentManager().popBackStackImmediate();
+
+        OTPVerificationChangePasswordFragment otpVerificationChangePasswordFragment = new OTPVerificationChangePasswordFragment();
+        otpVerificationChangePasswordFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, otpVerificationChangePasswordFragment).addToBackStack(null).commit();
     }
 
     public void switchToTrustedDeviceFragment() {

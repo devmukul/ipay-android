@@ -447,6 +447,7 @@
     <string name="title_otp_verification_for_personal">Enter Code</string>
     <string name="title_otp_verification_for_add_trusted_device">Enter Code</string>
     <string name="title_otp_verification_for_business">Enter Code</string>
+    <string name="title_otp_verification_for_change_password">Enter Code</string>
     <string name="title_select_account_type_page">Welcome</string>
     <string name="version">Version</string>
     <string name="select_a_question">Select Question</string>

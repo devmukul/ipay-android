@@ -17,11 +17,14 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
+import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.OTPRequestChangePassword;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.OTPResponseChangePassword;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -29,7 +32,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ChangePasswordFragment extends Fragment implements HttpResponseListener {
     private HttpRequestPutAsyncTask mChangePasswordTask = null;
-    private ChangePasswordResponse mChangePasswordResponse;
+    private OTPResponseChangePassword mChangePasswordResponse;
 
     private ProgressDialog mProgressDialog;
     private SharedPreferences pref;
@@ -39,6 +42,8 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
     private EditText mEnterConfirmNewPasswordEditText;
     private Button mChangePasswordButton;
 
+    private String mPassword;
+    private String mNewPassword;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,8 +65,6 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
         mProgressDialog = new ProgressDialog(getActivity());
 
         mEnterCurrentPasswordEditText.requestFocus();
-        final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         mChangePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,12 +119,12 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
             // Hiding keyboard after save button pressed in change password
             Utilities.hideKeyboard(getActivity());
 
-            String newPassword = mEnterNewPasswordEditText.getText().toString().trim();
-            String password = mEnterCurrentPasswordEditText.getText().toString().trim();
+            mNewPassword = mEnterNewPasswordEditText.getText().toString().trim();
+            mPassword = mEnterCurrentPasswordEditText.getText().toString().trim();
 
             mProgressDialog.setMessage(getString(R.string.change_password_progress));
             mProgressDialog.show();
-            ChangePasswordRequest mChangePasswordRequest = new ChangePasswordRequest(password, newPassword);
+            OTPRequestChangePassword mChangePasswordRequest = new OTPRequestChangePassword(mPassword, mNewPassword);
             Gson gson = new Gson();
             String json = gson.toJson(mChangePasswordRequest);
             mChangePasswordTask = new HttpRequestPutAsyncTask(Constants.COMMAND_CHANGE_PASSWORD,
@@ -133,6 +136,16 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
 
     public void setTitle() {
         getActivity().setTitle(R.string.change_password);
+    }
+
+    private void launchOTPVerificationFragment() {
+        SecuritySettingsActivity.otpDuration = mChangePasswordResponse.getOtpValidFor();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.PASSWORD, mPassword);
+        bundle.putString(Constants.NEW_PASSWORD, mNewPassword);
+
+        ((SecuritySettingsActivity) getActivity()).switchToOTPVerificationChangePasswordFragment(bundle);
     }
 
     @Override
@@ -154,12 +167,17 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
         if (result.getApiCommand().equals(Constants.COMMAND_CHANGE_PASSWORD)) {
 
             try {
-                mChangePasswordResponse = gson.fromJson(result.getJsonString(), ChangePasswordResponse.class);
+                mChangePasswordResponse = gson.fromJson(result.getJsonString(), OTPResponseChangePassword.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    ((SecuritySettingsActivity) getActivity()).switchToAccountSettingsFragment();
+
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        launchOTPVerificationFragment();
+                    }
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
