@@ -6,7 +6,6 @@ import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.AddTrustedPersonFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.ChangePasswordFragment;
-import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.OTPVerificationChangePasswordFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.PasswordRecoveryFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.SecurityQuestionFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.SetPinFragment;
@@ -89,7 +88,7 @@ public class SecuritySettingsActivity extends BaseActivity {
                 .replace(R.id.fragment_container, new ChangePasswordFragment()).addToBackStack(null).commit();
     }
 
-    public void switchToOTPVerificationChangePasswordFragment(Bundle bundle) {
+    /*public void switchToOTPVerificationChangePasswordFragment(Bundle bundle) {
         while (getSupportFragmentManager().getBackStackEntryCount() > 2)
             getSupportFragmentManager().popBackStackImmediate();
 
@@ -97,7 +96,7 @@ public class SecuritySettingsActivity extends BaseActivity {
         otpVerificationChangePasswordFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, otpVerificationChangePasswordFragment).addToBackStack(null).commit();
-    }
+    }*/
 
     public void switchToTrustedDeviceFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 1)

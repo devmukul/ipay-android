@@ -15,8 +15,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import bd.com.ipay.ipayskeleton.Activities.DialogActivities.BusinessContactPickerDialogActivity;
-import bd.com.ipay.ipayskeleton.Activities.DialogActivities.OTPVerificationChangePasswordDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -139,15 +137,7 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
 
     private void launchOTPVerificationFragment() {
         SecuritySettingsActivity.otpDuration = mChangePasswordValidationResponse.getOtpValidFor();
-
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.PASSWORD, mPassword);
-        bundle.putString(Constants.NEW_PASSWORD, mNewPassword);
-
-        //((SecuritySettingsActivity) getActivity()).switchToOTPVerificationChangePasswordFragment(bundle);
-
-        Intent intent = new Intent(getActivity(), OTPVerificationChangePasswordDialogActivity.class);
-        startActivityForResult(intent,OTP_VERIFICATION_REQUEST);
+        new OTPVerificationChangePasswordFragment(getContext(), mPassword,mNewPassword);
     }
 
     @Override
