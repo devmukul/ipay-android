@@ -1,11 +1,11 @@
 package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
@@ -33,7 +34,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class OTPVerificationChangePasswordFragment extends Fragment implements HttpResponseListener {
+public class OTPVerificationChangePasswordFragment extends MaterialDialog.Builder implements HttpResponseListener {
     private HttpRequestPutAsyncTask mChangePasswordTask = null;
     private ChangePasswordResponse mChangePasswordResponse;
 
@@ -45,6 +46,7 @@ public class OTPVerificationChangePasswordFragment extends Fragment implements H
     private TextView mTimerTextView;
     private Button mResendOTPButton;
 
+    private Context context;
     private ProgressDialog mProgressDialog;
 
     private String mPassword;
@@ -53,27 +55,29 @@ public class OTPVerificationChangePasswordFragment extends Fragment implements H
 
     private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public OTPVerificationChangePasswordFragment(Context context) {
+        super(context);
+
+        this.context = context;
+        initializeView();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_otp_verification_trusted_device, container, false);
+        View v = inflater.inflate(R.layout.dialog_otp_verification_change_password, container, false);
 
-        Bundle bundle = getArguments();
+     /*   Bundle bundle = getArguments();
 
         mPassword = bundle.getString(Constants.PASSWORD);
-        mNewPassword = bundle.getString(Constants.NEW_PASSWORD);
+        mNewPassword = bundle.getString(Constants.NEW_PASSWORD);*/
 
         mActivateButton = (Button) v.findViewById(R.id.buttonVerifyOTP);
         mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
         mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
 
-        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog = new ProgressDialog(context);
         mProgressDialog.setMessage(getString(R.string.change_password_progress));
         mProgressDialog.setCancelable(true);
 
@@ -134,6 +138,81 @@ public class OTPVerificationChangePasswordFragment extends Fragment implements H
         return v;
     }
 
+    public void initializeView() {
+
+        final MaterialDialog reviewDialog = new MaterialDialog.Builder(this.getContext())
+                .title(R.string.title_otp_verification_for_change_password)
+                .customView(R.layout.dialog_otp_verification_change_password, true)
+                .show();
+
+        View v = reviewDialog.getCustomView();
+
+        mActivateButton = (Button) v.findViewById(R.id.buttonVerifyOTP);
+        mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
+        mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
+        mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
+
+        mProgressDialog = new ProgressDialog(context);
+        mProgressDialog.setMessage(context.getString(R.string.change_password_progress));
+        mProgressDialog.setCancelable(true);
+
+        //enable broadcast receiver to get the text message to get the OTP
+        mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
+
+        mEnableDisableSMSBroadcastReceiver.enableBroadcastReceiver(getContext(), new SMSReaderBroadcastReceiver.OnTextMessageReceivedListener() {
+            @Override
+            public void onTextMessageReceive(String otp) {
+                mOTPEditText.setText(otp);
+                mActivateButton.performClick();
+            }
+        });
+
+        mActivateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hiding the keyboard after verifying OTP
+                Utilities.hideKeyboard(context);
+                if (Utilities.isConnectionAvailable(context)) {
+                    verifyInput();
+
+                } else if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        mResendOTPButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Utilities.isConnectionAvailable(getActivity()))
+                    resendOTP();
+                else if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+        mResendOTPButton.setEnabled(false);
+        mTimerTextView.setVisibility(View.VISIBLE);
+        new CountDownTimer(SecuritySettingsActivity.otpDuration, 1000 - 500) {
+
+            public void onTick(long millisUntilFinished) {
+                mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
+            }
+
+            public void onFinish() {
+
+                //mTimerTextView.setVisibility(View.INVISIBLE);
+                mResendOTPButton.setEnabled(true);
+            }
+        }.start();
+
+        if (Constants.DEBUG && Constants.AUTO_LOGIN && (Constants.SERVER_TYPE == 1 || Constants.SERVER_TYPE == 2)) {
+            mOTPEditText.setText("123456");
+            mActivateButton.callOnClick();
+        }
+
+
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -144,7 +223,7 @@ public class OTPVerificationChangePasswordFragment extends Fragment implements H
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Utilities.showKeyboard(getActivity(), mOTPEditText);
+       // Utilities.showKeyboard(getActivity(), mOTPEditText);
     }
 
     @Override

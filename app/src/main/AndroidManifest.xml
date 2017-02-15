@@ -273,6 +273,13 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustPan" />
 
+        <activity
+            android:name=".Activities.DialogActivities.OTPVerificationChangePasswordDialogActivity"
+            android:label="@string/title_otp_verification_for_change_password"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <!-- Receiver and service -->
 
         <receiver

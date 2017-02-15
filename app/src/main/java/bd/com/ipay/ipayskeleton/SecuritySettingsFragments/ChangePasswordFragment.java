@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.BusinessContactPickerDialogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.OTPVerificationChangePasswordDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -40,6 +43,7 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
     private String mPassword;
     private String mNewPassword;
 
+    private final int OTP_VERIFICATION_REQUEST = 100;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,7 +144,10 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
         bundle.putString(Constants.PASSWORD, mPassword);
         bundle.putString(Constants.NEW_PASSWORD, mNewPassword);
 
-        ((SecuritySettingsActivity) getActivity()).switchToOTPVerificationChangePasswordFragment(bundle);
+        //((SecuritySettingsActivity) getActivity()).switchToOTPVerificationChangePasswordFragment(bundle);
+
+        Intent intent = new Intent(getActivity(), OTPVerificationChangePasswordDialogActivity.class);
+        startActivityForResult(intent,OTP_VERIFICATION_REQUEST);
     }
 
     @Override
