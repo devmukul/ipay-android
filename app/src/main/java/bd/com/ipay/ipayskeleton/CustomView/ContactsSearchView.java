@@ -90,11 +90,10 @@ public class ContactsSearchView extends FrameLayout {
             if (userInput.length() > 0) {
                 mMobileNumberHintView.setVisibility(VISIBLE);
 
-                if (CurrentFragmentTag() != null && CurrentFragmentTag().equals(Constants.TOP_UP)) {
+                if (CurrentFragmentTag() != null && CurrentFragmentTag().equals(Constants.TOP_UP))
                     customTextChangeListener.onTextChange(userInput.toString());
-                }
-            } else
-                mMobileNumberHintView.setVisibility(INVISIBLE);
+
+            } else mMobileNumberHintView.setVisibility(INVISIBLE);
 
             mQuery = userInput.toString();
 
@@ -219,8 +218,7 @@ public class ContactsSearchView extends FrameLayout {
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = convertView;
 
-            if (view == null)
-                view = inflater.inflate(R.layout.list_item_contact, null);
+            if (view == null) view = inflater.inflate(R.layout.list_item_contact, null);
 
             primaryNameView = (TextView) view.findViewById(R.id.name1);
             secondaryNameView = (TextView) view.findViewById(R.id.name2);
@@ -261,15 +259,11 @@ public class ContactsSearchView extends FrameLayout {
             inviteStatusTextView.setVisibility(View.GONE);
             inviteButton.setVisibility(View.GONE);
 
-            if (isMember)
-                memberStatusView.setVisibility(View.VISIBLE);
-            else
-                memberStatusView.setVisibility(View.GONE);
+            if (isMember) memberStatusView.setVisibility(View.VISIBLE);
+            else memberStatusView.setVisibility(View.GONE);
 
-            if (isVerified)
-                verificationStatusView.setVisibility(View.VISIBLE);
-            else
-                verificationStatusView.setVisibility(View.GONE);
+            if (isVerified) verificationStatusView.setVisibility(View.VISIBLE);
+            else verificationStatusView.setVisibility(View.GONE);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
