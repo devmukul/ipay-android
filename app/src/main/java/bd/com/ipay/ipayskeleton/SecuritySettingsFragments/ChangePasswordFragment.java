@@ -64,7 +64,7 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
         mChangePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                attemptChangePassword();
+                attemptChangePasswordValidation();
             }
         });
 
@@ -77,8 +77,7 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
 
     }
 
-    private void attemptChangePassword() {
-
+    private void attemptChangePasswordValidation() {
         if (mChangePasswordValidationTask != null) {
             return;
         }
@@ -135,12 +134,11 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
 
     private void launchOTPVerificationFragment() {
         SecuritySettingsActivity.otpDuration = mChangePasswordValidationResponse.getOtpValidFor();
-        new OTPVerificationChangePasswordDialog(getContext(), mPassword,mNewPassword);
+        new OTPVerificationChangePasswordDialog(getContext(), mPassword, mNewPassword);
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
@@ -171,7 +169,9 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mChangePasswordValidationResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        launchOTPVerificationFragment();
+                        if (result.getJsonString().contains(getString(R.string.otp))) {
+                            launchOTPVerificationFragment();
+                        }
                     }
                 } else {
                     if (getActivity() != null)

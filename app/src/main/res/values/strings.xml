@@ -209,6 +209,7 @@
     <string name="logout_failed">Could not sign out properly</string>
     <string name="logout_from_this_device">Logout from this device</string>
     <string name="enter_otp">Enter Code</string>
+    <string name="otp">otp</string>
     <string name="enter_promo_code">Invitation Code</string>
     <string name="failed_to_reset_password">Failed to reset password. Please try again.</string>
     <string name="invalid_otp">Enter a valid OTP</string>
