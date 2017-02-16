@@ -18,17 +18,24 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
+import java.util.List;
+
 import bd.com.ipay.ipayskeleton.Activities.HelpAndSupportActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
+import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.GetEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.TicketCategory;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CreateTicketRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CreateTicketResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategoriesRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategoriesResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -39,22 +46,35 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     private HttpRequestPostAsyncTask mCreateTicketTask = null;
     private CreateTicketResponse mCreateTicketResponse;
 
+    private HttpRequestGetAsyncTask mGetTicketCategoriesTask = null;
+    private GetTicketCategoriesResponse mGetTicketCategoriesResponse;
+
     private HttpRequestGetAsyncTask mGetEmailsTask = null;
     private GetEmailResponse mGetEmailResponse;
 
     private EditText mMessageEditText;
     private EditText mSubjectEditText;
+    private EditTextWithProgressBar mCategoryEditText;
     private Button mCreateTicketButton;
 
     private ProgressDialog mProgressDialog;
+
+    private String mSubject;
+    private String mMessage;
+
+    private ResourceSelectorDialog<TicketCategory> ticketCategorySelectorDialog;
+    private List<TicketCategory> mTicketCategoryList;
+    private String mSelectedCategoryCode;
+    private int mSelectedCategoryId;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_create_ticket, container, false);
 
-        mSubjectEditText = (EditText) v.findViewById(R.id.subject);
-        mMessageEditText = (EditText) v.findViewById(R.id.message);
+        mSubjectEditText = (EditText) v.findViewById(R.id.subject_edit_text);
+        mCategoryEditText = (EditTextWithProgressBar) v.findViewById(R.id.category_edit_text);
+        mMessageEditText = (EditText) v.findViewById(R.id.message_edit_text);
         mCreateTicketButton = (Button) v.findViewById(R.id.button_create_ticket);
 
         mProgressDialog = new ProgressDialog(getActivity());
@@ -69,6 +89,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
             }
         });
 
+        getTicketCategories();
         return v;
     }
 
@@ -88,7 +109,25 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                 processGetEmailListResponse(json);
             }
         }
+    }
 
+    private void setTicketCategoryAdapter(List<TicketCategory> mTicketCategoryList) {
+        ticketCategorySelectorDialog = new ResourceSelectorDialog<>(getContext(), getString(R.string.select_category), mTicketCategoryList, mSelectedCategoryId, true);
+        ticketCategorySelectorDialog.setOnResourceSelectedListenerWithStringID(new ResourceSelectorDialog.OnResourceSelectedListenerWithStringID() {
+            @Override
+            public void onResourceSelectedWithStringID(String code, String name, int selectedIndex) {
+                mCategoryEditText.setText(name);
+                mSelectedCategoryCode = code;
+                mSelectedCategoryId = selectedIndex;
+            }
+        });
+
+        mCategoryEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ticketCategorySelectorDialog.show();
+            }
+        });
     }
 
     private void processGetEmailListResponse(String json) {
@@ -176,13 +215,15 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         boolean cancel = false;
         View focusView = null;
 
-        if (mSubjectEditText.getText().toString().isEmpty()) {
+        mSubject = mSubjectEditText.getText().toString();
+        mMessage = mMessageEditText.getText().toString();
+
+        if (mSubject.isEmpty()) {
             cancel = true;
             focusView = mSubjectEditText;
             mSubjectEditText.setError(getString(R.string.failed_empty_subject));
         }
-
-        if (mMessageEditText.getText().toString().isEmpty()) {
+        if (mMessage.isEmpty()) {
             cancel = true;
             focusView = mMessageEditText;
             mMessageEditText.setError(getString(R.string.failed_empty_message));
@@ -196,15 +237,29 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         }
     }
 
-    private void createTicket() {
-        if (mCreateTicketTask != null) {
+    private void getTicketCategories() {
+        if (mGetTicketCategoriesTask != null)
             return;
-        }
+
+        mCategoryEditText.showProgressBar();
+        GetTicketCategoriesRequestBuilder mGetTicketCategoriesRequestBuilder = new GetTicketCategoriesRequestBuilder();
+
+        String mUri = mGetTicketCategoriesRequestBuilder.generateUri().toString();
+        mGetTicketCategoriesTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TICKET_CATEGORIES,
+                mUri, getActivity());
+        mGetTicketCategoriesTask.mHttpResponseListener = this;
+
+        mGetTicketCategoriesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void createTicket() {
+        if (mCreateTicketTask != null)
+            return;
 
         mProgressDialog.setMessage(getString(R.string.creating_ticket));
         mProgressDialog.show();
 
-        CreateTicketRequest createTicketRequest = new CreateTicketRequest(mSubjectEditText.getText().toString(), mMessageEditText.getText().toString());
+        CreateTicketRequest createTicketRequest = new CreateTicketRequest(mSubject, mSelectedCategoryCode, mMessage);
 
         Gson gson = new Gson();
         String json = gson.toJson(createTicketRequest);
@@ -235,6 +290,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mCreateTicketTask = null;
             mGetEmailsTask = null;
+            mGetTicketCategoriesTask = null;
 
             if (getActivity() != null) {
                 Toast.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT).show();
@@ -299,6 +355,27 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                     }
                 }
                 mGetEmailsTask = null;
+                break;
+            case Constants.COMMAND_GET_TICKET_CATEGORIES:
+                try {
+                    mGetTicketCategoriesResponse = gson.fromJson(result.getJsonString(), GetTicketCategoriesResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mTicketCategoryList = mGetTicketCategoriesResponse.getTicketCategories();
+
+                        setTicketCategoryAdapter(mTicketCategoryList);
+                        mCategoryEditText.hideProgressBar();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                }
+
+                mProgressDialog.dismiss();
+                mGetTicketCategoriesTask = null;
+                break;
+
+            default:
                 break;
         }
     }
