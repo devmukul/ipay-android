@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,16 +14,13 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
-import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationChangePasswordDialog;
+import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintAuthenticationDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordValidationRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordValidationResponse;
-import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintAuthenticationDialog;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -44,8 +40,6 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
 
     private String mPassword;
     private String mNewPassword;
-    private String mNewPassword;
-    private String mCurrentPassword;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -123,13 +117,10 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
 
             mNewPassword = mEnterNewPasswordEditText.getText().toString().trim();
             mPassword = mEnterCurrentPasswordEditText.getText().toString().trim();
-            mNewPassword = mEnterNewPasswordEditText.getText().toString().trim();
-            mCurrentPassword = mEnterCurrentPasswordEditText.getText().toString().trim();
 
             mProgressDialog.setMessage(getString(R.string.change_password_progress));
             mProgressDialog.show();
             ChangePasswordValidationRequest mChangePasswordValidationRequest = new ChangePasswordValidationRequest(mPassword, mNewPassword);
-            ChangePasswordRequest mChangePasswordRequest = new ChangePasswordRequest(mCurrentPassword, mNewPassword);
             Gson gson = new Gson();
             String json = gson.toJson(mChangePasswordValidationRequest);
             mChangePasswordValidationTask = new HttpRequestPutAsyncTask(Constants.COMMAND_CHANGE_PASSWORD_VALIDATION,
@@ -199,23 +190,6 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
                             launchOTPVerificationFragment();
                         }
                     }
-
-
-
-
-
-
-
-
-                        Toast.makeText(getActivity(), mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    SignupOrLoginActivity.mPassword = mNewPassword;
-
-                    boolean isFingerPrintAuthOn = ProfileInfoCacheManager.getFingerprintAuthenticationStatus(false);
-                    if (isFingerPrintAuthOn) {
-                        saveNewPasswordWithTouchID();
-
-                    } else
-                        ((SecuritySettingsActivity) getActivity()).switchToAccountSettingsFragment();
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mChangePasswordValidationResponse.getMessage(), Toast.LENGTH_LONG).show();

@@ -140,7 +140,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
         new CountDownTimer(SecuritySettingsActivity.otpDuration, 1000 - 500) {
 
             public void onTick(long millisUntilFinished) {
-                mResendOTPButton.setText(context.getString(R.string.resend)+" "+ new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
+                mResendOTPButton.setText(context.getString(R.string.resend) + " " + new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
             }
 
             public void onFinish() {
