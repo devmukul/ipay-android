@@ -26,6 +26,7 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
     private HttpRequestPostAsyncTask mPendingIntroducerActionTask = null;
     private IntroduceActionResponse mPendingIntroducerActionResponse;
 
+    private MaterialDialog reviewDialog;
     private ProgressDialog mProgressDialog;
 
     private Context Context;
@@ -56,7 +57,7 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
 
     public void initializeView() {
 
-        final MaterialDialog reviewDialog = new MaterialDialog.Builder(this.getContext())
+        reviewDialog = new MaterialDialog.Builder(this.getContext())
                 .title(R.string.request_to_introduce)
                 .customView(R.layout.dialog_pending_introducer_review, true)
                 .show();
@@ -114,9 +115,6 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
     }
 
     private void attemptAcceptRejectPendingIntroducer(long requestID, String introducerAcceptRejectStatus) {
-        if (Context != null)
-            Toast.makeText(Context, R.string.service_not_available, Toast.LENGTH_LONG).show();
-
         if (introducerAcceptRejectStatus.equals(Constants.INTRODUCTION_REQUEST_ACTION_APPROVE))
             mProgressDialog.setMessage(Context.getString(R.string.adding_introducer));
         else
