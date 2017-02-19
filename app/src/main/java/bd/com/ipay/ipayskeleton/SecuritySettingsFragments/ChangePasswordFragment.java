@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +17,7 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActi
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationChangePasswordDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordValidationRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordValidationResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -30,7 +30,6 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
     private ChangePasswordValidationResponse mChangePasswordValidationResponse;
 
     private ProgressDialog mProgressDialog;
-    private SharedPreferences pref;
 
     private EditText mEnterCurrentPasswordEditText;
     private EditText mEnterNewPasswordEditText;
@@ -134,7 +133,7 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
 
     private void launchOTPVerificationFragment() {
         SecuritySettingsActivity.otpDuration = mChangePasswordValidationResponse.getOtpValidFor();
-        new OTPVerificationChangePasswordDialog(getContext(), mPassword, mNewPassword);
+        new OTPVerificationChangePasswordDialog(getActivity(), mPassword, mNewPassword);
     }
 
     @Override
@@ -148,7 +147,6 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
-
 
         Gson gson = new Gson();
 
@@ -185,7 +183,6 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
 
             mProgressDialog.dismiss();
             mChangePasswordValidationTask = null;
-
         }
     }
 

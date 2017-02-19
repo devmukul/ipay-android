@@ -70,6 +70,8 @@
     <string name="contact_already_exists">Contact already exists</string>
     <string name="business_mobile_number">Business Mobile Number</string>
     <string name="confirm_password_not_matched">Password did not match</string>
+    <string name="change_password_success">Password change successful</string>
+    <string name="change_password_success_message">Your password is changed successfully. Now you will be logged out from all devices. Please login again to continue.</string>
     <string name="confirm_pin_not_matched">PIN did not match</string>
     <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account.</string>
     <string name="empty_payable_list">You have no payable items at this moment. Click + button to add a fee to pay.</string>
@@ -366,6 +368,7 @@
     <string name="add_this_as_trusted_device">Add this device as trusted</string>
     <string name="failed_add_trusted_device">Could not add trusted device</string>
     <string name="change_password_progress">Change password on progress...</string>
+    <string name="change_password_validation">Password validation on progress...</string>
     <string name="enter_current_pass">Enter current password</string>
     <string name="current_pass">Current password</string>
     <string name="enter_question">Select Question</string>

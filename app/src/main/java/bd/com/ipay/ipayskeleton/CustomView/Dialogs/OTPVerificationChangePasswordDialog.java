@@ -1,15 +1,17 @@
-package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
+package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
@@ -22,32 +24,33 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.SMSReaderBroadcastReceiver;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordValidationRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordValidationResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordWithOTPRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordWithOTPResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder implements HttpResponseListener {
-    private HttpRequestPutAsyncTask mChangePasswordTask = null;
-    private ChangePasswordResponse mChangePasswordResponse;
+    private HttpRequestPutAsyncTask mChangePasswordWithOTPTask = null;
+    private ChangePasswordWithOTPResponse mChangePasswordWithOTPResponse;
 
     private HttpRequestPutAsyncTask mRequestOTPTask = null;
     private ChangePasswordValidationResponse mChangePasswordValidationResponse;
 
-    private MaterialDialog mReviewDialog;
+    private MaterialDialog mOTPInputDialog;
 
     private View view;
     private EditText mOTPEditText;
-    private TextView mTimerTextView;
 
     private Button mActivateButton;
     private Button mResendOTPButton;
     private Button mCancelButton;
 
-    private Context context;
+    private Activity context;
     private ProgressDialog mProgressDialog;
 
     private String mPassword;
@@ -56,7 +59,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
 
     private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
 
-    public OTPVerificationChangePasswordDialog(Context context, String password, String newPassword) {
+    public OTPVerificationChangePasswordDialog(Activity context, String password, String newPassword) {
         super(context);
 
         this.context = context;
@@ -66,34 +69,29 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
     }
 
     public void initializeView() {
-        mReviewDialog = new MaterialDialog.Builder(this.getContext())
+        mOTPInputDialog = new MaterialDialog.Builder(this.getContext())
                 .title(R.string.title_otp_verification_for_change_password)
                 .customView(R.layout.dialog_otp_verification_change_password, true)
                 .show();
 
-        view = mReviewDialog.getCustomView();
+        view = mOTPInputDialog.getCustomView();
 
         mOTPEditText = (EditText) view.findViewById(R.id.otp_edittext);
-        mTimerTextView = (TextView) view.findViewById(R.id.txt_timer);
         mActivateButton = (Button) view.findViewById(R.id.buttonVerifyOTP);
         mResendOTPButton = (Button) view.findViewById(R.id.buttonResend);
         mCancelButton = (Button) view.findViewById(R.id.buttonCancel);
 
         mProgressDialog = new ProgressDialog(context);
-        mProgressDialog.setMessage(context.getString(R.string.change_password_progress));
         mProgressDialog.setCancelable(true);
 
-        //enable broadcast receiver to get the text message to get the OTP
-        mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
+        setSMSBroadcastReceiver();
+        setButtonActions();
 
-        mEnableDisableSMSBroadcastReceiver.enableBroadcastReceiver(getContext(), new SMSReaderBroadcastReceiver.OnTextMessageReceivedListener() {
-            @Override
-            public void onTextMessageReceive(String otp) {
-                mOTPEditText.setText(otp);
-                mActivateButton.performClick();
-            }
-        });
+        setCountDownTimer();
+        setAutoLoginCredentials();
+    }
 
+    private void setButtonActions() {
         mActivateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,7 +111,6 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
                     resendOTP();
                 else if (context != null)
                     Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-
             }
         });
 
@@ -121,16 +118,29 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
             @Override
             public void onClick(View v) {
                 mEnableDisableSMSBroadcastReceiver.disableBroadcastReceiver(getContext());
-                mReviewDialog.dismiss();
+                mOTPInputDialog.dismiss();
             }
         });
+    }
 
+    private void setSMSBroadcastReceiver() {//enable broadcast receiver to get the text message to get the OTP
+        mEnableDisableSMSBroadcastReceiver = new EnableDisableSMSBroadcastReceiver();
+
+        mEnableDisableSMSBroadcastReceiver.enableBroadcastReceiver(getContext(), new SMSReaderBroadcastReceiver.OnTextMessageReceivedListener() {
+            @Override
+            public void onTextMessageReceive(String otp) {
+                mOTPEditText.setText(otp);
+                mActivateButton.performClick();
+            }
+        });
+    }
+
+    private void setCountDownTimer() {
         mResendOTPButton.setEnabled(false);
-        mTimerTextView.setVisibility(View.VISIBLE);
         new CountDownTimer(SecuritySettingsActivity.otpDuration, 1000 - 500) {
 
             public void onTick(long millisUntilFinished) {
-                mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
+                mResendOTPButton.setText(context.getString(R.string.resend)+" "+ new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
             }
 
             public void onFinish() {
@@ -138,11 +148,13 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
             }
         }.start();
 
+    }
+
+    private void setAutoLoginCredentials() {
         if (Constants.DEBUG && Constants.AUTO_LOGIN && (Constants.SERVER_TYPE == 1 || Constants.SERVER_TYPE == 2)) {
             mOTPEditText.setText("123456");
             mActivateButton.callOnClick();
         }
-
     }
 
     private void verifyInput() {
@@ -166,11 +178,35 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
         }
     }
 
+    private void showChangePasswordSuccessDialog() {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
+        dialog
+                .title(R.string.change_password_success)
+                .content(R.string.change_password_success_message)
+                .cancelable(false)
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        switchToLoginPage();
+                    }
+                })
+                .show();
+    }
+
+    private void switchToLoginPage() {
+        ((MyApplication) context.getApplication()).launchLoginPage(null);
+        ((MyApplication) context.getApplication()).clearTokenAndTimer();
+        ProfileInfoCacheManager.setLoggedInStatus(false);
+        mOTPInputDialog.cancel();
+    }
+
     private void resendOTP() {
         if (mRequestOTPTask != null) {
             return;
         }
 
+        mProgressDialog.setMessage(context.getString(R.string.sending_otp));
         mProgressDialog.show();
 
         ChangePasswordValidationRequest mChangePasswordRequest = new ChangePasswordValidationRequest(mPassword, mNewPassword);
@@ -178,26 +214,24 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
         String json = gson.toJson(mChangePasswordRequest);
         mRequestOTPTask = new HttpRequestPutAsyncTask(Constants.COMMAND_RESEND_OTP,
                 Constants.BASE_URL_MM + Constants.URL_CHANGE_PASSWORD, json, context);
-        mChangePasswordTask.mHttpResponseListener = this;
-        mChangePasswordTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mRequestOTPTask.mHttpResponseListener = this;
+        mRequestOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void attemptChangePasswordWithOTP() {
-
-        if (mChangePasswordTask != null) {
+        if (mChangePasswordWithOTPTask != null) {
             return;
         }
 
         mProgressDialog.setMessage(context.getString(R.string.change_password_progress));
         mProgressDialog.show();
-        ChangePasswordRequest mChangePasswordRequest = new ChangePasswordRequest(mPassword, mNewPassword, mOTP);
+        ChangePasswordWithOTPRequest mChangePasswordWithOTPRequest = new ChangePasswordWithOTPRequest(mPassword, mNewPassword, mOTP);
         Gson gson = new Gson();
-        String json = gson.toJson(mChangePasswordRequest);
-        mChangePasswordTask = new HttpRequestPutAsyncTask(Constants.COMMAND_CHANGE_PASSWORD,
+        String json = gson.toJson(mChangePasswordWithOTPRequest);
+        mChangePasswordWithOTPTask = new HttpRequestPutAsyncTask(Constants.COMMAND_CHANGE_PASSWORD,
                 Constants.BASE_URL_MM + Constants.URL_CHANGE_PASSWORD, json, context);
-        mChangePasswordTask.mHttpResponseListener = this;
-        mChangePasswordTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
+        mChangePasswordWithOTPTask.mHttpResponseListener = this;
+        mChangePasswordWithOTPTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -205,7 +239,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mChangePasswordTask = null;
+            mChangePasswordWithOTPTask = null;
             mRequestOTPTask = null;
             if (context != null)
                 Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT).show();
@@ -217,19 +251,20 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
         if (result.getApiCommand().equals(Constants.COMMAND_CHANGE_PASSWORD)) {
 
             try {
-                mChangePasswordResponse = gson.fromJson(result.getJsonString(), ChangePasswordResponse.class);
+                mChangePasswordWithOTPResponse = gson.fromJson(result.getJsonString(), ChangePasswordWithOTPResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (context != null) {
-                        Toast.makeText(context, mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, mChangePasswordWithOTPResponse.getMessage(), Toast.LENGTH_LONG).show();
                         Utilities.hideKeyboard(context, view);
 
-                        mReviewDialog.dismiss();
-                        ((SecuritySettingsActivity) context).switchToAccountSettingsFragment();
+                        mEnableDisableSMSBroadcastReceiver.disableBroadcastReceiver(context);
+                        mOTPInputDialog.hide();
+                        showChangePasswordSuccessDialog();
                     }
                 } else {
                     if (context != null)
-                        Toast.makeText(context, mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, mChangePasswordWithOTPResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -238,7 +273,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
             }
 
             mProgressDialog.dismiss();
-            mChangePasswordTask = null;
+            mChangePasswordWithOTPTask = null;
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_RESEND_OTP)) {
 
@@ -251,20 +286,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
                     if (context != null)
                         Toast.makeText(context, R.string.otp_sent, Toast.LENGTH_LONG).show();
 
-                    // Start timer again
-                    mTimerTextView.setVisibility(View.VISIBLE);
-                    mResendOTPButton.setEnabled(false);
-                    new CountDownTimer(SecuritySettingsActivity.otpDuration, 1000) {
-
-                        public void onTick(long millisUntilFinished) {
-                            mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
-                        }
-
-                        public void onFinish() {
-                            mTimerTextView.setVisibility(View.INVISIBLE);
-                            mResendOTPButton.setEnabled(true);
-                        }
-                    }.start();
+                    setCountDownTimer();
                 } else {
                     if (context != null)
                         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
