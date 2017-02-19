@@ -85,6 +85,23 @@
 
             <View style="@style/Divider" />
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/organizationNameEditText"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/organization_name"
+                    android:inputType="text"
+                    android:maxLength="50" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <View style="@style/Divider" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

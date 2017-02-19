@@ -43,6 +43,10 @@ public class Constants {
     public static final String MONEY_REQUEST_ID = "MONEY REQUESTS ID";
     public static final String MONEY_REQUEST_SERVICE_ID = "SERVICE_ID";
     public static final String TRANSACTION_ID = "TRANSACTION_ID";
+    public static final String TOP_UP = "TOP_UP";
+    public static final String SEND_MONEY = "SEND_MONEY";
+    public static final String REQUEST_MONEY = "REQUEST_MONEY";
+    public static final String REQUEST_PAYMENT = "REQUEST_PAYMENT";
 
     public static final String VERIFIED_USERS_ONLY = "VERIFIED_USERS_ONLY";
     public static final String IPAY_MEMBERS_ONLY = "IPAY_MEMBERS_ONLY";
@@ -94,6 +98,7 @@ public class Constants {
 
     public static final String OCCUPATION = "OCCUPATION";
     public static final String OCCUPATION_LIST = "OCCUPATION_LIST";
+    public static final String ORGANIZATION_NAME = "ORGANIZATION_NAME";
     public static final String DESIGNATION = "DESIGNATION";
     public static final String BUSINESS_NAME = "BUSINESS_NAME";
 
@@ -140,6 +145,11 @@ public class Constants {
     public static final int STARTING_MONTH = 01;
     public static final int STARTING_YEAR = 2016;
     public static final int DEFAULT_USER_CLASS = 1;
+
+    public static final String IS_FINGERPRINT_AUTHENTICATION_ON = "LOGIN_WITH_FINGERPRINT";
+    public static final String KEY_PASSWORD = "encrypted_password";
+    public static final String KEY_PASSWORD_IV = "encrypted_password_IV";
+    public static final String KEY_NAME = "key_name";
     /**
      * All requests and responses to server, as well as token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.

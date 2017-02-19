@@ -68,7 +68,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
     private ProgressDialog mProgressDialog;
 
-    private TextView mDocumentUploadInfoView;
     private DocumentListAdapter mDocumentListAdapter;
     private RecyclerView mDocumentListRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -94,6 +93,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     };
 
     private static final int[] BUSINESS_DOCUMENT_TYPE_NAMES = {
+            R.string.national_id,
             R.string.business_tin,
             R.string.trade_license,
             R.string.vat_registration_certificate
@@ -118,6 +118,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
         };
         BUSINESS_DOCUMENT_TYPES = new String[]{
+                Constants.DOCUMENT_TYPE_NATIONAL_ID,
                 Constants.DOCUMENT_TYPE_BUSINESS_TIN,
                 Constants.DOCUMENT_TYPE_TRADE_LICENSE,
                 Constants.DOCUMENT_TYPE_VAT_REG_CERT
@@ -130,8 +131,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         getActivity().setTitle(R.string.profile_documents);
 
         mProgressDialog = new ProgressDialog(getActivity());
-
-        mDocumentUploadInfoView = (TextView) v.findViewById(R.id.textview_document_upload_info);
+        
         mDocumentListRecyclerView = (RecyclerView) v.findViewById(R.id.list_documents);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mDocumentListRecyclerView.setLayoutManager(mLayoutManager);

@@ -47,6 +47,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private EditText mNameEditText;
     private EditText mDateOfBirthEditText;
     private EditText mOccupationEditText;
+    private EditText mOrganizationNameEditText;
     private CheckBox mFemaleCheckBox;
     private CheckBox mMaleCheckBox;
     private Button mInfoSaveButton;
@@ -59,9 +60,10 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private String mDateOfBirth = "";
     private Date mDate;
 
-    private int mOccupation = -1;
     private String mGender = null;
+    private String mOrganizationName;
 
+    private int mOccupation = -1;
     private List<Occupation> mOccupationList;
 
     @Override
@@ -73,7 +75,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_edit_basic_info, container, false);
+        View view = inflater.inflate(R.layout.fragment_edit_basic_info, container, false);
 
         if (ProfileInfoCacheManager.isBusinessAccount())
             getActivity().setTitle(getString(R.string.edit_contact_info));
@@ -85,13 +87,15 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mGender = bundle.getString(Constants.GENDER);
         mOccupation = bundle.getInt(Constants.OCCUPATION);
         mOccupationList = bundle.getParcelableArrayList(Constants.OCCUPATION_LIST);
+        mOrganizationName = bundle.getString(Constants.ORGANIZATION_NAME);
 
-        mInfoSaveButton = (Button) v.findViewById(R.id.button_save);
-        mNameEditText = (EditText) v.findViewById(R.id.name);
-        mDateOfBirthEditText = (EditText) v.findViewById(R.id.birthdayEditText);
-        mOccupationEditText = (EditText) v.findViewById(R.id.occupationEditText);
-        mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
-        mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
+        mInfoSaveButton = (Button) view.findViewById(R.id.button_save);
+        mNameEditText = (EditText) view.findViewById(R.id.name);
+        mDateOfBirthEditText = (EditText) view.findViewById(R.id.birthdayEditText);
+        mOccupationEditText = (EditText) view.findViewById(R.id.occupationEditText);
+        mOrganizationNameEditText = (EditText) view.findViewById(R.id.organizationNameEditText);
+        mMaleCheckBox = (CheckBox) view.findViewById(R.id.checkBoxMale);
+        mFemaleCheckBox = (CheckBox) view.findViewById(R.id.checkBoxFemale);
         mProgressDialog = new ProgressDialog(getActivity());
 
         mDate = Utilities.formatDateFromString(mDateOfBirth);
@@ -139,7 +143,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         setOccupationAdapter();
         setOccupation();
 
-        return v;
+        return view;
     }
 
     private void setGenderCheckBoxTextColor(boolean maleCheckBoxChecked, boolean femaleCheckBoxChecked) {
@@ -160,6 +164,10 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
         mName = mNameEditText.getText().toString().trim();
         mDateOfBirth = mDateOfBirthEditText.getText().toString().trim();
+        mOrganizationName = mOrganizationNameEditText.getText().toString().trim();
+
+        if (mOrganizationName.isEmpty())
+            mOrganizationName = null;
 
         if (mMaleCheckBox.isChecked())
             mGender = GenderList.genderNameToCodeMap.get(
@@ -205,7 +213,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         Gson gson = new Gson();
 
         SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(mName, mGender, mDateOfBirth,
-                mOccupation);
+                mOccupation, mOrganizationName);
 
         String profileInfoJson = gson.toJson(setProfileInfoRequest);
         mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
@@ -214,10 +222,9 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     }
 
     private void setProfileInformation() {
-
         mNameEditText.setText(mName);
-
         mDateOfBirthEditText.setText(mDateOfBirth);
+        mOrganizationNameEditText.setText(mOrganizationName);
 
         String[] genderArray = GenderList.genderNames;
 
@@ -256,7 +263,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
-
 
         Gson gson = new Gson();
 
