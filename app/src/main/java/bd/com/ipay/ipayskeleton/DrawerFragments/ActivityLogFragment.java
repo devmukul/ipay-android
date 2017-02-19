@@ -547,7 +547,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_SYSTEM_EVENT) {
                     if (userActivityResponsesList.get(pos).getDescription().equalsIgnoreCase(Constants.SIGNED_IN)) {
                         mPortrait.setImageResource(R.drawable.ic_signin);
-                    } else if (userActivityResponsesList.get(pos).getDescription().equalsIgnoreCase(Constants.SIGNED_OUT)) {
+                    } else {
                         mPortrait.setImageResource(R.drawable.ic_signout);
                     }
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_CHANGE_SECURITY) {
