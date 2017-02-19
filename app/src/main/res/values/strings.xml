@@ -469,6 +469,7 @@
     <string name="fingerprint_authentication_deactivated">Fingerprint authentication deactivated</string>
     <string name="fingerprint_settings_description">You can use your fingerprint for faster login. Your password will be safely stored.</string>
     <string name="login_failed_with_touch_id">It seems you have changed your password since you logged in the last time from this device. Please enter your new password.</string>
+    <string name="settings_changed_for_touch_id">It seems that fingerprint settings of this device is changed. Please login with your password and reactivate fingerprint authentication manually.</string>
     <string name="remove_fingerprint_authentication_alert_message">Are you sure you want to deactivate fingerprint authentication?</string>
 
     <!-- PUSH -->
