@@ -11,75 +11,79 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/value60"
-            android:orientation="vertical"
-            android:paddingTop="@dimen/activity_vertical_margin">
+            android:layout_height="wrap_content">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:text="@string/subject"
-                android:textColor="@color/colorPrimary" />
-
-            <TextView
-                android:id="@+id/textview_subject"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/value2"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/value2"
-                android:textSize="18sp" />
-
-            <View style="@style/Divider" />
-
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipe_refresh_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/inputLayout"
+                android:orientation="vertical"
                 android:paddingTop="@dimen/activity_vertical_margin">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/list_comments"
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_horizontal_margin"
-                    android:clipToPadding="false"
-                    android:paddingLeft="@dimen/activity_horizontal_margin_card"
-                    android:paddingRight="@dimen/activity_horizontal_margin_card" />
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:text="@string/subject"
+                    android:textColor="@color/colorPrimary" />
 
-            </android.support.v4.widget.SwipeRefreshLayout>
+                <TextView
+                    android:id="@+id/textview_subject"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/value2"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingTop="@dimen/value2"
+                    android:textSize="18sp" />
 
-        </LinearLayout>
+                <View style="@style/Divider" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="1dip"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+                <android.support.v4.widget.SwipeRefreshLayout
+                    android:id="@+id/swipe_refresh_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/activity_vertical_margin">
 
-            <EditText
-                android:id="@+id/user_comment_text"
-                android:layout_width="0dip"
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/list_comments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin"
+                        android:clipToPadding="false"
+                        android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                        android:paddingRight="@dimen/activity_horizontal_margin_card" />
+
+                </android.support.v4.widget.SwipeRefreshLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/inputLayout"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:imeOptions="actionSend"
-                android:paddingLeft="8dp"
-                android:paddingRight="6dp" />
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="1dip"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/btn_send"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_menu_send" />
-        </LinearLayout>
+                <EditText
+                    android:id="@+id/user_comment_text"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:imeOptions="actionSend"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="6dp" />
 
+                <ImageButton
+                    android:id="@+id/btn_send"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_send" />
+            </LinearLayout>
 
+        </RelativeLayout>
     </FrameLayout>
-
 </RelativeLayout>
