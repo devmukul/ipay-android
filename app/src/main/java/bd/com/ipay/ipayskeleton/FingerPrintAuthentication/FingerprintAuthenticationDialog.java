@@ -62,6 +62,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
 
     private Stage mStage = Stage.FINGERPRINT_ENCRYPT;
     private SharedPreferences mPref;
+    boolean isFingerPrintAuthOn;
 
     public FingerprintAuthenticationDialog(@NonNull Context context, Stage cipherStage) {
         super(context);
@@ -76,6 +77,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
         initFingerPrintAuthenticationManager();
 
         mPref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+        isFingerPrintAuthOn = ProfileInfoCacheManager.getFingerprintAuthenticationStatus(false);
 
         if (mFingerprintAuthenticationManager.ifFingerprintAuthenticationSupported()) {
             if (mStage == Stage.FINGERPRINT_ENCRYPT) {
@@ -96,6 +98,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     private void setEncryptionStage() {
         mEncryptionDialogBuilder = new MaterialDialog.Builder(context);
         mEncryptionDialogBuilder
@@ -203,6 +206,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
         return null;
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     private SecretKey createKey() {
         try {
 
@@ -226,6 +230,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
 
     public Cipher getCipher(int mode) {
         Cipher cipher;
+
 
         try {
             mKeyStore.load(null);
@@ -261,7 +266,24 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if (isFingerPrintAuthOn) {
+            removeFingerprintAuthentication();
+        }
         return null;
+    }
+
+    private void removeFingerprintAuthentication() {
+        ProfileInfoCacheManager.clearEncryptedPassword();
+        showSettingsChangedForFingerPrintDialog();
+    }
+
+    private void showSettingsChangedForFingerPrintDialog() {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
+        dialog
+                .content(R.string.settings_changed_for_touch_id)
+                .cancelable(false)
+                .positiveText(R.string.ok)
+                .show();
     }
 
     public void tryEncrypt(String password) {
