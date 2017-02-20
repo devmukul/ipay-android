@@ -85,6 +85,7 @@
     <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="error_invalid_pin">PIN must be 4 digit</string>
     <string name="error_invalid_otp">Please enter the OTP sent to your mobile</string>
+    <string name="error_invalid_otp_with_required_length">OTP must be 6 digit</string>
     <string name="error_promo_code_empty">Please enter the promo code</string>
     <string name="error_invalid_first_name">Please enter name</string>
     <string name="error_invalid_parent_name">Parents Name should have minimum length of 5 characters</string>

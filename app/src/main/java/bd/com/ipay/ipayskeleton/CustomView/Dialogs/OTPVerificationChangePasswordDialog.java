@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.Change
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -158,8 +159,11 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
         boolean cancel = false;
         View focusView = null;
 
-        if (mOTPEditText.getText().toString().trim().length() == 0) {
-            mOTPEditText.setError(context.getString(R.string.error_invalid_otp));
+        mOTP = mOTPEditText.getText().toString().trim();
+
+        String errorMessage = InputValidator.isValidOTP(context, mOTP);
+        if (errorMessage != null) {
+            mOTPEditText.setError(errorMessage);
             focusView = mOTPEditText;
             cancel = true;
         }
@@ -168,7 +172,6 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-
         } else {
             mOTP = mOTPEditText.getText().toString().trim();
             attemptChangePasswordWithOTP();
