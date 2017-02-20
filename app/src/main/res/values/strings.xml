@@ -88,8 +88,9 @@
     <string name="error_invalid_otp_with_required_length">OTP must be 6 digit</string>
     <string name="error_promo_code_empty">Please enter the promo code</string>
     <string name="error_invalid_first_name">Please enter name</string>
-    <string name="error_invalid_parent_name">Parents Name should have minimum length of 5 characters</string>
+    <string name="error_invalid_parent_name">Parents name should have minimum length of 5 characters</string>
     <string name="error_invalid_name">Please enter name</string>
+    <string name="business_name_required">Business name is required</string>
     <string name="error_invalid_name_with_required_length">Please enter a valid name of minimum 5 characters</string>
     <string name="error_invalid_birthday">Please enter birthday</string>
     <string name="please_select_institution">Please select an institution</string>
