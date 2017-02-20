@@ -348,14 +348,19 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
                 final String introducerName = mIntroducerList.get(pos).getName();
                 final String introducerMobileNumber = mIntroducerList.get(pos).getMobileNumber();
-                final long introducedTime = mIntroducerList.get(pos).getIntroducedDate();
-                final String time = Utilities.formatDateWithoutTime(mIntroducerList.get(pos).getIntroducedDate());
                 String imageUrl = mIntroducerList.get(pos).getProfilePictureUrl();
                 mIntroducerProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                 mIntroducerName.setText(introducerName);
                 mIntroducerMobileNumber.setText(introducerMobileNumber);
+                final long introducedTime = mIntroducerList.get(pos).getIntroducedDate();
+
                 if (introducedTime == 0) mTimeView.setVisibility(View.GONE);
-                else mTimeView.setText(getString(R.string.introduced_on) + " " + time);
+                else {
+                    mTimeView.setVisibility(View.VISIBLE);
+                    final String time = Utilities.formatDateWithoutTime(mIntroducerList.get(pos).getIntroducedDate());
+                    mTimeView.setText(getString(R.string.introduced_on) + " " + time);
+                }
+
             }
 
         }
