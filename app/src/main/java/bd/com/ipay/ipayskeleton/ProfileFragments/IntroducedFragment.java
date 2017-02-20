@@ -276,8 +276,8 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 if (mRecommendationRequestList != null && mRecommendationRequestList.size() != 0)
                     pos = pos - mRecommendationRequestList.size() - 1;
 
-                final String introducedName = mIntroducedList.get(pos).getName();
-                final String introducedMobileNumber = mIntroducedList.get(pos).getMobileNumber();
+                String introducedName = mIntroducedList.get(pos).getName();
+                String introducedMobileNumber = mIntroducedList.get(pos).getMobileNumber();
                 String imageUrl = mIntroducedList.get(pos).getProfilePictureUrl();
                 mIntroducedProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                 mIntroducedNameView.setText(introducedName);

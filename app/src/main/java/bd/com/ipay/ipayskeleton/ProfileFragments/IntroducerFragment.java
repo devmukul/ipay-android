@@ -299,9 +299,9 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
 
             public void bindViewForSentRequestList(int pos) {
-                final String RequestedName = mSentRequestList.get(pos).getName();
-                final String RequestedMobileNumber = mSentRequestList.get(pos).getMobileNumber();
-                final String requestStatus = mSentRequestList.get(pos).getStatus();
+                String RequestedName = mSentRequestList.get(pos).getName();
+                String RequestedMobileNumber = mSentRequestList.get(pos).getMobileNumber();
+                String requestStatus = mSentRequestList.get(pos).getStatus();
                 String imageUrl = mSentRequestList.get(pos).getProfilePictureUrl();
                 mRequestedProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                 mRequestedName.setText(RequestedName);
@@ -331,18 +331,18 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 if (mSentRequestList != null && mSentRequestList.size() != 0)
                     pos = pos - mSentRequestList.size() - 1;
 
-                final String introducerName = mIntroducerList.get(pos).getName();
-                final String introducerMobileNumber = mIntroducerList.get(pos).getMobileNumber();
+                String introducerName = mIntroducerList.get(pos).getName();
+                String introducerMobileNumber = mIntroducerList.get(pos).getMobileNumber();
                 String imageUrl = mIntroducerList.get(pos).getProfilePictureUrl();
                 mIntroducerProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                 mIntroducerName.setText(introducerName);
                 mIntroducerMobileNumber.setText(introducerMobileNumber);
-                final long introducedTime = mIntroducerList.get(pos).getIntroducedDate();
+                long introducedTime = mIntroducerList.get(pos).getIntroducedDate();
 
                 if (introducedTime == 0) mTimeView.setVisibility(View.GONE);
                 else {
                     mTimeView.setVisibility(View.VISIBLE);
-                    final String time = Utilities.formatDateWithoutTime(mIntroducerList.get(pos).getIntroducedDate());
+                    String time = Utilities.formatDateWithoutTime(mIntroducerList.get(pos).getIntroducedDate());
                     mTimeView.setText(getString(R.string.introduced_on) + " " + time);
                 }
             }
