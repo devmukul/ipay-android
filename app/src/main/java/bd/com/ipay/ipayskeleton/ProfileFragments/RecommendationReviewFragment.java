@@ -62,7 +62,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     private String mMothersname = null;
     private String mIntroductionMessage;
 
-    private AddressClass mAddress;
+    private AddressClass mAddress = null;
 
     private boolean isInContacts;
 
@@ -222,15 +222,16 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (mAddress != null)
-            getDistrictList();
+        setContentShown(false);
+
+        if (mAddress != null) getDistrictList();
         else setContentShown(true);
+
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setContentShown(false);
     }
 
     private void attemptSetRecommendationStatus(long requestID, String recommendationStatus) {
@@ -265,9 +266,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     }
 
     private void loadAddresses() {
-        if (mAddress == null)
-            mAddressView.setVisibility(View.GONE);
-        else
+        if (mAddress != null)
             mAddressView.setText(mAddress.toString(mThanaList, mDistrictList));
 
         if (this.isAdded()) setContentShown(true);
