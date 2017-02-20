@@ -34,8 +34,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class IntroducedFragment extends ProgressFragment implements HttpResponseListener {
-    ;
-
     private GetIntroducedListResponse mIntroducedListResponse;
     private HttpRequestGetAsyncTask mGetIntroducedTask = null;
 
@@ -94,9 +92,8 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     }
 
     private void getIntroducedList() {
-        if (mGetIntroducedTask != null) {
-            return;
-        }
+        if (mGetIntroducedTask != null) return;
+
         mGetIntroducedTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCED_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_APPROVED_INTRODUCTION_REQUESTS, getActivity());
         mGetIntroducedTask.mHttpResponseListener = this;
@@ -104,9 +101,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     }
 
     private void getRecommendationRequestsList() {
-        if (mGetRecommendationRequestsTask != null) {
-            return;
-        }
+        if (mGetRecommendationRequestsTask != null) return;
 
         mGetRecommendationRequestsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS,
                 Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, getActivity());
@@ -117,8 +112,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) throws RuntimeException {
-
-
         mGetRecommendationRequestsTask = null;
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -145,7 +138,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                             mIntroducedList.clear();
                             mIntroducedList.addAll(tempIntroducedClasses);
                         }
-                        //mBaseList.addAll(mIntroducedList);
                         mIntroduceAdapter.notifyDataSetChanged();
 
                     } else {
@@ -192,9 +184,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 break;
         }
         try {
-            if (isAdded()) {
-                setContentShown(true);
-            }
+            if (isAdded()) setContentShown(true);
             if (mIntroducedList != null && mIntroducedList.size() == 0 && mRecommendationRequestList != null && mRecommendationRequestList.size() == 0)
                 mEmptyListTextView.setVisibility(View.VISIBLE);
             else mEmptyListTextView.setVisibility(View.GONE);
@@ -205,7 +195,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     }
 
     private class IntroducedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
         private static final int RECOMMENDATION_ITEM_VIEW = 1;
         private static final int INTRODUCED_LIST_ITEM_VIEW = 2;
         private static final int INTRODUCED_LIST_HEADER_VIEW = 3;
@@ -240,7 +229,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
             }
 
             public void bindViewRecommendationList(int pos) {
-
                 final long requestID = mRecommendationRequestList.get(pos).getId();
                 final String senderName = mRecommendationRequestList.get(pos).getName();
                 final String senderMobileNumber = mRecommendationRequestList.get(pos).getSenderMobileNumber();
@@ -285,7 +273,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
             }
 
             public void bindViewForIntroducedList(int pos) {
-
                 if (mRecommendationRequestList != null && mRecommendationRequestList.size() != 0)
                     pos = pos - mRecommendationRequestList.size() - 1;
 
@@ -319,7 +306,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
             View v;
 
             if (viewType == INTRODUCED_LIST_ITEM_VIEW) {
@@ -339,7 +325,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
             try {
                 if (holder instanceof IntroducedListItemViewHolder) {
                     IntroducedListItemViewHolder vh = (IntroducedListItemViewHolder) holder;
@@ -357,7 +342,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
         @Override
         public int getItemCount() {
-
             int introducedListSize = 0;
             int recommendationRequestListSize = 0;
 
@@ -381,7 +365,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
         @Override
         public int getItemViewType(int position) {
-
             int recommendationRequestListSize = 0;
             int introducedListSize = 0;
 
@@ -408,5 +391,4 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
             } else return RECOMMENDATION_ITEM_VIEW;
         }
     }
-
 }
