@@ -18,6 +18,7 @@ public class Constants {
     public static final String CRITICAL_PREFERENCE_VERSION = "CRITICAL_PREFERENCE_VERSION";
     public static final String GCM_REGISTRATION_ID_SENT_TO_SERVER = "GCM_REGISTRATION_ID_SENT_TO_SERVER";
     public static final String PASSWORD = "PASSWORD";
+    public static final String NEW_PASSWORD = "NEW_PASSWORD";
     public static final String VERIFICATION_STATUS = "VERIFICATION_STATUS";
     public static final String TARGET_FRAGMENT = "TARGET_FRAGMENT";
     public static final String SIGN_IN = "SIGN_IN";
@@ -454,6 +455,7 @@ public class Constants {
     public static final long DEFAULT_TOKEN_OVERLAP_TIME = 15000;   // By default token time is one minute
 
     public static final String COMMAND_OTP_VERIFICATION = "COMMAND_OTP_VERIFICATION";
+    public static final String COMMAND_RESEND_OTP = "COMMAND_RESEND_OTP";
     public static final String COMMAND_CHECK_PROMO_CODE = "COMMAND_CHECK_PROMO_CODE";
     public static final String COMMAND_CHECK_IF_USER_EXISTS = "COMMAND_CHECK_IF_USER_EXISTS";
     public static final String COMMAND_REFRESH_TOKEN = "COMMAND_REFRESH_TOKEN";
@@ -492,6 +494,7 @@ public class Constants {
     public static final String COMMAND_TOPUP_REQUEST = "COMMAND_TOPUP_REQUEST";
     public static final String COMMAND_SET_PIN = "COMMAND_SET_PIN";
     public static final String COMMAND_CHANGE_PASSWORD = "COMMAND_CHANGE_PASSWORD";
+    public static final String COMMAND_CHANGE_PASSWORD_VALIDATION = "COMMAND_CHANGE_PASSWORD_VALIDATION";
     public static final String COMMAND_GET_PROFILE_INFO_REQUEST = "COMMAND_GET_PROFILE_INFO_REQUEST";
     public static final String COMMAND_GET_PARENT_INFO_REQUEST = "COMMAND_GET_PARENT_INFO_REQUEST";
     public static final String COMMAND_GET_OCCUPATIONS_REQUEST = "COMMAND_GET_OCCUPATIONS_REQUEST";

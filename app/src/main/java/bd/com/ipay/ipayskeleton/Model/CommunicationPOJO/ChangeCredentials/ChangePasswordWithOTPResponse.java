@@ -1,10 +1,10 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials;
 
-public class ChangePasswordResponse {
+public class ChangePasswordWithOTPResponse {
 
     private String message;
 
-    public ChangePasswordResponse() {
+    public ChangePasswordWithOTPResponse() {
 
     }
 
