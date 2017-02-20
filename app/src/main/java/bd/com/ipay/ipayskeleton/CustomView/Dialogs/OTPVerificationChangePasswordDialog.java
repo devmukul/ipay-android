@@ -97,9 +97,8 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
             public void onClick(View v) {
                 // Hiding the keyboard after verifying OTP
                 Utilities.hideKeyboard(context, v);
-                if (Utilities.isConnectionAvailable(context)) {
-                    verifyInput();
-                } else if (context != null)
+                if (Utilities.isConnectionAvailable(context)) verifyInput();
+                else if (context != null)
                     Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
         });
@@ -107,8 +106,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
         mResendOTPButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Utilities.isConnectionAvailable(context))
-                    resendOTP();
+                if (Utilities.isConnectionAvailable(context)) resendOTP();
                 else if (context != null)
                     Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
@@ -147,7 +145,6 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
                 mResendOTPButton.setEnabled(true);
             }
         }.start();
-
     }
 
     private void setAutoLoginCredentials() {
@@ -202,9 +199,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
     }
 
     private void resendOTP() {
-        if (mRequestOTPTask != null) {
-            return;
-        }
+        if (mRequestOTPTask != null) return;
 
         mProgressDialog.setMessage(context.getString(R.string.sending_otp));
         mProgressDialog.show();
@@ -219,9 +214,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
     }
 
     private void attemptChangePasswordWithOTP() {
-        if (mChangePasswordWithOTPTask != null) {
-            return;
-        }
+        if (mChangePasswordWithOTPTask != null) return;
 
         mProgressDialog.setMessage(context.getString(R.string.change_password_progress));
         mProgressDialog.show();
@@ -236,7 +229,6 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mChangePasswordWithOTPTask = null;
