@@ -13,11 +13,14 @@
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
             android:hint="@string/enter_current_pass"
             android:imeOptions="actionUnspecified"
             android:inputType="textPassword"
             android:maxLines="1"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textColorHint="@color/colorGray"
+            android:textSize="@dimen/text_size_small_medium" />
 
         <requestFocus />
     </android.support.design.widget.TextInputLayout>
@@ -30,11 +33,14 @@
             android:id="@+id/new_pin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
             android:hint="@string/enter_a_new_pin"
             android:inputType="numberPassword"
             android:maxLength="4"
             android:maxLines="1"
-            android:singleLine="true" >
+            android:singleLine="true"
+            android:textColorHint="@color/colorGray"
+            android:textSize="@dimen/text_size_small_medium">
 
         </EditText>
 
@@ -49,11 +55,14 @@
             android:id="@+id/confirm_pin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
             android:hint="@string/confirm_your_pin"
             android:inputType="numberPassword"
             android:maxLength="4"
             android:maxLines="1"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textColorHint="@color/colorGray"
+            android:textSize="@dimen/text_size_small_medium" />
 
     </android.support.design.widget.TextInputLayout>
 

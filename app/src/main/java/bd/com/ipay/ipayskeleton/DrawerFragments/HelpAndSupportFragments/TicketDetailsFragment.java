@@ -25,13 +25,13 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.AddCommentRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.AddCommentResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.Comment;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.GetTicketDetailsRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.GetTicketDetailsResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.Comment;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketDetailsRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketDetailsResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -155,7 +155,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (getActivity() != null) {
             mSwipeRefreshLayout.setRefreshing(false);
@@ -265,7 +265,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                 final Comment comment = mComments.get(pos);
 
                 if (comment.getAuthorId().equals(requesterId)) {
-                    profilePictureView.setProfilePicture(ProfileInfoCacheManager.getProfileImageUrl(), false);
+                    profilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl(), false);
                 } else {
                     profilePictureView.setProfilePicture(R.drawable.ic_transaction_ipaylogo);
                 }

@@ -16,8 +16,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
 
 import java.util.Calendar;
@@ -26,9 +28,9 @@ import java.util.Date;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestPersonalSignup;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponsePersonalSignup;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPRequestPersonalSignup;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPResponsePersonalSignup;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -59,6 +61,8 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     private ProgressDialog mProgressDialog;
 
     private String mDeviceID;
+
+    private DatePickerDialog mDatePickerDialog;
     private String mDOB;
 
     private int mYear;
@@ -103,20 +107,16 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
         mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
-        final DatePickerDialog dialog = new DatePickerDialog(
-                getActivity(), mDateSetListener, 1990, 0, 1);
+        setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
+
+        mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), null, mDateSetListener);
 
         mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.show();
+                mDatePickerDialog.show();
             }
         });
-
-        if (mMaleCheckBox.isChecked())
-            mMaleCheckBox.setTextColor((Color.WHITE));
-        if (mFemaleCheckBox.isChecked())
-            mFemaleCheckBox.setTextColor((Color.WHITE));
 
         mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,8 +124,8 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 mGenderEditText.setError(null);
                 mMaleCheckBox.setChecked(true);
                 mFemaleCheckBox.setChecked(false);
-                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mMaleCheckBox.setTextColor((Color.WHITE));
+
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         });
 
@@ -135,9 +135,8 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 mGenderEditText.setError(null);
                 mFemaleCheckBox.setChecked(true);
                 mMaleCheckBox.setChecked(false);
-                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mFemaleCheckBox.setTextColor((Color.WHITE));
 
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         });
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
@@ -198,15 +197,28 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 }
             };
 
-    private void attemptRequestOTP() {
+    private void setGenderCheckBoxTextColor(boolean maleCheckBoxChecked, boolean femaleCheckBoxChecked) {
+        if (maleCheckBoxChecked)
+            mMaleCheckBox.setTextColor((Color.WHITE));
+        else
+            mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
 
+        if (femaleCheckBoxChecked)
+            mFemaleCheckBox.setTextColor((Color.WHITE));
+        else
+            mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+    }
+
+    private void attemptRequestOTP() {
         // Reset errors.
         mNameView.setError(null);
         mMobileNumberView.setError(null);
         mPasswordView.setError(null);
 
+        String name = mNameView.getText().toString().trim();
+
         // Store values at the time of the login attempt.
-        SignupOrLoginActivity.mName = mNameView.getText().toString().trim();
+        SignupOrLoginActivity.mName = name;
         SignupOrLoginActivity.mBirthday = mDOB;
 
         // Store values at the time of the login attempt.
@@ -220,13 +232,13 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         boolean cancel = false;
         View focusView = null;
 
-        if (mNameView.getText().toString().trim().length() == 0) {
+        if (name.length() == 0) {
             mNameView.setError(getString(R.string.error_invalid_first_name));
             focusView = mNameView;
             cancel = true;
 
-        } else if (!InputValidator.isValidName(mNameView.getText().toString().trim())) {
-            mNameView.setError(getString(R.string.please_enter_valid_name));
+        } else if (!InputValidator.isValidNameWithRequiredLength(name)) {
+            mNameView.setError(getString(R.string.error_invalid_name_with_required_length));
             focusView = mNameView;
             cancel = true;
 
@@ -276,7 +288,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -286,7 +298,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 Toast.makeText(getActivity(), R.string.otp_request_failed, Toast.LENGTH_SHORT).show();
             return;
         }
-
 
         Gson gson = new Gson();
 
@@ -300,7 +311,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 e.printStackTrace();
                 message = getString(R.string.server_down);
             }
-
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 if (getActivity() != null)

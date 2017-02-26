@@ -14,8 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -23,7 +21,7 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -135,7 +133,6 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
     }
 
     @Override
@@ -213,12 +210,10 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
                 profilePictureView.setProfilePicture(profilePictureUrl, false);
 
                 if (CommonData.getBusinessTypes() != null) {
-                    for (BusinessType businessType : CommonData.getBusinessTypes()) {
-                        if (businessType.getId() == businessTypeID) {
-                            businessTypeView.setText(businessType.getName());
-                            businessTypeView.setVisibility(View.VISIBLE);
-                            break;
-                        }
+                    BusinessType businessType = CommonData.getBusinessTypeById(businessTypeID);
+                    if (businessType != null) {
+                        businessTypeView.setText(businessType.getName());
+                        businessTypeView.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -232,7 +227,6 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
                         intent.putExtra(Constants.PROFILE_PICTURE, profilePictureUrl);
                         getActivity().setResult(Activity.RESULT_OK, intent);
                         getActivity().finish();
-
                     }
                 });
             }

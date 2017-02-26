@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -23,17 +26,17 @@ import bd.com.ipay.ipayskeleton.Activities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.AddBankResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BankBranch;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BankBranchRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetBankBranchesResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.AddBankRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.AddBankResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Bank;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranch;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranchRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetBankBranchesResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
@@ -46,9 +49,6 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetBankBranchesTask = null;
     private GetBankBranchesResponse mGetBankBranchesResponse;
-
-    private HttpRequestPostAsyncTask mAddBankTask = null;
-    private AddBankResponse mAddBankResponse;
 
     private ProgressDialog mProgressDialog;
     private List<UserBankClass> mListUserBankClasses;
@@ -71,6 +71,9 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
     private ResourceSelectorDialog<Bank> bankSelectorDialog;
     private CustomSelectorDialog districtSelectorDialog;
     private CustomSelectorDialog bankBranchSelectorDialog;
+
+    private String mSelectedBankName;
+    private String mBankAccountNumber;
     private int mSelectedBranchId = -1;
     private int mSelectedBankId = -1;
     private int mSelectedDistrictId = -1;
@@ -100,7 +103,7 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
         mAccountNameEditText = (EditText) v.findViewById(R.id.bank_account_name);
         mAccountNumberEditText = (EditText) v.findViewById(R.id.bank_account_number);
         addBank = (Button) v.findViewById(R.id.button_add_bank);
-        mBankBranchEditTextProgressBar=(EditTextWithProgressBar) v.findViewById(R.id.editText_with_progressBar_branch);
+        mBankBranchEditTextProgressBar = (EditTextWithProgressBar) v.findViewById(R.id.editText_with_progressBar_branch);
         mBankBranchSelection = mBankBranchEditTextProgressBar.getEditText();
 
         mSelectedBankId = -1;
@@ -113,43 +116,35 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
         addBank.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // The first position is "Select One"
-                View focusView;
-                if (mSelectedBankId < 0) {
-                    mBankListSelection.setError(getContext().getString(R.string.please_select_a_bank));
-                } else if (mSelectedDistrictId < 0) {
-                    mDistrictSelection.setError(getContext().getString(R.string.please_select_a_district));
-                } else if (mSelectedBranchId < 0) {
-                    mBankBranchSelection.setError(getContext().getString(R.string.please_select_a_branch));
-                } else if (mAccountNameEditText.getText().toString().trim().length() == 0) {
-                    if (getActivity() != null) {
-                        mAccountNameEditText.setError(getContext().getString(R.string.please_enter_an_account_name));
-                        focusView = mAccountNameEditText;
-                        focusView.requestFocus();
-                    }
-                } else if (mAccountNumberEditText.getText().toString().trim().length() == 0) {
-                    if (getActivity() != null) {
-                        mAccountNumberEditText.setError(getContext().getString(R.string.please_enter_an_account_number));
-                        focusView = mAccountNumberEditText;
-                        focusView.requestFocus();
-                    }
-                } else if (mAccountNumberEditText.getText().toString().trim().length() < 8) {
-                    if (getActivity() != null) {
-                        mAccountNumberEditText.setError(getContext().getString(R.string.please_enter_an_account_number_of_minimum_digit));
-                        focusView = mAccountNumberEditText;
-                        focusView.requestFocus();
-                    }
-                } else {
-                    Utilities.hideKeyboard(getContext(), v);
-                    BankBranch bankBranch = mBranches.get(mSelectedBranchId);
-                    attemptAddBank(bankBranch.getRoutingNumber(), 0,
-                            mAccountNameEditText.getText().toString().trim(), mAccountNumberEditText.getText().toString().trim());
-                }
-
+                verifyUserInputs();
             }
         });
 
         return v;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        ((ManageBanksActivity) getActivity()).mSelectedBankId = mSelectedBankId;
+        ((ManageBanksActivity) getActivity()).mSelectedDistrictId = mSelectedDistrictId;
+        ((ManageBanksActivity) getActivity()).mSelectedBranchId = mSelectedBranchId;
+        ((ManageBanksActivity) getActivity()).mDistrictNames = mDistrictNames;
+        ((ManageBanksActivity) getActivity()).mBranches = mBranches;
+        ((ManageBanksActivity) getActivity()).mBranchNames = mBranchNames;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mSelectedBankId = ((ManageBanksActivity) getActivity()).mSelectedBankId;
+        mSelectedDistrictId = ((ManageBanksActivity) getActivity()).mSelectedDistrictId;
+        mSelectedBranchId = ((ManageBanksActivity) getActivity()).mSelectedBranchId;
+        mDistrictNames = ((ManageBanksActivity) getActivity()).mDistrictNames;
+        mBranches = ((ManageBanksActivity) getActivity()).mBranches;
+        mBranchNames = ((ManageBanksActivity) getActivity()).mBranchNames;
     }
 
     private void setBankAdapter(List<Bank> bankList) {
@@ -162,6 +157,7 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
                 mBankListSelection.setText(name);
                 mSelectedBankId = id;
                 mSelectedDistrictId = -1;
+                mSelectedBankName = name;
                 getBankBranches(mSelectedBankId);
             }
         });
@@ -183,7 +179,6 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
                 mDistrictSelection.setError(null);
                 mDistrictSelection.setText(name);
                 mSelectedDistrictId = id;
-
                 mSelectedBranchId = -1;
 
                 mBranches = new ArrayList<>();
@@ -228,10 +223,49 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
         });
     }
 
-    private void getBankBranches(long bankID) {
-        if (mGetBankBranchesTask != null) {
-            return;
+    private void verifyUserInputs() {
+        // The first position is "Select One"
+        View focusView;
+        if (mSelectedBankId < 0) {
+            mBankListSelection.setError(getString(R.string.please_select_a_bank));
+        } else if (mSelectedDistrictId < 0) {
+            mDistrictSelection.setError(getString(R.string.please_select_a_district));
+        } else if (mSelectedBranchId < 0) {
+            mBankBranchSelection.setError(getString(R.string.please_select_a_branch));
+        } else if (mAccountNameEditText.getText().toString().trim().length() == 0) {
+            mAccountNameEditText.setError(getString(R.string.please_enter_an_account_name));
+            focusView = mAccountNameEditText;
+            focusView.requestFocus();
+        } else if (mAccountNumberEditText.getText().toString().trim().length() == 0) {
+            mAccountNumberEditText.setError(getString(R.string.please_enter_an_account_number));
+            focusView = mAccountNumberEditText;
+            focusView.requestFocus();
+        } else if (mAccountNumberEditText.getText().toString().trim().length() < 10) {
+            mAccountNumberEditText.setError(getString(R.string.please_enter_an_account_number_of_minimum_digit));
+            focusView = mAccountNumberEditText;
+            focusView.requestFocus();
+        } else {
+            Utilities.hideKeyboard(getActivity());
+            launchAddBankAgreementPage();
         }
+    }
+
+    private void launchAddBankAgreementPage() {
+        BankBranch bankBranch = mBranches.get(mSelectedBranchId);
+        mBankAccountNumber = mAccountNumberEditText.getText().toString().trim();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.BANK_NAME, mSelectedBankName);
+        bundle.putParcelable(Constants.BANK_BRANCH, bankBranch);
+        bundle.putString(Constants.BANK_ACCOUNT_NUMBER, mBankAccountNumber);
+        bundle.putBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION, startedFromProfileCompletion);
+
+        ((ManageBanksActivity) getActivity()).switchToAddBankAgreementFragment(bundle);
+    }
+
+    private void getBankBranches(long bankID) {
+        if (mGetBankBranchesTask != null)
+            return;
 
         mBankBranchEditTextProgressBar.showProgressBar();
         BankBranchRequestBuilder mBankBranchRequestBuilder = new BankBranchRequestBuilder(bankID);
@@ -244,25 +278,11 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
         mGetBankBranchesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void attemptAddBank(String branchRoutingNumber, int accountType, String accountName, String accountNumber) {
-
-        mProgressDialog.setMessage(getString(R.string.adding_bank));
-        mProgressDialog.show();
-        AddBankRequest mAddBankRequest = new AddBankRequest(branchRoutingNumber, accountType, accountName, accountNumber);
-        Gson gson = new Gson();
-        String json = gson.toJson(mAddBankRequest);
-        mAddBankTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_A_BANK,
-                Constants.BASE_URL_MM + Constants.URL_ADD_A_BANK, json, getActivity());
-        mAddBankTask.mHttpResponseListener = this;
-        mAddBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
-            mAddBankTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
@@ -271,37 +291,6 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
         Gson gson = new Gson();
 
         switch (result.getApiCommand()) {
-            case Constants.COMMAND_ADD_A_BANK:
-
-                try {
-                    mAddBankResponse = gson.fromJson(result.getJsonString(), AddBankResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_LONG).show();
-
-                        // Refresh bank list
-                        if (mListUserBankClasses != null)
-                            mListUserBankClasses.clear();
-                        mListUserBankClasses = null;
-
-                        if (!startedFromProfileCompletion)
-                            ((ManageBanksActivity) getActivity()).switchToBankAccountsFragment();
-                        else
-                            Toast.makeText(getActivity(), R.string.bank_successfully_placed_for_verification, Toast.LENGTH_LONG).show();
-
-                    } else {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                mProgressDialog.dismiss();
-                mAddBankTask = null;
-
-                break;
             case Constants.COMMAND_GET_BANK_BRANCH_LIST:
 
                 try {
@@ -335,6 +324,9 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
                 mProgressDialog.dismiss();
                 mGetBankBranchesTask = null;
 
+                break;
+
+            default:
                 break;
         }
     }

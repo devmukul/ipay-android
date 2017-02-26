@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +24,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,13 +45,13 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequest
 import bd.com.ipay.ipayskeleton.Activities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.Friend.SearchContactClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistory;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryResponse;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -92,6 +92,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private Calendar toDate = null;
 
     private boolean hasNext = false;
+    private boolean isLoading = false;
     private boolean clearListAfterLoading;
 
     private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
@@ -515,6 +516,8 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         else
             mEmptyListTextView.setVisibility(View.VISIBLE);
 
+        if (isLoading)
+            isLoading = false;
         mTransactionHistoryAdapter.notifyDataSetChanged();
         setContentShown(true);
     }
@@ -529,7 +532,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -575,10 +578,9 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             private final TextView mTransactionDescriptionView;
             private final TextView mTimeView;
             private final TextView mReceiverView;
-            private final TextView loadMoreTextView;
             private final TextView mAmountTextView;
-            private final TextView netAmountView;
-            private final ImageView otherImageView;
+            private final TextView mNetAmountView;
+            private final ImageView mOtherImageView;
             private final ProfileImageView mProfileImageView;
             private final View mBalanceView;
 
@@ -588,11 +590,10 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 mTransactionDescriptionView = (TextView) itemView.findViewById(R.id.activity_description);
                 mTimeView = (TextView) itemView.findViewById(R.id.time);
                 mReceiverView = (TextView) itemView.findViewById(R.id.receiver);
-                loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
-                netAmountView = (TextView) itemView.findViewById(R.id.net_amount);
+                mNetAmountView = (TextView) itemView.findViewById(R.id.net_amount);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
-                otherImageView = (ImageView) itemView.findViewById(R.id.other_image);
+                mOtherImageView = (ImageView) itemView.findViewById(R.id.other_image);
                 mBalanceView = itemView.findViewById(R.id.balance_holder);
             }
 
@@ -609,7 +610,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
                 final int serviceId = transactionHistory.getServiceID();
 
-                if (balance !=null) {
+                if (balance != null) {
                     mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
                     mBalanceView.setVisibility(View.VISIBLE);
                 } else mBalanceView.setVisibility(View.GONE);
@@ -620,28 +621,28 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                     mReceiverView.setText(receiver);
                 } else mReceiverView.setVisibility(View.GONE);
 
-                netAmountView.setText(netAmountWithSign);
+                mNetAmountView.setText(netAmountWithSign);
                 mTimeView.setText(responseTime);
 
                 if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
-                    otherImageView.setVisibility(View.VISIBLE);
-                    if (bankCode != null) otherImageView.setImageResource(bankIcon);
-                    else otherImageView.setImageResource(R.drawable.ic_tran_add);
+                    mOtherImageView.setVisibility(View.VISIBLE);
+                    if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
+                    else mOtherImageView.setImageResource(R.drawable.ic_tran_add);
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
-                    otherImageView.setVisibility(View.VISIBLE);
-                    if (bankCode != null) otherImageView.setImageResource(bankIcon);
-                    else otherImageView.setImageResource(R.drawable.ic_tran_withdraw);
+                    mOtherImageView.setVisibility(View.VISIBLE);
+                    if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
+                    else mOtherImageView.setImageResource(R.drawable.ic_tran_withdraw);
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
-                    otherImageView.setVisibility(View.VISIBLE);
+                    mOtherImageView.setVisibility(View.VISIBLE);
                     if (ContactEngine.isValidNumber(receiver)) {
                         int mIcon = getOperatorIcon(receiver);
-                        otherImageView.setImageResource(mIcon);
-                    } else otherImageView.setImageResource(R.drawable.ic_top_up);
+                        mOtherImageView.setImageResource(mIcon);
+                    } else mOtherImageView.setImageResource(R.drawable.ic_top_up);
                 } else {
-                    otherImageView.setVisibility(View.INVISIBLE);
+                    mOtherImageView.setVisibility(View.INVISIBLE);
                     mProfileImageView.setVisibility(View.VISIBLE);
                     mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                 }
@@ -664,29 +665,52 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
                 });
             }
-
-            public void bindViewFooter() {
-                if (hasNext) loadMoreTextView.setText(R.string.load_more);
-                else loadMoreTextView.setText(R.string.no_more_results);
-            }
         }
 
         public class FooterViewHolder extends ViewHolder {
+            private TextView mLoadMoreTextView;
+            private ProgressBar mLoadMoreProgressBar;
+
             public FooterViewHolder(View itemView) {
                 super(itemView);
-                itemView.setOnClickListener(new View.OnClickListener() {
+
+                mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
+                mLoadMoreProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
+            }
+
+            public void bindViewFooter() {
+                setItemVisibilityOfFooterView();
+
+                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (hasNext) {
                             historyPageCount = historyPageCount + 1;
+                            showLoadingInFooter();
                             getPendingTransactionHistory();
                         }
                     }
                 });
+            }
 
-                TextView loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-                if (hasNext) loadMoreTextView.setText(R.string.load_more);
-                else loadMoreTextView.setText(R.string.no_more_results);
+            private void setItemVisibilityOfFooterView() {
+                if (isLoading) {
+                    mLoadMoreProgressBar.setVisibility(View.VISIBLE);
+                    mLoadMoreTextView.setVisibility(View.GONE);
+                } else {
+                    mLoadMoreProgressBar.setVisibility(View.GONE);
+                    mLoadMoreTextView.setVisibility(View.VISIBLE);
+
+                    if (hasNext)
+                        mLoadMoreTextView.setText(R.string.load_more);
+                    else
+                        mLoadMoreTextView.setText(R.string.no_more_results);
+                }
+            }
+
+            private void showLoadingInFooter() {
+                isLoading = true;
+                notifyDataSetChanged();
             }
         }
 
@@ -789,11 +813,11 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
         if (ProfileInfoCacheManager.getMobileNumber().equals(transactionHistory.getOriginatingMobileNumber())) {
             intent.putExtra(Constants.IS_IN_CONTACTS,
-                    new SearchContactClass(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getUserMobileNumber()));
+                    new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getUserMobileNumber()));
             intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
         } else {
             intent.putExtra(Constants.IS_IN_CONTACTS,
-                    new SearchContactClass(getActivity()).searchMobileNumber(transactionHistory.getOriginatingMobileNumber()));
+                    new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getOriginatingMobileNumber()));
         }
         startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
     }

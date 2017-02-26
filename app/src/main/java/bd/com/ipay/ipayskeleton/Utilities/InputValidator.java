@@ -49,6 +49,14 @@ public class InputValidator {
         return true;
     }
 
+    public static boolean isValidNameWithRequiredLength(String name) {
+        name = name.replaceAll("\\s+", "");
+
+        if (name.matches(".*[0-9]+.*") || name.length() < Constants.MIN_VALID_NAME_LENGTH)
+            return false;
+        return true;
+    }
+
     public static String isValidAmount(Context context, BigDecimal amount, BigDecimal minAmount, BigDecimal maxAmount) {
         String errorMessage = null;
 
@@ -68,4 +76,13 @@ public class InputValidator {
         return errorMessage;
     }
 
+    public static String isValidOTP(Context context, String otp) {
+        String errorMessage = null;
+
+        if (otp.length() == 0)
+            errorMessage = context.getString(R.string.error_invalid_otp);
+        else if (otp.length() != 6)
+            errorMessage = context.getString(R.string.error_invalid_otp_with_required_length);
+        return errorMessage;
+    }
 }

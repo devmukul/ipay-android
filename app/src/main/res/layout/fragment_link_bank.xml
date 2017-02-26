@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/account_number"
                 android:inputType="number"
-                android:maxLength="20"
+                android:maxLength="@integer/bank_account_number_max_length"
                 android:maxLines="1"
                 android:singleLine="true"
                 custom:borderType="down" />

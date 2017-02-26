@@ -116,7 +116,8 @@
 
                     <TextView
                         android:id="@+id/textview_present_address"
-                        style="@style/TextViewInfoLeftAlign" />
+                        style="@style/TextViewInfoLeftAlign"
+                        android:text="@string/not_available" />
                 </LinearLayout>
 
                 <CheckBox

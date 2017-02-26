@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,12 +25,12 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequestResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.MoneyAndPaymentRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.GetMoneyAndPaymentRequestResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.MoneyAndPaymentRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -49,17 +50,18 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
 
     private int pageCount = 0;
     private boolean hasNext = false;
+    private boolean isLoading = false;
     private boolean clearListAfterLoading;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_sent_money_requests, container, false);
+        View view = inflater.inflate(R.layout.fragment_sent_money_requests, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
-        mReceivedListRecyclerView = (RecyclerView) v.findViewById(R.id.list_my_requests);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+        mReceivedListRecyclerView = (RecyclerView) view.findViewById(R.id.list_my_requests);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
 
-        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
+        mEmptyListTextView = (TextView) view.findViewById(R.id.empty_list_text);
         mReceivedRequestsAdapter = new ReceivedMoneyRequestListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mReceivedListRecyclerView.setLayoutManager(mLayoutManager);
@@ -74,7 +76,7 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
             }
         });
 
-        return v;
+        return view;
     }
 
     @Override
@@ -119,7 +121,7 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (this.isAdded()) setContentShown(true);
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
@@ -148,10 +150,11 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
                         List<MoneyAndPaymentRequest> tempPendingMoneyRequestClasses;
                         tempPendingMoneyRequestClasses = mGetReceivedRequestResponse.getAllMoneyAndPaymentRequests();
                         moneyRequestList.addAll(tempPendingMoneyRequestClasses);
-
                     }
+
                     removeProcessingList();
                     hasNext = mGetReceivedRequestResponse.isHasNext();
+                    if (isLoading) isLoading = false;
                     mReceivedRequestsAdapter.notifyDataSetChanged();
 
                 } catch (Exception e) {
@@ -167,7 +170,6 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
 
             mSwipeRefreshLayout.setRefreshing(false);
             mReceivedRequestTask = null;
-
         }
 
         if (moneyRequestList != null && moneyRequestList.size() == 0) {
@@ -230,31 +232,50 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
         }
 
         public class FooterViewHolder extends RecyclerView.ViewHolder {
-
             private TextView mLoadMoreTextView;
+            private ProgressBar mLoadMoreProgressBar;
 
             public FooterViewHolder(View itemView) {
                 super(itemView);
 
-                itemView.setOnClickListener(new View.OnClickListener() {
+                mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
+                mLoadMoreProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
+            }
+
+            public void bindViewFooter() {
+                setItemVisibilityOfFooterView();
+
+                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (hasNext) {
                             pageCount = pageCount + 1;
+                            showLoadingInFooter();
                             getReceivedRequests();
                         }
                     }
                 });
-
-                mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
             }
 
-            public void bindView() {
+            private void setItemVisibilityOfFooterView() {
+                if (isLoading) {
+                    mLoadMoreProgressBar.setVisibility(View.VISIBLE);
+                    mLoadMoreTextView.setVisibility(View.GONE);
+                } else {
+                    mLoadMoreProgressBar.setVisibility(View.GONE);
+                    mLoadMoreTextView.setVisibility(View.VISIBLE);
 
-                if (hasNext)
-                    mLoadMoreTextView.setText(R.string.load_more);
-                else
-                    mLoadMoreTextView.setText(R.string.no_more_results);
+                    if (hasNext)
+                        mLoadMoreTextView.setText(R.string.load_more);
+                    else
+                        mLoadMoreTextView.setText(R.string.no_more_results);
+                }
+
+            }
+
+            private void showLoadingInFooter() {
+                isLoading = true;
+                notifyDataSetChanged();
             }
         }
 
@@ -284,7 +305,7 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
 
                 } else if (holder instanceof FooterViewHolder) {
                     FooterViewHolder vh = (FooterViewHolder) holder;
-                    vh.bindView();
+                    vh.bindViewFooter();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -302,7 +323,6 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
 
         @Override
         public int getItemViewType(int position) {
-
             if (position == getItemCount() - 1) {
                 return FOOTER_VIEW;
             } else

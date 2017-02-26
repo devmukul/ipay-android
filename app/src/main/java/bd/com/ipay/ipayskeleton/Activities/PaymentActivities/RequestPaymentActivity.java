@@ -19,12 +19,11 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.GetSinglePaymentRequestDetailRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.InvoiceItem;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PendingPaymentClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
-import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.CreateInvoiceFragmentStepOne;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetSinglePaymentRequestDetailRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PendingPaymentClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.CreateInvoiceFragmentStepTwo;
 import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.SentPaymentRequestDetailsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.RequestPaymentFragment;
@@ -189,7 +188,7 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetSingleRequestPaymentDetailsTask = null;
             Toast.makeText(this, R.string.service_not_available, Toast.LENGTH_LONG).show();

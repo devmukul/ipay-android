@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,15 +34,15 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewDialogFinishListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewMakePaymentDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.InvoiceItem;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.GetMoneyAndPaymentRequestResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.MoneyAndPaymentRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.GetMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.GetMoneyAndPaymentRequestResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.MoneyAndPaymentRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -65,6 +66,7 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
 
     private int pageCount = 0;
     private boolean hasNext = false;
+    private boolean isLoading = false;
     private boolean clearListAfterLoading;
 
     // These variables hold the information needed to populate the review dialog
@@ -225,7 +227,7 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (this.isAdded()) setContentShown(true);
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
@@ -233,7 +235,7 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
             mGetAllNotificationsTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
-                Toast.makeText(getActivity(),  R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -256,6 +258,7 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
                         }
 
                         hasNext = mGetMoneyAndPaymentRequestResponse.isHasNext();
+                        if (isLoading) isLoading = false;
                         mInvoiceListAdapter.notifyDataSetChanged();
 
                     } catch (Exception e) {
@@ -333,7 +336,6 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
             private final TextView mDescriptionView;
             private final TextView mTitleView;
             private final TextView mTimeView;
-            private final TextView loadMoreTextView;
             private final ProfileImageView mProfileImageView;
 
             public ViewHolder(final View itemView) {
@@ -342,7 +344,6 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
                 // Money request list items
                 mDescriptionView = (TextView) itemView.findViewById(R.id.textview_description);
                 mTimeView = (TextView) itemView.findViewById(R.id.textview_time);
-                loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 mTitleView = (TextView) itemView.findViewById(R.id.textview_title);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
             }
@@ -383,33 +384,53 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
                     }
                 });
             }
-
-            public void bindViewFooter() {
-                if (hasNext)
-                    loadMoreTextView.setText(R.string.load_more);
-                else
-                    loadMoreTextView.setText(R.string.no_more_results);
-            }
         }
 
         public class FooterViewHolder extends ViewHolder {
+            private TextView mLoadMoreTextView;
+            private ProgressBar mLoadMoreProgressBar;
+
             public FooterViewHolder(View itemView) {
                 super(itemView);
-                itemView.setOnClickListener(new View.OnClickListener() {
+
+                mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
+                mLoadMoreProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
+            }
+
+            public void bindViewFooter() {
+                setItemVisibilityOfFooterView();
+
+                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (hasNext) {
                             pageCount = pageCount + 1;
+                            showLoadingInFooter();
                             getMakePaymentRequests();
                         }
                     }
                 });
+            }
 
-                TextView loadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
-                if (hasNext)
-                    loadMoreTextView.setText(R.string.load_more);
-                else
-                    loadMoreTextView.setText(R.string.no_more_results);
+            private void setItemVisibilityOfFooterView() {
+                if (isLoading) {
+                    mLoadMoreProgressBar.setVisibility(View.VISIBLE);
+                    mLoadMoreTextView.setVisibility(View.GONE);
+                } else {
+                    mLoadMoreProgressBar.setVisibility(View.GONE);
+                    mLoadMoreTextView.setVisibility(View.VISIBLE);
+
+                    if (hasNext)
+                        mLoadMoreTextView.setText(R.string.load_more);
+                    else
+                        mLoadMoreTextView.setText(R.string.no_more_results);
+                }
+
+            }
+
+            private void showLoadingInFooter() {
+                isLoading = true;
+                notifyDataSetChanged();
             }
         }
 
@@ -494,5 +515,4 @@ public class ReceivedPaymentRequestsFragment extends ProgressFragment implements
             ((PaymentActivity) getActivity()).switchToReceivedPaymentRequestDetailsFragment(bundle);
         }
     }
-
 }

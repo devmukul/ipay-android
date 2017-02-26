@@ -60,6 +60,25 @@
 
         <View style="@style/Divider" />
 
+        <LinearLayout
+            android:id="@+id/fingerprint_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
+                android:id="@+id/login_with_fingerprint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_fingerprint"
+                android:paddingBottom="@dimen/value4"
+                android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                android:paddingTop="@dimen/value4"
+                android:text="@string/use_fingerprint_for_login" />
+
+            <View style="@style/Divider" />
+        </LinearLayout>
+
         <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
             android:id="@+id/logout_from_all_devices"
             android:layout_width="match_parent"

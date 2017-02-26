@@ -1,15 +1,12 @@
 package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,28 +14,32 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.ChangePasswordResponse;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationChangePasswordDialog;
+import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintAuthenticationDialog;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordValidationRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordValidationResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ChangePasswordFragment extends Fragment implements HttpResponseListener {
-    private HttpRequestPutAsyncTask mChangePasswordTask = null;
-    private ChangePasswordResponse mChangePasswordResponse;
+    private HttpRequestPutAsyncTask mChangePasswordValidationTask = null;
+    private ChangePasswordValidationResponse mChangePasswordValidationResponse;
 
     private ProgressDialog mProgressDialog;
-    private SharedPreferences pref;
 
     private EditText mEnterCurrentPasswordEditText;
     private EditText mEnterNewPasswordEditText;
     private EditText mEnterConfirmNewPasswordEditText;
     private Button mChangePasswordButton;
 
+    private String mPassword;
+    private String mNewPassword;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
         View v = inflater.inflate(R.layout.fragment_change_password, container, false);
         setTitle();
 
+
         mEnterCurrentPasswordEditText = (EditText) v.findViewById(R.id.current_password);
         mEnterNewPasswordEditText = (EditText) v.findViewById(R.id.new_password);
         mEnterConfirmNewPasswordEditText = (EditText) v.findViewById(R.id.confirm_new_password);
@@ -60,13 +62,11 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
         mProgressDialog = new ProgressDialog(getActivity());
 
         mEnterCurrentPasswordEditText.requestFocus();
-        final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         mChangePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                attemptChangePassword();
+                attemptChangePasswordValidation();
             }
         });
 
@@ -79,9 +79,8 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
 
     }
 
-    private void attemptChangePassword() {
-
-        if (mChangePasswordTask != null) {
+    private void attemptChangePasswordValidation() {
+        if (mChangePasswordValidationTask != null) {
             return;
         }
 
@@ -116,53 +115,84 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
             // Hiding keyboard after save button pressed in change password
             Utilities.hideKeyboard(getActivity());
 
-            String newPassword = mEnterNewPasswordEditText.getText().toString().trim();
-            String password = mEnterCurrentPasswordEditText.getText().toString().trim();
+            mNewPassword = mEnterNewPasswordEditText.getText().toString().trim();
+            mPassword = mEnterCurrentPasswordEditText.getText().toString().trim();
 
             mProgressDialog.setMessage(getString(R.string.change_password_progress));
             mProgressDialog.show();
-            ChangePasswordRequest mChangePasswordRequest = new ChangePasswordRequest(password, newPassword);
+            ChangePasswordValidationRequest mChangePasswordValidationRequest = new ChangePasswordValidationRequest(mPassword, mNewPassword);
             Gson gson = new Gson();
-            String json = gson.toJson(mChangePasswordRequest);
-            mChangePasswordTask = new HttpRequestPutAsyncTask(Constants.COMMAND_CHANGE_PASSWORD,
+            String json = gson.toJson(mChangePasswordValidationRequest);
+            mChangePasswordValidationTask = new HttpRequestPutAsyncTask(Constants.COMMAND_CHANGE_PASSWORD_VALIDATION,
                     Constants.BASE_URL_MM + Constants.URL_CHANGE_PASSWORD, json, getActivity());
-            mChangePasswordTask.mHttpResponseListener = this;
-            mChangePasswordTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            mChangePasswordValidationTask.mHttpResponseListener = this;
+            mChangePasswordValidationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
+    }
+
+    private void saveNewPasswordWithTouchID() {
+        FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getContext(),
+                FingerprintAuthenticationDialog.Stage.FINGERPRINT_ENCRYPT);
+        fingerprintAuthenticationDialog.setFinishEncryptionCheckerListener(new FingerprintAuthenticationDialog.FinishEncryptionCheckerListener() {
+            @Override
+            public void ifEncryptionFinished() {
+                if (ProfileInfoCacheManager.ifPasswordEncrypted()) {
+                    ProfileInfoCacheManager.setFingerprintAuthenticationStatus(true);
+                } else
+                    ProfileInfoCacheManager.setFingerprintAuthenticationStatus(false);
+
+                ((SecuritySettingsActivity) getActivity()).switchToAccountSettingsFragment();
+            }
+        });
     }
 
     public void setTitle() {
         getActivity().setTitle(R.string.change_password);
     }
 
-    @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    private void launchOTPVerificationFragment() {
+        SecuritySettingsActivity.otpDuration = mChangePasswordValidationResponse.getOtpValidFor();
+        new OTPVerificationChangePasswordDialog(getActivity(), mPassword, mNewPassword);
+    }
 
+    @Override
+    public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
-            mChangePasswordTask = null;
+            mChangePasswordValidationTask = null;
 
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
 
-
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_CHANGE_PASSWORD)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_CHANGE_PASSWORD_VALIDATION)) {
 
             try {
-                mChangePasswordResponse = gson.fromJson(result.getJsonString(), ChangePasswordResponse.class);
+                mChangePasswordValidationResponse = gson.fromJson(result.getJsonString(), ChangePasswordValidationResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    ((SecuritySettingsActivity) getActivity()).switchToAccountSettingsFragment();
+                        Toast.makeText(getActivity(), mChangePasswordValidationResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mChangePasswordValidationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        launchOTPVerificationFragment();
+                    }
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), mChangePasswordValidationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        if (result.getJsonString().contains(getString(R.string.otp))) {
+                            launchOTPVerificationFragment();
+                        }
+                    }
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mChangePasswordResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), mChangePasswordValidationResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -171,11 +201,8 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
             }
 
             mProgressDialog.dismiss();
-            mChangePasswordTask = null;
-
+            mChangePasswordValidationTask = null;
         }
     }
-
-
 }
 

@@ -20,8 +20,8 @@ import org.apache.http.protocol.HTTP;
 import java.io.IOException;
 
 import bd.com.ipay.ipayskeleton.BuildConfig;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Configuration.ApiVersionResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Configuration.ApiVersionResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -29,7 +29,7 @@ import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpResponseObject> {
+public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, GenericHttpResponse> {
 
     public HttpResponseListener mHttpResponseListener;
 
@@ -48,22 +48,22 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
     }
 
     @Override
-    protected HttpResponseObject doInBackground(Void... params) {
+    protected GenericHttpResponse doInBackground(Void... params) {
 
-        HttpResponseObject mHttpResponseObject = null;
+        GenericHttpResponse mGenericHttpResponse = null;
 
         try {
             if (Utilities.isConnectionAvailable(mContext)) {
                 if (Constants.IS_API_VERSION_CHECKED) {
                     mHttpResponse = makeRequest();
-                    mHttpResponseObject = parseHttpResponse(mHttpResponse);
-                    mHttpResponseObject.setUpdateNeeded(false);
+                    mGenericHttpResponse = parseHttpResponse(mHttpResponse);
+                    mGenericHttpResponse.setUpdateNeeded(false);
                 } else {
                     mHttpResponse = makeApiVersionCheckRequest();
-                    mHttpResponseObject = parseHttpResponse(mHttpResponse);
+                    mGenericHttpResponse = parseHttpResponse(mHttpResponse);
 
                     // Validate the Api version and set whether the update is required or not
-                    mHttpResponseObject = validateApiVersion(mHttpResponseObject);
+                    mGenericHttpResponse = validateApiVersion(mGenericHttpResponse);
                 }
 
             } else {
@@ -75,11 +75,11 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
             e.printStackTrace();
         }
 
-        return mHttpResponseObject;
+        return mGenericHttpResponse;
     }
 
     @Override
-    protected void onPostExecute(final HttpResponseObject result) {
+    protected void onPostExecute(final GenericHttpResponse result) {
         if (error) {
             if (mContext != null)
                 Toast.makeText(mContext, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
@@ -96,20 +96,13 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
         if (result != null) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
-                String message = mContext.getString(R.string.please_log_in_again);
-
-                try {
-                    Gson gson = new Gson();
-                    message = gson.fromJson(result.getJsonString(), LoginResponse.class).getMessage();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
                 try {
                     MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
                     boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
 
                     if (loggedIn) {
+                        String message = mContext.getString(R.string.please_log_in_again);
                         myApplicationInstance.launchLoginPage(message);
 
                     } else {
@@ -181,44 +174,44 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
         return null;
     }
 
-    private HttpResponseObject parseHttpResponse(HttpResponse mHttpResponse) {
-        HttpResponseObject mHttpResponseObject = null;
+    private GenericHttpResponse parseHttpResponse(HttpResponse mHttpResponse) {
+        GenericHttpResponse mGenericHttpResponse = null;
 
         if (mHttpResponse == null)
-            return mHttpResponseObject;
+            return mGenericHttpResponse;
 
         HttpResponseParser mHttpResponseParser = new HttpResponseParser();
         mHttpResponseParser.setAPI_COMMAND(API_COMMAND);
         mHttpResponseParser.setHttpResponse(mHttpResponse);
         mHttpResponseParser.setContext(mContext);
 
-        mHttpResponseObject = mHttpResponseParser.parseHttpResponse();
+        mGenericHttpResponse = mHttpResponseParser.parseHttpResponse();
 
         // Set the context, after response is parsed.
-        mHttpResponseObject.setContext(mContext);
+        mGenericHttpResponse.setContext(mContext);
 
-        return mHttpResponseObject;
+        return mGenericHttpResponse;
     }
 
-    private HttpResponseObject validateApiVersion(HttpResponseObject mHttpResponseObject) {
+    private GenericHttpResponse validateApiVersion(GenericHttpResponse mGenericHttpResponse) {
 
         Gson gson = new Gson();
 
         try {
-            ApiVersionResponse mApiVersionResponse = gson.fromJson(mHttpResponseObject.getJsonString(), ApiVersionResponse.class);
+            ApiVersionResponse mApiVersionResponse = gson.fromJson(mGenericHttpResponse.getJsonString(), ApiVersionResponse.class);
 
-            if (mHttpResponseObject.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+            if (mGenericHttpResponse.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 if (mApiVersionResponse != null) {
                     int requiredAPIVersion = mApiVersionResponse.getAndroid();
                     int availableAPIVersion = BuildConfig.VERSION_CODE;
 
                     if (availableAPIVersion < requiredAPIVersion) {
-                        mHttpResponseObject.setUpdateNeeded(true);
+                        mGenericHttpResponse.setUpdateNeeded(true);
                     } else {
                         Constants.IS_API_VERSION_CHECKED = true;
                         mHttpResponse = makeRequest();
-                        mHttpResponseObject = parseHttpResponse(mHttpResponse);
-                        mHttpResponseObject.setUpdateNeeded(false);
+                        mGenericHttpResponse = parseHttpResponse(mHttpResponse);
+                        mGenericHttpResponse.setUpdateNeeded(false);
                     }
                 }
             }
@@ -226,7 +219,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, HttpRes
             e.printStackTrace();
         }
 
-        return mHttpResponseObject;
+        return mGenericHttpResponse;
     }
 
     Context getContext() {

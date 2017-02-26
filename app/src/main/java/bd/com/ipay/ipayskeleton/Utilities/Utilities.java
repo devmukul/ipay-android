@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -58,14 +59,17 @@ import java.net.NetworkInterface;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.TokenParserClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
 
 public class Utilities {
 
@@ -535,6 +539,18 @@ public class Utilities {
         return new SimpleDateFormat("MMM d, yyyy").format(time);
     }
 
+    public static Date formatDateFromString(String dateString) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date newDate = null;
+        try {
+            newDate = format.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return newDate;
+    }
+
     public static boolean checkPlayServices(Context context) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(context);
@@ -547,10 +563,6 @@ public class Utilities {
             return filePath.substring(0, filePath.lastIndexOf('.')).toLowerCase();
         else
             return "";
-    }
-
-    public static String[] parseEventTicket(String qrcodeEncoded) {
-        return qrcodeEncoded.split(":");
     }
 
     /**
@@ -664,6 +676,54 @@ public class Utilities {
                 break;
         }
         return "";
+    }
+
+    private static void setCalenderWithAgeLimit(Calendar calendar) {
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        int minYear = currentYear - Constants.MIN_AGE_LIMIT;
+        int minMonth = currentMonth;
+        int minDay = currentDay;
+
+        calendar.set(minYear, minMonth, minDay);
+    }
+
+    public static DatePickerDialog initDatePickerDialog(Context context, Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {
+        final Calendar calendar = Calendar.getInstance();
+
+        if (date == null) {
+            setCalenderWithAgeLimit(calendar); // If no date was selected
+        } else
+            calendar.setTime(date);
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                context, onDateSetListener, year, month, day);
+
+        setLimitInDatePickerDialog(datePickerDialog);
+        return datePickerDialog;
+    }
+
+    private static void setLimitInDatePickerDialog(DatePickerDialog datePickerDialog) {
+        final Calendar calendar = Calendar.getInstance();
+
+        setCalenderWithAgeLimit(calendar);
+        long minDateInMilliSeconds = calendar.getTimeInMillis();
+
+        // Set 18 years from today as max limit of date picker
+        datePickerDialog.getDatePicker().setMaxDate(minDateInMilliSeconds);
+        datePickerDialog.setTitle(null);
+    }
+
+    public static DatePickerDialog getDatePickerDialog(Context context, Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {
+        final DatePickerDialog datePickerDialog = initDatePickerDialog(context, date, onDateSetListener);
+
+        return datePickerDialog;
     }
 
     public static void setActionBarTitle(Activity activity, String title) {

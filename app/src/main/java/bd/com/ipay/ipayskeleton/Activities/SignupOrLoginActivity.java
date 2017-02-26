@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import bd.com.ipay.ipayskeleton.ForgotPasswordFragments.ForgetPasswordFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.OTPVerificationBusinessFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepOneFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepThreeFragment;
@@ -25,7 +24,7 @@ import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments.OTPVerifi
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.OTPVerificationPersonalFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.SignupPersonalStepOneFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SelectAccountTypeFragment;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -173,13 +172,15 @@ public class SignupOrLoginActivity extends AppCompatActivity {
                 .replace(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
     }
 
-    public void switchToForgetPasswordFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new ForgetPasswordFragment()).addToBackStack(null).commit();
-    }
-
     public void switchToHomeActivity() {
         Intent intent = new Intent(SignupOrLoginActivity.this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        this.finish();
+    }
+
+    public void switchToDeviceTrustActivity() {
+        Intent intent = new Intent(SignupOrLoginActivity.this, DeviceTrustActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         this.finish();

@@ -50,4 +50,6 @@
     public static *** e(...);
 }
 
+-printmapping build/outputs/mapping/release/mapping.txt
+
 

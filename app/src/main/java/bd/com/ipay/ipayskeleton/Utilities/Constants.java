@@ -18,6 +18,7 @@ public class Constants {
     public static final String CRITICAL_PREFERENCE_VERSION = "CRITICAL_PREFERENCE_VERSION";
     public static final String GCM_REGISTRATION_ID_SENT_TO_SERVER = "GCM_REGISTRATION_ID_SENT_TO_SERVER";
     public static final String PASSWORD = "PASSWORD";
+    public static final String NEW_PASSWORD = "NEW_PASSWORD";
     public static final String VERIFICATION_STATUS = "VERIFICATION_STATUS";
     public static final String TARGET_FRAGMENT = "TARGET_FRAGMENT";
     public static final String SIGN_IN = "SIGN_IN";
@@ -29,7 +30,6 @@ public class Constants {
     public static final String TICKET_ID = "TICKET_ID";
     public static final String STRING_TO_ENCODE = "STRING_TO_ENCODE";
     public static final String ACTIVITY_TITLE = "ACTIVITY_TITLE";
-    public static final String EVENT_ID = "EVENT_ID";
     public static final String TITLE = "TITLE";
     public static final String DESCRIPTION = "DESCRIPTION";
     public static final String TIME = "TIME";
@@ -43,6 +43,10 @@ public class Constants {
     public static final String MONEY_REQUEST_ID = "MONEY REQUESTS ID";
     public static final String MONEY_REQUEST_SERVICE_ID = "SERVICE_ID";
     public static final String TRANSACTION_ID = "TRANSACTION_ID";
+    public static final String TOP_UP = "TOP_UP";
+    public static final String SEND_MONEY = "SEND_MONEY";
+    public static final String REQUEST_MONEY = "REQUEST_MONEY";
+    public static final String REQUEST_PAYMENT = "REQUEST_PAYMENT";
 
     public static final String VERIFIED_USERS_ONLY = "VERIFIED_USERS_ONLY";
     public static final String IPAY_MEMBERS_ONLY = "IPAY_MEMBERS_ONLY";
@@ -76,6 +80,8 @@ public class Constants {
     public static final String ANDROID = "Android";
     public static final String IS_PIN_ADDED = "is-pin-added";
     public static final String IS_IN_CONTACTS = "is-in-contacts";
+    public static final String SWITCHED_FROM_BANK_VERIFICATION = "switched_from_bank_validation";
+    public static final String IS_STARTED_FROM_PROFILE_COMPLETION = "is_started_from_profile_completion";
     public static final String SWITCHED_FROM_TRANSACTION_HISTORY = "switched_from_transaction_history";
     public static final String MOBILE_ANDROID = "mobile-android-";
     public static final String MULTIPART_FORM_DATA_NAME = "file";
@@ -83,7 +89,7 @@ public class Constants {
     public static final String OPERATOR_CODE = "operator_code";
     public static final String COUNTRY_CODE = "country_code";
     public static final String EXPAND_PIN = "expand_pin";
-    public static final String TRUSTED_OTP_RECEIVERS = "trusted_otp_receivers";
+    public static final String DEVICE_IS_NOT_TRUSTED = "Device is not trusted";
     public static final String DOCUMENT_ID = "DOCUMENT_ID";
     public static final String DOCUMENT_TYPE_NAME = "DOCUMENT_TYPE_NAME";
     public static final String MESSAGE = "message";
@@ -92,6 +98,7 @@ public class Constants {
 
     public static final String OCCUPATION = "OCCUPATION";
     public static final String OCCUPATION_LIST = "OCCUPATION_LIST";
+    public static final String ORGANIZATION_NAME = "ORGANIZATION_NAME";
     public static final String DESIGNATION = "DESIGNATION";
     public static final String BUSINESS_NAME = "BUSINESS_NAME";
 
@@ -114,6 +121,7 @@ public class Constants {
 
     public static final String AMOUNT = "amount";
     public static final String BANK_NAME = "bank_name";
+    public static final String BANK_BRANCH = "bank_branch";
     public static final String BANK_ACCOUNT_NUMBER = "bank_account_number";
     public static final String BANK_ACCOUNT_ID = "bank_account_id";
     public static final String BANK_CODE = "bank_code";
@@ -129,13 +137,19 @@ public class Constants {
     public static final double OFFICE_LATITUDE = 23.7810729;
     public static final double OFFICE_LONGITUDE = 90.4169212;
 
-//    public static final String EMPLOYEE_PRIVILEGE = "EMPLOYEE_PRIVILEGE";
+    public static final int MIN_AGE_LIMIT = 18;
+    public static final int MIN_VALID_NAME_LENGTH = 5;
 
     public static final int STARTING_DATE = 01;
 
     public static final int STARTING_MONTH = 01;
     public static final int STARTING_YEAR = 2016;
     public static final int DEFAULT_USER_CLASS = 1;
+
+    public static final String IS_FINGERPRINT_AUTHENTICATION_ON = "LOGIN_WITH_FINGERPRINT";
+    public static final String KEY_PASSWORD = "encrypted_password";
+    public static final String KEY_PASSWORD_IV = "encrypted_password_IV";
+    public static final String KEY_NAME = "key_name";
     /**
      * All requests and responses to server, as well as token is printed when debug flag is enabled.
      * Besides, for safety measures, all later flags won't work unless DEBUG flag is set.
@@ -256,10 +270,7 @@ public class Constants {
     public static final String URL_UPLOAD_DOCUMENTS = "docs/identification/documents";
     public static final String URL_UPLOAD_BUSINESS_DOCUMENTS = "docs/identification/documents/business";
     public static final String URL_GET_DOCUMENT_ACCESS_TOKEN = "user/contentAccessToken";
-    // Event Controller
-    public static final String URL_EVENT_LIST = "events/user/eventList/";
 
-    public static final String URL_EVENT_CATEGORIES = "categories";
     // Fee Charge REST
     public static final String URL_SERVICE_CHARGE = "feecharge";
 
@@ -307,8 +318,6 @@ public class Constants {
 
     // Settings REST
     public static final String URL_CHANGE_PASSWORD = "settings/password";
-    public static final String URL_SEND_OTP_FORGET_PASSWORD = "settings/password/forget";
-    public static final String URL_CONFIRM_OTP_FORGET_PASSWORD = "settings/password/forget/confirmation";
     public static final String URL_GET_SECURITY_ALL_QUESTIONS = "settings/security/allquestions/";
     public static final String URL_GET_SECURITY_QUESTIONS = "settings/security/questions";
     public static final String URL_SET_SECURITY_ANSWERS = "settings/security/answers";
@@ -317,19 +326,20 @@ public class Constants {
     public static final String URL_GET_PIN_INFO = "settings/pin";
     public static final String URL_SET_PIN = "settings/pin";
 
-    // Signin Rest
+    // Sign in Rest
     public static final String URL_GET_REFRESH_TOKEN = "signin/refreshToken";
     public static final String URL_LOGIN = "signin";
 
-    // Signout Rest
+    // Sign out Rest
     public static final String URL_LOG_OUT = "signout";
     public static final String URL_LOG_OUT_from_all_device = "signout/formAllDevice";
 
-    // Signup Rest
+    // Sign up Rest
     public static final String URL_SIGN_UP = "signup/activation";
     public static final String URL_SIGN_UP_BUSINESS = "signup/business/activation";
     public static final String URL_OTP_REQUEST = "signup";
     public static final String URL_CHECK_PROMO_CODE = "signup/checkpromocode";
+    public static final String URL_CHECK_IF_USER_EXISTS = "signup/check/";
     public static final String URL_OTP_REQUEST_BUSINESS = "signup/business";
 
     // SM Payment REST
@@ -445,14 +455,14 @@ public class Constants {
     public static final long DEFAULT_TOKEN_OVERLAP_TIME = 15000;   // By default token time is one minute
 
     public static final String COMMAND_OTP_VERIFICATION = "COMMAND_OTP_VERIFICATION";
+    public static final String COMMAND_RESEND_OTP = "COMMAND_RESEND_OTP";
     public static final String COMMAND_CHECK_PROMO_CODE = "COMMAND_CHECK_PROMO_CODE";
+    public static final String COMMAND_CHECK_IF_USER_EXISTS = "COMMAND_CHECK_IF_USER_EXISTS";
     public static final String COMMAND_REFRESH_TOKEN = "COMMAND_REFRESH_TOKEN";
     public static final String COMMAND_SIGN_UP = "COMMAND_SIGN_UP";
     public static final String COMMAND_SIGN_UP_BUSINESS = "COMMAND_SIGN_UP_BUSINESS";
     public static final String COMMAND_LOG_IN = "COMMAND_LOG_IN";
     public static final String COMMAND_ASK_FOR_RECOMMENDATION = "COMMAND_ASK_FOR_RECOMMENDATION";
-    public static final String COMMAND_FORGET_PASSWORD_SEND_OTP = "COMMAND_FORGET_PASSWORD_SEND_OTP";
-    public static final String COMMAND_FORGET_PASSWORD_CONFIRM_OTP = "COMMAND_FORGET_PASSWORD_CONFIRM_OTP";
     public static final String COMMAND_LOG_OUT = "COMMAND_LOG_OUT";
     public static final String COMMAND_SEND_MONEY = "COMMAND_SEND_MONEY";
     public static final String COMMAND_PAYMENT = "COMMAND_PAYMENT";
@@ -472,23 +482,19 @@ public class Constants {
     public static final String COMMAND_REJECT_REQUESTS_MONEY = "COMMAND_REJECT_REQUESTS_MONEY";
     public static final String COMMAND_CANCEL_PAYMENT_REQUEST = "COMMAND_CANCEL_PAYMENT_REQUEST";
     public static final String COMMAND_ACCEPT_PAYMENT_REQUEST = "COMMAND_ACCEPT_PAYMENT_REQUEST";
-    public static final String COMMAND_REJECT_PAYMENT_REQUEST = "COMMAND_REJECT_PAYMENT_REQUEST";
     public static final String COMMAND_GET_PENDING_REQUESTS_ME = "COMMAND_GET_PENDING_REQUESTS_ME";
-    public static final String COMMAND_GET_ALL_SETTLED_REQUESTS = "COMMAND_GET_ALL_SETTLED_REQUESTS";
-    public static final String COMMAND_GET_SENT_REQUEST_MONEY_HISTORY = "COMMAND_GET_SENT_REQUEST_MONEY_HISTORY";
-    public static final String COMMAND_GET_ALL_PARTICIPANTS_LIST = "COMMAND_GET_ALL_PARTICIPANTS_LIST";
     public static final String COMMAND_REQUEST_MONEY = "COMMAND_REQUEST_MONEY";
     public static final String COMMAND_SEND_INVOICE = "COMMAND_SEND_INVOICE";
     public static final String COMMAND_SAVE_INVOICE = "COMMAND_SAVE_INVOICE";
     public static final String COMMAND_GET_SINGLE_INVOICE = "COMMAND_GET_SINGLE_INVOICE";
     public static final String COMMAND_SET_PROFILE_PICTURE = "COMMAND_SET_PROFILE_PICTURE";
     public static final String COMMAND_ADD_A_BANK = "COMMAND_ADD_A_BANK";
-    public static final String COMMAND_SEND_FOR_VERIFICATION_BANK = "COMMAND_SEND_FOR_VERIFICATION_BANK";
     public static final String COMMAND_VERIFICATION_BANK_WITH_AMOUNT = "COMMAND_VERIFICATION_BANK_WITH_AMOUNT";
     public static final String COMMAND_REMOVE_A_BANK = "COMMAND_REMOVE_A_BANK";
     public static final String COMMAND_TOPUP_REQUEST = "COMMAND_TOPUP_REQUEST";
     public static final String COMMAND_SET_PIN = "COMMAND_SET_PIN";
     public static final String COMMAND_CHANGE_PASSWORD = "COMMAND_CHANGE_PASSWORD";
+    public static final String COMMAND_CHANGE_PASSWORD_VALIDATION = "COMMAND_CHANGE_PASSWORD_VALIDATION";
     public static final String COMMAND_GET_PROFILE_INFO_REQUEST = "COMMAND_GET_PROFILE_INFO_REQUEST";
     public static final String COMMAND_GET_PARENT_INFO_REQUEST = "COMMAND_GET_PARENT_INFO_REQUEST";
     public static final String COMMAND_GET_OCCUPATIONS_REQUEST = "COMMAND_GET_OCCUPATIONS_REQUEST";
@@ -508,7 +514,6 @@ public class Constants {
     public static final String COMMAND_INTRODUCE_ACTION = "COMMAND_INTRODUCE_ACTION";
     public static final String COMMAND_GET_USER_INFO = "COMMAND_GET_USER_INFO";
     public static final String COMMAND_WITHDRAW_MONEY = "COMMAND_WITHDRAW_MONEY";
-    public static final String COMMAND_EVENT_CATEGORIES = "COMMAND_EVENT_CATEGORIES";
     public static final String COMMAND_UPLOAD_DOCUMENT = "COMMAND_UPLOAD_DOCUMENT";
     public static final String COMMAND_GET_DOCUMENT_ACCESS_TOKEN = "COMMAND_GET_DOCUMENT_ACCESS_TOKEN";
     public static final String COMMAND_GET_PIN_INFO = "COMMAND_GET_PIN_INFO";
@@ -698,7 +703,7 @@ public class Constants {
 
     public static final int TRANSACTION_STATUS_ACCEPTED = 200;
     public static final int TRANSACTION_STATUS_PROCESSING = 102;
-    public static final int TRANSACTION_STATUS_CANCELED = 2;
+    public static final int TRANSACTION_STATUS_CANCELLED = 2;
     public static final int TRANSACTION_STATUS_REJECTED = 3;
 
     public static final String BUSINESS_INVITATION_ACCEPTED = "ACCEPTED";
@@ -722,8 +727,8 @@ public class Constants {
     public static final String ACTION_TYPE_MAKE_PRIMARY = "Make Primary";
     public static final String ACTION_TYPE_EDIT = "Edit";
     public static final String ACTION_TYPE_VIEW = "View";
-    public static final String ACTION_TYPE_TAKE_PICTURE = "Take a Picture";
-    public static final String ACTION_TYPE_SELECT_FROM_GALLERY = "Select from Gallery";
+    public static final String ACTION_TYPE_TAKE_PICTURE = "Take a picture";
+    public static final String ACTION_TYPE_SELECT_FROM_GALLERY = "Select from gallery";
 
     public static final String SERVICE_ACTION_REQUEST_PAYMENT = "Request Payment";
     public static final String SERVICE_ACTION_MAKE_PAYMENT = "Make Payment";

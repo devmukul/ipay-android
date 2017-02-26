@@ -11,12 +11,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <permission
         android:name="bd.com.ipay.android.permission.C2D_MESSAGE"
@@ -85,6 +87,13 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".Activities.DeviceTrustActivity"
+            android:label="@string/trust_this_device"
+            android:screenOrientation="portrait"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".Activities.PaymentActivities.SendMoneyActivity"
             android:label="@string/send_money"
             android:screenOrientation="portrait"
@@ -102,12 +111,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
-            android:name=".Activities.ForgotPasswordActivity"
-            android:label="@string/password_recovery"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.PaymentActivities.AddMoneyActivity"
             android:label="@string/add_money"
@@ -156,12 +159,6 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".Activities.EventActivity"
-            android:label="@string/events"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name=".Activities.PaymentActivities.EducationPaymentActivity"
             android:label="@string/education"
             android:screenOrientation="portrait"
@@ -169,7 +166,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.ManageBanksActivity"
-            android:label="@string/events"
+            android:label="@string/manage_bank_accounts"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize" />

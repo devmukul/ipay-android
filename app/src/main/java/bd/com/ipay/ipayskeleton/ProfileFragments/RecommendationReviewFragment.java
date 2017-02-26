@@ -25,18 +25,18 @@ import bd.com.ipay.ipayskeleton.Api.AddFriendAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
 import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroduceActionResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.District;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.DistrictRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetDistrictResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetThanaResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.ThanaRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.IntroduceActionResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.District;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.DistrictRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetDistrictResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetThanaResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Thana;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.ThanaRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -62,7 +62,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     private String mMothersname = null;
     private String mIntroductionMessage;
 
-    private AddressClass mAddress;
+    private AddressClass mAddress = null;
 
     private boolean isInContacts;
 
@@ -222,15 +222,16 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (mAddress != null)
-            getDistrictList();
+        setContentShown(false);
+
+        if (mAddress != null) getDistrictList();
         else setContentShown(true);
+
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setContentShown(false);
     }
 
     private void attemptSetRecommendationStatus(long requestID, String recommendationStatus) {
@@ -265,9 +266,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     }
 
     private void loadAddresses() {
-        if (mAddress == null)
-            mAddressView.setVisibility(View.GONE);
-        else
+        if (mAddress != null)
             mAddressView.setText(mAddress.toString(mThanaList, mDistrictList));
 
         if (this.isAdded()) setContentShown(true);
@@ -286,7 +285,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {

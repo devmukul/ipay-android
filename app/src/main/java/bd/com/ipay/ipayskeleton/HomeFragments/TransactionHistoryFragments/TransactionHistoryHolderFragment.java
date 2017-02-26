@@ -16,7 +16,7 @@ public class TransactionHistoryHolderFragment extends Fragment {
     private CheckBox mProcessedTransactionsSelector;
     private CheckBox mPendingTransactionsSelector;
 
-    private TransactionHistoryFragment mProcessedTransactionHistoryFragment;
+    private TransactionHistoryCompletedFragment mProcessedTransactionHistoryCompletedFragment;
     private TransactionHistoryPendingFragment mPendingTransactionHistoryFragment;
 
     private View v;
@@ -78,8 +78,8 @@ public class TransactionHistoryHolderFragment extends Fragment {
         mProcessedTransactionsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
         mPendingTransactionsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
 
-        mProcessedTransactionHistoryFragment = new TransactionHistoryFragment();
-        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mProcessedTransactionHistoryFragment).commit();
+        mProcessedTransactionHistoryCompletedFragment = new TransactionHistoryCompletedFragment();
+        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mProcessedTransactionHistoryCompletedFragment).commit();
 
     }
 

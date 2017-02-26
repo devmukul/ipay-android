@@ -19,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,11 +34,11 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
-import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.GetActivityRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.UserActivityClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.UserActivity.UserActivityResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UserActivity.GetActivityRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UserActivity.UserActivityClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UserActivity.UserActivityResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -74,6 +75,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     private Calendar toDate = null;
 
     private boolean hasNext = false;
+    private boolean isLoading = false;
     private boolean clearListAfterLoading;
 
     private Menu menu;
@@ -88,7 +90,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         MenuInflater menuInflater = getActivity().getMenuInflater();
-        menuInflater.inflate(R.menu.activity_history, menu);
+        menuInflater.inflate(R.menu.activity_log, menu);
         menuInflater.inflate(R.menu.clear_filter, menu);
         this.menu = menu;
         menu.findItem(R.id.action_clear_filter).setVisible(false);
@@ -448,7 +450,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -480,6 +482,8 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     }
 
                     hasNext = mUserActivityResponse.isHasNext();
+                    if (isLoading)
+                        isLoading = false;
                     mActivityLogAdapter.notifyDataSetChanged();
                     setContentShown(true);
                 } catch (Exception e) {
@@ -543,7 +547,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_SYSTEM_EVENT) {
                     if (userActivityResponsesList.get(pos).getDescription().equalsIgnoreCase(Constants.SIGNED_IN)) {
                         mPortrait.setImageResource(R.drawable.ic_signin);
-                    } else if (userActivityResponsesList.get(pos).getDescription().equalsIgnoreCase(Constants.SIGNED_OUT)) {
+                    } else {
                         mPortrait.setImageResource(R.drawable.ic_signout);
                     }
                 } else if (userActivityResponsesList.get(pos).getType() == Constants.ACTIVITY_TYPE_CHANGE_SECURITY) {
@@ -555,29 +559,49 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         public class FooterViewHolder extends RecyclerView.ViewHolder {
 
             private TextView mLoadMoreTextView;
+            private ProgressBar mLoadMoreProgressBar;
 
-            public FooterViewHolder(View itemView) {
+            public FooterViewHolder(final View itemView) {
                 super(itemView);
 
-                itemView.setOnClickListener(new View.OnClickListener() {
+                mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
+                mLoadMoreProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
+            }
+
+            public void bindView() {
+                setItemVisibilityOfFooterView();
+
+                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (hasNext) {
                             historyPageCount = historyPageCount + 1;
+                            showLoadingInFooter();
                             getUserActivities();
+
                         }
                     }
                 });
-
-                mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
             }
 
-            public void bindView() {
+            private void setItemVisibilityOfFooterView() {
+                if (isLoading) {
+                    mLoadMoreProgressBar.setVisibility(View.VISIBLE);
+                    mLoadMoreTextView.setVisibility(View.GONE);
+                } else {
+                    mLoadMoreProgressBar.setVisibility(View.GONE);
+                    mLoadMoreTextView.setVisibility(View.VISIBLE);
 
-                if (hasNext)
-                    mLoadMoreTextView.setText(R.string.load_more);
-                else
-                    mLoadMoreTextView.setText(R.string.no_more_results);
+                    if (hasNext)
+                        mLoadMoreTextView.setText(R.string.load_more);
+                    else
+                        mLoadMoreTextView.setText(R.string.no_more_results);
+                }
+            }
+
+            private void showLoadingInFooter() {
+                isLoading = true;
+                notifyDataSetChanged();
             }
         }
 

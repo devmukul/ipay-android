@@ -19,15 +19,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
+import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerPrintAuthenticationManager;
+import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintAuthenticationDialog;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -56,14 +59,20 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     private String mDeviceID;
     private SharedPreferences pref;
 
+    private boolean tryLogInWithTouchID = false;
+    private FingerprintAuthenticationDialog mFingerprintAuthenticationDialog;
+
     @Override
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_login_page);
-
         Utilities.showKeyboard(getActivity());
 
-        if (pref.contains(Constants.USERID)) {
+        /**
+         * If UUID exists, it means device was set as trusted before.
+         * Set the login username so that user can't change it.
+         */
+        if (pref.contains(Constants.UUID)) {
             mPasswordEditText.setText("");
             mPasswordEditText.requestFocus();
             mUserNameEditText.setEnabled(false);
@@ -71,6 +80,9 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             String mobileNumber = ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber());
             mUserNameEditText.setText(mobileNumber);
             mButtonJoinUs.setVisibility(View.GONE);
+
+            // Login with fingerprint
+            attemptLoginWithTouchID();
         } else {
             mPasswordEditText.setText("");
             mUserNameEditText.setText("");
@@ -117,7 +129,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 // Hiding the keyboard after login button pressed
                 Utilities.hideKeyboard(getActivity());
 
@@ -135,7 +146,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
                 intent.setData(Uri.parse(Constants.BASE_URL_WEB + Constants.URL_FORGET_PASSWORD));
                 startActivity(intent);
-                //((SignupOrLoginActivity) getActivity()).switchToForgetPasswordFragment();
             }
         });
 
@@ -149,7 +159,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mInfoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 new AlertDialog.Builder(getContext())
                         .setMessage(R.string.login_info)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -163,8 +172,9 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         });
 
         if (!ProfileInfoCacheManager.getProfileImageUrl().isEmpty()) {
+            if (Constants.DEBUG)
+                Log.d("Profile Picture", ProfileInfoCacheManager.getProfileImageUrl());
 
-            Log.d("Profile Picture", ProfileInfoCacheManager.getProfileImageUrl());
             mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
                     ProfileInfoCacheManager.getProfileImageUrl(), false);
         } else {
@@ -178,6 +188,51 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     public void onPause() {
         super.onPause();
         Utilities.hideKeyboard(getContext(), getView());
+
+        if (mFingerprintAuthenticationDialog != null) {
+            mFingerprintAuthenticationDialog.stopFingerprintAuthenticationListener();
+        }
+    }
+
+    private void attemptLoginWithTouchID() {
+        FingerPrintAuthenticationManager fingerPrintAuthenticationManager = new FingerPrintAuthenticationManager(getActivity());
+        if (fingerPrintAuthenticationManager.ifFingerprintAuthenticationSupported()) {
+            // If fingerprint auth option is on
+            boolean isFingerPrintAuthOn = ProfileInfoCacheManager.getFingerprintAuthenticationStatus(false);
+            if (isFingerPrintAuthOn) {
+                // If Fingerprint option is on and fingerprint is encrypted
+                if (ProfileInfoCacheManager.ifPasswordEncrypted()) {
+                    mFingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getActivity()
+                            , FingerprintAuthenticationDialog.Stage.FINGERPRINT_DECRYPT);
+                    mFingerprintAuthenticationDialog.setFinishDecryptionCheckerListener(new FingerprintAuthenticationDialog.FinishDecryptionCheckerListener() {
+                        @Override
+                        public void ifDecryptionFinished(String decryptedData) {
+                            if (decryptedData != null) {
+                                tryLogInWithTouchID = true;
+                                mPasswordLogin = decryptedData;
+                                attemptLogin();
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    private void removeFingerprintAuthentication() {
+        tryLogInWithTouchID = false;
+        ProfileInfoCacheManager.clearEncryptedPassword();
+        showLogInFailedWithFingerPrintAuthDialog();
+
+    }
+
+    private void showLogInFailedWithFingerPrintAuthDialog() {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
+        dialog
+                .content(R.string.login_failed_with_touch_id)
+                .cancelable(false)
+                .positiveText(R.string.ok)
+                .show();
     }
 
     private void attemptLogin() {
@@ -190,8 +245,9 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         // Store values at the time of the login attempt.
 
-        mPasswordLogin = mPasswordEditText.getText().toString().trim();
         mUserNameLogin = ContactEngine.formatMobileNumberBD(mUserNameEditText.getText().toString().trim());
+        if (!tryLogInWithTouchID)
+            mPasswordLogin = mPasswordEditText.getText().toString().trim();
 
         boolean cancel = false;
         View focusView = null;
@@ -211,14 +267,13 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
+            // There was an error; don't attempt login and focus the first form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-
-            // Save user's login information while trying to login
+            /**
+             * Show a progress spinner, and kick off a background task to perform the user login attempt.
+             * Save user's login information while trying to login
+             */
             SignupOrLoginActivity.mMobileNumber = mUserNameLogin;
             SignupOrLoginActivity.mPassword = mPasswordLogin;
             SignupOrLoginActivity.mMobileNumberBusiness = mUserNameLogin;
@@ -246,7 +301,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (isAdded())
             mProgressDialog.dismiss();
@@ -273,12 +328,13 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                     pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).apply();
                     // When user logs in, we want that by default he would log in to his default account
                     TokenManager.deactivateEmployerAccount();
-                    ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+
+                    // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
+                    if (!pref.contains(Constants.UUID))
+                        ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
+                    else ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
-//                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-//                        pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).commit();
-
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
 
@@ -294,14 +350,38 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
                     // Enter previous OTP
                     SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
-
                     ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
 
-                } else {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
+                    /**
+                     * Two situation might arise here. Wrong user name or password throws 401
+                     * Login request from an untrusted device with invalid UUID throws 401 too.
+                     * We need to handle both case. In case of wrong username or password just showing the response message is enough.
+                     */
+                    if (mLoginResponseModel.getMessage().contains(Constants.DEVICE_IS_NOT_TRUSTED)) {
+                        /**
+                         *  Logged in from an untrusted device with invalid UUID.
+                         *  Remove the saved UUID and send the login request again.
+                         */
+                        pref.edit().remove(Constants.UUID).apply();
 
+                        // Attempt login
+                        mLoginTask = null;
+                        attemptLogin();
+                    } else {
+                        if (!tryLogInWithTouchID) {
+                            if (getActivity() != null)
+                                Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else
+                            removeFingerprintAuthentication();
+                    }
+                } else {
+                    if (!tryLogInWithTouchID) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
+                    } else
+                        removeFingerprintAuthentication();
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -310,7 +390,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             }
 
             mLoginTask = null;
-
         }
     }
 }
