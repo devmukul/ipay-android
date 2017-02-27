@@ -21,6 +21,8 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SecuritySettingsActivity extends BaseActivity {
 
+    public static long otpDuration;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

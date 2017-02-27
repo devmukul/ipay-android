@@ -4,13 +4,14 @@ public class Introducer {
     private String name;
     private String mobileNumber;
     private String profilePictureUrl;
-    private Long introducedDate;
+    private long introducedDate;
 
     public Introducer() {
-
     }
 
-    public String getProfilePictureUrl() { return profilePictureUrl ; }
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
 
     public String getName() {
         return name;
@@ -20,7 +21,7 @@ public class Introducer {
         return mobileNumber;
     }
 
-    public Long getIntroducedDate() {
+    public long getIntroducedDate() {
         return introducedDate;
     }
 }

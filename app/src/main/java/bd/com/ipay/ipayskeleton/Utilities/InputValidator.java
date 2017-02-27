@@ -76,4 +76,13 @@ public class InputValidator {
         return errorMessage;
     }
 
+    public static String isValidOTP(Context context, String otp) {
+        String errorMessage = null;
+
+        if (otp.length() == 0)
+            errorMessage = context.getString(R.string.error_invalid_otp);
+        else if (otp.length() != 6)
+            errorMessage = context.getString(R.string.error_invalid_otp_with_required_length);
+        return errorMessage;
+    }
 }

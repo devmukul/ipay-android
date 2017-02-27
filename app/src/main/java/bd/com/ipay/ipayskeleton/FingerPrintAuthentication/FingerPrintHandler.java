@@ -1,15 +1,18 @@
 package bd.com.ipay.ipayskeleton.FingerPrintAuthentication;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
+import android.os.Build;
 import android.os.CancellationSignal;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
 import bd.com.ipay.ipayskeleton.R;
 
+@TargetApi(Build.VERSION_CODES.M)
 public class FingerPrintHandler extends FingerprintManager.AuthenticationCallback {
 
     private Context mContext;
@@ -50,7 +53,7 @@ public class FingerPrintHandler extends FingerprintManager.AuthenticationCallbac
 
     @Override
     public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
-        Toast.makeText(mContext, R.string.fingerprint_recognized, Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, R.string.fingerprint_recognized, Toast.LENGTH_SHORT).show();
         onAuthenticationCallBackListener.onAuthenticationCallBack(result);
     }
 

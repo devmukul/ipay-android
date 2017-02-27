@@ -38,7 +38,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class IntroducerFragment extends ProgressFragment implements HttpResponseListener {
-
     private final int PICK_CONTACT_REQUEST = 100;
     private int MINIMUM_INTRODUCER_COUNT;           // Default value
 
@@ -114,9 +113,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
     }
 
     private void getIntroducerList() {
-        if (mGetIntroducersTask != null) {
-            return;
-        }
+        if (mGetIntroducersTask != null) return;
 
         mGetIntroducersTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCER_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_UPSTREAM_APPROVED_INTRODUCTION_REQUESTS, getActivity());
@@ -125,9 +122,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
     }
 
     private void getSentRequestList() {
-        if (mGetSentRequestTask != null) {
-            return;
-        }
+        if (mGetSentRequestTask != null) return;
 
         mGetSentRequestTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SENT_REQUEST_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_UPSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, getActivity());
@@ -136,9 +131,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
     }
 
     private void sendRecommendationRequest(String mobileNumber) {
-        if (mAskForRecommendationTask != null) {
-            return;
-        }
+        if (mAskForRecommendationTask != null) return;
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_send_for_recommendation));
         mProgressDialog.show();
@@ -150,7 +143,6 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) throws RuntimeException {
-
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
@@ -226,7 +218,6 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                             mSentRequestList.addAll(tempIntroducerClasses);
                         }
                         mIntroduceAdapter.notifyDataSetChanged();
-
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
@@ -261,9 +252,8 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                 break;
         }
         try {
-            if (isAdded()) {
-                setContentShown(true);
-            }
+            if (isAdded()) setContentShown(true);
+
             if (mIntroducerList != null && mIntroducerList.size() == 0 && mSentRequestList != null && mSentRequestList.size() == 0)
                 mEmptyListTextView.setVisibility(View.VISIBLE);
             else mEmptyListTextView.setVisibility(View.GONE);
@@ -274,7 +264,6 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
     }
 
     private class IntroduceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
         private static final int INTRODUCER_LIST_ITEM_VIEW = 1;
         private static final int INTRODUCER_LIST_HEADER_VIEW = 2;
         private static final int SENT_REQUEST_LIST_ITEM_VIEW = 5;
@@ -283,8 +272,6 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-
-
             private final TextView mIntroducerName;
             private final TextView mIntroducerMobileNumber;
             private final ProfileImageView mIntroducerProfilePictureView;
@@ -312,10 +299,9 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
 
             public void bindViewForSentRequestList(int pos) {
-
-                final String RequestedName = mSentRequestList.get(pos).getName();
-                final String RequestedMobileNumber = mSentRequestList.get(pos).getMobileNumber();
-                final String requestStatus = mSentRequestList.get(pos).getStatus();
+                String RequestedName = mSentRequestList.get(pos).getName();
+                String RequestedMobileNumber = mSentRequestList.get(pos).getMobileNumber();
+                String requestStatus = mSentRequestList.get(pos).getStatus();
                 String imageUrl = mSentRequestList.get(pos).getProfilePictureUrl();
                 mRequestedProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                 mRequestedName.setText(RequestedName);
@@ -342,22 +328,24 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
             }
 
             public void bindViewForIntroducerList(int pos) {
-
                 if (mSentRequestList != null && mSentRequestList.size() != 0)
                     pos = pos - mSentRequestList.size() - 1;
 
-                final String introducerName = mIntroducerList.get(pos).getName();
-                final String introducerMobileNumber = mIntroducerList.get(pos).getMobileNumber();
-                final long introducedTime = mIntroducerList.get(pos).getIntroducedDate();
-                final String time = Utilities.formatDateWithoutTime(mIntroducerList.get(pos).getIntroducedDate());
+                String introducerName = mIntroducerList.get(pos).getName();
+                String introducerMobileNumber = mIntroducerList.get(pos).getMobileNumber();
                 String imageUrl = mIntroducerList.get(pos).getProfilePictureUrl();
                 mIntroducerProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                 mIntroducerName.setText(introducerName);
                 mIntroducerMobileNumber.setText(introducerMobileNumber);
-                if (introducedTime == 0) mTimeView.setVisibility(View.GONE);
-                else mTimeView.setText(getString(R.string.introduced_on) + " " + time);
-            }
+                long introducedTime = mIntroducerList.get(pos).getIntroducedDate();
 
+                if (introducedTime == 0) mTimeView.setVisibility(View.GONE);
+                else {
+                    mTimeView.setVisibility(View.VISIBLE);
+                    String time = Utilities.formatDateWithoutTime(mIntroducerList.get(pos).getIntroducedDate());
+                    mTimeView.setText(getString(R.string.introduced_on) + " " + time);
+                }
+            }
         }
 
         private class IntroducerListHeaderViewHolder extends ViewHolder {
@@ -386,7 +374,6 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
             View v;
 
             if (viewType == INTRODUCER_LIST_ITEM_VIEW) {
@@ -396,16 +383,15 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
             } else if (viewType == INTRODUCER_LIST_HEADER_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introducer_list_header, parent, false);
                 return new IntroducerListHeaderViewHolder(v);
+
             } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_request_from_me, parent, false);
                 return new SentRequestListItemViewHolder(v);
-
             }
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
             try {
                 if (holder instanceof SentRequestListItemViewHolder) {
                     SentRequestListItemViewHolder vh = (SentRequestListItemViewHolder) holder;
@@ -423,12 +409,10 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
         @Override
         public int getItemCount() {
-
             int introducerListSize = 0;
             int sentRequestsListSize = 0;
 
-            if (mIntroducerList == null && mSentRequestList == null)
-                return 0;
+            if (mIntroducerList == null && mSentRequestList == null) return 0;
 
             // Get the sizes of the lists
             if (mSentRequestList != null)
@@ -443,12 +427,10 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
             else if (introducerListSize == 0 && sentRequestsListSize > 0)
                 return sentRequestsListSize;
             else return 0;
-
         }
 
         @Override
         public int getItemViewType(int position) {
-
             int sentRequestListSize = 0;
             int introducerListSize = 0;
 

@@ -71,6 +71,8 @@
     <string name="contact_already_exists">Contact already exists</string>
     <string name="business_mobile_number">Business Mobile Number</string>
     <string name="confirm_password_not_matched">Password did not match</string>
+    <string name="change_password_success">Password change successful</string>
+    <string name="change_password_success_message">Your password is changed successfully. Now you will be logged out from all devices. Please login again to continue.</string>
     <string name="confirm_pin_not_matched">PIN did not match</string>
     <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account.</string>
     <string name="empty_payable_list">You have no payable items at this moment. Click + button to add a fee to pay.</string>
@@ -83,10 +85,11 @@
     <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="error_invalid_pin">PIN must be 4 digit</string>
     <string name="error_invalid_otp">Please enter the OTP sent to your mobile</string>
+    <string name="error_invalid_otp_with_required_length">OTP must be 6 digit</string>
     <string name="error_promo_code_empty">Please enter the promo code</string>
     <string name="error_invalid_first_name">Please enter name</string>
-    <string name="error_invalid_parent_name">Parents Name should have minimum length of 5 characters</string>
     <string name="error_invalid_name">Please enter name</string>
+    <string name="business_name_required">Business name is required</string>
     <string name="error_invalid_name_with_required_length">Please enter a valid name of minimum 5 characters</string>
     <string name="error_invalid_birthday">Please enter birthday</string>
     <string name="please_select_institution">Please select an institution</string>
@@ -210,6 +213,7 @@
     <string name="logout_failed">Could not sign out properly</string>
     <string name="logout_from_this_device">Logout from this device</string>
     <string name="enter_otp">Enter Code</string>
+    <string name="otp">otp</string>
     <string name="enter_promo_code">Invitation Code</string>
     <string name="failed_to_reset_password">Failed to reset password. Please try again.</string>
     <string name="invalid_otp">Enter a valid OTP</string>
@@ -366,6 +370,7 @@
     <string name="add_this_as_trusted_device">Add this device as trusted</string>
     <string name="failed_add_trusted_device">Could not add trusted device</string>
     <string name="change_password_progress">Change password on progress...</string>
+    <string name="change_password_validation">Password validation on progress...</string>
     <string name="enter_current_pass">Enter current password</string>
     <string name="current_pass">Current password</string>
     <string name="enter_question">Select Question</string>
@@ -448,6 +453,7 @@
     <string name="title_otp_verification_for_personal">Enter Code</string>
     <string name="title_otp_verification_for_add_trusted_device">Enter Code</string>
     <string name="title_otp_verification_for_business">Enter Code</string>
+    <string name="title_otp_verification_for_change_password">Enter Code</string>
     <string name="title_select_account_type_page">Welcome</string>
     <string name="version">Version</string>
     <string name="select_a_question">Select Question</string>
@@ -470,6 +476,7 @@
     <string name="fingerprint_authentication_deactivated">Fingerprint authentication deactivated</string>
     <string name="fingerprint_settings_description">You can use your fingerprint for faster login. Your password will be safely stored.</string>
     <string name="login_failed_with_touch_id">It seems you have changed your password since you logged in the last time from this device. Please enter your new password.</string>
+    <string name="settings_changed_for_touch_id">It seems that fingerprint settings of this device is changed. Please login with your password and reactivate fingerprint authentication manually.</string>
     <string name="remove_fingerprint_authentication_alert_message">Are you sure you want to deactivate fingerprint authentication?</string>
 
     <!-- PUSH -->
