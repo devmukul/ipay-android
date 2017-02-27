@@ -6,11 +6,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -18,6 +21,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HelpAndSupportActivity;
@@ -57,7 +62,14 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     private EditTextWithProgressBar mCategoryEditText;
     private Button mCreateTicketButton;
 
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView mFileAttachmentRecyclerView;
+
     private ProgressDialog mProgressDialog;
+
+    private ArrayList<String> alName;
+    private ArrayList<Integer> alImage;
 
     private String mSubject;
     private String mMessage;
@@ -67,15 +79,17 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     private String mSelectedCategoryCode;
     private int mSelectedCategoryId;
 
+    View view;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_create_ticket, container, false);
+        view = inflater.inflate(R.layout.fragment_create_ticket, container, false);
 
-        mSubjectEditText = (EditText) v.findViewById(R.id.subject_edit_text);
-        mCategoryEditText = (EditTextWithProgressBar) v.findViewById(R.id.category_edit_text);
-        mMessageEditText = (EditText) v.findViewById(R.id.message_edit_text);
-        mCreateTicketButton = (Button) v.findViewById(R.id.button_create_ticket);
+        mSubjectEditText = (EditText) view.findViewById(R.id.subject_edit_text);
+        mCategoryEditText = (EditTextWithProgressBar) view.findViewById(R.id.category_edit_text);
+        mMessageEditText = (EditText) view.findViewById(R.id.message_edit_text);
+        mCreateTicketButton = (Button) view.findViewById(R.id.button_create_ticket);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -90,7 +104,9 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         });
 
         getTicketCategories();
-        return v;
+
+        setFileAttachmentAdapter();
+        return view;
     }
 
     @Override
@@ -109,6 +125,20 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                 processGetEmailListResponse(json);
             }
         }
+    }
+
+    private void setFileAttachmentAdapter() {
+        alName = new ArrayList<>(Arrays.asList("Cheesy...", "Crispy... ", "Fizzy...", "Cool...", "Softy...", "Fruity...", "Fresh...", "Sticky..."));
+        // Calling the RecyclerView
+        mFileAttachmentRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mFileAttachmentRecyclerView.setHasFixedSize(true);
+
+        // The number of Columns
+        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mFileAttachmentRecyclerView.setLayoutManager(mLayoutManager);
+
+        mAdapter = new AttachFileAdapter();
+        mFileAttachmentRecyclerView.setAdapter(mAdapter);
     }
 
     private void setTicketCategoryAdapter(List<TicketCategory> mTicketCategoryList) {
@@ -378,5 +408,74 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
             default:
                 break;
         }
+    }
+
+    public class AttachFileAdapter extends RecyclerView.Adapter<AttachFileAdapter.ViewHolder> {
+        ArrayList<String> alName;
+        ArrayList<Integer> alImage;
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            View v = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.item_attach_file_ticket, viewGroup, false);
+            ViewHolder viewHolder = new ViewHolder(v);
+            return viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder viewHolder, int i) {
+            viewHolder.imgThumbnail.setImageResource(alImage.get(i));
+
+            viewHolder.setClickListener(new ItemClickListener() {
+                @Override
+                public void onClick(View view, int position, boolean isLongClick) {
+                    if (isLongClick) {
+                        Toast.makeText(getActivity(), "#" + position + " - " + alName.get(position) + " (Long click)", Toast.LENGTH_SHORT).show();
+                        //context.startActivity(new Intent(context, MainActivity.class));
+                    } else {
+                        Toast.makeText(getActivity(), "#" + position + " - " + alName.get(position), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return alName.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+
+            public ImageView imgThumbnail;
+            private ItemClickListener clickListener;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                imgThumbnail = (ImageView) itemView.findViewById(R.id.imageView_file);
+                itemView.setOnClickListener(this);
+                itemView.setOnLongClickListener(this);
+            }
+
+            public void setClickListener(ItemClickListener itemClickListener) {
+                this.clickListener = itemClickListener;
+            }
+
+            @Override
+            public void onClick(View view) {
+                clickListener.onClick(view, getPosition(), false);
+            }
+
+            @Override
+            public boolean onLongClick(View view) {
+                clickListener.onClick(view, getPosition(), true);
+                return true;
+            }
+        }
+
+    }
+
+    public interface ItemClickListener {
+
+        void onClick(View view, int position, boolean isLongClick);
     }
 }
