@@ -122,7 +122,7 @@ public class ContactsSearchView extends FrameLayout {
         mCustomAutoCompleteView.setFocusable(status);
     }
 
-    public void setMobileNumber(String mobileNumber) {
+    public void setTextFromSuggestion(String mobileNumber) {
         mCustomAutoCompleteView.setText(mobileNumber);
         mCustomAutoCompleteView.setSelection(mobileNumber.length());
         mCustomAutoCompleteView.setError(null);
@@ -268,7 +268,7 @@ public class ContactsSearchView extends FrameLayout {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setMobileNumber(mobileNumber);
+                    setTextFromSuggestion(mobileNumber);
                 }
             });
 
