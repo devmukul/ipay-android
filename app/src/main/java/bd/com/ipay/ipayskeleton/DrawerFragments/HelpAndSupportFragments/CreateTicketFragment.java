@@ -40,7 +40,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.TicketCategory;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CreateTicketRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CreateTicketResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategoriesRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategoriesResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategoryResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -52,7 +52,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     private CreateTicketResponse mCreateTicketResponse;
 
     private HttpRequestGetAsyncTask mGetTicketCategoriesTask = null;
-    private GetTicketCategoriesResponse mGetTicketCategoriesResponse;
+    private GetTicketCategoryResponse mGetTicketCategoriesResponse;
 
     private HttpRequestGetAsyncTask mGetEmailsTask = null;
     private GetEmailResponse mGetEmailResponse;
@@ -68,16 +68,15 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
 
     private ProgressDialog mProgressDialog;
 
-    private ArrayList<String> alName;
-    private ArrayList<Integer> alImage;
+    private ArrayList<String> attachedFiles;
 
     private String mSubject;
     private String mMessage;
 
-    private ResourceSelectorDialog<TicketCategory> ticketCategorySelectorDialog;
-    private List<TicketCategory> mTicketCategoryList;
     private String mSelectedCategoryCode;
     private int mSelectedCategoryId;
+    private List<TicketCategory> mTicketCategoryList;
+    private ResourceSelectorDialog<TicketCategory> ticketCategorySelectorDialog;
 
     View view;
 
@@ -128,7 +127,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     }
 
     private void setFileAttachmentAdapter() {
-        alName = new ArrayList<>(Arrays.asList("Cheesy...", "Crispy... ", "Fizzy...", "Cool...", "Softy...", "Fruity...", "Fresh...", "Sticky..."));
+        attachedFiles = new ArrayList<>(Arrays.asList("Cheesy..."));
         // Calling the RecyclerView
         mFileAttachmentRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mFileAttachmentRecyclerView.setHasFixedSize(true);
@@ -137,7 +136,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mFileAttachmentRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new AttachFileAdapter();
+        mAdapter = new FileAttachmentAdapter();
         mFileAttachmentRecyclerView.setAdapter(mAdapter);
     }
 
@@ -388,7 +387,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                 break;
             case Constants.COMMAND_GET_TICKET_CATEGORIES:
                 try {
-                    mGetTicketCategoriesResponse = gson.fromJson(result.getJsonString(), GetTicketCategoriesResponse.class);
+                    mGetTicketCategoriesResponse = gson.fromJson(result.getJsonString(), GetTicketCategoryResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mTicketCategoryList = mGetTicketCategoriesResponse.getTicketCategories();
 
@@ -410,72 +409,104 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         }
     }
 
-    public class AttachFileAdapter extends RecyclerView.Adapter<AttachFileAdapter.ViewHolder> {
-        ArrayList<String> alName;
-        ArrayList<Integer> alImage;
 
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View v = LayoutInflater.from(viewGroup.getContext())
-                    .inflate(R.layout.item_attach_file_ticket, viewGroup, false);
-            ViewHolder viewHolder = new ViewHolder(v);
-            return viewHolder;
+    private class FileAttachmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        private static final int ATTACH_NEW_FILE_VIEW = 1;
+
+        public class AttachedFileViewHolder extends RecyclerView.ViewHolder {
+            private ImageView mFileView;
+
+            public AttachedFileViewHolder(final View itemView) {
+                super(itemView);
+
+                mFileView = (ImageView) itemView.findViewById(R.id.imageView_file);
+            }
+
+            public void bindViewAttachedFile(final int pos) {
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (attachedFiles.size() < 5)
+                            attachedFiles.remove(pos - 1);
+                        else
+                            attachedFiles.remove(pos);
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        }
+
+        public class AttachNewFileViewHolder extends RecyclerView.ViewHolder {
+            private ImageView mAttachNewFileView;
+
+            public AttachNewFileViewHolder(View itemView) {
+                super(itemView);
+                mAttachNewFileView = (ImageView) itemView.findViewById(R.id.button_select_file);
+
+            }
+
+            public void bindViewAttachNewFile(final int pos) {
+                mAttachNewFileView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        attachedFiles.add("maliha");
+                        notifyDataSetChanged();
+                    }
+                });
+            }
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder viewHolder, int i) {
-            viewHolder.imgThumbnail.setImageResource(alImage.get(i));
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v;
 
-            viewHolder.setClickListener(new ItemClickListener() {
-                @Override
-                public void onClick(View view, int position, boolean isLongClick) {
-                    if (isLongClick) {
-                        Toast.makeText(getActivity(), "#" + position + " - " + alName.get(position) + " (Long click)", Toast.LENGTH_SHORT).show();
-                        //context.startActivity(new Intent(context, MainActivity.class));
-                    } else {
-                        Toast.makeText(getActivity(), "#" + position + " - " + alName.get(position), Toast.LENGTH_SHORT).show();
-                    }
+            if (viewType == ATTACH_NEW_FILE_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_attach_new_file, parent, false);
+
+                return new AttachNewFileViewHolder(v);
+            }
+
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_file_attachment, parent, false);
+
+            return new AttachedFileViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+                if (holder instanceof AttachedFileViewHolder) {
+                    AttachedFileViewHolder vh = (AttachedFileViewHolder) holder;
+                    vh.bindViewAttachedFile(position);
+                } else if (holder instanceof AttachNewFileViewHolder) {
+                    AttachNewFileViewHolder vh = (AttachNewFileViewHolder) holder;
+                    vh.bindViewAttachNewFile(position);
                 }
-            });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public int getItemCount() {
-            return alName.size();
+            if (attachedFiles == null)
+                return 1;
+            else if (attachedFiles.size() < 5)
+                return attachedFiles.size() + 1;
+            return attachedFiles.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+        @Override
+        public int getItemViewType(int position) {
+            if (attachedFiles == null || attachedFiles.size() < 5) {
+                if (position == 0) {
+                    return ATTACH_NEW_FILE_VIEW;
+                }
 
-            public ImageView imgThumbnail;
-            private ItemClickListener clickListener;
-
-            public ViewHolder(View itemView) {
-                super(itemView);
-                imgThumbnail = (ImageView) itemView.findViewById(R.id.imageView_file);
-                itemView.setOnClickListener(this);
-                itemView.setOnLongClickListener(this);
+                return super.getItemViewType(position);
             }
-
-            public void setClickListener(ItemClickListener itemClickListener) {
-                this.clickListener = itemClickListener;
-            }
-
-            @Override
-            public void onClick(View view) {
-                clickListener.onClick(view, getPosition(), false);
-            }
-
-            @Override
-            public boolean onLongClick(View view) {
-                clickListener.onClick(view, getPosition(), true);
-                return true;
-            }
+            return super.getItemViewType(position);
         }
-
     }
 
-    public interface ItemClickListener {
-
-        void onClick(View view, int position, boolean isLongClick);
-    }
 }
