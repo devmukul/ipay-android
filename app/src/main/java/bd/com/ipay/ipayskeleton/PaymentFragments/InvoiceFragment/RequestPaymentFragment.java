@@ -271,7 +271,7 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
             if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
                 String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
                 if (mobileNumber != null) {
-                    mMobileNumberEditText.setMobileNumber(mobileNumber);
+                    mMobileNumberEditText.setTextFromSuggestion(mobileNumber);
                 }
             }
         } else if (resultCode == Activity.RESULT_CANCELED && requestCode == PICK_CONTACT_REQUEST) {
