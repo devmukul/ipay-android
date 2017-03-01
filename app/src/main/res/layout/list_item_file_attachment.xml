@@ -4,10 +4,25 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/imageView_file"
+    <RelativeLayout
+        android:id="@+id/profile_picture_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_touch_id" />
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/attached_file_view"
+            android:layout_width="@dimen/value100"
+            android:layout_height="@dimen/value100"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_touch_id" />
+
+        <ImageView
+            android:id="@+id/button_remove_attached_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/attached_file_view"
+            android:layout_alignTop="@+id/attached_file_view"
+            android:src="@drawable/ic_edit_pic" />
+    </RelativeLayout>
 </LinearLayout>

@@ -6,8 +6,8 @@
     <ImageView
         android:id="@+id/button_select_file"
         style="@style/ButtonStyleGrey"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/value100"
+        android:layout_height="@dimen/value100"
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="@dimen/value10"
         android:layout_marginLeft="@dimen/activity_vertical_margin"

@@ -2,6 +2,8 @@ package bd.com.ipay.ipayskeleton.DrawerFragments.HelpAndSupportFragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,10 +21,13 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.features.ImagePickerActivity;
+import com.esafirm.imagepicker.model.Image;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HelpAndSupportActivity;
@@ -69,6 +74,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     private ProgressDialog mProgressDialog;
 
     private ArrayList<String> attachedFiles;
+    private ArrayList<Image> images = new ArrayList<>();
 
     private String mSubject;
     private String mMessage;
@@ -77,6 +83,8 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     private int mSelectedCategoryId;
     private List<TicketCategory> mTicketCategoryList;
     private ResourceSelectorDialog<TicketCategory> ticketCategorySelectorDialog;
+
+    private static final int REQUEST_CODE_PICKER = 1001;
 
     View view;
 
@@ -126,18 +134,15 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         }
     }
 
-    private void setFileAttachmentAdapter() {
-        attachedFiles = new ArrayList<>(Arrays.asList("Cheesy..."));
-        // Calling the RecyclerView
-        mFileAttachmentRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        mFileAttachmentRecyclerView.setHasFixedSize(true);
-
-        // The number of Columns
-        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        mFileAttachmentRecyclerView.setLayoutManager(mLayoutManager);
-
-        mAdapter = new FileAttachmentAdapter();
-        mFileAttachmentRecyclerView.setAdapter(mAdapter);
+    @Override
+    public void onActivityResult(int requestCode, final int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_PICKER && resultCode == getActivity().RESULT_OK && data != null) {
+            images = (ArrayList<Image>) ImagePicker.getImages(data);
+            if (images != null)
+                setImagePaths(images);
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void setTicketCategoryAdapter(List<TicketCategory> mTicketCategoryList) {
@@ -264,6 +269,28 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         } else {
             return true;
         }
+    }
+
+    private void setFileAttachmentAdapter() {
+        attachedFiles = new ArrayList<>();
+        // Calling the RecyclerView
+        mFileAttachmentRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mFileAttachmentRecyclerView.setHasFixedSize(true);
+
+        // The number of Columns
+        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mFileAttachmentRecyclerView.setLayoutManager(mLayoutManager);
+
+        mAdapter = new FileAttachmentAdapter();
+        mFileAttachmentRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void setImagePaths(List<Image> images) {
+        for (int i = 0; i < images.size(); i++) {
+            attachedFiles.add(images.get(i).getPath());
+        }
+
+        mAdapter.notifyDataSetChanged();
     }
 
     private void getTicketCategories() {
@@ -416,15 +443,29 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
 
         public class AttachedFileViewHolder extends RecyclerView.ViewHolder {
             private ImageView mFileView;
+            private ImageView mRemoveAttachedFileButton;
+            private File mFile;
+            private Bitmap mBitmap;
 
             public AttachedFileViewHolder(final View itemView) {
                 super(itemView);
 
-                mFileView = (ImageView) itemView.findViewById(R.id.imageView_file);
+                mFileView = (ImageView) itemView.findViewById(R.id.attached_file_view);
+                mRemoveAttachedFileButton = (ImageView) itemView.findViewById(R.id.button_remove_attached_file);
             }
 
             public void bindViewAttachedFile(final int pos) {
-                itemView.setOnClickListener(new View.OnClickListener() {
+                if (attachedFiles.size() < 5)
+                    mFile = new File(attachedFiles.get(pos - 1));
+                else
+                    mFile = new File(attachedFiles.get(pos));
+                if (mFile.exists()) {
+                    mBitmap = BitmapFactory.decodeFile(mFile.getPath());
+                    if (mBitmap != null) {
+                        mFileView.setImageBitmap(mBitmap);
+                    }
+                }
+                mRemoveAttachedFileButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (attachedFiles.size() < 5)
@@ -443,15 +484,15 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
             public AttachNewFileViewHolder(View itemView) {
                 super(itemView);
                 mAttachNewFileView = (ImageView) itemView.findViewById(R.id.button_select_file);
-
             }
 
             public void bindViewAttachNewFile(final int pos) {
                 mAttachNewFileView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        attachedFiles.add("maliha");
-                        notifyDataSetChanged();
+                        // attachedFiles.add("maliha");
+                        //notifyDataSetChanged();
+                        setMultipleImagePicker();
                     }
                 });
             }
@@ -463,12 +504,10 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
 
             if (viewType == ATTACH_NEW_FILE_VIEW) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_attach_new_file, parent, false);
-
                 return new AttachNewFileViewHolder(v);
             }
 
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_file_attachment, parent, false);
-
             return new AttachedFileViewHolder(v);
         }
 
@@ -509,4 +548,21 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         }
     }
 
+    private void setMultipleImagePicker() {
+        images.removeAll(images);
+        Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
+        intent.putExtra(ImagePicker.EXTRA_FOLDER_MODE, true);
+        intent.putExtra(ImagePicker.EXTRA_MODE, ImagePicker.MODE_MULTIPLE);
+        intent.putExtra(ImagePicker.EXTRA_LIMIT, 5 - attachedFiles.size());
+        intent.putExtra(ImagePicker.EXTRA_SHOW_CAMERA, false);
+        intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGES, images);
+        intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, "Album");
+        intent.putExtra(ImagePicker.EXTRA_IMAGE_TITLE, "Tap to select images");
+        intent.putExtra(ImagePicker.EXTRA_IMAGE_DIRECTORY, "Camera");
+
+        /* Will force ImagePicker to single pick */
+        intent.putExtra(ImagePicker.EXTRA_RETURN_AFTER_FIRST, true);
+
+        startActivityForResult(intent, REQUEST_CODE_PICKER);
+    }
 }
