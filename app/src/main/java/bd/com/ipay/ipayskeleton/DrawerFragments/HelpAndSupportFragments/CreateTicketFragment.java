@@ -1,9 +1,11 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HelpAndSupportFragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,7 +30,9 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import bd.com.ipay.ipayskeleton.Activities.HelpAndSupportActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
@@ -36,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -49,6 +54,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategory
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CreateTicketFragment extends ProgressFragment implements HttpResponseListener {
@@ -84,7 +90,10 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     private List<TicketCategory> mTicketCategoryList;
     private ResourceSelectorDialog<TicketCategory> ticketCategorySelectorDialog;
 
-    private static final int REQUEST_CODE_PICKER = 1001;
+    private static final int REQUEST_CODE_PICK_MULTIPLE_IMAGE = 1000;
+    private static final int REQUEST_CODE_PERMISSION = 1001;
+    private static final int REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT = 1002;
+    private int mPickerActionId = -1;
 
     View view;
 
@@ -135,14 +144,44 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     }
 
     @Override
-    public void onActivityResult(int requestCode, final int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_PICKER && resultCode == getActivity().RESULT_OK && data != null) {
-            images = (ArrayList<Image>) ImagePicker.getImages(data);
-            if (images != null)
-                setImagePaths(images);
-            return;
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION:
+                if (DocumentPicker.ifNecessaryPermissionExists(getActivity()))
+                    selectDocument(mPickerActionId);
+                else
+                    Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
         }
-        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, final int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT:
+                if (resultCode == Activity.RESULT_OK) {
+                    String filePath = DocumentPicker.getFilePathFromResult(getActivity(), resultCode, data);
+
+                    if (filePath != null) {
+                        Random r = new Random();
+                        int fileIndex = r.nextInt(100 - 1) + 1;
+                        Uri mSelectedDocumentUri = DocumentPicker.getDocumentWithIndexFromResult(getActivity(), resultCode, data, fileIndex);
+
+                        attachedFiles.add(mSelectedDocumentUri.getPath());
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+                break;
+
+            case REQUEST_CODE_PICK_MULTIPLE_IMAGE:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    images = (ArrayList<Image>) ImagePicker.getImages(data);
+                    if (images != null)
+                        setImagePaths(images);
+                }
+
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void setTicketCategoryAdapter(List<TicketCategory> mTicketCategoryList) {
@@ -436,7 +475,6 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         }
     }
 
-
     private class FileAttachmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int ATTACH_NEW_FILE_VIEW = 1;
@@ -480,6 +518,8 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
 
         public class AttachNewFileViewHolder extends RecyclerView.ViewHolder {
             private ImageView mAttachNewFileView;
+            private CustomUploadPickerDialog customUploadPickerDialog;
+            private List<String> mPickerList;
 
             public AttachNewFileViewHolder(View itemView) {
                 super(itemView);
@@ -487,12 +527,30 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
             }
 
             public void bindViewAttachNewFile(final int pos) {
+                mPickerList = Arrays.asList(getResources().getStringArray(R.array.attach_file_picker_action));
+
                 mAttachNewFileView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // attachedFiles.add("maliha");
                         //notifyDataSetChanged();
-                        setMultipleImagePicker();
+                        // setMultipleImagePicker();
+                        customUploadPickerDialog = new CustomUploadPickerDialog(getActivity(), getString(R.string.select_a_document), mPickerList);
+                        customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
+                            @Override
+                            public void onResourceSelected(int mActionId, String action) {
+                                if (!Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action)) {
+                                    if (DocumentPicker.ifNecessaryPermissionExists(getActivity()))
+                                        selectDocument(mActionId);
+                                    else {
+                                        mPickerActionId = mActionId;
+                                        DocumentPicker.requestRequiredPermissions(CreateTicketFragment.this, REQUEST_CODE_PERMISSION);
+                                    }
+                                } else
+                                    setMultipleImagePicker();
+                            }
+                        });
+                        customUploadPickerDialog.show();
                     }
                 });
             }
@@ -548,6 +606,11 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         }
     }
 
+    private void selectDocument(int id) {
+        Intent imagePickerIntent = DocumentPicker.getPickImageOrPDFIntentByID(getActivity(), getString(R.string.select_a_document), id);
+        startActivityForResult(imagePickerIntent, REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT);
+    }
+
     private void setMultipleImagePicker() {
         images.removeAll(images);
         Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
@@ -563,6 +626,6 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         /* Will force ImagePicker to single pick */
         intent.putExtra(ImagePicker.EXTRA_RETURN_AFTER_FIRST, true);
 
-        startActivityForResult(intent, REQUEST_CODE_PICKER);
+        startActivityForResult(intent, REQUEST_CODE_PICK_MULTIPLE_IMAGE);
     }
 }

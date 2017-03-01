@@ -7,14 +7,21 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -89,7 +96,7 @@ public class DocumentPicker {
         return getChooserIntent(intentList, chooserTitle);
     }
 
-    public static Intent getPickImageOrPdfIntentByID(Context context, String chooserTitle, int id) {
+    public static Intent getPickerIntentByID(Context context, String chooserTitle, int id) {
 
         Set<Intent> intentList = new LinkedHashSet<>();
 
@@ -106,6 +113,28 @@ public class DocumentPicker {
             if (tempFile != null)
                 takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile));
             intentList = addIntentsToList(context, intentList, takePhotoIntent);
+        }
+        return getChooserIntent(intentList, chooserTitle);
+    }
+
+    public static Intent getPickImageOrPDFIntentByID(Context context, String chooserTitle, int id) {
+
+        Set<Intent> intentList = new LinkedHashSet<>();
+
+        if (id == OPTION_EXTERNAL_STORAGE) {
+            Intent pickIntent = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intentList = addIntentsToList(context, intentList, pickIntent);
+        } else if (id == OPTION_CAMERA) {
+            Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            takePhotoIntent.putExtra("return-data", true);
+            takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(context)));
+            intentList = addIntentsToList(context, intentList, takePhotoIntent);
+        } else {
+            Intent pdfIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            pdfIntent.setType("application/pdf");
+            pdfIntent.addCategory(Intent.CATEGORY_OPENABLE);
+            intentList = addIntentsToList(context, intentList, pdfIntent);
         }
         return getChooserIntent(intentList, chooserTitle);
     }
@@ -196,11 +225,74 @@ public class DocumentPicker {
         return selectedImage;
     }
 
+    public static Uri getDocumentWithIndexFromResult(Context context, int resultCode, Intent returnedIntent, int fileIndex) {
+        Uri selectedImage = null;
+        try {
+            File documentFile = getTempFile(context);
+            if (resultCode == Activity.RESULT_OK) {
+                boolean isCamera = (returnedIntent == null ||
+                        returnedIntent.getData() == null ||
+                        returnedIntent.getData().toString().contains(documentFile.toString()));
+
+                if (returnedIntent != null)
+                    Log.e(TAG, "Returned Intent: " + returnedIntent.getData());
+                if (isCamera) {     /** CAMERA **/
+                    selectedImage = Uri.fromFile(documentFile);
+                } else if (returnedIntent.getData().toString().startsWith("file://")) {
+                    selectedImage = Uri.parse(returnedIntent.getData().toString());
+                } else {            /** ALBUM **/
+                    selectedImage = Uri.parse(Utilities.getFilePath(context, returnedIntent.getData()));
+                }
+                Log.e(TAG, "selectedImage: " + selectedImage.getPath());
+
+                if (isCamera) {
+                    Log.d(TAG, "Converting: " + selectedImage.getPath());
+
+                    // Convert the image - handle auto rotate problem in some devices, scale down
+                    // image if necessary (max 512*512)
+                    Bitmap convertedBitmap = CameraUtilities.handleSamplingAndRotationBitmap(context,
+                            isCamera ? selectedImage : returnedIntent.getData(), isCamera);
+
+                    // Save to file
+                    File tempFile = getTempFile(context);
+                    CameraUtilities.saveBitmapToFile(convertedBitmap, tempFile);
+                    selectedImage = Uri.fromFile(tempFile);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            // Save to specific location
+            selectedImage = Uri.fromFile(saveBitmapToLocation(context, selectedImage, fileIndex));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return selectedImage;
+    }
+
     private static File getTempFile(Context context) {
         File documentFile = new File(context.getExternalCacheDir(), TEMP_DOCUMENT_NAME);
         if (documentFile != null) {
             documentFile.getParentFile().mkdirs();
             return documentFile;
         } else return null;
+    }
+
+    private static File saveBitmapToLocation(Context context, Uri tempFilePath, int index) throws IOException {
+        String path = tempFilePath.getPath();
+        File tempFile = new File(path);
+        Bitmap mBitmap = BitmapFactory.decodeFile(tempFile.getPath());
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        mBitmap.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
+
+        File file = new File(context.getExternalCacheDir(), index + TEMP_DOCUMENT_NAME);
+        file.createNewFile();
+        FileOutputStream fo = new FileOutputStream(file);
+        fo.write(bytes.toByteArray());
+        fo.close();
+        return file;
     }
 }

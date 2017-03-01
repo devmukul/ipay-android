@@ -857,6 +857,12 @@
         <item>View uploaded document</item>
     </string-array>
 
+    <string-array name="attach_file_picker_action">
+        <item>Take a picture</item>
+        <item>Select from gallery</item>
+        <item>Select a PDF</item>
+    </string-array>
+
     <string-array name="verified_picker_action">
         <item>View Uploaded Document</item>
     </string-array>
