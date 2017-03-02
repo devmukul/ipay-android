@@ -166,15 +166,19 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         switch (requestCode) {
             case REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT:
                 if (resultCode == Activity.RESULT_OK) {
-                    String filePath = DocumentPicker.getFilePathFromResult(getActivity(), resultCode, data);
+
+                    String filePath = DocumentPicker.getFilePathForCameraOrPDFResult(getActivity(), resultCode, data);
+                    Toast.makeText(getActivity(), filePath, Toast.LENGTH_LONG).show();
 
                     if (filePath != null) {
-                        Toast.makeText(getActivity(), filePath, Toast.LENGTH_LONG).show();
                         Random r = new Random();
                         int fileIndex = r.nextInt(100 - 1) + 1;
                         Uri mSelectedDocumentUri = DocumentPicker.getDocumentWithIndexFromResult(getActivity(), resultCode, data, fileIndex);
 
-                        attachedFiles.add(mSelectedDocumentUri.getPath());
+                        if (mSelectedDocumentUri != null)
+                            attachedFiles.add(mSelectedDocumentUri.getPath());
+                        else attachedFiles.add(filePath);
+
                         mAdapter.notifyDataSetChanged();
                     }
                 }
@@ -527,6 +531,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
             private ImageView mRemoveAttachedFileButton;
             private File mFile;
             private Bitmap mBitmap;
+            private String attachFileName;
 
             public AttachedFileViewHolder(final View itemView) {
                 super(itemView);
@@ -536,16 +541,24 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
             }
 
             public void bindViewAttachedFile(final int pos) {
+
+                mFileView.setImageDrawable(getResources().getDrawable(R.drawable.ic_touch_id));
+
                 if (attachedFiles.size() < Constants.MAX_FILE_ATTACHMENT_LIMIT)
-                    mFile = new File(attachedFiles.get(pos - 1));
+                    attachFileName = attachedFiles.get(pos - 1);
                 else
-                    mFile = new File(attachedFiles.get(pos));
+                    attachFileName = attachedFiles.get(pos);
+
+                mFile = new File(attachFileName);
+
                 if (mFile.exists()) {
                     mBitmap = BitmapFactory.decodeFile(mFile.getPath());
                     if (mBitmap != null) {
                         mFileView.setImageBitmap(mBitmap);
                     }
                 }
+
+
                 mRemoveAttachedFileButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -553,6 +566,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                             attachedFiles.remove(pos - 1);
                         else
                             attachedFiles.remove(pos);
+
                         notifyDataSetChanged();
                     }
                 });
@@ -655,7 +669,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
         intent.putExtra(ImagePicker.EXTRA_FOLDER_MODE, true);
         intent.putExtra(ImagePicker.EXTRA_MODE, ImagePicker.MODE_MULTIPLE);
-        intent.putExtra(ImagePicker.EXTRA_LIMIT, 5 - attachedFiles.size());
+        intent.putExtra(ImagePicker.EXTRA_LIMIT, Constants.MAX_FILE_ATTACHMENT_LIMIT - attachedFiles.size());
         intent.putExtra(ImagePicker.EXTRA_SHOW_CAMERA, false);
         intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGES, images);
         intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, "Album");

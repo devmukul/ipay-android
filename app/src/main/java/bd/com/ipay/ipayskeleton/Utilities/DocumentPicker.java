@@ -131,7 +131,7 @@ public class DocumentPicker {
             takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(context)));
             intentList = addIntentsToList(context, intentList, takePhotoIntent);
         } else {
-            Intent pdfIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            Intent pdfIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             pdfIntent.setType("application/pdf");
             pdfIntent.addCategory(Intent.CATEGORY_OPENABLE);
             intentList = addIntentsToList(context, intentList, pdfIntent);
@@ -178,6 +178,25 @@ public class DocumentPicker {
                 return returnedIntent.getData().toString();
             } else {            /** ALBUM **/
                 return Utilities.getFilePath(context, returnedIntent.getData());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String getFilePathForCameraOrPDFResult(Context context, int resultCode, Intent returnedIntent) {
+        try {
+            File documentFile = getTempFile(context);
+
+            boolean isCamera = (returnedIntent == null ||
+                    returnedIntent.getData() == null ||
+                    returnedIntent.getData().toString().contains(documentFile.toString()));
+
+            if (isCamera) {     /** CAMERA **/
+                return getTempFile(context).getAbsolutePath();
+            } else {
+                return returnedIntent.getData().toString();
             }
         } catch (Exception e) {
             e.printStackTrace();
