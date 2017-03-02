@@ -51,6 +51,9 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CreateTicketReque
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CreateTicketResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategoriesRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategoryResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.TicketResponseForUploadAttachment;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.UploadTicketAttachmentRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.UploadTicketAttachmentRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -68,6 +71,9 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     private HttpRequestGetAsyncTask mGetEmailsTask = null;
     private GetEmailResponse mGetEmailResponse;
 
+    private HttpRequestPostAsyncTask mUploadTicketAttachmentTask = null;
+    private UploadTicketAttachmentRequestBuilder mUploadTicketAttachmentRequestBuilder;
+
     private EditText mMessageEditText;
     private EditText mSubjectEditText;
     private EditTextWithProgressBar mCategoryEditText;
@@ -77,6 +83,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView mFileAttachmentRecyclerView;
 
+    private View view;
     private ProgressDialog mProgressDialog;
 
     private ArrayList<String> attachedFiles;
@@ -84,18 +91,18 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
 
     private String mSubject;
     private String mMessage;
+    private long mCommentId;
+    private int mPickerActionId = -1;
+
 
     private String mSelectedCategoryCode;
     private int mSelectedCategoryId;
     private List<TicketCategory> mTicketCategoryList;
     private ResourceSelectorDialog<TicketCategory> ticketCategorySelectorDialog;
 
-    private static final int REQUEST_CODE_PICK_MULTIPLE_IMAGE = 1000;
     private static final int REQUEST_CODE_PERMISSION = 1001;
+    private static final int REQUEST_CODE_PICK_MULTIPLE_IMAGE = 1000;
     private static final int REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT = 1002;
-    private int mPickerActionId = -1;
-
-    View view;
 
     @Nullable
     @Override
@@ -162,6 +169,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                     String filePath = DocumentPicker.getFilePathFromResult(getActivity(), resultCode, data);
 
                     if (filePath != null) {
+                        Toast.makeText(getActivity(), filePath, Toast.LENGTH_LONG).show();
                         Random r = new Random();
                         int fileIndex = r.nextInt(100 - 1) + 1;
                         Uri mSelectedDocumentUri = DocumentPicker.getDocumentWithIndexFromResult(getActivity(), resultCode, data, fileIndex);
@@ -176,7 +184,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     images = (ArrayList<Image>) ImagePicker.getImages(data);
                     if (images != null)
-                        setImagePaths(images);
+                        setImagePathsFromMultiplePicker(images);
                 }
 
             default:
@@ -324,12 +332,21 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         mFileAttachmentRecyclerView.setAdapter(mAdapter);
     }
 
-    private void setImagePaths(List<Image> images) {
+    private void setImagePathsFromMultiplePicker(List<Image> images) {
         for (int i = 0; i < images.size(); i++) {
             attachedFiles.add(images.get(i).getPath());
         }
-
         mAdapter.notifyDataSetChanged();
+    }
+
+    private void uploadMultipleAttachmentsAsyncTask() {
+
+        for (int i = 0; i < attachedFiles.size(); i++) {
+            File file = new File(attachedFiles.get(i));
+            File[] files = new File[2];
+            files[0] = file;
+            uploadSingleAttachment(files);
+        }
     }
 
     private void getTicketCategories() {
@@ -338,8 +355,8 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
 
         mCategoryEditText.showProgressBar();
         GetTicketCategoriesRequestBuilder mGetTicketCategoriesRequestBuilder = new GetTicketCategoriesRequestBuilder();
-
         String mUri = mGetTicketCategoriesRequestBuilder.generateUri().toString();
+
         mGetTicketCategoriesTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TICKET_CATEGORIES,
                 mUri, getActivity());
         mGetTicketCategoriesTask.mHttpResponseListener = this;
@@ -376,6 +393,26 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         mGetEmailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void uploadSingleAttachment(File[] files) {
+        if (mUploadTicketAttachmentTask != null)
+            return;
+
+        mProgressDialog.setMessage(getString(R.string.creating_ticket));
+        mProgressDialog.show();
+
+        UploadTicketAttachmentRequestBuilder mUploadTicketAttachmentRequestBuilder = new UploadTicketAttachmentRequestBuilder();
+        String mUri = mUploadTicketAttachmentRequestBuilder.generateUri().toString();
+
+        UploadTicketAttachmentRequest uploadTicketAttachmentRequest = new UploadTicketAttachmentRequest(mCommentId, files);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(uploadTicketAttachmentRequest);
+
+        mUploadTicketAttachmentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CREATE_TICKET,
+                mUri, json, getActivity(), this);
+        mUploadTicketAttachmentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (getActivity() != null)
@@ -406,7 +443,13 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.ticket_created, Toast.LENGTH_LONG).show();
-                            showCreateTicketSuccessDialog();
+                            //showCreateTicketSuccessDialog();
+
+                            TicketResponseForUploadAttachment ticketResponseForUploadAttachment = mCreateTicketResponse.getResponse();
+                            mCommentId = ticketResponseForUploadAttachment.getComment_id();
+                            if (attachedFiles.size() > 0) {
+                                uploadMultipleAttachmentsAsyncTask();
+                            }
                         }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PAYMENT_REQUIRED) {
                         if (getActivity() != null) {
@@ -493,7 +536,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
             }
 
             public void bindViewAttachedFile(final int pos) {
-                if (attachedFiles.size() < 5)
+                if (attachedFiles.size() < Constants.MAX_FILE_ATTACHMENT_LIMIT)
                     mFile = new File(attachedFiles.get(pos - 1));
                 else
                     mFile = new File(attachedFiles.get(pos));
@@ -506,7 +549,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                 mRemoveAttachedFileButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (attachedFiles.size() < 5)
+                        if (attachedFiles.size() < Constants.MAX_FILE_ATTACHMENT_LIMIT)
                             attachedFiles.remove(pos - 1);
                         else
                             attachedFiles.remove(pos);
@@ -532,9 +575,6 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                 mAttachNewFileView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // attachedFiles.add("maliha");
-                        //notifyDataSetChanged();
-                        // setMultipleImagePicker();
                         customUploadPickerDialog = new CustomUploadPickerDialog(getActivity(), getString(R.string.select_a_document), mPickerList);
                         customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
                             @Override
@@ -588,18 +628,17 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         public int getItemCount() {
             if (attachedFiles == null)
                 return 1;
-            else if (attachedFiles.size() < 5)
+            else if (attachedFiles.size() < Constants.MAX_FILE_ATTACHMENT_LIMIT)
                 return attachedFiles.size() + 1;
             return attachedFiles.size();
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (attachedFiles == null || attachedFiles.size() < 5) {
+            if (attachedFiles == null || attachedFiles.size() < Constants.MAX_FILE_ATTACHMENT_LIMIT) {
                 if (position == 0) {
                     return ATTACH_NEW_FILE_VIEW;
                 }
-
                 return super.getItemViewType(position);
             }
             return super.getItemViewType(position);

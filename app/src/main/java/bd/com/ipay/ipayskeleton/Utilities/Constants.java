@@ -139,6 +139,7 @@ public class Constants {
 
     public static final int MIN_AGE_LIMIT = 18;
     public static final int MIN_VALID_NAME_LENGTH = 5;
+    public static final int MAX_FILE_ATTACHMENT_LIMIT = 5;
 
     public static final int STARTING_DATE = 01;
 
@@ -431,6 +432,7 @@ public class Constants {
     public static final String URL_GET_TICKET_DETAILS = "ticket/by/id";
     public static final String URL_GET_TICKET_CATEGORIES = "ticket/categories";
     public static final String URL_ADD_COMMENT = "ticket/add/comment";
+    public static final String URL_UPLOAD_TICKET_ATTACHMENT = "ticket/comment/attachment";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;

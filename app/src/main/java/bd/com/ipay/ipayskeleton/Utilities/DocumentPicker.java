@@ -254,19 +254,12 @@ public class DocumentPicker {
                             isCamera ? selectedImage : returnedIntent.getData(), isCamera);
 
                     // Save to file
-                    File tempFile = getTempFile(context);
+                    File tempFile = getFileWithIndex(context,fileIndex);
                     CameraUtilities.saveBitmapToFile(convertedBitmap, tempFile);
                     selectedImage = Uri.fromFile(tempFile);
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            // Save to specific location
-            selectedImage = Uri.fromFile(saveBitmapToLocation(context, selectedImage, fileIndex));
-        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -281,18 +274,13 @@ public class DocumentPicker {
         } else return null;
     }
 
-    private static File saveBitmapToLocation(Context context, Uri tempFilePath, int index) throws IOException {
-        String path = tempFilePath.getPath();
-        File tempFile = new File(path);
-        Bitmap mBitmap = BitmapFactory.decodeFile(tempFile.getPath());
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        mBitmap.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
+     private static File getFileWithIndex(Context context, int index) throws IOException {
 
-        File file = new File(context.getExternalCacheDir(), index + TEMP_DOCUMENT_NAME);
-        file.createNewFile();
-        FileOutputStream fo = new FileOutputStream(file);
-        fo.write(bytes.toByteArray());
-        fo.close();
-        return file;
+         File documentFile = new File(context.getExternalCacheDir(), index + TEMP_DOCUMENT_NAME);
+         if (documentFile != null) {
+             documentFile.getParentFile().mkdirs();
+             return documentFile;
+         } else return null;
+
     }
 }
