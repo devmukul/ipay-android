@@ -8,7 +8,10 @@
         android:id="@+id/profile_picture_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true">
+        android:layout_marginBottom="@dimen/value10"
+        android:layout_marginTop="@dimen/value10"
+        android:clickable="true"
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/attached_file_view"

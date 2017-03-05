@@ -3,12 +3,16 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket;
 import java.io.File;
 
 public class UploadTicketAttachmentRequest {
-    private long commentId;
+    private int commentId;
     private File[] file;
 
-    public UploadTicketAttachmentRequest(long commentId, File[] file) {
+    public UploadTicketAttachmentRequest(int commentId, File[] file) {
         this.commentId = commentId;
         this.file = file;
+    }
+
+    public UploadTicketAttachmentRequest(int commentId) {
+        this.commentId = commentId;
     }
 
     public long getCommentId() {

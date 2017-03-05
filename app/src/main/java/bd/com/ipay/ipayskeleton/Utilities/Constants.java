@@ -539,6 +539,7 @@ public class Constants {
     public static final String COMMAND_GET_TICKET_DETAILS = "COMMAND_GET_TICKET_DETAILS";
     public static final String COMMAND_GET_TICKET_CATEGORIES = "COMMAND_GET_TICKET_CATEGORIES";
     public static final String COMMAND_ADD_COMMENT = "COMMAND_ADD_COMMENT";
+    public static final String COMMAND_ADD_ATTACHMENT = "COMMAND_ADD_ATTACHMENT";
 
     // Resource
     public static final String COMMAND_GET_AVAILABLE_BANK_LIST = "COMMAND_GET_AVAILABLE_BANK_LIST";
@@ -745,6 +746,8 @@ public class Constants {
     public static final String TICKET_STATUS_ON_HOLD = "hold";
     public static final String TICKET_STATUS_SOLVED = "solved";
     public static final String TICKET_STATUS_CLOSED = "closed";
+
+    public static final String TICKET_COMMENT_ID = "commentId";
 
     public static final int REQUEST_TYPE_RECEIVED_REQUEST = 1;
     public static final int REQUEST_TYPE_SENT_REQUEST = 2;

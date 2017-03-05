@@ -40,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.UploadTicketAttachmentAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
@@ -51,8 +52,8 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CreateTicketReque
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CreateTicketResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategoriesRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategoryResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.TicketResponseForUploadAttachment;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.UploadTicketAttachmentRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.TicketResponseWithCommentId;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CommentIdResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.UploadTicketAttachmentRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
@@ -68,11 +69,12 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     private HttpRequestGetAsyncTask mGetTicketCategoriesTask = null;
     private GetTicketCategoryResponse mGetTicketCategoriesResponse;
 
-    private HttpRequestGetAsyncTask mGetEmailsTask = null;
-    private GetEmailResponse mGetEmailResponse;
-
     private HttpRequestPostAsyncTask mUploadTicketAttachmentTask = null;
     private UploadTicketAttachmentRequestBuilder mUploadTicketAttachmentRequestBuilder;
+
+
+    private HttpRequestGetAsyncTask mGetEmailsTask = null;
+    private GetEmailResponse mGetEmailResponse;
 
     private EditText mMessageEditText;
     private EditText mSubjectEditText;
@@ -174,7 +176,6 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                         Random r = new Random();
                         int fileIndex = r.nextInt(100 - 1) + 1;
                         Uri mSelectedDocumentUri = DocumentPicker.getDocumentWithIndexFromResult(getActivity(), resultCode, data, fileIndex);
-
                         if (mSelectedDocumentUri != null)
                             attachedFiles.add(mSelectedDocumentUri.getPath());
                         else attachedFiles.add(filePath);
@@ -187,8 +188,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
             case REQUEST_CODE_PICK_MULTIPLE_IMAGE:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     images = (ArrayList<Image>) ImagePicker.getImages(data);
-                    if (images != null)
-                        setImagePathsFromMultiplePicker(images);
+                    if (images != null) setImagePathsFromMultiplePicker(images);
                 }
 
             default:
@@ -346,11 +346,10 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     private void uploadMultipleAttachmentsAsyncTask() {
 
         for (int i = 0; i < attachedFiles.size(); i++) {
-            File file = new File(attachedFiles.get(i));
-            File[] files = new File[2];
-            files[0] = file;
-            uploadSingleAttachment(files);
+            if (!attachedFiles.get(i).isEmpty())
+                uploadDocument(attachedFiles.get(i));
         }
+        showCreateTicketSuccessDialog();
     }
 
     private void getTicketCategories() {
@@ -397,24 +396,11 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         mGetEmailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void uploadSingleAttachment(File[] files) {
-        if (mUploadTicketAttachmentTask != null)
-            return;
-
-        mProgressDialog.setMessage(getString(R.string.creating_ticket));
-        mProgressDialog.show();
-
-        UploadTicketAttachmentRequestBuilder mUploadTicketAttachmentRequestBuilder = new UploadTicketAttachmentRequestBuilder();
-        String mUri = mUploadTicketAttachmentRequestBuilder.generateUri().toString();
-
-        UploadTicketAttachmentRequest uploadTicketAttachmentRequest = new UploadTicketAttachmentRequest(mCommentId, files);
-
-        Gson gson = new Gson();
-        String json = gson.toJson(uploadTicketAttachmentRequest);
-
-        mUploadTicketAttachmentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CREATE_TICKET,
-                mUri, json, getActivity(), this);
-        mUploadTicketAttachmentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    private void uploadDocument(String filePath) {
+        UploadTicketAttachmentAsyncTask mUploadTicketAttachmentAsyncTask = new UploadTicketAttachmentAsyncTask(
+                Constants.COMMAND_ADD_ATTACHMENT, filePath, mCommentId, getActivity());
+        mUploadTicketAttachmentAsyncTask.mHttpResponseListener = this;
+        mUploadTicketAttachmentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -447,10 +433,9 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.ticket_created, Toast.LENGTH_LONG).show();
-                            //showCreateTicketSuccessDialog();
-
-                            TicketResponseForUploadAttachment ticketResponseForUploadAttachment = mCreateTicketResponse.getResponse();
-                            mCommentId = ticketResponseForUploadAttachment.getComment_id();
+                            TicketResponseWithCommentId ticketResponseWithCommentId = mCreateTicketResponse.getResponse();
+                            CommentIdResponse commentIdResponse = ticketResponseWithCommentId.getTicket();
+                            mCommentId = commentIdResponse.getComment_id();
                             if (attachedFiles.size() > 0) {
                                 uploadMultipleAttachmentsAsyncTask();
                             }
@@ -546,16 +531,13 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
 
                 if (attachedFiles.size() < Constants.MAX_FILE_ATTACHMENT_LIMIT)
                     attachFileName = attachedFiles.get(pos - 1);
-                else
-                    attachFileName = attachedFiles.get(pos);
+                else attachFileName = attachedFiles.get(pos);
 
                 mFile = new File(attachFileName);
 
                 if (mFile.exists()) {
                     mBitmap = BitmapFactory.decodeFile(mFile.getPath());
-                    if (mBitmap != null) {
-                        mFileView.setImageBitmap(mBitmap);
-                    }
+                    if (mBitmap != null) mFileView.setImageBitmap(mBitmap);
                 }
 
 
@@ -564,8 +546,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                     public void onClick(View v) {
                         if (attachedFiles.size() < Constants.MAX_FILE_ATTACHMENT_LIMIT)
                             attachedFiles.remove(pos - 1);
-                        else
-                            attachedFiles.remove(pos);
+                        else attachedFiles.remove(pos);
 
                         notifyDataSetChanged();
                     }
@@ -600,8 +581,9 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                                         mPickerActionId = mActionId;
                                         DocumentPicker.requestRequiredPermissions(CreateTicketFragment.this, REQUEST_CODE_PERMISSION);
                                     }
-                                } else
+                                } else {
                                     setMultipleImagePicker();
+                                }
                             }
                         });
                         customUploadPickerDialog.show();
