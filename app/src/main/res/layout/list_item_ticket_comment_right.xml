@@ -8,33 +8,39 @@
 
     <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
         android:id="@+id/profile_picture"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
         android:layout_width="@dimen/ticket_profile_picture_size"
         android:layout_height="@dimen/ticket_profile_picture_size"
-        android:layout_margin="@dimen/activity_horizontal_margin_card"/>
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/activity_horizontal_margin_card" />
 
     <LinearLayout
-        android:background="@drawable/background_ticket_comment_right"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/profile_picture">
+        android:layout_toLeftOf="@+id/profile_picture"
+        android:background="@drawable/background_ticket_comment_right"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/textview_comment"
-            android:textColor="@android:color/white"
+            style="@style/TicketCommentBodyStyle"
             android:gravity="right"
-            style="@style/TicketCommentBodyStyle"/>
+            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/textview_time"
             style="@style/TicketCommentTimeStyle"
             android:gravity="right"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
 
+        <LinearLayout
+            android:id="@+id/attachmentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

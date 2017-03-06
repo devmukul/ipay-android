@@ -11,11 +11,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -384,6 +387,8 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
             private ProfileImageView profilePictureView;
             private TextView commentView;
             private TextView timeView;
+            private LinearLayout attachmentView;
+
 
             public CommentViewHolder(View itemView) {
                 super(itemView);
@@ -391,6 +396,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                 profilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 commentView = (TextView) itemView.findViewById(R.id.textview_comment);
                 timeView = (TextView) itemView.findViewById(R.id.textview_time);
+                attachmentView = (LinearLayout) itemView.findViewById(R.id.attachmentLayout);
             }
 
             public void bindView(int pos) {
@@ -398,11 +404,32 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
 
                 if (comment.getAuthorId().equals(requesterId)) {
                     profilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl(), false);
+
                 } else {
                     profilePictureView.setProfilePicture(R.drawable.ic_transaction_ipaylogo);
                 }
                 commentView.setText(comment.getBody());
                 timeView.setText(Utilities.formatDateWithTime(comment.getCreatedAt()));
+
+                attachmentView.removeAllViews();
+                if (!comment.getDocuments().isEmpty()) {
+                    List<String> documents = comment.getDocuments();
+
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    attachmentView.setLayoutParams(params);
+                    attachmentView.setOrientation(LinearLayout.HORIZONTAL);
+                    attachmentView.setWeightSum(3f);
+
+                    for (String document : documents) {
+                        ProfileImageView attachment = new ProfileImageView(getActivity());
+                        attachment.setProfilePicture(document, false);
+                        LinearLayout.LayoutParams p2 = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
+                        attachment.setLayoutParams(p2);
+
+                        attachmentView.addView(attachment);
+                    }
+                }
+
             }
         }
 
