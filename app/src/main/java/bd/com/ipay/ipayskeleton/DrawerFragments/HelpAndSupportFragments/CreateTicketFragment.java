@@ -168,9 +168,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         switch (requestCode) {
             case REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT:
                 if (resultCode == Activity.RESULT_OK) {
-
                     String filePath = DocumentPicker.getFilePathForCameraOrPDFResult(getActivity(), resultCode, data);
-                    Toast.makeText(getActivity(), filePath, Toast.LENGTH_LONG).show();
 
                     if (filePath != null) {
                         Random r = new Random();

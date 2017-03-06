@@ -33,6 +33,8 @@
             style="@style/TicketCommentTimeStyle"
             android:gravity="right"
             android:textColor="@android:color/white"/>
+
+
     </LinearLayout>
 
 </RelativeLayout>

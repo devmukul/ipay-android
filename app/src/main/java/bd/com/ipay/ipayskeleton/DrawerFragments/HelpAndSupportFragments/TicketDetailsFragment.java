@@ -45,6 +45,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.Comment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CommentIdResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketDetailsRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketDetailsResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.Ticket;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.TicketAttachmentUploadResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -57,7 +58,6 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     private GetTicketDetailsResponse mGetTicketDetailsResponse;
 
     private HttpRequestPostAsyncTask mNewCommentTask = null;
-    private AddCommentResponse mAddCommentResponse;
 
     private RecyclerView mCommentListRecyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -146,7 +146,6 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
             }
         });
 
-
         return v;
     }
 
@@ -172,9 +171,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         switch (requestCode) {
             case REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT:
                 if (resultCode == Activity.RESULT_OK) {
-
                     String filePath = DocumentPicker.getFilePathForCameraOrPDFResult(getActivity(), resultCode, data);
-                    Toast.makeText(getActivity(), filePath, Toast.LENGTH_LONG).show();
 
                     if (filePath != null) {
                         Random r = new Random();
@@ -216,13 +213,6 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         }
     }
 
-    private void uploadFirstAttachmentWithComment(String comment) {
-        if (!attachedFiles.get(0).isEmpty()) {
-            sendCommentWithAttachment(comment, attachedFiles.get(0));
-            attachedFiles.remove(0);
-        }
-    }
-
     private boolean validateUserComment() {
         if (mUserCommentEditText.getText().toString().trim().isEmpty()) return false;
         else return true;
@@ -231,10 +221,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     private void addUserComment() {
         if (validateUserComment()) {
             String comment = mUserCommentEditText.getText().toString().trim();
-
-            if (attachedFiles.size() > 0)
-                uploadFirstAttachmentWithComment(comment);
-            else sendComment(comment);
+            sendComment(comment);
 
             mUserCommentEditText.getText().clear();
             Utilities.hideKeyboard(getActivity(), mUserCommentEditText);
@@ -291,13 +278,6 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         mNewCommentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_COMMENT, Constants.BASE_URL_ADMIN + Constants.URL_ADD_COMMENT,
                 json, getActivity(), this);
         mNewCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void sendCommentWithAttachment(String comment, String filePath) {
-        UploadTicketAttachmentAsyncTask mUploadTicketAttachmentAsyncTask = new UploadTicketAttachmentAsyncTask(
-                Constants.COMMAND_ADD_ATTACHMENT, mGetTicketDetailsResponse.getResponse().getTicket().getId(), comment, filePath, getActivity());
-        mUploadTicketAttachmentAsyncTask.mHttpResponseListener = this;
-        mUploadTicketAttachmentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void uploadAttachment(String filePath) {
@@ -370,29 +350,6 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
 
             case Constants.COMMAND_ADD_COMMENT:
                 try {
-                    mAddCommentResponse = gson.fromJson(result.getJsonString(), AddCommentResponse.class);
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.comment_successfully_added, Toast.LENGTH_LONG).show();
-                            getTicketDetails();
-                        }
-                    } else {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), mAddCommentResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                } catch (Exception e) {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_adding_comment, Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                mNewCommentTask = null;
-                break;
-
-            case Constants.COMMAND_ADD_ATTACHMENT:
-                try {
                     TicketAttachmentUploadResponse ticketResponseWithCommentId = gson.fromJson(result.getJsonString(), TicketAttachmentUploadResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
@@ -402,10 +359,10 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
 
                             Toast.makeText(getActivity(), R.string.comment_successfully_added, Toast.LENGTH_LONG).show();
                             getTicketDetails();
-                        }
-                    } else {
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), mAddCommentResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        } else {
+                            if (getActivity() != null) {
+                                Toast.makeText(getActivity(), R.string.not_available, Toast.LENGTH_LONG).show();
+                            }
                         }
                     }
                 } catch (Exception e) {
@@ -413,14 +370,12 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                         Toast.makeText(getActivity(), R.string.failed_adding_comment, Toast.LENGTH_LONG).show();
                     }
                 }
-
                 mNewCommentTask = null;
                 break;
         }
     }
 
     private class CommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
         private static final int VIEW_TYPE_FROM_ME = 1;
         private static final int VIEW_TYPE_FROM_SUPPORT = 2;
 

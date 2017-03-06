@@ -1,9 +1,12 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket;
 
+import java.util.List;
+
 public class Comment {
     private String body;
     private String authorId;
     private Long createdAt;
+    private List<String> documents;
 
     public Comment(String body, String authorId) {
         this.body = body;
@@ -20,6 +23,10 @@ public class Comment {
 
     public long getCreatedAt() {
         return createdAt;
+    }
+
+    public List<String> getDocuments() {
+        return documents;
     }
 
     @Override
