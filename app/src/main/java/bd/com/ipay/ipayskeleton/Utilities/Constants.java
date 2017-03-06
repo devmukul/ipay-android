@@ -433,6 +433,7 @@ public class Constants {
     public static final String URL_GET_TICKET_CATEGORIES = "ticket/categories";
     public static final String URL_ADD_COMMENT = "ticket/add/comment";
     public static final String URL_UPLOAD_TICKET_ATTACHMENT = "ticket/comment/attachment";
+    public static final String URL_ADD_COMMENT_WITH_ATTACHMENT = "ticket/add/comment/attachments";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
@@ -748,6 +749,9 @@ public class Constants {
     public static final String TICKET_STATUS_CLOSED = "closed";
 
     public static final String TICKET_COMMENT_ID = "commentId";
+    public static final String TICKETID = "ticketId";
+    public static final String TICKET_COMMENT = "comment";
+
 
     public static final int REQUEST_TYPE_RECEIVED_REQUEST = 1;
     public static final int REQUEST_TYPE_SENT_REQUEST = 2;

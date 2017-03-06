@@ -29,7 +29,9 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
     private final Context mContext;
     private final String filePath;
     private final String API_COMMAND;
-    private final long commentId;
+    private long ticketId;
+    private long commentId;
+    private String comment;
 
     public HttpResponseListener mHttpResponseListener;
 
@@ -38,6 +40,14 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
         this.filePath = filePath;
         this.API_COMMAND = API_COMMAND;
         this.commentId = commentId;
+    }
+
+    public UploadTicketAttachmentAsyncTask(String API_COMMAND, long ticketId, String comment, String filePath, Context mContext) {
+        this.mContext = mContext;
+        this.filePath = filePath;
+        this.API_COMMAND = API_COMMAND;
+        this.ticketId = ticketId;
+        this.comment = comment;
     }
 
     @Override
@@ -83,21 +93,26 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
             HttpClient client = new DefaultHttpClient();
             File file = new File(selectedImagePath);
             HttpPost post = null;
-
-            post = new HttpPost(Constants.BASE_URL_ADMIN + Constants.URL_UPLOAD_TICKET_ATTACHMENT);
-
-            if (TokenManager.isTokenExists())
-                post.setHeader(Constants.TOKEN, TokenManager.getToken());
-
             MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE,
                     Constants.BOUNDARY, Charset.defaultCharset());
 
+
+            if (comment != null) {
+                post = new HttpPost(Constants.BASE_URL_ADMIN + Constants.URL_ADD_COMMENT_WITH_ATTACHMENT);
+                entity.addPart(Constants.TICKETID, new StringBody(ticketId + ""));
+                entity.addPart(Constants.TICKET_COMMENT, new StringBody(comment));
+            } else {
+                post = new HttpPost(Constants.BASE_URL_ADMIN + Constants.URL_UPLOAD_TICKET_ATTACHMENT);
+                entity.addPart(Constants.TICKET_COMMENT_ID, new StringBody(commentId + ""));
+            }
+
             entity.addPart(Constants.MULTIPART_FORM_DATA_NAME, new FileBody(file));
-            entity.addPart(Constants.TICKET_COMMENT_ID, new StringBody(commentId+""));
             post.setEntity(entity);
 
             Log.e("POST", entity.toString());
 
+            if (TokenManager.isTokenExists())
+                post.setHeader(Constants.TOKEN, TokenManager.getToken());
             post.setHeader("Content-Type", "multipart/form-data; boundary=" + Constants.BOUNDARY);
 
             HttpResponse response = client.execute(post);

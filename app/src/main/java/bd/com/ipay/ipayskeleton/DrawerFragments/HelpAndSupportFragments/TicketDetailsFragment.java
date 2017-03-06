@@ -1,8 +1,12 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HelpAndSupportFragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,50 +20,75 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.features.ImagePickerActivity;
+import com.esafirm.imagepicker.model.Image;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.UploadTicketAttachmentAsyncTask;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.Comment;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CommentIdResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketDetailsRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketDetailsResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.TicketAttachmentUploadResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TicketDetailsFragment extends ProgressFragment implements HttpResponseListener {
-
     private HttpRequestGetAsyncTask mGetTicketDetailsTask = null;
     private GetTicketDetailsResponse mGetTicketDetailsResponse;
 
     private HttpRequestPostAsyncTask mNewCommentTask = null;
     private AddCommentResponse mAddCommentResponse;
 
-    private long ticketId;
-
     private RecyclerView mCommentListRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private View mAttachmentView;
+    private TextView mAttachmentNumberTextView;
+    private TextView mSubjectView;
+    private ImageButton mSendCommentButton;
+    private ImageButton mAttachFileButton;
+    private ImageButton mRemoveAttachFileButton;
+    private EditText mUserCommentEditText;
+
+    private ProgressDialog mProgressDialog;
+    private CustomUploadPickerDialog customUploadPickerDialog;
 
     private List<Comment> mComments;
     private String requesterId;
     private CommentListAdapter mCommentListAdapter;
 
-    private TextView mSubjectView;
-    private ImageButton mSendCommentButton;
-    private EditText mUserCommentEditText;
+    private List<String> mPickerList;
+    private ArrayList<String> attachedFiles;
+    private ArrayList<Image> images = new ArrayList<>();
 
-    private ProgressDialog mProgressDialog;
+    private long ticketId;
+    private long mCommentId;
+    private int mPickerActionId = -1;
+
+    private static final int REQUEST_CODE_PERMISSION = 1001;
+    private static final int REQUEST_CODE_PICK_MULTIPLE_IMAGE = 1000;
+    private static final int REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT = 1002;
 
     @Nullable
     @Override
@@ -68,9 +97,13 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
 
         ticketId = getArguments().getLong(Constants.TICKET_ID);
 
+        mAttachmentView = v.findViewById(R.id.attachmentLayout);
+        mAttachmentNumberTextView = (TextView) v.findViewById(R.id.textview_attachment_number);
         mSubjectView = (TextView) v.findViewById(R.id.textview_subject);
         mUserCommentEditText = (EditText) v.findViewById(R.id.user_comment_text);
         mSendCommentButton = (ImageButton) v.findViewById(R.id.btn_send);
+        mAttachFileButton = (ImageButton) v.findViewById(R.id.btn_attach);
+        mRemoveAttachFileButton = (ImageButton) v.findViewById(R.id.btn_remove_attachment);
 
         mCommentListAdapter = new CommentListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -80,6 +113,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
 
         mCommentListRecyclerView.setLayoutManager(mLayoutManager);
         mCommentListRecyclerView.setAdapter(mCommentListAdapter);
+        attachedFiles = new ArrayList<>();
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -98,6 +132,20 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                 addUserComment();
             }
         });
+        mAttachFileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectAttachmentDialog();
+            }
+        });
+        mRemoveAttachFileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                attachedFiles.removeAll(attachedFiles);
+                setAttachmentVisibility();
+            }
+        });
+
 
         return v;
     }
@@ -108,6 +156,73 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         getTicketDetails();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION:
+                if (DocumentPicker.ifNecessaryPermissionExists(getActivity()))
+                    selectDocument(mPickerActionId);
+                else
+                    Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, final int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT:
+                if (resultCode == Activity.RESULT_OK) {
+
+                    String filePath = DocumentPicker.getFilePathForCameraOrPDFResult(getActivity(), resultCode, data);
+                    Toast.makeText(getActivity(), filePath, Toast.LENGTH_LONG).show();
+
+                    if (filePath != null) {
+                        Random r = new Random();
+                        int fileIndex = r.nextInt(100 - 1) + 1;
+                        Uri mSelectedDocumentUri = DocumentPicker.getDocumentWithIndexFromResult(getActivity(), resultCode, data, fileIndex);
+                        if (mSelectedDocumentUri != null)
+                            attachedFiles.add(mSelectedDocumentUri.getPath());
+                        else attachedFiles.add(filePath);
+                        setAttachmentVisibility();
+                    }
+                }
+                break;
+
+            case REQUEST_CODE_PICK_MULTIPLE_IMAGE:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    images = (ArrayList<Image>) ImagePicker.getImages(data);
+                    if (images != null) setImagePathsFromMultiplePicker(images);
+                }
+
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void setAttachmentVisibility() {
+        if (attachedFiles.size() > 0) {
+            mAttachmentView.setVisibility(View.VISIBLE);
+            if (attachedFiles.size() > 1)
+                mAttachmentNumberTextView.setText(attachedFiles.size() + " attachments");
+            else
+                mAttachmentNumberTextView.setText(attachedFiles.size() + " attachment");
+        } else mAttachmentView.setVisibility(View.GONE);
+    }
+
+    private void uploadMultipleAttachmentsAsyncTask() {
+        for (int i = 0; i < attachedFiles.size(); i++) {
+            if (!attachedFiles.get(i).isEmpty())
+                uploadAttachment(attachedFiles.get(i));
+        }
+    }
+
+    private void uploadFirstAttachmentWithComment(String comment) {
+        if (!attachedFiles.get(0).isEmpty()) {
+            sendCommentWithAttachment(comment, attachedFiles.get(0));
+            attachedFiles.remove(0);
+        }
+    }
+
     private boolean validateUserComment() {
         if (mUserCommentEditText.getText().toString().trim().isEmpty()) return false;
         else return true;
@@ -116,7 +231,10 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     private void addUserComment() {
         if (validateUserComment()) {
             String comment = mUserCommentEditText.getText().toString().trim();
-            sendComment(comment);
+
+            if (attachedFiles.size() > 0)
+                uploadFirstAttachmentWithComment(comment);
+            else sendComment(comment);
 
             mUserCommentEditText.getText().clear();
             Utilities.hideKeyboard(getActivity(), mUserCommentEditText);
@@ -124,6 +242,27 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.comment_cannot_be_empty, Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void selectAttachmentDialog() {
+        mPickerList = Arrays.asList(getResources().getStringArray(R.array.attach_file_picker_action));
+        customUploadPickerDialog = new CustomUploadPickerDialog(getActivity(), getString(R.string.select_a_document), mPickerList);
+        customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
+            @Override
+            public void onResourceSelected(int mActionId, String action) {
+                if (!Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action)) {
+                    if (DocumentPicker.ifNecessaryPermissionExists(getActivity()))
+                        selectDocument(mActionId);
+                    else {
+                        mPickerActionId = mActionId;
+                        DocumentPicker.requestRequiredPermissions(TicketDetailsFragment.this, REQUEST_CODE_PERMISSION);
+                    }
+                } else {
+                    setMultipleImagePicker();
+                }
+            }
+        });
+        customUploadPickerDialog.show();
     }
 
     private void getTicketDetails() {
@@ -154,9 +293,22 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         mNewCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void sendCommentWithAttachment(String comment, String filePath) {
+        UploadTicketAttachmentAsyncTask mUploadTicketAttachmentAsyncTask = new UploadTicketAttachmentAsyncTask(
+                Constants.COMMAND_ADD_ATTACHMENT, mGetTicketDetailsResponse.getResponse().getTicket().getId(), comment, filePath, getActivity());
+        mUploadTicketAttachmentAsyncTask.mHttpResponseListener = this;
+        mUploadTicketAttachmentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void uploadAttachment(String filePath) {
+        UploadTicketAttachmentAsyncTask mUploadTicketAttachmentAsyncTask = new UploadTicketAttachmentAsyncTask(
+                Constants.COMMAND_ADD_ATTACHMENT, filePath, mCommentId, getActivity());
+        mUploadTicketAttachmentAsyncTask.mHttpResponseListener = this;
+        mUploadTicketAttachmentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-
         if (getActivity() != null) {
             mSwipeRefreshLayout.setRefreshing(false);
             mProgressDialog.dismiss();
@@ -191,8 +343,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
 
                         String ticketStatus = mGetTicketDetailsResponse.getResponse().getTicket().getStatus();
 
-                        if (ticketStatus.equalsIgnoreCase(Constants.TICKET_STATUS_NEW)
-                                || ticketStatus.equals(Constants.TICKET_STATUS_SOLVED)
+                        if (ticketStatus.equals(Constants.TICKET_STATUS_SOLVED)
                                 || ticketStatus.equals(Constants.TICKET_STATUS_CLOSED)) {
                             mSendCommentButton.setVisibility(View.GONE);
                             mUserCommentEditText.setVisibility(View.GONE);
@@ -239,8 +390,33 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
 
                 mNewCommentTask = null;
                 break;
-        }
 
+            case Constants.COMMAND_ADD_ATTACHMENT:
+                try {
+                    TicketAttachmentUploadResponse ticketResponseWithCommentId = gson.fromJson(result.getJsonString(), TicketAttachmentUploadResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null) {
+                            CommentIdResponse commentIdResponse = ticketResponseWithCommentId.getResponse();
+                            mCommentId = commentIdResponse.getComment_id();
+                            if (attachedFiles.size() > 0) uploadMultipleAttachmentsAsyncTask();
+
+                            Toast.makeText(getActivity(), R.string.comment_successfully_added, Toast.LENGTH_LONG).show();
+                            getTicketDetails();
+                        }
+                    } else {
+                        if (getActivity() != null) {
+                            Toast.makeText(getActivity(), mAddCommentResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.failed_adding_comment, Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                mNewCommentTask = null;
+                break;
+        }
     }
 
     private class CommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -309,5 +485,34 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
             else
                 return mComments.size();
         }
+    }
+
+    private void selectDocument(int id) {
+        Intent imagePickerIntent = DocumentPicker.getPickImageOrPDFIntentByID(getActivity(), getString(R.string.select_a_document), id);
+        startActivityForResult(imagePickerIntent, REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT);
+    }
+
+    private void setImagePathsFromMultiplePicker(List<Image> images) {
+        for (int i = 0; i < images.size(); i++)
+            attachedFiles.add(images.get(i).getPath());
+        setAttachmentVisibility();
+    }
+
+    private void setMultipleImagePicker() {
+        images.removeAll(images);
+        Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
+        intent.putExtra(ImagePicker.EXTRA_FOLDER_MODE, true);
+        intent.putExtra(ImagePicker.EXTRA_MODE, ImagePicker.MODE_MULTIPLE);
+        intent.putExtra(ImagePicker.EXTRA_LIMIT, Constants.MAX_FILE_ATTACHMENT_LIMIT - attachedFiles.size());
+        intent.putExtra(ImagePicker.EXTRA_SHOW_CAMERA, false);
+        intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGES, images);
+        intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, "Album");
+        intent.putExtra(ImagePicker.EXTRA_IMAGE_TITLE, "Tap to select images");
+        intent.putExtra(ImagePicker.EXTRA_IMAGE_DIRECTORY, "Camera");
+
+        /* Will force ImagePicker to single pick */
+        intent.putExtra(ImagePicker.EXTRA_RETURN_AFTER_FIRST, true);
+
+        startActivityForResult(intent, REQUEST_CODE_PICK_MULTIPLE_IMAGE);
     }
 }

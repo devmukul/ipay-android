@@ -18,7 +18,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/inputLayout"
+                android:layout_above="@+id/attachmentLayout"
                 android:orientation="vertical"
                 android:paddingTop="@dimen/activity_vertical_margin">
 
@@ -60,6 +60,32 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/attachmentLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dip"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_above="@+id/inputLayout"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/textview_attachment_number"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:imeOptions="actionSend"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="6dp" />
+
+                <ImageButton
+                    android:id="@+id/btn_remove_attachment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/alert_dark_frame" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/inputLayout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -67,6 +93,12 @@
                 android:layout_marginTop="1dip"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btn_attach"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_input_add" />
 
                 <EditText
                     android:id="@+id/user_comment_text"

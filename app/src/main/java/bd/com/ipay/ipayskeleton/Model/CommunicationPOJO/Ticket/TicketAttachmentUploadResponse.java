@@ -3,13 +3,13 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket;
 public class TicketAttachmentUploadResponse {
     private String message;
     private int statusCode;
-    private TicketResponseWithCommentId response;
+    private CommentIdResponse response;
 
     public String getMessage() {
         return message;
     }
 
-    public TicketResponseWithCommentId getResponse() {
+    public CommentIdResponse getResponse() {
         return response;
     }
 
@@ -25,7 +25,7 @@ public class TicketAttachmentUploadResponse {
         this.statusCode = statusCode;
     }
 
-    public void setResponse(TicketResponseWithCommentId response) {
+    public void setResponse(CommentIdResponse response) {
         this.response = response;
     }
 }

@@ -324,32 +324,20 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
 
     private void setFileAttachmentAdapter() {
         attachedFiles = new ArrayList<>();
-        // Calling the RecyclerView
         mFileAttachmentRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mFileAttachmentRecyclerView.setHasFixedSize(true);
 
-        // The number of Columns
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mFileAttachmentRecyclerView.setLayoutManager(mLayoutManager);
-
         mAdapter = new FileAttachmentAdapter();
         mFileAttachmentRecyclerView.setAdapter(mAdapter);
     }
 
-    private void setImagePathsFromMultiplePicker(List<Image> images) {
-        for (int i = 0; i < images.size(); i++) {
-            attachedFiles.add(images.get(i).getPath());
-        }
-        mAdapter.notifyDataSetChanged();
-    }
-
     private void uploadMultipleAttachmentsAsyncTask() {
-
         for (int i = 0; i < attachedFiles.size(); i++) {
             if (!attachedFiles.get(i).isEmpty())
-                uploadDocument(attachedFiles.get(i));
+                uploadAttachement(attachedFiles.get(i));
         }
-        showCreateTicketSuccessDialog();
     }
 
     private void getTicketCategories() {
@@ -396,7 +384,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         mGetEmailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void uploadDocument(String filePath) {
+    private void uploadAttachement(String filePath) {
         UploadTicketAttachmentAsyncTask mUploadTicketAttachmentAsyncTask = new UploadTicketAttachmentAsyncTask(
                 Constants.COMMAND_ADD_ATTACHMENT, filePath, mCommentId, getActivity());
         mUploadTicketAttachmentAsyncTask.mHttpResponseListener = this;
@@ -436,9 +424,9 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                             TicketResponseWithCommentId ticketResponseWithCommentId = mCreateTicketResponse.getResponse();
                             CommentIdResponse commentIdResponse = ticketResponseWithCommentId.getTicket();
                             mCommentId = commentIdResponse.getComment_id();
-                            if (attachedFiles.size() > 0) {
-                                uploadMultipleAttachmentsAsyncTask();
-                            }
+                            if (attachedFiles.size() > 0) uploadMultipleAttachmentsAsyncTask();
+
+                            showCreateTicketSuccessDialog();
                         }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PAYMENT_REQUIRED) {
                         if (getActivity() != null) {
@@ -526,7 +514,6 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
             }
 
             public void bindViewAttachedFile(final int pos) {
-
                 mFileView.setImageDrawable(getResources().getDrawable(R.drawable.ic_touch_id));
 
                 if (attachedFiles.size() < Constants.MAX_FILE_ATTACHMENT_LIMIT)
@@ -534,13 +521,10 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                 else attachFileName = attachedFiles.get(pos);
 
                 mFile = new File(attachFileName);
-
                 if (mFile.exists()) {
                     mBitmap = BitmapFactory.decodeFile(mFile.getPath());
                     if (mBitmap != null) mFileView.setImageBitmap(mBitmap);
                 }
-
-
                 mRemoveAttachedFileButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -644,6 +628,12 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     private void selectDocument(int id) {
         Intent imagePickerIntent = DocumentPicker.getPickImageOrPDFIntentByID(getActivity(), getString(R.string.select_a_document), id);
         startActivityForResult(imagePickerIntent, REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT);
+    }
+
+    private void setImagePathsFromMultiplePicker(List<Image> images) {
+        for (int i = 0; i < images.size(); i++)
+            attachedFiles.add(images.get(i).getPath());
+        mAdapter.notifyDataSetChanged();
     }
 
     private void setMultipleImagePicker() {
