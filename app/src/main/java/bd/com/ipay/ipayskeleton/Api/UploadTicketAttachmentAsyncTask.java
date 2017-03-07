@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.Api;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,6 +18,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -83,6 +89,7 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
 
         try {
             HttpClient client = new DefaultHttpClient();
+
             File file = new File(selectedImagePath);
             HttpPost post = null;
 

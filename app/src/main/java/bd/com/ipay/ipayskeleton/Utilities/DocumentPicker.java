@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -132,9 +133,9 @@ public class DocumentPicker {
             takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(context)));
             intentList = addIntentsToList(context, intentList, takePhotoIntent);
         } else {
-            Intent pdfIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            Intent pdfIntent = new Intent(Intent.ACTION_GET_CONTENT);
             pdfIntent.setType("application/pdf");
-            pdfIntent.addCategory(Intent.CATEGORY_OPENABLE);
+            // pdfIntent.addCategory(Intent.CATEGORY_OPENABLE);
             intentList = addIntentsToList(context, intentList, pdfIntent);
         }
         return getChooserIntent(intentList, chooserTitle);
@@ -197,7 +198,7 @@ public class DocumentPicker {
             if (isCamera) {     /** CAMERA **/
                 return getTempFile(context).getAbsolutePath();
             } else {
-                return returnedIntent.getData().toString();
+                return returnedIntent.getData().getPath().toString();
             }
         } catch (Exception e) {
             e.printStackTrace();
