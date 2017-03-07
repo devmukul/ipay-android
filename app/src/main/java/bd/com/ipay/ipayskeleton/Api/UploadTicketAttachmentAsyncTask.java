@@ -99,6 +99,8 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
                     Constants.BOUNDARY, Charset.defaultCharset());
 
             entity.addPart(Constants.TICKET_COMMENT_ID, new StringBody(commentId + ""));
+
+            if(file.exists())
             entity.addPart(Constants.MULTIPART_FORM_DATA_NAME, new FileBody(file));
             post.setEntity(entity);
 

@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Parcelable;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -135,8 +136,8 @@ public class DocumentPicker {
         } else {
             Intent pdfIntent = new Intent(Intent.ACTION_GET_CONTENT);
             pdfIntent.setType("application/pdf");
-            // pdfIntent.addCategory(Intent.CATEGORY_OPENABLE);
-            intentList = addIntentsToList(context, intentList, pdfIntent);
+            pdfIntent.addCategory(Intent.CATEGORY_OPENABLE);
+            intentList = addIntentsToList(context, intentList,pdfIntent);
         }
         return getChooserIntent(intentList, chooserTitle);
     }
@@ -198,7 +199,8 @@ public class DocumentPicker {
             if (isCamera) {     /** CAMERA **/
                 return getTempFile(context).getAbsolutePath();
             } else {
-                return returnedIntent.getData().getPath().toString();
+                return getPath(context,returnedIntent.getData().getPath().toString());
+                //return returnedIntent.getData().getPath().toString();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -303,5 +305,14 @@ public class DocumentPicker {
             return documentFile;
         } else return null;
 
+    }
+
+    public static String getPath(Context context, String uri) {
+        final String[] split = uri.split(":");
+                final String type = split[0];
+
+        return Environment.getExternalStorageDirectory() + "/" + split[1];
+
+         //return null;
     }
 }
