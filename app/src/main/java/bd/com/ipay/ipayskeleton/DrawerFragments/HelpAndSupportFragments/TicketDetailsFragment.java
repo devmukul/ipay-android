@@ -211,6 +211,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                 uploadAttachment(attachedFiles.get(i));
         }
         attachedFiles.removeAll(attachedFiles);
+        setAttachmentVisibility();
     }
 
     private boolean validateUserComment() {
