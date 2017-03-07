@@ -11,13 +11,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,12 +41,10 @@ import bd.com.ipay.ipayskeleton.Api.UploadTicketAttachmentAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.Comment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CommentIdResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketDetailsRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketDetailsResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.Ticket;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.TicketAttachmentUploadResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -214,6 +210,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
             if (!attachedFiles.get(i).isEmpty())
                 uploadAttachment(attachedFiles.get(i));
         }
+        attachedFiles.removeAll(attachedFiles);
     }
 
     private boolean validateUserComment() {
@@ -387,7 +384,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
             private ProfileImageView profilePictureView;
             private TextView commentView;
             private TextView timeView;
-            private LinearLayout attachmentView;
+            private LinearLayout attachmentLayout;
 
 
             public CommentViewHolder(View itemView) {
@@ -396,7 +393,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                 profilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 commentView = (TextView) itemView.findViewById(R.id.textview_comment);
                 timeView = (TextView) itemView.findViewById(R.id.textview_time);
-                attachmentView = (LinearLayout) itemView.findViewById(R.id.attachmentLayout);
+                attachmentLayout = (LinearLayout) itemView.findViewById(R.id.attachmentLayout);
             }
 
             public void bindView(int pos) {
@@ -411,22 +408,22 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                 commentView.setText(comment.getBody());
                 timeView.setText(Utilities.formatDateWithTime(comment.getCreatedAt()));
 
-                attachmentView.removeAllViews();
+                attachmentLayout.removeAllViews();
                 if (!comment.getDocuments().isEmpty()) {
                     List<String> documents = comment.getDocuments();
 
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    attachmentView.setLayoutParams(params);
-                    attachmentView.setOrientation(LinearLayout.HORIZONTAL);
-                    attachmentView.setWeightSum(3f);
+                    attachmentLayout.setLayoutParams(params);
+                    attachmentLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    attachmentLayout.setWeightSum(3f);
 
                     for (String document : documents) {
                         ProfileImageView attachment = new ProfileImageView(getActivity());
                         attachment.setProfilePicture(document, false);
-                        LinearLayout.LayoutParams p2 = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
-                        attachment.setLayoutParams(p2);
+                        LinearLayout.LayoutParams attachmentViewParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
+                        attachment.setLayoutParams(attachmentViewParams);
 
-                        attachmentView.addView(attachment);
+                        attachmentLayout.addView(attachment);
                     }
                 }
 

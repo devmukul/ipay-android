@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -273,7 +274,7 @@ public class DocumentPicker {
                             isCamera ? selectedImage : returnedIntent.getData(), isCamera);
 
                     // Save to file
-                    File tempFile = getFileWithIndex(context,fileIndex);
+                    File tempFile = getFileWithIndex(context, fileIndex);
                     CameraUtilities.saveBitmapToFile(convertedBitmap, tempFile);
                     selectedImage = Uri.fromFile(tempFile);
                 }
@@ -293,13 +294,13 @@ public class DocumentPicker {
         } else return null;
     }
 
-     private static File getFileWithIndex(Context context, int index) throws IOException {
+    private static File getFileWithIndex(Context context, int index) throws IOException {
 
-         File documentFile = new File(context.getExternalCacheDir(), index + TEMP_DOCUMENT_NAME);
-         if (documentFile != null) {
-             documentFile.getParentFile().mkdirs();
-             return documentFile;
-         } else return null;
+        File documentFile = new File(context.getExternalCacheDir(), index + TEMP_DOCUMENT_NAME);
+        if (documentFile != null) {
+            documentFile.getParentFile().mkdirs();
+            return documentFile;
+        } else return null;
 
     }
 }
