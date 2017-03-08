@@ -512,17 +512,25 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
             }
 
             public void bindViewAttachedFile(final int pos) {
-                mFileView.setImageDrawable(getResources().getDrawable(R.drawable.ic_touch_id));
 
                 if (attachedFiles.size() < Constants.MAX_FILE_ATTACHMENT_LIMIT)
                     attachFileName = attachedFiles.get(pos - 1);
                 else attachFileName = attachedFiles.get(pos);
 
-                mFile = new File(attachFileName);
-                if (mFile.exists()) {
-                    mBitmap = BitmapFactory.decodeFile(mFile.getPath());
-                    if (mBitmap != null) mFileView.setImageBitmap(mBitmap);
+                if (attachFileName.contains(".pdf"))
+                    mFileView.setImageDrawable(getResources().getDrawable(R.drawable.icon_pdf));
+                else {
+                    try {
+                        mFile = new File(attachFileName);
+                        if (mFile.exists()) {
+                            mBitmap = BitmapFactory.decodeFile(mFile.getPath());
+                            if (mBitmap != null) mFileView.setImageBitmap(mBitmap);
+                        }
+                    } catch (Exception e) {
+                        mFileView.setImageDrawable(getResources().getDrawable(R.drawable.ic_touch_id));
+                    }
                 }
+
                 mRemoveAttachedFileButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

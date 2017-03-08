@@ -6,25 +6,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.Parcelable;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -137,7 +128,8 @@ public class DocumentPicker {
             Intent pdfIntent = new Intent(Intent.ACTION_GET_CONTENT);
             pdfIntent.setType("application/pdf");
             pdfIntent.addCategory(Intent.CATEGORY_OPENABLE);
-            intentList = addIntentsToList(context, intentList,pdfIntent);
+            pdfIntent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+            intentList = addIntentsToList(context, intentList, pdfIntent);
         }
         return getChooserIntent(intentList, chooserTitle);
     }
@@ -199,8 +191,7 @@ public class DocumentPicker {
             if (isCamera) {     /** CAMERA **/
                 return getTempFile(context).getAbsolutePath();
             } else {
-                return getPath(context,returnedIntent.getData().getPath().toString());
-                //return returnedIntent.getData().getPath().toString();
+                return Utilities.getPath(returnedIntent.getData());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -305,14 +296,5 @@ public class DocumentPicker {
             return documentFile;
         } else return null;
 
-    }
-
-    public static String getPath(Context context, String uri) {
-        final String[] split = uri.split(":");
-                final String type = split[0];
-
-        return Environment.getExternalStorageDirectory() + "/" + split[1];
-
-         //return null;
     }
 }

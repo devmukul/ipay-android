@@ -15,6 +15,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -688,6 +689,20 @@ public class Utilities {
         int minDay = currentDay;
 
         calendar.set(minYear, minMonth, minDay);
+    }
+
+    public static String getPath( Uri uri) {
+        final String path = uri.getPath();
+        final String[] split = path.split(":");
+
+        if (isExternalStorageDocument(uri))
+            return Environment.getExternalStorageDirectory() + "/" + split[1];
+        else
+            return uri.getLastPathSegment().toString();
+    }
+
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
 
     public static DatePickerDialog initDatePickerDialog(Context context, Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {

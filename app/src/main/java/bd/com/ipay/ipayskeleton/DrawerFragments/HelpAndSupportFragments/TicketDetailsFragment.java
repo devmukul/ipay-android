@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.UploadTicketAttachmentAsyncTask;
+import bd.com.ipay.ipayskeleton.CustomView.AttachmentView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentRequest;
@@ -416,15 +417,14 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     attachmentLayout.setLayoutParams(params);
                     attachmentLayout.setOrientation(LinearLayout.HORIZONTAL);
-                    attachmentLayout.setWeightSum(3f);
 
                     for (String document : documents) {
-                        ProfileImageView attachment = new ProfileImageView(getActivity());
-                        attachment.setProfilePicture(document, false);
+                        AttachmentView attachmentview = new AttachmentView(getActivity());
+                        attachmentview.setAttachment(document, false);
                         LinearLayout.LayoutParams attachmentViewParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
-                        attachment.setLayoutParams(attachmentViewParams);
+                        attachmentview.setLayoutParams(attachmentViewParams);
 
-                        attachmentLayout.addView(attachment);
+                        attachmentLayout.addView(attachmentview);
                     }
                 }
 

@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_alignRight="@+id/attached_file_view"
             android:layout_alignTop="@+id/attached_file_view"
-            android:src="@drawable/ic_edit_pic" />
+            android:background="@drawable/ic_crossw"
+            android:backgroundTint="@color/colorPrimary" />
     </RelativeLayout>
 </LinearLayout>
