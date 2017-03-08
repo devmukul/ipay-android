@@ -61,7 +61,7 @@ public class AttachmentView extends FrameLayout {
                         .signature(new StringSignature(String.valueOf(System.currentTimeMillis())));
             }
 
-            if (attachmentUri.contains(".pdf")) {
+            if (attachmentUri.contains(getResources().getString(R.string.pdf))) {
                 glide
                         .placeholder(R.drawable.icon_pdf)
                         .error(R.drawable.icon_pdf)

@@ -516,7 +516,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                     attachFileName = attachedFiles.get(pos - 1);
                 else attachFileName = attachedFiles.get(pos);
 
-                if (attachFileName.contains(".pdf"))
+                if (attachFileName.contains(getResources().getString(R.string.pdf)))
                     mFileView.setImageDrawable(getResources().getDrawable(R.drawable.icon_pdf));
                 else {
                     try {
