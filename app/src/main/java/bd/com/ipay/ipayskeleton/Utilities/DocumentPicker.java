@@ -191,7 +191,7 @@ public class DocumentPicker {
             if (isCamera) {     /** CAMERA **/
                 return getTempFile(context).getAbsolutePath();
             } else {
-                return Utilities.getPath(returnedIntent.getData());
+                return Utilities.getPath(context,returnedIntent.getData());
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -66,6 +66,8 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     private View mAttachmentView;
     private TextView mAttachmentNumberTextView;
     private TextView mSubjectView;
+    private TextView mCategoryView;
+    private View mCategoryLayout;
     private ImageButton mSendCommentButton;
     private ImageButton mAttachFileButton;
     private ImageButton mRemoveAttachFileButton;
@@ -100,6 +102,8 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         mAttachmentView = v.findViewById(R.id.attachmentLayout);
         mAttachmentNumberTextView = (TextView) v.findViewById(R.id.textview_attachment_number);
         mSubjectView = (TextView) v.findViewById(R.id.textview_subject);
+        mCategoryView = (TextView) v.findViewById(R.id.textview_category);
+        mCategoryLayout = v.findViewById(R.id.categoryLayout);
         mUserCommentEditText = (EditText) v.findViewById(R.id.user_comment_text);
         mSendCommentButton = (ImageButton) v.findViewById(R.id.btn_send);
         mAttachFileButton = (ImageButton) v.findViewById(R.id.btn_attach);
@@ -321,6 +325,10 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                         requesterId = mGetTicketDetailsResponse.getResponse().getTicket().getRequesterId();
 
                         mSubjectView.setText(mGetTicketDetailsResponse.getResponse().getTicket().getSubject());
+                        if (mGetTicketDetailsResponse.getResponse().getTicket().getCategory() != null) {
+                            mCategoryLayout.setVisibility(View.VISIBLE);
+                            mCategoryView.setText(mGetTicketDetailsResponse.getResponse().getTicket().getCategory());
+                        }
                         mCommentListAdapter.notifyDataSetChanged();
 
                         String ticketStatus = mGetTicketDetailsResponse.getResponse().getTicket().getStatus();

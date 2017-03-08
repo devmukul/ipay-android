@@ -7,6 +7,7 @@ public class Ticket {
     private long createdAt;
     private long updatedAt;
     private String subject;
+    private String type;
     private String description;
     private String status;
 
@@ -41,6 +42,8 @@ public class Ticket {
     public String getStatus() {
         return status;
     }
+
+    public String getCategory() { return type; }
 
     @Override
     public String toString() {
