@@ -239,7 +239,7 @@ public class DocumentPicker {
         return selectedImage;
     }
 
-    public static Uri getDocumentWithIndexFromResult(Context context, int resultCode, Intent returnedIntent, int fileIndex) {
+    public static Uri getDocumentUriWithIndexFromResult(Context context, int resultCode, Intent returnedIntent, int fileIndex) {
         Uri selectedImage = null;
         try {
             File documentFile = getTempFile(context);
@@ -289,12 +289,10 @@ public class DocumentPicker {
     }
 
     private static File getFileWithIndex(Context context, int index) throws IOException {
-
         File documentFile = new File(context.getExternalCacheDir(), index + TEMP_DOCUMENT_NAME);
         if (documentFile != null) {
             documentFile.getParentFile().mkdirs();
             return documentFile;
         } else return null;
-
     }
 }

@@ -180,7 +180,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                     if (filePath != null) {
                         Random r = new Random();
                         int fileIndex = r.nextInt(100 - 1) + 1;
-                        Uri mSelectedDocumentUri = DocumentPicker.getDocumentWithIndexFromResult(getActivity(), resultCode, data, fileIndex);
+                        Uri mSelectedDocumentUri = DocumentPicker.getDocumentUriWithIndexFromResult(getActivity(), resultCode, data, fileIndex);
                         if (mSelectedDocumentUri != null)
                             attachedFiles.add(mSelectedDocumentUri.getPath());
                         else attachedFiles.add(filePath);
@@ -204,9 +204,14 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         if (attachedFiles.size() > 0) {
             mAttachmentView.setVisibility(View.VISIBLE);
             if (attachedFiles.size() > 1)
-                mAttachmentNumberTextView.setText(attachedFiles.size() + " attachments");
+                mAttachmentNumberTextView.setText(attachedFiles.size() + " " + R.string.attachments);
             else
-                mAttachmentNumberTextView.setText(attachedFiles.size() + " attachment");
+                mAttachmentNumberTextView.setText(attachedFiles.size() + " " + R.string.attachment);
+
+            if (attachedFiles.size() < Constants.MAX_FILE_ATTACHMENT_LIMIT)
+                mAttachFileButton.setVisibility(View.VISIBLE);
+            else mAttachFileButton.setVisibility(View.GONE);
+
         } else mAttachmentView.setVisibility(View.GONE);
     }
 
@@ -494,9 +499,9 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         intent.putExtra(ImagePicker.EXTRA_LIMIT, Constants.MAX_FILE_ATTACHMENT_LIMIT - attachedFiles.size());
         intent.putExtra(ImagePicker.EXTRA_SHOW_CAMERA, false);
         intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGES, images);
-        intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, "Album");
-        intent.putExtra(ImagePicker.EXTRA_IMAGE_TITLE, "Tap to select images");
-        intent.putExtra(ImagePicker.EXTRA_IMAGE_DIRECTORY, "Camera");
+        intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, R.string.album);
+        intent.putExtra(ImagePicker.EXTRA_IMAGE_TITLE, R.string.tap_to_select_images);
+        intent.putExtra(ImagePicker.EXTRA_IMAGE_DIRECTORY, R.string.camera);
 
         /* Will force ImagePicker to single pick */
         intent.putExtra(ImagePicker.EXTRA_RETURN_AFTER_FIRST, true);

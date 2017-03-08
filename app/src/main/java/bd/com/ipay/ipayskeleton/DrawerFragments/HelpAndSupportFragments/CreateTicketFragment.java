@@ -173,7 +173,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                     if (filePath != null) {
                         Random r = new Random();
                         int fileIndex = r.nextInt(100 - 1) + 1;
-                        Uri mSelectedDocumentUri = DocumentPicker.getDocumentWithIndexFromResult(getActivity(), resultCode, data, fileIndex);
+                        Uri mSelectedDocumentUri = DocumentPicker.getDocumentUriWithIndexFromResult(getActivity(), resultCode, data, fileIndex);
                         if (mSelectedDocumentUri != null)
                             attachedFiles.add(mSelectedDocumentUri.getPath());
                         else attachedFiles.add(filePath);
@@ -512,7 +512,6 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
             }
 
             public void bindViewAttachedFile(final int pos) {
-
                 if (attachedFiles.size() < Constants.MAX_FILE_ATTACHMENT_LIMIT)
                     attachFileName = attachedFiles.get(pos - 1);
                 else attachFileName = attachedFiles.get(pos);
@@ -650,9 +649,9 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         intent.putExtra(ImagePicker.EXTRA_LIMIT, Constants.MAX_FILE_ATTACHMENT_LIMIT - attachedFiles.size());
         intent.putExtra(ImagePicker.EXTRA_SHOW_CAMERA, false);
         intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGES, images);
-        intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, "Album");
-        intent.putExtra(ImagePicker.EXTRA_IMAGE_TITLE, "Tap to select images");
-        intent.putExtra(ImagePicker.EXTRA_IMAGE_DIRECTORY, "Camera");
+        intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, R.string.album);
+        intent.putExtra(ImagePicker.EXTRA_IMAGE_TITLE, R.string.tap_to_select_images);
+        intent.putExtra(ImagePicker.EXTRA_IMAGE_DIRECTORY, R.string.camera);
 
         /* Will force ImagePicker to single pick */
         intent.putExtra(ImagePicker.EXTRA_RETURN_AFTER_FIRST, true);

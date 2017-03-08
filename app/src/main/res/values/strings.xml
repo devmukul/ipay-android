@@ -795,7 +795,11 @@
     <string name="cancelled">Cancelled</string>
     <string name="rejected">Rejected</string>
     <string name="draft">Draft</string>
-
+    <string name="attachment">attachment</string>
+    <string name="attachments">attachments</string>
+    <string name="album">Album</string>
+    <string name="tap_to_select_images">Tap to select images</string>
+    <string name="camera">Camera</string>
 
     <string-array name="mobile_operators">
         <item>Grameenphone</item>
