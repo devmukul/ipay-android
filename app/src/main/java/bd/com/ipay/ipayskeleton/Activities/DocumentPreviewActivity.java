@@ -22,7 +22,7 @@ public class DocumentPreviewActivity extends AppCompatActivity {
         String fileExtension = getIntent().getStringExtra(Constants.FILE_EXTENSION);
         String documentTypeName = getIntent().getStringExtra(Constants.DOCUMENT_TYPE_NAME);
 
-        if (!documentTypeName.isEmpty())
+        if (documentTypeName != null)
             setTitle(documentTypeName);
         else
             setTitle("Attachment");

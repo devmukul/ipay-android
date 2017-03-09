@@ -67,13 +67,17 @@ public class AttachmentView extends FrameLayout {
                         .error(R.drawable.icon_pdf)
                         .crossFade()
                         .dontAnimate()
+                        .fitCenter()
+                        .override(300,300)
                         .into(mAttachmentView);
             } else {
                 glide
-                        .placeholder(R.drawable.ic_transaction_ipaylogo)
-                        .error(R.drawable.ic_transaction_ipaylogo)
+                        .placeholder(R.drawable.add_device)
+                        .error(R.drawable.add_device)
                         .crossFade()
                         .dontAnimate()
+                        .fitCenter()
+                        .override(300,300)
                         .into(mAttachmentView);
             }
         } catch (Exception e) {
