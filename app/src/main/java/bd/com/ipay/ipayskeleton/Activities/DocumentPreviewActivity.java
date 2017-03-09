@@ -1,13 +1,12 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -25,7 +24,7 @@ public class DocumentPreviewActivity extends AppCompatActivity {
         String fileExtension = getIntent().getStringExtra(Constants.FILE_EXTENSION);
         String documentTypeName = getIntent().getStringExtra(Constants.DOCUMENT_TYPE_NAME);
 
-        if (documentTypeName!=null)
+        if (documentTypeName != null)
             setTitle(documentTypeName);
         else
             setTitle("Attachment");
@@ -36,7 +35,8 @@ public class DocumentPreviewActivity extends AppCompatActivity {
         webView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
 
         if (documentUrl.contains("pdf")) {
-            webView.loadUrl(documentUrl);
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(documentUrl));
+            startActivity(browserIntent);
         } else if (fileExtension.endsWith("jpg") || fileExtension.endsWith("jpeg") || fileExtension.endsWith("png")) {
             // For loading images
             webView.loadData("<html><head><style type='text/css'>body{margin:auto auto;text-align:center;} img{width:100%25;} </style></head><body><img src='" +

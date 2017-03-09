@@ -67,8 +67,7 @@ public class AttachmentView extends FrameLayout {
                         .error(R.drawable.icon_pdf)
                         .crossFade()
                         .dontAnimate()
-                        .fitCenter()
-                        .override(300, 300)
+                        .override(100, 80)
                         .into(mAttachmentView);
             } else {
                 glide
