@@ -801,6 +801,7 @@
     <string name="tap_to_select_images">Tap to select images</string>
     <string name="camera">Camera</string>
     <string name="pdf">pdf</string>
+    <string name="max_limit_exceed">Max limit of attachment exceed. </string>
 
     <string-array name="mobile_operators">
         <item>Grameenphone</item>

@@ -68,7 +68,7 @@ public class AttachmentView extends FrameLayout {
                         .crossFade()
                         .dontAnimate()
                         .fitCenter()
-                        .override(300,300)
+                        .override(300, 300)
                         .into(mAttachmentView);
             } else {
                 glide
@@ -77,7 +77,7 @@ public class AttachmentView extends FrameLayout {
                         .crossFade()
                         .dontAnimate()
                         .fitCenter()
-                        .override(300,300)
+                        .override(300, 300)
                         .into(mAttachmentView);
             }
         } catch (Exception e) {

@@ -15,6 +15,7 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin_card" />
 
     <LinearLayout
+        android:id="@+id/messageLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -28,17 +29,20 @@
             android:gravity="left"
             android:textColor="@android:color/white" />
 
-        <TextView
-            android:id="@+id/textview_time"
-            style="@style/TicketCommentTimeStyle"
-            android:gravity="left"
-            android:textColor="@android:color/white" />
-
         <LinearLayout
             android:id="@+id/attachmentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" />
+
+        <TextView
+            android:id="@+id/textview_time"
+            style="@style/TicketCommentTimeStyle"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/messageLayout"
+            android:layout_marginTop="@dimen/activity_horizontal_margin_semi_double"
+            android:gravity="right"
+            android:textColor="@color/colorDarkKGray" />
     </LinearLayout>
 
 </RelativeLayout>

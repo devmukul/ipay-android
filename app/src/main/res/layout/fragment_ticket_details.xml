@@ -40,33 +40,6 @@
 
                 <View style="@style/Divider" />
 
-                <LinearLayout
-                    android:id="@+id/categoryLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
-                        android:paddingTop="@dimen/value2"
-                        android:text="@string/category"
-                        android:textColor="@color/colorPrimary" />
-
-                    <TextView
-                        android:id="@+id/textview_category"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/value2"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
-                        android:paddingTop="@dimen/activity_horizontal_margin"
-                        android:textSize="18sp" />
-
-                    <View style="@style/Divider" />
-                </LinearLayout>
-
                 <android.support.v4.widget.SwipeRefreshLayout
                     android:id="@+id/swipe_refresh_layout"
                     android:layout_width="match_parent"
@@ -83,7 +56,6 @@
                         android:paddingRight="@dimen/activity_horizontal_margin_card" />
 
                 </android.support.v4.widget.SwipeRefreshLayout>
-
             </LinearLayout>
 
             <LinearLayout
@@ -109,7 +81,7 @@
                     android:id="@+id/btn_remove_attachment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@android:drawable/alert_dark_frame" />
+                    android:src="@drawable/ic_crossw" />
             </LinearLayout>
 
             <LinearLayout
