@@ -8,79 +8,37 @@
 
     <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
         android:id="@+id/profile_picture"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
         android:layout_width="@dimen/ticket_profile_picture_size"
         android:layout_height="@dimen/ticket_profile_picture_size"
-        android:layout_marginRight="@dimen/activity_horizontal_margin_card"/>
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/activity_horizontal_margin_card" />
 
     <LinearLayout
-        android:background="@drawable/background_ticket_comment_left"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/profile_picture">
+        android:layout_toRightOf="@+id/profile_picture"
+        android:background="@drawable/background_ticket_comment_left"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/textview_comment"
-            android:textColor="@android:color/white"
+            style="@style/TicketCommentBodyStyle"
             android:gravity="left"
-            style="@style/TicketCommentBodyStyle"/>
+            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/textview_time"
             style="@style/TicketCommentTimeStyle"
             android:gravity="left"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
 
         <LinearLayout
             android:id="@+id/attachmentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/activity_horizontal_margin_card"
-                android:layout_weight="1"
-                android:src="@drawable/ic_fingerprint_activation"
-                android:visibility="gone"/>
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_margin="@dimen/activity_horizontal_margin_card"
-                android:layout_weight="1"
-                android:src="@drawable/ic_fingerprint_activation"
-                android:visibility="gone"/>
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/activity_horizontal_margin_card"
-                android:layout_weight="1"
-                android:src="@drawable/ic_fingerprint_activation"
-                android:visibility="gone"/>
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_margin="@dimen/activity_horizontal_margin_card"
-                android:layout_weight="1"
-                android:src="@drawable/ic_fingerprint_activation"
-                android:visibility="gone"/>
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_margin="@dimen/activity_horizontal_margin_card"
-                android:layout_weight="1"
-                android:src="@drawable/ic_fingerprint_activation"
-                android:visibility="gone"/>
-
-        </LinearLayout>
+            android:orientation="horizontal" />
     </LinearLayout>
 
 </RelativeLayout>

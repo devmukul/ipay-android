@@ -11,9 +11,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -33,6 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import bd.com.ipay.ipayskeleton.Activities.DocumentPreviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -204,15 +207,14 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         if (attachedFiles.size() > 0) {
             mAttachmentView.setVisibility(View.VISIBLE);
             if (attachedFiles.size() > 1)
-                mAttachmentNumberTextView.setText(attachedFiles.size() + " " + R.string.attachments);
+                mAttachmentNumberTextView.setText(attachedFiles.size() + " " + getString(R.string.attachments));
             else
-                mAttachmentNumberTextView.setText(attachedFiles.size() + " " + R.string.attachment);
-
-            if (attachedFiles.size() < Constants.MAX_FILE_ATTACHMENT_LIMIT)
-                mAttachFileButton.setVisibility(View.VISIBLE);
-            else mAttachFileButton.setVisibility(View.GONE);
-
+                mAttachmentNumberTextView.setText(attachedFiles.size() + " " + getString(R.string.attachment));
         } else mAttachmentView.setVisibility(View.GONE);
+
+        if (attachedFiles.size() < Constants.MAX_FILE_ATTACHMENT_LIMIT)
+            mAttachFileButton.setVisibility(View.VISIBLE);
+        else mAttachFileButton.setVisibility(View.GONE);
     }
 
     private void uploadMultipleAttachmentsAsyncTask() {
@@ -430,13 +432,25 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     attachmentLayout.setLayoutParams(params);
                     attachmentLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    attachmentLayout.setGravity(Gravity.CENTER);
 
-                    for (String document : documents) {
+                    for (final String document : documents) {
                         AttachmentView attachmentview = new AttachmentView(getActivity());
                         attachmentview.setAttachment(document, false);
                         LinearLayout.LayoutParams attachmentViewParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
+                        attachmentViewParams.gravity = Gravity.CENTER_HORIZONTAL;
                         attachmentview.setLayoutParams(attachmentViewParams);
 
+                        attachmentview.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                Intent intent = new Intent(getActivity(), DocumentPreviewActivity.class);
+                                intent.putExtra(Constants.FILE_EXTENSION, Utilities.getExtension(document));
+                                intent.putExtra(Constants.DOCUMENT_URL, document);
+                                startActivity(intent);
+                            }
+                        });
                         attachmentLayout.addView(attachmentview);
                     }
                 }
@@ -499,9 +513,9 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         intent.putExtra(ImagePicker.EXTRA_LIMIT, Constants.MAX_FILE_ATTACHMENT_LIMIT - attachedFiles.size());
         intent.putExtra(ImagePicker.EXTRA_SHOW_CAMERA, false);
         intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGES, images);
-        intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, R.string.album);
-        intent.putExtra(ImagePicker.EXTRA_IMAGE_TITLE, R.string.tap_to_select_images);
-        intent.putExtra(ImagePicker.EXTRA_IMAGE_DIRECTORY, R.string.camera);
+        intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, getString(R.string.album));
+        intent.putExtra(ImagePicker.EXTRA_IMAGE_TITLE, getString(R.string.tap_to_select_images));
+        intent.putExtra(ImagePicker.EXTRA_IMAGE_DIRECTORY, getString(R.string.camera));
 
         /* Will force ImagePicker to single pick */
         intent.putExtra(ImagePicker.EXTRA_RETURN_AFTER_FIRST, true);

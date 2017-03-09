@@ -22,7 +22,10 @@ public class DocumentPreviewActivity extends AppCompatActivity {
         String fileExtension = getIntent().getStringExtra(Constants.FILE_EXTENSION);
         String documentTypeName = getIntent().getStringExtra(Constants.DOCUMENT_TYPE_NAME);
 
-        setTitle(documentTypeName);
+        if (!documentTypeName.isEmpty())
+            setTitle(documentTypeName);
+        else
+            setTitle("Attachment");
 
         WebView webView = new WebView(this);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -34,7 +37,7 @@ public class DocumentPreviewActivity extends AppCompatActivity {
         } else if (fileExtension.endsWith("jpg") || fileExtension.endsWith("jpeg") || fileExtension.endsWith("png")) {
             // For loading images
             webView.loadData("<html><head><style type='text/css'>body{margin:auto auto;text-align:center;} img{width:100%25;} </style></head><body><img src='" +
-                    documentUrl + "'/></body></html>","text/html",  "UTF-8");
+                    documentUrl + "'/></body></html>", "text/html", "UTF-8");
         } else {
             webView.loadUrl(documentUrl);
         }
