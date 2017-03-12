@@ -26,8 +26,9 @@
         <TextView
             android:id="@+id/textview_comment"
             style="@style/TicketCommentBodyStyle"
-            android:gravity="right"
-            android:textColor="@android:color/white" />
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
+            android:gravity="right" />
 
         <LinearLayout
             android:id="@+id/attachmentLayout"

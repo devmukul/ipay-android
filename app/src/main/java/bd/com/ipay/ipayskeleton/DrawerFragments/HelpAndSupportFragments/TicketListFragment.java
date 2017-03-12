@@ -190,7 +190,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
         private class TicketViewHolder extends RecyclerView.ViewHolder {
 
             private TextView subjectView;
-            private TextView descriptionView;
+            private TextView categoryView;
             private TextView timeView;
             private TextView statusView;
 
@@ -198,7 +198,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                 super(itemView);
 
                 subjectView = (TextView) itemView.findViewById(R.id.textview_subject);
-                descriptionView = (TextView) itemView.findViewById(R.id.textview_description);
+                categoryView = (TextView) itemView.findViewById(R.id.textview_category);
                 timeView = (TextView) itemView.findViewById(R.id.textview_time);
                 statusView = (TextView) itemView.findViewById(R.id.textview_status);
             }
@@ -207,7 +207,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                 final Ticket ticket = mTickets.get(pos);
 
                 subjectView.setText(ticket.getSubject());
-                descriptionView.setText(ticket.getDescription());
+                categoryView.setText(getString(R.string.category) + ": " + ticket.getCategory());
                 timeView.setText(Utilities.formatDateWithTime(ticket.getCreatedAt()));
                 statusView.setText(ticket.getStatus().toUpperCase());
 
