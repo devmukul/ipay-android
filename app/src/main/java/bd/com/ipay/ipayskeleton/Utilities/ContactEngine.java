@@ -33,7 +33,6 @@ import java.util.Set;
 
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
-import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 import bd.com.ipay.ipayskeleton.Model.Friend.PhoneName;
 
 public class ContactEngine {
@@ -965,7 +964,6 @@ public class ContactEngine {
 //                    else
                     friendInfo = new FriendInfo(name,phoneNumber, photoUrl);
 
-                  //  FriendNode contact = new FriendNode(phoneNumber, friendInfo);
                     phoneContacts.add(friendInfo);
                 }
             } while (phoneContactsCursor.moveToNext());
@@ -1019,16 +1017,15 @@ public class ContactEngine {
         }
 
         for (FriendInfo phoneContact : phoneContacts) {
-//            Log.e("Contact", phoneContact.toString() + " : " + serverContactMap.get(phoneContact.getPhoneNumber()));
             if (serverContactMap.containsKey(phoneContact.getMobileNumber())) {
                 String serverName = serverContactMap.get(phoneContact.getMobileNumber()).getName();
                 String phoneName = phoneContact.getName();
 
                 if (!serverName.equals(phoneName)) {
-                    contactDiff.updatedFriends.add(phoneContact);
+                    contactDiff.updatedContacts.add(phoneContact);
                 }
             } else {
-                contactDiff.newFriends.add(phoneContact);
+                contactDiff.newContacts.add(phoneContact);
             }
         }
 
@@ -1069,17 +1066,17 @@ public class ContactEngine {
     }
 
     public static class ContactDiff {
-        public final List<FriendInfo> newFriends;
-        public final List<FriendInfo> updatedFriends;
+        public final List<FriendInfo> newContacts;
+        public final List<FriendInfo> updatedContacts;
 
         public ContactDiff() {
-            newFriends = new ArrayList<>();
-            updatedFriends = new ArrayList<>();
+            newContacts = new ArrayList<>();
+            updatedContacts = new ArrayList<>();
         }
 
-        public ContactDiff(List<FriendInfo> newFriends, List<FriendInfo> updatedFriends) {
-            this.newFriends = newFriends;
-            this.updatedFriends = updatedFriends;
+        public ContactDiff(List<FriendInfo> newContacts, List<FriendInfo> updatedContacts) {
+            this.newContacts = newContacts;
+            this.updatedContacts = updatedContacts;
         }
     }
 

@@ -13,11 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
-import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
-import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendResponse;
-import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
+import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
+import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
 import bd.com.ipay.ipayskeleton.Model.Friend.InfoUpdateFriend;
 import bd.com.ipay.ipayskeleton.Model.Friend.UpdateFriendRequest;
 import bd.com.ipay.ipayskeleton.Model.Friend.UpdateFriendResponse;
@@ -65,8 +64,8 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
             // Calculate the difference between phone contacts and server contacts
             ContactEngine.ContactDiff contactDiff = ContactEngine.getContactDiff(phoneContacts, serverContacts);
 
-            Log.i("New Contacts", contactDiff.newFriends.toString());
-            Log.i("Updated Contacts", contactDiff.updatedFriends.toString());
+            Log.i("New Contacts", contactDiff.newContacts.toString());
+            Log.i("Updated Contacts", contactDiff.updatedContacts.toString());
 
             return contactDiff;
         } else {
@@ -78,8 +77,8 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
     @Override
     protected void onPostExecute(ContactEngine.ContactDiff contactDiff) {
         if (contactDiff != null) {
-            addFriends(contactDiff.newFriends);
-            updateFriends(contactDiff.updatedFriends);
+            addFriends(contactDiff.newContacts);
+            updateFriends(contactDiff.updatedContacts);
         }
 
     }

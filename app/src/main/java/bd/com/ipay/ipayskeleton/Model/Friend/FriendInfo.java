@@ -9,9 +9,6 @@ public class FriendInfo {
     private boolean verified;
     private String contactName; // Previous name
     private String iPayName; // Previous original name
-    /* private String profilePictureUrl;
-     private String profilePictureUrlMedium;
-     private String profilePictureUrlHigh;*/
     private ProfilePictureURL profilePictureURL;
     private String relationship;
     private long updateAt;

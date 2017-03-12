@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
-import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
