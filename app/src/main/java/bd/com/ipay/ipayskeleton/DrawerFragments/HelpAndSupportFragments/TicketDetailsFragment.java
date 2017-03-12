@@ -68,7 +68,6 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
 
     private View mAttachmentView;
     private TextView mAttachmentNumberTextView;
-    private TextView mSubjectView;
     private ImageButton mSendCommentButton;
     private ImageButton mAttachFileButton;
     private ImageButton mRemoveAttachFileButton;
@@ -102,7 +101,6 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
 
         mAttachmentView = v.findViewById(R.id.attachmentLayout);
         mAttachmentNumberTextView = (TextView) v.findViewById(R.id.textview_attachment_number);
-        mSubjectView = (TextView) v.findViewById(R.id.textview_subject);
         mUserCommentEditText = (EditText) v.findViewById(R.id.user_comment_text);
         mSendCommentButton = (ImageButton) v.findViewById(R.id.btn_send);
         mAttachFileButton = (ImageButton) v.findViewById(R.id.btn_attach);
@@ -159,6 +157,10 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getTicketDetails();
+    }
+
+    private void setTitle(String title) {
+        getActivity().setTitle(title);
     }
 
     @Override
@@ -326,7 +328,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                         mComments = mGetTicketDetailsResponse.getResponse().getComments().getComments();
                         requesterId = mGetTicketDetailsResponse.getResponse().getTicket().getRequesterId();
 
-                        mSubjectView.setText(mGetTicketDetailsResponse.getResponse().getTicket().getSubject());
+                        setTitle(mGetTicketDetailsResponse.getResponse().getTicket().getSubject());
                         mCommentListAdapter.notifyDataSetChanged();
 
                         String ticketStatus = mGetTicketDetailsResponse.getResponse().getTicket().getStatus();

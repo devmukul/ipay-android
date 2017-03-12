@@ -22,35 +22,15 @@
                 android:orientation="vertical"
                 android:paddingTop="@dimen/activity_vertical_margin">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:text="@string/subject"
-                    android:textColor="@color/colorPrimary" />
-
-                <TextView
-                    android:id="@+id/textview_subject"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/value2"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingTop="@dimen/value2"
-                    android:textSize="18sp" />
-
-                <View style="@style/Divider" />
-
                 <android.support.v4.widget.SwipeRefreshLayout
                     android:id="@+id/swipe_refresh_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/activity_vertical_margin">
+                    android:layout_height="wrap_content">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/list_comments"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/activity_horizontal_margin"
                         android:clipToPadding="false"
                         android:paddingLeft="@dimen/activity_horizontal_margin_card"
                         android:paddingRight="@dimen/activity_horizontal_margin_card" />

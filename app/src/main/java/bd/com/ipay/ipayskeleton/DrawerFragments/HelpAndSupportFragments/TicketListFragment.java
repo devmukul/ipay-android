@@ -53,6 +53,8 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_ticket_list, container, false);
 
+        setTitle();
+
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
 
         mFabCreateNewTicket = (FloatingActionButton) v.findViewById(R.id.fab_new_ticket);
@@ -82,6 +84,11 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
 
         return v;
     }
+
+    private void setTitle() {
+        getActivity().setTitle(R.string.help);
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

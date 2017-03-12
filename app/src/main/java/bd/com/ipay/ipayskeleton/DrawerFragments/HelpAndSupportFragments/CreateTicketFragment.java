@@ -111,6 +111,8 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_create_ticket, container, false);
 
+        setTitle();
+
         mSubjectEditText = (EditText) view.findViewById(R.id.subject_edit_text);
         mCategoryEditText = (EditTextWithProgressBar) view.findViewById(R.id.category_edit_text);
         mMessageEditText = (EditText) view.findViewById(R.id.message_edit_text);
@@ -133,6 +135,11 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         setFileAttachmentAdapter();
         return view;
     }
+
+    private void setTitle() {
+        getActivity().setTitle(R.string.help);
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
