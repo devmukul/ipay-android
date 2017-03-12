@@ -396,11 +396,10 @@ public class Constants {
     public static final String URL_DELETE_EMAIL = "user/emails/";
     public static final String URL_MAKE_PRIMARY_EMAIL = "/primary";
 
-    // User Rest (Friends)
-    public static final String URL_GET_FRIENDS = "getfriends";
-    public static final String URL_ADD_FRIENDS = "addfriends";
-    public static final String URL_DELETE_FRIEND = "deletefriend";
-    public static final String URL_UPDATE_FRIENDS = "updatefriends";
+    // User Rest (Friends Updated)
+    public static final String URL_GET_CONTACTS = "contacts";
+    public static final String URL_ADD_CONTACTS = "contacts";
+    public static final String URL_UPDATE_CONTACTS = "contacts";
 
     // Business Information (Owner)
     public static final String URL_GET_BUSINESS_INFORMATION = "user/profile/business";

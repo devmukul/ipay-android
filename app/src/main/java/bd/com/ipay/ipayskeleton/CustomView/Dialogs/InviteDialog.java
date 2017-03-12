@@ -179,7 +179,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
         String json = gson.toJson(addFriendRequest);
 
         mAddFriendAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, context, this);
+                Constants.BASE_URL_FRIEND + Constants.URL_ADD_CONTACTS, json, context, this);
         mAddFriendAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }

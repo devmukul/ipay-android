@@ -4,59 +4,67 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 
 public class FriendInfo {
     private int accountType;
-    private boolean isMember;
-    private boolean isVerified;
-    private String name;
-    private String originalName;
-    private String profilePictureUrl;
-    private String profilePictureUrlMedium;
-    private String profilePictureUrlHigh;
+    private String mobileNumber;
+    private boolean iPayMember;
+    private boolean verified;
+    private String contactName; // Previous name
+    private String iPayName; // Previous original name
+    /* private String profilePictureUrl;
+     private String profilePictureUrlMedium;
+     private String profilePictureUrlHigh;*/
+    private ProfilePictureURL profilePictureURL;
     private String relationship;
     private long updateAt;
 
-    public FriendInfo(String name, String profilePictureUrl) {
-        this.name = name;
-        this.profilePictureUrl = profilePictureUrl;
+
+    public FriendInfo(String name, String mobileNumber, String profilePictureUrl) {
+        this.contactName = name;
+        this.mobileNumber = mobileNumber;
+        this.profilePictureURL = new ProfilePictureURL(profilePictureUrl);
     }
 
-    public FriendInfo(int accountType, boolean isMember, boolean isVerified, String name, String originalName,
+    public FriendInfo(int accountType, boolean isMember, boolean isVerified, String name, String originalName, String mobileNumber,
                       String profilePictureUrl, String profilePictureUrlMedium, String profilePictureUrlHigh, String relationship, long updateAt) {
         this.accountType = accountType;
-        this.isMember = isMember;
-        this.isVerified = isVerified;
-        this.name = name;
-        this.originalName = originalName;
-        this.profilePictureUrl = profilePictureUrl;
-        this.profilePictureUrlMedium = profilePictureUrlMedium;
-        this.profilePictureUrlHigh = profilePictureUrlHigh;
+        this.mobileNumber = mobileNumber;
+        this.iPayMember = isMember;
+        this.verified = isVerified;
+        this.contactName = name;
+        this.iPayName = originalName;
+        this.profilePictureURL = new ProfilePictureURL(profilePictureUrl, profilePictureUrlMedium, profilePictureUrlHigh);
         this.relationship = relationship;
         this.updateAt = updateAt;
     }
 
-    public FriendInfo(int accountType, int isMember, int verificationStatus, String name, String originalName,
+    public FriendInfo(int accountType, int isMember, int verificationStatus, String name, String originalName,String mobileNumber,
                       String profilePictureUrl, String profilePictureUrlMedium, String profilePictureUrlHigh, String relationship, long updateAt) {
         this(accountType, isMember == DBConstants.IPAY_MEMBER, verificationStatus == DBConstants.VERIFIED_USER,
-                name, originalName, profilePictureUrl, profilePictureUrlMedium, profilePictureUrlHigh, relationship, updateAt);
+                name, originalName,mobileNumber, profilePictureUrl, profilePictureUrlMedium, profilePictureUrlHigh, relationship, updateAt);
     }
 
     public int getAccountType() {
         return accountType;
     }
 
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
     public boolean isMember() {
-        return isMember;
+        return iPayMember;
     }
 
     public boolean isVerified() {
-        return isVerified;
+        return verified;
     }
 
     public String getName() {
-        return name;
+        return contactName;
     }
 
     public String getOriginalName() {
-        return originalName;
+        return iPayName;
     }
 
     public long getUpdateTime() {
@@ -64,21 +72,21 @@ public class FriendInfo {
     }
 
     public String getProfilePictureUrl() {
-        return profilePictureUrl;
+        return profilePictureURL.getLow();
     }
 
     // TODO remove extra checking once medium quality profile picture becomes available in live
     public String getProfilePictureUrlMedium() {
-        if (profilePictureUrlMedium != null && !profilePictureUrlMedium.isEmpty())
-            return profilePictureUrlMedium;
+        if (profilePictureURL.getMedium() != null && !profilePictureURL.getMedium().isEmpty())
+            return profilePictureURL.getMedium();
         else
             return getProfilePictureUrl();
     }
 
     // TODO remove extra checking once high quality profile picture becomes available in live
     public String getProfilePictureUrlHigh() {
-        if (profilePictureUrlHigh != null && !profilePictureUrlHigh.isEmpty())
-            return profilePictureUrlHigh;
+        if (profilePictureURL.getHigh() != null && !profilePictureURL.getHigh().isEmpty())
+            return profilePictureURL.getHigh();
         else
             return getProfilePictureUrlMedium();
     }
@@ -92,26 +100,26 @@ public class FriendInfo {
     }
 
     public void setVerified(boolean verified) {
-        isVerified = verified;
+        verified = verified;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.contactName = name;
     }
 
     public void setProfilePictureUrl(String profilePictureUrl) {
-        this.profilePictureUrl = profilePictureUrl;
+        this.profilePictureURL =new ProfilePictureURL(profilePictureUrl);
     }
 
     @Override
     public String toString() {
         return "FriendInfo{" +
                 "accountType=" + accountType +
-                ", isMember=" + isMember +
-                ", isVerified=" + isVerified +
-                ", name='" + name + '\'' +
-                ", originalName='" + originalName + '\'' +
-                ", profilePictureUrl='" + profilePictureUrl + '\'' +
+                ", isMember=" + iPayMember +
+                ", isVerified=" + verified +
+                ", name='" + contactName + '\'' +
+                ", originalName='" + iPayName + '\'' +
+                ", profilePictureUrl='" + profilePictureURL + '\'' +
                 '}';
     }
 }

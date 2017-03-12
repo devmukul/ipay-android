@@ -248,7 +248,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         String json = gson.toJson(addFriendRequest);
 
         mAddFriendAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, getActivity(), this);
+                Constants.BASE_URL_FRIEND + Constants.URL_ADD_CONTACTS, json, getActivity(), this);
         mAddFriendAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
+import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
 import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
 import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendResponse;
@@ -35,9 +36,9 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
     private static boolean contactsSyncedOnce;
 
     private final Context context;
-    private final List<FriendNode> serverContacts;
+    private final List<FriendInfo> serverContacts;
 
-    public SyncContactsAsyncTask(Context context, List<FriendNode> serverContacts) {
+    public SyncContactsAsyncTask(Context context, List<FriendInfo> serverContacts) {
         this.context = context;
         this.serverContacts = serverContacts;
     }
@@ -59,7 +60,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
                 Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
 
             // Read phone contacts
-            List<FriendNode> phoneContacts = ContactEngine.getAllContacts(context);
+            List<FriendInfo> phoneContacts = ContactEngine.getAllContacts(context);
 
             // Calculate the difference between phone contacts and server contacts
             ContactEngine.ContactDiff contactDiff = ContactEngine.getContactDiff(phoneContacts, serverContacts);
@@ -83,7 +84,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
 
     }
 
-    private void addFriends(List<FriendNode> friends) {
+    private void addFriends(List<FriendInfo> friends) {
         if (mAddFriendAsyncTask != null) {
             return;
         }
@@ -92,8 +93,8 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
             return;
 
         List<InfoAddFriend> newFriends = new ArrayList<>();
-        for (FriendNode friendNode : friends) {
-            newFriends.add(new InfoAddFriend(friendNode.getPhoneNumber(), friendNode.getInfo().getName()));
+        for (FriendInfo friendNode : friends) {
+            newFriends.add(new InfoAddFriend(friendNode.getMobileNumber(), friendNode.getName()));
         }
 
         AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
@@ -101,12 +102,12 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
         String json = gson.toJson(addFriendRequest);
 
         mAddFriendAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, context, this);
+                Constants.BASE_URL_FRIEND + Constants.URL_ADD_CONTACTS, json, context, this);
         mAddFriendAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
-    private void updateFriends(List<FriendNode> friends) {
+    private void updateFriends(List<FriendInfo> friends) {
         if (mUpdateFriendResponse != null) {
             return;
         }
@@ -115,9 +116,9 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
             return;
 
         List<InfoUpdateFriend> updateFriends = new ArrayList<>();
-        for (FriendNode friend : friends) {
+        for (FriendInfo friend : friends) {
             InfoUpdateFriend infoUpdateFriend = new InfoUpdateFriend(
-                    friend.getPhoneNumber(), friend.getInfo().getName());
+                    friend.getMobileNumber(), friend.getName());
             updateFriends.add(infoUpdateFriend);
         }
 
@@ -126,7 +127,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
         String json = gson.toJson(updateFriendRequest);
 
         mUpdateFriendAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_UPDATE_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_UPDATE_FRIENDS, json, context, this);
+                Constants.BASE_URL_FRIEND + Constants.URL_UPDATE_CONTACTS, json, context, this);
         mUpdateFriendAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
