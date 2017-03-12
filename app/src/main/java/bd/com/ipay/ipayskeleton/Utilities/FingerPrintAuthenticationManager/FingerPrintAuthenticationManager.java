@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.FingerPrintAuthentication;
+package bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager;
 
 import android.Manifest;
 import android.app.KeyguardManager;
