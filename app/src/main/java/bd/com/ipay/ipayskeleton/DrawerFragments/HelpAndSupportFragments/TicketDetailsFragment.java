@@ -420,7 +420,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                 if (!comment.getDocuments().isEmpty()) {
                     List<String> documents = comment.getDocuments();
 
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     attachmentLayout.setLayoutParams(params);
                     attachmentLayout.setOrientation(LinearLayout.VERTICAL);
                     attachmentLayout.setGravity(Gravity.CENTER);
@@ -428,8 +428,12 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                     for (final String document : documents) {
                         AttachmentView attachmentview = new AttachmentView(getActivity());
                         attachmentview.setAttachment(document, false);
-                        LinearLayout.LayoutParams attachmentViewParams = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-                        attachmentViewParams.gravity = Gravity.CENTER_HORIZONTAL;
+                        LinearLayout.LayoutParams attachmentViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        if (comment.getAuthorId().equals(requesterId))
+                            attachmentViewParams.gravity = Gravity.RIGHT;
+                        else
+                            attachmentViewParams.gravity = Gravity.LEFT;
+
                         attachmentview.setLayoutParams(attachmentViewParams);
 
                         attachmentview.setOnClickListener(new View.OnClickListener() {

@@ -16,25 +16,28 @@
 
     <LinearLayout
         android:id="@+id/messageLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/profile_picture"
-        android:background="@drawable/background_ticket_comment_left"
+        android:layout_toLeftOf="@+id/profile_picture"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/textview_comment"
             style="@style/TicketCommentBodyStyle"
-            android:layout_gravity="center"
+            android:layout_gravity="left"
             android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
-            android:gravity="left" />
+            android:background="@drawable/background_ticket_comment_left"
+            android:gravity="left"
+            android:padding="@dimen/value5" />
 
         <LinearLayout
             android:id="@+id/attachmentLayout"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" />
+            android:layout_margin="@dimen/value5"
+            android:background="@drawable/background_ticket_comment_left"
+            android:orientation="vertical" />
 
         <TextView
             android:id="@+id/textview_time"
@@ -42,7 +45,8 @@
             android:layout_alignParentBottom="true"
             android:layout_below="@id/messageLayout"
             android:layout_marginTop="@dimen/activity_horizontal_margin_semi_double"
-            android:gravity="right"
+            android:layout_toLeftOf="@+id/profile_picture"
+            android:gravity="left"
             android:textColor="@color/colorDarkKGray" />
     </LinearLayout>
 
