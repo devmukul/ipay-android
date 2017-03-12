@@ -19,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin_semi_double"
         android:layout_toLeftOf="@+id/profile_picture"
         android:orientation="vertical">
 
@@ -36,6 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/value5"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin_semi_double"
             android:background="@drawable/background_ticket_comment_right"
             android:orientation="vertical" />
     </LinearLayout>
@@ -45,7 +47,6 @@
         style="@style/TicketCommentTimeStyle"
         android:layout_alignParentBottom="true"
         android:layout_below="@id/messageLayout"
-        android:layout_marginTop="@dimen/activity_horizontal_margin_semi_double"
         android:layout_toLeftOf="@+id/profile_picture"
         android:gravity="right"
         android:textColor="@color/colorDarkKGray" />

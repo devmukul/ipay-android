@@ -71,8 +71,8 @@ public class AttachmentView extends FrameLayout {
                         .into(mAttachmentView);
             } else {
                 glide
-                        .placeholder(R.drawable.add_device)
-                        .error(R.drawable.add_device)
+                        .placeholder(R.drawable.ic_image)
+                        .error(R.drawable.ic_image)
                         .crossFade()
                         .dontAnimate()
                         .fitCenter()
