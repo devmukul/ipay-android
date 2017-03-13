@@ -16,7 +16,6 @@ public class GenericHttpResponse {
     private boolean isUpdateNeeded;
     private Context context;
     private List<Header> headers;
-    private String response;
 
     public GenericHttpResponse() {
     }
@@ -60,10 +59,6 @@ public class GenericHttpResponse {
     public void setJsonString(String jsonString) {
         this.jsonString = jsonString;
     }
-
-    public String getResponse() { return response; }
-
-    public void setResponse(String response) { this.response = response; }
 
     public List<Header> getHeaders() {
         return headers;

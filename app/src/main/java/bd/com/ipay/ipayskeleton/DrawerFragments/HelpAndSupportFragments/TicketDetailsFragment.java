@@ -15,7 +15,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -33,14 +32,12 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 import bd.com.ipay.ipayskeleton.Activities.DocumentPreviewActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.UploadTicketAttachmentAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.AttachmentView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
@@ -56,6 +53,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
+import bd.com.ipay.ipayskeleton.Utilities.MultipleImagePicker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TicketDetailsFragment extends ProgressFragment implements HttpResponseListener {
@@ -63,8 +61,6 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     private GetTicketDetailsResponse mGetTicketDetailsResponse;
 
     private HttpRequestPostAsyncTask mNewCommentTask = null;
-
-    private CommentIdResponse mCommentIdResponse;
 
     private RecyclerView mCommentListRecyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -186,8 +182,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                     String filePath = DocumentPicker.getFilePathForCameraOrPDFResult(getActivity(), resultCode, data);
 
                     if (filePath != null) {
-                        Random r = new Random();
-                        int fileIndex = r.nextInt(100 - 1) + 1;
+                        int fileIndex = Utilities.getRandomNumber();
                         Uri mSelectedDocumentUri = DocumentPicker.getDocumentUriWithIndexFromResult(getActivity(), resultCode, data, fileIndex);
                         if (mSelectedDocumentUri != null)
                             attachedFiles.add(mSelectedDocumentUri.getPath());
@@ -245,12 +240,12 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         }
     }
 
-    private void loadAttachedDocuments(long commentId, List<String> newUploadeddocuments) {
+    private void loadAttachedDocuments(long commentId, List<String> newUploadedDocuments) {
         int index = CommonData.getIndexOfComment(commentId, mComments);
         Comment comment = mComments.get(index);
 
         List<String> documentList = comment.getDocuments();
-        documentList.addAll(newUploadeddocuments);
+        documentList.addAll(newUploadedDocuments);
         comment.setDocuments(documentList);
         mComments.set(index, comment);
 
@@ -463,9 +458,13 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                     List<String> documents = comment.getDocuments();
 
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    if (comment.getAuthorId().equals(requesterId))
+                        params.gravity = Gravity.RIGHT;
+                    else
+                        params.gravity = Gravity.LEFT;
+
                     attachmentLayout.setLayoutParams(params);
                     attachmentLayout.setOrientation(LinearLayout.VERTICAL);
-                    attachmentLayout.setGravity(Gravity.CENTER);
 
                     for (final String document : documents) {
                         AttachmentView attachmentview = new AttachmentView(getActivity());
@@ -491,7 +490,6 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                         attachmentLayout.addView(attachmentview);
                     }
                 }
-
             }
         }
 
@@ -543,20 +541,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     }
 
     private void setMultipleImagePicker() {
-        images.removeAll(images);
-        Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
-        intent.putExtra(ImagePicker.EXTRA_FOLDER_MODE, true);
-        intent.putExtra(ImagePicker.EXTRA_MODE, ImagePicker.MODE_MULTIPLE);
-        intent.putExtra(ImagePicker.EXTRA_LIMIT, Constants.MAX_FILE_ATTACHMENT_LIMIT - attachedFiles.size());
-        intent.putExtra(ImagePicker.EXTRA_SHOW_CAMERA, false);
-        intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGES, images);
-        intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, getString(R.string.album));
-        intent.putExtra(ImagePicker.EXTRA_IMAGE_TITLE, getString(R.string.tap_to_select_images));
-        intent.putExtra(ImagePicker.EXTRA_IMAGE_DIRECTORY, getString(R.string.camera));
-
-        /* Will force ImagePicker to single pick */
-        intent.putExtra(ImagePicker.EXTRA_RETURN_AFTER_FIRST, true);
-
+        Intent intent = MultipleImagePicker.getMultipleImagePickerIntent(getActivity(), Constants.MAX_FILE_ATTACHMENT_LIMIT - attachedFiles.size());
         startActivityForResult(intent, REQUEST_CODE_PICK_MULTIPLE_IMAGE);
     }
 }

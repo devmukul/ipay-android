@@ -70,6 +70,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -777,6 +778,13 @@ public class Utilities {
 
     public static BigDecimal bigDecimalPercentage(BigDecimal base, BigDecimal pct) {
         return base.multiply(pct).divide(new BigDecimal(100));
+    }
+
+    public static int getRandomNumber()
+    {
+        Random r = new Random();
+        int number = r.nextInt(100 - 1) + 1;
+        return number;
     }
 
     public static void goToiPayInAppStore(Context mContext) {

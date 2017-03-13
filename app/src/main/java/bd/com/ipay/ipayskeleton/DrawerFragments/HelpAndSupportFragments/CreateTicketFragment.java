@@ -59,6 +59,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
+import bd.com.ipay.ipayskeleton.Utilities.MultipleImagePicker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CreateTicketFragment extends ProgressFragment implements HttpResponseListener {
@@ -649,20 +650,8 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     }
 
     private void setMultipleImagePicker() {
-        images.removeAll(images);
-        Intent intent = new Intent(getActivity(), ImagePickerActivity.class);
-        intent.putExtra(ImagePicker.EXTRA_FOLDER_MODE, true);
-        intent.putExtra(ImagePicker.EXTRA_MODE, ImagePicker.MODE_MULTIPLE);
-        intent.putExtra(ImagePicker.EXTRA_LIMIT, Constants.MAX_FILE_ATTACHMENT_LIMIT - attachedFiles.size());
-        intent.putExtra(ImagePicker.EXTRA_SHOW_CAMERA, false);
-        intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGES, images);
-        intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, R.string.album);
-        intent.putExtra(ImagePicker.EXTRA_IMAGE_TITLE, R.string.tap_to_select_images);
-        intent.putExtra(ImagePicker.EXTRA_IMAGE_DIRECTORY, R.string.camera);
 
-        /* Will force ImagePicker to single pick */
-        intent.putExtra(ImagePicker.EXTRA_RETURN_AFTER_FIRST, true);
-
+        Intent intent = MultipleImagePicker.getMultipleImagePickerIntent(getActivity(),Constants.MAX_FILE_ATTACHMENT_LIMIT - attachedFiles.size());
         startActivityForResult(intent, REQUEST_CODE_PICK_MULTIPLE_IMAGE);
     }
 }
