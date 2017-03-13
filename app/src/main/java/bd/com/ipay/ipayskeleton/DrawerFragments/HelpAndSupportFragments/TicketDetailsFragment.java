@@ -33,6 +33,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import bd.com.ipay.ipayskeleton.Activities.DocumentPreviewActivity;
@@ -52,6 +53,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketDetailsR
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.TicketAttachmentUploadResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -61,6 +63,8 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     private GetTicketDetailsResponse mGetTicketDetailsResponse;
 
     private HttpRequestPostAsyncTask mNewCommentTask = null;
+
+    private CommentIdResponse mCommentIdResponse;
 
     private RecyclerView mCommentListRecyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -241,6 +245,19 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         }
     }
 
+    private void loadAttachedDocuments(long commentId, List<String> newUploadeddocuments) {
+        int index = CommonData.getIndexOfComment(commentId, mComments);
+        Comment comment = mComments.get(index);
+
+        List<String> documentList = comment.getDocuments();
+        documentList.addAll(newUploadeddocuments);
+        comment.setDocuments(documentList);
+        mComments.set(index, comment);
+
+        mCommentListAdapter.notifyDataSetChanged();
+        mCommentListRecyclerView.smoothScrollToPosition(mCommentListAdapter.getItemCount() - 1);
+    }
+
     private void selectAttachmentDialog() {
         mPickerList = Arrays.asList(getResources().getStringArray(R.array.attach_file_picker_action));
         customUploadPickerDialog = new CustomUploadPickerDialog(getActivity(), getString(R.string.select_a_document), mPickerList);
@@ -382,7 +399,30 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                 }
                 mNewCommentTask = null;
                 break;
+
+
+            case Constants.COMMAND_ADD_ATTACHMENT:
+                try {
+                    CommentIdResponse commentIdResponse = gson.fromJson(result.getJsonString(), CommentIdResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null) {
+                            mCommentId = commentIdResponse.getComment_id();
+                            List<String> documents = commentIdResponse.getDocuments();
+                            loadAttachedDocuments(mCommentId, documents);
+                        } else {
+                            if (getActivity() != null) {
+                                Toast.makeText(getActivity(), R.string.not_available, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    if (getActivity() != null) {
+                        Toast.makeText(getActivity(), R.string.failed_adding_comment, Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
         }
+
     }
 
     private class CommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

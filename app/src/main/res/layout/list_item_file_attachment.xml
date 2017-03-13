@@ -18,7 +18,7 @@
             android:layout_width="@dimen/value100"
             android:layout_height="@dimen/value100"
             android:layout_gravity="center"
-            android:src="@drawable/ic_touch_id" />
+            android:src="@drawable/ic_image" />
 
         <ImageView
             android:id="@+id/button_remove_attached_file"
@@ -26,7 +26,6 @@
             android:layout_height="wrap_content"
             android:layout_alignRight="@+id/attached_file_view"
             android:layout_alignTop="@+id/attached_file_view"
-            android:background="@drawable/ic_crossw"
-            android:backgroundTint="@color/colorPrimary" />
+            android:background="@drawable/cancel" />
     </RelativeLayout>
 </LinearLayout>

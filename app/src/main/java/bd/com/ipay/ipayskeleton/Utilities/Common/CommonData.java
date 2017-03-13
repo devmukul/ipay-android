@@ -6,6 +6,7 @@ import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Bank;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.Comment;
 
 public class CommonData {
     private static List<Bank> availableBanks;
@@ -73,9 +74,17 @@ public class CommonData {
         CommonData.businessTypes = businessTypes;
         businessIdToTypeMap = new HashMap<>();
         businessNameToIdMap = new HashMap<>();
-        for (BusinessType businessType: businessTypes) {
+        for (BusinessType businessType : businessTypes) {
             businessIdToTypeMap.put(businessType.getId(), businessType);
             businessNameToIdMap.put(businessType.getName(), businessType.getId());
         }
+    }
+
+    public static int getIndexOfComment(long commentId, List<Comment> mComments) {
+        for (Comment comment : mComments) {
+            if (comment.getComment_Id() == commentId)
+                return mComments.indexOf(comment);
+        }
+        return -1;
     }
 }
