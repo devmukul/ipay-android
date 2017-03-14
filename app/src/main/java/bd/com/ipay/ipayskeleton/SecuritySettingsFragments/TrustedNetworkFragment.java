@@ -28,6 +28,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.Api.HttpDeleteWithBodyAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -48,7 +49,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
     private HttpRequestGetAsyncTask mGetTrustedPersonsTask = null;
     private GetTrustedPersonsResponse mGetTrustedPersonsResponse = null;
 
-    private HttpRequestDeleteAsyncTask mRemoveTrustedPersonTask = null;
+    private HttpDeleteWithBodyAsyncTask mRemoveTrustedPersonTask = null;
     private RemoveTrustedPersonResponse mRemoveTrustedPersonResponse = null;
 
     private List<TrustedPerson> mTrustedPersons;
@@ -209,8 +210,8 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         Gson gson = new Gson();
         String json = gson.toJson(deleteTrustedPersonRequest);
 
-        mRemoveTrustedPersonTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_TRUSTED_PERSON,
-                Constants.BASE_URL_MM + Constants.URL_REMOVE_TRUSTED_PERSON+"?password="+password+"&personId="+personID, getActivity(), this);
+        mRemoveTrustedPersonTask = new HttpDeleteWithBodyAsyncTask(Constants.COMMAND_REMOVE_TRUSTED_PERSON,
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_TRUSTED_PERSON, json, getActivity(), this);
         mRemoveTrustedPersonTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
