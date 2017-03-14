@@ -213,7 +213,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
             public void bindView(int pos) {
                 final Ticket ticket = mTickets.get(pos);
 
-                subjectView.setText(ticket.getSubject());
+                subjectView.setText(ticket.getId() + " : " + ticket.getSubject());
                 categoryView.setText(getString(R.string.category) + ": " + ticket.getCategory());
                 timeView.setText(Utilities.formatDateWithTime(ticket.getCreatedAt()));
                 statusView.setText(ticket.getStatus().toUpperCase());

@@ -131,7 +131,6 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         });
 
         getTicketCategories();
-
         setFileAttachmentAdapter();
         return view;
     }
@@ -339,9 +338,9 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     }
 
     private void uploadMultipleAttachmentsAsyncTask() {
-        for (int i = 0; i < attachedFiles.size(); i++) {
-            if (!attachedFiles.get(i).isEmpty())
-                uploadAttachement(attachedFiles.get(i));
+        for (String attachedFile : attachedFiles) {
+            if (!attachedFile.isEmpty())
+                uploadAttachement(attachedFile);
         }
     }
 
@@ -649,8 +648,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     }
 
     private void setMultipleImagePicker() {
-
-        Intent intent = MultipleImagePicker.getMultipleImagePickerIntent(getActivity(),Constants.MAX_FILE_ATTACHMENT_LIMIT - attachedFiles.size());
+        Intent intent = MultipleImagePicker.getMultipleImagePickerIntent(getActivity(), Constants.MAX_FILE_ATTACHMENT_LIMIT - attachedFiles.size());
         startActivityForResult(intent, REQUEST_CODE_PICK_MULTIPLE_IMAGE);
     }
 }

@@ -12,7 +12,7 @@
         android:layout_height="@dimen/ticket_profile_picture_size"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/activity_horizontal_margin_card" />
+        android:layout_margin="@dimen/activity_horizontal_margin_card" />
 
     <LinearLayout
         android:id="@+id/messageLayout"
