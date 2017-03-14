@@ -52,6 +52,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.CustomDrawable;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.MultipleImagePicker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -214,9 +215,9 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     }
 
     private void uploadMultipleAttachmentsAsyncTask() {
-        for (int i = 0; i < attachedFiles.size(); i++) {
-            if (!attachedFiles.get(i).isEmpty())
-                uploadAttachment(attachedFiles.get(i));
+        for (String attachedFile : attachedFiles) {
+            if (!attachedFile.isEmpty())
+                uploadAttachment(attachedFile);
         }
         attachedFiles.removeAll(attachedFiles);
         setAttachmentVisibility();
@@ -425,7 +426,6 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         private static final int VIEW_TYPE_FROM_SUPPORT = 2;
 
         private class CommentViewHolder extends RecyclerView.ViewHolder {
-
             private ProfileImageView profilePictureView;
             private TextView commentView;
             private TextView timeView;
@@ -457,26 +457,11 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                 if (!comment.getDocuments().isEmpty()) {
                     List<String> documents = comment.getDocuments();
 
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    if (comment.getAuthorId().equals(requesterId))
-                        params.gravity = Gravity.RIGHT;
-                    else
-                        params.gravity = Gravity.LEFT;
-
-                    attachmentLayout.setLayoutParams(params);
-                    attachmentLayout.setOrientation(LinearLayout.VERTICAL);
-
+                    CustomDrawable.getCustomTicketAttachmentLayout(getActivity(), comment.getAuthorId().equals(requesterId), attachmentLayout);
                     for (final String document : documents) {
                         AttachmentView attachmentview = new AttachmentView(getActivity());
                         attachmentview.setAttachment(document, false);
-                        LinearLayout.LayoutParams attachmentViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                        if (comment.getAuthorId().equals(requesterId))
-                            attachmentViewParams.gravity = Gravity.RIGHT;
-                        else
-                            attachmentViewParams.gravity = Gravity.LEFT;
-
-                        attachmentview.setLayoutParams(attachmentViewParams);
-
+                        attachmentview.setLayoutParams(comment.getAuthorId().equals(requesterId));
                         attachmentview.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {

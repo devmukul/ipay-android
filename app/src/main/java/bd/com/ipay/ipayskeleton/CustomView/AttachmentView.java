@@ -3,9 +3,11 @@ package bd.com.ipay.ipayskeleton.CustomView;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
@@ -47,6 +49,16 @@ public class AttachmentView extends FrameLayout {
     public void setAttachment(int photoResourceId) {
         Drawable drawable = context.getResources().getDrawable(photoResourceId);
         mAttachmentView.setImageDrawable(drawable);
+    }
+
+    public void setLayoutParams(boolean isAlignedRight) {
+        LinearLayout.LayoutParams attachmentViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        if (isAlignedRight)
+            attachmentViewParams.gravity = Gravity.RIGHT;
+        else
+            attachmentViewParams.gravity = Gravity.LEFT;
+
+        this.setLayoutParams(attachmentViewParams);
     }
 
     public void setAttachment(String attachmentUri, boolean forceLoad) {

@@ -77,8 +77,7 @@
                     android:id="@+id/btn_attach"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:padding="@dimen/value5"
+                    android:padding="@dimen/activity_horizontal_margin"
                     android:src="@drawable/ic_attachment" />
 
                 <EditText

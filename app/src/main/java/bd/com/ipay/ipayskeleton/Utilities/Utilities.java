@@ -780,8 +780,7 @@ public class Utilities {
         return base.multiply(pct).divide(new BigDecimal(100));
     }
 
-    public static int getRandomNumber()
-    {
+    public static int getRandomNumber() {
         Random r = new Random();
         int number = r.nextInt(100 - 1) + 1;
         return number;
