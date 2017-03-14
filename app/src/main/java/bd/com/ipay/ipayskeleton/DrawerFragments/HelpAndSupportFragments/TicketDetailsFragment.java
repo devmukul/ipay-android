@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
 import com.esafirm.imagepicker.features.ImagePicker;
-import com.esafirm.imagepicker.features.ImagePickerActivity;
 import com.esafirm.imagepicker.model.Image;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -44,10 +42,10 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.Comment;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CommentIdResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CommentIdWithDocumentList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketDetailsRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketDetailsResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.TicketAttachmentUploadResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
@@ -373,11 +371,11 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
 
             case Constants.COMMAND_ADD_COMMENT:
                 try {
-                    TicketAttachmentUploadResponse ticketResponseWithCommentId = gson.fromJson(result.getJsonString(), TicketAttachmentUploadResponse.class);
+                    AddCommentResponse ticketResponseWithCommentId = gson.fromJson(result.getJsonString(), AddCommentResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
-                            CommentIdResponse commentIdResponse = ticketResponseWithCommentId.getResponse();
-                            mCommentId = commentIdResponse.getComment_id();
+                            CommentIdWithDocumentList commentIdWithDocumentList = ticketResponseWithCommentId.getResponse();
+                            mCommentId = commentIdWithDocumentList.getComment_id();
                             if (attachedFiles.size() > 0) uploadMultipleAttachmentsAsyncTask();
 
                             Toast.makeText(getActivity(), R.string.comment_successfully_added, Toast.LENGTH_LONG).show();
@@ -399,11 +397,11 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
 
             case Constants.COMMAND_ADD_ATTACHMENT:
                 try {
-                    CommentIdResponse commentIdResponse = gson.fromJson(result.getJsonString(), CommentIdResponse.class);
+                    CommentIdWithDocumentList commentIdWithDocumentList = gson.fromJson(result.getJsonString(), CommentIdWithDocumentList.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
-                            mCommentId = commentIdResponse.getComment_id();
-                            List<String> documents = commentIdResponse.getDocuments();
+                            mCommentId = commentIdWithDocumentList.getComment_id();
+                            List<String> documents = commentIdWithDocumentList.getDocuments();
                             loadAttachedDocuments(mCommentId, documents);
                         } else {
                             if (getActivity() != null) {

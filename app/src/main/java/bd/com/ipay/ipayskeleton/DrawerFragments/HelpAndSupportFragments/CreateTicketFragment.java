@@ -24,7 +24,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.esafirm.imagepicker.features.ImagePicker;
-import com.esafirm.imagepicker.features.ImagePickerActivity;
 import com.esafirm.imagepicker.model.Image;
 import com.google.gson.Gson;
 
@@ -52,8 +51,8 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CreateTicketReque
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CreateTicketResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategoriesRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategoryResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.TicketResponseWithCommentId;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CommentIdResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.TicketWithCommentId;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CommentIdWithDocumentList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.UploadTicketAttachmentRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
@@ -427,9 +426,9 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.ticket_created, Toast.LENGTH_LONG).show();
-                            TicketResponseWithCommentId ticketResponseWithCommentId = mCreateTicketResponse.getResponse();
-                            CommentIdResponse commentIdResponse = ticketResponseWithCommentId.getTicket();
-                            mCommentId = commentIdResponse.getComment_id();
+                            TicketWithCommentId ticketResponseWithCommentId = mCreateTicketResponse.getResponse();
+                            CommentIdWithDocumentList commentIdWithDocumentList = ticketResponseWithCommentId.getTicket();
+                            mCommentId = commentIdWithDocumentList.getComment_id();
                             if (attachedFiles.size() > 0) uploadMultipleAttachmentsAsyncTask();
 
                             showCreateTicketSuccessDialog();

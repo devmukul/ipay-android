@@ -2,7 +2,7 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket;
 
 import java.util.List;
 
-public class CommentIdResponse {
+public class CommentIdWithDocumentList {
     private long comment_id;
     private long id;
     private List<String> documents;
