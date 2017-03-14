@@ -44,7 +44,6 @@ public class PasswordInputDialogBuilder extends MaterialDialog.Builder {
                     focusView.requestFocus();
                 } else {
                     Utilities.hideKeyboard(context, mPasswordField);
-
                     onSubmitListener.onClick(dialog, which);
 
                     build().dismiss();
