@@ -166,7 +166,6 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                 .setPositiveButton(getString(R.string.remove), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //removeTrustedPerson(personID);
                         final PasswordInputDialogBuilder passwordInputDialogBuilder = new PasswordInputDialogBuilder(getActivity());
                         passwordInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
                             @Override
