@@ -934,15 +934,6 @@ public class ContactEngine {
         if (phoneContactsCursor == null)
             return null;
 
-//        DataHelper dataHelper = DataHelper.getInstance(context);
-//        List<FriendNode> iPayContacts = dataHelper.getFriendList();
-//        dataHelper.closeDbOpenHelper();
-
-//        Map<String, FriendInfo> iPayContactsMap = new HashMap<>();
-//        for (FriendNode friendNode : iPayContacts) {
-//            iPayContactsMap.put(friendNode.getPhoneNumber(), friendNode.getInfo());
-//        }
-
         if (phoneContactsCursor.moveToFirst()) {
             int nameIndex = phoneContactsCursor.getColumnIndex(Phone.DISPLAY_NAME);
             int photoUrlIndex = phoneContactsCursor.getColumnIndex(Phone.PHOTO_URI);
@@ -959,11 +950,7 @@ public class ContactEngine {
                     phoneNumber = formatMobileNumberBD(phoneNumber);
 
                     FriendInfo friendInfo;
-//                    if (iPayContactsMap.containsKey(phoneNumber))
-//                        friendInfo = iPayContactsMap.get(phoneNumber);
-//                    else
                     friendInfo = new FriendInfo(name,phoneNumber, photoUrl);
-
                     phoneContacts.add(friendInfo);
                 }
             } while (phoneContactsCursor.moveToNext());

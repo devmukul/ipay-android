@@ -16,7 +16,7 @@ public class GetContactsResponse {
 
     @Override
     public String toString() {
-        return "FriendNode{" +
+        return "FriendInfo{" +
                 "totalCount='" + totalCount + '\'' +
                 ", contactList=" + contactList +
                 '}';
