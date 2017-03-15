@@ -149,7 +149,7 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
 
     private void setBankAdapter(List<Bank> bankList) {
 
-        bankSelectorDialog = new ResourceSelectorDialog<>(getContext(), getString(R.string.select_a_bank), bankList, mSelectedBankId);
+        bankSelectorDialog = new ResourceSelectorDialog<>(getContext(), getString(R.string.select_a_bank), bankList);
         bankSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {

@@ -19,18 +19,17 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.Arrays;
-import java.util.List;
-
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.AddTrustedPersonRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.AddTrustedPersonResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -46,10 +45,8 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
     private ImageView mSelectContactButton;
     private Button mAddButton;
 
-    private CustomSelectorDialog mCustomSelectorDialog;
+    private ResourceSelectorDialog mResourceSelectorDialog;
     private ProgressDialog mProgressDialog;
-
-    private List<String> mRelationshipList;
 
     private String mName;
     private String mRelationship;
@@ -81,24 +78,21 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
         final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
-
-        mRelationshipList = Arrays.asList(getResources().getStringArray(R.array.relationship));
-        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), getString(R.string.relationship), mRelationshipList);
-
-        mEditTextRelationship.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCustomSelectorDialog.show();
-            }
-        });
-
-        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+        mResourceSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.relationship), CommonData.getRelationshipList());
+        mResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int selectedIndex, String mRelation) {
                 mEditTextRelationship.setError(null);
                 mEditTextRelationship.setText(mRelation);
                 mSelectedRelationId = selectedIndex;
                 mRelationship = mRelation;
+            }
+        });
+
+        mEditTextRelationship.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mResourceSelectorDialog.show();
             }
         });
 
@@ -148,7 +142,7 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
             focusView = mEditTextName;
             mEditTextName.setError(getString(R.string.error_invalid_name));
             cancel = true;
-        }else if (!ContactEngine.isValidNumber(mMobileNumber)) {
+        } else if (!ContactEngine.isValidNumber(mMobileNumber)) {
 
             focusView = mEditTextMobileNumber;
             mEditTextMobileNumber.setError(getString(R.string.please_enter_valid_mobile_number));

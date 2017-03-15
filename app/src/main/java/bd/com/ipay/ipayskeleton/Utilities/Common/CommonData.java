@@ -71,6 +71,10 @@ public class CommonData {
         return businessIdToTypeMap.get(id);
     }
 
+    public static List<Relationship> getRelationshipList() {
+        return CommonData.relationshipList;
+    }
+
     public static void setBusinessTypes(List<BusinessType> businessTypes) {
         CommonData.businessTypes = businessTypes;
         businessIdToTypeMap = new HashMap<>();

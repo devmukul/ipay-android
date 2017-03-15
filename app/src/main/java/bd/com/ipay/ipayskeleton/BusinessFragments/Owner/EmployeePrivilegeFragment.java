@@ -134,7 +134,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
     }
 
     private void setRolesAdapter() {
-        roleSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_role), ManagePeopleActivity.mAllRoleList, mSelectedRoleId);
+        roleSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_role), ManagePeopleActivity.mAllRoleList);
         roleSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
