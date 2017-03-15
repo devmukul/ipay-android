@@ -31,26 +31,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.DocumentPreviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.UploadTicketAttachmentAsyncTask;
-import bd.com.ipay.ipayskeleton.CustomView.AttachmentView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.Comment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CommentIdWithDocumentList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketDetailsRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketDetailsResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomDrawable;
+import bd.com.ipay.ipayskeleton.Utilities.CustomerSupportUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.MultipleImagePicker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -162,6 +160,16 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         getActivity().setTitle(title);
     }
 
+    private void setAttachmentVisibility() {
+        if (attachedFiles.size() > 0) {
+            mAttachmentView.setVisibility(View.VISIBLE);
+            if (attachedFiles.size() > 1)
+                mAttachmentNumberTextView.setText(attachedFiles.size() + " " + getString(R.string.attachments));
+            else
+                mAttachmentNumberTextView.setText(attachedFiles.size() + " " + getString(R.string.attachment));
+        } else mAttachmentView.setVisibility(View.GONE);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -202,16 +210,6 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         }
     }
 
-    private void setAttachmentVisibility() {
-        if (attachedFiles.size() > 0) {
-            mAttachmentView.setVisibility(View.VISIBLE);
-            if (attachedFiles.size() > 1)
-                mAttachmentNumberTextView.setText(attachedFiles.size() + " " + getString(R.string.attachments));
-            else
-                mAttachmentNumberTextView.setText(attachedFiles.size() + " " + getString(R.string.attachment));
-        } else mAttachmentView.setVisibility(View.GONE);
-    }
-
     private void uploadMultipleAttachmentsAsyncTask() {
         for (String attachedFile : attachedFiles) {
             if (!attachedFile.isEmpty())
@@ -240,13 +238,9 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     }
 
     private void loadAttachedDocuments(long commentId, List<String> newUploadedDocuments) {
-        int index = CommonData.getIndexOfComment(commentId, mComments);
+        int index = CustomerSupportUtilities.getIndexOfComment(commentId, mComments);
         Comment comment = mComments.get(index);
-
-        List<String> documentList = comment.getDocuments();
-        documentList.addAll(newUploadedDocuments);
-        comment.setDocuments(documentList);
-        mComments.set(index, comment);
+        mComments.set(index, CustomerSupportUtilities.getUpdatedCommentWithDocuments(comment, newUploadedDocuments));
 
         mCommentListAdapter.notifyDataSetChanged();
         mCommentListRecyclerView.smoothScrollToPosition(mCommentListAdapter.getItemCount() - 1);
@@ -343,7 +337,6 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                         mCommentListAdapter.notifyDataSetChanged();
 
                         String ticketStatus = mGetTicketDetailsResponse.getResponse().getTicket().getStatus();
-
                         if (ticketStatus.equals(Constants.TICKET_STATUS_SOLVED)
                                 || ticketStatus.equals(Constants.TICKET_STATUS_CLOSED)) {
                             mSendCommentButton.setVisibility(View.GONE);
@@ -394,7 +387,6 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                 mNewCommentTask = null;
                 break;
 
-
             case Constants.COMMAND_ADD_ATTACHMENT:
                 try {
                     CommentIdWithDocumentList commentIdWithDocumentList = gson.fromJson(result.getJsonString(), CommentIdWithDocumentList.class);
@@ -416,7 +408,6 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                 }
                 break;
         }
-
     }
 
     private class CommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -428,7 +419,6 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
             private TextView commentView;
             private TextView timeView;
             private LinearLayout attachmentLayout;
-
 
             public CommentViewHolder(View itemView) {
                 super(itemView);
@@ -454,24 +444,8 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                 attachmentLayout.removeAllViews();
                 if (!comment.getDocuments().isEmpty()) {
                     List<String> documents = comment.getDocuments();
-
-                    CustomDrawable.getCustomTicketAttachmentLayout(getActivity(), comment.getAuthorId().equals(requesterId), attachmentLayout);
-                    for (final String document : documents) {
-                        AttachmentView attachmentview = new AttachmentView(getActivity());
-                        attachmentview.setAttachment(document, false);
-                        attachmentview.setLayoutParams(comment.getAuthorId().equals(requesterId));
-                        attachmentview.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
-                                Intent intent = new Intent(getActivity(), DocumentPreviewActivity.class);
-                                intent.putExtra(Constants.FILE_EXTENSION, Utilities.getExtension(document));
-                                intent.putExtra(Constants.DOCUMENT_URL, document);
-                                startActivity(intent);
-                            }
-                        });
-                        attachmentLayout.addView(attachmentview);
-                    }
+                    CustomDrawable.getCustomTicketAttachmentLayout(getActivity(), comment.getAuthorId().equals(requesterId),
+                            attachmentLayout, documents);
                 }
             }
         }

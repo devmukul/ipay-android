@@ -57,6 +57,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.UploadTicketAttac
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.CustomDrawable;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.MultipleImagePicker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -89,7 +90,6 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     private ProgressDialog mProgressDialog;
 
     private ArrayList<String> attachedFiles;
-    private ArrayList<Image> images = new ArrayList<>();
 
     private String mSubject;
     private String mMessage;
@@ -138,7 +138,6 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     private void setTitle() {
         getActivity().setTitle(R.string.help);
     }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -191,7 +190,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
 
             case REQUEST_CODE_PICK_MULTIPLE_IMAGE:
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    images = (ArrayList<Image>) ImagePicker.getImages(data);
+                    ArrayList<Image> images = (ArrayList<Image>) ImagePicker.getImages(data);
                     if (images != null) setImagePathsFromMultiplePicker(images);
                 }
 
@@ -522,19 +521,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                     attachFileName = attachedFiles.get(pos - 1);
                 else attachFileName = attachedFiles.get(pos);
 
-                if (attachFileName.contains(getResources().getString(R.string.pdf)))
-                    mFileView.setImageDrawable(getResources().getDrawable(R.drawable.icon_pdf));
-                else {
-                    try {
-                        mFile = new File(attachFileName);
-                        if (mFile.exists()) {
-                            mBitmap = BitmapFactory.decodeFile(mFile.getPath());
-                            if (mBitmap != null) mFileView.setImageBitmap(mBitmap);
-                        }
-                    } catch (Exception e) {
-                        mFileView.setImageDrawable(getResources().getDrawable(R.drawable.ic_touch_id));
-                    }
-                }
+                CustomDrawable.getCustomFileThumbnailView(getActivity(), mFileView, attachFileName);
 
                 mRemoveAttachedFileButton.setOnClickListener(new View.OnClickListener() {
                     @Override
