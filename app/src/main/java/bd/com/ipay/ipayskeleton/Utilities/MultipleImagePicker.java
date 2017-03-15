@@ -2,14 +2,12 @@ package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.widget.ImageView;
 
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ImagePickerActivity;
 import com.esafirm.imagepicker.model.Image;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.R;
 
