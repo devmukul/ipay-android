@@ -46,6 +46,7 @@ import bd.com.ipay.ipayskeleton.Api.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GetFriendsAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GetRelationshipAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -62,6 +63,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
@@ -87,6 +89,7 @@ public class HomeActivity extends BaseActivity
     private GetBusinessInformationResponse mGetBusinessInformationResponse;
 
     private GetBusinessTypesAsyncTask mGetBusinessTypesAsyncTask;
+    private GetRelationshipAsyncTask mGetRelationshipAsyncTask;
 
     private AutoResizeTextView mMobileNumberView;
     private TextView mNameView;
@@ -211,6 +214,9 @@ public class HomeActivity extends BaseActivity
 
         // Load the list of available business types, which will be accessed from multiple activities
         getAvailableBusinessTypes();
+
+        // Fetch available relationship list
+        getRelationshipList();
 
         // Check if important permissions (e.g. Contacts permission) is given. If not,
         // request user for permission.
@@ -537,6 +543,21 @@ public class HomeActivity extends BaseActivity
             }
         });
         mGetBusinessTypesAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getRelationshipList() {
+        // Load business types, then extract the name of the business type from businessTypeId
+        mGetRelationshipAsyncTask = new GetRelationshipAsyncTask(this, new GetRelationshipAsyncTask.RelationshipLoadListener() {
+            @Override
+            public void onLoadSuccess(List<Relationship> businessTypes) {
+            }
+
+            @Override
+            public void onLoadFailed() {
+
+            }
+        });
+        mGetRelationshipAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
