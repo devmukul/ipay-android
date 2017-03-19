@@ -190,7 +190,7 @@ public class Constants {
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
-            BASE_URL_FRIEND = "http://10.10.10.11:1337/v1/";
+            BASE_URL_FRIEND = "http://10.10.10.11:4000/external/v1/";
             BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/support/";
 //            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
@@ -202,7 +202,7 @@ public class Constants {
             BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
-            BASE_URL_FRIEND = "http://10.15.40.14:1337/v1/";
+            BASE_URL_FRIEND = "http://10.15.40.14:4000/external/v1";
             BASE_URL_ADMIN = "http://10.15.40.15:8085/api/v1/support/";
             BASE_URL_WEB = "http://test.ipay.com.bd";
             SERVER_NAME = "test";
@@ -213,7 +213,7 @@ public class Constants {
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.10.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
-            BASE_URL_FRIEND = "http://10.10.40.14:1337/v1/";
+            BASE_URL_FRIEND = "http://10.10.40.14:4000/external/v1";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
             BASE_URL_WEB = "http://stage.ipay.com.bd";
             SERVER_NAME = "stage";
@@ -396,11 +396,10 @@ public class Constants {
     public static final String URL_DELETE_EMAIL = "user/emails/";
     public static final String URL_MAKE_PRIMARY_EMAIL = "/primary";
 
-    // User Rest (Friends)
-    public static final String URL_GET_FRIENDS = "getfriends";
-    public static final String URL_ADD_FRIENDS = "addfriends";
-    public static final String URL_DELETE_FRIEND = "deletefriend";
-    public static final String URL_UPDATE_FRIENDS = "updatefriends";
+    // User Rest (Friend Updated)
+    public static final String URL_GET_CONTACTS = "contacts";
+    public static final String URL_ADD_CONTACTS = "contacts";
+    public static final String URL_UPDATE_CONTACTS = "contacts";
 
     // Business Information (Owner)
     public static final String URL_GET_BUSINESS_INFORMATION = "user/profile/business";

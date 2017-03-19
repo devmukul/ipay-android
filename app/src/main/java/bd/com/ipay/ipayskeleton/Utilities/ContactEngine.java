@@ -33,7 +33,6 @@ import java.util.Set;
 
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
-import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
 import bd.com.ipay.ipayskeleton.Model.Friend.PhoneName;
 
 public class ContactEngine {
@@ -916,8 +915,8 @@ public class ContactEngine {
      * Read all contacts from the phone. If phone number already exists in the iPay contacts database,
      * fetch the corresponding info from the database.
      */
-    public static List<FriendNode> getAllContacts(Context context) {
-        List<FriendNode> phoneContacts = new ArrayList<>();
+    public static List<FriendInfo> getAllContacts(Context context) {
+        List<FriendInfo> phoneContacts = new ArrayList<>();
 
         final String[] projection = new String[]{
                 Phone._ID,
@@ -935,15 +934,6 @@ public class ContactEngine {
         if (phoneContactsCursor == null)
             return null;
 
-//        DataHelper dataHelper = DataHelper.getInstance(context);
-//        List<FriendNode> iPayContacts = dataHelper.getFriendList();
-//        dataHelper.closeDbOpenHelper();
-
-//        Map<String, FriendInfo> iPayContactsMap = new HashMap<>();
-//        for (FriendNode friendNode : iPayContacts) {
-//            iPayContactsMap.put(friendNode.getPhoneNumber(), friendNode.getInfo());
-//        }
-
         if (phoneContactsCursor.moveToFirst()) {
             int nameIndex = phoneContactsCursor.getColumnIndex(Phone.DISPLAY_NAME);
             int photoUrlIndex = phoneContactsCursor.getColumnIndex(Phone.PHOTO_URI);
@@ -960,13 +950,8 @@ public class ContactEngine {
                     phoneNumber = formatMobileNumberBD(phoneNumber);
 
                     FriendInfo friendInfo;
-//                    if (iPayContactsMap.containsKey(phoneNumber))
-//                        friendInfo = iPayContactsMap.get(phoneNumber);
-//                    else
-                    friendInfo = new FriendInfo(name, photoUrl);
-
-                    FriendNode contact = new FriendNode(phoneNumber, friendInfo);
-                    phoneContacts.add(contact);
+                    friendInfo = new FriendInfo(name,phoneNumber, photoUrl);
+                    phoneContacts.add(friendInfo);
                 }
             } while (phoneContactsCursor.moveToNext());
         }
@@ -1010,25 +995,24 @@ public class ContactEngine {
      * Pass phone contacts in the newContacts list and server contacts in the oldContacts list
      * to get a list of newly added/updated contacts in the phone book
      */
-    public static ContactDiff getContactDiff(List<FriendNode> phoneContacts, List<FriendNode> serverContacts) {
+    public static ContactDiff getContactDiff(List<FriendInfo> phoneContacts, List<FriendInfo> serverContacts) {
         ContactDiff contactDiff = new ContactDiff();
 
         Map<String, FriendInfo> serverContactMap = new HashMap<>();
-        for (FriendNode serverContact : serverContacts) {
-            serverContactMap.put(serverContact.getPhoneNumber(), serverContact.getInfo());
+        for (FriendInfo serverContact : serverContacts) {
+            serverContactMap.put(serverContact.getMobileNumber(), serverContact);
         }
 
-        for (FriendNode phoneContact : phoneContacts) {
-//            Log.e("Contact", phoneContact.toString() + " : " + serverContactMap.get(phoneContact.getPhoneNumber()));
-            if (serverContactMap.containsKey(phoneContact.getPhoneNumber())) {
-                String serverName = serverContactMap.get(phoneContact.getPhoneNumber()).getName();
-                String phoneName = phoneContact.getInfo().getName();
+        for (FriendInfo phoneContact : phoneContacts) {
+            if (serverContactMap.containsKey(phoneContact.getMobileNumber())) {
+                String serverName = serverContactMap.get(phoneContact.getMobileNumber()).getName();
+                String phoneName = phoneContact.getName();
 
                 if (!serverName.equals(phoneName)) {
-                    contactDiff.updatedFriends.add(phoneContact);
+                    contactDiff.updatedContacts.add(phoneContact);
                 }
             } else {
-                contactDiff.newFriends.add(phoneContact);
+                contactDiff.newContacts.add(phoneContact);
             }
         }
 
@@ -1069,17 +1053,17 @@ public class ContactEngine {
     }
 
     public static class ContactDiff {
-        public final List<FriendNode> newFriends;
-        public final List<FriendNode> updatedFriends;
+        public final List<FriendInfo> newContacts;
+        public final List<FriendInfo> updatedContacts;
 
         public ContactDiff() {
-            newFriends = new ArrayList<>();
-            updatedFriends = new ArrayList<>();
+            newContacts = new ArrayList<>();
+            updatedContacts = new ArrayList<>();
         }
 
-        public ContactDiff(List<FriendNode> newFriends, List<FriendNode> updatedFriends) {
-            this.newFriends = newFriends;
-            this.updatedFriends = updatedFriends;
+        public ContactDiff(List<FriendInfo> newContacts, List<FriendInfo> updatedContacts) {
+            this.newContacts = newContacts;
+            this.updatedContacts = updatedContacts;
         }
     }
 
