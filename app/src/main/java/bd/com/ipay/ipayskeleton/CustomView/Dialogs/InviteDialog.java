@@ -27,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
 import bd.com.ipay.ipayskeleton.Model.Friend.InviteFriend;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -50,8 +51,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
     private HttpRequestPostAsyncTask mSendInviteTask = null;
     private SendInviteResponse mSendInviteResponse;
 
-    private CustomSelectorDialog mCustomSelectorDialog;
-    private List<String> mRelationshipList;
+    private ResourceSelectorDialog mResourceSelectorDialog;
 
     private FinishCheckerListener mFinishCheckerListener;
 
@@ -88,22 +88,20 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
 
         Utilities.showKeyboard(context);
 
-        mRelationshipList = Arrays.asList(context.getResources().getStringArray(R.array.relationship));
-        mCustomSelectorDialog = new CustomSelectorDialog(context, context.getResources().getString(R.string.relationship), mRelationshipList);
-
-        mEditTextRelationship.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCustomSelectorDialog.show();
-            }
-        });
-
-        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+        mResourceSelectorDialog = new ResourceSelectorDialog(context, context.getResources().getString(R.string.relationship), CommonData.getRelationshipList());
+        mResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int selectedIndex, String mRelation) {
                 mEditTextRelationship.setError(null);
                 mEditTextRelationship.setText(mRelation);
                 mRelationship = mRelation;
+            }
+        });
+
+        mEditTextRelationship.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mResourceSelectorDialog.show();
             }
         });
 

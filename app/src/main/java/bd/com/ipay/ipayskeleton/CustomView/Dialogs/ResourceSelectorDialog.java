@@ -35,7 +35,7 @@ public class ResourceSelectorDialog<E extends Resource> extends AlertDialog {
     private TextView textViewTitle;
     private ListView popUpList;
 
-    public ResourceSelectorDialog(Context context, String mTitle, List<E> resources, int selectedItemId) {
+    public ResourceSelectorDialog(Context context, String mTitle, List<E> resources) {
         super(context);
         this.context = context;
         this.resources = resources;
