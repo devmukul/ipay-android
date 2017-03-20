@@ -12,8 +12,8 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class GetRelationshipAsyncTask extends HttpRequestGetAsyncTask {
-    public GetRelationshipAsyncTask(Context context, final RelationshipLoadListener listener) {
+public class GetRelationshipListAsyncTask extends HttpRequestGetAsyncTask {
+    public GetRelationshipListAsyncTask(Context context, final RelationshipLoadListener listener) {
         super(Constants.COMMAND_GET_RELATIONSHIP_LIST,
                 new GetRelationshipRequestBuilder().getGeneratedUri(),
                 context);
@@ -43,7 +43,7 @@ public class GetRelationshipAsyncTask extends HttpRequestGetAsyncTask {
         };
     }
 
-    public GetRelationshipAsyncTask(Context context) {
+    public GetRelationshipListAsyncTask(Context context) {
         this(context, null);
     }
 
