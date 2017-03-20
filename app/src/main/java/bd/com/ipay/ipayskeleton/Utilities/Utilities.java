@@ -573,15 +573,15 @@ public class Utilities {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static String getPath(Context context, Uri uri) {
-        final String path = uri.getPath();
-        final String[] split = path.split(":");
+        String path = uri.getPath();
+        String[] split = path.split(":");
 
         if (isExternalStorageDocument(uri))
             return Environment.getExternalStorageDirectory() + "/" + split[1];
 
         else if (isDownloadsDocument(uri)) {
-            final String id = DocumentsContract.getDocumentId(uri);
-            final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+            String id = DocumentsContract.getDocumentId(uri);
+            Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
             return getDataColumn(context, contentUri, null, null);
         } else return uri.getPath();
     }
