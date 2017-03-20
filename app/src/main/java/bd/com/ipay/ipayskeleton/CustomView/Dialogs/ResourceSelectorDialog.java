@@ -27,7 +27,7 @@ public class ResourceSelectorDialog<E extends Resource> extends AlertDialog {
     private int selectedItemId;
 
     private OnResourceSelectedListener onResourceSelectedListener;
-    private OnResourceSelectedListenerWithStringID onResourceSelectedListenerWithSelectedIndex;
+    private OnResourceSelectedListenerWithStringID onResourceSelectedListenerWithStringID;
     private ArrayAdapter<String> arrayAdapter;
 
     private LayoutInflater inflater;
@@ -114,8 +114,8 @@ public class ResourceSelectorDialog<E extends Resource> extends AlertDialog {
                 String name = names.get(i);
                 String stringID = stringIds.get(i);
 
-                if (onResourceSelectedListenerWithSelectedIndex != null)
-                    onResourceSelectedListenerWithSelectedIndex.onResourceSelectedWithStringID(stringID, name, selectedItemId);
+                if (onResourceSelectedListenerWithStringID != null)
+                    onResourceSelectedListenerWithStringID.onResourceSelectedWithStringID(stringID, name, selectedItemId);
                 dismiss();
             }
         });
@@ -125,8 +125,8 @@ public class ResourceSelectorDialog<E extends Resource> extends AlertDialog {
         this.onResourceSelectedListener = onResourceSelectedListener;
     }
 
-    public void setOnResourceSelectedListenerWithSelectedIndex(OnResourceSelectedListenerWithStringID onResourceSelectedListenerWithSelectedIndex) {
-        this.onResourceSelectedListenerWithSelectedIndex = onResourceSelectedListenerWithSelectedIndex;
+    public void setOnResourceSelectedListenerWithStringID(OnResourceSelectedListenerWithStringID onResourceSelectedListenerWithStringID) {
+        this.onResourceSelectedListenerWithStringID = onResourceSelectedListenerWithStringID;
     }
 
     public interface OnResourceSelectedListener {

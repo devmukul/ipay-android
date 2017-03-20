@@ -1,8 +1,10 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,6 +17,9 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -65,6 +70,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -565,6 +571,46 @@ public class Utilities {
             return "";
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static String getPath(Context context, Uri uri) {
+        String path = uri.getPath();
+        String[] split = path.split(":");
+
+        if (isExternalStorageDocument(uri))
+            return Environment.getExternalStorageDirectory() + "/" + split[1];
+
+        else if (isDownloadsDocument(uri)) {
+            String id = DocumentsContract.getDocumentId(uri);
+            Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+            return getDataColumn(context, contentUri, null, null);
+        } else return uri.getPath();
+    }
+
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = {column};
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
+
     /**
      * Checks if a profile picture is proper or not.
      *
@@ -732,6 +778,12 @@ public class Utilities {
 
     public static BigDecimal bigDecimalPercentage(BigDecimal base, BigDecimal pct) {
         return base.multiply(pct).divide(new BigDecimal(100));
+    }
+
+    public static int getRandomNumber() {
+        Random r = new Random();
+        int number = r.nextInt(100 - 1) + 1;
+        return number;
     }
 
     public static void goToiPayInAppStore(Context mContext) {

@@ -53,6 +53,8 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_ticket_list, container, false);
 
+        setTitle();
+
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
 
         mFabCreateNewTicket = (FloatingActionButton) v.findViewById(R.id.fab_new_ticket);
@@ -82,6 +84,11 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
 
         return v;
     }
+
+    private void setTitle() {
+        getActivity().setTitle(R.string.help);
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -190,7 +197,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
         private class TicketViewHolder extends RecyclerView.ViewHolder {
 
             private TextView subjectView;
-            private TextView descriptionView;
+            private TextView categoryView;
             private TextView timeView;
             private TextView statusView;
 
@@ -198,7 +205,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                 super(itemView);
 
                 subjectView = (TextView) itemView.findViewById(R.id.textview_subject);
-                descriptionView = (TextView) itemView.findViewById(R.id.textview_description);
+                categoryView = (TextView) itemView.findViewById(R.id.textview_category);
                 timeView = (TextView) itemView.findViewById(R.id.textview_time);
                 statusView = (TextView) itemView.findViewById(R.id.textview_status);
             }
@@ -206,8 +213,8 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
             public void bindView(int pos) {
                 final Ticket ticket = mTickets.get(pos);
 
-                subjectView.setText(ticket.getSubject());
-                descriptionView.setText(ticket.getDescription());
+                subjectView.setText(ticket.getId() + " : " + ticket.getSubject());
+                categoryView.setText(getString(R.string.category) + ": " + ticket.getCategory());
                 timeView.setText(Utilities.formatDateWithTime(ticket.getCreatedAt()));
                 statusView.setText(ticket.getStatus().toUpperCase());
 

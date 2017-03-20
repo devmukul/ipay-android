@@ -139,6 +139,7 @@ public class Constants {
 
     public static final int MIN_AGE_LIMIT = 18;
     public static final int MIN_VALID_NAME_LENGTH = 5;
+    public static final int MAX_FILE_ATTACHMENT_LIMIT = 5;
 
     public static final int STARTING_DATE = 01;
 
@@ -428,7 +429,10 @@ public class Constants {
     public static final String URL_CREATE_TICKET = "ticket/create";
     public static final String URL_GET_TICKETS = "ticket/list";
     public static final String URL_GET_TICKET_DETAILS = "ticket/by/id";
+    public static final String URL_GET_TICKET_CATEGORIES = "ticket/categories";
     public static final String URL_ADD_COMMENT = "ticket/add/comment";
+    public static final String URL_UPLOAD_TICKET_ATTACHMENT = "ticket/comment/attachment";
+    public static final String URL_ADD_COMMENT_WITH_ATTACHMENT = "ticket/add/comment/attachments";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
@@ -533,7 +537,9 @@ public class Constants {
     public static final String COMMAND_CREATE_TICKET = "COMMAND_CREATE_TICKET";
     public static final String COMMAND_GET_TICKETS = "COMMAND_GET_TICKETS";
     public static final String COMMAND_GET_TICKET_DETAILS = "COMMAND_GET_TICKET_DETAILS";
+    public static final String COMMAND_GET_TICKET_CATEGORIES = "COMMAND_GET_TICKET_CATEGORIES";
     public static final String COMMAND_ADD_COMMENT = "COMMAND_ADD_COMMENT";
+    public static final String COMMAND_ADD_ATTACHMENT = "COMMAND_ADD_ATTACHMENT";
 
     // Resource
     public static final String COMMAND_GET_AVAILABLE_BANK_LIST = "COMMAND_GET_AVAILABLE_BANK_LIST";
@@ -741,6 +747,11 @@ public class Constants {
     public static final String TICKET_STATUS_ON_HOLD = "hold";
     public static final String TICKET_STATUS_SOLVED = "solved";
     public static final String TICKET_STATUS_CLOSED = "closed";
+
+    public static final String TICKET_COMMENT_ID = "commentId";
+    public static final String TICKETID = "ticketId";
+    public static final String TICKET_COMMENT = "comment";
+
 
     public static final int REQUEST_TYPE_RECEIVED_REQUEST = 1;
     public static final int REQUEST_TYPE_SENT_REQUEST = 2;

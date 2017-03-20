@@ -770,8 +770,10 @@
     <string name="help">Help</string>
     <string name="create_ticket">Create Ticket</string>
     <string name="subject">Subject</string>
+    <string name="category">Category</string>
     <string name="ticket_created">Ticket Created</string>
     <string name="creating_ticket">Creating ticket...</string>
+    <string name="select_category">Select a category</string>
     <string name="no_email_added">No Email Added</string>
     <string name="can_not_add_bank_if_not_verified">You can not link your bank until your iPay account gets verified by our system. After submitting your documents and other information it might take a while for verification.</string>
     <string name="dialog_add_new_email">You need to set up your primary email to use the support system. Add an email now?</string>
@@ -795,7 +797,13 @@
     <string name="cancelled">Cancelled</string>
     <string name="rejected">Rejected</string>
     <string name="draft">Draft</string>
-
+    <string name="attachment">attachment</string>
+    <string name="attachments">attachments</string>
+    <string name="album">Album</string>
+    <string name="tap_to_select_images">Tap to select images</string>
+    <string name="camera">Camera</string>
+    <string name="pdf">pdf</string>
+    <string name="max_limit_exceed">Max limit of attachment exceed. </string>
 
     <string-array name="mobile_operators">
         <item>Grameenphone</item>
@@ -855,6 +863,12 @@
         <item>Take a picture</item>
         <item>Select from gallery</item>
         <item>View uploaded document</item>
+    </string-array>
+
+    <string-array name="attach_file_picker_action">
+        <item>Take a picture</item>
+        <item>Select from gallery</item>
+        <item>Select a PDF</item>
     </string-array>
 
     <string-array name="verified_picker_action">
