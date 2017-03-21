@@ -1,3 +1,4 @@
+/*
 package bd.com.ipay.ipayskeleton.Service.GCM;
 
 import android.app.Activity;
@@ -61,22 +62,26 @@ public class RegistrationIntentService extends IntentService {
         LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }
 
-    /**
+    */
+/**
      * Persist registration to third-party servers.
      * <p/>
      * Modify this method to associate the user's GCM registration token with any server-side account
      * maintained by your application.
-     */
+     *//*
+
     private void saveGCMTokenInPreference(String token) {
         SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         pref.edit().putString(Constants.PUSH_NOTIFICATION_TOKEN, token).apply();
     }
 
-    /**
+    */
+/**
      * Subscribe to any GCM topics of interest, as defined by the TOPICS constant.
      *
      * @throws IOException if unable to reach the GCM PubSub service
-     */
+     *//*
+
     private void subscribeTopics(String token) throws IOException {
         GcmPubSub pubSub = GcmPubSub.getInstance(this);
         for (String topic : TOPICS) {
@@ -84,3 +89,4 @@ public class RegistrationIntentService extends IntentService {
         }
     }
 }
+*/
