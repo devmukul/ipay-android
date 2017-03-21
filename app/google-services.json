@@ -1,20 +1,35 @@
 {
   "project_info": {
-    "project_number": "799721005986",
-    "project_id": "ipay-772e8"
+    "project_number": "272950193600",
+    "firebase_url": "https://ipayandroid-beta.firebaseio.com",
+    "project_id": "ipayandroid-beta",
+    "storage_bucket": "ipayandroid-beta.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:799721005986:android:7dcef9bb4cb24e14",
+        "mobilesdk_app_id": "1:272950193600:android:c1135b3d28489c92",
         "android_client_info": {
           "package_name": "bd.com.ipay.android"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "272950193600-e7mhe9g3hmdptl0u07ob6itjtk2n1ssi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "bd.com.ipay.android",
+            "certificate_hash": "df89c4e803d580b7c914714640e10605ccce6448"
+          }
+        },
+        {
+          "client_id": "272950193600-qckcs9snubedvmska5dkf1v57r2ic64s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyB6fiY1MTe0DBchx0-SJtiB7PoIe9cyzh4"
+          "current_key": "AIzaSyCnVuM1QnMA0Olem-1rXBf0KJH6NOBY2Gg"
         }
       ],
       "services": {
@@ -22,11 +37,16 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "272950193600-qckcs9snubedvmska5dkf1v57r2ic64s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }
