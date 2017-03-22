@@ -179,6 +179,7 @@ public class Constants {
     public static final String BASE_URL_EDU;
     public static final String BASE_URL_FRIEND;
     public static final String BASE_URL_ADMIN;
+    public static final String BASE_URL_NOTIFICATION;
     public static final String BASE_URL_FTP_SERVER;
     public static final String BASE_URL_WEB;
     private static final String SERVER_NAME;
@@ -192,6 +193,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://10.10.10.11:1337/v1/";
             BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/support/";
+            BASE_URL_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
 //            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             SERVER_NAME = "dev";
@@ -204,6 +206,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_FRIEND = "http://10.15.40.14:1337/v1/";
             BASE_URL_ADMIN = "http://10.15.40.15:8085/api/v1/support/";
+            BASE_URL_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "http://test.ipay.com.bd";
             SERVER_NAME = "test";
 
@@ -215,6 +218,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
             BASE_URL_FRIEND = "http://10.10.40.14:1337/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
+            BASE_URL_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "http://stage.ipay.com.bd";
             SERVER_NAME = "stage";
 
@@ -226,6 +230,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
             BASE_URL_FRIEND = "https://www.ipay.com.bd/friend/v1/";
             BASE_URL_ADMIN = "https://www.ipay.com.bd/api/v1/support/";
+            BASE_URL_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "https://www.ipay.com.bd";
             SERVER_NAME = "live";
 
@@ -237,6 +242,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_FRIEND = "http://dev.ipay.com.bd/friend/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
+            BASE_URL_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             SERVER_NAME = "local";
         }
@@ -431,6 +437,9 @@ public class Constants {
     public static final String URL_GET_TICKET_DETAILS = "ticket/by/id";
     public static final String URL_ADD_COMMENT = "ticket/add/comment";
 
+    // FCM notification
+    public static final String URL_REFRESH_FIREBASE_TOKEN = "firebase/login/";
+
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
     public static final int HTTP_RESPONSE_STATUS_PAYMENT_REQUIRED = 402;
@@ -459,6 +468,7 @@ public class Constants {
     public static final String COMMAND_CHECK_PROMO_CODE = "COMMAND_CHECK_PROMO_CODE";
     public static final String COMMAND_CHECK_IF_USER_EXISTS = "COMMAND_CHECK_IF_USER_EXISTS";
     public static final String COMMAND_REFRESH_TOKEN = "COMMAND_REFRESH_TOKEN";
+    public static final String COMMAND_REFRESH_FIREBASE_TOKEN = "COMMAND_REFRESH_FIREBASE_TOKEN";
     public static final String COMMAND_SIGN_UP = "COMMAND_SIGN_UP";
     public static final String COMMAND_SIGN_UP_BUSINESS = "COMMAND_SIGN_UP_BUSINESS";
     public static final String COMMAND_LOG_IN = "COMMAND_LOG_IN";
