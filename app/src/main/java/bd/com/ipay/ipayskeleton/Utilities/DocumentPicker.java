@@ -172,7 +172,7 @@ public class DocumentPicker {
             } else if (returnedIntent.getData().toString().startsWith("file://")) {
                 return returnedIntent.getData().toString();
             } else {            /** ALBUM **/
-                return FileUtilities.getFilePath(context, returnedIntent.getData());
+                return FileUtilities.getDataColumn(context, returnedIntent.getData());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -191,7 +191,7 @@ public class DocumentPicker {
             if (isCamera) {     /** CAMERA **/
                 return getTempFile(context).getAbsolutePath();
             } else {
-                return FileUtilities.getPath(context,returnedIntent.getData());
+                return FileUtilities.getAbsolutePath(context,returnedIntent.getData());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -215,7 +215,7 @@ public class DocumentPicker {
                 } else if (returnedIntent.getData().toString().startsWith("file://")) {
                     selectedImage = Uri.parse(returnedIntent.getData().toString());
                 } else {            /** ALBUM **/
-                    selectedImage = Uri.parse(FileUtilities.getFilePath(context, returnedIntent.getData()));
+                    selectedImage = Uri.parse(FileUtilities.getDataColumn(context, returnedIntent.getData()));
                 }
                 Log.e(TAG, "selectedImage: " + selectedImage.getPath());
 
@@ -255,7 +255,7 @@ public class DocumentPicker {
                 } else if (returnedIntent.getData().toString().startsWith("file://")) {
                     selectedImage = Uri.parse(returnedIntent.getData().toString());
                 } else {            /** ALBUM **/
-                    selectedImage = Uri.parse(FileUtilities.getFilePath(context, returnedIntent.getData()));
+                    selectedImage = Uri.parse(FileUtilities.getDataColumn(context, returnedIntent.getData()));
                 }
                 Log.e(TAG, "selectedImage: " + selectedImage.getPath());
 

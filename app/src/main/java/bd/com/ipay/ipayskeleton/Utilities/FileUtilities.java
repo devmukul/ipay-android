@@ -15,7 +15,7 @@ import java.io.File;
 public class FileUtilities {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static String getPath(Context context, Uri uri) {
+    public static String getAbsolutePath(Context context, Uri uri) {
         String path = uri.getPath();
         String[] split = path.split(":");
 
@@ -25,7 +25,7 @@ public class FileUtilities {
         } else if (isDownloadsDocument(uri)) {
             String id = DocumentsContract.getDocumentId(uri);
             Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-            return getDataColumn(context, contentUri, null, null);
+            return getDataColumn(context, contentUri);
 
         } else {
             String[] splitPath = path.split("//");
@@ -44,32 +44,20 @@ public class FileUtilities {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
-    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
+    public static String getDataColumn(Context context, Uri uri) {
         Cursor cursor = null;
-        final String column = "_data";
-        final String[] projection = {column};
+        String[] projection = {MediaStore.Video.Media.DATA};
         try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            cursor = context.getContentResolver().query(uri, projection, null, null, null);
+            String filePath = null;
             if (cursor != null && cursor.moveToFirst()) {
-                final int index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(index);
+                filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+                return filePath;
             }
         } finally {
             if (cursor != null)
                 cursor.close();
         }
         return null;
-    }
-
-    public static String getFilePath(Context context, Uri uri) {
-        String[] projection = {MediaStore.Video.Media.DATA};
-        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
-        String filePath = null;
-        if (cursor != null && cursor.moveToFirst()) {
-            filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
-            cursor.close();
-        }
-
-        return filePath;
     }
 }
