@@ -20,7 +20,6 @@ public class FileUtilities {
         String[] split = path.split(":");
 
         if (isExternalStorageDocument(uri)) {
-
             return Environment.getExternalStorageDirectory() + "/" + split[1];
 
         } else if (isDownloadsDocument(uri)) {
