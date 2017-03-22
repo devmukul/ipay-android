@@ -1,35 +1,35 @@
 {
   "project_info": {
-    "project_number": "272950193600",
-    "firebase_url": "https://ipayandroid-beta.firebaseio.com",
-    "project_id": "ipayandroid-beta",
-    "storage_bucket": "ipayandroid-beta.appspot.com"
+    "project_number": "680706480318",
+    "firebase_url": "https://api-project-680706480318.firebaseio.com",
+    "project_id": "api-project-680706480318",
+    "storage_bucket": "api-project-680706480318.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:272950193600:android:c1135b3d28489c92",
+        "mobilesdk_app_id": "1:680706480318:android:e4988ba0f8faf6b5",
         "android_client_info": {
-          "package_name": "bd.com.ipay.android"
+          "package_name": "com.nati.firebase.firebasetest"
         }
       },
       "oauth_client": [
         {
-          "client_id": "272950193600-e7mhe9g3hmdptl0u07ob6itjtk2n1ssi.apps.googleusercontent.com",
+          "client_id": "680706480318-sfp8uc9gcnr4n597h1esokhv04tshhrd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "bd.com.ipay.android",
-            "certificate_hash": "df89c4e803d580b7c914714640e10605ccce6448"
+            "package_name": "com.nati.firebase.firebasetest",
+            "certificate_hash": "3c6e563b423ca098ed1c730f91a09a31c4f441b2"
           }
         },
         {
-          "client_id": "272950193600-qckcs9snubedvmska5dkf1v57r2ic64s.apps.googleusercontent.com",
+          "client_id": "680706480318-8jsam42mu889n3e5hsaf8b9guiiv9p9r.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCnVuM1QnMA0Olem-1rXBf0KJH6NOBY2Gg"
+          "current_key": "AIzaSyAMFy9cPO2hcDdmDcPjrg_LcsL55uB450w"
         }
       ],
       "services": {
@@ -40,10 +40,99 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "272950193600-qckcs9snubedvmska5dkf1v57r2ic64s.apps.googleusercontent.com",
+              "client_id": "680706480318-8jsam42mu889n3e5hsaf8b9guiiv9p9r.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "680706480318-6hk8j1viafk81p2v32jdj3s7l2oht65j.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "bd.com.ipay.ios"
+              }
             }
           ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:680706480318:android:ea3d871316c31fdc",
+        "android_client_info": {
+          "package_name": "com.nati.firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "680706480318-3rndktuf9a7h1drt0sil3qo5pq7j0n7d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nati.firebase",
+            "certificate_hash": "fb5dfc8ff2f9394de2d9d0b433e9ed5944130139"
+          }
+        },
+        {
+          "client_id": "680706480318-8jsam42mu889n3e5hsaf8b9guiiv9p9r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMFy9cPO2hcDdmDcPjrg_LcsL55uB450w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "680706480318-8jsam42mu889n3e5hsaf8b9guiiv9p9r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "680706480318-6hk8j1viafk81p2v32jdj3s7l2oht65j.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "bd.com.ipay.ios"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:680706480318:android:c1135b3d28489c92",
+        "android_client_info": {
+          "package_name": "bd.com.ipay.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "680706480318-8jsam42mu889n3e5hsaf8b9guiiv9p9r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMFy9cPO2hcDdmDcPjrg_LcsL55uB450w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2
