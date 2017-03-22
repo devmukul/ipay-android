@@ -407,7 +407,6 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
             if (getActivity() != null) {
                 Toast.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT).show();
                 mProgressDialog.dismiss();
-//                getActivity().onBackPressed();
             }
 
             return;
