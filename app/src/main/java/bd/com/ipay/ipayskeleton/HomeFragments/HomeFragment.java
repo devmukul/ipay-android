@@ -59,6 +59,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.RefreshBalanceRe
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Service.FCM.FCMPushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
@@ -581,7 +582,14 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private final BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            refreshBalance();
+            if (!FCMPushNotificationStatusHolder.isUpdateAvailable(Constants.PUSH_NOTIFICATION_TAG_BALANCE))
+                refreshBalance();
+
+            else {
+                String balance = pref.getString(Constants.USER_BALANCE, null);
+                balanceView.setText(Utilities.takaWithComma(Double.parseDouble(balance)) + " " + getString(R.string.bdt));
+                FCMPushNotificationStatusHolder.setUpdateAvailable(Constants.PUSH_NOTIFICATION_TAG_BALANCE, false);
+            }
         }
     };
 

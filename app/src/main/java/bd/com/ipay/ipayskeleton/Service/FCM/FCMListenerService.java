@@ -9,21 +9,28 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 
+import java.io.StringReader;
 import java.util.Map;
 import java.util.Random;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FireBaseNotification;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FireBaseNotificationParser;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FireBaseNotificationResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class FCMListenerService  extends FirebaseMessagingService{
-    private FireBaseNotificationResponse mFireBaseNotificationResponse ;
+public class FCMListenerService extends FirebaseMessagingService {
+    private FireBaseNotification mFireBaseNotificationResponse = null;
+
     @Override
-    public void onMessageReceived(RemoteMessage message){
+    public void onMessageReceived(RemoteMessage message) {
         String from = message.getFrom();
         Map data = message.getData();
 
@@ -33,13 +40,14 @@ public class FCMListenerService  extends FirebaseMessagingService{
         if (data.size() > 0) {
             Log.d("Data", "Message data payload: " + data.toString());
             Gson gson = new Gson();
-            mFireBaseNotificationResponse = gson.fromJson(message.getData().toString(), FireBaseNotificationResponse.class);
+            mFireBaseNotificationResponse = gson.fromJson(data.get(Constants.NOTIFICATION_DATA).toString(), FireBaseNotification.class);
+            FireBaseNotificationParser.notificationParser(this, mFireBaseNotificationResponse);
         }
 
         // Check if message contains a notification payload.
         if (message.getNotification() != null) {
             Log.d("Notification Payload", "Message Notification Body: " + message.getNotification().getBody());
-            createNotification(message.getNotification().getTitle(),message.getNotification().getBody());
+            createNotification(message.getNotification().getTitle(), message.getNotification().getBody());
         }
     }
 
@@ -60,6 +68,7 @@ public class FCMListenerService  extends FirebaseMessagingService{
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
+        //  if(icon!=null ? notificationBuilder.setSmallIcon(R.icon) : notificationBuilder.setSmallIcon(R.mipmap.ic_launcher));
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
