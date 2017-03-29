@@ -1,15 +1,24 @@
 package bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Service.FCM.FCMPushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TransactionHistoryHolderFragment extends Fragment {
 
@@ -48,6 +57,9 @@ public class TransactionHistoryHolderFragment extends Fragment {
             }
         });
 
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mTransactionHistoryBroadcastReceiver,
+                new IntentFilter(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST));
+
         return v;
     }
 
@@ -80,7 +92,6 @@ public class TransactionHistoryHolderFragment extends Fragment {
 
         mProcessedTransactionHistoryCompletedFragment = new TransactionHistoryCompletedFragment();
         getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mProcessedTransactionHistoryCompletedFragment).commit();
-
     }
 
     private void switchToPendingTransactionsFragment() {
@@ -93,5 +104,19 @@ public class TransactionHistoryHolderFragment extends Fragment {
         mPendingTransactionHistoryFragment = new TransactionHistoryPendingFragment();
         getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mPendingTransactionHistoryFragment).commit();
     }
+
+    private final BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if (mProcessedTransactionsSelector.isChecked() && mProcessedTransactionHistoryCompletedFragment != null) {
+                TransactionHistory transactionHistory = intent.getParcelableExtra(Constants.TRANSACTION_DETAILS);
+                mProcessedTransactionHistoryCompletedFragment.addLastTransactionHistory(transactionHistory);
+            } else if (mPendingTransactionsSelector.isChecked() && mPendingTransactionHistoryFragment != null) {
+                TransactionHistory transactionHistory = intent.getParcelableExtra(Constants.TRANSACTION_DETAILS);
+                mPendingTransactionHistoryFragment.addLastTransactionHistory(transactionHistory);
+            }
+        }
+    };
 
 }

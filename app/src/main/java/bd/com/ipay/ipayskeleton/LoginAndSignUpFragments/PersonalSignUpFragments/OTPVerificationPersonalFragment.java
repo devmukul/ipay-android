@@ -24,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.RegisterFCMTokenToServerAsyncTask;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
@@ -58,6 +59,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
     private ProgressDialog mProgressDialog;
 
     private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
+    private SharedPreferences pref;
 
     @Override
     public void onResume() {
@@ -75,6 +77,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
 
         Utilities.showKeyboard(getActivity(), mOTPEditText);
+        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
         mProgressDialog = new ProgressDialog(getActivity());
@@ -201,7 +204,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             return;
         }
 
-        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
 
         mProgressDialog.show();
@@ -315,6 +318,11 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         ProfileInfoCacheManager.setLoggedInStatus(true);
+
+                        String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+                        if (pushRegistrationID != null) {
+                            new RegisterFCMTokenToServerAsyncTask(getContext());
+                        }
 
                         ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
 

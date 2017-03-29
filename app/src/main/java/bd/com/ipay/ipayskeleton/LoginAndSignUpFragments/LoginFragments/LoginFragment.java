@@ -26,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.RegisterFCMTokenToServerAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerPrintAuthenticationManager;
 import bd.com.ipay.ipayskeleton.FingerPrintAuthentication.FingerprintAuthenticationDialog;
@@ -322,6 +323,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     ProfileInfoCacheManager.setLoggedInStatus(true);
+                    String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+                    if (pushRegistrationID != null) {
+                        new RegisterFCMTokenToServerAsyncTask(getContext());
+                    }
 
                     SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
                     pref.edit().putString(Constants.USERID, mUserNameLogin).apply();
