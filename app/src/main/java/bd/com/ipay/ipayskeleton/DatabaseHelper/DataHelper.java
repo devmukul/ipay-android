@@ -64,7 +64,6 @@ public class DataHelper {
                     values.put(DBConstants.KEY_IS_ACTIVE, friendInfo.isActive() ?
                             DBConstants.ACTIVE : DBConstants.INACTIVE);
 
-
                     db.insertWithOnConflict(DBConstants.DB_TABLE_FRIENDS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 }
             } catch (Exception e) {
