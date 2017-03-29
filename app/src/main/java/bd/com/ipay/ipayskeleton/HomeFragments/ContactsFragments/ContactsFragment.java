@@ -38,23 +38,28 @@ import com.bumptech.glide.request.target.Target;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
+import bd.com.ipay.ipayskeleton.Api.DeleteFriendAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
-import bd.com.ipay.ipayskeleton.Model.Friend.InviteFriend;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.AskForIntroductionResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.SendInviteResponse;
+import bd.com.ipay.ipayskeleton.Model.Friend.DeleteFriendRequest;
+import bd.com.ipay.ipayskeleton.Model.Friend.InfoDeleteFriend;
+import bd.com.ipay.ipayskeleton.Model.Friend.InviteFriend;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonColorList.PROFILE_PICTURE_BACKGROUNDS;
@@ -508,6 +513,37 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
     }
 
+    private void showDeleteContactConfirmationDialog(final String mobileNumber) {
+        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                .title(R.string.remove_contact_title)
+                .cancelable(false)
+                .content(R.string.remove_contact_message)
+                .positiveText(R.string.yes)
+                .negativeText(R.string.no)
+                .show();
+
+        dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                deleteFriend(mobileNumber);
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void deleteFriend(String phoneNumber) {
+        List<InfoDeleteFriend> newFriends = new ArrayList<>();
+        newFriends.add(new InfoDeleteFriend(ContactEngine.formatMobileNumberBD(phoneNumber)));
+
+        DeleteFriendRequest deleteFriendRequest = new DeleteFriendRequest(newFriends);
+        Gson gson = new Gson();
+        String json = gson.toJson(deleteFriendRequest);
+
+        new DeleteFriendAsyncTask(Constants.COMMAND_DELETE_FRIENDS,
+                Constants.BASE_URL_FRIEND + Constants.URL_DELETE_FRIENDS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private void sendRecommendationRequest(String mobileNumber) {
         if (mAskForRecommendationTask != null) {
             return;
@@ -860,8 +896,15 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                         }
                     }
                 });
-            }
 
+                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        showDeleteContactConfirmationDialog(mobileNumber);
+                        return false;
+                    }
+                });
+            }
         }
 
         @SuppressWarnings("UnnecessaryLocalVariable")

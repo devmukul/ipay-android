@@ -101,7 +101,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
         String json = gson.toJson(addFriendRequest);
 
         mAddFriendAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_ADD_CONTACTS, json, context, this);
+                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, context, this);
         mAddFriendAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
@@ -126,7 +126,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
         String json = gson.toJson(updateFriendRequest);
 
         mUpdateFriendAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_UPDATE_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_UPDATE_CONTACTS, json, context, this);
+                Constants.BASE_URL_FRIEND + Constants.URL_UPDATE_FRIENDS, json, context, this);
         mUpdateFriendAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
