@@ -62,7 +62,7 @@ public class DataHelper {
                     values.put(DBConstants.KEY_IS_MEMBER, friendInfo.isMember() ?
                             DBConstants.IPAY_MEMBER : DBConstants.NOT_IPAY_MEMBER);
                     values.put(DBConstants.KEY_IS_ACTIVE, friendInfo.isActive() ?
-                            DBConstants.IS_ACTIVE : DBConstants.IS_NOT_ACTIVE);
+                            DBConstants.ACTIVE : DBConstants.INACTIVE);
 
 
                     db.insertWithOnConflict(DBConstants.DB_TABLE_FRIENDS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -168,7 +168,7 @@ public class DataHelper {
                 }
             }
             // Select only active contacts
-            queryString += " AND " + DBConstants.KEY_IS_ACTIVE + " = " + DBConstants.IS_ACTIVE;
+            queryString += " AND " + DBConstants.KEY_IS_ACTIVE + " = " + DBConstants.ACTIVE;
 
             // If original name exists, then user original name as the sorting parameter.
             // Otherwise use normal name as the sorting parameter.
