@@ -37,7 +37,7 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
                 DBConstants.KEY_VERIFICATION_STATUS + " integer default 0, " +
                 DBConstants.KEY_UPDATE_TIME + " long, " +
                 DBConstants.KEY_IS_MEMBER + " integer default 0, " +
-                DBConstants.KEY_IS_ACTIVE + " integer default 0)");
+                DBConstants.KEY_IS_ACTIVE + " integer default " + DBConstants.ACTIVE + ")");
     }
 
     private void createBusinessAccountsTable(SQLiteDatabase db) {
