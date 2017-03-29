@@ -29,6 +29,7 @@ public class DBConstants {
     public static final String KEY_RELATIONSHIP = "relationship";
     public static final String KEY_IS_MEMBER = "is_member";
     public static final String KEY_UPDATE_TIME = "update_at";
+    public static final String KEY_IS_ACTIVE = "is_active";
 
     // Business table
     public static final String KEY_BUSINESS_MOBILE_NUMBER = "mobile_number";
@@ -53,4 +54,7 @@ public class DBConstants {
 
     public static final int IPAY_MEMBER = 1;
     public static final int NOT_IPAY_MEMBER = 0;
+
+    public static final int IS_ACTIVE = 1;
+    public static final int IS_NOT_ACTIVE = 0;
 }

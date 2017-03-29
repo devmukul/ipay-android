@@ -39,6 +39,12 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
                 DBConstants.KEY_IS_MEMBER + " integer default 0)");
     }
 
+    private void updateFriendsTable(SQLiteDatabase db) {
+        db.execSQL("alter table " +
+                DBConstants.DB_TABLE_FRIENDS +" add column "+
+                DBConstants.KEY_IS_ACTIVE + " integer default 0");
+    }
+
     private void createBusinessAccountsTable(SQLiteDatabase db) {
         db.execSQL("create table if not exists " +
                 DBConstants.DB_TABLE_BUSINESS_ACCOUNTS +
@@ -71,6 +77,8 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
                 createFriendsTable(db);
             case 9:
                 createBusinessAccountsTable(db);
+            case 10:
+                updateFriendsTable(db);
                 break;
         }
     }

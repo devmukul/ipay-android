@@ -16,7 +16,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
 
     private final Context context;
     private static DataHelper instance = null;
@@ -62,6 +62,9 @@ public class DataHelper {
                     values.put(DBConstants.KEY_UPDATE_TIME, friendInfo.getUpdateTime());
                     values.put(DBConstants.KEY_IS_MEMBER, friendInfo.isMember() ?
                             DBConstants.IPAY_MEMBER : DBConstants.NOT_IPAY_MEMBER);
+                    values.put(DBConstants.KEY_IS_ACTIVE, friendInfo.isActive() ?
+                            DBConstants.IS_ACTIVE : DBConstants.IS_NOT_ACTIVE);
+
 
                     db.insertWithOnConflict(DBConstants.DB_TABLE_FRIENDS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 }
@@ -164,6 +167,8 @@ public class DataHelper {
                     // Get invited users
                     queryString += " AND " + DBConstants.KEY_MOBILE_NUMBER + " NOT IN " + inviteeListStr;
                 }
+
+                queryString += " AND " + DBConstants.KEY_IS_ACTIVE + " = " + DBConstants.IS_ACTIVE;
             }
 
             // If original name exists, then user original name as the sorting parameter.
@@ -314,7 +319,7 @@ public class DataHelper {
                 int isMember = cursor.getInt(isMemberIndex);
 
                 FriendInfo friend = new FriendInfo(accountType, isMember,
-                        verificationStatus, name, originalName,mobileNumber, profilePictureUrl, profilePictureUrlQualityMedium, profilePictureUrlQualityHigh, relationship, updateTime);
+                        verificationStatus, name, originalName, mobileNumber, profilePictureUrl, profilePictureUrlQualityMedium, profilePictureUrlQualityHigh, relationship, updateTime);
                 friends.add(friend);
             } while (cursor.moveToNext());
         }
