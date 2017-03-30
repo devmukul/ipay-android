@@ -125,7 +125,7 @@ public class DocumentPicker {
             takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(context)));
             intentList = addIntentsToList(context, intentList, takePhotoIntent);
         } else {
-            Intent pdfIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            Intent pdfIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             pdfIntent.setType("application/pdf");
             pdfIntent.addCategory(Intent.CATEGORY_OPENABLE);
             pdfIntent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
