@@ -142,6 +142,7 @@ public class Constants {
     public static final int MAX_FILE_ATTACHMENT_LIMIT = 5;
 
     public static final int STARTING_DATE = 01;
+    public static final int SERVER_TYPE_LIVE = 4;
 
     public static final int STARTING_MONTH = 01;
     public static final int STARTING_YEAR = 2016;
