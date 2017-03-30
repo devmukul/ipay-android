@@ -281,7 +281,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
         String json = gson.toJson(addFriendRequest);
 
         new AddFriendAsyncTask(Constants.COMMAND_ADD_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_ADD_CONTACTS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

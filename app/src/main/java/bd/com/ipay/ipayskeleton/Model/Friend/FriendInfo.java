@@ -12,6 +12,7 @@ public class FriendInfo {
     private ProfilePictureURL profilePictureURL;
     private String relationship;
     private long updateAt;
+    private boolean active;
 
 
     public FriendInfo(String name, String mobileNumber, String profilePictureUrl) {
@@ -68,6 +69,10 @@ public class FriendInfo {
         return updateAt;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
     public String getProfilePictureUrl() {
         return profilePictureURL.getLow();
     }
@@ -106,6 +111,10 @@ public class FriendInfo {
 
     public void setProfilePictureUrl(String profilePictureUrl) {
         this.profilePictureURL =new ProfilePictureURL(profilePictureUrl);
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override

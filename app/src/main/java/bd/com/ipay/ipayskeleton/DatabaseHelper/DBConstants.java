@@ -29,6 +29,7 @@ public class DBConstants {
     public static final String KEY_RELATIONSHIP = "relationship";
     public static final String KEY_IS_MEMBER = "is_member";
     public static final String KEY_UPDATE_TIME = "update_at";
+    public static final String KEY_IS_ACTIVE = "is_active";
 
     // Business table
     public static final String KEY_BUSINESS_MOBILE_NUMBER = "mobile_number";
@@ -40,11 +41,9 @@ public class DBConstants {
     public static final String KEY_BUSINESS_PROFILE_PICTURE_QUALITY_MEDIUM = "profile_picture_quality_medium";
     public static final String KEY_BUSINESS_PROFILE_PICTURE_QUALITY_HIGH = "profile_picture_quality_high";
 
-
     // Push events table
     public static final String KEY_TAG_NAME = "tag_name";
     public static final String KEY_JSON = "json";
-
 
     public static final int VERIFIED_USER = 1;
     public static final int NOT_VERIFIED_USER = 0;
@@ -53,4 +52,7 @@ public class DBConstants {
 
     public static final int IPAY_MEMBER = 1;
     public static final int NOT_IPAY_MEMBER = 0;
+
+    public static final int ACTIVE = 1;
+    public static final int INACTIVE = 0;
 }

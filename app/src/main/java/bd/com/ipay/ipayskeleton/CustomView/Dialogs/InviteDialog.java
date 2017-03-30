@@ -14,7 +14,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.GetFriendsAsyncTask;
@@ -177,7 +176,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
         String json = gson.toJson(addFriendRequest);
 
         mAddFriendAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_ADD_CONTACTS, json, context, this);
+                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, context, this);
         mAddFriendAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }

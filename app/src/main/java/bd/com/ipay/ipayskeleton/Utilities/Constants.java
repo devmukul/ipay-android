@@ -203,7 +203,7 @@ public class Constants {
             BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
-            BASE_URL_FRIEND = "http://10.15.40.14:4000/external/v1";
+            BASE_URL_FRIEND = "http://10.15.40.14:4000/external/v1/";
             BASE_URL_ADMIN = "http://10.15.40.15:8085/api/v1/support/";
             BASE_URL_WEB = "http://test.ipay.com.bd";
             SERVER_NAME = "test";
@@ -214,7 +214,7 @@ public class Constants {
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.10.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
-            BASE_URL_FRIEND = "http://10.10.40.14:4000/external/v1";
+            BASE_URL_FRIEND = "http://10.10.40.14:4000/external/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
             BASE_URL_WEB = "http://stage.ipay.com.bd";
             SERVER_NAME = "stage";
@@ -398,9 +398,10 @@ public class Constants {
     public static final String URL_MAKE_PRIMARY_EMAIL = "/primary";
 
     // User Rest (Friend Updated)
-    public static final String URL_GET_CONTACTS = "contacts";
-    public static final String URL_ADD_CONTACTS = "contacts";
-    public static final String URL_UPDATE_CONTACTS = "contacts";
+    public static final String URL_GET_FRIENDS = "contacts";
+    public static final String URL_ADD_FRIENDS = "contacts";
+    public static final String URL_UPDATE_FRIENDS = "contacts";
+    public static final String URL_DELETE_FRIENDS = "contacts";
 
     // Business Information (Owner)
     public static final String URL_GET_BUSINESS_INFORMATION = "user/profile/business";
@@ -524,6 +525,7 @@ public class Constants {
     public static final String COMMAND_GET_PROFILE_COMPLETION_STATUS = "COMMAND_GET_PROFILE_COMPLETION_STATUS";
     public static final String COMMAND_GET_FRIENDS = "COMMAND_GET_FRIENDS";
     public static final String COMMAND_ADD_FRIENDS = "COMMAND_ADD_FRIENDS";
+    public static final String COMMAND_DELETE_FRIENDS = "COMMAND_DELETE_FRIENDS";
     public static final String COMMAND_UPDATE_FRIENDS = "COMMAND_UPDATE_FRIENDS";
     public static final String COMMAND_GET_BUSINESS_RULE = "COMMAND_GET_BUSINESS_RULE";
     public static final String COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE = "COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE";

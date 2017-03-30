@@ -16,7 +16,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
 
     private final Context context;
     private static DataHelper instance = null;
@@ -53,7 +53,6 @@ public class DataHelper {
                     values.put(DBConstants.KEY_NAME, friendInfo.getName());
                     values.put(DBConstants.KEY_ORIGINAL_NAME, friendInfo.getOriginalName());
                     values.put(DBConstants.KEY_ACCOUNT_TYPE, friendInfo.getAccountType());
-//                    values.put(DBConstants.KEY_PROFILE_PICTURE, friendInfo.getProfilePictureUrl());
                     values.put(DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM, friendInfo.getProfilePictureUrlMedium());
                     values.put(DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH, friendInfo.getProfilePictureUrlHigh());
                     values.put(DBConstants.KEY_RELATIONSHIP, friendInfo.getRelationship());
@@ -62,6 +61,8 @@ public class DataHelper {
                     values.put(DBConstants.KEY_UPDATE_TIME, friendInfo.getUpdateTime());
                     values.put(DBConstants.KEY_IS_MEMBER, friendInfo.isMember() ?
                             DBConstants.IPAY_MEMBER : DBConstants.NOT_IPAY_MEMBER);
+                    values.put(DBConstants.KEY_IS_ACTIVE, friendInfo.isActive() ?
+                            DBConstants.ACTIVE : DBConstants.INACTIVE);
 
                     db.insertWithOnConflict(DBConstants.DB_TABLE_FRIENDS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 }
@@ -165,6 +166,8 @@ public class DataHelper {
                     queryString += " AND " + DBConstants.KEY_MOBILE_NUMBER + " NOT IN " + inviteeListStr;
                 }
             }
+            // Select only active contacts
+            queryString += " AND " + DBConstants.KEY_IS_ACTIVE + " = " + DBConstants.ACTIVE;
 
             // If original name exists, then user original name as the sorting parameter.
             // Otherwise use normal name as the sorting parameter.
@@ -314,7 +317,7 @@ public class DataHelper {
                 int isMember = cursor.getInt(isMemberIndex);
 
                 FriendInfo friend = new FriendInfo(accountType, isMember,
-                        verificationStatus, name, originalName,mobileNumber, profilePictureUrl, profilePictureUrlQualityMedium, profilePictureUrlQualityHigh, relationship, updateTime);
+                        verificationStatus, name, originalName, mobileNumber, profilePictureUrl, profilePictureUrlQualityMedium, profilePictureUrlQualityHigh, relationship, updateTime);
                 friends.add(friend);
             } while (cursor.moveToNext());
         }

@@ -804,6 +804,8 @@
     <string name="camera">Camera</string>
     <string name="pdf">pdf</string>
     <string name="max_limit_exceed">Max limit of attachment exceed. </string>
+    <string name="remove_contact_title">Delete contact </string>
+    <string name="remove_contact_message">Delete this contact from iPay? </string>
 
     <string-array name="mobile_operators">
         <item>Grameenphone</item>

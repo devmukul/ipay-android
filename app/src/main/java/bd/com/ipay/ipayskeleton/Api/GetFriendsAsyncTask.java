@@ -17,7 +17,7 @@ public class GetFriendsAsyncTask extends HttpRequestGetAsyncTask implements Http
 
     GetContactsResponse mGetContactsResponse;
     public GetFriendsAsyncTask(Context context) {
-        super(Constants.COMMAND_GET_FRIENDS, Constants.BASE_URL_FRIEND + Constants.URL_GET_CONTACTS, context);
+        super(Constants.COMMAND_GET_FRIENDS, Constants.BASE_URL_FRIEND + Constants.URL_GET_FRIENDS, context);
         mHttpResponseListener = this;
     }
 
