@@ -149,7 +149,9 @@ public class TransactionDetailsFragment extends Fragment {
             if (bankCode != null) otherImageView.setImageResource(bankIcon);
             else otherImageView.setImageResource(R.drawable.ic_tran_add);
 
-        } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
+        } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
+                || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT
+                || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK) {
             mNameView.setText(bankName);
             mMobileNumberView.setText(bankAccountNumber);
             mProfileImageView.setVisibility(View.GONE);

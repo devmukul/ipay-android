@@ -51,6 +51,7 @@ public class TransactionHistory implements Parcelable {
                 case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
                     return receiverInfo;
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
+                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT):
                     return getBankName();
                 case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
                     return "iPay";
@@ -90,7 +91,9 @@ public class TransactionHistory implements Parcelable {
 
     public String getNetAmountFormatted(String userMobileNumber) {
         if ((serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null)
-                || (serviceID != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK && receiverInfo == null))
+                || (serviceID != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK
+                && serviceID != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT
+                && receiverInfo == null))
             return Utilities.formatTakaWithComma(netAmount);
 
         /* **** Service charge effect ****
@@ -105,6 +108,7 @@ public class TransactionHistory implements Parcelable {
             case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
                 return Utilities.formatTakaWithSignAndComma("+", netAmount);
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
+            case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT):
                 return Utilities.formatTakaWithSignAndComma("+", netAmount);
             case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
                 return Utilities.formatTakaWithSignAndComma("+", netAmount);
@@ -232,6 +236,8 @@ public class TransactionHistory implements Parcelable {
                     return "Top up failed and returned " + Utilities.formatTaka(getNetAmount());
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
                     return "Withdraw money failed and returned " + Utilities.formatTaka(getNetAmount());
+                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT):
+                    return "Withdraw money reverted " + Utilities.formatTaka(getNetAmount());
                 case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
                     return "Opening balance from iPay";
                 case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
@@ -348,6 +354,8 @@ public class TransactionHistory implements Parcelable {
                     return "TopUp Rollback";
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
                     return "Withdraw Money Rollback";
+                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT):
+                    return "Withdraw Money Revert";
                 case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
                     return "Opening Balance";
                 case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
