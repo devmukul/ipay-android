@@ -16,9 +16,7 @@ public class SSLPinning {
     static final Set<String> PINS = new HashSet<>(Arrays.asList(
             new String[]{
                     "98b358c0d6d537da39fa5050b1139584774b62536f939aa2aad2a2e6ae30cd06",
-                    "4ca704ad0d9f7dea75212451fb80525e72e3c1badbfe79c3865ec8c9eb756581",
-                    "aa4cf5f8209db77273ec7d2219cf149815a585d9eeb47a880d8d89d49de5e1d3",
-                    "1142c7c18bc68649f2ce7a01bf2be06e2762047dc95f77851c79483b760af049"}));
+                    "4ca704ad0d9f7dea75212451fb80525e72e3c1badbfe79c3865ec8c9eb756581"}));
 
     public static boolean validatePinning() {
         if (Constants.SERVER_TYPE == Constants.SERVER_TYPE_LIVE) {
@@ -30,10 +28,6 @@ public class SSLPinning {
                 Certificate[] certs = targetConnection.getServerCertificates();
                 MessageDigest md = MessageDigest.getInstance("SHA-256");
 
-                // Bypassing if one of the certificates missing
-                if (certs.length < REQUIRED_CERTIFICATES) {
-                    return true;
-                }
                 for (Certificate cert : certs) {
                     X509Certificate x509Certificate = (X509Certificate) cert;
                     byte[] key = x509Certificate.getPublicKey().getEncoded();
@@ -51,6 +45,10 @@ public class SSLPinning {
                     }
                 }
 
+                // Bypassing if one of the certificates missing
+                if (certs.length < REQUIRED_CERTIFICATES) {
+                    return true;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
