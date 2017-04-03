@@ -25,6 +25,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
@@ -99,16 +100,12 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
 
     private void attemptAcceptPaymentRequestWithPinCheck() {
         if (this.isPinRequired) {
-            final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
-
-            pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
+            new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    acceptPaymentRequest(requestId, pinInputDialogBuilder.getPin());
+                public void ifPinCheckedAndAdded(String pin) {
+                    acceptPaymentRequest(requestId, pin);
                 }
             });
-
-            pinInputDialogBuilder.build().show();
         } else
             acceptPaymentRequest(requestId, null);
     }

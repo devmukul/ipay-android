@@ -13,30 +13,37 @@ public class CustomPinCheckerWithInputDialog {
     private Context context;
 
     public CustomPinCheckerWithInputDialog(final Context context, final PinCheckAndSetListener pinCheckAndSetListener) {
-        this.context= context;
+        this.context = context;
         this.pinCheckAndSetListener = pinCheckAndSetListener;
 
+        initPinChecker();
+    }
+
+    private void initPinChecker() {
         PinChecker pinChecker = new PinChecker(context, new PinChecker.PinCheckerListener() {
             @Override
             public void ifPinAdded() {
-                final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(context);
-
-                pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        if (pinCheckAndSetListener != null) {
-                            pinCheckAndSetListener.ifPinCheckedAndAdded(pinInputDialogBuilder.getPin());
-                        }
-
-                    }
-                });
-
-                pinInputDialogBuilder.build().show();
+                showPinInputDialog();
             }
         });
         pinChecker.execute();
     }
-    
+
+    private void showPinInputDialog() {
+        final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(context);
+
+        pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                if (pinCheckAndSetListener != null) {
+                    pinCheckAndSetListener.ifPinCheckedAndAdded(pinInputDialogBuilder.getPin());
+                }
+            }
+        });
+
+        pinInputDialogBuilder.build().show();
+    }
+
     public interface PinCheckAndSetListener {
         void ifPinCheckedAndAdded(String pin);
     }
