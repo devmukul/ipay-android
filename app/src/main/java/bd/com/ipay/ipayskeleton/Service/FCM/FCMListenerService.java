@@ -9,25 +9,18 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 
-import java.io.StringReader;
 import java.util.Map;
 import java.util.Random;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FireBaseNotification;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FireBaseNotificationParser;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FireBaseNotificationResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class FCMListenerService extends FirebaseMessagingService {
-    private FireBaseNotification mFireBaseNotificationResponse = null;
+    private int service_ID;
 
     @Override
     public void onMessageReceived(RemoteMessage message) {
@@ -39,9 +32,9 @@ public class FCMListenerService extends FirebaseMessagingService {
         // Check if message contains a data payload.
         if (data.size() > 0) {
             Log.d("Data", "Message data payload: " + data.toString());
-            Gson gson = new Gson();
-            mFireBaseNotificationResponse = gson.fromJson(data.get(Constants.NOTIFICATION_DATA).toString(), FireBaseNotification.class);
-            FireBaseNotificationParser.notificationParser(this, mFireBaseNotificationResponse);
+
+            service_ID =Integer.parseInt(data.get(Constants.PUSH_NOTIFICATION_SERVICE_ID).toString());
+            FCMNotificationParser.notificationParser(this, service_ID);
         }
 
         // Check if message contains a notification payload.

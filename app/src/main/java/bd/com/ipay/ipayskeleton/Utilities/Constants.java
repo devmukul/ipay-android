@@ -59,7 +59,7 @@ public class Constants {
     public static final String PROFILE_INFO_UPDATE_BROADCAST = "PROFILE_INFO_UPDATE_BROADCAST";
     public static final String PROFILE_PICTURE_UPDATE_BROADCAST = "PROFILE_PICTURE_UPDATE_BROADCAST";
     public static final String TRANSACTION_HISTORY_UPDATE_BROADCAST = "TRANSACTION_HISTORY_UPDATE_BROADCAST";
-    public static final String TRANSACTION_HISTORY_UPDATE_BROADCAST_NEW = "TRANSACTION_HISTORY_UPDATE_BROADCAST_NEW";
+    public static final String BALANCE_UPDATE_BROADCAST = "BALANCE_UPDATE_BROADCAST";
     public static final String PROFILE_COMPLETION_UPDATE_BROADCAST = "PROFILE_COMPLETION_UPDATE_BROADCAST";
 
     public static final String TOKEN = "token";
@@ -673,6 +673,7 @@ public class Constants {
     public static final String PUSH_NOTIFICATION_TAG_BALANCE = "BALANCE";
     public static final String PUSH_NOTIFICATION_TOKEN = "token";
     public static final String PUSH_NOTIFICATION_EVENT = "EVENT";
+    public static final String PUSH_NOTIFICATION_SERVICE_ID = "serviceId";
 
     public static final String TOTAL = "total";
     public static final String INVOICE_RECEIVER_TAG = "receiver";

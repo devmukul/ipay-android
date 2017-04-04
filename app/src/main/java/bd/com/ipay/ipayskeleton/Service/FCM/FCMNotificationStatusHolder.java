@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class FCMPushNotificationStatusHolder { private static SharedPreferences pref;
+public class FCMNotificationStatusHolder { private static SharedPreferences pref;
 
     public static void initialize(Context context) {
         pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);

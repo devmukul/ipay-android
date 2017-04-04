@@ -815,11 +815,4 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             refreshTransactionHistory();
         }
     }
-
-    public void addLastTransactionHistory(TransactionHistory transactionHistory) {
-        if (transactionHistory != null) {
-            userTransactionHistories.add(transactionHistory);
-            mTransactionHistoryAdapter.notifyDataSetChanged();
-        } else refreshTransactionHistory();
-    }
 }

@@ -59,7 +59,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.RefreshBalanceRe
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.FCM.FCMPushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Service.FCM.FCMNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
@@ -286,8 +286,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_PICTURE_UPDATE_BROADCAST));
 
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mTransactionHistoryBroadcastReceiver,
-                new IntentFilter(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBalanceUpdateBroadcastReceiver,
+                new IntentFilter(Constants.BALANCE_UPDATE_BROADCAST));
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfileCompletionInfoUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_COMPLETION_UPDATE_BROADCAST));
@@ -309,7 +309,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     public void onDestroyView() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfileInfoUpdateBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfilePictureUpdateBroadcastReceiver);
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mTransactionHistoryBroadcastReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBalanceUpdateBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfileCompletionInfoUpdateBroadcastReceiver);
 
         super.onDestroyView();
@@ -579,17 +579,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         }
     };
 
-    private final BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mBalanceUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (!FCMPushNotificationStatusHolder.isUpdateAvailable(Constants.PUSH_NOTIFICATION_TAG_BALANCE))
-                refreshBalance();
-
-            else {
-                String balance = pref.getString(Constants.USER_BALANCE, null);
-                balanceView.setText(Utilities.takaWithComma(Double.parseDouble(balance)) + " " + getString(R.string.bdt));
-                FCMPushNotificationStatusHolder.setUpdateAvailable(Constants.PUSH_NOTIFICATION_TAG_BALANCE, false);
-            }
+            refreshBalance();
         }
     };
 
