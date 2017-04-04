@@ -219,7 +219,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             mSwipeRefreshLayout.destroyDrawingCache();
             mSwipeRefreshLayout.clearAnimation();
         }
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
     }
 
     @Override
