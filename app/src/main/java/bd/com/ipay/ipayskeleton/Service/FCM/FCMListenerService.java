@@ -11,16 +11,19 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 
 import java.util.Map;
 import java.util.Random;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FCMNotificationResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class FCMListenerService extends FirebaseMessagingService {
     private int service_ID;
+    private FCMNotificationResponse mFcmNotificationResponse ;
 
     @Override
     public void onMessageReceived(RemoteMessage message) {
@@ -33,8 +36,10 @@ public class FCMListenerService extends FirebaseMessagingService {
         if (data.size() > 0) {
             Log.d("Data", "Message data payload: " + data.toString());
 
-            service_ID =Integer.parseInt(data.get(Constants.PUSH_NOTIFICATION_SERVICE_ID).toString());
-            FCMNotificationParser.notificationParser(this, service_ID);
+            Gson gson = new Gson();
+            JsonElement jsonElement = gson.toJsonTree(data);
+            mFcmNotificationResponse = gson.fromJson(jsonElement, FCMNotificationResponse.class);
+            FCMNotificationParser.notificationParser(this, mFcmNotificationResponse);
         }
 
         // Check if message contains a notification payload.
