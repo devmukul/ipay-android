@@ -80,7 +80,7 @@ public class DashBoardFragment extends Fragment {
                 viewPager.setCurrentItem(tab.getPosition());
 
                 if (tab.getPosition() == TRANSACTION_HISTORY_TAB)
-                    Utilities.sendBroadcast(getActivity(), Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST);
+                    Utilities.sendBroadcast(getActivity(), Constants.PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST);
             }
 
             @Override

@@ -211,7 +211,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         super.onResume();
         transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
-                new IntentFilter(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST));
+                new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
     }
 
     @Override
