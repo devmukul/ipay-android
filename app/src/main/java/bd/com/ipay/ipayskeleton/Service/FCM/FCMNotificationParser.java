@@ -18,6 +18,7 @@ public class FCMNotificationParser {
             case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT): {
                 Utilities.sendBroadcast(context, Constants.BALANCE_UPDATE_BROADCAST);
                 Utilities.sendBroadcast(context, Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST);
+                break;
             }
             case (Constants.TRANSACTION_HISTORY_REQUEST_MONEY):
             case (Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT): {
@@ -35,6 +36,7 @@ public class FCMNotificationParser {
                     Utilities.sendBroadcast(context, Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST);
                     Utilities.sendBroadcast(context, Constants.NOTIFICATION_UPDATE_BROADCAST);
                 }
+                break;
             }
         }
     }
