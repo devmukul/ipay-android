@@ -61,6 +61,7 @@ public class Constants {
     public static final String TRANSACTION_HISTORY_UPDATE_BROADCAST = "TRANSACTION_HISTORY_UPDATE_BROADCAST";
     public static final String BALANCE_UPDATE_BROADCAST = "BALANCE_UPDATE_BROADCAST";
     public static final String PROFILE_COMPLETION_UPDATE_BROADCAST = "PROFILE_COMPLETION_UPDATE_BROADCAST";
+    public static final String NOTIFICATION_UPDATE_BROADCAST = "NOTIFICATION_UPDATE_BROADCAST";
 
     public static final String TOKEN = "token";
     public static final String REFRESH_TOKEN = "refresh-token";

@@ -1,11 +1,14 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,6 +36,7 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PendingIntroducerReviewDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryPendingFragment;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.Business;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessListResponse;
@@ -99,6 +103,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private String mDescriptionOfRequest;
 
     private OnNotificationUpdateListener mOnNotificationUpdateListener;
+    private NotificationBroadcastReceiver notificationBroadcastReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -134,9 +139,19 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     public void onResume() {
         super.onResume();
+
+        notificationBroadcastReceiver = new NotificationBroadcastReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(notificationBroadcastReceiver,
+                new IntentFilter(Constants.NOTIFICATION_UPDATE_BROADCAST));
         if (Utilities.isConnectionAvailable(getActivity())) {
             refreshNotificationLists(getActivity());
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(notificationBroadcastReceiver);
+        super.onDestroyView();
     }
 
     @Override
@@ -148,6 +163,12 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         // all the lists have already been loaded. We have to call postProcessNotificationList
         // to properly update the view.
         postProcessNotificationList();
+    }
+
+    public void registerNotificationBroadcastReceiver(Context context) {
+        notificationBroadcastReceiver = new NotificationBroadcastReceiver();
+        LocalBroadcastManager.getInstance(context).registerReceiver(notificationBroadcastReceiver,
+                new IntentFilter(Constants.NOTIFICATION_UPDATE_BROADCAST));
     }
 
     public void setOnNotificationUpdateListener(OnNotificationUpdateListener listener) {
@@ -774,4 +795,10 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
     }
 
+    private class NotificationBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            refreshNotificationLists(context);
+        }
+    }
 }

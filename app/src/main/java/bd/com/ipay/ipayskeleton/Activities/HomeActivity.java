@@ -204,6 +204,8 @@ public class HomeActivity extends BaseActivity
         // the number of pending notifications. Once the notifications are loaded, updateNotificationBadgeCount()
         // is called from NotificationFragment.
         mNotificationFragment.getNotificationLists(this);
+        // Registering the notification broadcast receiver
+        mNotificationFragment.registerNotificationBroadcastReceiver(this);
 
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
