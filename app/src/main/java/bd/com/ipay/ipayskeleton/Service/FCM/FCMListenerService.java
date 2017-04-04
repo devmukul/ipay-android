@@ -22,8 +22,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FCMNotifica
 import bd.com.ipay.ipayskeleton.R;
 
 public class FCMListenerService extends FirebaseMessagingService {
-    private int service_ID;
-    private FCMNotificationResponse mFcmNotificationResponse ;
+    private FCMNotificationResponse mFcmNotificationResponse;
 
     @Override
     public void onMessageReceived(RemoteMessage message) {
@@ -35,11 +34,7 @@ public class FCMListenerService extends FirebaseMessagingService {
         // Check if message contains a data payload.
         if (data.size() > 0) {
             Log.d("Data", "Message data payload: " + data.toString());
-
-            Gson gson = new Gson();
-            JsonElement jsonElement = gson.toJsonTree(data);
-            mFcmNotificationResponse = gson.fromJson(jsonElement, FCMNotificationResponse.class);
-            FCMNotificationParser.notificationParser(this, mFcmNotificationResponse);
+            getResponseFromData(data);
         }
 
         // Check if message contains a notification payload.
@@ -47,6 +42,13 @@ public class FCMListenerService extends FirebaseMessagingService {
             Log.d("Notification Payload", "Message Notification Body: " + message.getNotification().getBody());
             createNotification(message.getNotification().getTitle(), message.getNotification().getBody());
         }
+    }
+
+    private void getResponseFromData(Map data) {
+        Gson gson = new Gson();
+        JsonElement jsonElement = gson.toJsonTree(data);
+        mFcmNotificationResponse = gson.fromJson(jsonElement, FCMNotificationResponse.class);
+        FCMNotificationParser.notificationParser(this, mFcmNotificationResponse);
     }
 
     private void createNotification(String title, String message) {
@@ -66,7 +68,6 @@ public class FCMListenerService extends FirebaseMessagingService {
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
-        //  if(icon!=null ? notificationBuilder.setSmallIcon(R.icon) : notificationBuilder.setSmallIcon(R.mipmap.ic_launcher));
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
