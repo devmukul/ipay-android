@@ -19,7 +19,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutReq
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.GetRefreshTokenRequest;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.FCM.FCMNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 
@@ -50,8 +49,6 @@ public class MyApplication extends Application implements HttpResponseListener {
 
         ProfileInfoCacheManager.initialize(getApplicationContext());
         PushNotificationStatusHolder.initialize(getApplicationContext());
-        FCMNotificationStatusHolder.initialize(getApplicationContext());
-
     }
 
     public static MyApplication getMyApplicationInstance() {

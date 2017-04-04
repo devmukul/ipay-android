@@ -20,6 +20,7 @@ import java.util.Random;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FCMNotificationResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class FCMListenerService extends FirebaseMessagingService {
     private FCMNotificationResponse mFcmNotificationResponse;
@@ -29,17 +30,18 @@ public class FCMListenerService extends FirebaseMessagingService {
         String from = message.getFrom();
         Map data = message.getData();
 
-        Log.d("Message", "From: " + from);
+        if (Constants.DEBUG) Log.d("Message", "From: " + from);
 
         // Check if message contains a data payload.
         if (data.size() > 0) {
-            Log.d("Data", "Message data payload: " + data.toString());
+            if (Constants.DEBUG) Log.d("Data", "Message data payload: " + data.toString());
             getResponseFromData(data);
         }
 
         // Check if message contains a notification payload.
         if (message.getNotification() != null) {
-            Log.d("Notification Payload", "Message Notification Body: " + message.getNotification().getBody());
+            if (Constants.DEBUG)
+                Log.d("Notification Payload", "Message Notification Body: " + message.getNotification().getBody());
             createNotification(message.getNotification().getTitle(), message.getNotification().getBody());
         }
     }

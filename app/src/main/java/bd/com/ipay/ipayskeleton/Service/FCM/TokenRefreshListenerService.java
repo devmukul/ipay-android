@@ -9,6 +9,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 
 public class TokenRefreshListenerService extends FirebaseInstanceIdService {
     private SharedPreferences pref;
@@ -24,10 +25,10 @@ public class TokenRefreshListenerService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d("Firebase Token", "Refreshed token: " + refreshedToken);
+
+        if (Constants.DEBUG) Log.d("Firebase Token", "Refreshed token: " + refreshedToken);
 
         pref = this.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-
         saveRegistrationTokenInPref(refreshedToken);
     }
 
