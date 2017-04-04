@@ -9,5 +9,4 @@ public class NotificationUtilities {
         Intent intent = new Intent(intentFilter);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
-
 }
