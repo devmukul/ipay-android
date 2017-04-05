@@ -1,22 +1,22 @@
-package bd.com.ipay.ipayskeleton.Model.Friend;
+package bd.com.ipay.ipayskeleton.Model.Contact;
 
 import java.util.List;
 
 public class GetContactsResponse {
     private int totalCount;
-    private List<FriendInfo> contactList;
+    private List<ContactNode> contactList;
 
     public int getTotalCount() {
         return totalCount;
     }
 
-    public List<FriendInfo> getContactList() {
+    public List<ContactNode> getContactList() {
         return contactList;
     }
 
     @Override
     public String toString() {
-        return "FriendInfo{" +
+        return "ContactNode{" +
                 "totalCount='" + totalCount + '\'' +
                 ", contactList=" + contactList +
                 '}';

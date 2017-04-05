@@ -44,7 +44,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
-import bd.com.ipay.ipayskeleton.Api.DeleteFriendAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.ContactApi.DeleteContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -54,9 +54,10 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.AskForIntroductionResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.SendInviteResponse;
-import bd.com.ipay.ipayskeleton.Model.Friend.DeleteFriendRequest;
-import bd.com.ipay.ipayskeleton.Model.Friend.InfoDeleteFriend;
-import bd.com.ipay.ipayskeleton.Model.Friend.InviteFriend;
+import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactRequest;
+import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactNode;
+import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.Contact.InviteContactNode;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -290,7 +291,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 if (ContactsHolderFragment.mGetInviteInfoResponse != null)
                     invitees = ContactsHolderFragment.mGetInviteInfoResponse.getInvitees();
 
-                Cursor cursor = dataHelper.searchFriends(mQuery, miPayMembersOnly, mBusinessMemberOnly, mShowNonInvitedNonMembersOnly,
+                Cursor cursor = dataHelper.searchContacts(mQuery, miPayMembersOnly, mBusinessMemberOnly, mShowNonInvitedNonMembersOnly,
                         mShowVerifiedUsersOnly, mShowInvitedOnly, mShowNonInvitedNonMembersOnly, invitees);
 
                 if (cursor != null) {
@@ -309,7 +310,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                         contactLoadFinishListener.onContactLoadFinish(cursor.getCount());
                     }
 
-                    this.registerContentObserver(cursor, DBConstants.DB_TABLE_FRIENDS_URI);
+                    this.registerContentObserver(cursor, DBConstants.DB_TABLE_CONTACTS_URI);
                 }
 
                 return cursor;
@@ -525,23 +526,19 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                deleteFriend(mobileNumber);
+                deleteContact(mobileNumber);
             }
         });
 
         dialog.show();
     }
 
-    private void deleteFriend(String phoneNumber) {
-        List<InfoDeleteFriend> newFriends = new ArrayList<>();
-        newFriends.add(new InfoDeleteFriend(ContactEngine.formatMobileNumberBD(phoneNumber)));
+    private void deleteContact(String phoneNumber) {
+        DeleteContactRequestBuilder deleteContactRequestBuilder = new DeleteContactRequestBuilder(phoneNumber);
 
-        DeleteFriendRequest deleteFriendRequest = new DeleteFriendRequest(newFriends);
-        Gson gson = new Gson();
-        String json = gson.toJson(deleteFriendRequest);
-
-        new DeleteFriendAsyncTask(Constants.COMMAND_DELETE_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_DELETE_FRIENDS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new DeleteContactAsyncTask(Constants.COMMAND_DELETE_CONTACTS,
+                deleteContactRequestBuilder.generateUri(), deleteContactRequestBuilder.getDeleteContactRequest(),
+                getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void sendRecommendationRequest(String mobileNumber) {
@@ -566,9 +563,9 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_sending_invite));
             mProgressDialog.show();
 
-            InviteFriend inviteFriend = new InviteFriend(phoneNumber, wantToIntroduce);
+            InviteContactNode inviteContactNode = new InviteContactNode(phoneNumber, wantToIntroduce);
             Gson gson = new Gson();
-            String json = gson.toJson(inviteFriend, InviteFriend.class);
+            String json = gson.toJson(inviteContactNode, InviteContactNode.class);
             mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
                     Constants.BASE_URL_MM + Constants.URL_SEND_INVITE, json, getActivity(), this);
             mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -699,7 +696,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.invite_to_ipay)
-                .customView(R.layout.dialog_invite_friend_with_introduction, true)
+                .customView(R.layout.dialog_invite_contact_with_introduction, true)
                 .positiveText(R.string.yes)
                 .negativeText(R.string.no)
                 .show();
@@ -741,7 +738,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int EMPTY_VIEW = 10;
-        private static final int FRIEND_VIEW = 100;
+        private static final int CONTACT_VIEW = 100;
 
         public class EmptyViewHolder extends RecyclerView.ViewHolder {
             public final TextView mEmptyDescription;
@@ -951,7 +948,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             if (getItemCount() == 0)
                 return EMPTY_VIEW;
             else
-                return FRIEND_VIEW;
+                return CONTACT_VIEW;
         }
     }
 

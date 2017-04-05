@@ -178,7 +178,7 @@ public class Constants {
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
     public static final String BASE_URL_EDU;
-    public static final String BASE_URL_FRIEND;
+    public static final String BASE_URL_CONTACT;
     public static final String BASE_URL_ADMIN;
     public static final String BASE_URL_FTP_SERVER;
     public static final String BASE_URL_WEB;
@@ -191,7 +191,7 @@ public class Constants {
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
-            BASE_URL_FRIEND = "http://10.10.10.11:4000/external/v1/";
+            BASE_URL_CONTACT = "http://10.10.10.11:4000/external/v1/";
             BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/support/";
 //            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
@@ -203,7 +203,7 @@ public class Constants {
             BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
-            BASE_URL_FRIEND = "http://10.15.40.14:4000/external/v1/";
+            BASE_URL_CONTACT = "http://10.15.40.14:4000/external/v1/";
             BASE_URL_ADMIN = "http://10.15.40.15:8085/api/v1/support/";
             BASE_URL_WEB = "http://test.ipay.com.bd";
             SERVER_NAME = "test";
@@ -214,7 +214,7 @@ public class Constants {
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.10.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
-            BASE_URL_FRIEND = "http://10.10.40.14:4000/external/v1/";
+            BASE_URL_CONTACT = "http://10.10.40.14:4000/external/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
             BASE_URL_WEB = "http://stage.ipay.com.bd";
             SERVER_NAME = "stage";
@@ -225,7 +225,7 @@ public class Constants {
             BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";
             BASE_URL_EDU = "https://www.ipay.com.bd/api/v1/em/";
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
-            BASE_URL_FRIEND = "https://www.ipay.com.bd/friend/v1/";
+            BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
             BASE_URL_ADMIN = "https://www.ipay.com.bd/api/v1/support/";
             BASE_URL_WEB = "https://www.ipay.com.bd";
             SERVER_NAME = "live";
@@ -236,7 +236,7 @@ public class Constants {
             BASE_URL_SM = "http://192.168.1.105:8085/api/v1/money/";
             BASE_URL_EDU = "http://192.168.1.105:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
-            BASE_URL_FRIEND = "http://dev.ipay.com.bd/friend/v1/";
+            BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             SERVER_NAME = "local";
@@ -397,11 +397,11 @@ public class Constants {
     public static final String URL_DELETE_EMAIL = "user/emails/";
     public static final String URL_MAKE_PRIMARY_EMAIL = "/primary";
 
-    // User Rest (Friend Updated)
-    public static final String URL_GET_FRIENDS = "contacts";
-    public static final String URL_ADD_FRIENDS = "contacts";
-    public static final String URL_UPDATE_FRIENDS = "contacts";
-    public static final String URL_DELETE_FRIENDS = "contacts";
+    // User Rest (Contact)
+    public static final String URL_GET_CONTACTS = "contacts";
+    public static final String URL_ADD_CONTACTS = "contacts";
+    public static final String URL_UPDATE_CONTACTS = "contacts";
+    public static final String URL_DELETE_CONTACTS = "contacts";
 
     // Business Information (Owner)
     public static final String URL_GET_BUSINESS_INFORMATION = "user/profile/business";
@@ -523,10 +523,10 @@ public class Constants {
     public static final String COMMAND_GET_PIN_INFO = "COMMAND_GET_PIN_INFO";
     public static final String COMMAND_GET_MONEY_REQUESTS = "COMMAND_GET_MONEY_REQUESTS";
     public static final String COMMAND_GET_PROFILE_COMPLETION_STATUS = "COMMAND_GET_PROFILE_COMPLETION_STATUS";
-    public static final String COMMAND_GET_FRIENDS = "COMMAND_GET_FRIENDS";
-    public static final String COMMAND_ADD_FRIENDS = "COMMAND_ADD_FRIENDS";
-    public static final String COMMAND_DELETE_FRIENDS = "COMMAND_DELETE_FRIENDS";
-    public static final String COMMAND_UPDATE_FRIENDS = "COMMAND_UPDATE_FRIENDS";
+    public static final String COMMAND_GET_CONTACTS = "COMMAND_GET_CONTACTS";
+    public static final String COMMAND_ADD_CONTACTS = "COMMAND_ADD_CONTACTS";
+    public static final String COMMAND_DELETE_CONTACTS = "COMMAND_DELETE_CONTACTS";
+    public static final String COMMAND_UPDATE_CONTACTS = "COMMAND_UPDATE_CONTACTS";
     public static final String COMMAND_GET_BUSINESS_RULE = "COMMAND_GET_BUSINESS_RULE";
     public static final String COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE = "COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE";
     public static final String COMMAND_GET_ALL_BUSINESS_LIST = "COMMAND_GET_ALL_BUSINESS_LIST";

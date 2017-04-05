@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -143,7 +143,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             mSelectReceiverButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
+                    Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
                     startActivityForResult(intent, PICK_CONTACT_REQUEST);
                 }
             });

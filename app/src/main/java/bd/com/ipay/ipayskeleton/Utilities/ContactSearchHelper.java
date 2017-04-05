@@ -18,7 +18,7 @@ public class ContactSearchHelper {
         mQuery = mobileNumber;
 
         DataHelper dataHelper = DataHelper.getInstance(activity);
-        Cursor cursor = dataHelper.searchFriends(mQuery, false, false, false,
+        Cursor cursor = dataHelper.searchContacts(mQuery, false, false, false,
                 false, false, false, null);
 
         if (cursor != null) {

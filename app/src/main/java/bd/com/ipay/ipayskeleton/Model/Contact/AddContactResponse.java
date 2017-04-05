@@ -1,6 +1,6 @@
-package bd.com.ipay.ipayskeleton.Model.Friend;
+package bd.com.ipay.ipayskeleton.Model.Contact;
 
-class DeleteFriendResponse {
+public class AddContactResponse {
     private String message;
 
     public String getMessage() {

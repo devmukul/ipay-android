@@ -15,23 +15,19 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
-import bd.com.ipay.ipayskeleton.Api.AddFriendAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
-import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyResponse;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -119,7 +115,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
             public void onClick(View v) {
                 attemptRequestMoney();
                 if (mAddInContactsCheckBox.isChecked()) {
-                    addFriend(mReceiverName, mReceiverMobileNumber, null);
+                    addContact(mReceiverName, mReceiverMobileNumber, null);
                 }
             }
         });
@@ -150,16 +146,13 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mRequestMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void addFriend(String name, String phoneNumber, String relationship) {
-        List<InfoAddFriend> newFriends = new ArrayList<>();
-        newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
+    private void addContact(String name, String phoneNumber, String relationship) {
+        AddContactRequestBuilder addContactRequestBuilder = new
+                AddContactRequestBuilder(name, phoneNumber, relationship);
 
-        AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
-        Gson gson = new Gson();
-        String json = gson.toJson(addFriendRequest);
-
-        new AddFriendAsyncTask(Constants.COMMAND_ADD_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new AddContactAsyncTask(Constants.COMMAND_ADD_CONTACTS,
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(),
+                getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

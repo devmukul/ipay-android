@@ -1,26 +1,26 @@
-package bd.com.ipay.ipayskeleton.Model.Friend;
+package bd.com.ipay.ipayskeleton.Model.Contact;
 
-public class InfoAddFriend {
+public class AddContactNode {
     private String mobileNumber;
     private String contactName;
     private String relationship;
 
-    public InfoAddFriend() {
+    public AddContactNode() {
 
     }
 
-    public InfoAddFriend(String mobileNumber, String contactName) {
+    public AddContactNode(String mobileNumber, String contactName) {
         this.mobileNumber = mobileNumber;
         this.contactName = contactName;
     }
 
-    public InfoAddFriend(String mobileNumber, String contactName, String relationship) {
+    public AddContactNode(String mobileNumber, String contactName, String relationship) {
         this.mobileNumber = mobileNumber;
         this.contactName = contactName;
         this.relationship = relationship;
     }
 
-    public String getFriendsNumber() {
+    public String getContactNumber() {
         return mobileNumber;
     }
 

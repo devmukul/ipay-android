@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -179,7 +179,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                             mAskForRecommendation.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
+                                    Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
                                     intent.putExtra(Constants.VERIFIED_USERS_ONLY, true);                   // Get the verified iPay users only.
                                     startActivityForResult(intent, PICK_CONTACT_REQUEST);
                                 }

@@ -163,7 +163,6 @@
     <string name="update">Update</string>
     <string name="update_ipay">Please update iPay</string>
     <string name="update_your_application">Please update your application from Google Play Store.</string>
-    <string name="friend">Friend</string>
     <string name="add_to_contacts">Add to Contacts</string>
     <string name="ipay_contacts">iPay</string>
     <string name="security_questions">Security Questions</string>
@@ -660,9 +659,12 @@
     <string name="introducer_list_header">Introduced by</string>
     <string name="select_a_contact">Select a contact</string>
     <string name="progress_dialog_single_invoice">Fetching invoice...</string>
-    <string name="failed_add_friend">Add friend failed</string>
-    <string name="failed_invite_friend">Invite friend failed</string>
-    <string name="failed_update_friend">Update friend failed</string>
+    <string name="add_contact_successful">Contact added successfully. Refreshing contact list...</string>
+    <string name="delete_contact_successful">Contact deleted successfully. Refreshing contact list...</string>
+    <string name="update_contact_successful">Update contact successful</string>
+    <string name="failed_add_contact">Add contact failed</string>
+    <string name="failed_invite_contact">Invite contact failed</string>
+    <string name="failed_update_contact">Update contact failed</string>
     <string name="confirm_request_accept">Are you sure you want to accept this request?</string>
     <string name="confirm_request_rejection">Are you sure you want to reject this request?</string>
     <string name="contacts_sync_failed">Contacts Sync Failed</string>
@@ -730,8 +732,8 @@
     <string name="edit_business_information">Edit Business Information</string>
     <string name="get_balance">Get Balance</string>
     <string name="get_transactions">Get Transactions</string>
-    <string name="friend_read">See frieds</string>
-    <string name="friend_write">Add friends</string>
+    <string name="contact_read">See contacts</string>
+    <string name="contact_write">Add contacts</string>
     <string name="see_owner_info">See business owner information</string>
     <string name="manage_owner_info">Manage business owner information</string>
     <string name="see_docs">See personal documents</string>
@@ -755,11 +757,9 @@
     <string name="status">Status</string>
     <string name="time">Time</string>
     <string name="topup_rollback">TopUp Rollback</string>
-    <string name="add_a_friend">Add a Friend</string>
     <string name="add_a_contact">Add a Contact</string>
-    <string name="invite_a_friend">Invite a Friend</string>
-    <string name="progress_dialog_adding_friend">Adding friend...</string>
-    <string name="add_friend_successful">Add Friend Successful. Refreshing friend list...</string>
+    <string name="invite_a_contact">Invite a Contact</string>
+    <string name="progress_dialog_adding_contact">Adding contact...</string>
     <string name="dialog_requesting_top_up">Preparing for Top Up...</string>
     <string name="term_link">https://www.ipay.com.bd/legal/tos</string>
     <string name="privacy_link">https://www.ipay.com.bd/legal/privacy-policy</string>
@@ -820,15 +820,6 @@
         <item>Pre-paid</item>
         <item>Post-paid </item>
     </string-array>
-
-    <string-array name="relationship">
-        <item>Father</item>
-        <item>Mother</item>
-        <item>Brother</item>
-        <item>Sister</item>
-        <item>Friend</item>
-    </string-array>
-
 
     <string-array name="trusted_device_or_network_action">
         <item>Remove</item>

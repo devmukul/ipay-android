@@ -14,21 +14,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import bd.com.ipay.ipayskeleton.Api.AddFriendAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
-import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
-import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TransactionDetailsFragment extends Fragment {
@@ -122,7 +116,7 @@ public class TransactionDetailsFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 mAddInContactsButton.setVisibility(View.GONE);
-                                addFriend(transactionHistory.getAdditionalInfo().getUserName(),
+                                addContact(transactionHistory.getAdditionalInfo().getUserName(),
                                         transactionHistory.getAdditionalInfo().getUserMobileNumber(), null);
                             }
                         })
@@ -226,16 +220,13 @@ public class TransactionDetailsFragment extends Fragment {
         return v;
     }
 
-    private void addFriend(String name, String phoneNumber, String relationship) {
-        List<InfoAddFriend> newFriends = new ArrayList<>();
-        newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
+    private void addContact(String name, String phoneNumber, String relationship) {
+        AddContactRequestBuilder addContactRequestBuilder = new
+                AddContactRequestBuilder(name, phoneNumber, relationship);
 
-        AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
-        Gson gson = new Gson();
-        String json = gson.toJson(addFriendRequest);
-
-        new AddFriendAsyncTask(Constants.COMMAND_ADD_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new AddContactAsyncTask(Constants.COMMAND_ADD_CONTACTS,
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(),
+                getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
