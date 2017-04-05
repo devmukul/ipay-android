@@ -17,11 +17,13 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequest;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactNode;
 import bd.com.ipay.ipayskeleton.Model.Contact.UpdateContactNode;
 import bd.com.ipay.ipayskeleton.Model.Contact.UpdateContactRequest;
+import bd.com.ipay.ipayskeleton.Model.Contact.UpdateContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Contact.UpdateContactResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -92,19 +94,10 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
         if (contactList.isEmpty())
             return;
 
-        List<AddContactNode> newContacts = new ArrayList<>();
-        for (ContactNode contactNode : contactList) {
-            newContacts.add(new AddContactNode(contactNode.getMobileNumber(), contactNode.getName()));
-        }
-
-        AddContactRequest addContactRequest = new AddContactRequest(newContacts);
-        Gson gson = new Gson();
-        String json = gson.toJson(addContactRequest);
-
+        AddContactRequestBuilder addContactRequestBuilder = new AddContactRequestBuilder(contactList);
         mAddContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_CONTACTS,
-                Constants.BASE_URL_CONTACT + Constants.URL_ADD_CONTACTS, json, context, this);
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(), context, this);
         mAddContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     private void updateContacts(List<ContactNode> contactList) {
@@ -115,19 +108,9 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
         if (contactList.isEmpty())
             return;
 
-        List<UpdateContactNode> updateContacts = new ArrayList<>();
-        for (ContactNode contactNode : contactList) {
-            UpdateContactNode updateContactNode = new UpdateContactNode(
-                    contactNode.getMobileNumber(), contactNode.getName());
-            updateContacts.add(updateContactNode);
-        }
-
-        UpdateContactRequest updateContactRequest = new UpdateContactRequest(updateContacts);
-        Gson gson = new Gson();
-        String json = gson.toJson(updateContactRequest);
-
+        UpdateContactRequestBuilder updateContactRequestBuilder = new UpdateContactRequestBuilder(contactList);
         mUpdateContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_UPDATE_CONTACTS,
-                Constants.BASE_URL_CONTACT + Constants.URL_UPDATE_CONTACTS, json, context, this);
+               updateContactRequestBuilder.generateUri(), updateContactRequestBuilder.getUpdateContactRequest(), context, this);
         mUpdateContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

@@ -52,7 +52,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.CreateTicketRespo
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategoriesRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategoryResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.TicketWithCommentId;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.UploadTicketAttachmentRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -68,10 +67,6 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
 
     private HttpRequestGetAsyncTask mGetTicketCategoriesTask = null;
     private GetTicketCategoryResponse mGetTicketCategoriesResponse;
-
-    private HttpRequestPostAsyncTask mUploadTicketAttachmentTask = null;
-    private UploadTicketAttachmentRequestBuilder mUploadTicketAttachmentRequestBuilder;
-
 
     private HttpRequestGetAsyncTask mGetEmailsTask = null;
     private GetEmailResponse mGetEmailResponse;

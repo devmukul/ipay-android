@@ -56,6 +56,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndI
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactRequest;
 import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactNode;
+import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Contact.InviteContactNode;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -533,15 +534,11 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void deleteContact(String phoneNumber) {
-        List<DeleteContactNode> newContacts = new ArrayList<>();
-        newContacts.add(new DeleteContactNode(ContactEngine.formatMobileNumberBD(phoneNumber)));
-
-        DeleteContactRequest deleteContactRequest = new DeleteContactRequest(newContacts);
-        Gson gson = new Gson();
-        String json = gson.toJson(deleteContactRequest);
+        DeleteContactRequestBuilder deleteContactRequestBuilder = new DeleteContactRequestBuilder(phoneNumber);
 
         new DeleteContactAsyncTask(Constants.COMMAND_DELETE_CONTACTS,
-                Constants.BASE_URL_CONTACT + Constants.URL_DELETE_CONTACTS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                deleteContactRequestBuilder.generateUri(), deleteContactRequestBuilder.getDeleteContactRequest(),
+                getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void sendRecommendationRequest(String mobileNumber) {
