@@ -74,7 +74,6 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
         } else {
             return null;
         }
-
     }
 
     @Override
@@ -83,7 +82,6 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
             addContacts(contactDiff.newContacts);
             updateContacts(contactDiff.updatedContacts);
         }
-
     }
 
     private void addContacts(List<ContactNode> contactList) {
@@ -148,11 +146,13 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
                 mAddContactResponse = gson.fromJson(result.getJsonString(), AddContactResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     // Server contacts updated, download contacts again
-                    Log.i("Friend", "Create friend successful");
+                    if (Constants.DEBUG)
+                        Log.i("Contact", context.getString(R.string.add_contact_successful));
+
                     new GetContactsAsyncTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     if (mAddContactResponse != null)
-                        Log.e(context.getString(R.string.failed_add_friend), mAddContactResponse.getMessage());
+                        Log.e(context.getString(R.string.failed_add_contact), mAddContactResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -164,10 +164,11 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
             try {
                 mUpdateContactResponse = gson.fromJson(result.getJsonString(), UpdateContactResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    Log.i("Friend", "Update friend successful");
+                    if (Constants.DEBUG)
+                        Log.i("Contact", context.getString(R.string.update_contact_successful));
                     // Maybe we should download contacts again?
                 } else {
-                    Log.e(context.getString(R.string.failed_update_friend), mUpdateContactResponse.getMessage());
+                    Log.e(context.getString(R.string.failed_update_contact), mUpdateContactResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -397,7 +397,7 @@ public class Constants {
     public static final String URL_DELETE_EMAIL = "user/emails/";
     public static final String URL_MAKE_PRIMARY_EMAIL = "/primary";
 
-    // User Rest (Friend Updated)
+    // User Rest (Contact)
     public static final String URL_GET_CONTACTS = "contacts";
     public static final String URL_ADD_CONTACTS = "contacts";
     public static final String URL_UPDATE_CONTACTS = "contacts";

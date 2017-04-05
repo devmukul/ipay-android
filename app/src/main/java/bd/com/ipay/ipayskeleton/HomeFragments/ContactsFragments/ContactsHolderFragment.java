@@ -141,9 +141,9 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     private void showAddContactDialog() {
         MaterialDialog.Builder addContactDialog = new MaterialDialog.Builder(getActivity());
         addContactDialog
-                .title(R.string.add_a_friend)
+                .title(R.string.add_a_contact)
                 .autoDismiss(false)
-                .customView(R.layout.dialog_add_friend, false)
+                .customView(R.layout.dialog_add_contact, false)
                 .positiveText(R.string.add)
                 .negativeText(R.string.cancel);
 
@@ -180,7 +180,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
                 if (verifyUserInputs()) {
                     mName = nameView.getText().toString();
                     mMobileNumber = mobileNumberView.getText().toString();
-                    mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_friend));
+                    mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_contact));
 
                     if (mRelationship != null)
                         mRelationship = mRelationship.toUpperCase();
@@ -210,7 +210,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 
         addContactDialog.show();
         nameView.requestFocus();
-
     }
 
     private boolean verifyUserInputs() {
@@ -230,24 +229,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             error = true;
         }
         return !error;
-    }
-
-    private void addContact(String name, String phoneNumber, String relationship) {
-        if (mAddContactAsyncTask != null) {
-            return;
-        }
-
-        List<AddContactNode> newContacts = new ArrayList<>();
-        newContacts.add(new AddContactNode(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
-
-        AddContactRequest addContactRequest = new AddContactRequest(newContacts);
-        Gson gson = new Gson();
-        String json = gson.toJson(addContactRequest);
-
-        mAddContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_CONTACTS,
-                Constants.BASE_URL_CONTACT + Constants.URL_ADD_CONTACTS, json, getActivity(), this);
-        mAddContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     private void getInviteInfo() {
@@ -321,6 +302,23 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         });
     }
 
+    private void addContact(String name, String phoneNumber, String relationship) {
+        if (mAddContactAsyncTask != null) {
+            return;
+        }
+
+        List<AddContactNode> newContacts = new ArrayList<>();
+        newContacts.add(new AddContactNode(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
+
+        AddContactRequest addContactRequest = new AddContactRequest(newContacts);
+        Gson gson = new Gson();
+        String json = gson.toJson(addContactRequest);
+
+        mAddContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_CONTACTS,
+                Constants.BASE_URL_CONTACT + Constants.URL_ADD_CONTACTS, json, getActivity(), this);
+        mAddContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (isAdded()) {
@@ -354,22 +352,21 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.add_friend_successful, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.add_contact_successful, Toast.LENGTH_LONG).show();
                         new GetContactsAsyncTask(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_add_friend, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.failed_add_contact, Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
 
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_add_friend, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.failed_add_contact, Toast.LENGTH_LONG).show();
             }
 
             mAddContactAsyncTask = null;
         }
-
     }
 }

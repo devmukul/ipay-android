@@ -263,7 +263,7 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activities.InviteActivity"
-            android:label="@string/invite_a_friend"
+            android:label="@string/invite_a_contact"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustPan|stateHidden" />

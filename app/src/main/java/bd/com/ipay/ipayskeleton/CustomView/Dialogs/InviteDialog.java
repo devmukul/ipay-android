@@ -69,9 +69,9 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
     private void showAddContactDialog() {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
         dialog
-                .title(R.string.invite_a_friend)
+                .title(R.string.invite_a_contact)
                 .autoDismiss(false)
-                .customView(R.layout.dialog_invite_friend, true)
+                .customView(R.layout.dialog_invite_contact, true)
                 .positiveText(R.string.invite)
                 .negativeText(R.string.cancel);
 
@@ -222,12 +222,12 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
                     sendInvite(mMobileNumber);
                 } else {
                     mProgressDialog.dismiss();
-                    Toast.makeText(context, R.string.failed_invite_friend, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.failed_invite_contact, Toast.LENGTH_LONG).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 mProgressDialog.dismiss();
-                Toast.makeText(context, R.string.failed_invite_friend, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.failed_invite_contact, Toast.LENGTH_LONG).show();
             }
 
             mAddContactAsyncTask = null;

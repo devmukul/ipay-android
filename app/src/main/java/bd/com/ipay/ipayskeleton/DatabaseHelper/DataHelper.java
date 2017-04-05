@@ -75,7 +75,7 @@ public class DataHelper {
 
             context.getContentResolver().notifyChange(DBConstants.DB_TABLE_CONTACTS_URI, null);
 
-            if (Constants.DEBUG) Log.i("Friends", "Inserted into the database");
+            if (Constants.DEBUG) Log.i("Contacts", "Inserted into the database");
         }
     }
 
