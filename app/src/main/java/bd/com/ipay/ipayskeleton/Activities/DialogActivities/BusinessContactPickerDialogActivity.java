@@ -13,7 +13,7 @@ public class BusinessContactPickerDialogActivity extends FragmentActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_friend_picker);
+        setContentView(R.layout.activity_contact_picker);
 
         BusinessContactsFragment fragment = new BusinessContactsFragment();
 

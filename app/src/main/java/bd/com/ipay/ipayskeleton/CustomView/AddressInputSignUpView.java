@@ -124,7 +124,7 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
     }
 
     private void setThanaAdapter(List<Thana> thanaList) {
-        thanaSelectorDialog = new ResourceSelectorDialog<>(context, context.getString(R.string.select_a_thana), thanaList, mSelectedThanaId);
+        thanaSelectorDialog = new ResourceSelectorDialog<>(context, context.getString(R.string.select_a_thana), thanaList);
         thanaSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
@@ -143,7 +143,7 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
     }
 
     private void setDistrictAdapter(List<District> districtList) {
-        districtSelectorDialog = new ResourceSelectorDialog<>(context, context.getString(R.string.select_a_district), districtList, mSelectedDistrictId);
+        districtSelectorDialog = new ResourceSelectorDialog<>(context, context.getString(R.string.select_a_district), districtList);
         districtSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {

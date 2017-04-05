@@ -82,7 +82,7 @@ public class AddPayAbleFragment extends Fragment {
         }
 
         // Set the selector here
-        paymentItemsSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_session), mPayablesList, mSelectedPaymentItemID);
+        paymentItemsSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_session), mPayablesList);
         paymentItemsSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {

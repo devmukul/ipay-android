@@ -634,7 +634,10 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
                     else mOtherImageView.setImageResource(R.drawable.ic_tran_add);
 
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK) {
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
+                        || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK
+                        || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT) {
+
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
                     if (bankCode != null) mOtherImageView.setImageResource(bankIcon);

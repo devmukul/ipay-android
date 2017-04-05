@@ -92,6 +92,8 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
 
         String pushRegistrationID = mSharedPreferences.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
 
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_trusted_device));
+        mProgressDialog.show();
         AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
                 Constants.MOBILE_ANDROID + mDeviceID, pushRegistrationID);
         Gson gson = new Gson();
@@ -177,6 +179,7 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
                     Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
                 }
 
+                mProgressDialog.dismiss();
                 mAddTrustedDeviceTask = null;
                 break;
             default:

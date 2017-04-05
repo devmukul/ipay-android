@@ -146,6 +146,9 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
             return;
         }
 
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_trusted_device));
+        mProgressDialog.show();
+
         String mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
         String mDeviceName = DeviceInfoFactory.getDeviceName();
 
@@ -273,6 +276,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                 Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
             }
 
+            mProgressDialog.dismiss();
             mAddTrustedDeviceTask = null;
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {

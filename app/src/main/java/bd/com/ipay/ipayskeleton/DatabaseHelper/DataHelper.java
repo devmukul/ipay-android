@@ -10,14 +10,13 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
-import bd.com.ipay.ipayskeleton.Model.Friend.FriendNode;
+import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
 
     private final Context context;
     private static DataHelper instance = null;
@@ -41,30 +40,31 @@ public class DataHelper {
         instance = null;
     }
 
-    public void createFriends(List<FriendNode> friendNodes) {
-        if (friendNodes != null && !friendNodes.isEmpty()) {
+    public void createContacts(List<ContactNode> contactList) {
+        if (contactList != null && !contactList.isEmpty()) {
 
             SQLiteDatabase db = dOpenHelper.getWritableDatabase();
             db.beginTransaction();
 
             try {
-                for (FriendNode friendNode : friendNodes) {
+                for (ContactNode contactNode : contactList) {
                     ContentValues values = new ContentValues();
-                    values.put(DBConstants.KEY_MOBILE_NUMBER, friendNode.getPhoneNumber());
-                    values.put(DBConstants.KEY_NAME, friendNode.getInfo().getName());
-                    values.put(DBConstants.KEY_ORIGINAL_NAME, friendNode.getInfo().getOriginalName());
-                    values.put(DBConstants.KEY_ACCOUNT_TYPE, friendNode.getInfo().getAccountType());
-                    values.put(DBConstants.KEY_PROFILE_PICTURE, friendNode.getInfo().getProfilePictureUrl());
-                    values.put(DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM, friendNode.getInfo().getProfilePictureUrlMedium());
-                    values.put(DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH, friendNode.getInfo().getProfilePictureUrlHigh());
-                    values.put(DBConstants.KEY_RELATIONSHIP, friendNode.getInfo().getRelationship());
-                    values.put(DBConstants.KEY_VERIFICATION_STATUS, friendNode.getInfo().isVerified() ?
+                    values.put(DBConstants.KEY_MOBILE_NUMBER, contactNode.getMobileNumber());
+                    values.put(DBConstants.KEY_NAME, contactNode.getName());
+                    values.put(DBConstants.KEY_ORIGINAL_NAME, contactNode.getOriginalName());
+                    values.put(DBConstants.KEY_ACCOUNT_TYPE, contactNode.getAccountType());
+                    values.put(DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM, contactNode.getProfilePictureUrlMedium());
+                    values.put(DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH, contactNode.getProfilePictureUrlHigh());
+                    values.put(DBConstants.KEY_RELATIONSHIP, contactNode.getRelationship());
+                    values.put(DBConstants.KEY_VERIFICATION_STATUS, contactNode.isVerified() ?
                             DBConstants.VERIFIED_USER : DBConstants.NOT_VERIFIED_USER);
-                    values.put(DBConstants.KEY_UPDATE_TIME, friendNode.getInfo().getUpdateTime());
-                    values.put(DBConstants.KEY_IS_MEMBER, friendNode.getInfo().isMember() ?
+                    values.put(DBConstants.KEY_UPDATE_TIME, contactNode.getUpdateTime());
+                    values.put(DBConstants.KEY_IS_MEMBER, contactNode.isMember() ?
                             DBConstants.IPAY_MEMBER : DBConstants.NOT_IPAY_MEMBER);
+                    values.put(DBConstants.KEY_IS_ACTIVE, contactNode.isActive() ?
+                            DBConstants.ACTIVE : DBConstants.INACTIVE);
 
-                    db.insertWithOnConflict(DBConstants.DB_TABLE_FRIENDS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                    db.insertWithOnConflict(DBConstants.DB_TABLE_CONTACTS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -73,9 +73,9 @@ public class DataHelper {
             db.setTransactionSuccessful();
             db.endTransaction();
 
-            context.getContentResolver().notifyChange(DBConstants.DB_TABLE_FRIENDS_URI, null);
+            context.getContentResolver().notifyChange(DBConstants.DB_TABLE_CONTACTS_URI, null);
 
-            if (Constants.DEBUG) Log.i("Friends", "Inserted into the database");
+            if (Constants.DEBUG) Log.i("Contacts", "Inserted into the database");
         }
     }
 
@@ -112,22 +112,22 @@ public class DataHelper {
         }
     }
 
-    public Cursor searchFriends(String query) {
-        return searchFriends(query, false, false, false);
+    public Cursor searchContacts(String query) {
+        return searchContacts(query, false, false, false);
     }
 
-    public Cursor searchFriends(String query, boolean memberOnly, boolean businessMemberOnly, boolean verifiedOnly) {
-        return searchFriends(query, memberOnly, businessMemberOnly, false, verifiedOnly, false, false, null);
+    public Cursor searchContacts(String query, boolean memberOnly, boolean businessMemberOnly, boolean verifiedOnly) {
+        return searchContacts(query, memberOnly, businessMemberOnly, false, verifiedOnly, false, false, null);
     }
 
-    public Cursor searchFriends(String query, boolean memberOnly, boolean businessMemberOnly, boolean nonMemberOnly,
-                                boolean verifiedOnly, boolean invitedOnly, boolean nonInvitedOnly, List<String> invitees) {
+    public Cursor searchContacts(String query, boolean memberOnly, boolean businessMemberOnly, boolean nonMemberOnly,
+                                 boolean verifiedOnly, boolean invitedOnly, boolean nonInvitedOnly, List<String> invitees) {
         Cursor cursor = null;
 
         try {
             SQLiteDatabase db = dOpenHelper.getReadableDatabase();
 
-            String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_FRIENDS
+            String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_CONTACTS
                     + " WHERE (" + DBConstants.KEY_NAME + " LIKE '%" + query + "%'"
                     + " OR " + DBConstants.KEY_MOBILE_NUMBER + " LIKE '%" + query + "%'"
                     + " OR " + DBConstants.KEY_ORIGINAL_NAME + " LIKE '%" + query + "%')";
@@ -166,6 +166,8 @@ public class DataHelper {
                     queryString += " AND " + DBConstants.KEY_MOBILE_NUMBER + " NOT IN " + inviteeListStr;
                 }
             }
+            // Select only active contacts
+            queryString += " AND " + DBConstants.KEY_IS_ACTIVE + " = " + DBConstants.ACTIVE;
 
             // If original name exists, then user original name as the sorting parameter.
             // Otherwise use normal name as the sorting parameter.
@@ -284,9 +286,9 @@ public class DataHelper {
     }
 
 
-    private List<FriendNode> getFriendList(String query, boolean memberOnly, boolean businessMemberOnly, boolean verifiedOnly) {
-        Cursor cursor = searchFriends(query, memberOnly, businessMemberOnly, verifiedOnly);
-        List<FriendNode> friends = new ArrayList<>();
+    private List<ContactNode> getContactList(String query, boolean memberOnly, boolean businessMemberOnly, boolean verifiedOnly) {
+        Cursor cursor = searchContacts(query, memberOnly, businessMemberOnly, verifiedOnly);
+        List<ContactNode> contacts = new ArrayList<>();
 
         if (cursor.moveToFirst()) {
             int nameIndex = cursor.getColumnIndex(DBConstants.KEY_NAME);
@@ -314,17 +316,17 @@ public class DataHelper {
                 long updateTime = cursor.getLong(updateTimeIndex);
                 int isMember = cursor.getInt(isMemberIndex);
 
-                FriendNode friend = new FriendNode(mobileNumber, new FriendInfo(accountType, isMember,
-                        verificationStatus, name, originalName, profilePictureUrl, profilePictureUrlQualityMedium, profilePictureUrlQualityHigh, relationship, updateTime));
-                friends.add(friend);
+                ContactNode contactNode = new ContactNode(accountType, isMember,
+                        verificationStatus, name, originalName, mobileNumber, profilePictureUrl, profilePictureUrlQualityMedium, profilePictureUrlQualityHigh, relationship, updateTime);
+                contacts.add(contactNode);
             } while (cursor.moveToNext());
         }
 
-        return friends;
+        return contacts;
     }
 
-    public List<FriendNode> getFriendList() {
-        return getFriendList("", false, false, false);
+    public List<ContactNode> getContactList() {
+        return getContactList("", false, false, false);
     }
 
 }

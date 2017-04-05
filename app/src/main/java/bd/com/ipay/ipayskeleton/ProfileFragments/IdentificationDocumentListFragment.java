@@ -488,7 +488,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     }
 
     private void selectDocument(int id) {
-        Intent imagePickerIntent = DocumentPicker.getPickImageOrPdfIntentByID(getActivity(), getString(R.string.select_a_document), id);
+        Intent imagePickerIntent = DocumentPicker.getPickerIntentByID(getActivity(), getString(R.string.select_a_document), id);
         startActivityForResult(imagePickerIntent, ACTION_UPLOAD_DOCUMENT);
     }
 

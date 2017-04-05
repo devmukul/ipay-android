@@ -28,10 +28,10 @@ import java.util.Comparator;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.NotificationActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PendingIntroducerReviewDialog;
@@ -57,7 +57,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
-import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class NotificationFragment extends ProgressFragment implements HttpResponseListener {
@@ -662,16 +662,11 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         mVat = vat;
                         mInvoiceItemList = itemList;
 
-                        PinChecker moneyAndPaymentRequestPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                            @Override
-                            public void ifPinAdded() {
-                                if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
-                                    attemptGetServiceCharge(Constants.SERVICE_ID_REQUEST_MONEY);
-                                else
-                                    launchInvoiceHistoryFragment();
-                            }
-                        });
-                        moneyAndPaymentRequestPinChecker.execute();
+                        if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
+                            attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
+                        else {
+                            launchInvoiceHistoryFragment();
+                        }
                     }
                 });
 

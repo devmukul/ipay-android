@@ -17,14 +17,14 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        createFriendsTable(db);
+        createContactsTable(db);
         createPushNotificationTable(db);
         createBusinessAccountsTable(db);
     }
 
-    private void createFriendsTable(SQLiteDatabase db) {
+    private void createContactsTable(SQLiteDatabase db) {
         db.execSQL("create table if not exists " +
-                DBConstants.DB_TABLE_FRIENDS +
+                DBConstants.DB_TABLE_CONTACTS +
                 "(_id integer primary key autoincrement, " +
                 DBConstants.KEY_MOBILE_NUMBER + " text unique not null, " +
                 DBConstants.KEY_NAME + " text, " +
@@ -36,7 +36,8 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
                 DBConstants.KEY_RELATIONSHIP + " text, " +
                 DBConstants.KEY_VERIFICATION_STATUS + " integer default 0, " +
                 DBConstants.KEY_UPDATE_TIME + " long, " +
-                DBConstants.KEY_IS_MEMBER + " integer default 0)");
+                DBConstants.KEY_IS_MEMBER + " integer default 0, " +
+                DBConstants.KEY_IS_ACTIVE + " integer default " + DBConstants.ACTIVE + ")");
     }
 
     private void createBusinessAccountsTable(SQLiteDatabase db) {
@@ -60,17 +61,21 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
                 + DBConstants.KEY_JSON + " text)");
     }
 
+    private void dropTable(SQLiteDatabase db, String tableName) {
+        db.execSQL("drop table if exists " + tableName);
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         // The last case will contain the break statement only. As the migration will take place one by one.
         // Here's a nice explanation - http://stackoverflow.com/a/26916986/3145960
         switch (oldVersion) {
-            case 8:
-                db.execSQL("drop table if exists " + DBConstants.DB_TABLE_FRIENDS);
-                createFriendsTable(db);
             case 9:
                 createBusinessAccountsTable(db);
+            case 10:
+                dropTable(db, DBConstants.DB_TABLE_CONTACTS);
+                createContactsTable(db);
                 break;
         }
     }

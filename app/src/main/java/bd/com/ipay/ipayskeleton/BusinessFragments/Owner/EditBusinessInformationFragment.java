@@ -68,7 +68,7 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
         mBusinessTypeId = getArguments().getInt(Constants.BUSINESS_TYPE);
         mBusinessTypes = getArguments().getParcelableArrayList(Constants.BUSINESS_TYPE_LIST);
 
-        businessTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), getString(R.string.business_type), mBusinessTypes, mBusinessTypeId);
+        businessTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), getString(R.string.business_type), mBusinessTypes);
         businessTypeResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {

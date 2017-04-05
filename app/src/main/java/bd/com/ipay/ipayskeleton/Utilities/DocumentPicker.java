@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -89,7 +90,7 @@ public class DocumentPicker {
         return getChooserIntent(intentList, chooserTitle);
     }
 
-    public static Intent getPickImageOrPdfIntentByID(Context context, String chooserTitle, int id) {
+    public static Intent getPickerIntentByID(Context context, String chooserTitle, int id) {
 
         Set<Intent> intentList = new LinkedHashSet<>();
 
@@ -106,6 +107,29 @@ public class DocumentPicker {
             if (tempFile != null)
                 takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile));
             intentList = addIntentsToList(context, intentList, takePhotoIntent);
+        }
+        return getChooserIntent(intentList, chooserTitle);
+    }
+
+    public static Intent getPickImageOrPDFIntentByID(Context context, String chooserTitle, int id) {
+
+        Set<Intent> intentList = new LinkedHashSet<>();
+
+        if (id == OPTION_EXTERNAL_STORAGE) {
+            Intent pickIntent = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intentList = addIntentsToList(context, intentList, pickIntent);
+        } else if (id == OPTION_CAMERA) {
+            Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            takePhotoIntent.putExtra("return-data", true);
+            takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(context)));
+            intentList = addIntentsToList(context, intentList, takePhotoIntent);
+        } else {
+            Intent pdfIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            pdfIntent.setType("application/pdf");
+            pdfIntent.addCategory(Intent.CATEGORY_OPENABLE);
+            pdfIntent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+            intentList = addIntentsToList(context, intentList, pdfIntent);
         }
         return getChooserIntent(intentList, chooserTitle);
     }
@@ -148,7 +172,26 @@ public class DocumentPicker {
             } else if (returnedIntent.getData().toString().startsWith("file://")) {
                 return returnedIntent.getData().toString();
             } else {            /** ALBUM **/
-                return Utilities.getFilePath(context, returnedIntent.getData());
+                return FileUtilities.getDataColumn(context, returnedIntent.getData());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String getFilePathForCameraOrPDFResult(Context context, int resultCode, Intent returnedIntent) {
+        try {
+            File documentFile = getTempFile(context);
+
+            boolean isCamera = (returnedIntent == null ||
+                    returnedIntent.getData() == null ||
+                    returnedIntent.getData().toString().contains(documentFile.toString()));
+
+            if (isCamera) {     /** CAMERA **/
+                return getTempFile(context).getAbsolutePath();
+            } else {
+                return FileUtilities.getAbsolutePath(context,returnedIntent.getData());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -172,7 +215,7 @@ public class DocumentPicker {
                 } else if (returnedIntent.getData().toString().startsWith("file://")) {
                     selectedImage = Uri.parse(returnedIntent.getData().toString());
                 } else {            /** ALBUM **/
-                    selectedImage = Uri.parse(Utilities.getFilePath(context, returnedIntent.getData()));
+                    selectedImage = Uri.parse(FileUtilities.getDataColumn(context, returnedIntent.getData()));
                 }
                 Log.e(TAG, "selectedImage: " + selectedImage.getPath());
 
@@ -196,8 +239,57 @@ public class DocumentPicker {
         return selectedImage;
     }
 
+    public static Uri getDocumentUriWithIndexFromResult(Context context, int resultCode, Intent returnedIntent, int fileIndex) {
+        Uri selectedImage = null;
+        try {
+            File documentFile = getTempFile(context);
+            if (resultCode == Activity.RESULT_OK) {
+                boolean isCamera = (returnedIntent == null ||
+                        returnedIntent.getData() == null ||
+                        returnedIntent.getData().toString().contains(documentFile.toString()));
+
+                if (returnedIntent != null)
+                    Log.e(TAG, "Returned Intent: " + returnedIntent.getData());
+                if (isCamera) {     /** CAMERA **/
+                    selectedImage = Uri.fromFile(documentFile);
+                } else if (returnedIntent.getData().toString().startsWith("file://")) {
+                    selectedImage = Uri.parse(returnedIntent.getData().toString());
+                } else {            /** ALBUM **/
+                    selectedImage = Uri.parse(FileUtilities.getDataColumn(context, returnedIntent.getData()));
+                }
+                Log.e(TAG, "selectedImage: " + selectedImage.getPath());
+
+                if (isCamera) {
+                    Log.d(TAG, "Converting: " + selectedImage.getPath());
+
+                    // Convert the image - handle auto rotate problem in some devices, scale down
+                    // image if necessary (max 512*512)
+                    Bitmap convertedBitmap = CameraUtilities.handleSamplingAndRotationBitmap(context,
+                            isCamera ? selectedImage : returnedIntent.getData(), isCamera);
+
+                    // Save to file
+                    File tempFile = getFileWithIndex(context, fileIndex);
+                    CameraUtilities.saveBitmapToFile(convertedBitmap, tempFile);
+                    selectedImage = Uri.fromFile(tempFile);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return selectedImage;
+    }
+
     private static File getTempFile(Context context) {
         File documentFile = new File(context.getExternalCacheDir(), TEMP_DOCUMENT_NAME);
+        if (documentFile != null) {
+            documentFile.getParentFile().mkdirs();
+            return documentFile;
+        } else return null;
+    }
+
+    private static File getFileWithIndex(Context context, int index) throws IOException {
+        File documentFile = new File(context.getExternalCacheDir(), index + TEMP_DOCUMENT_NAME);
         if (documentFile != null) {
             documentFile.getParentFile().mkdirs();
             return documentFile;
