@@ -5,11 +5,11 @@ import android.os.AsyncTask;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class AddFriendAsyncTask extends HttpRequestPostAsyncTask implements HttpResponseListener {
+public class DeleteContactAsyncTask extends HttpRequestPatchAsyncTask implements HttpResponseListener {
 
     private Context context;
 
-    public AddFriendAsyncTask(String API_COMMAND, String mUri, String mJsonString, Context mContext) {
+    public DeleteContactAsyncTask(String API_COMMAND, String mUri, String mJsonString, Context mContext) {
         super(API_COMMAND, mUri, mJsonString, mContext);
         this.context = mContext;
         mHttpResponseListener = this;
@@ -27,12 +27,11 @@ public class AddFriendAsyncTask extends HttpRequestPostAsyncTask implements Http
         try {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 if (getContext() != null) {
-                    new GetFriendsAsyncTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new GetContactsAsyncTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

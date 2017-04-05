@@ -45,7 +45,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GetBusinessTypesAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GetFriendsAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GetContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GetRelationshipListAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
@@ -177,9 +177,9 @@ public class HomeActivity extends BaseActivity
         } else getProfileInfo();
 
         // Sync contacts
-        new GetFriendsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        // Contact sync is done as follows: first all the contacts are downloaded from the server
-        // (#GetFriendsAsyncTask) and stored in the database (#SyncContactsAsyncTask).
+        new GetContactsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        // DBContactNode sync is done as follows: first all the contacts are downloaded from the server
+        // (#GetContactsAsyncTask) and stored in the database (#SyncContactsAsyncTask).
         // Then difference with phone contacts is calculated, and this difference is sent to the
         // server. If there is any new contact on the phone, we download all contacts from the
         // server again to keep phone and server contacts in sync.
@@ -344,7 +344,7 @@ public class HomeActivity extends BaseActivity
 
                     if (permissions[i].equals(Manifest.permission.READ_CONTACTS)) {
                         if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            new GetFriendsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            new GetContactsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     }
                 }

@@ -16,14 +16,14 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.GetFriendsAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GetContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
-import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
-import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
-import bd.com.ipay.ipayskeleton.Model.Friend.InviteFriend;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequest;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactNode;
+import bd.com.ipay.ipayskeleton.Model.Contact.InviteContactNode;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
@@ -46,7 +46,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
     private final Context context;
     private ProgressDialog mProgressDialog;
 
-    private HttpRequestPostAsyncTask mAddFriendAsyncTask;
+    private HttpRequestPostAsyncTask mAddContactAsyncTask;
     private HttpRequestPostAsyncTask mSendInviteTask = null;
     private SendInviteResponse mSendInviteResponse;
 
@@ -59,14 +59,14 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
         this.context = context;
         this.mMobileNumber = mMobileNumber;
         mProgressDialog = new ProgressDialog(context);
-        showAddFriendDialog();
+        showAddContactDialog();
     }
 
     public void setFinishCheckerListener(FinishCheckerListener finishChceckerListener) {
         mFinishCheckerListener = finishChceckerListener;
     }
 
-    private void showAddFriendDialog() {
+    private void showAddContactDialog() {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
         dialog
                 .title(R.string.invite_a_friend)
@@ -114,7 +114,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
                     if (mRelationship != null)
                         mRelationship = mRelationship.toUpperCase();
 
-                    addFriend(mName, mMobileNumber, mRelationship);
+                    addContact(mName, mMobileNumber, mRelationship);
 
                     Utilities.hideKeyboard(context, mEditTextname);
                     Utilities.hideKeyboard(context, mEditTextMobileNumber);
@@ -160,24 +160,24 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
     }
 
 
-    private void addFriend(String name, String phoneNumber, String relationship) {
-        if (mAddFriendAsyncTask != null) {
+    private void addContact(String name, String phoneNumber, String relationship) {
+        if (mAddContactAsyncTask != null) {
             return;
         }
         mProgressDialog.setMessage(context.getResources().getString(R.string.processing));
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
 
-        List<InfoAddFriend> newFriends = new ArrayList<>();
-        newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
+        List<AddContactNode> newContacts = new ArrayList<>();
+        newContacts.add(new AddContactNode(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
 
-        AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
+        AddContactRequest addContactRequest = new AddContactRequest(newContacts);
         Gson gson = new Gson();
-        String json = gson.toJson(addFriendRequest);
+        String json = gson.toJson(addContactRequest);
 
-        mAddFriendAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, context, this);
-        mAddFriendAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mAddContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_CONTACTS,
+                Constants.BASE_URL_CONTACT + Constants.URL_ADD_CONTACTS, json, context, this);
+        mAddContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
@@ -192,9 +192,9 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
 
             boolean wantToIntroduce = mIntroduceCheckbox.isChecked();
 
-            InviteFriend inviteFriend = new InviteFriend(phoneNumber, wantToIntroduce);
+            InviteContactNode inviteContactNode = new InviteContactNode(phoneNumber, wantToIntroduce);
             Gson gson = new Gson();
-            String json = gson.toJson(inviteFriend, InviteFriend.class);
+            String json = gson.toJson(inviteContactNode, InviteContactNode.class);
             mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
                     Constants.BASE_URL_MM + Constants.URL_SEND_INVITE, json, context, this);
             mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -205,7 +205,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mAddFriendAsyncTask = null;
+            mAddContactAsyncTask = null;
             mSendInviteTask = null;
 
             Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_LONG).show();
@@ -214,11 +214,11 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_ADD_FRIENDS)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_ADD_CONTACTS)) {
             try {
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    new GetFriendsAsyncTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new GetContactsAsyncTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     sendInvite(mMobileNumber);
                 } else {
                     mProgressDialog.dismiss();
@@ -230,7 +230,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
                 Toast.makeText(context, R.string.failed_invite_friend, Toast.LENGTH_LONG).show();
             }
 
-            mAddFriendAsyncTask = null;
+            mAddContactAsyncTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_SEND_INVITE)) {
             mProgressDialog.dismiss();
             try {

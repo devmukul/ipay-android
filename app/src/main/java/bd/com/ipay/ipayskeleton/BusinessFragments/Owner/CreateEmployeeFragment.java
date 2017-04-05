@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -69,7 +69,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
             mSelectMobileNumberFromContactsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
+                    Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
                     intent.putExtra(Constants.VERIFIED_USERS_ONLY, true);
                     startActivityForResult(intent, PICK_CONTACT_REQUEST);
                 }

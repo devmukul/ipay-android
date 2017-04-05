@@ -1,6 +1,6 @@
-package bd.com.ipay.ipayskeleton.Model.Friend;
+package bd.com.ipay.ipayskeleton.Model.Contact;
 
-public class Contact {
+public class DBContactNode {
     private String name;
     private String originalName;
     private String mobileNumber;

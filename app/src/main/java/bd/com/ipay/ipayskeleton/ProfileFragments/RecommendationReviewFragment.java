@@ -21,14 +21,14 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.AddFriendAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
-import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequest;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactNode;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.IntroduceActionResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.District;
@@ -236,7 +236,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
 
     private void attemptSetRecommendationStatus(long requestID, String recommendationStatus) {
         if (mAddInContactsCheckBox.isChecked()) {
-            addFriend(mSenderName, mSenderMobileNumber, null);
+            addContact(mSenderName, mSenderMobileNumber, null);
         }
         if (requestID == 0) {
             if (getActivity() != null)
@@ -272,16 +272,16 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
         if (this.isAdded()) setContentShown(true);
     }
 
-    private void addFriend(String name, String phoneNumber, String relationship) {
-        List<InfoAddFriend> newFriends = new ArrayList<>();
-        newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
+    private void addContact(String name, String phoneNumber, String relationship) {
+        List<AddContactNode> newContacts = new ArrayList<>();
+        newContacts.add(new AddContactNode(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
 
-        AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
+        AddContactRequest addContactRequest = new AddContactRequest(newContacts);
         Gson gson = new Gson();
-        String json = gson.toJson(addFriendRequest);
+        String json = gson.toJson(addContactRequest);
 
-        new AddFriendAsyncTask(Constants.COMMAND_ADD_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new AddContactAsyncTask(Constants.COMMAND_ADD_CONTACTS,
+                Constants.BASE_URL_CONTACT + Constants.URL_ADD_CONTACTS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

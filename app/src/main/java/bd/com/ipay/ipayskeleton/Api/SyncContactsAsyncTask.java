@@ -13,31 +13,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
-import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
-import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendResponse;
-import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
-import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
-import bd.com.ipay.ipayskeleton.Model.Friend.InfoUpdateFriend;
-import bd.com.ipay.ipayskeleton.Model.Friend.UpdateFriendRequest;
-import bd.com.ipay.ipayskeleton.Model.Friend.UpdateFriendResponse;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequest;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactResponse;
+import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactNode;
+import bd.com.ipay.ipayskeleton.Model.Contact.UpdateContactNode;
+import bd.com.ipay.ipayskeleton.Model.Contact.UpdateContactRequest;
+import bd.com.ipay.ipayskeleton.Model.Contact.UpdateContactResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 
 public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine.ContactDiff> implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mAddFriendAsyncTask;
-    private AddFriendResponse mAddFriendResponse;
+    private HttpRequestPostAsyncTask mAddContactAsyncTask;
+    private AddContactResponse mAddContactResponse;
 
-    private HttpRequestPostAsyncTask mUpdateFriendAsyncTask;
-    private UpdateFriendResponse mUpdateFriendResponse;
+    private HttpRequestPostAsyncTask mUpdateContactAsyncTask;
+    private UpdateContactResponse mUpdateContactResponse;
 
     private static boolean contactsSyncedOnce;
 
     private final Context context;
-    private final List<FriendInfo> serverContacts;
+    private final List<ContactNode> serverContacts;
 
-    public SyncContactsAsyncTask(Context context, List<FriendInfo> serverContacts) {
+    public SyncContactsAsyncTask(Context context, List<ContactNode> serverContacts) {
         this.context = context;
         this.serverContacts = serverContacts;
     }
@@ -45,9 +45,9 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
     @Override
     protected ContactEngine.ContactDiff doInBackground(String... params) {
 
-        // Save the friend list fetched from the server into the database
+        // Save the contact list fetched from the server into the database
         DataHelper dataHelper = DataHelper.getInstance(context);
-        dataHelper.createFriends(serverContacts);
+        dataHelper.createContacts(serverContacts);
 
         // IMPORTANT: Perform this check only after saving all server contacts into the database!
         if (contactsSyncedOnce)
@@ -59,7 +59,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
                 Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
 
             // Read phone contacts
-            List<FriendInfo> phoneContacts = ContactEngine.getAllContacts(context);
+            List<ContactNode> phoneContacts = ContactEngine.getAllContacts(context);
 
             // Calculate the difference between phone contacts and server contacts
             ContactEngine.ContactDiff contactDiff = ContactEngine.getContactDiff(phoneContacts, serverContacts);
@@ -77,100 +77,100 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
     @Override
     protected void onPostExecute(ContactEngine.ContactDiff contactDiff) {
         if (contactDiff != null) {
-            addFriends(contactDiff.newContacts);
-            updateFriends(contactDiff.updatedContacts);
+            addContacts(contactDiff.newContacts);
+            updateContacts(contactDiff.updatedContacts);
         }
 
     }
 
-    private void addFriends(List<FriendInfo> friends) {
-        if (mAddFriendAsyncTask != null) {
+    private void addContacts(List<ContactNode> contactList) {
+        if (mAddContactAsyncTask != null) {
             return;
         }
 
-        if (friends.isEmpty())
+        if (contactList.isEmpty())
             return;
 
-        List<InfoAddFriend> newFriends = new ArrayList<>();
-        for (FriendInfo friendNode : friends) {
-            newFriends.add(new InfoAddFriend(friendNode.getMobileNumber(), friendNode.getName()));
+        List<AddContactNode> newContacts = new ArrayList<>();
+        for (ContactNode contactNode : contactList) {
+            newContacts.add(new AddContactNode(contactNode.getMobileNumber(), contactNode.getName()));
         }
 
-        AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
+        AddContactRequest addContactRequest = new AddContactRequest(newContacts);
         Gson gson = new Gson();
-        String json = gson.toJson(addFriendRequest);
+        String json = gson.toJson(addContactRequest);
 
-        mAddFriendAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, context, this);
-        mAddFriendAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mAddContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_CONTACTS,
+                Constants.BASE_URL_CONTACT + Constants.URL_ADD_CONTACTS, json, context, this);
+        mAddContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
-    private void updateFriends(List<FriendInfo> friends) {
-        if (mUpdateFriendResponse != null) {
+    private void updateContacts(List<ContactNode> contactList) {
+        if (mUpdateContactResponse != null) {
             return;
         }
 
-        if (friends.isEmpty())
+        if (contactList.isEmpty())
             return;
 
-        List<InfoUpdateFriend> updateFriends = new ArrayList<>();
-        for (FriendInfo friend : friends) {
-            InfoUpdateFriend infoUpdateFriend = new InfoUpdateFriend(
-                    friend.getMobileNumber(), friend.getName());
-            updateFriends.add(infoUpdateFriend);
+        List<UpdateContactNode> updateContacts = new ArrayList<>();
+        for (ContactNode contactNode : contactList) {
+            UpdateContactNode updateContactNode = new UpdateContactNode(
+                    contactNode.getMobileNumber(), contactNode.getName());
+            updateContacts.add(updateContactNode);
         }
 
-        UpdateFriendRequest updateFriendRequest = new UpdateFriendRequest(updateFriends);
+        UpdateContactRequest updateContactRequest = new UpdateContactRequest(updateContacts);
         Gson gson = new Gson();
-        String json = gson.toJson(updateFriendRequest);
+        String json = gson.toJson(updateContactRequest);
 
-        mUpdateFriendAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_UPDATE_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_UPDATE_FRIENDS, json, context, this);
-        mUpdateFriendAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mUpdateContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_UPDATE_CONTACTS,
+                Constants.BASE_URL_CONTACT + Constants.URL_UPDATE_CONTACTS, json, context, this);
+        mUpdateContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mAddFriendAsyncTask = null;
-            mUpdateFriendAsyncTask = null;
+            mAddContactAsyncTask = null;
+            mUpdateContactAsyncTask = null;
             return;
         }
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_ADD_FRIENDS)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_ADD_CONTACTS)) {
             try {
-                mAddFriendResponse = gson.fromJson(result.getJsonString(), AddFriendResponse.class);
+                mAddContactResponse = gson.fromJson(result.getJsonString(), AddContactResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     // Server contacts updated, download contacts again
                     Log.i("Friend", "Create friend successful");
-                    new GetFriendsAsyncTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new GetContactsAsyncTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
-                    if (mAddFriendResponse != null)
-                        Log.e(context.getString(R.string.failed_add_friend), mAddFriendResponse.getMessage());
+                    if (mAddContactResponse != null)
+                        Log.e(context.getString(R.string.failed_add_friend), mAddContactResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            mAddFriendAsyncTask = null;
+            mAddContactAsyncTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_UPDATE_FRIENDS)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_UPDATE_CONTACTS)) {
             try {
-                mUpdateFriendResponse = gson.fromJson(result.getJsonString(), UpdateFriendResponse.class);
+                mUpdateContactResponse = gson.fromJson(result.getJsonString(), UpdateContactResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     Log.i("Friend", "Update friend successful");
                     // Maybe we should download contacts again?
                 } else {
-                    Log.e(context.getString(R.string.failed_update_friend), mUpdateFriendResponse.getMessage());
+                    Log.e(context.getString(R.string.failed_update_friend), mUpdateContactResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            mUpdateFriendAsyncTask = null;
+            mUpdateContactAsyncTask = null;
         }
     }
 }

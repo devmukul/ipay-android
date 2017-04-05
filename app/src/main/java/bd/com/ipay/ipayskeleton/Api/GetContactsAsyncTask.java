@@ -8,16 +8,16 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
-import bd.com.ipay.ipayskeleton.Model.Friend.GetContactsResponse;
+import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
+import bd.com.ipay.ipayskeleton.Model.Contact.GetContactsResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class GetFriendsAsyncTask extends HttpRequestGetAsyncTask implements HttpResponseListener {
+public class GetContactsAsyncTask extends HttpRequestGetAsyncTask implements HttpResponseListener {
 
     GetContactsResponse mGetContactsResponse;
-    public GetFriendsAsyncTask(Context context) {
-        super(Constants.COMMAND_GET_FRIENDS, Constants.BASE_URL_FRIEND + Constants.URL_GET_FRIENDS, context);
+    public GetContactsAsyncTask(Context context) {
+        super(Constants.COMMAND_GET_CONTACTS, Constants.BASE_URL_CONTACT + Constants.URL_GET_CONTACTS, context);
         mHttpResponseListener = this;
     }
 
@@ -38,7 +38,7 @@ public class GetFriendsAsyncTask extends HttpRequestGetAsyncTask implements Http
                 Gson gson = new Gson();
                 mGetContactsResponse = gson.fromJson(result.getJsonString(), GetContactsResponse.class);
 
-                List<FriendInfo> mGetAllContactsResponse = mGetContactsResponse.getContactList();
+                List<ContactNode> mGetAllContactsResponse = mGetContactsResponse.getContactList();
 
                 SyncContactsAsyncTask syncContactsAsyncTask = new SyncContactsAsyncTask(getContext(), mGetAllContactsResponse);
                 syncContactsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

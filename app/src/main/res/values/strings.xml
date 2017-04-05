@@ -730,8 +730,8 @@
     <string name="edit_business_information">Edit Business Information</string>
     <string name="get_balance">Get Balance</string>
     <string name="get_transactions">Get Transactions</string>
-    <string name="friend_read">See frieds</string>
-    <string name="friend_write">Add friends</string>
+    <string name="contact_read">See contacts</string>
+    <string name="contact_write">Add contacts</string>
     <string name="see_owner_info">See business owner information</string>
     <string name="manage_owner_info">Manage business owner information</string>
     <string name="see_docs">See personal documents</string>
@@ -820,15 +820,6 @@
         <item>Pre-paid</item>
         <item>Post-paid </item>
     </string-array>
-
-    <string-array name="relationship">
-        <item>Father</item>
-        <item>Mother</item>
-        <item>Brother</item>
-        <item>Sister</item>
-        <item>Friend</item>
-    </string-array>
-
 
     <string-array name="trusted_device_or_network_action">
         <item>Remove</item>

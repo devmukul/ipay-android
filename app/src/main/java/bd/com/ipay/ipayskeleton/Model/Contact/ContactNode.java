@@ -1,8 +1,8 @@
-package bd.com.ipay.ipayskeleton.Model.Friend;
+package bd.com.ipay.ipayskeleton.Model.Contact;
 
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 
-public class FriendInfo {
+public class ContactNode {
     private int accountType;
     private String mobileNumber;
     private boolean iPayMember;
@@ -15,14 +15,14 @@ public class FriendInfo {
     private boolean active;
 
 
-    public FriendInfo(String name, String mobileNumber, String profilePictureUrl) {
+    public ContactNode(String name, String mobileNumber, String profilePictureUrl) {
         this.contactName = name;
         this.mobileNumber = mobileNumber;
         this.profilePictureURL = new ProfilePictureURL(profilePictureUrl);
     }
 
-    public FriendInfo(int accountType, boolean isMember, boolean isVerified, String name, String originalName, String mobileNumber,
-                      String profilePictureUrl, String profilePictureUrlMedium, String profilePictureUrlHigh, String relationship, long updateAt) {
+    public ContactNode(int accountType, boolean isMember, boolean isVerified, String name, String originalName, String mobileNumber,
+                       String profilePictureUrl, String profilePictureUrlMedium, String profilePictureUrlHigh, String relationship, long updateAt) {
         this.accountType = accountType;
         this.mobileNumber = mobileNumber;
         this.iPayMember = isMember;
@@ -34,8 +34,8 @@ public class FriendInfo {
         this.updateAt = updateAt;
     }
 
-    public FriendInfo(int accountType, int isMember, int verificationStatus, String name, String originalName,String mobileNumber,
-                      String profilePictureUrl, String profilePictureUrlMedium, String profilePictureUrlHigh, String relationship, long updateAt) {
+    public ContactNode(int accountType, int isMember, int verificationStatus, String name, String originalName, String mobileNumber,
+                       String profilePictureUrl, String profilePictureUrlMedium, String profilePictureUrlHigh, String relationship, long updateAt) {
         this(accountType, isMember == DBConstants.IPAY_MEMBER, verificationStatus == DBConstants.VERIFIED_USER,
                 name, originalName,mobileNumber, profilePictureUrl, profilePictureUrlMedium, profilePictureUrlHigh, relationship, updateAt);
     }
@@ -119,7 +119,7 @@ public class FriendInfo {
 
     @Override
     public String toString() {
-        return "FriendInfo{" +
+        return "ContactNode{" +
                 "accountType=" + accountType +
                 ", isMember=" + iPayMember +
                 ", isVerified=" + verified +

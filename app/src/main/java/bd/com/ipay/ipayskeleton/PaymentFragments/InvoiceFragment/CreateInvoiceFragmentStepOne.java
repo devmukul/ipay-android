@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
 import bd.com.ipay.ipayskeleton.R;
@@ -67,7 +67,7 @@ public class CreateInvoiceFragmentStepOne extends Fragment {
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
+                Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
                 intent.putExtra(Constants.IPAY_MEMBERS_ONLY, true);
                 startActivityForResult(intent, PICK_CONTACT_REQUEST);
             }

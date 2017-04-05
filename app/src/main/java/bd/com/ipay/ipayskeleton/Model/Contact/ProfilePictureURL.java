@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Model.Friend;
+package bd.com.ipay.ipayskeleton.Model.Contact;
 
 public class ProfilePictureURL {
     private String low;

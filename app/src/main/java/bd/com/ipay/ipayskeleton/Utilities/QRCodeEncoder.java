@@ -190,7 +190,7 @@ public final class QRCodeEncoder {
 						newContents.append(';');
 						contents = newContents.toString();
 						displayContents = newDisplayContents.toString();
-						title = "Contact";
+						title = "DBContactNode";
 					} else {
 						contents = null;
 						displayContents = null;

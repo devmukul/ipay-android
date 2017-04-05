@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
-import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
@@ -156,7 +156,7 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
+                Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
                 intent.putExtra(Constants.IPAY_MEMBERS_ONLY, true);
                 startActivityForResult(intent, PICK_CONTACT_REQUEST);
             }

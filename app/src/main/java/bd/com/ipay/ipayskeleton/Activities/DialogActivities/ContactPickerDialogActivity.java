@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 
-import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.FriendPickerFragment;
+import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactPickerFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -15,7 +15,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
  * If want to show only verified users, pass (Constants.VERIFIED_USERS_ONLY, false) in the intent
  * while starting the activity.
  */
-public class FriendPickerDialogActivity extends FragmentActivity {
+public class ContactPickerDialogActivity extends FragmentActivity {
 
     private boolean mShowVerifiedUsersOnly;
     private boolean miPayMembersOnly;
@@ -25,13 +25,13 @@ public class FriendPickerDialogActivity extends FragmentActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_friend_picker);
+        setContentView(R.layout.activity_contact_picker);
 
         mShowVerifiedUsersOnly = getIntent().getBooleanExtra(Constants.VERIFIED_USERS_ONLY, false);
         miPayMembersOnly = getIntent().getBooleanExtra(Constants.IPAY_MEMBERS_ONLY, false);
         mBusinessMembersOnly = getIntent().getBooleanExtra(Constants.BUSINESS_ACCOUNTS_ONLY, false);
 
-        FriendPickerFragment fragment = new FriendPickerFragment();
+        ContactPickerFragment fragment = new ContactPickerFragment();
 
         Bundle bundle = new Bundle();
         bundle.putBoolean(Constants.VERIFIED_USERS_ONLY, mShowVerifiedUsersOnly);
