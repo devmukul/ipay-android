@@ -236,7 +236,7 @@ public class Constants {
             BASE_URL_SM = "http://192.168.1.105:8085/api/v1/money/";
             BASE_URL_EDU = "http://192.168.1.105:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
-            BASE_URL_CONTACT = "http://dev.ipay.com.bd/friend/v1/";
+            BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             SERVER_NAME = "local";
