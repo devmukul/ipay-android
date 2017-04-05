@@ -225,7 +225,7 @@ public class Constants {
             BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";
             BASE_URL_EDU = "https://www.ipay.com.bd/api/v1/em/";
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
-            BASE_URL_CONTACT = "https://www.ipay.com.bd/friend/v1/";
+            BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
             BASE_URL_ADMIN = "https://www.ipay.com.bd/api/v1/support/";
             BASE_URL_WEB = "https://www.ipay.com.bd";
             SERVER_NAME = "live";
