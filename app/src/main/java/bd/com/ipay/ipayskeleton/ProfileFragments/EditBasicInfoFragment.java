@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +29,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetPro
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Occupation;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;

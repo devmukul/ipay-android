@@ -13,7 +13,6 @@
     <string name="mobile_android">mobile-android-</string>
     <string name="no_iPay_account">The user doesn\'t have an iPay account</string>
     <string name="enter_OTP_sent_to_your_mobile">Enter OTP sent to your mobile</string>
-    <string name="gcm_sender_id">799721005986</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="prompt_mobile">Enter your mobile number </string>

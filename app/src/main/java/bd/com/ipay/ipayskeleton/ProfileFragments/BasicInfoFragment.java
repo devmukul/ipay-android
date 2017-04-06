@@ -30,7 +30,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetOccupationRe
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Occupation;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.OccupationRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;

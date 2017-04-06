@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Service.GCM;
+package bd.com.ipay.ipayskeleton.Service.FCM;
 
 import android.app.Activity;
 import android.content.Context;

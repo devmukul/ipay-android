@@ -269,10 +269,6 @@
             android:windowSoftInputMode="adjustPan" />
 
         <!-- FCM-->
-        <service
-            android:name=".Service.GCM.RegistrationIntentService"
-            android:exported="false" />
-
         <service android:name=".Service.FCM.FCMListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -285,5 +281,4 @@
             </intent-filter>
         </service>
     </application>
-
 </manifest>

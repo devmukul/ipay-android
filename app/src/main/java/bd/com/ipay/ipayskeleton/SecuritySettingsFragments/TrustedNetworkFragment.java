@@ -29,7 +29,6 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpDeleteWithBodyAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
@@ -41,7 +40,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.R
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.TrustedPerson;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TrustedNetworkFragment extends ProgressFragment implements HttpResponseListener {

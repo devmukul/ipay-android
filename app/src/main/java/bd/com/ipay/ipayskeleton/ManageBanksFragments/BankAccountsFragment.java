@@ -28,7 +28,6 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -45,7 +44,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.VerifyBankWithAmoun
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.VerifyBankWithAmountRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.VerifyBankWithAmountResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;

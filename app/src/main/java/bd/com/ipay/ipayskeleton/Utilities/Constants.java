@@ -16,7 +16,6 @@ public class Constants {
     public static final String LOGGED_IN = "LOGGED_IN";
     public static final String FIRST_LAUNCH = "FIRST_LAUNCH";
     public static final String CRITICAL_PREFERENCE_VERSION = "CRITICAL_PREFERENCE_VERSION";
-    public static final String GCM_REGISTRATION_ID_SENT_TO_SERVER = "GCM_REGISTRATION_ID_SENT_TO_SERVER";
     public static final String PASSWORD = "PASSWORD";
     public static final String NEW_PASSWORD = "NEW_PASSWORD";
     public static final String VERIFICATION_STATUS = "VERIFICATION_STATUS";
