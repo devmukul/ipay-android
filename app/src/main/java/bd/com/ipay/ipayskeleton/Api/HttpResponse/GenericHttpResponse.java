@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Api;
+package bd.com.ipay.ipayskeleton.Api.HttpResponse;
 
 import android.content.Context;
 import android.util.Log;

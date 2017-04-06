@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Api;
+package bd.com.ipay.ipayskeleton.Api.UploadApi;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -19,54 +19,40 @@ import org.apache.http.util.EntityUtils;
 import java.io.File;
 import java.nio.charset.Charset;
 
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, GenericHttpResponse> {
+public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, GenericHttpResponse> {
 
     private final Context mContext;
-    private final String imagePath;
+    private final String filePath;
     private final String API_COMMAND;
-    private final String documentIdNumber;
-    private final String documentType;
-    private int uploadType;
+    private long ticketId;
+    private long commentId;
+    private String comment;
 
     public HttpResponseListener mHttpResponseListener;
 
-    private static final int OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT = 1;
-    private static final int OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT = 2;
-
-    public UploadIdentifierDocumentAsyncTask(String API_COMMAND, String imagePath, Context mContext,
-                                             String documentIdNumber, String documentType) {
+    public UploadTicketAttachmentAsyncTask(String API_COMMAND, String filePath, long commentId, Context mContext) {
         this.mContext = mContext;
-        this.imagePath = imagePath;
+        this.filePath = filePath;
         this.API_COMMAND = API_COMMAND;
-        this.documentIdNumber = documentIdNumber;
-        this.documentType = documentType;
-    }
-
-    public UploadIdentifierDocumentAsyncTask(String API_COMMAND, String imagePath, Context mContext,
-                                             String documentIdNumber, String documentType, int uploadType) {
-        this.mContext = mContext;
-        this.imagePath = imagePath;
-        this.API_COMMAND = API_COMMAND;
-        this.documentIdNumber = documentIdNumber;
-        this.documentType = documentType;
-        this.uploadType = uploadType;
+        this.commentId = commentId;
     }
 
     @Override
     protected GenericHttpResponse doInBackground(Void... params) {
-
         if (Constants.DEBUG)
             Log.w("Document Upload", "Started");
 
         GenericHttpResponse mGenericHttpResponse = new GenericHttpResponse();
 
         if (Utilities.isConnectionAvailable(mContext))
-            mGenericHttpResponse = uploadDocument(imagePath);
+            mGenericHttpResponse = uploadDocument(filePath);
         else
             Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG).show();
 
@@ -99,29 +85,25 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Gen
 
         try {
             HttpClient client = new DefaultHttpClient();
+
             File file = new File(selectedImagePath);
             HttpPost post = null;
-            if (uploadType == OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT)
-                post = new HttpPost(Constants.BASE_URL_MM + Constants.URL_UPLOAD_DOCUMENTS);
 
-            else if (uploadType == OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT) {
-                post = new HttpPost(Constants.BASE_URL_MM + Constants.URL_UPLOAD_BUSINESS_DOCUMENTS);
-            }
-
-            if (TokenManager.isTokenExists())
-                post.setHeader(Constants.TOKEN, TokenManager.getToken());
-            if (TokenManager.isEmployerAccountActive())
-                post.setHeader(Constants.OPERATING_ON_ACCOUNT_ID, TokenManager.getOperatingOnAccountId());
+            post = new HttpPost(Constants.BASE_URL_ADMIN + Constants.URL_UPLOAD_TICKET_ATTACHMENT);
 
             MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE,
                     Constants.BOUNDARY, Charset.defaultCharset());
 
+            entity.addPart(Constants.TICKET_COMMENT_ID, new StringBody(commentId + ""));
+
+            if(file.exists())
             entity.addPart(Constants.MULTIPART_FORM_DATA_NAME, new FileBody(file));
-            entity.addPart(Constants.DOCUMENT_ID_NUMBER, new StringBody(documentIdNumber));
-            entity.addPart(Constants.DOCUMENT_TYPE, new StringBody(documentType));
             post.setEntity(entity);
 
-            post.setHeader("Accept", "application/json");
+            Log.e("POST", entity.toString());
+
+            if (TokenManager.isTokenExists())
+                post.setHeader(Constants.TOKEN, TokenManager.getToken());
             post.setHeader("Content-Type", "multipart/form-data; boundary=" + Constants.BOUNDARY);
 
             HttpResponse response = client.execute(post);

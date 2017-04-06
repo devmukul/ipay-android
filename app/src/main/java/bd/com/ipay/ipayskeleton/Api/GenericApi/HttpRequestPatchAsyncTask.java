@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Api;
+package bd.com.ipay.ipayskeleton.Api.GenericApi;
 
 import android.content.Context;
 import android.util.Log;
@@ -7,6 +7,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HTTP;
 
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.HttpPatchRequestBase;
 

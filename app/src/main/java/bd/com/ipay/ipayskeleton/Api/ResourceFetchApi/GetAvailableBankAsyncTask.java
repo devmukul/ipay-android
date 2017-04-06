@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Api;
+package bd.com.ipay.ipayskeleton.Api.ResourceFetchApi;
 
 import android.content.Context;
 
@@ -6,6 +6,9 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Bank;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetAvailableBankResponse;
@@ -17,7 +20,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
  * Loaded bank accounts are saved into {@link CommonData}.
  * <p/>
  * If you want to do something with the result after loading the bank list, pass
- * a {@link bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask.BankLoadListener} to the constructor.
+ * a {@link GetAvailableBankAsyncTask.BankLoadListener} to the constructor.
  */
 public class GetAvailableBankAsyncTask extends HttpRequestGetAsyncTask {
     public GetAvailableBankAsyncTask(Context context, final BankLoadListener listener) {

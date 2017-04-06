@@ -1,8 +1,9 @@
-package bd.com.ipay.ipayskeleton.Api;
+package bd.com.ipay.ipayskeleton.Api.UploadApi;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -11,39 +12,68 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import java.io.File;
 import java.nio.charset.Charset;
 
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, GenericHttpResponse> {
+public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, GenericHttpResponse> {
 
     private final Context mContext;
     private final String imagePath;
     private final String API_COMMAND;
+    private final String documentIdNumber;
+    private final String documentType;
+    private int uploadType;
+
     public HttpResponseListener mHttpResponseListener;
 
-    public UploadProfilePictureAsyncTask(String API_COMMAND, String imagePath, Context mContext) {
+    private static final int OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT = 1;
+    private static final int OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT = 2;
+
+    public UploadIdentifierDocumentAsyncTask(String API_COMMAND, String imagePath, Context mContext,
+                                             String documentIdNumber, String documentType) {
         this.mContext = mContext;
         this.imagePath = imagePath;
         this.API_COMMAND = API_COMMAND;
+        this.documentIdNumber = documentIdNumber;
+        this.documentType = documentType;
+    }
+
+    public UploadIdentifierDocumentAsyncTask(String API_COMMAND, String imagePath, Context mContext,
+                                             String documentIdNumber, String documentType, int uploadType) {
+        this.mContext = mContext;
+        this.imagePath = imagePath;
+        this.API_COMMAND = API_COMMAND;
+        this.documentIdNumber = documentIdNumber;
+        this.documentType = documentType;
+        this.uploadType = uploadType;
     }
 
     @Override
     protected GenericHttpResponse doInBackground(Void... params) {
 
-        GenericHttpResponse mGenericHttpResponse;
+        if (Constants.DEBUG)
+            Log.w("Document Upload", "Started");
+
+        GenericHttpResponse mGenericHttpResponse = new GenericHttpResponse();
 
         if (Utilities.isConnectionAvailable(mContext))
-            mGenericHttpResponse = uploadImage(imagePath);
+            mGenericHttpResponse = uploadDocument(imagePath);
         else
-            return null;
+            Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG).show();
+
+        if (Constants.DEBUG)
+            Log.w("Document Upload", "Finished");
 
         return mGenericHttpResponse;
     }
@@ -57,32 +87,28 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, Generic
     protected void onPostExecute(final GenericHttpResponse result) {
 
         if (result != null) {
-            if (Constants.DEBUG)
-                Log.w("Image Upload", result.toString());
-
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
                 MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
                 myApplicationInstance.launchLoginPage(null);
             } else
                 mHttpResponseListener.httpResponseReceiver(result);
 
-        } else {
-            if (Constants.DEBUG)
-                Log.w("Image Upload", "NULL");
-
-            mHttpResponseListener.httpResponseReceiver(null);
-        }
+        } else mHttpResponseListener.httpResponseReceiver(null);
 
     }
 
-    private GenericHttpResponse uploadImage(String selectedImagePath) {
-        if (Constants.DEBUG)
-            Log.w("Uploading image", selectedImagePath);
+    private GenericHttpResponse uploadDocument(String selectedImagePath) {
 
         try {
             HttpClient client = new DefaultHttpClient();
             File file = new File(selectedImagePath);
-            HttpPost post = new HttpPost(Constants.BASE_URL_MM + Constants.URL_SET_PROFILE_PICTURE);
+            HttpPost post = null;
+            if (uploadType == OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT)
+                post = new HttpPost(Constants.BASE_URL_MM + Constants.URL_UPLOAD_DOCUMENTS);
+
+            else if (uploadType == OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT) {
+                post = new HttpPost(Constants.BASE_URL_MM + Constants.URL_UPLOAD_BUSINESS_DOCUMENTS);
+            }
 
             if (TokenManager.isTokenExists())
                 post.setHeader(Constants.TOKEN, TokenManager.getToken());
@@ -93,13 +119,17 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, Generic
                     Constants.BOUNDARY, Charset.defaultCharset());
 
             entity.addPart(Constants.MULTIPART_FORM_DATA_NAME, new FileBody(file));
+            entity.addPart(Constants.DOCUMENT_ID_NUMBER, new StringBody(documentIdNumber));
+            entity.addPart(Constants.DOCUMENT_TYPE, new StringBody(documentType));
+            post.setEntity(entity);
+
             post.setHeader("Accept", "application/json");
             post.setHeader("Content-Type", "multipart/form-data; boundary=" + Constants.BOUNDARY);
 
-            post.setEntity(entity);
-
             HttpResponse response = client.execute(post);
             HttpEntity httpEntity = response.getEntity();
+
+            Log.e("POST", post.toString());
 
             int status = response.getStatusLine().getStatusCode();
 
@@ -107,6 +137,8 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, Generic
             mGenericHttpResponse.setStatus(status);
             mGenericHttpResponse.setApiCommand(API_COMMAND);
             mGenericHttpResponse.setJsonString(EntityUtils.toString(httpEntity));
+
+            Log.e("Result", mGenericHttpResponse.toString());
 
             return mGenericHttpResponse;
 

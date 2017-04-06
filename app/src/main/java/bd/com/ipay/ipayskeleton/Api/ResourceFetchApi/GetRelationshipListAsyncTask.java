@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Api;
+package bd.com.ipay.ipayskeleton.Api.ResourceFetchApi;
 
 import android.content.Context;
 
@@ -6,6 +6,9 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetRelationshipRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetRelationshipResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;

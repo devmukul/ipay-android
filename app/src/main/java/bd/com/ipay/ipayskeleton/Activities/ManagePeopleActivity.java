@@ -12,9 +12,9 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EmployeeDetailsFragment;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.CreateEmployeeFragment;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EmployeeManagementFragment;

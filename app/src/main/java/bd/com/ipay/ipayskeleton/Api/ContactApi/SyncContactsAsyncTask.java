@@ -9,20 +9,15 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
-import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequest;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
-import bd.com.ipay.ipayskeleton.Model.Contact.AddContactNode;
-import bd.com.ipay.ipayskeleton.Model.Contact.UpdateContactNode;
-import bd.com.ipay.ipayskeleton.Model.Contact.UpdateContactRequest;
 import bd.com.ipay.ipayskeleton.Model.Contact.UpdateContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Contact.UpdateContactResponse;
 import bd.com.ipay.ipayskeleton.R;

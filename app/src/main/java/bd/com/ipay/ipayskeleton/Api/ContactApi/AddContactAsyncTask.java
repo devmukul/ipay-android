@@ -3,9 +3,9 @@ package bd.com.ipay.ipayskeleton.Api.ContactApi;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class AddContactAsyncTask extends HttpRequestPostAsyncTask implements HttpResponseListener {
