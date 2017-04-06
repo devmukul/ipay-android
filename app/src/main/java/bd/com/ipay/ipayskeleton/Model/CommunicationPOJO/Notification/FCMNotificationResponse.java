@@ -6,6 +6,7 @@ public class FCMNotificationResponse {
     private int serviceId;
     private boolean isReceiver;
     private String changed_data;
+    private String icon;
 
     public int getServiceId() {
         return serviceId;
@@ -13,6 +14,10 @@ public class FCMNotificationResponse {
 
     public boolean isReceiver() {
         return isReceiver;
+    }
+
+    public String getIcon() {
+        return icon;
     }
 
     public FCMNotificationData getNotificationData() {
