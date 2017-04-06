@@ -326,7 +326,7 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
                     mNameView.setText(mReceiverName);
 
                 mMobileNumberView.setText(mReceiverMobileNumber);
-                mProfileImageView.setProfilePicture(mPhotoUri, false);
+                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mPhotoUri, false);
             }
 
             public void bindViewForFooter() {
