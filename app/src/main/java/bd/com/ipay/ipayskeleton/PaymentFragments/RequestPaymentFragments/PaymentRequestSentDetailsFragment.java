@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment;
+package bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -35,7 +35,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SentPaymentRequestDetailsFragment extends ReviewFragment implements HttpResponseListener {
+public class PaymentRequestSentDetailsFragment extends ReviewFragment implements HttpResponseListener {
 
     private final int ACTION_CANCEL_REQUEST = 0;
 

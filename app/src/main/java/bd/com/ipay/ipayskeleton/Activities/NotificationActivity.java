@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessEmployeeReviewFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.ReceivedPaymentRequestDetailsFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentRequestReceivedDetailsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.SentReceivedRequestReviewFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.RecommendationReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -52,9 +52,9 @@ public class NotificationActivity extends BaseActivity {
 
     public void switchToReceivedPaymentRequestDetailsFragment(Bundle bundle) {
 
-        ReceivedPaymentRequestDetailsFragment receivedPaymentRequestDetailsFragment = new ReceivedPaymentRequestDetailsFragment();
-        receivedPaymentRequestDetailsFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, receivedPaymentRequestDetailsFragment).commit();
+        PaymentRequestReceivedDetailsFragment paymentRequestReceivedDetailsFragment = new PaymentRequestReceivedDetailsFragment();
+        paymentRequestReceivedDetailsFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, paymentRequestReceivedDetailsFragment).commit();
     }
 
     private void switchToReceivedRequestReviewFragment() {

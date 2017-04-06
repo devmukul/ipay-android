@@ -97,17 +97,14 @@ public class BusinessContactsSearchView extends FrameLayout {
         return mCustomAutoCompleteView.getText();
     }
 
-    public void setText(String text) {
-        mCustomAutoCompleteView.setText(text);
-    }
 
     public void setError(String error) {
         mCustomAutoCompleteView.setError(error);
     }
 
-    public void setMobileNumber(String mobileNumber) {
-        mCustomAutoCompleteView.setText(mobileNumber);
-        mCustomAutoCompleteView.setSelection(mobileNumber.length());
+    public void setText(String text) {
+        mCustomAutoCompleteView.setText(text);
+        mCustomAutoCompleteView.setSelection(text.length());
         mCustomAutoCompleteView.setError(null);
 
         hideSuggestionList();
@@ -229,7 +226,7 @@ public class BusinessContactsSearchView extends FrameLayout {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setMobileNumber(mobileNumber);
+                    setText(mobileNumber);
                 }
             });
 
