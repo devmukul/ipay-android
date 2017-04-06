@@ -1,9 +1,9 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment;
 
-public class SendInvoiceResponse {
+public class PaymentRequestSentResponse {
     private String message;
 
-    public SendInvoiceResponse() {
+    public PaymentRequestSentResponse() {
 
     }
 

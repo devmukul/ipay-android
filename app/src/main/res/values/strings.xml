@@ -204,7 +204,7 @@
     <string name="progress_dialog_fetching_bank_list">Fetching bank list...</string>
     <string name="progress_dialog_sending_invite">Sending invitation...</string>
     <string name="progress_dialog_fetching_business_types">Loading business types..</string>
-    <string name="progress_dialog_sending_invoice">Sending Invoice...</string>
+    <string name="progress_dialog_sending_payment_request">Sending Payment Request...</string>
     <string name="progress_dialog_rejecting">Rejecting request...</string>
     <string name="progress_dialog_accepted">Accepting request...</string>
     <string name="progress_dialog_signing_out">Signing out...</string>
@@ -282,7 +282,7 @@
     <string name="submitting_request_money">Submitting your request for money</string>
     <string name="failed_request_money">Money request failed</string>
     <string name="failed_to_fetch_categories">Failed to fetch event categories</string>
-    <string name="failed_invoice_creation">Invoice creation failed</string>
+    <string name="failed_request_payment">Payment request failed</string>
     <string name="failed_remove_bank">Failed to remove this bank from your iPay account. Please try again later.</string>
     <string name="failed_to_fetch_branch">Failed to fetch branches for this bank</string>
     <string name="failed_to_send_for_bank_verification">Failed to send request.</string>
