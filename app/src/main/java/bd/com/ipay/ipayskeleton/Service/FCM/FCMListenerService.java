@@ -13,6 +13,7 @@ import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.CreateCustomNotificationAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FCMNotificationResponse;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Notification.NotificationUtilities;
 
@@ -29,7 +30,7 @@ public class FCMListenerService extends FirebaseMessagingService {
         // Check if message contains a data payload.
         if (data.size() > 0) {
             if (Constants.DEBUG) Log.d("Data", "Message data payload: " + data.toString());
-            getNotificationResponseFromData(data);
+            parseNotificationResponseFromData(data);
         }
 
         // Check if message contains a notification payload.
@@ -37,16 +38,19 @@ public class FCMListenerService extends FirebaseMessagingService {
             if (Constants.DEBUG)
                 Log.d("Notification Payload", "Message Notification Body: " + message.getNotification().getBody());
 
-            createNotification(this, message.getNotification().getTitle(),
-                    message.getNotification().getBody(), mFcmNotificationResponse.getIcon());
+            if (!(NotificationUtilities.isUserActive(this)))
+                createNotification(this, message.getNotification().getTitle(),
+                        message.getNotification().getBody(), mFcmNotificationResponse.getIcon());
         }
     }
 
-    private void getNotificationResponseFromData(Map data) {
+    private void parseNotificationResponseFromData(Map data) {
         Gson gson = new Gson();
         JsonElement jsonElement = gson.toJsonTree(data);
         mFcmNotificationResponse = gson.fromJson(jsonElement, FCMNotificationResponse.class);
-        FCMNotificationParser.notificationParser(this, mFcmNotificationResponse);
+
+        if (NotificationUtilities.isUserActive(this))
+            FCMNotificationParser.notificationParser(this, mFcmNotificationResponse);
     }
 
     private void createNotification(Context context, String title, String message, String imageUrl) {
