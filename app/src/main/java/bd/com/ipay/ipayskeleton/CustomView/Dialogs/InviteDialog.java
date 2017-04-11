@@ -118,7 +118,6 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
 
                     dialog.dismiss();
                 }
-
             }
         });
 
@@ -133,9 +132,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
 
         dialog.show();
         mEditTextname.requestFocus();
-
     }
-
 
     private boolean verifyUserInputs() {
 
@@ -168,9 +165,9 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
         AddContactRequestBuilder addContactRequestBuilder = new
                 AddContactRequestBuilder(name, phoneNumber, relationship);
 
-        new AddContactAsyncTask(Constants.COMMAND_ADD_CONTACTS,
-                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(),
-                context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mAddContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_CONTACTS,
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(), context, this);
+        mAddContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void sendInvite(String phoneNumber) {
