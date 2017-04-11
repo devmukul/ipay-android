@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.GetTrusted
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerService implements HttpResponseListener {
@@ -130,7 +131,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                 break;
             case Constants.PUSH_NOTIFICATION_TAG_TRANSACTION:
                 if (isForeground() && isLoggedIn) {
-                    Log.d("Transaction", "Sending broadcast");
+                    LoggerUtilities.logDebug("Transaction", "Sending broadcast");
                     Utilities.sendBroadcast(this, Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST);
                 }
         }

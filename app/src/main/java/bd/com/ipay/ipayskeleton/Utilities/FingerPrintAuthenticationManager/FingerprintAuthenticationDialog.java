@@ -135,6 +135,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     private void setDecryptionStage() {
         mDecryptionDialogBuilder = new MaterialDialog.Builder(context);
         mDecryptionDialogBuilder

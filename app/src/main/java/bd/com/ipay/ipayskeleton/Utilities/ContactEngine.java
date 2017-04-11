@@ -34,6 +34,7 @@ import java.util.Set;
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
 import bd.com.ipay.ipayskeleton.Model.Contact.PhoneName;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
 
 public class ContactEngine {
     private static final String TAG = "ContactEngine";
@@ -360,7 +361,7 @@ public class ContactEngine {
                 selection, selectionArgs, sortOrder);
         if (cursor != null) {
             if (BuildConfig.DEBUG)
-                Log.d("result found", "" + cursor.getCount());
+                LoggerUtilities.logDebug("result found", "" + cursor.getCount());
             int numberIndex = cursor
                     .getColumnIndex(Phone.NUMBER);
             int nameIndex = cursor
@@ -376,10 +377,10 @@ public class ContactEngine {
                 PhoneName pn = new PhoneName();
                 pn.id = cursor.getInt(idIndex);
                 pn.name = cursor.getString(nameIndex);
-                // Log.d("Name",pn.name);
+                // LoggerUtilities.logDebug("Name",pn.name);
                 pn.number = cursor.getString(numberIndex);
                 pn.starred = cursor.getString(favIndex);
-                // Log.d("Number",pn.number);
+                // LoggerUtilities.logDebug("Number",pn.number);
                 int type = cursor.getInt(typeIndex);
                 if (type == Phone.TYPE_HOME) {
                     pn.type = "Home";
@@ -693,7 +694,7 @@ public class ContactEngine {
         Cursor cursor = context.getContentResolver().query(uri, projection,
                 selection, selectionArgs, sortOrder);
 //        if (BuildConfig.DEBUG)
-//            Log.d("result found", "" + cursor.getCount());
+//            LoggerUtilities.logDebug("result found", "" + cursor.getCount());
 
         if (cursor != null && cursor.moveToNext()) {
             int numberIndex = cursor.getColumnIndex(Phone.NUMBER);
@@ -721,7 +722,7 @@ public class ContactEngine {
         Cursor cursor = context.getContentResolver().query(uri, projection,
                 selection, selectionArgs, sortOrder);
 //        if (BuildConfig.DEBUG)
-//            Log.d("result found", "" + cursor.getCount());
+//            LoggerUtilities.logDebug("result found", "" + cursor.getCount());
 
         if (cursor != null && cursor.moveToNext()) {
             int mailIndex = cursor

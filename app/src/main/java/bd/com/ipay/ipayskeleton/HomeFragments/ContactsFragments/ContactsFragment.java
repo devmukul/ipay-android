@@ -57,6 +57,7 @@ import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Contact.InviteContactNode;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonColorList.PROFILE_PICTURE_BACKGROUNDS;
@@ -192,7 +193,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private void resetSearchKeyword() {
         if (mSearchView != null && !mQuery.isEmpty()) {
             if (Constants.DEBUG)
-                Log.d("Loader", "Resetting.. Previous query: " + mQuery);
+                LoggerUtilities.logDebug("Loader", "Resetting.. Previous query: " + mQuery);
 
             mQuery = "";
             mSearchView.setQuery("", false);

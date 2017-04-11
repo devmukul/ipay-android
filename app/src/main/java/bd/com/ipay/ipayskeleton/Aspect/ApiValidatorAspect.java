@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.Pointcut;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
 
 @Aspect
 public class ApiValidatorAspect {
@@ -24,7 +25,7 @@ public class ApiValidatorAspect {
         Object[] args = joinPoint.getArgs();
         Object result = null;
 
-        Log.d("Aspect", "Masud aspected something here");
+        LoggerUtilities.logDebug("Aspect", "Masud aspected something here");
 
         try {
             GenericHttpResponse mGenericHttpResponse = (GenericHttpResponse) args[0];

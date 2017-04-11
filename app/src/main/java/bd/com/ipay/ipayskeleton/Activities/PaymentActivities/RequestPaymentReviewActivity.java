@@ -21,6 +21,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteToiPayFra
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments.RequestPaymentReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestPaymentReviewActivity extends BaseActivity implements HttpResponseListener {
@@ -118,7 +119,7 @@ public class RequestPaymentReviewActivity extends BaseActivity implements HttpRe
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String name = mGetUserInfoResponse.getName();
                     String profilePicture;
-                    Log.d("Profile Pictures", mGetUserInfoResponse.getProfilePictures().toString());
+                    LoggerUtilities.logDebug("Profile Pictures", mGetUserInfoResponse.getProfilePictures().toString());
                     profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
 
                     switchToRequestReviewFragment(name, profilePicture);

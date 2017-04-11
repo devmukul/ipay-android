@@ -70,6 +70,7 @@ import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
 
 public class Utilities {
 
@@ -365,7 +366,7 @@ public class Utilities {
         byte[] data = Base64.decode(base64, Base64.DEFAULT);
         try {
             String parsedToken = new String(data, "UTF-8");
-            Log.d(Constants.PARSED_TOKEN, Constants.PARSED_TOKEN + parsedToken);
+            LoggerUtilities.logDebug(Constants.PARSED_TOKEN, Constants.PARSED_TOKEN + parsedToken);
             Gson gson = new Gson();
             TokenParserClass mTokenParserClass = gson.fromJson(parsedToken, TokenParserClass.class);
 

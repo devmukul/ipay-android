@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
 
 public class RegistrationIntentService extends IntentService {
 
@@ -51,7 +52,7 @@ public class RegistrationIntentService extends IntentService {
             sharedPreferences.edit().putBoolean(Constants.GCM_REGISTRATION_ID_SENT_TO_SERVER, true).apply();
             // [END register_for_gcm]
         } catch (Exception e) {
-            Log.d(TAG, "Failed to complete token refresh", e);
+            LoggerUtilities.logDebug(TAG, "Failed to complete token refresh", e);
             // If an exception happens while fetching the new token or updating our registration data
             // on a third-party server, this ensures that we'll attempt the update at a later time.
             sharedPreferences.edit().putBoolean(Constants.GCM_REGISTRATION_ID_SENT_TO_SERVER, false).apply();

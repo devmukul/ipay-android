@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
 
 public class PagerIndicator extends RecyclerView {
 
@@ -39,13 +40,13 @@ public class PagerIndicator extends RecyclerView {
 
     public PagerIndicator(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-        Log.d(VIEW_LOG_TAG, "PagerIndicator Constructor 2");
+        LoggerUtilities.logDebug(VIEW_LOG_TAG, "PagerIndicator Constructor 2");
 
     }
 
     public PagerIndicator(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        Log.d(VIEW_LOG_TAG, "PagerIndicator Constructor 3");
+        LoggerUtilities.logDebug(VIEW_LOG_TAG, "PagerIndicator Constructor 3");
         this.mContext = context;
 
         this.mLayoutManager = new LinearLayoutManager(context);
@@ -67,22 +68,22 @@ public class PagerIndicator extends RecyclerView {
 
     public void setup(int selectedResource,
                       int unselectedResource, int count) {
-        Log.d(VIEW_LOG_TAG, "Pager Indicator Setup");
+        LoggerUtilities.logDebug(VIEW_LOG_TAG, "Pager Indicator Setup");
         mSelectedResource = selectedResource;
         mUnselectedResource = unselectedResource;
         mClickable = false;
         mCount = count;
 
         if (getLayoutManager() == null) {
-            Log.d(VIEW_LOG_TAG, "Layout Manager Null");
+            LoggerUtilities.logDebug(VIEW_LOG_TAG, "Layout Manager Null");
         } else {
-            Log.d(VIEW_LOG_TAG, "Layout Manager instantiated");
+            LoggerUtilities.logDebug(VIEW_LOG_TAG, "Layout Manager instantiated");
         }
 
         if (getAdapter() == null) {
-            Log.d(VIEW_LOG_TAG, "Adapter Null");
+            LoggerUtilities.logDebug(VIEW_LOG_TAG, "Adapter Null");
         } else {
-            Log.d(VIEW_LOG_TAG, "Adapter instantiated");
+            LoggerUtilities.logDebug(VIEW_LOG_TAG, "Adapter instantiated");
         }
     }
 

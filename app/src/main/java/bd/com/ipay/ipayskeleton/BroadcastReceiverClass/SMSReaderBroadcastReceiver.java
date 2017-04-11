@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
 
 
 public class SMSReaderBroadcastReceiver extends BroadcastReceiver {
@@ -40,7 +41,7 @@ public class SMSReaderBroadcastReceiver extends BroadcastReceiver {
                     }
                 }
                 catch(Exception e) {
-                    Log.d("Exception caught", e.getMessage());
+                    LoggerUtilities.logDebug("Exception caught", e.getMessage());
                 }
             }
         }

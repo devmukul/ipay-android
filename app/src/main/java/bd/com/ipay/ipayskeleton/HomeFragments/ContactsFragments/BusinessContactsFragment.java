@@ -25,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
 
 public class BusinessContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
         SearchView.OnQueryTextListener {
@@ -87,7 +88,7 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
     private void resetSearchKeyword() {
         if (mSearchView != null && !mQuery.isEmpty()) {
             if (Constants.DEBUG)
-                Log.d("Loader", "Resetting.. Previous query: " + mQuery);
+                LoggerUtilities.logDebug("Loader", "Resetting.. Previous query: " + mQuery);
 
             mQuery = "";
             mSearchView.setQuery("", false);

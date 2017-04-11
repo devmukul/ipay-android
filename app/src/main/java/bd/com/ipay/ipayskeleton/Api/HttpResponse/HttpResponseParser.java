@@ -15,6 +15,7 @@ import java.util.Arrays;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -56,7 +57,7 @@ public class HttpResponseParser {
                 } else if (header.getName().equals(Constants.REFRESH_TOKEN)) {
                     TokenManager.setRefreshToken(header.getValue());
                     if (Constants.DEBUG)
-                        Log.d(Constants.REFRESH_TOKEN, TokenManager.getRefreshToken());
+                        LoggerUtilities.logDebug(Constants.REFRESH_TOKEN, TokenManager.getRefreshToken());
                 }
             }
         }
