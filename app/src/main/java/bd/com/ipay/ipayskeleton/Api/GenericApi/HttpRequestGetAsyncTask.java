@@ -1,13 +1,13 @@
 package bd.com.ipay.ipayskeleton.Api.GenericApi;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 
 public class HttpRequestGetAsyncTask extends HttpRequestAsyncTask {
 
@@ -21,9 +21,7 @@ public class HttpRequestGetAsyncTask extends HttpRequestAsyncTask {
 
     @Override
     protected HttpRequestBase getRequest() {
-        if (Constants.DEBUG) {
-            Log.w(Constants.GET_URL, mUri);
-        }
+        Logger.logWarn(Constants.GET_URL, mUri);
         return new HttpGet(mUri);
     }
 

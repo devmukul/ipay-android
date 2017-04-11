@@ -23,7 +23,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,15 +40,15 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
+import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceFetchApi.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ResourceFetchApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ResourceFetchApi.GetBusinessTypesAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ResourceFetchApi.GetRelationshipListAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
@@ -192,9 +191,7 @@ public class HomeActivity extends BaseActivity
             startService(intent);
         }
 
-        if (Constants.DEBUG) {
-            Log.w("Token", TokenManager.getToken());
-        }
+        Logger.logWarn("Token", TokenManager.getToken());
 
         // The same notification fragment is used when NotificationActivity is launched.
         // We are initializing it here to load notification badge count.
@@ -340,8 +337,7 @@ public class HomeActivity extends BaseActivity
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
                 for (int i = 0; i < permissions.length; i++) {
-                    if (Constants.DEBUG)
-                        Log.w(permissions[i], grantResults[i] + "");
+                    Logger.logWarn(permissions[i], grantResults[i] + "");
 
                     if (permissions[i].equals(Manifest.permission.READ_CONTACTS)) {
                         if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
@@ -664,8 +660,7 @@ public class HomeActivity extends BaseActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
-            if (Constants.DEBUG)
-                Logger.logDebug("Broadcast home activity", newProfilePicture);
+            Logger.logDebug("Broadcast home activity", newProfilePicture);
 
             mProfileImageView.setProfilePicture(newProfilePicture, true);
 

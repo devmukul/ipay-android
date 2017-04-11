@@ -1,13 +1,13 @@
 package bd.com.ipay.ipayskeleton.Api.GenericApi;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpRequestBase;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 
 public class HttpRequestDeleteAsyncTask extends HttpRequestAsyncTask {
 
@@ -21,9 +21,7 @@ public class HttpRequestDeleteAsyncTask extends HttpRequestAsyncTask {
 
     @Override
     protected HttpRequestBase getRequest() {
-        if (Constants.DEBUG) {
-            Log.w(Constants.DELETE_URL, mUri);
-        }
+        Logger.logWarn(Constants.DELETE_URL, mUri);
         return new HttpDelete(mUri);
     }
 }

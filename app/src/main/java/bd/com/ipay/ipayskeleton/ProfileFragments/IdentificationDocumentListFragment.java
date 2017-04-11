@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +35,8 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DocumentPreviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.UploadApi.UploadIdentifierDocumentAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -51,6 +50,7 @@ import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class IdentificationDocumentListFragment extends ProgressFragment implements HttpResponseListener {
@@ -184,8 +184,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         mFileName = temp[temp.length - 1];
                         documentPreviewDetailsList.get(mSelectedItemId).setSelectedFilePath(mFileName);
                         mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent);
-                        if (Constants.DEBUG)
-                            Log.w("Loading document", mSelectedItemId + " " + mSelectedDocumentUri.toString());
+                        Logger.logWarn("Loading document", mSelectedItemId + " " + mSelectedDocumentUri.toString());
 
                         documentPreviewDetailsList.get(mSelectedItemId).setSelectedDocumentUri(mSelectedDocumentUri);
                         mDocumentListAdapter.notifyDataSetChanged();
@@ -313,8 +312,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
         String selectedOImagePath = documentPreviewDetailsList.get(mID).getSelectedDocumentUri().getPath();
 
-        if (Constants.DEBUG)
-            Log.w("Loading document", mDocumentID + " " + mID + " " + selectedOImagePath + " " + mDocumentType);
+        Logger.logWarn("Loading document", mDocumentID + " " + mID + " " + selectedOImagePath + " " + mDocumentType);
 
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
@@ -398,8 +396,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                             mSelectedDocumentDetails.getDocumentId(),
                             mSelectedDocumentDetails.getDocumentType());
 
-                    if (Constants.DEBUG)
-                        Log.w("Loading document", documentUrl);
+                    Logger.logWarn("Loading document", documentUrl);
 
                     Intent intent = new Intent(getActivity(), DocumentPreviewActivity.class);
                     intent.putExtra(Constants.FILE_EXTENSION, Utilities.getExtension(mSelectedDocumentDetails.getDocumentUrl()));

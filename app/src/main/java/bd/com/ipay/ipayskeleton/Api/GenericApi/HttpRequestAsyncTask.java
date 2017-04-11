@@ -70,7 +70,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                 }
 
             } else {
-                if (Constants.DEBUG) Logger.logDebug(Constants.ERROR, API_COMMAND);
+                Logger.logDebug(Constants.ERROR, API_COMMAND);
                 error = true;
                 return null;
             }
@@ -89,12 +89,10 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
             return;
         }
 
-        if (Constants.DEBUG) {
-            if (result == null)
-                Log.e(Constants.RESULT, API_COMMAND + " NULL");
-            else
-                Log.w(Constants.RESULT, Constants.GET_REQUEST + result.toString());
-        }
+        if (result == null)
+            Logger.logError(Constants.RESULT, API_COMMAND + " NULL");
+        else
+            Logger.logWarn(Constants.RESULT, Constants.GET_REQUEST + result.toString());
 
         if (result != null) {
 

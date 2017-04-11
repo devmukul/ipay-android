@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.Api.UploadApi;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -21,6 +20,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -59,8 +59,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, Generic
     protected void onPostExecute(final GenericHttpResponse result) {
 
         if (result != null) {
-            if (Constants.DEBUG)
-                Log.w("Image Upload", result.toString());
+            Logger.logWarn("Image Upload", result.toString());
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
                 MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
@@ -69,8 +68,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, Generic
                 mHttpResponseListener.httpResponseReceiver(result);
 
         } else {
-            if (Constants.DEBUG)
-                Log.w("Image Upload", "NULL");
+            Logger.logWarn("Image Upload", "NULL");
 
             mHttpResponseListener.httpResponseReceiver(null);
         }
@@ -78,8 +76,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, Generic
     }
 
     private GenericHttpResponse uploadImage(String selectedImagePath) {
-        if (Constants.DEBUG)
-            Log.w("Uploading image", selectedImagePath);
+        Logger.logWarn("Uploading image", selectedImagePath);
 
         try {
             HttpClient client = new DefaultHttpClient();

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,8 +177,7 @@ public class DataHelper {
                     + " ELSE "
                     + DBConstants.KEY_ORIGINAL_NAME + " END COLLATE NOCASE";
 
-            if (Constants.DEBUG)
-                Log.w("Query", queryString);
+            Logger.logWarn("Query", queryString);
 
             cursor = db.rawQuery(queryString, null);
 
@@ -205,15 +203,13 @@ public class DataHelper {
                     + query + "%'" + ")" + " ORDER BY " + DBConstants.KEY_BUSINESS_NAME
                     + " COLLATE NOCASE";
 
-            if (Constants.DEBUG)
-                Log.w("Query", queryString);
+            Logger.logWarn("Query", queryString);
 
             cursor = db.rawQuery(queryString, null);
 
             if (cursor != null) {
                 cursor.getCount();
-                if (Constants.DEBUG)
-                    Log.w("Query", cursor.getCount() + "");
+                Logger.logWarn("Query", cursor.getCount() + "");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -232,8 +228,7 @@ public class DataHelper {
             String queryString = "SELECT MAX(" + DBConstants.KEY_BUSINESS_ACCOUNT_ID +
                     ") FROM " + DBConstants.DB_TABLE_BUSINESS_ACCOUNTS;
 
-            if (Constants.DEBUG)
-                Log.w("Query", queryString);
+            Logger.logWarn("Query", queryString);
 
             cursor = db.rawQuery(queryString, null);
 

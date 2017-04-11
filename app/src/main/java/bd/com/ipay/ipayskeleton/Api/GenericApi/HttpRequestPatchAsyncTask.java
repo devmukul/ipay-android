@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.Api.GenericApi;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
@@ -10,13 +9,14 @@ import org.apache.http.protocol.HTTP;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.HttpPatchRequestBase;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 
 public class HttpRequestPatchAsyncTask extends HttpRequestAsyncTask {
 
     private final String mJsonString;
 
     public HttpRequestPatchAsyncTask(String API_COMMAND, String mUri, String mJsonString,
-                                    Context mContext, HttpResponseListener listener) {
+                                     Context mContext, HttpResponseListener listener) {
         super(API_COMMAND, mUri, mContext, listener);
         this.mJsonString = mJsonString;
     }
@@ -27,11 +27,9 @@ public class HttpRequestPatchAsyncTask extends HttpRequestAsyncTask {
 
     @Override
     protected HttpRequestBase getRequest() {
-        if (Constants.DEBUG) {
-            Log.w("POST_URL", mUri);
-            if (mJsonString != null)
-                Log.w("json", mJsonString);
-        }
+        Logger.logWarn("POST_URL", mUri);
+        if (mJsonString != null)
+            Logger.logWarn("json", mJsonString);
 
         HttpPatchRequestBase httpPatch = new HttpPatchRequestBase(mUri);
 

@@ -86,8 +86,7 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
 
     private void resetSearchKeyword() {
         if (mSearchView != null && !mQuery.isEmpty()) {
-            if (Constants.DEBUG)
-                Logger.logDebug("Loader", "Resetting.. Previous query: " + mQuery);
+            Logger.logDebug("Loader", "Resetting.. Previous query: " + mQuery);
 
             mQuery = "";
             mSearchView.setQuery("", false);

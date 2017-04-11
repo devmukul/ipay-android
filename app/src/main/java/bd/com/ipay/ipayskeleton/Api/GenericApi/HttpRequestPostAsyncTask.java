@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.Api.GenericApi;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -10,6 +9,7 @@ import org.apache.http.protocol.HTTP;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 
 public class HttpRequestPostAsyncTask extends HttpRequestAsyncTask {
 
@@ -27,11 +27,9 @@ public class HttpRequestPostAsyncTask extends HttpRequestAsyncTask {
 
     @Override
     protected HttpRequestBase getRequest() {
-        if (Constants.DEBUG) {
-            Log.w("POST_URL", mUri);
-            if (mJsonString != null)
-                Log.w("json", mJsonString);
-        }
+        Logger.logWarn("POST_URL", mUri);
+        if (mJsonString != null)
+            Logger.logWarn("json", mJsonString);
 
         HttpPost httpPost = new HttpPost(mUri);
 

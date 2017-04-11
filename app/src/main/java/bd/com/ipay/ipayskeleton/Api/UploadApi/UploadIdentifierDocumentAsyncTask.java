@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.Api.UploadApi;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
@@ -23,6 +22,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -61,9 +61,7 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Gen
 
     @Override
     protected GenericHttpResponse doInBackground(Void... params) {
-
-        if (Constants.DEBUG)
-            Log.w("Document Upload", "Started");
+        Logger.logWarn("Document Upload", "Started");
 
         GenericHttpResponse mGenericHttpResponse = new GenericHttpResponse();
 
@@ -72,8 +70,7 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Gen
         else
             Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG).show();
 
-        if (Constants.DEBUG)
-            Log.w("Document Upload", "Finished");
+        Logger.logWarn("Document Upload", "Finished");
 
         return mGenericHttpResponse;
     }
@@ -129,7 +126,7 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Gen
             HttpResponse response = client.execute(post);
             HttpEntity httpEntity = response.getEntity();
 
-            Log.e("POST", post.toString());
+            Logger.logError("POST", post.toString());
 
             int status = response.getStatusLine().getStatusCode();
 
@@ -138,7 +135,7 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Gen
             mGenericHttpResponse.setApiCommand(API_COMMAND);
             mGenericHttpResponse.setJsonString(EntityUtils.toString(httpEntity));
 
-            Log.e("Result", mGenericHttpResponse.toString());
+            Logger.logError("Result", mGenericHttpResponse.toString());
 
             return mGenericHttpResponse;
 

@@ -1,13 +1,13 @@
 package bd.com.ipay.ipayskeleton.Api.HttpResponse;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.apache.http.Header;
 
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 
 public class GenericHttpResponse {
     private int status;
@@ -70,8 +70,7 @@ public class GenericHttpResponse {
 
     private String getHeaderValue(String headerName) {
         for (Header header : headers) {
-            if (Constants.DEBUG)
-                Log.w(header.getName(), header.getValue());
+            Logger.logWarn(header.getName(), header.getValue());
             if (header.getName().equals(headerName))
                 return header.getValue();
         }

@@ -12,7 +12,6 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -156,7 +155,7 @@ public class DocumentPicker {
             Intent targetedIntent = new Intent(intent);
             targetedIntent.setPackage(packageName);
             list.add(targetedIntent);
-            Log.e(TAG, "Intent: " + intent.getAction() + " package: " + packageName);
+            Logger.logError(TAG, "Intent: " + intent.getAction() + " package: " + packageName);
         }
         return list;
     }
@@ -211,7 +210,7 @@ public class DocumentPicker {
                         returnedIntent.getData().toString().contains(documentFile.toString()));
 
                 if (returnedIntent != null)
-                    Log.e(TAG, "Returned Intent: " + returnedIntent.getData());
+                    Logger.logError(TAG, "Returned Intent: " + returnedIntent.getData());
                 if (isCamera) {     /** CAMERA **/
                     selectedImage = Uri.fromFile(documentFile);
                 } else if (returnedIntent.getData().toString().startsWith("file://")) {
@@ -219,7 +218,7 @@ public class DocumentPicker {
                 } else {            /** ALBUM **/
                     selectedImage = Uri.parse(FileUtilities.getDataColumn(context, returnedIntent.getData()));
                 }
-                Log.e(TAG, "selectedImage: " + selectedImage.getPath());
+                Logger.logError(TAG, "selectedImage: " + selectedImage.getPath());
 
                 if (isCamera) {
                     Logger.logDebug(TAG, "Converting: " + selectedImage.getPath());
@@ -251,7 +250,7 @@ public class DocumentPicker {
                         returnedIntent.getData().toString().contains(documentFile.toString()));
 
                 if (returnedIntent != null)
-                    Log.e(TAG, "Returned Intent: " + returnedIntent.getData());
+                    Logger.logError(TAG, "Returned Intent: " + returnedIntent.getData());
                 if (isCamera) {     /** CAMERA **/
                     selectedImage = Uri.fromFile(documentFile);
                 } else if (returnedIntent.getData().toString().startsWith("file://")) {
@@ -259,7 +258,7 @@ public class DocumentPicker {
                 } else {            /** ALBUM **/
                     selectedImage = Uri.parse(FileUtilities.getDataColumn(context, returnedIntent.getData()));
                 }
-                Log.e(TAG, "selectedImage: " + selectedImage.getPath());
+                Logger.logError(TAG, "selectedImage: " + selectedImage.getPath());
 
                 if (isCamera) {
                     Logger.logDebug(TAG, "Converting: " + selectedImage.getPath());

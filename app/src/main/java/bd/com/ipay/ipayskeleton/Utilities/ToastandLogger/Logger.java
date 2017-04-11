@@ -18,6 +18,16 @@ public class Logger {
 
     public static void logInfo(String tag, String message) {
         if (Constants.DEBUG)
-            Logger.logInfo(tag, message);
+            Log.i(tag, message);
+    }
+
+    public static void logError(String tag, String message) {
+        if (Constants.DEBUG)
+            Log.e(tag, message);
+    }
+
+    public static void logWarn(String tag, String message) {
+        if (Constants.DEBUG)
+            Log.w(tag, message);
     }
 }
