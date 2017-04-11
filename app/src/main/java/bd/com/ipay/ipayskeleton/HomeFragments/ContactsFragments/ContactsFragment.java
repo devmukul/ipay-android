@@ -15,7 +15,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -57,7 +56,7 @@ import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Contact.InviteContactNode;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonColorList.PROFILE_PICTURE_BACKGROUNDS;
@@ -193,7 +192,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private void resetSearchKeyword() {
         if (mSearchView != null && !mQuery.isEmpty()) {
             if (Constants.DEBUG)
-                LoggerUtilities.logDebug("Loader", "Resetting.. Previous query: " + mQuery);
+                Logger.logDebug("Loader", "Resetting.. Previous query: " + mQuery);
 
             mQuery = "";
             mSearchView.setQuery("", false);

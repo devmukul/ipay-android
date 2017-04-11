@@ -73,7 +73,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Config;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -363,7 +363,7 @@ public class HomeActivity extends BaseActivity
     private void updateNotificationBadgeCount(int badgeCount) {
         mBadgeCount = badgeCount;
 
-        LoggerUtilities.logDebug("Notification Count", badgeCount + "");
+        Logger.logDebug("Notification Count", badgeCount + "");
         if (mOptionsMenu != null) {
             if (badgeCount > 0) {
                 ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
@@ -665,7 +665,7 @@ public class HomeActivity extends BaseActivity
         public void onReceive(Context context, Intent intent) {
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
             if (Constants.DEBUG)
-                LoggerUtilities.logDebug("Broadcast home activity", newProfilePicture);
+                Logger.logDebug("Broadcast home activity", newProfilePicture);
 
             mProfileImageView.setProfilePicture(newProfilePicture, true);
 

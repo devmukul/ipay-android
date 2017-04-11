@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -21,7 +20,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteToiPayFra
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments.RequestPaymentReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestPaymentReviewActivity extends BaseActivity implements HttpResponseListener {
@@ -119,7 +118,7 @@ public class RequestPaymentReviewActivity extends BaseActivity implements HttpRe
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String name = mGetUserInfoResponse.getName();
                     String profilePicture;
-                    LoggerUtilities.logDebug("Profile Pictures", mGetUserInfoResponse.getProfilePictures().toString());
+                    Logger.logDebug("Profile Pictures", mGetUserInfoResponse.getProfilePictures().toString());
                     profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
 
                     switchToRequestReviewFragment(name, profilePicture);

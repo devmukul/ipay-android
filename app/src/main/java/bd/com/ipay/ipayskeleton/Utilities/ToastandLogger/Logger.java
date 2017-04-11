@@ -4,7 +4,7 @@ import android.util.Log;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class LoggerUtilities {
+public class Logger {
 
     public static void logDebug(String tag, String message) {
         if (Constants.DEBUG)
@@ -18,6 +18,6 @@ public class LoggerUtilities {
 
     public static void logInfo(String tag, String message) {
         if (Constants.DEBUG)
-            LoggerUtilities.logInfo(tag, message);
+            Logger.logInfo(tag, message);
     }
 }

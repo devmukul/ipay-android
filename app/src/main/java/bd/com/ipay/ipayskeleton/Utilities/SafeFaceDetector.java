@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.graphics.ImageFormat;
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.google.android.gms.vision.Detector;
@@ -11,7 +10,7 @@ import com.google.android.gms.vision.face.Face;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 
 public class SafeFaceDetector extends Detector<Face> {
     private static final String TAG = "SafeFaceDetector";
@@ -87,7 +86,7 @@ public class SafeFaceDetector extends Detector<Face> {
         int width = metadata.getWidth();
         int height = metadata.getHeight();
 
-        LoggerUtilities.logInfo(TAG, "Padded image from: " + width + "x" + height + " to " + newWidth + "x" + height);
+        Logger.logInfo(TAG, "Padded image from: " + width + "x" + height + " to " + newWidth + "x" + height);
 
         ByteBuffer origBuffer = originalFrame.getGrayscaleImageData();
         int origOffset = origBuffer.arrayOffset();
@@ -123,7 +122,7 @@ public class SafeFaceDetector extends Detector<Face> {
         int width = metadata.getWidth();
         int height = metadata.getHeight();
 
-        LoggerUtilities.logInfo(TAG, "Padded image from: " + width + "x" + height + " to " + width + "x" + newHeight);
+        Logger.logInfo(TAG, "Padded image from: " + width + "x" + height + " to " + width + "x" + newHeight);
 
         ByteBuffer origBuffer = originalFrame.getGrayscaleImageData();
         int origOffset = origBuffer.arrayOffset();

@@ -13,7 +13,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 
 public class DataHelper {
 
@@ -76,7 +76,7 @@ public class DataHelper {
 
             context.getContentResolver().notifyChange(DBConstants.DB_TABLE_CONTACTS_URI, null);
 
-            LoggerUtilities.logInfo("Contacts", "Inserted into the database");
+            Logger.logInfo("Contacts", "Inserted into the database");
         }
     }
 
@@ -109,7 +109,7 @@ public class DataHelper {
 
             context.getContentResolver().notifyChange(DBConstants.DB_TABLE_BUSINESS_URI, null);
 
-            LoggerUtilities.logInfo("Business", "Inserted into the database");
+            Logger.logInfo("Business", "Inserted into the database");
         }
     }
 

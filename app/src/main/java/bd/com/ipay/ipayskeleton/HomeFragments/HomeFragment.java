@@ -16,7 +16,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -62,7 +61,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HomeFragment extends Fragment implements HttpResponseListener {
@@ -574,7 +573,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         @Override
         public void onReceive(Context context, Intent intent) {
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
-            LoggerUtilities.logDebug("Broadcast home fragment", newProfilePicture);
+            Logger.logDebug("Broadcast home fragment", newProfilePicture);
             mProfilePictureView.setProfilePicture(newProfilePicture, true);
         }
     };

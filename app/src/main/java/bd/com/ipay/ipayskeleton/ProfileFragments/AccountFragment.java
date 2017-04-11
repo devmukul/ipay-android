@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +39,7 @@ import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AccountFragment extends Fragment implements HttpResponseListener {
@@ -328,7 +327,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     }
 
     private void setProfileInformation() {
-        LoggerUtilities.logDebug("Profile Pic Account", mProfilePicture);
+        Logger.logDebug("Profile Pic Account", mProfilePicture);
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
         mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +

@@ -15,7 +15,6 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.PhoneLookup;
 import android.provider.ContactsContract.RawContacts;
-import android.util.Log;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
@@ -34,7 +33,7 @@ import java.util.Set;
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
 import bd.com.ipay.ipayskeleton.Model.Contact.PhoneName;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 
 public class ContactEngine {
     private static final String TAG = "ContactEngine";
@@ -170,7 +169,7 @@ public class ContactEngine {
     private static void addContactToAccount1(Context context,
                                              String accountName, String accountType, String name, String number) {
         if (BuildConfig.DEBUG)
-            LoggerUtilities.logInfo(TAG, "Adding contact: " + name);
+            Logger.logInfo(TAG, "Adding contact: " + name);
         ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
 
         ContentProviderOperation.Builder builder = ContentProviderOperation
@@ -220,7 +219,7 @@ public class ContactEngine {
 
     public static void updateOrInsertContact(Context context, String accountName, String accountType, String name, String number) {
         if (BuildConfig.DEBUG)
-            LoggerUtilities.logInfo("ContactEngine", "Searching DBContactNode: Name: " + name + " Number: " + number);
+            Logger.logInfo("ContactEngine", "Searching DBContactNode: Name: " + name + " Number: " + number);
 
         int id = -1;
         Cursor cursor = context.getContentResolver().query(
@@ -251,7 +250,7 @@ public class ContactEngine {
         }
         if (id != -1) {
             if (BuildConfig.DEBUG)
-                LoggerUtilities.logInfo("ContactEngine", "DBContactNode Already exists!! RawContactID: " + id);
+                Logger.logInfo("ContactEngine", "DBContactNode Already exists!! RawContactID: " + id);
             /*
              * ArrayList<ContentProviderOperation> operationList = new
 			 * ArrayList<ContentProviderOperation>();
@@ -299,7 +298,7 @@ public class ContactEngine {
 			 */
         } else {
             if (BuildConfig.DEBUG)
-                LoggerUtilities.logInfo("ContactEngine", "DBContactNode not found!! inserting new contact");
+                Logger.logInfo("ContactEngine", "DBContactNode not found!! inserting new contact");
             addContactToAccount1(context, accountName, accountType, name, number);
         }
     }
@@ -361,7 +360,7 @@ public class ContactEngine {
                 selection, selectionArgs, sortOrder);
         if (cursor != null) {
             if (BuildConfig.DEBUG)
-                LoggerUtilities.logDebug("result found", "" + cursor.getCount());
+                Logger.logDebug("result found", "" + cursor.getCount());
             int numberIndex = cursor
                     .getColumnIndex(Phone.NUMBER);
             int nameIndex = cursor
@@ -377,10 +376,10 @@ public class ContactEngine {
                 PhoneName pn = new PhoneName();
                 pn.id = cursor.getInt(idIndex);
                 pn.name = cursor.getString(nameIndex);
-                // LoggerUtilities.logDebug("Name",pn.name);
+                // Logger.logDebug("Name",pn.name);
                 pn.number = cursor.getString(numberIndex);
                 pn.starred = cursor.getString(favIndex);
-                // LoggerUtilities.logDebug("Number",pn.number);
+                // Logger.logDebug("Number",pn.number);
                 int type = cursor.getInt(typeIndex);
                 if (type == Phone.TYPE_HOME) {
                     pn.type = "Home";
@@ -694,7 +693,7 @@ public class ContactEngine {
         Cursor cursor = context.getContentResolver().query(uri, projection,
                 selection, selectionArgs, sortOrder);
 //        if (BuildConfig.DEBUG)
-//            LoggerUtilities.logDebug("result found", "" + cursor.getCount());
+//            Logger.logDebug("result found", "" + cursor.getCount());
 
         if (cursor != null && cursor.moveToNext()) {
             int numberIndex = cursor.getColumnIndex(Phone.NUMBER);
@@ -722,7 +721,7 @@ public class ContactEngine {
         Cursor cursor = context.getContentResolver().query(uri, projection,
                 selection, selectionArgs, sortOrder);
 //        if (BuildConfig.DEBUG)
-//            LoggerUtilities.logDebug("result found", "" + cursor.getCount());
+//            Logger.logDebug("result found", "" + cursor.getCount());
 
         if (cursor != null && cursor.moveToNext()) {
             int mailIndex = cursor
@@ -862,7 +861,7 @@ public class ContactEngine {
         else if (lookupKeys.length > 0)
             selection = lookupSelection;
 
-//        LoggerUtilities.logInfo("ContactEngine", "getContactCursorFromLookUpList generatedSelection: "+selection);
+//        Logger.logInfo("ContactEngine", "getContactCursorFromLookUpList generatedSelection: "+selection);
 
         Uri queryUri = ContactsContract.Contacts.CONTENT_URI;
 
@@ -898,7 +897,7 @@ public class ContactEngine {
         else if (lookupKeys.length > 0)
             selection = lookupSelection;
 
-//        LoggerUtilities.logInfo("ContactEngine", "getContactCursorFromLookUpList generatedSelection: "+selection);
+//        Logger.logInfo("ContactEngine", "getContactCursorFromLookUpList generatedSelection: "+selection);
 
         Uri queryUri = ContactsContract.Contacts.CONTENT_URI;
 

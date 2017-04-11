@@ -28,7 +28,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -70,7 +70,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                 }
 
             } else {
-                if (Constants.DEBUG) LoggerUtilities.logDebug(Constants.ERROR, API_COMMAND);
+                if (Constants.DEBUG) Logger.logDebug(Constants.ERROR, API_COMMAND);
                 error = true;
                 return null;
             }

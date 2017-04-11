@@ -21,7 +21,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 
 /**
  * Source: https://gist.github.com/Mariovc/f06e70ebe8ca52fbbbe2
@@ -222,7 +222,7 @@ public class DocumentPicker {
                 Log.e(TAG, "selectedImage: " + selectedImage.getPath());
 
                 if (isCamera) {
-                    LoggerUtilities.logDebug(TAG, "Converting: " + selectedImage.getPath());
+                    Logger.logDebug(TAG, "Converting: " + selectedImage.getPath());
 
                     // Convert the image - handle auto rotate problem in some devices, scale down
                     // image if necessary (max 512*512)
@@ -262,7 +262,7 @@ public class DocumentPicker {
                 Log.e(TAG, "selectedImage: " + selectedImage.getPath());
 
                 if (isCamera) {
-                    LoggerUtilities.logDebug(TAG, "Converting: " + selectedImage.getPath());
+                    Logger.logDebug(TAG, "Converting: " + selectedImage.getPath());
 
                     // Convert the image - handle auto rotate problem in some devices, scale down
                     // image if necessary (max 512*512)

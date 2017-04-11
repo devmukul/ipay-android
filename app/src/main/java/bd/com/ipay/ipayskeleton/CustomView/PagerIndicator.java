@@ -5,7 +5,6 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 
 public class PagerIndicator extends RecyclerView {
 
@@ -40,13 +39,13 @@ public class PagerIndicator extends RecyclerView {
 
     public PagerIndicator(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-        LoggerUtilities.logDebug(VIEW_LOG_TAG, "PagerIndicator Constructor 2");
+        Logger.logDebug(VIEW_LOG_TAG, "PagerIndicator Constructor 2");
 
     }
 
     public PagerIndicator(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        LoggerUtilities.logDebug(VIEW_LOG_TAG, "PagerIndicator Constructor 3");
+        Logger.logDebug(VIEW_LOG_TAG, "PagerIndicator Constructor 3");
         this.mContext = context;
 
         this.mLayoutManager = new LinearLayoutManager(context);
@@ -68,22 +67,22 @@ public class PagerIndicator extends RecyclerView {
 
     public void setup(int selectedResource,
                       int unselectedResource, int count) {
-        LoggerUtilities.logDebug(VIEW_LOG_TAG, "Pager Indicator Setup");
+        Logger.logDebug(VIEW_LOG_TAG, "Pager Indicator Setup");
         mSelectedResource = selectedResource;
         mUnselectedResource = unselectedResource;
         mClickable = false;
         mCount = count;
 
         if (getLayoutManager() == null) {
-            LoggerUtilities.logDebug(VIEW_LOG_TAG, "Layout Manager Null");
+            Logger.logDebug(VIEW_LOG_TAG, "Layout Manager Null");
         } else {
-            LoggerUtilities.logDebug(VIEW_LOG_TAG, "Layout Manager instantiated");
+            Logger.logDebug(VIEW_LOG_TAG, "Layout Manager instantiated");
         }
 
         if (getAdapter() == null) {
-            LoggerUtilities.logDebug(VIEW_LOG_TAG, "Adapter Null");
+            Logger.logDebug(VIEW_LOG_TAG, "Adapter Null");
         } else {
-            LoggerUtilities.logDebug(VIEW_LOG_TAG, "Adapter instantiated");
+            Logger.logDebug(VIEW_LOG_TAG, "Adapter instantiated");
         }
     }
 

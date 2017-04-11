@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +36,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -174,7 +173,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         if (!ProfileInfoCacheManager.getProfileImageUrl().isEmpty()) {
             if (Constants.DEBUG)
-                LoggerUtilities.logDebug("Profile Picture", ProfileInfoCacheManager.getProfileImageUrl());
+                Logger.logDebug("Profile Picture", ProfileInfoCacheManager.getProfileImageUrl());
 
             mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
                     ProfileInfoCacheManager.getProfileImageUrl(), false);
