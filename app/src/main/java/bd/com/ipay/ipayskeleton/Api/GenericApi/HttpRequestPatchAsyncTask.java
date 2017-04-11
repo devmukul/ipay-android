@@ -7,7 +7,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HTTP;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.HttpPatchRequestBase;
 import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 
@@ -27,9 +26,9 @@ public class HttpRequestPatchAsyncTask extends HttpRequestAsyncTask {
 
     @Override
     protected HttpRequestBase getRequest() {
-        Logger.logWarn("POST_URL", mUri);
+        Logger.logW("POST_URL", mUri);
         if (mJsonString != null)
-            Logger.logWarn("json", mJsonString);
+            Logger.logW("json", mJsonString);
 
         HttpPatchRequestBase httpPatch = new HttpPatchRequestBase(mUri);
 

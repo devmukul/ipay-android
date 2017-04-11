@@ -573,7 +573,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         @Override
         public void onReceive(Context context, Intent intent) {
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
-            Logger.logDebug("Broadcast home fragment", newProfilePicture);
+            Logger.logD("Broadcast home fragment", newProfilePicture);
             mProfilePictureView.setProfilePicture(newProfilePicture, true);
         }
     };

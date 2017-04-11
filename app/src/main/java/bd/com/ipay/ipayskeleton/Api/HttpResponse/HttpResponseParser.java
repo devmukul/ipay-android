@@ -54,7 +54,7 @@ public class HttpResponseParser {
 
                 } else if (header.getName().equals(Constants.REFRESH_TOKEN)) {
                     TokenManager.setRefreshToken(header.getValue());
-                    Logger.logDebug(Constants.REFRESH_TOKEN, TokenManager.getRefreshToken());
+                    Logger.logD(Constants.REFRESH_TOKEN, TokenManager.getRefreshToken());
                 }
             }
         }

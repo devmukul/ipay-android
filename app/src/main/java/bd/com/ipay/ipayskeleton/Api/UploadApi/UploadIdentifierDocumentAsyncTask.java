@@ -61,7 +61,7 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Gen
 
     @Override
     protected GenericHttpResponse doInBackground(Void... params) {
-        Logger.logWarn("Document Upload", "Started");
+        Logger.logW("Document Upload", "Started");
 
         GenericHttpResponse mGenericHttpResponse = new GenericHttpResponse();
 
@@ -70,7 +70,7 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Gen
         else
             Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG).show();
 
-        Logger.logWarn("Document Upload", "Finished");
+        Logger.logW("Document Upload", "Finished");
 
         return mGenericHttpResponse;
     }
@@ -126,7 +126,7 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Gen
             HttpResponse response = client.execute(post);
             HttpEntity httpEntity = response.getEntity();
 
-            Logger.logError("POST", post.toString());
+            Logger.logE("POST", post.toString());
 
             int status = response.getStatusLine().getStatusCode();
 
@@ -135,7 +135,7 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Gen
             mGenericHttpResponse.setApiCommand(API_COMMAND);
             mGenericHttpResponse.setJsonString(EntityUtils.toString(httpEntity));
 
-            Logger.logError("Result", mGenericHttpResponse.toString());
+            Logger.logE("Result", mGenericHttpResponse.toString());
 
             return mGenericHttpResponse;
 

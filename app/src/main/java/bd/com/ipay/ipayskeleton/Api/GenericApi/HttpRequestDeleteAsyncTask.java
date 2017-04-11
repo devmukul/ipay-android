@@ -21,7 +21,7 @@ public class HttpRequestDeleteAsyncTask extends HttpRequestAsyncTask {
 
     @Override
     protected HttpRequestBase getRequest() {
-        Logger.logWarn(Constants.DELETE_URL, mUri);
+        Logger.logW(Constants.DELETE_URL, mUri);
         return new HttpDelete(mUri);
     }
 }

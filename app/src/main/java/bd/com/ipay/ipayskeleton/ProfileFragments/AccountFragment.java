@@ -327,7 +327,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     }
 
     private void setProfileInformation() {
-        Logger.logDebug("Profile Pic Account", mProfilePicture);
+        Logger.logD("Profile Pic Account", mProfilePicture);
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
         mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +

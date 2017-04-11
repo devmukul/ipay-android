@@ -39,13 +39,13 @@ public class PagerIndicator extends RecyclerView {
 
     public PagerIndicator(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-        Logger.logDebug(VIEW_LOG_TAG, "PagerIndicator Constructor 2");
+        Logger.logD(VIEW_LOG_TAG, "PagerIndicator Constructor 2");
 
     }
 
     public PagerIndicator(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        Logger.logDebug(VIEW_LOG_TAG, "PagerIndicator Constructor 3");
+        Logger.logD(VIEW_LOG_TAG, "PagerIndicator Constructor 3");
         this.mContext = context;
 
         this.mLayoutManager = new LinearLayoutManager(context);
@@ -67,22 +67,22 @@ public class PagerIndicator extends RecyclerView {
 
     public void setup(int selectedResource,
                       int unselectedResource, int count) {
-        Logger.logDebug(VIEW_LOG_TAG, "Pager Indicator Setup");
+        Logger.logD(VIEW_LOG_TAG, "Pager Indicator Setup");
         mSelectedResource = selectedResource;
         mUnselectedResource = unselectedResource;
         mClickable = false;
         mCount = count;
 
         if (getLayoutManager() == null) {
-            Logger.logDebug(VIEW_LOG_TAG, "Layout Manager Null");
+            Logger.logD(VIEW_LOG_TAG, "Layout Manager Null");
         } else {
-            Logger.logDebug(VIEW_LOG_TAG, "Layout Manager instantiated");
+            Logger.logD(VIEW_LOG_TAG, "Layout Manager instantiated");
         }
 
         if (getAdapter() == null) {
-            Logger.logDebug(VIEW_LOG_TAG, "Adapter Null");
+            Logger.logD(VIEW_LOG_TAG, "Adapter Null");
         } else {
-            Logger.logDebug(VIEW_LOG_TAG, "Adapter instantiated");
+            Logger.logD(VIEW_LOG_TAG, "Adapter instantiated");
         }
     }
 

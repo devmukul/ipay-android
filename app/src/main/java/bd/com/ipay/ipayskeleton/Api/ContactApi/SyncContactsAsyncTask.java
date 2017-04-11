@@ -64,8 +64,8 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
             // Calculate the difference between phone contacts and server contacts
             ContactEngine.ContactDiff contactDiff = ContactEngine.getContactDiff(phoneContacts, serverContacts);
 
-            Logger.logInfo("New Contacts", contactDiff.newContacts.toString());
-            Logger.logInfo("Updated Contacts", contactDiff.updatedContacts.toString());
+            Logger.logI("New Contacts", contactDiff.newContacts.toString());
+            Logger.logI("Updated Contacts", contactDiff.updatedContacts.toString());
 
             return contactDiff;
         } else {
@@ -124,12 +124,12 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
                 mAddContactResponse = gson.fromJson(result.getJsonString(), AddContactResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     // Server contacts updated, download contacts again
-                    Logger.logInfo("Contact", context.getString(R.string.add_contact_successful));
+                    Logger.logI("Contact", context.getString(R.string.add_contact_successful));
 
                     new GetContactsAsyncTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     if (mAddContactResponse != null)
-                        Logger.logError(context.getString(R.string.failed_add_contact), mAddContactResponse.getMessage());
+                        Logger.logE(context.getString(R.string.failed_add_contact), mAddContactResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -141,10 +141,10 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
             try {
                 mUpdateContactResponse = gson.fromJson(result.getJsonString(), UpdateContactResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    Logger.logInfo("Contact", context.getString(R.string.update_contact_successful));
+                    Logger.logI("Contact", context.getString(R.string.update_contact_successful));
                     // Maybe we should download contacts again?
                 } else {
-                    Logger.logError(context.getString(R.string.failed_update_contact), mUpdateContactResponse.getMessage());
+                    Logger.logE(context.getString(R.string.failed_update_contact), mUpdateContactResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

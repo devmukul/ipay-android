@@ -23,7 +23,7 @@ public class ApiValidatorAspect {
         Object[] args = joinPoint.getArgs();
         Object result = null;
 
-        Logger.logDebug("Aspect", "Masud aspected something here");
+        Logger.logD("Aspect", "Masud aspected something here");
 
         try {
             GenericHttpResponse mGenericHttpResponse = (GenericHttpResponse) args[0];

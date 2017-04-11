@@ -40,7 +40,7 @@ public class SMSReaderBroadcastReceiver extends BroadcastReceiver {
                     }
                 }
                 catch(Exception e) {
-                    Logger.logDebug("Exception caught", e.getMessage());
+                    Logger.logD("Exception caught", e.getMessage());
                 }
             }
         }

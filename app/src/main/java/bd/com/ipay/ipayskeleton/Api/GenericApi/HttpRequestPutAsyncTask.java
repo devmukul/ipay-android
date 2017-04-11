@@ -8,7 +8,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HTTP;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 
 public class HttpRequestPutAsyncTask extends HttpRequestAsyncTask {
@@ -27,9 +26,9 @@ public class HttpRequestPutAsyncTask extends HttpRequestAsyncTask {
 
     @Override
     protected HttpRequestBase getRequest() {
-        Logger.logWarn("PUT_URL", mUri);
+        Logger.logW("PUT_URL", mUri);
         if (mJsonString != null)
-            Logger.logWarn("json", mJsonString);
+            Logger.logW("json", mJsonString);
 
         HttpPut httpPut = new HttpPut(mUri);
 

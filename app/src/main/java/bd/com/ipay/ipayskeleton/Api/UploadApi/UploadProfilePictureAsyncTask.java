@@ -59,7 +59,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, Generic
     protected void onPostExecute(final GenericHttpResponse result) {
 
         if (result != null) {
-            Logger.logWarn("Image Upload", result.toString());
+            Logger.logW("Image Upload", result.toString());
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
                 MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
@@ -68,7 +68,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, Generic
                 mHttpResponseListener.httpResponseReceiver(result);
 
         } else {
-            Logger.logWarn("Image Upload", "NULL");
+            Logger.logW("Image Upload", "NULL");
 
             mHttpResponseListener.httpResponseReceiver(null);
         }
@@ -76,7 +76,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, Generic
     }
 
     private GenericHttpResponse uploadImage(String selectedImagePath) {
-        Logger.logWarn("Uploading image", selectedImagePath);
+        Logger.logW("Uploading image", selectedImagePath);
 
         try {
             HttpClient client = new DefaultHttpClient();

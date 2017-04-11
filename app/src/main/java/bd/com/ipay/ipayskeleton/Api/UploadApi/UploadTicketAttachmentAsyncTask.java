@@ -46,7 +46,7 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
 
     @Override
     protected GenericHttpResponse doInBackground(Void... params) {
-        Logger.logWarn("Document Upload", "Started");
+        Logger.logW("Document Upload", "Started");
 
         GenericHttpResponse mGenericHttpResponse = new GenericHttpResponse();
 
@@ -55,7 +55,7 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
         else
             Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG).show();
 
-        Logger.logWarn("Document Upload", "Finished");
+        Logger.logW("Document Upload", "Finished");
 
         return mGenericHttpResponse;
     }
@@ -98,7 +98,7 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
                 entity.addPart(Constants.MULTIPART_FORM_DATA_NAME, new FileBody(file));
             post.setEntity(entity);
 
-            Logger.logError("POST", entity.toString());
+            Logger.logE("POST", entity.toString());
 
             if (TokenManager.isTokenExists())
                 post.setHeader(Constants.TOKEN, TokenManager.getToken());
@@ -107,7 +107,7 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
             HttpResponse response = client.execute(post);
             HttpEntity httpEntity = response.getEntity();
 
-            Logger.logError("POST", post.toString());
+            Logger.logE("POST", post.toString());
 
             int status = response.getStatusLine().getStatusCode();
 
@@ -116,7 +116,7 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
             mGenericHttpResponse.setApiCommand(API_COMMAND);
             mGenericHttpResponse.setJsonString(EntityUtils.toString(httpEntity));
 
-            Logger.logError("Result", mGenericHttpResponse.toString());
+            Logger.logE("Result", mGenericHttpResponse.toString());
 
             return mGenericHttpResponse;
 

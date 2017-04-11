@@ -11,7 +11,6 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 
 public class DataHelper {
@@ -75,7 +74,7 @@ public class DataHelper {
 
             context.getContentResolver().notifyChange(DBConstants.DB_TABLE_CONTACTS_URI, null);
 
-            Logger.logInfo("Contacts", "Inserted into the database");
+            Logger.logI("Contacts", "Inserted into the database");
         }
     }
 
@@ -108,7 +107,7 @@ public class DataHelper {
 
             context.getContentResolver().notifyChange(DBConstants.DB_TABLE_BUSINESS_URI, null);
 
-            Logger.logInfo("Business", "Inserted into the database");
+            Logger.logI("Business", "Inserted into the database");
         }
     }
 
@@ -177,7 +176,7 @@ public class DataHelper {
                     + " ELSE "
                     + DBConstants.KEY_ORIGINAL_NAME + " END COLLATE NOCASE";
 
-            Logger.logWarn("Query", queryString);
+            Logger.logW("Query", queryString);
 
             cursor = db.rawQuery(queryString, null);
 
@@ -203,13 +202,13 @@ public class DataHelper {
                     + query + "%'" + ")" + " ORDER BY " + DBConstants.KEY_BUSINESS_NAME
                     + " COLLATE NOCASE";
 
-            Logger.logWarn("Query", queryString);
+            Logger.logW("Query", queryString);
 
             cursor = db.rawQuery(queryString, null);
 
             if (cursor != null) {
                 cursor.getCount();
-                Logger.logWarn("Query", cursor.getCount() + "");
+                Logger.logW("Query", cursor.getCount() + "");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -228,7 +227,7 @@ public class DataHelper {
             String queryString = "SELECT MAX(" + DBConstants.KEY_BUSINESS_ACCOUNT_ID +
                     ") FROM " + DBConstants.DB_TABLE_BUSINESS_ACCOUNTS;
 
-            Logger.logWarn("Query", queryString);
+            Logger.logW("Query", queryString);
 
             cursor = db.rawQuery(queryString, null);
 

@@ -76,7 +76,7 @@ public class TokenManager {
     }
 
     public static void setiPayTokenTimeInMs(long iPayTokenTimeInMs) {
-        Logger.logWarn("Token Timer Interval", iPayTokenTimeInMs + "");
+        Logger.logW("Token Timer Interval", iPayTokenTimeInMs + "");
         TokenManager.iPayTokenTimeInMs = iPayTokenTimeInMs;
     }
 }

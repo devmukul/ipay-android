@@ -6,27 +6,27 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class Logger {
 
-    public static void logDebug(String tag, String message) {
+    public static void logD(String tag, String message) {
         if (Constants.DEBUG)
             Log.d(tag, message);
     }
 
-    public static void logDebug(String tag, String message, Exception e) {
+    public static void logD(String tag, String message, Exception e) {
         if (Constants.DEBUG)
             Log.d(tag, message, e);
     }
 
-    public static void logInfo(String tag, String message) {
+    public static void logI(String tag, String message) {
         if (Constants.DEBUG)
             Log.i(tag, message);
     }
 
-    public static void logError(String tag, String message) {
+    public static void logE(String tag, String message) {
         if (Constants.DEBUG)
             Log.e(tag, message);
     }
 
-    public static void logWarn(String tag, String message) {
+    public static void logW(String tag, String message) {
         if (Constants.DEBUG)
             Log.w(tag, message);
     }

@@ -21,7 +21,7 @@ public class HttpRequestGetAsyncTask extends HttpRequestAsyncTask {
 
     @Override
     protected HttpRequestBase getRequest() {
-        Logger.logWarn(Constants.GET_URL, mUri);
+        Logger.logW(Constants.GET_URL, mUri);
         return new HttpGet(mUri);
     }
 

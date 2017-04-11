@@ -57,7 +57,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        Logger.logWarn("Push Found", "From: " + from + ", data: " + data);
+        Logger.logW("Push Found", "From: " + from + ", data: " + data);
 
         boolean isLoggedIn = ProfileInfoCacheManager.getLoggedInStatus(false);
 
@@ -129,7 +129,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                 break;
             case Constants.PUSH_NOTIFICATION_TAG_TRANSACTION:
                 if (isForeground() && isLoggedIn) {
-                    Logger.logDebug("Transaction", "Sending broadcast");
+                    Logger.logD("Transaction", "Sending broadcast");
                     Utilities.sendBroadcast(this, Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST);
                 }
         }

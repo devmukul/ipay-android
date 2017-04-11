@@ -120,7 +120,7 @@ public class CameraUtilities {
         if (fromCamera) {
             int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
 
-            Logger.logWarn("Orientation - Camera", orientation + "");
+            Logger.logW("Orientation - Camera", orientation + "");
 
             switch (orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_90:
@@ -142,7 +142,7 @@ public class CameraUtilities {
             if (cur != null)
                 cur.close();
 
-            Logger.logWarn("Orientation - Gallery", orientation + "");
+            Logger.logW("Orientation - Gallery", orientation + "");
 
             return rotateImage(img, orientation);
         }

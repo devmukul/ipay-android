@@ -25,7 +25,7 @@ public class HttpDeleteWithBodyAsyncTask extends HttpRequestAsyncTask {
 
     @Override
     protected HttpRequestBase getRequest() {
-        Logger.logWarn(Constants.DELETE_URL, mUri);
+        Logger.logW(Constants.DELETE_URL, mUri);
 
         HttpDeleteWithBody httpDeleteWithBody = new HttpDeleteWithBody(mUri);
         try {

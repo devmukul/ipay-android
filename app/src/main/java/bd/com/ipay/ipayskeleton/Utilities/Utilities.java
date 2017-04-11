@@ -365,7 +365,7 @@ public class Utilities {
         byte[] data = Base64.decode(base64, Base64.DEFAULT);
         try {
             String parsedToken = new String(data, "UTF-8");
-            Logger.logDebug(Constants.PARSED_TOKEN, Constants.PARSED_TOKEN + parsedToken);
+            Logger.logD(Constants.PARSED_TOKEN, Constants.PARSED_TOKEN + parsedToken);
             Gson gson = new Gson();
             TokenParserClass mTokenParserClass = gson.fromJson(parsedToken, TokenParserClass.class);
 

@@ -86,7 +86,7 @@ public class SafeFaceDetector extends Detector<Face> {
         int width = metadata.getWidth();
         int height = metadata.getHeight();
 
-        Logger.logInfo(TAG, "Padded image from: " + width + "x" + height + " to " + newWidth + "x" + height);
+        Logger.logI(TAG, "Padded image from: " + width + "x" + height + " to " + newWidth + "x" + height);
 
         ByteBuffer origBuffer = originalFrame.getGrayscaleImageData();
         int origOffset = origBuffer.arrayOffset();
@@ -122,7 +122,7 @@ public class SafeFaceDetector extends Detector<Face> {
         int width = metadata.getWidth();
         int height = metadata.getHeight();
 
-        Logger.logInfo(TAG, "Padded image from: " + width + "x" + height + " to " + width + "x" + newHeight);
+        Logger.logI(TAG, "Padded image from: " + width + "x" + height + " to " + width + "x" + newHeight);
 
         ByteBuffer origBuffer = originalFrame.getGrayscaleImageData();
         int origOffset = origBuffer.arrayOffset();

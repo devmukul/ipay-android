@@ -121,7 +121,7 @@ public class MyApplication extends Application implements HttpResponseListener {
     }
 
     private void refreshToken() {
-        Logger.logWarn("Token_Timer", "Refresh token called");
+        Logger.logW("Token_Timer", "Refresh token called");
 
         if (mRefreshTokenAsyncTask != null) {
             mRefreshTokenAsyncTask.cancel(true);

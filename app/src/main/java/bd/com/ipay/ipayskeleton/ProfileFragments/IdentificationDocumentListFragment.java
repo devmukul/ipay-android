@@ -184,7 +184,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         mFileName = temp[temp.length - 1];
                         documentPreviewDetailsList.get(mSelectedItemId).setSelectedFilePath(mFileName);
                         mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent);
-                        Logger.logWarn("Loading document", mSelectedItemId + " " + mSelectedDocumentUri.toString());
+                        Logger.logW("Loading document", mSelectedItemId + " " + mSelectedDocumentUri.toString());
 
                         documentPreviewDetailsList.get(mSelectedItemId).setSelectedDocumentUri(mSelectedDocumentUri);
                         mDocumentListAdapter.notifyDataSetChanged();
@@ -312,7 +312,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
         String selectedOImagePath = documentPreviewDetailsList.get(mID).getSelectedDocumentUri().getPath();
 
-        Logger.logWarn("Loading document", mDocumentID + " " + mID + " " + selectedOImagePath + " " + mDocumentType);
+        Logger.logW("Loading document", mDocumentID + " " + mID + " " + selectedOImagePath + " " + mDocumentType);
 
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
@@ -396,7 +396,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                             mSelectedDocumentDetails.getDocumentId(),
                             mSelectedDocumentDetails.getDocumentType());
 
-                    Logger.logWarn("Loading document", documentUrl);
+                    Logger.logW("Loading document", documentUrl);
 
                     Intent intent = new Intent(getActivity(), DocumentPreviewActivity.class);
                     intent.putExtra(Constants.FILE_EXTENSION, Utilities.getExtension(mSelectedDocumentDetails.getDocumentUrl()));

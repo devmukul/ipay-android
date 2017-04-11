@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.Api.GenericApi;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -70,7 +69,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                 }
 
             } else {
-                Logger.logDebug(Constants.ERROR, API_COMMAND);
+                Logger.logD(Constants.ERROR, API_COMMAND);
                 error = true;
                 return null;
             }
@@ -90,9 +89,9 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         }
 
         if (result == null)
-            Logger.logError(Constants.RESULT, API_COMMAND + " NULL");
+            Logger.logE(Constants.RESULT, API_COMMAND + " NULL");
         else
-            Logger.logWarn(Constants.RESULT, Constants.GET_REQUEST + result.toString());
+            Logger.logW(Constants.RESULT, Constants.GET_REQUEST + result.toString());
 
         if (result != null) {
 

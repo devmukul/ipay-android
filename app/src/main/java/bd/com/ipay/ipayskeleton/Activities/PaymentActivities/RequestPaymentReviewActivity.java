@@ -118,7 +118,7 @@ public class RequestPaymentReviewActivity extends BaseActivity implements HttpRe
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String name = mGetUserInfoResponse.getName();
                     String profilePicture;
-                    Logger.logDebug("Profile Pictures", mGetUserInfoResponse.getProfilePictures().toString());
+                    Logger.logD("Profile Pictures", mGetUserInfoResponse.getProfilePictures().toString());
                     profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
 
                     switchToRequestReviewFragment(name, profilePicture);

@@ -70,7 +70,7 @@ public class GenericHttpResponse {
 
     private String getHeaderValue(String headerName) {
         for (Header header : headers) {
-            Logger.logWarn(header.getName(), header.getValue());
+            Logger.logW(header.getName(), header.getValue());
             if (header.getName().equals(headerName))
                 return header.getValue();
         }

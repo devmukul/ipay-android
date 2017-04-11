@@ -155,7 +155,7 @@ public class DocumentPicker {
             Intent targetedIntent = new Intent(intent);
             targetedIntent.setPackage(packageName);
             list.add(targetedIntent);
-            Logger.logError(TAG, "Intent: " + intent.getAction() + " package: " + packageName);
+            Logger.logE(TAG, "Intent: " + intent.getAction() + " package: " + packageName);
         }
         return list;
     }
@@ -210,7 +210,7 @@ public class DocumentPicker {
                         returnedIntent.getData().toString().contains(documentFile.toString()));
 
                 if (returnedIntent != null)
-                    Logger.logError(TAG, "Returned Intent: " + returnedIntent.getData());
+                    Logger.logE(TAG, "Returned Intent: " + returnedIntent.getData());
                 if (isCamera) {     /** CAMERA **/
                     selectedImage = Uri.fromFile(documentFile);
                 } else if (returnedIntent.getData().toString().startsWith("file://")) {
@@ -218,10 +218,10 @@ public class DocumentPicker {
                 } else {            /** ALBUM **/
                     selectedImage = Uri.parse(FileUtilities.getDataColumn(context, returnedIntent.getData()));
                 }
-                Logger.logError(TAG, "selectedImage: " + selectedImage.getPath());
+                Logger.logE(TAG, "selectedImage: " + selectedImage.getPath());
 
                 if (isCamera) {
-                    Logger.logDebug(TAG, "Converting: " + selectedImage.getPath());
+                    Logger.logD(TAG, "Converting: " + selectedImage.getPath());
 
                     // Convert the image - handle auto rotate problem in some devices, scale down
                     // image if necessary (max 512*512)
@@ -250,7 +250,7 @@ public class DocumentPicker {
                         returnedIntent.getData().toString().contains(documentFile.toString()));
 
                 if (returnedIntent != null)
-                    Logger.logError(TAG, "Returned Intent: " + returnedIntent.getData());
+                    Logger.logE(TAG, "Returned Intent: " + returnedIntent.getData());
                 if (isCamera) {     /** CAMERA **/
                     selectedImage = Uri.fromFile(documentFile);
                 } else if (returnedIntent.getData().toString().startsWith("file://")) {
@@ -258,10 +258,10 @@ public class DocumentPicker {
                 } else {            /** ALBUM **/
                     selectedImage = Uri.parse(FileUtilities.getDataColumn(context, returnedIntent.getData()));
                 }
-                Logger.logError(TAG, "selectedImage: " + selectedImage.getPath());
+                Logger.logE(TAG, "selectedImage: " + selectedImage.getPath());
 
                 if (isCamera) {
-                    Logger.logDebug(TAG, "Converting: " + selectedImage.getPath());
+                    Logger.logD(TAG, "Converting: " + selectedImage.getPath());
 
                     // Convert the image - handle auto rotate problem in some devices, scale down
                     // image if necessary (max 512*512)

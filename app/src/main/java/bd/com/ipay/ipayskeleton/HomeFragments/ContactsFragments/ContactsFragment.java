@@ -191,7 +191,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
     private void resetSearchKeyword() {
         if (mSearchView != null && !mQuery.isEmpty()) {
-            Logger.logDebug("Loader", "Resetting.. Previous query: " + mQuery);
+            Logger.logD("Loader", "Resetting.. Previous query: " + mQuery);
 
             mQuery = "";
             mSearchView.setQuery("", false);

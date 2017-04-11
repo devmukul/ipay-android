@@ -191,7 +191,7 @@ public class HomeActivity extends BaseActivity
             startService(intent);
         }
 
-        Logger.logWarn("Token", TokenManager.getToken());
+        Logger.logW("Token", TokenManager.getToken());
 
         // The same notification fragment is used when NotificationActivity is launched.
         // We are initializing it here to load notification badge count.
@@ -337,7 +337,7 @@ public class HomeActivity extends BaseActivity
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
                 for (int i = 0; i < permissions.length; i++) {
-                    Logger.logWarn(permissions[i], grantResults[i] + "");
+                    Logger.logW(permissions[i], grantResults[i] + "");
 
                     if (permissions[i].equals(Manifest.permission.READ_CONTACTS)) {
                         if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
@@ -359,7 +359,7 @@ public class HomeActivity extends BaseActivity
     private void updateNotificationBadgeCount(int badgeCount) {
         mBadgeCount = badgeCount;
 
-        Logger.logDebug("Notification Count", badgeCount + "");
+        Logger.logD("Notification Count", badgeCount + "");
         if (mOptionsMenu != null) {
             if (badgeCount > 0) {
                 ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
@@ -660,7 +660,7 @@ public class HomeActivity extends BaseActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
-            Logger.logDebug("Broadcast home activity", newProfilePicture);
+            Logger.logD("Broadcast home activity", newProfilePicture);
 
             mProfileImageView.setProfilePicture(newProfilePicture, true);
 
