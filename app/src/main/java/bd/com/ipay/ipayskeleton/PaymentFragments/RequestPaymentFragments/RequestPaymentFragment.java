@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment;
+package bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -271,7 +271,7 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
             if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
                 String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
                 if (mobileNumber != null) {
-                    mMobileNumberEditText.setTextFromSuggestion(mobileNumber);
+                    mMobileNumberEditText.setText(mobileNumber);
                 }
             }
         } else if (resultCode == Activity.RESULT_CANCELED && requestCode == PICK_CONTACT_REQUEST) {

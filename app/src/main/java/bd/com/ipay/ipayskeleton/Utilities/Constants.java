@@ -344,7 +344,7 @@ public class Constants {
     public static final String URL_OTP_REQUEST_BUSINESS = "signup/business";
 
     // SM Payment REST
-    public static final String URL_PAYMENT_SEND_INVOICE = "payment/invoice/send";
+    public static final String URL_SEND_PAYMENT_REQUEST = "payment/invoice/send";
     public static final String URL_PAYMENT_SAVE_INVOICE = "payment/invoice/save";
     public static final String URL_PAYMENT_GET_INVOICE = "payment/invoice/get/";
 
@@ -488,7 +488,7 @@ public class Constants {
     public static final String COMMAND_ACCEPT_PAYMENT_REQUEST = "COMMAND_ACCEPT_PAYMENT_REQUEST";
     public static final String COMMAND_GET_PENDING_REQUESTS_ME = "COMMAND_GET_PENDING_REQUESTS_ME";
     public static final String COMMAND_REQUEST_MONEY = "COMMAND_REQUEST_MONEY";
-    public static final String COMMAND_SEND_INVOICE = "COMMAND_SEND_INVOICE";
+    public static final String COMMAND_SEND_PAYMENT_REQUEST = "COMMAND_SEND_PAYMENT_REQUEST";
     public static final String COMMAND_SAVE_INVOICE = "COMMAND_SAVE_INVOICE";
     public static final String COMMAND_GET_SINGLE_INVOICE = "COMMAND_GET_SINGLE_INVOICE";
     public static final String COMMAND_SET_PROFILE_PICTURE = "COMMAND_SET_PROFILE_PICTURE";

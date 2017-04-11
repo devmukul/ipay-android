@@ -188,7 +188,7 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
         if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             if (mobileNumber != null) {
-                mMobileNumberEditText.setTextFromSuggestion(mobileNumber);
+                mMobileNumberEditText.setText(mobileNumber);
             }
         } else if (requestCode == REQUEST_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             ((RequestMoneyActivity) getActivity()).switchToMoneyRequestListFragment(true);

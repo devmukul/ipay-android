@@ -20,15 +20,17 @@ import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetSinglePaymentRequestDetailRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PendingPaymentClass;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
-import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.CreateInvoiceFragmentStepTwo;
-import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.SentPaymentRequestDetailsFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.RequestPaymentFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment.SentPaymentRequestsFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.ReceivedPaymentRequestDetailsFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments.RequestPaymentFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments.PaymentRequestSentDetailsFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments.PaymentRequestsSentFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentRequestReceivedDetailsFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -115,25 +117,10 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
         }
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SentPaymentRequestsFragment())
+                .replace(R.id.fragment_container, new PaymentRequestsSentFragment())
                 .commit();
         mFabNewRequestPayment.setVisibility(View.VISIBLE);
 
-    }
-
-    public void switchToCreateInvoiceStepTwoFragment(Bundle bundle) {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 2) {
-            getSupportFragmentManager().popBackStackImmediate();
-        }
-
-        CreateInvoiceFragmentStepTwo frag = new CreateInvoiceFragmentStepTwo();
-        frag.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, frag)
-                .addToBackStack(null)
-                .commit();
-
-        mFabNewRequestPayment.setVisibility(View.GONE);
     }
 
     private void switchToRequestPaymentFragment() {
@@ -146,18 +133,18 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
     }
 
     public void switchToSentPaymentRequestDetailsFragment(Bundle bundle) {
-        SentPaymentRequestDetailsFragment sentPaymentRequestDetailsFragment = new SentPaymentRequestDetailsFragment();
+        PaymentRequestSentDetailsFragment paymentRequestSentDetailsFragment = new PaymentRequestSentDetailsFragment();
         if (bundle != null) {
-            sentPaymentRequestDetailsFragment.setArguments(bundle);
+            paymentRequestSentDetailsFragment.setArguments(bundle);
         }
 
         if (switchedFromTransactionHistory)
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, sentPaymentRequestDetailsFragment)
+                    .replace(R.id.fragment_container, paymentRequestSentDetailsFragment)
                     .commit();
         else
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, sentPaymentRequestDetailsFragment)
+                    .replace(R.id.fragment_container, paymentRequestSentDetailsFragment)
                     .addToBackStack(null)
                     .commit();
 
@@ -165,10 +152,10 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
     }
 
     public void switchToReceivedPaymentRequestDetailsFragment(Bundle bundle) {
-        ReceivedPaymentRequestDetailsFragment receivedPaymentRequestDetailsFragment = new ReceivedPaymentRequestDetailsFragment();
-        receivedPaymentRequestDetailsFragment.setArguments(bundle);
+        PaymentRequestReceivedDetailsFragment paymentRequestReceivedDetailsFragment = new PaymentRequestReceivedDetailsFragment();
+        paymentRequestReceivedDetailsFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, receivedPaymentRequestDetailsFragment).commit();
+                .replace(R.id.fragment_container, paymentRequestReceivedDetailsFragment).commit();
 
         mFabNewRequestPayment.setVisibility(View.GONE);
     }

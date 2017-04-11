@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.InvoiceFragment;
+package bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
@@ -37,7 +37,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SentPaymentRequestsFragment extends ProgressFragment implements HttpResponseListener {
+public class PaymentRequestsSentFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mPendingInvoicesTask = null;
     private GetPendingPaymentsResponse mGetPendingPaymentsResponse;
