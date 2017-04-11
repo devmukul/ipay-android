@@ -13,9 +13,8 @@ import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.CreateCustomNotificationAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FCMNotificationResponse;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.Notification.NotificationUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.AppInstance.AppInstanceUtilities;
 
 public class FCMListenerService extends FirebaseMessagingService {
     private FCMNotificationResponse mFcmNotificationResponse;
@@ -38,7 +37,7 @@ public class FCMListenerService extends FirebaseMessagingService {
             if (Constants.DEBUG)
                 Log.d("Notification Payload", "Message Notification Body: " + message.getNotification().getBody());
 
-            if (!(NotificationUtilities.isUserActive(this)))
+            if (!(AppInstanceUtilities.isUserActive(this)))
                 createNotification(this, message.getNotification().getTitle(),
                         message.getNotification().getBody(), mFcmNotificationResponse.getIcon());
         }
@@ -49,7 +48,7 @@ public class FCMListenerService extends FirebaseMessagingService {
         JsonElement jsonElement = gson.toJsonTree(data);
         mFcmNotificationResponse = gson.fromJson(jsonElement, FCMNotificationResponse.class);
 
-        if (NotificationUtilities.isUserActive(this))
+        if (AppInstanceUtilities.isUserActive(this))
             FCMNotificationParser.notificationParser(this, mFcmNotificationResponse);
     }
 

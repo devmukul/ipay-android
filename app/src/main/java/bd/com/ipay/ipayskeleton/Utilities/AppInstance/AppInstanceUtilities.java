@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Utilities.Notification;
+package bd.com.ipay.ipayskeleton.Utilities.AppInstance;
 
 import android.app.ActivityManager;
 import android.content.ComponentName;
@@ -9,7 +9,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class NotificationUtilities {
+public class AppInstanceUtilities {
 
     private static boolean isForeground(Context context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);

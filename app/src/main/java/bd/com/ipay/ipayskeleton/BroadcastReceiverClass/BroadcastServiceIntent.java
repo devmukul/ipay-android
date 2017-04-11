@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Utilities.Notification;
+package bd.com.ipay.ipayskeleton.BroadcastReceiverClass;
 
 import android.content.Context;
 import android.content.Intent;
