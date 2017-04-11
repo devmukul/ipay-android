@@ -170,7 +170,7 @@ public class ContactEngine {
     private static void addContactToAccount1(Context context,
                                              String accountName, String accountType, String name, String number) {
         if (BuildConfig.DEBUG)
-            Log.i(TAG, "Adding contact: " + name);
+            LoggerUtilities.logInfo(TAG, "Adding contact: " + name);
         ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
 
         ContentProviderOperation.Builder builder = ContentProviderOperation
@@ -220,7 +220,7 @@ public class ContactEngine {
 
     public static void updateOrInsertContact(Context context, String accountName, String accountType, String name, String number) {
         if (BuildConfig.DEBUG)
-            Log.i("ContactEngine", "Searching DBContactNode: Name: " + name + " Number: " + number);
+            LoggerUtilities.logInfo("ContactEngine", "Searching DBContactNode: Name: " + name + " Number: " + number);
 
         int id = -1;
         Cursor cursor = context.getContentResolver().query(
@@ -251,7 +251,7 @@ public class ContactEngine {
         }
         if (id != -1) {
             if (BuildConfig.DEBUG)
-                Log.i("ContactEngine", "DBContactNode Already exists!! RawContactID: " + id);
+                LoggerUtilities.logInfo("ContactEngine", "DBContactNode Already exists!! RawContactID: " + id);
             /*
              * ArrayList<ContentProviderOperation> operationList = new
 			 * ArrayList<ContentProviderOperation>();
@@ -299,7 +299,7 @@ public class ContactEngine {
 			 */
         } else {
             if (BuildConfig.DEBUG)
-                Log.i("ContactEngine", "DBContactNode not found!! inserting new contact");
+                LoggerUtilities.logInfo("ContactEngine", "DBContactNode not found!! inserting new contact");
             addContactToAccount1(context, accountName, accountType, name, number);
         }
     }
@@ -862,7 +862,7 @@ public class ContactEngine {
         else if (lookupKeys.length > 0)
             selection = lookupSelection;
 
-//        Log.i("ContactEngine", "getContactCursorFromLookUpList generatedSelection: "+selection);
+//        LoggerUtilities.logInfo("ContactEngine", "getContactCursorFromLookUpList generatedSelection: "+selection);
 
         Uri queryUri = ContactsContract.Contacts.CONTENT_URI;
 
@@ -898,7 +898,7 @@ public class ContactEngine {
         else if (lookupKeys.length > 0)
             selection = lookupSelection;
 
-//        Log.i("ContactEngine", "getContactCursorFromLookUpList generatedSelection: "+selection);
+//        LoggerUtilities.logInfo("ContactEngine", "getContactCursorFromLookUpList generatedSelection: "+selection);
 
         Uri queryUri = ContactsContract.Contacts.CONTENT_URI;
 

@@ -15,4 +15,9 @@ public class LoggerUtilities {
         if (Constants.DEBUG)
             Log.d(tag, message, e);
     }
+
+    public static void logInfo(String tag, String message) {
+        if (Constants.DEBUG)
+            LoggerUtilities.logInfo(tag, message);
+    }
 }

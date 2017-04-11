@@ -37,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.LoggerUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -173,7 +174,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         if (!ProfileInfoCacheManager.getProfileImageUrl().isEmpty()) {
             if (Constants.DEBUG)
-                Log.d("Profile Picture", ProfileInfoCacheManager.getProfileImageUrl());
+                LoggerUtilities.logDebug("Profile Picture", ProfileInfoCacheManager.getProfileImageUrl());
 
             mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
                     ProfileInfoCacheManager.getProfileImageUrl(), false);
