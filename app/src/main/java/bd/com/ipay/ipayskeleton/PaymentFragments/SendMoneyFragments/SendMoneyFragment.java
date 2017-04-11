@@ -298,7 +298,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                             }
                         }
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
