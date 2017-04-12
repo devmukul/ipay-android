@@ -207,12 +207,6 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".Activities.PaymentActivities.CreateInvoiceReviewActivity"
-            android:label="@string/review_and_create_invoice"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ActionBarNoElevation"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity
             android:name=".Activities.DialogActivities.ContactPickerDialogActivity"
             android:label="@string/select_a_contact"
             android:screenOrientation="portrait"

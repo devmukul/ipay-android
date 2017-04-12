@@ -85,6 +85,9 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
 
         pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
+        if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
+            mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
+        }
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,7 +153,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             if (mobileNumber != null) {
-                mMobileNumberEditText.setMobileNumber(mobileNumber);
+                mMobileNumberEditText.setText(mobileNumber);
             }
         } else if (requestCode == PAYMENT_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();

@@ -38,7 +38,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implements HttpResponseListener {
+public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mAcceptPaymentTask = null;
     private PaymentAcceptRejectOrCancelResponse mPaymentAcceptPaymentResponse;
@@ -326,7 +326,7 @@ public class ReceivedPaymentRequestDetailsFragment extends ReviewFragment implem
                     mNameView.setText(mReceiverName);
 
                 mMobileNumberView.setText(mReceiverMobileNumber);
-                mProfileImageView.setProfilePicture(mPhotoUri, false);
+                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mPhotoUri, false);
             }
 
             public void bindViewForFooter() {

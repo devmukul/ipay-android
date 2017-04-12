@@ -2,7 +2,7 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment;
 
 import java.math.BigDecimal;
 
-public class SendInvoiceRequest {
+public class SendNewPaymentRequest {
 
     private final BigDecimal amount;
     private final String clientMobileNumber;
@@ -10,7 +10,7 @@ public class SendInvoiceRequest {
     private final Integer requestId;
     private final BigDecimal vat;
 
-    public SendInvoiceRequest(BigDecimal amount, String clientMobileNumber, String description, Integer requestId, BigDecimal vat) {
+    public SendNewPaymentRequest(BigDecimal amount, String clientMobileNumber, String description, Integer requestId, BigDecimal vat) {
         this.amount = amount;
         this.clientMobileNumber = clientMobileNumber;
         this.description = description;

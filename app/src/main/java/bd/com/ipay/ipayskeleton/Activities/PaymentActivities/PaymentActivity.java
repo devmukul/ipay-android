@@ -8,8 +8,8 @@ import android.view.View;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.ReceivedPaymentRequestDetailsFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.ReceivedPaymentRequestsFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentRequestReceivedDetailsFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentRequestsReceivedFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.MakePaymentFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -87,15 +87,15 @@ public class PaymentActivity extends BaseActivity {
 
     public void switchToReceivedPaymentRequestsFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new ReceivedPaymentRequestsFragment()).commit();
+                .replace(R.id.fragment_container, new PaymentRequestsReceivedFragment()).commit();
         mFabMakingPayment.setVisibility(View.VISIBLE);
         switchedToPendingList = true;
     }
 
     public void switchToReceivedPaymentRequestDetailsFragment(Bundle bundle) {
-        ReceivedPaymentRequestDetailsFragment receivedPaymentRequestDetailsFragment = new ReceivedPaymentRequestDetailsFragment();
-        receivedPaymentRequestDetailsFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, receivedPaymentRequestDetailsFragment).commit();
+        PaymentRequestReceivedDetailsFragment paymentRequestReceivedDetailsFragment = new PaymentRequestReceivedDetailsFragment();
+        paymentRequestReceivedDetailsFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, paymentRequestReceivedDetailsFragment).commit();
         mFabMakingPayment.setVisibility(View.GONE);
         switchedToPendingList = false;
     }
