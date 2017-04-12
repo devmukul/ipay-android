@@ -21,11 +21,13 @@ public class MultipleBroadCastServiceIntent extends BroadcastServiceIntent {
     public static void sendBroadcastForAcceptedMoneyOrPaymentRequest(Context context) {
         sendBroadcast(context, Constants.BALANCE_UPDATE_BROADCAST);
         sendBroadcast(context, Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST);
+        sendBroadcast(context, Constants.PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST);
         sendBroadcast(context, Constants.NOTIFICATION_UPDATE_BROADCAST);
     }
 
     public static void sendBroadcastForCanceledOrRejectedRequest(Context context) {
         sendBroadcast(context, Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST);
+        sendBroadcast(context, Constants.PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST);
         sendBroadcast(context, Constants.NOTIFICATION_UPDATE_BROADCAST);
     }
 }
