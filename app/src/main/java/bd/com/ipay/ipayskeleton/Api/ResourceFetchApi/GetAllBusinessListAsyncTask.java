@@ -15,6 +15,7 @@ import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRespo
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 
 public class GetAllBusinessListAsyncTask extends HttpRequestGetAsyncTask implements HttpResponseListener {
     GetAllBusinessContactResponse mBusinessContactResponse;
@@ -47,14 +48,14 @@ public class GetAllBusinessListAsyncTask extends HttpRequestGetAsyncTask impleme
                 dataHelper.createBusinessAccountsList(mBusinessContacts);
             } else {
                 if (context != null) {
-                    Toast.makeText(context, R.string.business_contacts_sync_failed, Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(context, R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
 
             if (context != null) {
-                Toast.makeText(context, R.string.business_contacts_sync_failed, Toast.LENGTH_LONG).show();
+                ToastWrapper.makeText(context, R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
             }
         }
 

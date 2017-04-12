@@ -51,6 +51,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CustomDrawable;
 import bd.com.ipay.ipayskeleton.Utilities.CustomerSupportUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.MultipleImagePicker;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TicketDetailsFragment extends ProgressFragment implements HttpResponseListener {
@@ -347,14 +348,14 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                             setContentShown(true);
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.failed_loading_ticket_details, Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(getActivity(), R.string.failed_loading_ticket_details, Toast.LENGTH_LONG);
                             getActivity().onBackPressed();
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_loading_ticket_details, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), R.string.failed_loading_ticket_details, Toast.LENGTH_LONG);
                         getActivity().onBackPressed();
                     }
                 }
@@ -371,17 +372,17 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                             mCommentId = commentIdWithDocumentList.getComment_id();
                             if (attachedFiles.size() > 0) uploadMultipleAttachmentsAsyncTask();
 
-                            Toast.makeText(getActivity(), R.string.comment_successfully_added, Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(getActivity(), R.string.comment_successfully_added, Toast.LENGTH_LONG);
                             getTicketDetails();
                         } else {
                             if (getActivity() != null) {
-                                Toast.makeText(getActivity(), R.string.not_available, Toast.LENGTH_LONG).show();
+                                ToastWrapper.makeText(getActivity(), R.string.not_available, Toast.LENGTH_LONG);
                             }
                         }
                     }
                 } catch (Exception e) {
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_adding_comment, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), R.string.failed_adding_comment, Toast.LENGTH_LONG);
                     }
                 }
                 mNewCommentTask = null;

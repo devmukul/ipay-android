@@ -35,6 +35,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.Privilege
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.Role;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 
 public class BusinessEmployeeReviewFragment extends ProgressFragment implements HttpResponseListener {
 
@@ -248,17 +249,17 @@ public class BusinessEmployeeReviewFragment extends ProgressFragment implements 
                     mConfirmBusinessInvitationResponse = gson.fromJson(result.getJsonString(), ConfirmBusinessInvitationResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), mConfirmBusinessInvitationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(getActivity(), mConfirmBusinessInvitationResponse.getMessage(), Toast.LENGTH_LONG);
                             getActivity().onBackPressed();
                         }
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mConfirmBusinessInvitationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(getActivity(), mConfirmBusinessInvitationResponse.getMessage(), Toast.LENGTH_LONG);
                     }
 
                 } catch (Exception e) {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_confirming_business_invitation, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), R.string.failed_confirming_business_invitation, Toast.LENGTH_LONG);
                 }
 
                 mProgressDialog.dismiss();
@@ -291,11 +292,11 @@ public class BusinessEmployeeReviewFragment extends ProgressFragment implements 
                         mPrivilegeListView.setAdapter(mEmployeeDetailsAdapter);
 
                     } else {
-                        Toast.makeText(getActivity(), mGetRolesResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), mGetRolesResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
                 }
 
             default:

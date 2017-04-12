@@ -20,6 +20,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteToiPayFra
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyReviewActivity extends BaseActivity implements HttpResponseListener {
@@ -124,7 +125,7 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                     switchToSendInviteFragment();
                 } else {
-                    Toast.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                    ToastWrapper.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                     finish();
                 }
 
@@ -132,7 +133,7 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
             } catch (Exception e) {
                 e.printStackTrace();
 
-                Toast.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 finish();
             }
 

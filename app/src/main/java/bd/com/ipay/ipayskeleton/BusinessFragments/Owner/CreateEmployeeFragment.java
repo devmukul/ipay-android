@@ -27,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CreateEmployeeFragment extends Fragment implements HttpResponseListener {
@@ -205,14 +206,14 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
                         Toast.makeText(getActivity(), R.string.user_has_no_ipay_account, Toast.LENGTH_LONG).show();
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                        ToastWrapper.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 }
 
 
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                    ToastWrapper.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
             }
 
             mGetProfileInfoTask = null;

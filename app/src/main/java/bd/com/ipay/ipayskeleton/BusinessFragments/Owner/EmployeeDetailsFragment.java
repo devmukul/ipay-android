@@ -30,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.Privilege
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.Role;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 
 public class EmployeeDetailsFragment extends Fragment implements HttpResponseListener {
 
@@ -105,7 +106,6 @@ public class EmployeeDetailsFragment extends Fragment implements HttpResponseLis
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
-                        //Toast.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                         mEmployeeDetails = mGetEmployeeDetailsResponse.getInfo();
 
@@ -126,21 +126,18 @@ public class EmployeeDetailsFragment extends Fragment implements HttpResponseLis
                             }
                         }
 
-
                         mPrivilegeList = Arrays.asList(ManagePeopleActivity.mRolePrivilegeMap.get(mEmployeeDetails.getRoleId()));
                         mEmployeeDetailsAdapter = new EmployeeDetailsAdapter();
-
                         mPrivilegeListView.setAdapter(mEmployeeDetailsAdapter);
-
                     }
                 } else {
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 }
             } catch (Exception e) {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.fetching_employee_details_failed, Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(getActivity(), R.string.fetching_employee_details_failed, Toast.LENGTH_LONG);
             }
         }
     }

@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentReq
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestPaymentActivity extends BaseActivity implements HttpResponseListener {
@@ -209,14 +210,14 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
                         launchSentPaymentRequestDetailsReviewFragment();
                     }
                 } else {
-                    Toast.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                    ToastWrapper.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                     finish();
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
 
-                Toast.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 finish();
             }
 

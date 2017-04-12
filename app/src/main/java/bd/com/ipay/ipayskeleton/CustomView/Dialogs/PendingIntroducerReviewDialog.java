@@ -20,6 +20,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.Pendi
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.IntroduceActionResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 
 public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implements HttpResponseListener {
 
@@ -151,19 +152,19 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
                     mPendingIntroducerActionResponse = gson.fromJson(result.getJsonString(), IntroduceActionResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (Context != null)
-                            Toast.makeText(Context, mPendingIntroducerActionResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(Context, mPendingIntroducerActionResponse.getMessage(), Toast.LENGTH_LONG);
 
                         if (mActionCheckerListener != null) {
                             mActionCheckerListener.ifFinishNeeded();
                         }
                     } else {
                         if (Context != null)
-                            Toast.makeText(Context, mPendingIntroducerActionResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(Context, mPendingIntroducerActionResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (Context != null)
-                        Toast.makeText(Context, R.string.service_not_available, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(Context, R.string.service_not_available, Toast.LENGTH_LONG);
                 }
 
                 mProgressDialog.dismiss();

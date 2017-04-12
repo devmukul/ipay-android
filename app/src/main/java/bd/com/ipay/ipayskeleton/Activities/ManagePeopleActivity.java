@@ -23,6 +23,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.GetRolesR
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.Role;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ManagePeopleActivity extends BaseActivity implements HttpResponseListener {
@@ -173,12 +174,12 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
 
                     } else {
                         finish();
-                        Toast.makeText(ManagePeopleActivity.this, mGetRolesResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(ManagePeopleActivity.this, mGetRolesResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     finish();
-                    Toast.makeText(ManagePeopleActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(ManagePeopleActivity.this, R.string.service_not_available, Toast.LENGTH_LONG);
                 }
 
             default:

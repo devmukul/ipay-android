@@ -30,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EditBusinessInformationFragment extends Fragment implements HttpResponseListener {
@@ -180,17 +181,17 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
                 mSetBusinessInformationResponse = gson.fromJson(result.getJsonString(), SetBusinessInformationResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mSetBusinessInformationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), mSetBusinessInformationResponse.getMessage(), Toast.LENGTH_LONG);
                         ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
                     }
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mSetBusinessInformationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), mSetBusinessInformationResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.business_information_saving_failed, Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(getActivity(), R.string.business_information_saving_failed, Toast.LENGTH_LONG);
             }
 
             mSetBusinessInformationRequestAsyncTask = null;

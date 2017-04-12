@@ -25,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMone
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements HttpResponseListener {
@@ -200,19 +201,19 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                     if (context != null)
-                        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(context, message, Toast.LENGTH_LONG);
 
                     if (mReviewFinishListener != null)
                         mReviewFinishListener.onReviewFinish();
 
                 } else {
                     if (context != null)
-                        Toast.makeText(context, mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(context, mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (context != null)
-                    Toast.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();
@@ -226,7 +227,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
                             PaymentAcceptRejectOrCancelResponse.class);
                     String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
                     if (context != null)
-                        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(context, message, Toast.LENGTH_LONG);
 
                     if (mReviewFinishListener != null)
                         mReviewFinishListener.onReviewFinish();
@@ -234,12 +235,12 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (context != null)
-                        Toast.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (context != null)
-                    Toast.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();

@@ -40,6 +40,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class BusinessInformationFragment extends ProgressFragment implements HttpResponseListener {
@@ -385,14 +386,14 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                         processBusinessInformationResponse();
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(getActivity(), R.string.failed_loading_business_information, Toast.LENGTH_LONG);
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
 
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), R.string.failed_loading_business_information, Toast.LENGTH_LONG);
                     }
                 }
 
@@ -433,12 +434,12 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                            ToastWrapper.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                        ToastWrapper.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
                 }
 
                 mGetProfileInfoTask = null;
@@ -453,14 +454,14 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                         setContentShown(true);
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                            ToastWrapper.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
                             getActivity().onBackPressed();
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                        ToastWrapper.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
                         getActivity().onBackPressed();
                     }
                 }
@@ -477,14 +478,14 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
                             getActivity().onBackPressed();
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
                         getActivity().onBackPressed();
                     }
                 }
@@ -502,14 +503,14 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG);
                             getActivity().onBackPressed();
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG);
                         getActivity().onBackPressed();
                     }
                 }

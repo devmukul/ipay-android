@@ -9,6 +9,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPatchAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 
 public class DeleteContactAsyncTask extends HttpRequestPatchAsyncTask implements HttpResponseListener {
 
@@ -32,7 +33,7 @@ public class DeleteContactAsyncTask extends HttpRequestPatchAsyncTask implements
         try {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 if (context != null) {
-                    Toast.makeText(context, R.string.delete_contact_successful, Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(context, R.string.delete_contact_successful, Toast.LENGTH_LONG);
                     new GetContactsAsyncTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }
