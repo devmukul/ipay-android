@@ -53,6 +53,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class NotificationFragment extends ProgressFragment implements HttpResponseListener {
@@ -433,7 +434,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             if (isAdded()) {
                 mSwipeRefreshLayout.setRefreshing(false);
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG);
             }
 
             return;
@@ -452,12 +453,12 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         } catch (Exception e) {
                             e.printStackTrace();
                             if (getActivity() != null)
-                                Toast.makeText(getActivity(), mGetMoneyAndPaymentRequestResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                ToastWrapper.makeText(getActivity(), mGetMoneyAndPaymentRequestResponse.getMessage(), Toast.LENGTH_LONG);
                         }
 
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -475,11 +476,11 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         mIntroductionRequests = mIntroductionRequestsResponse.getVerificationRequestList();
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                    ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 }
 
                 mGetIntroductionRequestTask = null;
@@ -494,11 +495,11 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         mBusinessInvitations = mGetBusinessListResponse.getBusinessList();
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mGetBusinessListResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(getActivity(), mGetBusinessListResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                    ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 }
 
                 mGetBusinessInvitationTask = null;
@@ -513,11 +514,11 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         mPendingIntroducerList = mPendingIntroducerListResponse.getWantToBeIntroducers();
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                    ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 }
 
                 mGetPendingIntroducerListTask = null;
@@ -534,13 +535,13 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                             mServiceCharge = mGetServiceChargeResponse.getServiceCharge(mAmount);
 
                             if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
-                                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                             } else {
                                 launchReceivedRequestFragment();
                             }
 
                         } else {
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                            ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                             return;
                         }
                     } else {
@@ -550,7 +551,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                    ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 }
 
                 mServiceChargeTask = null;

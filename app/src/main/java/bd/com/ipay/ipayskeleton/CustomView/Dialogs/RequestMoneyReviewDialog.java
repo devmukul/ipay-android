@@ -188,7 +188,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
             mAcceptRequestTask = null;
             mAcceptPaymentTask = null;
             if (context != null)
-                Toast.makeText(context, R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(context, R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT);
             return;
         }
 

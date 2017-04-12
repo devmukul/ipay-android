@@ -235,7 +235,7 @@ public class BusinessEmployeeReviewFragment extends ProgressFragment implements 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetRolesAsyncTask = null;
             mConfirmBusinessInvitationTask = null;
-            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+            ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 

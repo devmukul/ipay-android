@@ -95,7 +95,7 @@ public class EmployeeDetailsFragment extends Fragment implements HttpResponseLis
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mEmployeeDetailsAsyncTask = null;
-            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+            ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 

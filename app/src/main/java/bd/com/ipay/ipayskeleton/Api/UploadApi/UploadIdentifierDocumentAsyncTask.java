@@ -23,6 +23,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -68,7 +69,7 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Gen
         if (Utilities.isConnectionAvailable(mContext))
             mGenericHttpResponse = uploadDocument(imagePath);
         else
-            Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG).show();
+            ToastWrapper.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG);
 
         Logger.logW("Document Upload", "Finished");
 

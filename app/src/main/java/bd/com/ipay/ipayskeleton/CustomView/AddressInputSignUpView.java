@@ -287,7 +287,7 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
             mGetThanaListAsyncTask = null;
             mGetDistrictListAsyncTask = null;
             if (context != null)
-                Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 

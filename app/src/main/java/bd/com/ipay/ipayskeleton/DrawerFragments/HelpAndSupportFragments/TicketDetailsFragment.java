@@ -234,7 +234,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
             Utilities.hideKeyboard(getActivity(), mUserCommentEditText);
         } else {
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.comment_cannot_be_empty, Toast.LENGTH_LONG).show();
+                ToastWrapper.makeText(getActivity(), R.string.comment_cannot_be_empty, Toast.LENGTH_LONG);
         }
     }
 
@@ -314,7 +314,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetTicketDetailsTask = null;
             if (getActivity() != null) {
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 getActivity().onBackPressed();
             }
             return;

@@ -417,7 +417,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.ticket_created, Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(getActivity(), R.string.ticket_created, Toast.LENGTH_LONG);
                             TicketWithCommentId ticketResponseWithCommentId = mCreateTicketResponse.getResponse();
                             CommentIdWithDocumentList commentIdWithDocumentList = ticketResponseWithCommentId.getTicket();
                             mCommentId = commentIdWithDocumentList.getComment_id();

@@ -29,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAccep
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements HttpResponseListener {
@@ -145,7 +146,7 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
             mProgressDialog.show();
             mAcceptPaymentTask = null;
             if (context != null)
-                Toast.makeText(context, R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(context, R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -166,12 +167,12 @@ public class ReviewMakePaymentDialog extends MaterialDialog.Builder implements H
 
                 } else {
                     if (context != null)
-                        Toast.makeText(context, mPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(context, mPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (context != null)
-                    Toast.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG);
             }
             mProgressDialog.dismiss();
             mAcceptPaymentTask = null;

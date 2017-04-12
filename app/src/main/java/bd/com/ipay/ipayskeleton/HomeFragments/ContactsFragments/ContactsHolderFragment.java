@@ -37,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ContactsHolderFragment extends Fragment implements HttpResponseListener {
@@ -323,7 +324,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             mGetInviteInfoTask = null;
             mAddContactAsyncTask = null;
             if (getContext() != null)
-                Toast.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                ToastWrapper.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -345,18 +346,18 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.add_contact_successful, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), R.string.add_contact_successful, Toast.LENGTH_LONG);
                         new GetContactsAsyncTask(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_add_contact, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), R.string.failed_add_contact, Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
 
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_add_contact, Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(getActivity(), R.string.failed_add_contact, Toast.LENGTH_LONG);
             }
 
             mAddContactAsyncTask = null;

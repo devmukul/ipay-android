@@ -459,7 +459,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             mSwipeRefreshLayout.setRefreshing(false);
 
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
+                ToastWrapper.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
             return;
         }
 

@@ -139,7 +139,7 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
             mPendingIntroducerActionTask = null;
 
             if (Context != null)
-                Toast.makeText(Context, R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(Context, R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 

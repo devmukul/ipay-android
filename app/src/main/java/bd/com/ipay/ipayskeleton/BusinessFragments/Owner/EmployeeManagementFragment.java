@@ -34,6 +34,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.GetAllEmp
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.RemoveEmployeeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EmployeeManagementFragment extends ProgressFragment implements HttpResponseListener {
@@ -134,7 +135,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
             mGetAllEmployeeAsyncTask = null;
 
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -150,14 +151,14 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                         setContentShown(true);
                 } else {
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mGetAllEmployeesResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), mGetAllEmployeesResponse.getMessage(), Toast.LENGTH_LONG);
                         getActivity().onBackPressed();
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_loading_employee_list, Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(getActivity(), R.string.failed_loading_employee_list, Toast.LENGTH_LONG);
                     getActivity().onBackPressed();
                 }
             }
@@ -172,23 +173,22 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
 
                     if (getActivity() != null) {
 
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), message, Toast.LENGTH_LONG);
                         getEmployeeList();
                     }
 
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mRemoveAnEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), mRemoveAnEmployeeResponse.getMessage(), Toast.LENGTH_LONG);
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.could_not_remove_employee, Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(getActivity(), R.string.could_not_remove_employee, Toast.LENGTH_LONG);
             }
 
             mRemoveAnEmployeeAsyncTask = null;
-
         }
 
         if (mEmployeeList != null && mEmployeeList.size() == 0) {
