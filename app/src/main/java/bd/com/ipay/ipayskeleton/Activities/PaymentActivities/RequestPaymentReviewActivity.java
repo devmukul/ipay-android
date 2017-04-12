@@ -105,7 +105,7 @@ public class RequestPaymentReviewActivity extends BaseActivity implements HttpRe
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetProfileInfoTask = null;
-            Toast.makeText(this, R.string.service_not_available, Toast.LENGTH_LONG).show();
+            ToastWrapper.makeText(this, R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 

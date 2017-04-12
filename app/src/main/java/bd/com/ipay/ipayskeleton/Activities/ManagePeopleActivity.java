@@ -154,7 +154,7 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetRolesAsyncTask = null;
-            Toast.makeText(ManagePeopleActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
+            ToastWrapper.makeText(ManagePeopleActivity.this, R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
