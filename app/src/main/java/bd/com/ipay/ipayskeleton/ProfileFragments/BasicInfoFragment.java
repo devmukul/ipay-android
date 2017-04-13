@@ -35,6 +35,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class BasicInfoFragment extends ProgressFragment implements HttpResponseListener {
@@ -253,7 +254,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             mGetProfileInfoTask = null;
             mGetOccupationTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+               ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -273,12 +274,12 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                       ToastWrapper.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                   ToastWrapper.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
             }
 
             mGetProfileInfoTask = null;
@@ -314,12 +315,12 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                       ToastWrapper.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                   ToastWrapper.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
             }
 
             mGetParentInfoTask = null;

@@ -45,6 +45,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.MoneyAndPay
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class PaymentRequestsReceivedFragment extends ProgressFragment implements HttpResponseListener {
@@ -235,7 +236,7 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
             mGetAllNotificationsTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
+                ToastWrapper.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
             return;
         }
 
@@ -264,12 +265,12 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG);
                     }
 
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG);
                 }
 
                 mGetAllNotificationsTask = null;
@@ -303,13 +304,13 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG);
                         }
                     }
 
                 } else {
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG);
                     }
                 }
                 mGetSingleInvoiceTask = null;

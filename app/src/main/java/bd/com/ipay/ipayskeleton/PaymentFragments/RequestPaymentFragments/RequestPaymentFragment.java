@@ -37,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestPaymentFragment extends Fragment implements HttpResponseListener {
@@ -149,7 +150,7 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
                         launchReviewPage();
                     }
                 } else if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+                     ToastWrapper.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG);
             }
         });
 
@@ -276,8 +277,8 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
             }
         } else if (resultCode == Activity.RESULT_CANCELED && requestCode == PICK_CONTACT_REQUEST) {
             if (getActivity() != null)
-                Toast.makeText(getActivity(), getString(R.string.no_contact_selected),
-                        Toast.LENGTH_SHORT).show();
+                 ToastWrapper.makeText(getActivity(), getString(R.string.no_contact_selected),
+                        Toast.LENGTH_SHORT);
         } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CREATE_INVOICE_REVIEW)
             ((RequestPaymentActivity) getActivity()).switchToSentPaymentRequestsFragment();
     }
@@ -288,7 +289,7 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                 ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -313,12 +314,12 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                         ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                     ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             }
 
             mGetBusinessRuleTask = null;

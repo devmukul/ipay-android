@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.MoneyReques
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SentMoneyRequestsFragment extends ProgressFragment implements HttpResponseListener {
@@ -164,7 +165,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
             mPendingRequestTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null) {
-                Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
+                 ToastWrapper.makeText(getActivity(), R.string.fetch_info_failed,  Toast.LENGTH_LONG);
             }
             return;
         }
@@ -193,12 +194,12 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                         ToastWrapper.makeText(getActivity(), R.string.pending_get_failed,  Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                     ToastWrapper.makeText(getActivity(), R.string.pending_get_failed,  Toast.LENGTH_LONG);
             }
 
             mSwipeRefreshLayout.setRefreshing(false);
@@ -212,7 +213,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                             RequestMoneyAcceptRejectOrCancelResponse.class);
                     String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                         ToastWrapper.makeText(getActivity(), message,  Toast.LENGTH_LONG);
 
                     // Refresh the pending list
                     if (pendingMoneyRequests != null)
@@ -223,12 +224,12 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+                         ToastWrapper.makeText(getActivity(), R.string.could_not_cancel_money_request,  Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+                     ToastWrapper.makeText(getActivity(), R.string.could_not_cancel_money_request,  Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();

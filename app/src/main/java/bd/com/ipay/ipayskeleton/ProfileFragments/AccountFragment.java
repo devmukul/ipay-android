@@ -40,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AccountFragment extends Fragment implements HttpResponseListener {
@@ -372,7 +373,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
             mUploadProfilePictureAsyncTask = null;
             mGetProfileCompletionStatusTask = null;
             if (getActivity() != null) {
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             }
             return;
         }
@@ -400,7 +401,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.profile_picture_set_failed, Toast.LENGTH_SHORT).show();
+                    ToastWrapper.makeText(getActivity(), R.string.profile_picture_set_failed, Toast.LENGTH_SHORT);
             }
 
             mUploadProfilePictureAsyncTask = null;
@@ -421,13 +422,13 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                     }
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_fetching_profile_completion_status, Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(getActivity(), R.string.failed_fetching_profile_completion_status, Toast.LENGTH_LONG);
             }
 
             mGetProfileCompletionStatusTask = null;

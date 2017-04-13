@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class PaymentReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -227,7 +228,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
             mProgressDialog.dismiss();
             mPaymentTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.payment_failed_due_to_server_down, Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(getActivity(), R.string.payment_failed_due_to_server_down, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -240,12 +241,12 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG);
                     getActivity().setResult(Activity.RESULT_OK);
                     getActivity().finish();
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

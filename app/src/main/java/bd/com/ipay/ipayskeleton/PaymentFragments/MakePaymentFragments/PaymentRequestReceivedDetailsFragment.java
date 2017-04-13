@@ -35,6 +35,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMone
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implements HttpResponseListener {
@@ -190,7 +191,7 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
             mAcceptPaymentTask = null;
             mRejectRequestTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(getActivity(), R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -214,12 +215,12 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
 
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mPaymentAcceptPaymentResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), mPaymentAcceptPaymentResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG);
             }
             mProgressDialog.dismiss();
             mAcceptPaymentTask = null;
@@ -242,12 +243,12 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
 
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mPaymentRejectResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), mPaymentRejectResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();

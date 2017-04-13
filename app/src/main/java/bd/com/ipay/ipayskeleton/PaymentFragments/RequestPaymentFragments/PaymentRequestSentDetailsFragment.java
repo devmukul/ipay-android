@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMone
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class PaymentRequestSentDetailsFragment extends ReviewFragment implements HttpResponseListener {
@@ -162,7 +163,7 @@ public class PaymentRequestSentDetailsFragment extends ReviewFragment implements
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
+                 ToastWrapper.makeText(getActivity(), R.string.fetch_info_failed,  Toast.LENGTH_LONG);
             return;
         }
         Gson gson = new Gson();
@@ -175,7 +176,7 @@ public class PaymentRequestSentDetailsFragment extends ReviewFragment implements
                             PaymentAcceptRejectOrCancelResponse.class);
                     String message = mPaymentCancelResponse.getMessage();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                         ToastWrapper.makeText(getActivity(), message,  Toast.LENGTH_LONG);
 
                     if (switchedFromTransactionHistory) {
                         Utilities.finishLauncherActivity(getActivity());
@@ -185,12 +186,12 @@ public class PaymentRequestSentDetailsFragment extends ReviewFragment implements
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+                         ToastWrapper.makeText(getActivity(), R.string.could_not_cancel_money_request,  Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+                     ToastWrapper.makeText(getActivity(), R.string.could_not_cancel_money_request,  Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();

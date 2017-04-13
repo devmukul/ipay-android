@@ -34,6 +34,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMone
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ReceivedMoneyRequestsFragment extends ProgressFragment implements HttpResponseListener {
@@ -135,7 +136,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
             mGetMoneyRequestTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null) {
-                Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
+                ToastWrapper.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
             }
             return;
         }
@@ -165,12 +166,12 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG);
                     }
 
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(getActivity(), R.string.failed_fetching_money_requests, Toast.LENGTH_LONG);
                 }
 
                 mGetMoneyRequestTask = null;
