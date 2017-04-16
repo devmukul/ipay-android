@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.CustomView.BusinessContactsSearchView;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
@@ -61,8 +61,6 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
     private EditText mAmountEditText;
     private EditText mRefNumberEditText;
 
-    private SharedPreferences pref;
-
     private static final int REQUEST_CODE_PERMISSION = 1001;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
@@ -83,8 +81,6 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         buttonPayment = (Button) v.findViewById(R.id.button_payment);
-
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
             mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
@@ -197,8 +193,8 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         String error_message;
 
         String balance = null;
-        if (pref.contains(Constants.USER_BALANCE)) {
-            balance = pref.getString(Constants.USER_BALANCE, null);
+        if (SharedPrefUtilities.contains(Constants.USER_BALANCE)) {
+            balance = SharedPrefUtilities.getString(Constants.USER_BALANCE, null);
         }
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();

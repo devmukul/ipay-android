@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
@@ -70,7 +70,6 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
     private int[] mBankIconArray;
     private int selectedBankPosition = 0;
 
-    private SharedPreferences pref;
     private ProgressDialog mProgressDialog;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
@@ -97,8 +96,6 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         mUserBankNameList = new ArrayList<>();
         mUserBankAccountNumberList = new ArrayList<>();
         mUserBankList = new ArrayList<>();
-
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         // Block from adding bank if an user is not verified
         if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
@@ -233,8 +230,8 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         View focusView = null;
 
         String balance = null;
-        if (pref.contains(Constants.USER_BALANCE)) {
-            balance = pref.getString(Constants.USER_BALANCE, null);
+        if (SharedPrefUtilities.contains(Constants.USER_BALANCE)) {
+            balance = SharedPrefUtilities.getString(Constants.USER_BALANCE, null);
         }
 
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {

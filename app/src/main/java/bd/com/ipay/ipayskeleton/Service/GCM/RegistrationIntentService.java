@@ -1,10 +1,7 @@
 package bd.com.ipay.ipayskeleton.Service.GCM;
 
-import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.gcm.GcmPubSub;
@@ -14,6 +11,7 @@ import com.google.android.gms.iid.InstanceID;
 import java.io.IOException;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 
@@ -28,7 +26,6 @@ public class RegistrationIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         try {
             // [START register_for_gcm]
@@ -48,13 +45,13 @@ public class RegistrationIntentService extends IntentService {
             // You should store a boolean that indicates whether the generated token has been
             // sent to your server. If the boolean is false, send the token to your server,
             // otherwise your server should have already received the token.
-            sharedPreferences.edit().putBoolean(Constants.GCM_REGISTRATION_ID_SENT_TO_SERVER, true).apply();
+            SharedPrefUtilities.putBoolean(Constants.GCM_REGISTRATION_ID_SENT_TO_SERVER, true);
             // [END register_for_gcm]
         } catch (Exception e) {
             Logger.logD(TAG, "Failed to complete token refresh", e);
             // If an exception happens while fetching the new token or updating our registration data
             // on a third-party server, this ensures that we'll attempt the update at a later time.
-            sharedPreferences.edit().putBoolean(Constants.GCM_REGISTRATION_ID_SENT_TO_SERVER, false).apply();
+           SharedPrefUtilities.putBoolean(Constants.GCM_REGISTRATION_ID_SENT_TO_SERVER, false);
         }
         // Notify UI that registration has completed, so the progress indicator can be hidden.
         Intent registrationComplete = new Intent("Registration Complete");
@@ -68,8 +65,7 @@ public class RegistrationIntentService extends IntentService {
      * maintained by your application.
      */
     private void saveGCMTokenInPreference(String token) {
-        SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        pref.edit().putString(Constants.PUSH_NOTIFICATION_TOKEN, token).apply();
+       SharedPrefUtilities.putString(Constants.PUSH_NOTIFICATION_TOKEN, token);
     }
 
     /**

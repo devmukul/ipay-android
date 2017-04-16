@@ -59,6 +59,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletio
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
@@ -96,8 +97,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private static final int REQUEST_CODE_PERMISSION = 1001;
 
     private View mProfileCompletionPromptView;
-
-    private SharedPreferences pref;
 
     private static boolean profileCompletionPromptShown = false;
 
@@ -142,8 +141,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mProgressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.profile_completion_percentage);
         mProfileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
         mCloseButton = (ImageButton) mProfileCompletionPromptView.findViewById(R.id.button_close);
-
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -527,7 +524,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                     if (balance != null) {
                         if (isAdded())
                             balanceView.setText(Utilities.takaWithComma(Double.parseDouble(balance)) + " " + getString(R.string.bdt));
-                        pref.edit().putString(Constants.USER_BALANCE, balance).apply();
+                        SharedPrefUtilities.putString(Constants.USER_BALANCE, balance);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

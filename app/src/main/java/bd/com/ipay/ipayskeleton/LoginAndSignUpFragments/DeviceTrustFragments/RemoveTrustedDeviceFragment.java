@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.DeviceTrustFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -42,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.TrustedDev
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -152,8 +152,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         String mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
         String mDeviceName = DeviceInfoFactory.getDeviceName();
 
-        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+        String pushRegistrationID = SharedPrefUtilities.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
 
         AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
                 Constants.MOBILE_ANDROID + mDeviceID, pushRegistrationID);
@@ -262,8 +261,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String UUID = mAddToTrustedDeviceResponse.getUUID();
-                    SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                    pref.edit().putString(Constants.UUID, UUID).apply();
+                    SharedPrefUtilities.putString(Constants.UUID, UUID);
 
                     // Launch HomeActivity from here on successful trusted device add
                     ((DeviceTrustActivity) getActivity()).switchToHomeActivity();

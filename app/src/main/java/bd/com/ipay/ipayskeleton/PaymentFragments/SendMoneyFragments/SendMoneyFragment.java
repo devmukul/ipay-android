@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
@@ -57,8 +57,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
 
-    private SharedPreferences pref;
-
     public static final int REQUEST_CODE_PERMISSION = 1001;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
@@ -73,8 +71,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         buttonSend = (Button) v.findViewById(R.id.button_send_money);
-
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
@@ -104,7 +100,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                         launchReviewPage();
                     }
                 } else if (getActivity() != null)
-                   ToastWrapper.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG);
+                    ToastWrapper.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG);
             }
         });
 
@@ -133,7 +129,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     initiateScan();
                 } else {
-                   ToastWrapper.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG);
+                    ToastWrapper.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG);
                 }
             }
         }
@@ -167,7 +163,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                         if (ContactEngine.isValidNumber(result)) {
                             mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
                         } else if (getActivity() != null)
-                           ToastWrapper.makeText(getActivity(), getResources().getString(
+                            ToastWrapper.makeText(getActivity(), getResources().getString(
                                     R.string.please_scan_a_valid_pin), Toast.LENGTH_SHORT);
                     }
                 });
@@ -187,8 +183,8 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
         String balance = null;
-        if (pref.contains(Constants.USER_BALANCE)) {
-            balance = pref.getString(Constants.USER_BALANCE, null);
+        if (SharedPrefUtilities.contains(Constants.USER_BALANCE)) {
+            balance = SharedPrefUtilities.getString(Constants.USER_BALANCE, null);
         }
 
         // validation check of amount
@@ -278,7 +274,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             if (getActivity() != null)
-               ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -302,12 +298,12 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                       ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
+                        ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                   ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
+                    ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             }
 
             mGetBusinessRuleTask = null;

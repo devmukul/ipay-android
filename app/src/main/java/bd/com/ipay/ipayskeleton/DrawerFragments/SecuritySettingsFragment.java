@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -43,7 +42,6 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
     private View mFingerprintOptionHolder;
 
     private ProgressDialog mProgressDialog;
-    private SharedPreferences mPref;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,7 +59,6 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
         mFingerprintOptionHolder = view.findViewById(R.id.fingerprint_layout);
 
         mProgressDialog = new ProgressDialog(getActivity());
-        mPref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         setVisibilityOfFingerPrintOption();
         setButtonActions();

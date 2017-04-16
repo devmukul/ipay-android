@@ -1,11 +1,9 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,19 +20,20 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager.FingerPrintAuthenticationManager;
-import bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager.FingerprintAuthenticationDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
+import bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager.FingerPrintAuthenticationManager;
+import bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager.FingerprintAuthenticationDialog;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
@@ -57,8 +56,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
     private ProgressDialog mProgressDialog;
     private String mDeviceID;
-    private SharedPreferences pref;
-
     private boolean tryLogInWithTouchID = false;
     private FingerprintAuthenticationDialog mFingerprintAuthenticationDialog;
 
@@ -72,7 +69,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
          * If UUID exists, it means device was set as trusted before.
          * Set the login username so that user can't change it.
          */
-        if (pref.contains(Constants.UUID)) {
+        if (SharedPrefUtilities.contains(Constants.UUID)) {
             mPasswordEditText.setText("");
             mPasswordEditText.requestFocus();
             mUserNameEditText.setEnabled(false);
@@ -90,7 +87,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         }
 
         // Auto Login
-        if (pref.contains(Constants.USERID) && Constants.DEBUG && Constants.AUTO_LOGIN) {
+        if (SharedPrefUtilities.contains(Constants.USERID) && Constants.DEBUG && Constants.AUTO_LOGIN) {
             mPasswordEditText.setText("qqqqqqq1");
             //           mUserNameEditText.setText("+8801677258077");
             attemptLogin();
@@ -110,8 +107,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
 
         mButtonLogin = (Button) v.findViewById(R.id.login_button);
@@ -122,7 +117,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         mPasswordEditText = (EditText) v.findViewById(R.id.login_password);
         mInfoView = (ImageView) v.findViewById(R.id.login_info);
 
-        if (pref.contains(Constants.USERID)) {
+        if (SharedPrefUtilities.contains(Constants.USERID)) {
             mButtonJoinUs.setVisibility(View.GONE);
         }
 
@@ -282,11 +277,11 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
             mProgressDialog.show();
 
             String UUID = null;
-            if (pref.contains(Constants.UUID)) {
-                UUID = pref.getString(Constants.UUID, null);
+            if (SharedPrefUtilities.contains(Constants.UUID)) {
+                UUID = SharedPrefUtilities.getString(Constants.UUID, null);
             }
 
-            String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+            String pushRegistrationID = SharedPrefUtilities.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
 
             LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
                     Constants.MOBILE_ANDROID + mDeviceID, UUID, null, pushRegistrationID, null);
@@ -322,14 +317,13 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     ProfileInfoCacheManager.setLoggedInStatus(true);
 
-                    SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                    pref.edit().putString(Constants.USERID, mUserNameLogin).apply();
-                    pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).apply();
+                    SharedPrefUtilities.putString(Constants.USERID, mUserNameLogin);
+                    SharedPrefUtilities.putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType());
                     // When user logs in, we want that by default he would log in to his default account
                     TokenManager.deactivateEmployerAccount();
 
                     // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
-                    if (!pref.contains(Constants.UUID))
+                    if (!SharedPrefUtilities.contains(Constants.UUID))
                         ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
                     else ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
 
@@ -362,7 +356,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                          *  Logged in from an untrusted device with invalid UUID.
                          *  Remove the saved UUID and send the login request again.
                          */
-                        pref.edit().remove(Constants.UUID).apply();
+                        SharedPrefUtilities.remove(Constants.UUID);
 
                         // Attempt login
                         mLoginTask = null;

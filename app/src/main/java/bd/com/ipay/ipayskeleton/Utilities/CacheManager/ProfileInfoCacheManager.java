@@ -1,32 +1,28 @@
 package bd.com.ipay.ipayskeleton.Utilities.CacheManager;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v4.content.LocalBroadcastManager;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class ProfileInfoCacheManager {
-    private static SharedPreferences pref;
     private static Context context;
 
     public static void initialize(Context context) {
         ProfileInfoCacheManager.context = context;
-        pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
     }
 
     public static String getName() {
-        return pref.getString(Constants.USER_NAME, "");
+        return SharedPrefUtilities.getString(Constants.USER_NAME, "");
     }
 
     public static String getMobileNumber() {
-        return pref.getString(Constants.USERID, "");
+        return SharedPrefUtilities.getString(Constants.USERID, "");
     }
 
     public static String getProfileImageUrl() {
-        return pref.getString(Constants.PROFILE_PICTURE, "");
+        return SharedPrefUtilities.getString(Constants.PROFILE_PICTURE, "");
     }
 
     public static boolean isAccountVerified() {
@@ -38,20 +34,19 @@ public class ProfileInfoCacheManager {
     }
 
     public static String getVerificationStatus() {
-        return pref.getString(Constants.VERIFICATION_STATUS, "");
+        return SharedPrefUtilities.getString(Constants.VERIFICATION_STATUS, "");
     }
 
     public static int getAccountType() {
-        return pref.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE);
+        return SharedPrefUtilities.getInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE);
     }
 
     public static void updateCache(String name, String mobileNumber, String profileImageUrl, String verificationStatus) {
-        pref.edit()
-                .putString(Constants.USER_NAME, name)
-                .putString(Constants.USERID, mobileNumber)
-                .putString(Constants.PROFILE_PICTURE, profileImageUrl)
-                .putString(Constants.VERIFICATION_STATUS, verificationStatus)
-                .apply();
+
+        SharedPrefUtilities.putString(Constants.USER_NAME, name);
+        SharedPrefUtilities.putString(Constants.USERID, mobileNumber);
+        SharedPrefUtilities.putString(Constants.PROFILE_PICTURE, profileImageUrl);
+        SharedPrefUtilities.putString(Constants.VERIFICATION_STATUS, verificationStatus);
 
         // Send broadcast that profile information has updated, so views showing profile information
         // (e.g. HomeFragment) could be refreshed
@@ -60,11 +55,9 @@ public class ProfileInfoCacheManager {
     }
 
     public static void updateCache(String name, String profileImageUrl, String verificationStatus) {
-        pref.edit()
-                .putString(Constants.USER_NAME, name)
-                .putString(Constants.PROFILE_PICTURE, profileImageUrl)
-                .putString(Constants.VERIFICATION_STATUS, verificationStatus)
-                .apply();
+        SharedPrefUtilities.putString(Constants.USER_NAME, name);
+        SharedPrefUtilities.putString(Constants.PROFILE_PICTURE, profileImageUrl);
+        SharedPrefUtilities.putString(Constants.VERIFICATION_STATUS, verificationStatus);
 
         // Send broadcast that profile information has updated, so views showing profile information
         // (e.g. HomeFragment) could be refreshed
@@ -73,34 +66,32 @@ public class ProfileInfoCacheManager {
     }
 
     public static void setLoggedInStatus(boolean loggedIn) {
-        pref.edit().putBoolean(Constants.LOGGED_IN, loggedIn).apply();
+        SharedPrefUtilities.putBoolean(Constants.LOGGED_IN, loggedIn);
     }
 
     public static boolean getLoggedInStatus(boolean defaultValue) {
-        boolean loggedIn = pref.getBoolean(Constants.LOGGED_IN, defaultValue);
+        boolean loggedIn = SharedPrefUtilities.getBoolean(Constants.LOGGED_IN, defaultValue);
         return loggedIn;
     }
 
     public static boolean getFingerprintAuthenticationStatus(boolean defaultValue) {
-        boolean isFingerprintAuthOn = pref.getBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, defaultValue);
+        boolean isFingerprintAuthOn = SharedPrefUtilities.getBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, defaultValue);
         return isFingerprintAuthOn;
     }
 
     public static void setFingerprintAuthenticationStatus(boolean value) {
-        pref.edit().putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, value).apply();
+        SharedPrefUtilities.putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, value);
     }
 
     public static boolean ifPasswordEncrypted() {
-        if (pref.getString(Constants.KEY_PASSWORD, "") != "")
+        if (SharedPrefUtilities.getString(Constants.KEY_PASSWORD, "") != "")
             return true;
         return false;
     }
 
     public static void clearEncryptedPassword() {
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString(Constants.KEY_PASSWORD, "");
-        pref.edit().putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false).apply();
-        editor.commit();
+        SharedPrefUtilities.putString(Constants.KEY_PASSWORD, "");
+        SharedPrefUtilities.putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false);
     }
 
 }

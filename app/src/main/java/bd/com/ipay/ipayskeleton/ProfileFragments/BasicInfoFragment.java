@@ -1,8 +1,6 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,8 +19,8 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetParentInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
@@ -32,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.OccupationReque
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -68,8 +67,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     private TextView mGenderView;
     private TextView mSignUpTimeView;
 
-    private SharedPreferences pref;
-
     private String mName = "";
     private String mMobileNumber = "";
     private String mProfileImageUrl = "";
@@ -101,9 +98,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_basic_info, container, false);
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         getActivity().setTitle(R.string.basic_info);
-
 
         mNameView = (TextView) view.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) view.findViewById(R.id.textview_mobile_number);
@@ -118,7 +113,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mGenderView = (TextView) view.findViewById(R.id.textview_gender);
         mSignUpTimeView = (TextView) view.findViewById(R.id.textview_signup);
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
-        mDateOfBirth = pref.getString(Constants.BIRTHDAY, "");
+        mDateOfBirth = SharedPrefUtilities.getString(Constants.BIRTHDAY, "");
         mProgressDialog = new ProgressDialog(getActivity());
         mContactEditButton = (ImageButton) view.findViewById(R.id.button_edit_contact_information);
         mParentInfoEditButton = (ImageButton) view.findViewById(R.id.button_edit_parent_information);
@@ -254,7 +249,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             mGetProfileInfoTask = null;
             mGetOccupationTask = null;
             if (getActivity() != null)
-               ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -274,12 +269,12 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
                 } else {
                     if (getActivity() != null)
-                       ToastWrapper.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
+                        ToastWrapper.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                   ToastWrapper.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
+                    ToastWrapper.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
             }
 
             mGetProfileInfoTask = null;
@@ -315,12 +310,12 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
                 } else {
                     if (getActivity() != null)
-                       ToastWrapper.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
+                        ToastWrapper.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                   ToastWrapper.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
+                    ToastWrapper.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
             }
 
             mGetParentInfoTask = null;

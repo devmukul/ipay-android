@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,6 +35,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -55,7 +55,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     private TextView mMobileTopUpInfoTextView;
 
     private ProgressDialog mProgressDialog;
-    private SharedPreferences pref;
 
     private List<String> mPackageList;
     private List<String> mOperatorList;
@@ -74,7 +73,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_mobile_topup, container, false);
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mMobileNumberEditText = (CustomContactsSearchView) view.findViewById(R.id.mobile_number);
         mAmountEditText = (EditText) view.findViewById(R.id.amount);
@@ -90,7 +88,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         mUserMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         setOperatorAndPackageAdapter();
 
-        int mobileNumberType = pref.getInt(Constants.MOBILE_NUMBER_TYPE, Constants.MOBILE_TYPE_PREPAID);
+        int mobileNumberType = SharedPrefUtilities.getInt(Constants.MOBILE_NUMBER_TYPE, Constants.MOBILE_TYPE_PREPAID);
         if (mobileNumberType == Constants.MOBILE_TYPE_PREPAID) {
             mPackageEditText.setText(mPackageList.get(Constants.MOBILE_TYPE_PREPAID - 1));
             mSelectedPackageTypeId = Constants.MOBILE_TYPE_PREPAID - 1;
@@ -212,8 +210,8 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         BigDecimal maxAmount;
 
         String balance = null;
-        if (pref.contains(Constants.USER_BALANCE)) {
-            balance = pref.getString(Constants.USER_BALANCE, null);
+        if (SharedPrefUtilities.contains(Constants.USER_BALANCE)) {
+            balance = SharedPrefUtilities.getString(Constants.USER_BALANCE, null);
         }
 
         if (mAmountEditText.getText().toString().trim().length() == 0) {
@@ -282,7 +280,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             mobileNumberType = Constants.MOBILE_TYPE_POSTPAID;
         else
             mobileNumberType = Constants.MOBILE_TYPE_PREPAID;
-        pref.edit().putInt(Constants.MOBILE_NUMBER_TYPE, mobileNumberType).apply();
+        SharedPrefUtilities.putInt(Constants.MOBILE_NUMBER_TYPE, mobileNumberType);
 
         int operatorCode = mSelectedOperatorTypeId + 1;
         String countryCode = "+88"; // TODO: For now Bangladesh Only

@@ -1,14 +1,12 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -68,6 +66,7 @@ import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
 import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.Config;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
@@ -95,7 +94,6 @@ public class HomeActivity extends BaseActivity
     private AutoResizeTextView mMobileNumberView;
     private TextView mNameView;
     private ProfileImageView mProfileImageView;
-    private SharedPreferences pref;
     private String mUserID;
     private String mDeviceID;
 
@@ -157,11 +155,10 @@ public class HomeActivity extends BaseActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mUserID = ProfileInfoCacheManager.getMobileNumber();
         mDeviceID = DeviceInfoFactory.getDeviceId(HomeActivity.this);
 
-        pref.edit().putBoolean(Constants.FIRST_LAUNCH, false).apply();
+        SharedPrefUtilities.putBoolean(Constants.FIRST_LAUNCH, false);
 
         mMobileNumberView = (AutoResizeTextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_mobile_number);
         mNameView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_name);
@@ -172,7 +169,7 @@ public class HomeActivity extends BaseActivity
         switchToDashBoard();
 
         // Check if there's anything new from the server
-        int accountType = pref.getInt(Constants.ACCOUNT_TYPE, 0);
+        int accountType = SharedPrefUtilities.getInt(Constants.ACCOUNT_TYPE, 0);
         if (accountType == Constants.BUSINESS_ACCOUNT_TYPE) {
             getBusinessInformation();
         } else getProfileInfo();
@@ -225,7 +222,7 @@ public class HomeActivity extends BaseActivity
         sendAnalytics();
 
         // Check if the stored critical preference version is lesser than the version found from config
-        savedCriticalPreferenceVersion = pref.getInt(Constants.CRITICAL_PREFERENCE_VERSION, 0);
+        savedCriticalPreferenceVersion =SharedPrefUtilities.getInt(Constants.CRITICAL_PREFERENCE_VERSION, 0);
         if (Config.criticalPreferenceVersion > savedCriticalPreferenceVersion)
             todoCheckList(savedCriticalPreferenceVersion);
 
@@ -328,7 +325,7 @@ public class HomeActivity extends BaseActivity
         }
 
         // Store the updated critical preference version after all necessary actions.
-        pref.edit().putInt(Constants.CRITICAL_PREFERENCE_VERSION, Config.criticalPreferenceVersion).commit();
+        SharedPrefUtilities.putInt(Constants.CRITICAL_PREFERENCE_VERSION, Config.criticalPreferenceVersion);
     }
 
     @Override

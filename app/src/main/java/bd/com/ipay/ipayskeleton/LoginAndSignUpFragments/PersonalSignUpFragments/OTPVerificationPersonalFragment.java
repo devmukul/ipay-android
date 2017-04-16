@@ -1,8 +1,6 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -22,8 +20,8 @@ import java.util.Date;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
@@ -34,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.SignupReq
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.SignupResponsePersonal;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -201,8 +200,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             return;
         }
 
-        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+        String pushRegistrationID = SharedPrefUtilities.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
 
         mProgressDialog.show();
 
@@ -241,14 +239,14 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     String otp = mSignupResponseModel.getOtp();
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                        pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumber).apply();
-                        pref.edit().putString(Constants.PASSWORD, SignupOrLoginActivity.mPassword).apply();
-                        pref.edit().putString(Constants.NAME, SignupOrLoginActivity.mName).apply();
-                        pref.edit().putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthday).apply();
-                        pref.edit().putString(Constants.GENDER, SignupOrLoginActivity.mGender).apply();
-                        pref.edit().putString(Constants.USERCOUNTRY, "Bangladesh").apply();   // TODO
-                        pref.edit().putInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE).apply();
+
+                        SharedPrefUtilities.putString(Constants.USERID, SignupOrLoginActivity.mMobileNumber);
+                        SharedPrefUtilities.putString(Constants.PASSWORD, SignupOrLoginActivity.mPassword);
+                        SharedPrefUtilities.putString(Constants.NAME, SignupOrLoginActivity.mName);
+                        SharedPrefUtilities.putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthday);
+                        SharedPrefUtilities.putString(Constants.GENDER, SignupOrLoginActivity.mGender);
+                        SharedPrefUtilities.putString(Constants.USERCOUNTRY, "Bangladesh");
+                        SharedPrefUtilities.putInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE);
 
                         // Request a login immediately after sign up
                         if (Utilities.isConnectionAvailable(getActivity()))

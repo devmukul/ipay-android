@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.Utilities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -15,6 +14,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPinDialogBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.PinInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
 
 /**
  * Checks if pin has been added for this user. If not, show pin input dialog. Otherwise,
@@ -29,7 +29,6 @@ public class PinChecker implements HttpResponseListener {
     private PinInfoResponse mPinInfoResponse;
 
     private final ProgressDialog mProgressDialog;
-    private final SharedPreferences pref;
 
     private boolean cancel;
 
@@ -37,14 +36,12 @@ public class PinChecker implements HttpResponseListener {
         mContext = context;
         mPinCheckerListener = pinCheckerListener;
         mProgressDialog = new ProgressDialog(context);
-
-        pref = mContext.getSharedPreferences(Constants.ApplicationTag, Context.MODE_PRIVATE);
     }
 
     public void execute() {
         cancel = false;
 
-        if (pref.getBoolean(Constants.IS_PIN_ADDED, false)) {
+        if (SharedPrefUtilities.getBoolean(Constants.IS_PIN_ADDED, false)) {
             if (mPinCheckerListener != null) {
                 mPinCheckerListener.ifPinAdded();
             }
@@ -101,7 +98,7 @@ public class PinChecker implements HttpResponseListener {
                             }
 
                             // Save the information so that we don't need to get pin info again and again
-                            pref.edit().putBoolean(Constants.IS_PIN_ADDED, true).apply();
+                            SharedPrefUtilities.putBoolean(Constants.IS_PIN_ADDED, true);
 
                         } else {
                             AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(mContext, new AddPinDialogBuilder.AddPinListener() {
