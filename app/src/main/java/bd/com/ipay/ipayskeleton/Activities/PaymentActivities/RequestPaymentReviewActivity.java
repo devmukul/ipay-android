@@ -42,7 +42,7 @@ public class RequestPaymentReviewActivity extends BaseActivity implements HttpRe
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mReceiverMobileNumber = getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
+        mReceiverMobileNumber = getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
 
         getProfileInfo(mReceiverMobileNumber);
     }

@@ -623,7 +623,6 @@ public class Constants {
     public static final int TRANSACTION_HISTORY_TOP_UP_ROLLBACK = 2002;
     public static final int TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK = 3003;
     public static final int TRANSACTION_HISTORY_REQUEST_PAYMENT = 6005;
-    public static final int TRANSACTION_HISTORY_INVOICE = 6003;
     public static final int TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT = 3502;
 
     public static final int SERVICE_ID_REQUEST_MONEY = 6001;
@@ -671,9 +670,9 @@ public class Constants {
     public static final String PUSH_NOTIFICATION_EVENT = "EVENT";
 
     public static final String TOTAL = "total";
-    public static final String INVOICE_RECEIVER_TAG = "receiver";
+    public static final String RECEIVER_MOBILE_NUMBER = "receiver";
     public static final String INVOICE_ITEM_NAME_TAG = "item_name";
-    public static final String INVOICE_DESCRIPTION_TAG = "description";
+    public static final String DESCRIPTION_TAG = "description";
     public static final String REFERENCE_NUMBER = "reference number";
     public static final String INVOICE_QUANTITY_TAG = "quantity";
     public static final String INVOICE_RATE_TAG = "rate";

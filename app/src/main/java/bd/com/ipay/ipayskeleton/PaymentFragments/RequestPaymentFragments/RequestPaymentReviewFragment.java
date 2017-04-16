@@ -64,8 +64,8 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_request_payment_review, container, false);
 
-        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
-        mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
+        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
+        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
         mAmount = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.AMOUNT));
         mTotal = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.TOTAL));
         if (getActivity().getIntent().getStringExtra(Constants.VAT).equals(""))
@@ -85,7 +85,7 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
 
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
-        mCreateNewPaymentRequestButton = (Button) v.findViewById(R.id.button_create_invoice);
+        mCreateNewPaymentRequestButton = (Button) v.findViewById(R.id.button_create_payment_request);
 
         mProgressDialog = new ProgressDialog(getActivity());
 

@@ -325,7 +325,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
     }
 
-    private void launchInvoiceHistoryFragment() {
+    private void launchPaymentRequestsReceivedDetailsFragment() {
         Bundle bundle = new Bundle();
         bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
         bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
@@ -336,7 +336,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         bundle.putString(Constants.AMOUNT, mAmount.toString());
         bundle.putString(Constants.TITLE, mTitle);
         bundle.putString(Constants.DESCRIPTION, mDescriptionOfRequest);
-        bundle.putString(Constants.TAG, Constants.INVOICE);
+        bundle.putString(Constants.TAG, Constants.REQUEST_PAYMENT);
 
         if (mInvoiceItemList != null)
             bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mInvoiceItemList));
@@ -352,8 +352,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
         bundle.putSerializable(Constants.AMOUNT, mAmount);
-        bundle.putString(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
-        bundle.putString(Constants.INVOICE_DESCRIPTION_TAG, mDescriptionOfRequest);
+        bundle.putString(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
+        bundle.putString(Constants.DESCRIPTION_TAG, mDescriptionOfRequest);
         bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
         bundle.putString(Constants.NAME, mReceiverName);
         bundle.putString(Constants.PHOTO_URI, mPhotoUri);
@@ -644,7 +644,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
                             attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
                         else {
-                            launchInvoiceHistoryFragment();
+                            launchPaymentRequestsReceivedDetailsFragment();
                         }
                     }
                 });

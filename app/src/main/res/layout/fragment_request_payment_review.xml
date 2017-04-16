@@ -152,7 +152,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/button_create_invoice"
+            android:id="@+id/button_create_payment_request"
             style="@style/PrimaryMediumButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

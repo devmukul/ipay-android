@@ -642,7 +642,7 @@
     <string name="please_select_a_file_to_upload">Please select a file to upload</string>
     <string name="select_a_file">Select a file</string>
     <string name="failed_fetching_money_requests">Failed to fetch money requests</string>
-    <string name="failed_fetching_single_invoice">Failed to fetch invoice</string>
+    <string name="failed_fetching_payment_request">Failed to fetch payment request</string>
     <string name="not_a_valid_invoice_id">Please scan a valid invoice Id</string>
     <string name="failed_fetching_profile_completion_status">Failed to fetch profile completion status</string>
     <string name="can_not_change_picture">Verified user can not change profile picture</string>
@@ -658,7 +658,7 @@
     <string name="introduced_list_header">I have Introduced</string>
     <string name="introducer_list_header">Introduced by</string>
     <string name="select_a_contact">Select a contact</string>
-    <string name="progress_dialog_single_invoice">Fetching invoice...</string>
+    <string name="progress_dialog_payment_request">Fetching payment request...</string>
     <string name="add_contact_successful">Contact added successfully. Refreshing contact list...</string>
     <string name="delete_contact_successful">Contact deleted successfully. Refreshing contact list...</string>
     <string name="update_contact_successful">Update contact successful</string>

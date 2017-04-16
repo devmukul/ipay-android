@@ -351,8 +351,8 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
             Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
             intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
             intent.putExtra(Constants.AMOUNT, mAmount);
-            intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
-            intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, mDescription);
+            intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
+            intent.putExtra(Constants.DESCRIPTION_TAG, mDescription);
             intent.putExtra(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
             intent.putExtra(Constants.NAME, mReceiverName);
             intent.putExtra(Constants.PHOTO_URI, mPhotoUri);

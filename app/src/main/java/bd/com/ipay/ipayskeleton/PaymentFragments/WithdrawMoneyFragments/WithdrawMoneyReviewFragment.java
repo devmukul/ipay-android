@@ -65,7 +65,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         View v = inflater.inflate(R.layout.fragment_withdraw_money_review, container, false);
 
         mAmount = getActivity().getIntent().getDoubleExtra(Constants.AMOUNT, 0);
-        mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
+        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
         mBankAccountId = getActivity().getIntent().getLongExtra(Constants.BANK_ACCOUNT_ID, -1);
         mBankName = getActivity().getIntent().getStringExtra(Constants.BANK_NAME);
         mBankAccountNumber = getActivity().getIntent().getStringExtra(Constants.BANK_ACCOUNT_NUMBER);

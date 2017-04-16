@@ -68,8 +68,8 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         View v = inflater.inflate(R.layout.fragment_payment_review, container, false);
 
         mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
-        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
-        mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
+        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
+        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
         mReferenceNumber = getActivity().getIntent().getStringExtra(Constants.REFERENCE_NUMBER);
 
         mReceiverName = getArguments().getString(Constants.NAME);

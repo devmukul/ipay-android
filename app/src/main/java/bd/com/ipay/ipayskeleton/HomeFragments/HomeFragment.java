@@ -1,20 +1,13 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,26 +23,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SingleInvoiceActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPinDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -89,12 +77,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private LinearLayout mRequestMoneyButton;
     private LinearLayout mMobileTopUpButton;
     private LinearLayout mMakePaymentButton;
-    private TextView mCreateInvoiceButton;
-    private LinearLayout mPayByQRCodeButton;
-
     private ImageView refreshBalanceButton;
-
-    private static final int REQUEST_CODE_PERMISSION = 1001;
 
     private View mProfileCompletionPromptView;
 
@@ -133,8 +116,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mRequestMoneyButton = (LinearLayout) v.findViewById(R.id.button_request_money);
         mMobileTopUpButton = (LinearLayout) v.findViewById(R.id.button_mobile_topup);
         mMakePaymentButton = (LinearLayout) v.findViewById(R.id.button_make_payment);
-        mCreateInvoiceButton = (Button) v.findViewById(R.id.button_create_invoice);
-        mPayByQRCodeButton = (LinearLayout) v.findViewById(R.id.button_pay_by_QR_code);
 
         mProgressBarWithoutAnimation = (ProgressBar) v.findViewById(R.id.circular_progress_bar);
 
@@ -148,11 +129,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 mProfileCompletionPromptView.setVisibility(View.GONE);
             }
         });
-
-       /* if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
-            mCreateInvoiceButton.setVisibility(View.GONE);
-        } else if (ProfileInfoCacheManager.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
-            mCreateInvoiceButton.setVisibility(View.VISIBLE); */
 
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,26 +194,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 makePaymentPinChecker.execute();
             }
         });
-
-        mCreateInvoiceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), RequestPaymentActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-        mPayByQRCodeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA},
-                            REQUEST_CODE_PERMISSION);
-                } else initiateScan();
-            }
-        });
-
 
         mMobileTopUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -311,58 +267,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         super.onDestroyView();
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-
-        switch (requestCode) {
-            case REQUEST_CODE_PERMISSION: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    initiateScan();
-                } else {
-                    Toast.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
-
-    private void initiateScan() {
-        IntentIntegrator.forSupportFragment(this).initiateScan();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
-            IntentResult scanResult = IntentIntegrator.parseActivityResult(
-                    requestCode, resultCode, data);
-            if (scanResult == null) {
-                return;
-            }
-            final String result = scanResult.getContents();
-            if (result != null) {
-                Handler mHandler = new Handler();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            PinChecker singleInvoicePinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                                @Override
-                                public void ifPinAdded() {
-                                    Intent intent = new Intent(getActivity(), SingleInvoiceActivity.class);
-                                    intent.putExtra(Constants.RESULT, result);
-                                    startActivity(intent);
-                                }
-                            });
-                            singleInvoicePinChecker.execute();
-                        } catch (NumberFormatException e) {
-                            Toast.makeText(getActivity(), R.string.error_invalid_QR_code, Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-            }
-        }
-    }
-
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {

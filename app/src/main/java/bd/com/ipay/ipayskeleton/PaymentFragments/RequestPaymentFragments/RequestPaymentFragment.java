@@ -239,9 +239,9 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
         String vat = mVatEditText.getText().toString();
 
         Intent intent = new Intent(getActivity(), RequestPaymentReviewActivity.class);
-        intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
+        intent.putExtra(Constants.DESCRIPTION_TAG, description);
         intent.putExtra(Constants.INVOICE_AMOUNT_TAG, amount);
-        intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(receiver));
+        intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(receiver));
 
         if (vat != null) intent.putExtra(Constants.VAT, vat);
         else intent.putExtra(Constants.VAT, "0");
