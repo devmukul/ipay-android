@@ -8,7 +8,6 @@ import bd.com.ipay.ipayskeleton.Utilities.AppInstance.AppInstanceUtilities;
 public class ToastWrapper {
 
     public static void makeText(Context context, String text, int duration) {
-
         if (AppInstanceUtilities.isUserActive(context)) {
             Toast.makeText(context, text, duration).show();
         }

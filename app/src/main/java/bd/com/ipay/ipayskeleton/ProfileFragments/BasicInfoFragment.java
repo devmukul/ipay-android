@@ -30,7 +30,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.OccupationReque
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -113,7 +113,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mGenderView = (TextView) view.findViewById(R.id.textview_gender);
         mSignUpTimeView = (TextView) view.findViewById(R.id.textview_signup);
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
-        mDateOfBirth = SharedPrefUtilities.getString(Constants.BIRTHDAY, "");
+        mDateOfBirth = ProfileInfoCacheManager.getBIRTHDAY("");
         mProgressDialog = new ProgressDialog(getActivity());
         mContactEditButton = (ImageButton) view.findViewById(R.id.button_edit_contact_information);
         mParentInfoEditButton = (ImageButton) view.findViewById(R.id.button_edit_parent_information);
@@ -145,12 +145,12 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
         setContentShown(false);
 
-        if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE)
-                || PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE)) {
+        if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE)
+                || PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE)) {
             getProfileInfo();
         } else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE);
+            String json = dataHelper.getPushEvent(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE);
 
             if (json == null)
                 getProfileInfo();
@@ -262,10 +262,10 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
                     processProfileInfoResponse(result.getJsonString());
 
                     DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
+                    dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
 
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+                    PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
+                    PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
 
                 } else {
                     if (getActivity() != null)

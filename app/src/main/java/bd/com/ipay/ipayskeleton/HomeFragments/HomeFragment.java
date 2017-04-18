@@ -47,7 +47,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletio
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
@@ -281,7 +281,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     }
 
     private void updateProfileData() {
-        mNameView.setText(ProfileInfoCacheManager.getName());
+        mNameView.setText(ProfileInfoCacheManager.getUserName());
         mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
         mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
                 ProfileInfoCacheManager.getProfileImageUrl(), false);
@@ -428,7 +428,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                     if (balance != null) {
                         if (isAdded())
                             balanceView.setText(Utilities.takaWithComma(Double.parseDouble(balance)) + " " + getString(R.string.bdt));
-                        SharedPrefUtilities.putString(Constants.USER_BALANCE, balance);
+                        SharedPrefManager.setUserBalance(balance);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

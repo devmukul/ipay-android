@@ -32,7 +32,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.SignupReq
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.SignupResponseBusiness;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -210,7 +210,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
             return;
         }
 
-        String pushRegistrationID = SharedPrefUtilities.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+        String pushRegistrationID = SharedPrefManager.getPushNotificationToken(null);
 
         mProgressDialog.show();
         LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
@@ -247,12 +247,12 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                     String otp = mSignupResponseBusiness.getOtp();
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        SharedPrefUtilities.putString(Constants.USERID, SignupOrLoginActivity.mMobileNumberBusiness);
-                        SharedPrefUtilities.putString(Constants.PASSWORD, SignupOrLoginActivity.mPasswordBusiness);
-                        SharedPrefUtilities.putString(Constants.NAME, SignupOrLoginActivity.mNameBusiness);
-                        SharedPrefUtilities.putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthdayBusinessHolder);
-                        SharedPrefUtilities.putString(Constants.GENDER, "M");
-                        SharedPrefUtilities.putInt(Constants.ACCOUNT_TYPE, Constants.BUSINESS_ACCOUNT_TYPE);
+                        ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumberBusiness);
+                        ProfileInfoCacheManager.setPASSWORD(SignupOrLoginActivity.mPasswordBusiness);
+                        ProfileInfoCacheManager.setNAME(SignupOrLoginActivity.mNameBusiness);
+                        ProfileInfoCacheManager.setBIRTHDAY(SignupOrLoginActivity.mBirthdayBusinessHolder);
+                        ProfileInfoCacheManager.setGENDER("M");
+                        ProfileInfoCacheManager.setAccountType(Constants.BUSINESS_ACCOUNT_TYPE);
 
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), getString(R.string.signup_successful), Toast.LENGTH_LONG).show();

@@ -66,7 +66,8 @@ import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
 import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Config;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
@@ -158,7 +159,7 @@ public class HomeActivity extends BaseActivity
         mUserID = ProfileInfoCacheManager.getMobileNumber();
         mDeviceID = DeviceInfoFactory.getDeviceId(HomeActivity.this);
 
-        SharedPrefUtilities.putBoolean(Constants.FIRST_LAUNCH, false);
+        SharedPrefManager.setFirstLaunch(false);
 
         mMobileNumberView = (AutoResizeTextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_mobile_number);
         mNameView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_name);
@@ -169,7 +170,7 @@ public class HomeActivity extends BaseActivity
         switchToDashBoard();
 
         // Check if there's anything new from the server
-        int accountType = SharedPrefUtilities.getInt(Constants.ACCOUNT_TYPE, 0);
+        int accountType = ProfileInfoCacheManager.getAccountType(0);
         if (accountType == Constants.BUSINESS_ACCOUNT_TYPE) {
             getBusinessInformation();
         } else getProfileInfo();
@@ -222,7 +223,7 @@ public class HomeActivity extends BaseActivity
         sendAnalytics();
 
         // Check if the stored critical preference version is lesser than the version found from config
-        savedCriticalPreferenceVersion =SharedPrefUtilities.getInt(Constants.CRITICAL_PREFERENCE_VERSION, 0);
+        savedCriticalPreferenceVersion = SharedPrefManager.getCriticalPreferenceVersion(0);
         if (Config.criticalPreferenceVersion > savedCriticalPreferenceVersion)
             todoCheckList(savedCriticalPreferenceVersion);
 
@@ -271,7 +272,7 @@ public class HomeActivity extends BaseActivity
     }
 
     private void updateProfileData() {
-        mNameView.setText(ProfileInfoCacheManager.getName());
+        mNameView.setText(ProfileInfoCacheManager.getUserName());
         mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
                 ProfileInfoCacheManager.getProfileImageUrl(), false);
@@ -325,7 +326,7 @@ public class HomeActivity extends BaseActivity
         }
 
         // Store the updated critical preference version after all necessary actions.
-        SharedPrefUtilities.putInt(Constants.CRITICAL_PREFERENCE_VERSION, Config.criticalPreferenceVersion);
+        SharedPrefManager.setCriticalPreferenceVersion(Config.criticalPreferenceVersion);
     }
 
     @Override
@@ -607,7 +608,7 @@ public class HomeActivity extends BaseActivity
                         //saving user info in shared preference
                         ProfileInfoCacheManager.updateCache(mGetUserInfoResponse.getName(), imageUrl, mGetUserInfoResponse.getAccountStatus());
 
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
                     } else {
@@ -632,7 +633,7 @@ public class HomeActivity extends BaseActivity
 
                         //saving user info in shared preference
                         ProfileInfoCacheManager.updateCache(mGetBusinessInformationResponse.getBusinessName(), imageUrl, mGetBusinessInformationResponse.getVerificationStatus());
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                     } else {
                         ToastWrapper.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);

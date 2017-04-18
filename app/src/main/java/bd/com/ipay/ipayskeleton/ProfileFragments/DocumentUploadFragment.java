@@ -25,12 +25,13 @@ import com.google.gson.Gson;
 import java.io.File;
 
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.UploadApi.UploadIdentifierDocumentAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
@@ -216,7 +217,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                         // If push is delayed, we would not see the updated document list when we back
                         // to the document list fragment. Setting the update flag to true to force load
                         // the list.
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
 
                         ToastWrapper.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG);
                         ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();

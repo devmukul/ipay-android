@@ -48,6 +48,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.Upload
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
@@ -143,14 +144,14 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE)) {
+        if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE)) {
             if (ProfileInfoCacheManager.isBusinessAccount()) {
                 getIdentificationBusinessDocuments();
             } else
                 getIdentificationDocuments();
         } else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE);
+            String json = dataHelper.getPushEvent(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE);
 
             if (json == null) {
 
@@ -349,9 +350,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         processGetDocumentListResponse(result.getJsonString());
 
                         DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                        dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
+                        dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
 
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.failed_get_document_list, Toast.LENGTH_SHORT).show();
@@ -372,9 +373,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         processGetBusinessDocumentListResponse(result.getJsonString());
 
                         DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                        dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
+                        dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
 
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.failed_get_document_list, Toast.LENGTH_SHORT).show();
@@ -421,7 +422,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                             // If push is delayed, we would not see the updated document list when we back
                             // to the document list fragment. Setting the update flag to true to force load
                             // the list.
-                            PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
+                            PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
 
                             Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
 

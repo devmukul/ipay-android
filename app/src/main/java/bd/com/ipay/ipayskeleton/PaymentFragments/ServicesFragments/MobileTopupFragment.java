@@ -25,8 +25,8 @@ import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogA
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
@@ -35,7 +35,8 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -88,7 +89,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         mUserMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         setOperatorAndPackageAdapter();
 
-        int mobileNumberType = SharedPrefUtilities.getInt(Constants.MOBILE_NUMBER_TYPE, Constants.MOBILE_TYPE_PREPAID);
+        int mobileNumberType = SharedPrefManager.getMobileNumberType(Constants.MOBILE_TYPE_PREPAID);
         if (mobileNumberType == Constants.MOBILE_TYPE_PREPAID) {
             mPackageEditText.setText(mPackageList.get(Constants.MOBILE_TYPE_PREPAID - 1));
             mSelectedPackageTypeId = Constants.MOBILE_TYPE_PREPAID - 1;
@@ -210,8 +211,8 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         BigDecimal maxAmount;
 
         String balance = null;
-        if (SharedPrefUtilities.contains(Constants.USER_BALANCE)) {
-            balance = SharedPrefUtilities.getString(Constants.USER_BALANCE, null);
+        if (SharedPrefManager.ifContainsUserBalance()) {
+            balance = SharedPrefManager.getUserBalance(null);
         }
 
         if (mAmountEditText.getText().toString().trim().length() == 0) {
@@ -280,7 +281,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             mobileNumberType = Constants.MOBILE_TYPE_POSTPAID;
         else
             mobileNumberType = Constants.MOBILE_TYPE_PREPAID;
-        SharedPrefUtilities.putInt(Constants.MOBILE_NUMBER_TYPE, mobileNumberType);
+        SharedPrefManager.setMobileNumberType(mobileNumberType);
 
         int operatorCode = mSelectedOperatorTypeId + 1;
         String countryCode = "+88"; // TODO: For now Bangladesh Only
@@ -288,7 +289,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         Intent intent = new Intent(getActivity(), TopUpReviewActivity.class);
         intent.putExtra(Constants.MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mobileNumber));
         intent.putExtra(Constants.AMOUNT, amount);
-        intent.putExtra(Constants.MOBILE_NUMBER_TYPE, mobileNumberType);
+        intent.putExtra(SharedPrefConstants.MOBILE_NUMBER_TYPE, mobileNumberType);
         intent.putExtra(Constants.OPERATOR_CODE, operatorCode);
         intent.putExtra(Constants.COUNTRY_CODE, countryCode);
 

@@ -20,7 +20,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.GetRefreshT
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 
 public class MyApplication extends Application implements HttpResponseListener {
@@ -48,7 +48,9 @@ public class MyApplication extends Application implements HttpResponseListener {
         super.onCreate();
         myApplicationInstance = this;
 
-        SharedPrefUtilities.initialize(getApplicationContext());
+        SharedPrefManager.initialize(getApplicationContext());
+        ProfileInfoCacheManager.initialize(getApplicationContext());
+        PushNotificationStatusHolder.initialize(getApplicationContext());
     }
 
     public static MyApplication getMyApplicationInstance() {

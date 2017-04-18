@@ -25,9 +25,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.NotificationActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
@@ -231,7 +231,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mProgressDialog.setMessage(getString(R.string.loading));
         mProgressDialog.show();
 
-        int accountType = ProfileInfoCacheManager.getAccountType();
+        int accountType = ProfileInfoCacheManager.getAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
         int accountClass = Constants.DEFAULT_USER_CLASS;
 
         GetServiceChargeRequest mServiceChargeRequest = new GetServiceChargeRequest(serviceId, accountType, accountClass);

@@ -23,7 +23,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrust
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -85,7 +85,7 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
         if (mAddTrustedDeviceTask != null)
             return;
 
-        String pushRegistrationID = SharedPrefUtilities.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+        String pushRegistrationID = SharedPrefManager.getPushNotificationToken(null);
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_trusted_device));
         mProgressDialog.show();
@@ -160,7 +160,7 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         String UUID = mAddToTrustedDeviceResponse.getUUID();
-                        SharedPrefUtilities.putString(Constants.UUID, UUID);
+                        ProfileInfoCacheManager.setUUID(UUID);
 
                         // Launch HomeActivity from here on successful trusted device add
                         ((DeviceTrustActivity) getActivity()).switchToHomeActivity();

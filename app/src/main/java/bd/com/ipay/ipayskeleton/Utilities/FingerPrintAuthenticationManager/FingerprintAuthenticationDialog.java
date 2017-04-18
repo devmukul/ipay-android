@@ -34,7 +34,7 @@ import javax.crypto.spec.IvParameterSpec;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
@@ -242,7 +242,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
 
             } else {
                 SecretKey key = (SecretKey) mKeyStore.getKey(Constants.KEY_NAME, null);
-                iv = Base64.decode(SharedPrefUtilities.getString(Constants.KEY_PASSWORD_IV, ""), Base64.DEFAULT);
+                iv = Base64.decode(SharedPrefManager.getKeyPasswordIv(""), Base64.DEFAULT);
                 ivParams = new IvParameterSpec(iv);
                 cipher.init(mode, key, ivParams);
             }
@@ -291,8 +291,8 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
             IvParameterSpec ivParams = mEncryptCipher.getParameters().getParameterSpec(IvParameterSpec.class);
             String iv = Base64.encodeToString(ivParams.getIV(), Base64.DEFAULT);
 
-            SharedPrefUtilities.putString(Constants.KEY_PASSWORD, Base64.encodeToString(encrypted, Base64.DEFAULT));
-            SharedPrefUtilities.putString(Constants.KEY_PASSWORD_IV, iv);
+            SharedPrefManager.setKeyPassword(Base64.encodeToString(encrypted, Base64.DEFAULT));
+            SharedPrefManager.setKeyPasswordIv(iv);
             mEncryptionDialog.dismiss();
             mFinishEncryptionCheckerListener.ifEncryptionFinished();
 
@@ -304,7 +304,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
 
     public void tryDecrypt() {
         try {
-            byte[] encodedData = Base64.decode(SharedPrefUtilities.getString(Constants.KEY_PASSWORD, ""), Base64.DEFAULT);
+            byte[] encodedData = Base64.decode(SharedPrefManager.getKeyPassword(""), Base64.DEFAULT);
             byte[] decodedData = mDecryptCipher.doFinal(encodedData);
             mDecryptionDialog.dismiss();
             mFinishDecryptionCheckerListener.ifDecryptionFinished(new String(decodedData));

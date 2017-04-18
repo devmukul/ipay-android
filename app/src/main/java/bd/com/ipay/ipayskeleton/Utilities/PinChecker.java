@@ -9,12 +9,12 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPinDialogBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.PinInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 
 /**
  * Checks if pin has been added for this user. If not, show pin input dialog. Otherwise,
@@ -41,7 +41,7 @@ public class PinChecker implements HttpResponseListener {
     public void execute() {
         cancel = false;
 
-        if (SharedPrefUtilities.getBoolean(Constants.IS_PIN_ADDED, false)) {
+        if (SharedPrefManager.isPinAdded(false)) {
             if (mPinCheckerListener != null) {
                 mPinCheckerListener.ifPinAdded();
             }
@@ -75,7 +75,7 @@ public class PinChecker implements HttpResponseListener {
         mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetPinInfoTask = null;
             if (mContext != null)
                 Toast.makeText(mContext, R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
@@ -98,7 +98,7 @@ public class PinChecker implements HttpResponseListener {
                             }
 
                             // Save the information so that we don't need to get pin info again and again
-                            SharedPrefUtilities.putBoolean(Constants.IS_PIN_ADDED, true);
+                            SharedPrefManager.setPinAdded(true);
 
                         } else {
                             AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(mContext, new AddPinDialogBuilder.AddPinListener() {

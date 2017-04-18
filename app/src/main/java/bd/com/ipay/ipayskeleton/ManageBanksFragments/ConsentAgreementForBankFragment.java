@@ -15,8 +15,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.ManageBanksActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.AddBankRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.AddBankResponse;
@@ -97,7 +97,7 @@ public class ConsentAgreementForBankFragment extends Fragment implements HttpRes
         mBankBranch = bundle.getParcelable(Constants.BANK_BRANCH);
         mBranchName = mBankBranch.getName();
         mBankAccountNumber = bundle.getString(Constants.BANK_ACCOUNT_NUMBER);
-        mAccountName = ProfileInfoCacheManager.getName();
+        mAccountName = ProfileInfoCacheManager.getUserName();
 
         startedFromProfileCompletion = bundle.getBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION);
     }

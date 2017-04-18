@@ -21,8 +21,8 @@ import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
@@ -105,7 +105,7 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
 
         setBankAdapter(bankNames);
 
-        mAccountNameEditText.setText(ProfileInfoCacheManager.getName());
+        mAccountNameEditText.setText(ProfileInfoCacheManager.getUserName());
 
         addBank.setOnClickListener(new View.OnClickListener() {
             @Override

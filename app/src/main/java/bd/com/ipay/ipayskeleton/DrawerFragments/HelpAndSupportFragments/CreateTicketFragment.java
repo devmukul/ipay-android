@@ -34,9 +34,9 @@ import java.util.Random;
 
 import bd.com.ipay.ipayskeleton.Activities.HelpAndSupportActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.UploadApi.UploadTicketAttachmentAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
@@ -54,6 +54,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategory
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.TicketWithCommentId;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomDrawable;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
@@ -138,11 +139,11 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE))
+        if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE))
             getEmails();
         else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE);
+            String json = dataHelper.getPushEvent(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE);
 
             if (json == null)
                 getEmails();
@@ -450,9 +451,9 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                         processGetEmailListResponse(result.getJsonString());
 
                         DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                        dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
+                        dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
 
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
                     } else {
                         if (getActivity() != null) {
                             ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);

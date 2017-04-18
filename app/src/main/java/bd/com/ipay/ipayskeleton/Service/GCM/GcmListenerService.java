@@ -29,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.G
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.GetTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -61,10 +62,10 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
         boolean isLoggedIn = ProfileInfoCacheManager.getLoggedInStatus(false);
 
-        tag = data.getString(Constants.PUSH_NOTIFICATION_EVENT);
+        tag = data.getString(SharedPrefConstants.PUSH_NOTIFICATION_EVENT);
 
         switch (tag) {
-            case Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE:
+            case SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE:
                 if (isForeground() && isLoggedIn)
                     getProfileInfo();
                 else {
@@ -73,7 +74,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                             getString(R.string.push_profile_picture_updated_message));
                 }
                 break;
-            case Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE:
+            case SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE:
                 if (isForeground() && isLoggedIn)
                     getProfileInfo();
                 else {
@@ -82,7 +83,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                     PushNotificationStatusHolder.setUpdateNeeded(tag, true);
                 }
                 break;
-            case Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE:
+            case SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE:
                 if (isForeground() && isLoggedIn)
                     getIdentificationDocuments();
                 else {
@@ -91,7 +92,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                     PushNotificationStatusHolder.setUpdateNeeded(tag, true);
                 }
                 break;
-            case Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE:
+            case SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE:
                 if (isForeground() && isLoggedIn)
                     getEmails();
                 else {
@@ -100,7 +101,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                     PushNotificationStatusHolder.setUpdateNeeded(tag, true);
                 }
                 break;
-            case Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE:
+            case SharedPrefConstants.PUSH_NOTIFICATION_TAG_BANK_UPDATE:
                 if (isForeground() && isLoggedIn)
                     getBankList();
                 else {
@@ -109,7 +110,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                     PushNotificationStatusHolder.setUpdateNeeded(tag, true);
                 }
                 break;
-            case Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE:
+            case SharedPrefConstants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE:
                 if (isForeground() && isLoggedIn)
                     getTrustedDeviceList();
                 else {
@@ -118,7 +119,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                     PushNotificationStatusHolder.setUpdateNeeded(tag, true);
                 }
                 break;
-            case Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE:
+            case SharedPrefConstants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE:
                 if (isForeground() && isLoggedIn)
                     getTrustedPersons();
                 else {
@@ -127,7 +128,7 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                     PushNotificationStatusHolder.setUpdateNeeded(tag, true);
                 }
                 break;
-            case Constants.PUSH_NOTIFICATION_TAG_TRANSACTION:
+            case SharedPrefConstants.PUSH_NOTIFICATION_TAG_TRANSACTION:
                 if (isForeground() && isLoggedIn) {
                     Logger.logD("Transaction", "Sending broadcast");
                     Utilities.sendBroadcast(this, Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST);
@@ -243,9 +244,9 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     try {
                         mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
-                        dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+                        dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
 
                         String imageUrl = Utilities.getImage(mGetProfileInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
 
@@ -262,8 +263,8 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
             case Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST:
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
+                    dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
+                    PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
                 }
 
                 mGetIdentificationDocumentsTask = null;
@@ -271,8 +272,8 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
             case Constants.COMMAND_GET_EMAILS:
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
+                    dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
+                    PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
                 }
 
                 mGetEmailsTask = null;
@@ -280,8 +281,8 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
             case Constants.COMMAND_GET_BANK_LIST:
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, result.getJsonString());
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, false);
+                    dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, result.getJsonString());
+                    PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, false);
                 }
 
                 mGetBankTask = null;
@@ -289,8 +290,8 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
             case Constants.COMMAND_GET_TRUSTED_DEVICES:
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, result.getJsonString());
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, false);
+                    dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, result.getJsonString());
+                    PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, false);
                 }
 
                 mGetTrustedDeviceTask = null;
@@ -298,8 +299,8 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
             case Constants.COMMAND_GET_TRUSTED_PERSONS:
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, result.getJsonString());
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, false);
+                    dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, result.getJsonString());
+                    PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE, false);
                 }
 
                 mGetTrustedPersonsTask = null;

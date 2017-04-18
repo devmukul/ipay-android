@@ -28,10 +28,10 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyReviewActivity;
-import bd.com.ipay.ipayskeleton.Api.ResourceFetchApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.ResourceFetchApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.BankListValidator;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialogWithIcon;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
@@ -40,7 +40,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
@@ -230,8 +230,8 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         View focusView = null;
 
         String balance = null;
-        if (SharedPrefUtilities.contains(Constants.USER_BALANCE)) {
-            balance = SharedPrefUtilities.getString(Constants.USER_BALANCE, null);
+        if (SharedPrefManager.ifContainsUserBalance()) {
+            balance = SharedPrefManager.getUserBalance(null);
         }
 
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {

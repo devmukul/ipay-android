@@ -26,8 +26,8 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.UploadApi.UploadProfilePictureAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ProfilePictureHelperDialog;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
@@ -37,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletio
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
@@ -109,7 +110,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         mProgressDialog = new ProgressDialog(getActivity());
 
-        mName = ProfileInfoCacheManager.getName();
+        mName = ProfileInfoCacheManager.getUserName();
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         mProfilePicture = ProfileInfoCacheManager.getProfileImageUrl();
 
@@ -388,7 +389,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                     getProfileCompletionStatus();
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true);
+                    PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, true);
 
                     Intent intent = new Intent(Constants.PROFILE_PICTURE_UPDATE_BROADCAST);
                     intent.putExtra(Constants.PROFILE_PICTURE, mSelectedImagePath);

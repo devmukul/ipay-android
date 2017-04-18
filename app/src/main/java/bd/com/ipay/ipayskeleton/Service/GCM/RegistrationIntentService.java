@@ -11,8 +11,7 @@ import com.google.android.gms.iid.InstanceID;
 import java.io.IOException;
 
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefUtilities;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
 
 public class RegistrationIntentService extends IntentService {
@@ -45,13 +44,13 @@ public class RegistrationIntentService extends IntentService {
             // You should store a boolean that indicates whether the generated token has been
             // sent to your server. If the boolean is false, send the token to your server,
             // otherwise your server should have already received the token.
-            SharedPrefUtilities.putBoolean(Constants.GCM_REGISTRATION_ID_SENT_TO_SERVER, true);
+          //  SharedPrefUtilities.putBoolean(Constants.GCM_REGISTRATION_ID_SENT_TO_SERVER, true);
             // [END register_for_gcm]
         } catch (Exception e) {
             Logger.logD(TAG, "Failed to complete token refresh", e);
             // If an exception happens while fetching the new token or updating our registration data
             // on a third-party server, this ensures that we'll attempt the update at a later time.
-           SharedPrefUtilities.putBoolean(Constants.GCM_REGISTRATION_ID_SENT_TO_SERVER, false);
+           //SharedPrefUtilities.putBoolean(Constants.GCM_REGISTRATION_ID_SENT_TO_SERVER, false);
         }
         // Notify UI that registration has completed, so the progress indicator can be hidden.
         Intent registrationComplete = new Intent("Registration Complete");
@@ -65,7 +64,7 @@ public class RegistrationIntentService extends IntentService {
      * maintained by your application.
      */
     private void saveGCMTokenInPreference(String token) {
-       SharedPrefUtilities.putString(Constants.PUSH_NOTIFICATION_TOKEN, token);
+       SharedPrefManager.setPushNotificationToken(token);
     }
 
     /**

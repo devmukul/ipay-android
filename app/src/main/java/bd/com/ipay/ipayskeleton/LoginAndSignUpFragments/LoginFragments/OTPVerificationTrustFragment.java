@@ -1,8 +1,6 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -23,8 +21,8 @@ import java.util.Date;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
@@ -33,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPReques
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPResponseTrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -52,7 +51,6 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
 
     private String mDeviceID;
     private ProgressDialog mProgressDialog;
-    private SharedPreferences pref;
 
     private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
 
@@ -67,7 +65,6 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_otp_verification_trusted_device, container, false);
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mActivateButton = (Button) v.findViewById(R.id.buttonVerifyOTP);
         mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
@@ -188,7 +185,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
 
         } else {
             String otp = mOTPEditText.getText().toString().trim();
-            String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+            String pushRegistrationID = SharedPrefManager.getPushNotificationToken(null);
 
             mProgressDialog.show();
 
@@ -227,12 +224,12 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     ProfileInfoCacheManager.setLoggedInStatus(true);
 
-                    pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).apply();
+                    ProfileInfoCacheManager.setAccountType(mLoginResponseModel.getAccountType());
 
                     if (mLoginResponseModel.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE)
-                        pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumber).apply();
+                        ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumber);
                     else
-                        pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumberBusiness).apply();
+                        ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumberBusiness);
 
                     if (getActivity() != null)
                         ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
