@@ -23,7 +23,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.GetRolesR
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.Role;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ManagePeopleActivity extends BaseActivity implements HttpResponseListener {
@@ -154,7 +154,7 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetRolesAsyncTask = null;
-            ToastWrapper.makeText(ManagePeopleActivity.this, R.string.service_not_available, Toast.LENGTH_LONG);
+            Toaster.makeText(ManagePeopleActivity.this, R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -174,12 +174,12 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
 
                     } else {
                         finish();
-                        ToastWrapper.makeText(ManagePeopleActivity.this, mGetRolesResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(ManagePeopleActivity.this, mGetRolesResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     finish();
-                    ToastWrapper.makeText(ManagePeopleActivity.this, R.string.service_not_available, Toast.LENGTH_LONG);
+                    Toaster.makeText(ManagePeopleActivity.this, R.string.service_not_available, Toast.LENGTH_LONG);
                 }
 
             default:

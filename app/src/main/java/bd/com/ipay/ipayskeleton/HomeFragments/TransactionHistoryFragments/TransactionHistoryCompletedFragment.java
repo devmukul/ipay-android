@@ -51,7 +51,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TransactionHistoryCompletedFragment extends ProgressFragment implements HttpResponseListener {
@@ -532,7 +532,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mTransactionHistoryTask = null;
             if (getActivity() != null)
-                ToastWrapper.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
+                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
             return;
         }
 

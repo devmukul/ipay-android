@@ -11,7 +11,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class DataHelper {
 

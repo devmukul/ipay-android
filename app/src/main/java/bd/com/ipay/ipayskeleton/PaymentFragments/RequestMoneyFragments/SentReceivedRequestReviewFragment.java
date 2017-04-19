@@ -34,7 +34,7 @@ import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SentReceivedRequestReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -306,7 +306,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
             mAcceptRequestTask = null;
             mRejectRequestTask = null;
             if (getActivity() != null)
-                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -322,7 +322,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
-                            ToastWrapper.makeText(getActivity(), message, Toast.LENGTH_LONG);
+                            Toaster.makeText(getActivity(), message, Toast.LENGTH_LONG);
 
                             if (switchedFromTransactionHistory) {
                                 Intent intent = new Intent();
@@ -334,12 +334,12 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
                     } else {
                         if (getActivity() != null)
-                            ToastWrapper.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
+                            Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG);
                 }
 
                 mProgressDialog.dismiss();
@@ -354,7 +354,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
-                            ToastWrapper.makeText(getActivity(), message, Toast.LENGTH_LONG);
+                            Toaster.makeText(getActivity(), message, Toast.LENGTH_LONG);
 
                             if (switchedFromTransactionHistory) {
                                 Utilities.finishLauncherActivity(getActivity());
@@ -364,13 +364,13 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
                     } else {
                         if (getActivity() != null)
-                            ToastWrapper.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
+                            Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG);
                 }
 
                 mProgressDialog.dismiss();
@@ -385,7 +385,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                                 RequestMoneyAcceptRejectOrCancelResponse.class);
                         String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
-                            ToastWrapper.makeText(getActivity(), message, Toast.LENGTH_LONG);
+                            Toaster.makeText(getActivity(), message, Toast.LENGTH_LONG);
 
                             if (switchedFromTransactionHistory) {
                                 Utilities.finishLauncherActivity(getActivity());
@@ -396,12 +396,12 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null)
-                            ToastWrapper.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG);
+                            Toaster.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG);
                     }
 
                 } else {
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG);
                 }
 
                 mProgressDialog.dismiss();

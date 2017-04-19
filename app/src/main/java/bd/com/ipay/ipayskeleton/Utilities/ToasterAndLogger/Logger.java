@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Utilities.ToastandLogger;
+package bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger;
 
 import android.util.Log;
 

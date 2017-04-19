@@ -12,7 +12,7 @@ import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyFragment;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyActivity extends BaseActivity {
@@ -52,7 +52,7 @@ public class SendMoneyActivity extends BaseActivity {
                     if (sendMoneyFragment != null)
                         sendMoneyFragment.initiateScan();
                 } else {
-                    ToastWrapper.makeText(this, R.string.request_for_camera_permission, Toast.LENGTH_LONG);
+                    Toaster.makeText(this, R.string.request_for_camera_permission, Toast.LENGTH_LONG);
                 }
                 break;
         }

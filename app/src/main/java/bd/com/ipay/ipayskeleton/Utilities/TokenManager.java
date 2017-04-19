@@ -1,6 +1,6 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 /**
  * We get an authentication token from the server when the user logs in. This token needs to be

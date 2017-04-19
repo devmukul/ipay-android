@@ -35,7 +35,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.Privilege
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.Role;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class BusinessEmployeeReviewFragment extends ProgressFragment implements HttpResponseListener {
 
@@ -235,7 +235,7 @@ public class BusinessEmployeeReviewFragment extends ProgressFragment implements 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetRolesAsyncTask = null;
             mConfirmBusinessInvitationTask = null;
-            ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
+            Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -249,17 +249,17 @@ public class BusinessEmployeeReviewFragment extends ProgressFragment implements 
                     mConfirmBusinessInvitationResponse = gson.fromJson(result.getJsonString(), ConfirmBusinessInvitationResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
-                            ToastWrapper.makeText(getActivity(), mConfirmBusinessInvitationResponse.getMessage(), Toast.LENGTH_LONG);
+                            Toaster.makeText(getActivity(), mConfirmBusinessInvitationResponse.getMessage(), Toast.LENGTH_LONG);
                             getActivity().onBackPressed();
                         }
                     } else {
                         if (getActivity() != null)
-                            ToastWrapper.makeText(getActivity(), mConfirmBusinessInvitationResponse.getMessage(), Toast.LENGTH_LONG);
+                            Toaster.makeText(getActivity(), mConfirmBusinessInvitationResponse.getMessage(), Toast.LENGTH_LONG);
                     }
 
                 } catch (Exception e) {
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), R.string.failed_confirming_business_invitation, Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.failed_confirming_business_invitation, Toast.LENGTH_LONG);
                 }
 
                 mProgressDialog.dismiss();
@@ -292,11 +292,11 @@ public class BusinessEmployeeReviewFragment extends ProgressFragment implements 
                         mPrivilegeListView.setAdapter(mEmployeeDetailsAdapter);
 
                     } else {
-                        ToastWrapper.makeText(getActivity(), mGetRolesResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), mGetRolesResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
                 }
 
             default:

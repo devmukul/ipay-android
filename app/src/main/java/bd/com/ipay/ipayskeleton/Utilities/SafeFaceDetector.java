@@ -10,7 +10,7 @@ import com.google.android.gms.vision.face.Face;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class SafeFaceDetector extends Detector<Face> {
     private static final String TAG = "SafeFaceDetector";

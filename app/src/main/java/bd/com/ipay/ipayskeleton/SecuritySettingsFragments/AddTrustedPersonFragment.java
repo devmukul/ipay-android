@@ -31,7 +31,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddTrustedPersonFragment extends Fragment implements HttpResponseListener {
@@ -187,7 +187,7 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mAddTrustedPersonTask = null;
             if (getActivity() != null)
-                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -208,7 +208,7 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    ToastWrapper.makeText(getActivity(), R.string.failed_adding_trusted_person, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.failed_adding_trusted_person, Toast.LENGTH_LONG);
             }
 
             mAddTrustedPersonTask = null;

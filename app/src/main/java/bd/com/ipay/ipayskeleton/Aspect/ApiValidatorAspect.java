@@ -7,7 +7,7 @@ import org.aspectj.lang.annotation.Pointcut;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 @Aspect
 public class ApiValidatorAspect {

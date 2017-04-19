@@ -29,7 +29,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 /**
  * Be sure to call the attemptGetServiceCharge method at the end of your onCreateView method
@@ -113,7 +113,7 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
             mServiceChargeTask = null;
 
             if (getActivity() != null) {
-                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             }
 
             return;
@@ -128,7 +128,7 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (mGetServiceChargeResponse != null) {
                         if (mGetServiceChargeResponse.getServiceCharge(getAmount()).compareTo(BigDecimal.ZERO) < 0) {
-                            ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                            Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                             getActivity().finish();
                         } else {
                             onServiceChargeLoadFinished(mGetServiceChargeResponse.getServiceCharge(getAmount()));
@@ -137,20 +137,20 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
                         onPinLoadFinished(mGetServiceChargeResponse.isPinRequired());
 
                     } else {
-                        ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                         getActivity().finish();
                         return;
                     }
                 } else {
                     if (getActivity() != null) {
-                        ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                         getActivity().finish();
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
 
-                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 getActivity().finish();
             }
 
@@ -216,14 +216,14 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
 
                         if (mBusinessRulesResponseWithServiceCharge.getFeeCharge() != null) {
                             if (mBusinessRulesResponseWithServiceCharge.getFeeCharge().getServiceCharge(getAmount()).compareTo(BigDecimal.ZERO) < 0) {
-                                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                                 getActivity().finish();
                             } else {
                                 onServiceChargeLoadFinished(mBusinessRulesResponseWithServiceCharge.getFeeCharge().getServiceCharge(getAmount()));
                             }
 
                         } else {
-                            ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                            Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                             getActivity().finish();
                             return;
                         }
@@ -235,12 +235,12 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 }
 
             } else {
                 if (getActivity() != null)
-                    ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             }
 
             mGetBusinessRuleTask = null;

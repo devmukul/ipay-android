@@ -56,8 +56,8 @@ import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Contact.InviteContactNode;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonColorList.PROFILE_PICTURE_BACKGROUNDS;
@@ -576,7 +576,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             mSendInviteTask = null;
 
             if (getActivity() != null)
-                ToastWrapper.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT);
+                Toaster.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT);
 
             return;
         }
@@ -598,13 +598,13 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
 
                 } else if (getActivity() != null) {
-                    ToastWrapper.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG);
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null) {
-                    ToastWrapper.makeText(getActivity(), R.string.failed_sending_invitation, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.failed_sending_invitation, Toast.LENGTH_LONG);
                 }
             }
 
@@ -617,16 +617,16 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
-                        ToastWrapper.makeText(getActivity(), R.string.introduction_request_sent, Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.introduction_request_sent, Toast.LENGTH_LONG);
                     }
                 } else if (getActivity() != null) {
-                    ToastWrapper.makeText(getActivity(), mAskForIntroductionResponse.getMessage(), Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), mAskForIntroductionResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
 
                 if (getActivity() != null) {
-                    ToastWrapper.makeText(getActivity(), R.string.failed_asking_introduction, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.failed_asking_introduction, Toast.LENGTH_LONG);
                 }
             }
 

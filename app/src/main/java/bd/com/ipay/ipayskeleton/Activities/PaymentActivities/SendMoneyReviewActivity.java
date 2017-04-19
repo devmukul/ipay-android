@@ -20,7 +20,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteToiPayFra
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyReviewActivity extends BaseActivity implements HttpResponseListener {
@@ -104,7 +104,7 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetProfileInfoTask = null;
-            ToastWrapper.makeText(this, R.string.service_not_available, Toast.LENGTH_LONG);
+            Toaster.makeText(this, R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -125,7 +125,7 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                     switchToSendInviteFragment();
                 } else {
-                    ToastWrapper.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+                    Toaster.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                     finish();
                 }
 
@@ -133,7 +133,7 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
             } catch (Exception e) {
                 e.printStackTrace();
 
-                ToastWrapper.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+                Toaster.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 finish();
             }
 

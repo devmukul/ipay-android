@@ -11,7 +11,7 @@ import java.io.UnsupportedEncodingException;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.HttpDeleteWithBody;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class HttpDeleteWithBodyAsyncTask extends HttpRequestAsyncTask {
 

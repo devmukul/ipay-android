@@ -20,7 +20,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.Pendi
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.IntroduceActionResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implements HttpResponseListener {
 
@@ -139,7 +139,7 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
             mPendingIntroducerActionTask = null;
 
             if (Context != null)
-                ToastWrapper.makeText(Context, R.string.service_not_available, Toast.LENGTH_SHORT);
+                Toaster.makeText(Context, R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -152,19 +152,19 @@ public class PendingIntroducerReviewDialog extends MaterialDialog.Builder implem
                     mPendingIntroducerActionResponse = gson.fromJson(result.getJsonString(), IntroduceActionResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (Context != null)
-                            ToastWrapper.makeText(Context, mPendingIntroducerActionResponse.getMessage(), Toast.LENGTH_LONG);
+                            Toaster.makeText(Context, mPendingIntroducerActionResponse.getMessage(), Toast.LENGTH_LONG);
 
                         if (mActionCheckerListener != null) {
                             mActionCheckerListener.ifFinishNeeded();
                         }
                     } else {
                         if (Context != null)
-                            ToastWrapper.makeText(Context, mPendingIntroducerActionResponse.getMessage(), Toast.LENGTH_LONG);
+                            Toaster.makeText(Context, mPendingIntroducerActionResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (Context != null)
-                        ToastWrapper.makeText(Context, R.string.service_not_available, Toast.LENGTH_LONG);
+                        Toaster.makeText(Context, R.string.service_not_available, Toast.LENGTH_LONG);
                 }
 
                 mProgressDialog.dismiss();

@@ -28,7 +28,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestPaymentReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -194,7 +194,7 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mProgressDialog.dismiss();
             if (getActivity() != null)
-                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -208,16 +208,16 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     getActivity().setResult(Activity.RESULT_OK);
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), mPaymentRequestSentResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), mPaymentRequestSentResponse.getMessage(), Toast.LENGTH_LONG);
                     getActivity().finish();
                 } else {
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), mPaymentRequestSentResponse.getMessage(), Toast.LENGTH_SHORT);
+                        Toaster.makeText(getActivity(), mPaymentRequestSentResponse.getMessage(), Toast.LENGTH_SHORT);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    ToastWrapper.makeText(getActivity(), R.string.failed_request_payment, Toast.LENGTH_SHORT);
+                    Toaster.makeText(getActivity(), R.string.failed_request_payment, Toast.LENGTH_SHORT);
             }
             mSendPaymentRequestTask = null;
         }

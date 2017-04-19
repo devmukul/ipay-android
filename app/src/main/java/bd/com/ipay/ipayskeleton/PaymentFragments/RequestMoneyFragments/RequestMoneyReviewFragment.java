@@ -28,7 +28,7 @@ import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -165,7 +165,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
             mProgressDialog.dismiss();
             mRequestMoneyTask = null;
             if (getActivity() != null)
-                 ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                 Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -183,15 +183,15 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
                     getActivity().finish();
 
                     if (getActivity() != null)
-                         ToastWrapper.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                         Toaster.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_LONG);
                 } else {
                     if (getActivity() != null)
-                         ToastWrapper.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_SHORT);
+                         Toaster.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_SHORT);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                     ToastWrapper.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT);
+                     Toaster.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT);
             }
 
             mProgressDialog.dismiss();

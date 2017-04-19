@@ -31,7 +31,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -202,7 +202,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
             mProgressDialog.dismiss();
             mWithdrawMoneyTask = null;
             if (getActivity() != null)
-                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 

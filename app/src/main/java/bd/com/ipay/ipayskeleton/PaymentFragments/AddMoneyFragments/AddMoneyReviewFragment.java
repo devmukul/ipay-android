@@ -31,7 +31,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -201,7 +201,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
             mProgressDialog.dismiss();
             mAddMoneyTask = null;
             if (getActivity() != null)
-                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -215,18 +215,18 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_LONG);
                     getActivity().setResult(Activity.RESULT_OK);
                     // Exit the Add money activity and return to HomeActivity
                     getActivity().finish();
                 } else {
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    ToastWrapper.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG);
             }
 
 

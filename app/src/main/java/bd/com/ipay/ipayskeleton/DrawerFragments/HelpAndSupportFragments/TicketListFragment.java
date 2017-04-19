@@ -31,7 +31,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketsRespons
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.Ticket;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TicketListFragment extends ProgressFragment implements HttpResponseListener {
@@ -132,7 +132,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetTicketsTask = null;
             if (getActivity() != null) {
-                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 showErrorDialog();
             }
             return;

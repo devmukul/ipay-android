@@ -19,7 +19,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Singl
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class TransactionDetailsActivity extends BaseActivity implements HttpResponseListener {
 
@@ -95,7 +95,7 @@ public class TransactionDetailsActivity extends BaseActivity implements HttpResp
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mTransactionHistoryTask = null;
             if (this != null)
-                ToastWrapper.makeText(this, R.string.fetch_info_failed, Toast.LENGTH_LONG);
+                Toaster.makeText(this, R.string.fetch_info_failed, Toast.LENGTH_LONG);
             return;
         }
 
@@ -122,12 +122,12 @@ public class TransactionDetailsActivity extends BaseActivity implements HttpResp
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (this != null)
-                        ToastWrapper.makeText(this, R.string.transaction_history_get_failed, Toast.LENGTH_LONG);
+                        Toaster.makeText(this, R.string.transaction_history_get_failed, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (this != null)
-                    ToastWrapper.makeText(this, R.string.transaction_history_get_failed, Toast.LENGTH_LONG);
+                    Toaster.makeText(this, R.string.transaction_history_get_failed, Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();

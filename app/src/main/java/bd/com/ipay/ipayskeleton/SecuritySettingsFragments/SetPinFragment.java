@@ -24,7 +24,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPin
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SetPinFragment extends Fragment implements HttpResponseListener {
@@ -125,7 +125,7 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
             mSavePINTask = null;
 
             if (getActivity() != null)
-                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -148,7 +148,7 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    ToastWrapper.makeText(getActivity(), R.string.save_failed, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.save_failed, Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();

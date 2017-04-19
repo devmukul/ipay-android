@@ -42,7 +42,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyFragment extends Fragment implements HttpResponseListener {
@@ -100,7 +100,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                         launchReviewPage();
                     }
                 } else if (getActivity() != null)
-                    ToastWrapper.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG);
             }
         });
 
@@ -129,7 +129,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     initiateScan();
                 } else {
-                    ToastWrapper.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG);
                 }
             }
         }
@@ -163,7 +163,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                         if (ContactEngine.isValidNumber(result)) {
                             mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
                         } else if (getActivity() != null)
-                            ToastWrapper.makeText(getActivity(), getResources().getString(
+                            Toaster.makeText(getActivity(), getResources().getString(
                                     R.string.please_scan_a_valid_pin), Toast.LENGTH_SHORT);
                     }
                 });
@@ -274,7 +274,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             if (getActivity() != null)
-                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -298,12 +298,12 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                    ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             }
 
             mGetBusinessRuleTask = null;

@@ -35,7 +35,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PendingPaymentClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class PaymentRequestsSentFragment extends ProgressFragment implements HttpResponseListener {
@@ -115,7 +115,7 @@ public class PaymentRequestsSentFragment extends ProgressFragment implements Htt
             getPendingPaymentRequests();
 
         } else if (getActivity() != null)
-            ToastWrapper.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG);
+            Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG);
     }
 
     private void getPendingPaymentRequests() {
@@ -140,7 +140,7 @@ public class PaymentRequestsSentFragment extends ProgressFragment implements Htt
             mPendingInvoicesTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null)
-                ToastWrapper.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
+                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
             return;
         }
 
@@ -172,12 +172,12 @@ public class PaymentRequestsSentFragment extends ProgressFragment implements Htt
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                    ToastWrapper.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG);
             }
 
             mSwipeRefreshLayout.setRefreshing(false);

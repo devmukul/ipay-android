@@ -33,7 +33,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.MoneyAndPay
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implements HttpResponseListener {
@@ -131,7 +131,7 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
             mReceivedRequestTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null) {
-                ToastWrapper.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
+                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
             }
             return;
         }
@@ -161,12 +161,12 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                    ToastWrapper.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG);
             }
 
             mSwipeRefreshLayout.setRefreshing(false);

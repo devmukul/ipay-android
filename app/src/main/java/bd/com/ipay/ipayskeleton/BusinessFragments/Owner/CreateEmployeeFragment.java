@@ -27,7 +27,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CreateEmployeeFragment extends Fragment implements HttpResponseListener {
@@ -180,7 +180,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetProfileInfoTask = null;
-            ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
+            Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -206,14 +206,14 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
                         Toast.makeText(getActivity(), R.string.user_has_no_ipay_account, Toast.LENGTH_LONG).show();
                 } else {
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+                        Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 }
 
 
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    ToastWrapper.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+                    Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
             }
 
             mGetProfileInfoTask = null;

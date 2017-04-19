@@ -50,8 +50,8 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HomeFragment extends Fragment implements HttpResponseListener {
@@ -409,7 +409,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             mGetProfileCompletionStatusTask = null;
 
             if (getActivity() != null)
-                ToastWrapper.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
+                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
 
             refreshBalanceButton.clearAnimation();
             return;
@@ -433,11 +433,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), R.string.balance_update_failed, Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.balance_update_failed, Toast.LENGTH_LONG);
                 }
             } else {
                 if (getActivity() != null)
-                    ToastWrapper.makeText(getActivity(), R.string.balance_update_failed, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.balance_update_failed, Toast.LENGTH_LONG);
             }
 
             mRefreshBalanceTask = null;
@@ -451,13 +451,13 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                     mProgressBarWithoutAnimation.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
                 } else {
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    ToastWrapper.makeText(getActivity(), R.string.failed_fetching_profile_completion_status, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.failed_fetching_profile_completion_status, Toast.LENGTH_LONG);
             }
 
             mGetProfileCompletionStatusTask = null;

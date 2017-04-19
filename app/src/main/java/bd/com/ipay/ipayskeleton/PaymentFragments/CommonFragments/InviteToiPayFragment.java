@@ -23,7 +23,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class InviteToiPayFragment extends ProgressFragment implements HttpResponseListener {
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
@@ -97,7 +97,7 @@ public class InviteToiPayFragment extends ProgressFragment implements HttpRespon
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             if (getActivity() != null)
-                ToastWrapper.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT);
+                Toaster.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT);
 
             return;
         }

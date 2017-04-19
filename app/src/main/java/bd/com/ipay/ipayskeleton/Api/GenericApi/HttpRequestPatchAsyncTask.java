@@ -8,7 +8,7 @@ import org.apache.http.protocol.HTTP;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Utilities.HttpPatchRequestBase;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class HttpRequestPatchAsyncTask extends HttpRequestAsyncTask {
 

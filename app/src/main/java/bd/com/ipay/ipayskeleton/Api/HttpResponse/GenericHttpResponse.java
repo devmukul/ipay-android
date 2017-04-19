@@ -7,7 +7,7 @@ import org.apache.http.Header;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class GenericHttpResponse {
     private int status;

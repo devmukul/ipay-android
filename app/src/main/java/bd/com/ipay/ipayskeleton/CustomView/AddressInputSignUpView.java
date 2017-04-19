@@ -27,7 +27,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.ThanaRequestBui
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CountryList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class AddressInputSignUpView extends FrameLayout implements HttpResponseListener {
 
@@ -287,7 +287,7 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
             mGetThanaListAsyncTask = null;
             mGetDistrictListAsyncTask = null;
             if (context != null)
-                ToastWrapper.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT);
+                Toaster.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -308,12 +308,12 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
 
                 } else {
                     if (context != null)
-                        ToastWrapper.makeText(context, R.string.failed_loading_district_list, Toast.LENGTH_LONG);
+                        Toaster.makeText(context, R.string.failed_loading_district_list, Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (context != null)
-                    ToastWrapper.makeText(context, R.string.failed_loading_district_list, Toast.LENGTH_LONG);
+                    Toaster.makeText(context, R.string.failed_loading_district_list, Toast.LENGTH_LONG);
             }
 
             mGetDistrictListAsyncTask = null;
@@ -328,12 +328,12 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
 
                 } else {
                     if (context != null)
-                        ToastWrapper.makeText(context, R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
+                        Toaster.makeText(context, R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (context != null)
-                    ToastWrapper.makeText(context, R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
+                    Toaster.makeText(context, R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
             }
 
             mGetThanaListAsyncTask = null;

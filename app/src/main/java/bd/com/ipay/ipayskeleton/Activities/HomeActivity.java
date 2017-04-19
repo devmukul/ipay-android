@@ -72,8 +72,8 @@ import bd.com.ipay.ipayskeleton.Utilities.Config;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.Logger;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -612,11 +612,11 @@ public class HomeActivity extends BaseActivity
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
                     } else {
-                        ToastWrapper.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+                        Toaster.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    ToastWrapper.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+                    Toaster.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 }
 
                 mGetProfileInfoTask = null;
@@ -636,12 +636,12 @@ public class HomeActivity extends BaseActivity
                         PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                     } else {
-                        ToastWrapper.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);
+                        Toaster.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);
 
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    ToastWrapper.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);
+                    Toaster.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);
 
                 }
 

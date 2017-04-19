@@ -41,7 +41,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UserActivity.UserActivit
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UserActivity.UserActivityResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ActivityLogFragment extends ProgressFragment implements HttpResponseListener {
@@ -286,7 +286,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     dpd.show();
 
                 } catch (ParseException e) {
-                    ToastWrapper.makeText(getActivity(), R.string.select_from_date_first, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.select_from_date_first, Toast.LENGTH_LONG);
                 }
             }
         });
@@ -459,7 +459,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             mSwipeRefreshLayout.setRefreshing(false);
 
             if (getActivity() != null)
-                ToastWrapper.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
+                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
             return;
         }
 
@@ -490,12 +490,12 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), R.string.user_activity_get_failed, Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.user_activity_get_failed, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                    ToastWrapper.makeText(getActivity(), R.string.user_activity_get_failed, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.user_activity_get_failed, Toast.LENGTH_LONG);
             }
 
             mSwipeRefreshLayout.setRefreshing(false);

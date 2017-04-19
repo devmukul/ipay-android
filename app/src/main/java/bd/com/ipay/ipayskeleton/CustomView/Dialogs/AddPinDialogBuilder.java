@@ -20,7 +20,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPin
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpResponseListener {
@@ -134,7 +134,7 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
 					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mSavePINTask = null;
             if (getContext() != null)
-                ToastWrapper.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG);
+                Toaster.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -148,17 +148,17 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getContext() != null)
-                        ToastWrapper.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG);
 
                     mAddPinListener.onPinAddSuccess();
                 } else {
                     if (getContext() != null)
-                        ToastWrapper.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getContext() != null)
-                    ToastWrapper.makeText(getContext(), R.string.save_failed, Toast.LENGTH_LONG);
+                    Toaster.makeText(getContext(), R.string.save_failed, Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();

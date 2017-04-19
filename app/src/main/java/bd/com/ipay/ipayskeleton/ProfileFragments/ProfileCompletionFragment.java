@@ -23,7 +23,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class ProfileCompletionFragment extends ProgressFragment implements HttpResponseListener {
     private RecyclerView mProfileCompletionRecyclerView;
@@ -90,7 +90,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetProfileCompletionStatusTask = null;
             if (getActivity() != null)
-                ToastWrapper.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
+                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
 
             return;
         }
@@ -105,7 +105,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
                     populateView();
                 } else {
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
                 }
 
             } catch (Exception e) {

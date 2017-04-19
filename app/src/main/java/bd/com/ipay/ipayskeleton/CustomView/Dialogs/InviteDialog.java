@@ -26,7 +26,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
@@ -201,7 +201,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
             mAddContactAsyncTask = null;
             mSendInviteTask = null;
 
-            ToastWrapper.makeText(context, R.string.service_not_available, Toast.LENGTH_LONG);
+            Toaster.makeText(context, R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -215,12 +215,12 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
                     sendInvite(mMobileNumber);
                 } else {
                     mProgressDialog.dismiss();
-                    ToastWrapper.makeText(context, R.string.failed_invite_contact, Toast.LENGTH_LONG);
+                    Toaster.makeText(context, R.string.failed_invite_contact, Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 mProgressDialog.dismiss();
-                ToastWrapper.makeText(context, R.string.failed_invite_contact, Toast.LENGTH_LONG);
+                Toaster.makeText(context, R.string.failed_invite_contact, Toast.LENGTH_LONG);
             }
 
             mAddContactAsyncTask = null;
@@ -240,12 +240,12 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
                     }
 
                 } else {
-                    ToastWrapper.makeText(context, mSendInviteResponse.getMessage(), Toast.LENGTH_LONG);
+                    Toaster.makeText(context, mSendInviteResponse.getMessage(), Toast.LENGTH_LONG);
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
-                ToastWrapper.makeText(context, R.string.failed_sending_invitation, Toast.LENGTH_LONG);
+                Toaster.makeText(context, R.string.failed_sending_invitation, Toast.LENGTH_LONG);
             }
             mSendInviteTask = null;
         }

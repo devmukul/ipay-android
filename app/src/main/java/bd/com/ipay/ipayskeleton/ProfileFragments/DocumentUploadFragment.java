@@ -34,7 +34,7 @@ import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class DocumentUploadFragment extends Fragment implements HttpResponseListener {
 
@@ -201,7 +201,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mUploadIdentifierDocumentAsyncTask = null;
-            ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+            Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -219,13 +219,13 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                         // the list.
                         PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
 
-                        ToastWrapper.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG);
                         ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
                     }
 
                 } else {
                     if (getActivity() != null)
-                        ToastWrapper.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

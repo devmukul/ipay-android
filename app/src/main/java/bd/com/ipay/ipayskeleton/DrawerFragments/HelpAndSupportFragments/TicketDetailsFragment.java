@@ -51,7 +51,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CustomDrawable;
 import bd.com.ipay.ipayskeleton.Utilities.CustomerSupportUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.MultipleImagePicker;
-import bd.com.ipay.ipayskeleton.Utilities.ToastandLogger.ToastWrapper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TicketDetailsFragment extends ProgressFragment implements HttpResponseListener {
@@ -234,7 +234,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
             Utilities.hideKeyboard(getActivity(), mUserCommentEditText);
         } else {
             if (getActivity() != null)
-                ToastWrapper.makeText(getActivity(), R.string.comment_cannot_be_empty, Toast.LENGTH_LONG);
+                Toaster.makeText(getActivity(), R.string.comment_cannot_be_empty, Toast.LENGTH_LONG);
         }
     }
 
@@ -314,7 +314,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetTicketDetailsTask = null;
             if (getActivity() != null) {
-                ToastWrapper.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 getActivity().onBackPressed();
             }
             return;
@@ -348,14 +348,14 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                             setContentShown(true);
                     } else {
                         if (getActivity() != null) {
-                            ToastWrapper.makeText(getActivity(), R.string.failed_loading_ticket_details, Toast.LENGTH_LONG);
+                            Toaster.makeText(getActivity(), R.string.failed_loading_ticket_details, Toast.LENGTH_LONG);
                             getActivity().onBackPressed();
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
-                        ToastWrapper.makeText(getActivity(), R.string.failed_loading_ticket_details, Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.failed_loading_ticket_details, Toast.LENGTH_LONG);
                         getActivity().onBackPressed();
                     }
                 }
@@ -372,17 +372,17 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                             mCommentId = commentIdWithDocumentList.getComment_id();
                             if (attachedFiles.size() > 0) uploadMultipleAttachmentsAsyncTask();
 
-                            ToastWrapper.makeText(getActivity(), R.string.comment_successfully_added, Toast.LENGTH_LONG);
+                            Toaster.makeText(getActivity(), R.string.comment_successfully_added, Toast.LENGTH_LONG);
                             getTicketDetails();
                         } else {
                             if (getActivity() != null) {
-                                ToastWrapper.makeText(getActivity(), R.string.not_available, Toast.LENGTH_LONG);
+                                Toaster.makeText(getActivity(), R.string.not_available, Toast.LENGTH_LONG);
                             }
                         }
                     }
                 } catch (Exception e) {
                     if (getActivity() != null) {
-                        ToastWrapper.makeText(getActivity(), R.string.failed_adding_comment, Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.failed_adding_comment, Toast.LENGTH_LONG);
                     }
                 }
                 mNewCommentTask = null;
