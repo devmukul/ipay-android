@@ -526,10 +526,8 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
                     mAddSecurityQuestionAnswerClassList.get(position).setAnswer(editable.toString());
                     mSecurityQuestionAnswerValidationClassList.get(position).setAnswerAvailable(true);
                 } else {
-                    {
-                        mAddSecurityQuestionAnswerClassList.get(position).setAnswer(null);
-                        mSecurityQuestionAnswerValidationClassList.get(position).setAnswerAvailable(false);
-                    }
+                    mAddSecurityQuestionAnswerClassList.get(position).setAnswer(null);
+                    mSecurityQuestionAnswerValidationClassList.get(position).setAnswerAvailable(false);
                 }
 
             }
