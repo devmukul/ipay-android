@@ -32,13 +32,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import bd.com.ipay.ipayskeleton.Activities.HelpAndSupportActivity;
-import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.HelpAndSupportActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.UploadApi.UploadTicketAttachmentAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadTicketAttachmentAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;

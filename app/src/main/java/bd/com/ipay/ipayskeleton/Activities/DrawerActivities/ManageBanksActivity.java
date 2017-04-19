@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Activities;
+package bd.com.ipay.ipayskeleton.Activities.DrawerActivities;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,10 +8,10 @@ import android.view.View;
 
 import java.util.ArrayList;
 
+import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.ConsentAgreementForBankFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.LinkBankFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.BankAccountsFragment;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Bank;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranch;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;

@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Activities;
+package bd.com.ipay.ipayskeleton.Activities.DrawerActivities;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;

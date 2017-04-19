@@ -31,7 +31,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentReviewActivi
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.ResourceFetchApi.GetAllBusinessListAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.BusinessContactsSearchView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;

@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.BroadcastReceiverClass;
+package bd.com.ipay.ipayskeleton.BroadcastReceivers;
 
 
 import android.content.BroadcastReceiver;

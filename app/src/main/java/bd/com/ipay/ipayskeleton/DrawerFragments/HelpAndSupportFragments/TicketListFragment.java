@@ -23,7 +23,7 @@ import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.HelpAndSupportActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.HelpAndSupportActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;

@@ -105,41 +105,6 @@ public class ProfileInfoCacheManager {
         return false;
     }
 
-    public static void updateCache(String name, String mobileNumber, String profileImageUrl, String verificationStatus) {
-       /* pref.edit()
-                .putString(SharedPrefConstants.USER_NAME, name)
-                .putString(SharedPrefConstants.USERID, mobileNumber)
-                .putString(SharedPrefConstants.PROFILE_PICTURE, profileImageUrl)
-                .putString(SharedPrefConstants.VERIFICATION_STATUS, verificationStatus)
-                .apply();*/
-        setUserName(name);
-        setMobileNumber(mobileNumber);
-        setProfilePicture(profileImageUrl);
-        setVerificationStatus(verificationStatus);
-
-
-        // Send broadcast that profile information has updated, so views showing profile information
-        // (e.g. HomeFragment) could be refreshed
-        Intent intent = new Intent(Constants.PROFILE_INFO_UPDATE_BROADCAST);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-    }
-
-    public static void updateCache(String name, String profileImageUrl, String verificationStatus) {
-       /* pref.edit()
-                .putString(SharedPrefConstants.USER_NAME, name)
-                .putString(Constants.PROFILE_PICTURE, profileImageUrl)
-                .putString(SharedPrefConstants.VERIFICATION_STATUS, verificationStatus)
-                .apply();*/
-
-        setUserName(name);
-        setProfilePicture(profileImageUrl);
-        setVerificationStatus(verificationStatus);
-        // Send broadcast that profile information has updated, so views showing profile information
-        // (e.g. HomeFragment) could be refreshed
-        Intent intent = new Intent(Constants.PROFILE_INFO_UPDATE_BROADCAST);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-    }
-
     public static void setLoggedInStatus(boolean loggedIn) {
         pref.edit().putBoolean(SharedPrefConstants.LOGGED_IN, loggedIn).apply();
     }
@@ -163,6 +128,28 @@ public class ProfileInfoCacheManager {
         editor.putString(SharedPrefConstants.KEY_PASSWORD, "");
         pref.edit().putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false).apply();
         editor.commit();
+    }
+
+    public static void updateCache(String name, String mobileNumber, String profileImageUrl, String verificationStatus) {
+        setUserName(name);
+        setMobileNumber(mobileNumber);
+        setProfilePicture(profileImageUrl);
+        setVerificationStatus(verificationStatus);
+
+        // Send broadcast that profile information has updated, so views showing profile information
+        // (e.g. HomeFragment) could be refreshed
+        Intent intent = new Intent(Constants.PROFILE_INFO_UPDATE_BROADCAST);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
+    public static void updateCache(String name, String profileImageUrl, String verificationStatus) {
+        setUserName(name);
+        setProfilePicture(profileImageUrl);
+        setVerificationStatus(verificationStatus);
+        // Send broadcast that profile information has updated, so views showing profile information
+        // (e.g. HomeFragment) could be refreshed
+        Intent intent = new Intent(Constants.PROFILE_INFO_UPDATE_BROADCAST);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 }
 

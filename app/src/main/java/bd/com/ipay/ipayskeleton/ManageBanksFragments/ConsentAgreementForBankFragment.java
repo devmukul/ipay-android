@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import bd.com.ipay.ipayskeleton.Activities.ManageBanksActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;

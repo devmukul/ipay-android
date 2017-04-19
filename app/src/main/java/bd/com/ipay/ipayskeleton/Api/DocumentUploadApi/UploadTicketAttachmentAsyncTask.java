@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Api.UploadApi;
+package bd.com.ipay.ipayskeleton.Api.DocumentUploadApi;
 
 import android.content.Context;
 import android.os.AsyncTask;

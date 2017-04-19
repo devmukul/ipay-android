@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Api.ResourceFetchApi;
+package bd.com.ipay.ipayskeleton.Api.ResourceApi;
 
 import android.content.Context;
 import android.widget.Toast;
