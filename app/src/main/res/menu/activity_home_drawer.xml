@@ -24,8 +24,8 @@
             android:title="@string/activity_log" />
         <item
             android:id="@+id/nav_invite"
-            android:icon="@drawable/ic_invite_friend"
-            android:title="@string/invite_a_friend"
+            android:icon="@drawable/ic_invite_contact"
+            android:title="@string/invite_a_contact"
             android:visible="true" />
         <item
             android:id="@+id/nav_help"

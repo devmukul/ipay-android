@@ -15,7 +15,6 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -65,6 +64,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -378,17 +378,7 @@ public class Utilities {
         return timeForTokenExpiration;
     }
 
-    public static String getFilePath(Context context, Uri uri) {
-        String[] projection = {MediaStore.Video.Media.DATA};
-        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
-        String filePath = null;
-        if (cursor != null && cursor.moveToFirst()) {
-            filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
-            cursor.close();
-        }
 
-        return filePath;
-    }
 
     public static String getFilePathFromData(Context context, Uri uri) {
         String[] projection = new String[]{"_data"};
@@ -732,6 +722,12 @@ public class Utilities {
 
     public static BigDecimal bigDecimalPercentage(BigDecimal base, BigDecimal pct) {
         return base.multiply(pct).divide(new BigDecimal(100));
+    }
+
+    public static int getRandomNumber() {
+        Random r = new Random();
+        int number = r.nextInt(100 - 1) + 1;
+        return number;
     }
 
     public static void goToiPayInAppStore(Context mContext) {

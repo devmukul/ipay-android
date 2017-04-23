@@ -29,6 +29,7 @@
     <string name="enter_new_pin">PIN (4 digit)</string>
     <string name="confirm_your_pin">Confirm PIN</string>
     <string name="enter_new_pass">Enter a new password</string>
+    <string name="enter_your_pass">Enter your password</string>
     <string name="new_pass">New password</string>
     <string name="confirm_new_pass">Confirm new password</string>
     <string name="confirm_password">Confirm Password</string>
@@ -162,7 +163,6 @@
     <string name="update">Update</string>
     <string name="update_ipay">Please update iPay</string>
     <string name="update_your_application">Please update your application from Google Play Store.</string>
-    <string name="friend">Friend</string>
     <string name="add_to_contacts">Add to Contacts</string>
     <string name="ipay_contacts">iPay</string>
     <string name="security_questions">Security Questions</string>
@@ -204,10 +204,11 @@
     <string name="progress_dialog_fetching_bank_list">Fetching bank list...</string>
     <string name="progress_dialog_sending_invite">Sending invitation...</string>
     <string name="progress_dialog_fetching_business_types">Loading business types..</string>
-    <string name="progress_dialog_sending_invoice">Sending Invoice...</string>
+    <string name="progress_dialog_sending_payment_request">Sending Payment Request...</string>
     <string name="progress_dialog_rejecting">Rejecting request...</string>
     <string name="progress_dialog_accepted">Accepting request...</string>
     <string name="progress_dialog_signing_out">Signing out...</string>
+    <string name="progress_dialog_adding_trusted_device">Adding this device as trusted...</string>
     <string name="signup_successful">Sign up successful. Welcome to iPay</string>
     <string name="login_failed">Login failed. Please check your user name and password.</string>
     <string name="logout_failed">Could not sign out properly</string>
@@ -281,7 +282,7 @@
     <string name="submitting_request_money">Submitting your request for money</string>
     <string name="failed_request_money">Money request failed</string>
     <string name="failed_to_fetch_categories">Failed to fetch event categories</string>
-    <string name="failed_invoice_creation">Invoice creation failed</string>
+    <string name="failed_request_payment">Payment request failed</string>
     <string name="failed_remove_bank">Failed to remove this bank from your iPay account. Please try again later.</string>
     <string name="failed_to_fetch_branch">Failed to fetch branches for this bank</string>
     <string name="failed_to_send_for_bank_verification">Failed to send request.</string>
@@ -658,9 +659,12 @@
     <string name="introducer_list_header">Introduced by</string>
     <string name="select_a_contact">Select a contact</string>
     <string name="progress_dialog_single_invoice">Fetching invoice...</string>
-    <string name="failed_add_friend">Add friend failed</string>
-    <string name="failed_invite_friend">Invite friend failed</string>
-    <string name="failed_update_friend">Update friend failed</string>
+    <string name="add_contact_successful">Contact added successfully. Refreshing contact list...</string>
+    <string name="delete_contact_successful">Contact deleted successfully. Refreshing contact list...</string>
+    <string name="update_contact_successful">Update contact successful</string>
+    <string name="failed_add_contact">Add contact failed</string>
+    <string name="failed_invite_contact">Invite contact failed</string>
+    <string name="failed_update_contact">Update contact failed</string>
     <string name="confirm_request_accept">Are you sure you want to accept this request?</string>
     <string name="confirm_request_rejection">Are you sure you want to reject this request?</string>
     <string name="contacts_sync_failed">Contacts Sync Failed</string>
@@ -728,8 +732,8 @@
     <string name="edit_business_information">Edit Business Information</string>
     <string name="get_balance">Get Balance</string>
     <string name="get_transactions">Get Transactions</string>
-    <string name="friend_read">See frieds</string>
-    <string name="friend_write">Add friends</string>
+    <string name="contact_read">See contacts</string>
+    <string name="contact_write">Add contacts</string>
     <string name="see_owner_info">See business owner information</string>
     <string name="manage_owner_info">Manage business owner information</string>
     <string name="see_docs">See personal documents</string>
@@ -753,11 +757,9 @@
     <string name="status">Status</string>
     <string name="time">Time</string>
     <string name="topup_rollback">TopUp Rollback</string>
-    <string name="add_a_friend">Add a Friend</string>
     <string name="add_a_contact">Add a Contact</string>
-    <string name="invite_a_friend">Invite a Friend</string>
-    <string name="progress_dialog_adding_friend">Adding friend...</string>
-    <string name="add_friend_successful">Add Friend Successful. Refreshing friend list...</string>
+    <string name="invite_a_contact">Invite a Contact</string>
+    <string name="progress_dialog_adding_contact">Adding contact...</string>
     <string name="dialog_requesting_top_up">Preparing for Top Up...</string>
     <string name="term_link">https://www.ipay.com.bd/legal/tos</string>
     <string name="privacy_link">https://www.ipay.com.bd/legal/privacy-policy</string>
@@ -768,8 +770,10 @@
     <string name="help">Help</string>
     <string name="create_ticket">Create Ticket</string>
     <string name="subject">Subject</string>
+    <string name="category">Category</string>
     <string name="ticket_created">Ticket Created</string>
     <string name="creating_ticket">Creating ticket...</string>
+    <string name="select_category">Select a category</string>
     <string name="no_email_added">No Email Added</string>
     <string name="can_not_add_bank_if_not_verified">You can not link your bank until your iPay account gets verified by our system. After submitting your documents and other information it might take a while for verification.</string>
     <string name="dialog_add_new_email">You need to set up your primary email to use the support system. Add an email now?</string>
@@ -793,7 +797,15 @@
     <string name="cancelled">Cancelled</string>
     <string name="rejected">Rejected</string>
     <string name="draft">Draft</string>
-
+    <string name="attachment">attachment</string>
+    <string name="attachments">attachments</string>
+    <string name="album">Album</string>
+    <string name="tap_to_select_images">Tap to select images</string>
+    <string name="camera">Camera</string>
+    <string name="pdf">pdf</string>
+    <string name="max_limit_exceed">Max limit of attachment exceed. </string>
+    <string name="remove_contact_title">Delete contact </string>
+    <string name="remove_contact_message">Delete this contact from iPay? </string>
 
     <string-array name="mobile_operators">
         <item>Grameenphone</item>
@@ -808,15 +820,6 @@
         <item>Pre-paid</item>
         <item>Post-paid </item>
     </string-array>
-
-    <string-array name="relationship">
-        <item>Father</item>
-        <item>Mother</item>
-        <item>Brother</item>
-        <item>Sister</item>
-        <item>Friend</item>
-    </string-array>
-
 
     <string-array name="trusted_device_or_network_action">
         <item>Remove</item>
@@ -853,6 +856,12 @@
         <item>Take a picture</item>
         <item>Select from gallery</item>
         <item>View uploaded document</item>
+    </string-array>
+
+    <string-array name="attach_file_picker_action">
+        <item>Take a picture</item>
+        <item>Select from gallery</item>
+        <item>Select a PDF</item>
     </string-array>
 
     <string-array name="verified_picker_action">

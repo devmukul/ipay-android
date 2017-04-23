@@ -45,7 +45,8 @@ import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GetBusinessTypesAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GetFriendsAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GetRelationshipListAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
@@ -62,6 +63,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
@@ -87,6 +89,7 @@ public class HomeActivity extends BaseActivity
     private GetBusinessInformationResponse mGetBusinessInformationResponse;
 
     private GetBusinessTypesAsyncTask mGetBusinessTypesAsyncTask;
+    private GetRelationshipListAsyncTask mGetRelationshipListAsyncTask;
 
     private AutoResizeTextView mMobileNumberView;
     private TextView mNameView;
@@ -174,9 +177,9 @@ public class HomeActivity extends BaseActivity
         } else getProfileInfo();
 
         // Sync contacts
-        new GetFriendsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        // Contact sync is done as follows: first all the contacts are downloaded from the server
-        // (#GetFriendsAsyncTask) and stored in the database (#SyncContactsAsyncTask).
+        new GetContactsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        // DBContactNode sync is done as follows: first all the contacts are downloaded from the server
+        // (#GetContactsAsyncTask) and stored in the database (#SyncContactsAsyncTask).
         // Then difference with phone contacts is calculated, and this difference is sent to the
         // server. If there is any new contact on the phone, we download all contacts from the
         // server again to keep phone and server contacts in sync.
@@ -211,6 +214,9 @@ public class HomeActivity extends BaseActivity
 
         // Load the list of available business types, which will be accessed from multiple activities
         getAvailableBusinessTypes();
+
+        // Fetch available relationship list
+        getRelationshipList();
 
         // Check if important permissions (e.g. Contacts permission) is given. If not,
         // request user for permission.
@@ -338,7 +344,7 @@ public class HomeActivity extends BaseActivity
 
                     if (permissions[i].equals(Manifest.permission.READ_CONTACTS)) {
                         if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            new GetFriendsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            new GetContactsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     }
                 }
@@ -537,6 +543,20 @@ public class HomeActivity extends BaseActivity
             }
         });
         mGetBusinessTypesAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getRelationshipList() {
+        mGetRelationshipListAsyncTask = new GetRelationshipListAsyncTask(this, new GetRelationshipListAsyncTask.RelationshipLoadListener() {
+            @Override
+            public void onLoadSuccess(List<Relationship> relationshipList) {
+            }
+
+            @Override
+            public void onLoadFailed() {
+
+            }
+        });
+        mGetRelationshipListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
@@ -143,7 +143,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             mSelectReceiverButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
+                    Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
                     startActivityForResult(intent, PICK_CONTACT_REQUEST);
                 }
             });
@@ -164,7 +164,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 setOperator(inputText);
             }
         });
-        mMobileNumberEditText.setTextFromSuggestion(mUserMobileNumber);
+        mMobileNumberEditText.setText(mUserMobileNumber);
     }
 
     private void setOperatorAndPackageAdapter() {
@@ -261,7 +261,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             if (data != null) {
                 String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
                 if (mobileNumber != null)
-                    mMobileNumberEditText.setTextFromSuggestion(mobileNumber);
+                    mMobileNumberEditText.setText(mobileNumber);
             }
         } else if (requestCode == MOBILE_TOPUP_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             if (getActivity() != null)

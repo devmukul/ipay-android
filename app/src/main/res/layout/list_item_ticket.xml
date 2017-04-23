@@ -33,7 +33,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textview_description"
+            android:id="@+id/textview_category"
             android:textSize="14sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

@@ -134,7 +134,7 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
             mInstitutionsList.add(institution);
         }
 
-        institutionsSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_an_institution), mInstitutionsList, mSelectedInstitutionId);
+        institutionsSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_an_institution), mInstitutionsList);
         institutionsSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
@@ -163,7 +163,7 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
             mSessionsList.add(session);
         }
 
-        sessionsSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_session), mSessionsList, mSelectedSessionId);
+        sessionsSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_session), mSessionsList);
         sessionsSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {

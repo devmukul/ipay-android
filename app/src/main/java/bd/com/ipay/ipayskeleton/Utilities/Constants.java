@@ -139,6 +139,7 @@ public class Constants {
 
     public static final int MIN_AGE_LIMIT = 18;
     public static final int MIN_VALID_NAME_LENGTH = 5;
+    public static final int MAX_FILE_ATTACHMENT_LIMIT = 5;
 
     public static final int STARTING_DATE = 01;
 
@@ -177,7 +178,7 @@ public class Constants {
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
     public static final String BASE_URL_EDU;
-    public static final String BASE_URL_FRIEND;
+    public static final String BASE_URL_CONTACT;
     public static final String BASE_URL_ADMIN;
     public static final String BASE_URL_FTP_SERVER;
     public static final String BASE_URL_WEB;
@@ -190,7 +191,7 @@ public class Constants {
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
-            BASE_URL_FRIEND = "http://10.10.10.11:1337/v1/";
+            BASE_URL_CONTACT = "http://10.10.10.11:4000/external/v1/";
             BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/support/";
 //            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
@@ -202,7 +203,7 @@ public class Constants {
             BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
-            BASE_URL_FRIEND = "http://10.15.40.14:1337/v1/";
+            BASE_URL_CONTACT = "http://10.15.40.14:4000/external/v1/";
             BASE_URL_ADMIN = "http://10.15.40.15:8085/api/v1/support/";
             BASE_URL_WEB = "http://test.ipay.com.bd";
             SERVER_NAME = "test";
@@ -213,7 +214,7 @@ public class Constants {
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.10.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
-            BASE_URL_FRIEND = "http://10.10.40.14:1337/v1/";
+            BASE_URL_CONTACT = "http://10.10.40.14:4000/external/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
             BASE_URL_WEB = "http://stage.ipay.com.bd";
             SERVER_NAME = "stage";
@@ -224,7 +225,7 @@ public class Constants {
             BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";
             BASE_URL_EDU = "https://www.ipay.com.bd/api/v1/em/";
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
-            BASE_URL_FRIEND = "https://www.ipay.com.bd/friend/v1/";
+            BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
             BASE_URL_ADMIN = "https://www.ipay.com.bd/api/v1/support/";
             BASE_URL_WEB = "https://www.ipay.com.bd";
             SERVER_NAME = "live";
@@ -235,7 +236,7 @@ public class Constants {
             BASE_URL_SM = "http://192.168.1.105:8085/api/v1/money/";
             BASE_URL_EDU = "http://192.168.1.105:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
-            BASE_URL_FRIEND = "http://dev.ipay.com.bd/friend/v1/";
+            BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             SERVER_NAME = "local";
@@ -343,7 +344,7 @@ public class Constants {
     public static final String URL_OTP_REQUEST_BUSINESS = "signup/business";
 
     // SM Payment REST
-    public static final String URL_PAYMENT_SEND_INVOICE = "payment/invoice/send";
+    public static final String URL_SEND_PAYMENT_REQUEST = "payment/invoice/send";
     public static final String URL_PAYMENT_SAVE_INVOICE = "payment/invoice/save";
     public static final String URL_PAYMENT_GET_INVOICE = "payment/invoice/get/";
 
@@ -368,7 +369,7 @@ public class Constants {
     // Trusted Network REST
     public static final String URL_GET_TRUSTED_PERSONS = "trustednetwork/trustedpersons/";
     public static final String URL_POST_TRUSTED_PERSONS = "trustednetwork/trustedpersons/";
-    public static final String URL_REMOVE_TRUSTED_PERSON = "trustednetwork/trustedpersons/";
+    public static final String URL_REMOVE_TRUSTED_PERSON = "trustednetwork/trustedpersons";
 
     // User Rest
     public static final String URL_GET_USER_INFO = "user/userinfo";
@@ -396,11 +397,11 @@ public class Constants {
     public static final String URL_DELETE_EMAIL = "user/emails/";
     public static final String URL_MAKE_PRIMARY_EMAIL = "/primary";
 
-    // User Rest (Friends)
-    public static final String URL_GET_FRIENDS = "getfriends";
-    public static final String URL_ADD_FRIENDS = "addfriends";
-    public static final String URL_DELETE_FRIEND = "deletefriend";
-    public static final String URL_UPDATE_FRIENDS = "updatefriends";
+    // User Rest (Contact)
+    public static final String URL_GET_CONTACTS = "contacts";
+    public static final String URL_ADD_CONTACTS = "contacts";
+    public static final String URL_UPDATE_CONTACTS = "contacts";
+    public static final String URL_DELETE_CONTACTS = "contacts";
 
     // Business Information (Owner)
     public static final String URL_GET_BUSINESS_INFORMATION = "user/profile/business";
@@ -429,7 +430,10 @@ public class Constants {
     public static final String URL_CREATE_TICKET = "ticket/create";
     public static final String URL_GET_TICKETS = "ticket/list";
     public static final String URL_GET_TICKET_DETAILS = "ticket/by/id";
+    public static final String URL_GET_TICKET_CATEGORIES = "ticket/categories";
     public static final String URL_ADD_COMMENT = "ticket/add/comment";
+    public static final String URL_UPLOAD_TICKET_ATTACHMENT = "ticket/comment/attachment";
+    public static final String URL_ADD_COMMENT_WITH_ATTACHMENT = "ticket/add/comment/attachments";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
@@ -484,7 +488,7 @@ public class Constants {
     public static final String COMMAND_ACCEPT_PAYMENT_REQUEST = "COMMAND_ACCEPT_PAYMENT_REQUEST";
     public static final String COMMAND_GET_PENDING_REQUESTS_ME = "COMMAND_GET_PENDING_REQUESTS_ME";
     public static final String COMMAND_REQUEST_MONEY = "COMMAND_REQUEST_MONEY";
-    public static final String COMMAND_SEND_INVOICE = "COMMAND_SEND_INVOICE";
+    public static final String COMMAND_SEND_PAYMENT_REQUEST = "COMMAND_SEND_PAYMENT_REQUEST";
     public static final String COMMAND_SAVE_INVOICE = "COMMAND_SAVE_INVOICE";
     public static final String COMMAND_GET_SINGLE_INVOICE = "COMMAND_GET_SINGLE_INVOICE";
     public static final String COMMAND_SET_PROFILE_PICTURE = "COMMAND_SET_PROFILE_PICTURE";
@@ -519,9 +523,10 @@ public class Constants {
     public static final String COMMAND_GET_PIN_INFO = "COMMAND_GET_PIN_INFO";
     public static final String COMMAND_GET_MONEY_REQUESTS = "COMMAND_GET_MONEY_REQUESTS";
     public static final String COMMAND_GET_PROFILE_COMPLETION_STATUS = "COMMAND_GET_PROFILE_COMPLETION_STATUS";
-    public static final String COMMAND_GET_FRIENDS = "COMMAND_GET_FRIENDS";
-    public static final String COMMAND_ADD_FRIENDS = "COMMAND_ADD_FRIENDS";
-    public static final String COMMAND_UPDATE_FRIENDS = "COMMAND_UPDATE_FRIENDS";
+    public static final String COMMAND_GET_CONTACTS = "COMMAND_GET_CONTACTS";
+    public static final String COMMAND_ADD_CONTACTS = "COMMAND_ADD_CONTACTS";
+    public static final String COMMAND_DELETE_CONTACTS = "COMMAND_DELETE_CONTACTS";
+    public static final String COMMAND_UPDATE_CONTACTS = "COMMAND_UPDATE_CONTACTS";
     public static final String COMMAND_GET_BUSINESS_RULE = "COMMAND_GET_BUSINESS_RULE";
     public static final String COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE = "COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE";
     public static final String COMMAND_GET_ALL_BUSINESS_LIST = "COMMAND_GET_ALL_BUSINESS_LIST";
@@ -534,7 +539,9 @@ public class Constants {
     public static final String COMMAND_CREATE_TICKET = "COMMAND_CREATE_TICKET";
     public static final String COMMAND_GET_TICKETS = "COMMAND_GET_TICKETS";
     public static final String COMMAND_GET_TICKET_DETAILS = "COMMAND_GET_TICKET_DETAILS";
+    public static final String COMMAND_GET_TICKET_CATEGORIES = "COMMAND_GET_TICKET_CATEGORIES";
     public static final String COMMAND_ADD_COMMENT = "COMMAND_ADD_COMMENT";
+    public static final String COMMAND_ADD_ATTACHMENT = "COMMAND_ADD_ATTACHMENT";
 
     // Resource
     public static final String COMMAND_GET_AVAILABLE_BANK_LIST = "COMMAND_GET_AVAILABLE_BANK_LIST";
@@ -542,6 +549,7 @@ public class Constants {
     public static final String COMMAND_GET_THANA_LIST = "COMMAND_GET_THANA_LIST";
     public static final String COMMAND_GET_DISTRICT_LIST = "COMMAND_GET_DISTRICT_LIST";
     public static final String COMMAND_GET_BANK_BRANCH_LIST = "COMMAND_GET_BANK_BRANCH_LIST";
+    public static final String COMMAND_GET_RELATIONSHIP_LIST = "COMMAND_GET_RELATIONSHIP_LIST";
 
     // Invite
     public static final String COMMAND_GET_INVITE_INFO = "COMMAND_GET_INVITE_INFO";
@@ -616,6 +624,7 @@ public class Constants {
     public static final int TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK = 3003;
     public static final int TRANSACTION_HISTORY_REQUEST_PAYMENT = 6005;
     public static final int TRANSACTION_HISTORY_INVOICE = 6003;
+    public static final int TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT = 3502;
 
     public static final int SERVICE_ID_REQUEST_MONEY = 6001;
     public static final int SERVICE_ID_REQUEST_INVOICE = 6003;
@@ -741,6 +750,11 @@ public class Constants {
     public static final String TICKET_STATUS_ON_HOLD = "hold";
     public static final String TICKET_STATUS_SOLVED = "solved";
     public static final String TICKET_STATUS_CLOSED = "closed";
+
+    public static final String TICKET_COMMENT_ID = "commentId";
+    public static final String TICKETID = "ticketId";
+    public static final String TICKET_COMMENT = "comment";
+
 
     public static final int REQUEST_TYPE_RECEIVED_REQUEST = 1;
     public static final int REQUEST_TYPE_SENT_REQUEST = 2;

@@ -91,13 +91,15 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
         if (args != null)
             startedFromProfileCompletion = args.getBoolean(STARTED_FROM_PROFILE_ACTIVITY);
 
+        mSelectedBankId = -1;
         mDistrictNames = new ArrayList<>();
         mBranches = new ArrayList<>();
         mBranchNames = new ArrayList<>();
         bankNames = new ArrayList<>();
+        if (CommonData.getAvailableBanks() != null)
+            bankNames.addAll((ArrayList) CommonData.getAvailableBanks());
 
         mProgressDialog = new ProgressDialog(getActivity());
-
         mBankListSelection = (EditText) v.findViewById(R.id.default_bank_accounts);
         mDistrictSelection = (EditText) v.findViewById(R.id.branch_districts);
         mAccountNameEditText = (EditText) v.findViewById(R.id.bank_account_name);
@@ -106,9 +108,6 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
         mBankBranchEditTextProgressBar = (EditTextWithProgressBar) v.findViewById(R.id.editText_with_progressBar_branch);
         mBankBranchSelection = mBankBranchEditTextProgressBar.getEditText();
 
-        mSelectedBankId = -1;
-
-        bankNames.addAll((ArrayList) CommonData.getAvailableBanks());
         setBankAdapter(bankNames);
 
         mAccountNameEditText.setText(ProfileInfoCacheManager.getName());
@@ -149,7 +148,7 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
 
     private void setBankAdapter(List<Bank> bankList) {
 
-        bankSelectorDialog = new ResourceSelectorDialog<>(getContext(), getString(R.string.select_a_bank), bankList, mSelectedBankId);
+        bankSelectorDialog = new ResourceSelectorDialog<>(getContext(), getString(R.string.select_a_bank), bankList);
         bankSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {

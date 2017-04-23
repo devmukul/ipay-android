@@ -333,6 +333,8 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
 
                 if (mSecurityQuestionAnswerValidationClassList.get(pos).getQuestion() != null)
                     mQuestionEditText.setText(mSecurityQuestionAnswerValidationClassList.get(pos).getQuestion());
+                else
+                    mQuestionEditText.setText("");
 
                 if (mAddSecurityQuestionAnswerClassList.get(pos).getAnswer() != null)
                     mAnswerEditText.setText(mAddSecurityQuestionAnswerClassList.get(pos).getAnswer());
@@ -523,6 +525,9 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
                 if (editable.length() > 0) {
                     mAddSecurityQuestionAnswerClassList.get(position).setAnswer(editable.toString());
                     mSecurityQuestionAnswerValidationClassList.get(position).setAnswerAvailable(true);
+                } else {
+                    mAddSecurityQuestionAnswerClassList.get(position).setAnswer(null);
+                    mSecurityQuestionAnswerValidationClassList.get(position).setAnswerAvailable(false);
                 }
 
             }

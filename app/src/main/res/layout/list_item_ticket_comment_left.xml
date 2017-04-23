@@ -8,31 +8,48 @@
 
     <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
         android:id="@+id/profile_picture"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
         android:layout_width="@dimen/ticket_profile_picture_size"
         android:layout_height="@dimen/ticket_profile_picture_size"
-        android:layout_marginRight="@dimen/activity_horizontal_margin_card"/>
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/activity_horizontal_margin_card" />
 
     <LinearLayout
-        android:background="@drawable/background_ticket_comment_left"
-        android:layout_width="match_parent"
+        android:id="@+id/messageLayout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/profile_picture">
+        android:layout_toRightOf="@+id/profile_picture"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_horizontal_margin">
 
         <TextView
             android:id="@+id/textview_comment"
-            android:textColor="@android:color/white"
+            style="@style/TicketCommentBodyStyle"
+            android:layout_gravity="left"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
+            android:background="@drawable/background_ticket_comment_left"
             android:gravity="left"
-            style="@style/TicketCommentBodyStyle"/>
+            android:padding="@dimen/value5" />
 
-        <TextView
-            android:id="@+id/textview_time"
-            style="@style/TicketCommentTimeStyle"
-            android:gravity="left"
-            android:textColor="@android:color/white"/>
+        <LinearLayout
+            android:id="@+id/attachmentLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_margin="@dimen/value5"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin_double"
+            android:background="@drawable/background_ticket_comment_left"
+            android:orientation="vertical" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textview_time"
+        style="@style/TicketCommentTimeStyle"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/messageLayout"
+        android:layout_toRightOf="@+id/profile_picture"
+        android:gravity="center_horizontal"
+        android:textColor="@color/colorDarkKGray" />
 
 </RelativeLayout>

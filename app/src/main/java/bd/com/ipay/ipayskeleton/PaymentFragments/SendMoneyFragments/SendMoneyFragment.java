@@ -26,7 +26,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 import java.math.BigDecimal;
 
-import bd.com.ipay.ipayskeleton.Activities.DialogActivities.FriendPickerDialogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
@@ -87,7 +87,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FriendPickerDialogActivity.class);
+                Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
                 intent.putExtra(Constants.IPAY_MEMBERS_ONLY, true);
                 startActivityForResult(intent, PICK_CONTACT_REQUEST);
             }
@@ -147,7 +147,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             if (mobileNumber != null)
-                mMobileNumberEditText.setTextFromSuggestion(mobileNumber);
+                mMobileNumberEditText.setText(mobileNumber);
 
         } else if (requestCode == SEND_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();

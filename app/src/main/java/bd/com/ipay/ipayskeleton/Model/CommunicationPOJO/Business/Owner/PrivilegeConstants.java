@@ -29,8 +29,8 @@ public class PrivilegeConstants {
     private static final String WITHDRAW_MONEY = "WithdrawMoney";
     private static final String TOP_UP = "Topup";
     private static final String EDUCATION_MANAGE = "EducationManage";
-    private static final String FRIEND_READ = "FRIEND_READ";
-    private static final String FRIEND_WRITE = "FRIEND_WRITE";
+    private static final String CONTACT_READ = "CONTACT_READ";
+    private static final String CONTACT_WRITE = "CONTACT_WRITE";
     private static final String SEE_OWNER_INFO = "SEE_OWNER_INFO";
     private static final String MANAGE_OWNER_INFO = "MANAGE_OWNER_INFO";
     private static final String SEE_DOCS = "SEE_DOCS";
@@ -68,8 +68,8 @@ public class PrivilegeConstants {
         ALL_PRIVILEGES.add(new Privilege(WITHDRAW_MONEY));
         ALL_PRIVILEGES.add(new Privilege(TOP_UP));
         ALL_PRIVILEGES.add(new Privilege(EDUCATION_MANAGE));
-        ALL_PRIVILEGES.add(new Privilege(FRIEND_READ));
-        ALL_PRIVILEGES.add(new Privilege(FRIEND_WRITE));
+        ALL_PRIVILEGES.add(new Privilege(CONTACT_READ));
+        ALL_PRIVILEGES.add(new Privilege(CONTACT_WRITE));
         ALL_PRIVILEGES.add(new Privilege(SEE_OWNER_INFO));
         ALL_PRIVILEGES.add(new Privilege(MANAGE_OWNER_INFO));
         ALL_PRIVILEGES.add(new Privilege(SEE_DOCS));
@@ -111,8 +111,8 @@ public class PrivilegeConstants {
         PRIVILEGE_NAME_MAP.put(WITHDRAW_MONEY, R.string.withdraw_money);
         PRIVILEGE_NAME_MAP.put(TOP_UP, R.string.mobile_topup);
         PRIVILEGE_NAME_MAP.put(EDUCATION_MANAGE, R.string.education_management);
-        PRIVILEGE_NAME_MAP.put(FRIEND_READ, R.string.friend_read);
-        PRIVILEGE_NAME_MAP.put(FRIEND_WRITE, R.string.friend_write);
+        PRIVILEGE_NAME_MAP.put(CONTACT_READ, R.string.contact_read);
+        PRIVILEGE_NAME_MAP.put(CONTACT_WRITE, R.string.contact_write);
         PRIVILEGE_NAME_MAP.put(SEE_OWNER_INFO, R.string.see_owner_info);
         PRIVILEGE_NAME_MAP.put(MANAGE_OWNER_INFO, R.string.manage_owner_info);
         PRIVILEGE_NAME_MAP.put(SEE_DOCS, R.string.see_docs);
