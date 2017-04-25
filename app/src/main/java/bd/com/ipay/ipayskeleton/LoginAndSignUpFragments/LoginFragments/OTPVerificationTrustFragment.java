@@ -259,14 +259,13 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                     // Start timer again
                     mTimerTextView.setVisibility(View.VISIBLE);
                     mResendOTPButton.setEnabled(false);
-                    new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
+                    new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000 - 500) {
 
                         public void onTick(long millisUntilFinished) {
                             mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
                         }
 
                         public void onFinish() {
-                            mTimerTextView.setVisibility(View.INVISIBLE);
                             mResendOTPButton.setEnabled(true);
                         }
                     }.start();

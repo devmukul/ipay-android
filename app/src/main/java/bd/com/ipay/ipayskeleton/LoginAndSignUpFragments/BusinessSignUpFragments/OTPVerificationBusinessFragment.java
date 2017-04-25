@@ -283,21 +283,20 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                     mOtpResponseBusinessSignup = gson.fromJson(result.getJsonString(), OTPResponseBusinessSignup.class);
                     String message = mOtpResponseBusinessSignup.getMessage();
 
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.otp_sent, Toast.LENGTH_LONG).show();
 
                         // Start timer again
                         mTimerTextView.setVisibility(View.VISIBLE);
                         mResendOTPButton.setEnabled(false);
-                        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
+                        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000 - 500) {
 
                             public void onTick(long millisUntilFinished) {
                                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
                             }
 
                             public void onFinish() {
-                                mTimerTextView.setVisibility(View.INVISIBLE);
                                 mResendOTPButton.setEnabled(true);
                             }
                         }.start();
