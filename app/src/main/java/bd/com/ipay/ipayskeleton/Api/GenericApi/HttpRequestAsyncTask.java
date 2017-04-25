@@ -1,8 +1,7 @@
-package bd.com.ipay.ipayskeleton.Api;
+package bd.com.ipay.ipayskeleton.Api.GenericApi;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -19,13 +18,16 @@ import org.apache.http.protocol.HTTP;
 
 import java.io.IOException;
 
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseParser;
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Configuration.ApiVersionResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -67,7 +69,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                 }
 
             } else {
-                if (Constants.DEBUG) Log.d(Constants.ERROR, API_COMMAND);
+                Logger.logD(Constants.ERROR, API_COMMAND);
                 error = true;
                 return null;
             }
@@ -86,12 +88,10 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
             return;
         }
 
-        if (Constants.DEBUG) {
-            if (result == null)
-                Log.e(Constants.RESULT, API_COMMAND + " NULL");
-            else
-                Log.w(Constants.RESULT, Constants.GET_REQUEST + result.toString());
-        }
+        if (result == null)
+            Logger.logE(Constants.RESULT, API_COMMAND + " NULL");
+        else
+            Logger.logW(Constants.RESULT, Constants.GET_REQUEST + result.toString());
 
         if (result != null) {
 

@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.BroadcastReceiverClass;
+package bd.com.ipay.ipayskeleton.BroadcastReceivers;
 
 
 import android.content.BroadcastReceiver;
@@ -6,12 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
-import android.util.Log;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 
 public class SMSReaderBroadcastReceiver extends BroadcastReceiver {
@@ -40,7 +40,7 @@ public class SMSReaderBroadcastReceiver extends BroadcastReceiver {
                     }
                 }
                 catch(Exception e) {
-                    Log.d("Exception caught", e.getMessage());
+                    Logger.logD("Exception caught", e.getMessage());
                 }
             }
         }

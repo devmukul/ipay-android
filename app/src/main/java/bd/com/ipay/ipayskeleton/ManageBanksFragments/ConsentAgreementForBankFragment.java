@@ -14,16 +14,17 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import bd.com.ipay.ipayskeleton.Activities.ManageBanksActivity;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.AddBankRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.AddBankResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranch;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class ConsentAgreementForBankFragment extends Fragment implements HttpResponseListener {
 
@@ -96,7 +97,7 @@ public class ConsentAgreementForBankFragment extends Fragment implements HttpRes
         mBankBranch = bundle.getParcelable(Constants.BANK_BRANCH);
         mBranchName = mBankBranch.getName();
         mBankAccountNumber = bundle.getString(Constants.BANK_ACCOUNT_NUMBER);
-        mAccountName = ProfileInfoCacheManager.getName();
+        mAccountName = ProfileInfoCacheManager.getUserName();
 
         startedFromProfileCompletion = bundle.getBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION);
     }
@@ -130,7 +131,7 @@ public class ConsentAgreementForBankFragment extends Fragment implements HttpRes
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mAddBankTask = null;
-            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+            Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -142,16 +143,16 @@ public class ConsentAgreementForBankFragment extends Fragment implements HttpRes
                 mAddBankResponse = gson.fromJson(result.getJsonString(), AddBankResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_LONG);
 
                     if (!startedFromProfileCompletion)
                         ((ManageBanksActivity) getActivity()).switchToBankAccountsFragment();
                     else
-                        Toast.makeText(getActivity(), R.string.bank_successfully_placed_for_verification, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.bank_successfully_placed_for_verification, Toast.LENGTH_LONG);
 
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toaster.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_SHORT);
                 }
 
             } catch (Exception e) {

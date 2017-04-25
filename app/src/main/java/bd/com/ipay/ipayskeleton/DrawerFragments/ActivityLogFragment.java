@@ -32,15 +32,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UserActivity.GetActivityRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UserActivity.UserActivityClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UserActivity.UserActivityResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ActivityLogFragment extends ProgressFragment implements HttpResponseListener {
@@ -285,7 +286,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                     dpd.show();
 
                 } catch (ParseException e) {
-                    Toast.makeText(getActivity(), R.string.select_from_date_first, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.select_from_date_first, Toast.LENGTH_LONG);
                 }
             }
         });
@@ -458,7 +459,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             mSwipeRefreshLayout.setRefreshing(false);
 
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
+                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
             return;
         }
 
@@ -489,12 +490,12 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.user_activity_get_failed, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.user_activity_get_failed, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.user_activity_get_failed, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.user_activity_get_failed, Toast.LENGTH_LONG);
             }
 
             mSwipeRefreshLayout.setRefreshing(false);

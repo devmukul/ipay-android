@@ -1,8 +1,6 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.DeviceTrustFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,15 +14,16 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DeviceTrustActivity;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -38,8 +37,6 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
     private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
 
     private ProgressDialog mProgressDialog;
-    private SharedPreferences mSharedPreferences;
-
     private TextView mDeviceNameTextView;
     private Button mAddTrustedDeviceButton;
     private Button mLogoutButton;
@@ -53,8 +50,6 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
         View view = inflater.inflate(R.layout.fragment_add_trusted_device, container, false);
 
         mProgressDialog = new ProgressDialog(getActivity());
-        mSharedPreferences = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-
         mDeviceNameTextView = (TextView) view.findViewById(R.id.device_name);
         mAddTrustedDeviceButton = (Button) view.findViewById(R.id.button_add_trusted_device);
         mLogoutButton = (Button) view.findViewById(R.id.button_logout);
@@ -90,7 +85,7 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
         if (mAddTrustedDeviceTask != null)
             return;
 
-        String pushRegistrationID = mSharedPreferences.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+        String pushRegistrationID = SharedPrefManager.getPushNotificationToken(null);
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_trusted_device));
         mProgressDialog.show();
@@ -165,7 +160,7 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         String UUID = mAddToTrustedDeviceResponse.getUUID();
-                        mSharedPreferences.edit().putString(Constants.UUID, UUID).apply();
+                        ProfileInfoCacheManager.setUUID(UUID);
 
                         // Launch HomeActivity from here on successful trusted device add
                         ((DeviceTrustActivity) getActivity()).switchToHomeActivity();

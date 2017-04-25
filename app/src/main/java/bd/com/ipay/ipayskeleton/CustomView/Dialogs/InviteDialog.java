@@ -15,9 +15,9 @@ import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.SendInviteResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
@@ -26,6 +26,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
@@ -197,7 +198,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
             mAddContactAsyncTask = null;
             mSendInviteTask = null;
 
-            Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_LONG).show();
+            Toaster.makeText(context, R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -211,12 +212,12 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
                     sendInvite(mMobileNumber);
                 } else {
                     mProgressDialog.dismiss();
-                    Toast.makeText(context, R.string.failed_invite_contact, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(context, R.string.failed_invite_contact, Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 mProgressDialog.dismiss();
-                Toast.makeText(context, R.string.failed_invite_contact, Toast.LENGTH_LONG).show();
+                Toaster.makeText(context, R.string.failed_invite_contact, Toast.LENGTH_LONG);
             }
 
             mAddContactAsyncTask = null;
@@ -236,13 +237,12 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
                     }
 
                 } else {
-                    Toast.makeText(context, mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    Toaster.makeText(context, mSendInviteResponse.getMessage(), Toast.LENGTH_LONG);
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(context, R.string.failed_sending_invitation, Toast.LENGTH_LONG).show();
-
+                Toaster.makeText(context, R.string.failed_sending_invitation, Toast.LENGTH_LONG);
             }
             mSendInviteTask = null;
         }

@@ -24,9 +24,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.MoneyReques
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SentMoneyRequestsFragment extends ProgressFragment implements HttpResponseListener {
@@ -164,7 +165,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
             mPendingRequestTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null) {
-                Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
+                 Toaster.makeText(getActivity(), R.string.fetch_info_failed,  Toast.LENGTH_LONG);
             }
             return;
         }
@@ -193,12 +194,12 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                         Toaster.makeText(getActivity(), R.string.pending_get_failed,  Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                     Toaster.makeText(getActivity(), R.string.pending_get_failed,  Toast.LENGTH_LONG);
             }
 
             mSwipeRefreshLayout.setRefreshing(false);
@@ -212,7 +213,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                             RequestMoneyAcceptRejectOrCancelResponse.class);
                     String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                         Toaster.makeText(getActivity(), message,  Toast.LENGTH_LONG);
 
                     // Refresh the pending list
                     if (pendingMoneyRequests != null)
@@ -223,12 +224,12 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+                         Toaster.makeText(getActivity(), R.string.could_not_cancel_money_request,  Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+                     Toaster.makeText(getActivity(), R.string.could_not_cancel_money_request,  Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();
@@ -398,8 +399,8 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
             Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
             intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
             intent.putExtra(Constants.AMOUNT, mAmount);
-            intent.putExtra(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
-            intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, mDescription);
+            intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
+            intent.putExtra(Constants.DESCRIPTION_TAG, mDescription);
             intent.putExtra(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
             intent.putExtra(Constants.NAME, mReceiverName);
             intent.putExtra(Constants.PHOTO_URI, mPhotoUri);

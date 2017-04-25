@@ -42,10 +42,10 @@ import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
-import bd.com.ipay.ipayskeleton.Activities.TransactionDetailsActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
@@ -653,7 +653,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                         if (!mSwipeRefreshLayout.isRefreshing()) {
                             if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY)
                                 launchRequestMoneyReviewPage(transactionHistory);
-                            else if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT || serviceId == Constants.TRANSACTION_HISTORY_INVOICE)
+                            else if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT)
                                 launchRequestPaymentReviewPage(transactionHistory);
                             else {
                                 Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
@@ -802,10 +802,10 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
         Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
-        intent.putExtra(Constants.INVOICE_RECEIVER_TAG,
+        intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER,
                 ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getUserMobileNumber()));
 
-        intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, transactionHistory.getPurpose());
+        intent.putExtra(Constants.DESCRIPTION_TAG, transactionHistory.getPurpose());
         intent.putExtra(Constants.MONEY_REQUEST_ID, transactionHistory.getId());
         intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
         intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());

@@ -20,7 +20,7 @@ public class NotificationActivity extends BaseActivity {
 
         String tag = getIntent().getStringExtra(Constants.TAG);
 
-        if (tag != null && tag.equals(Constants.INVOICE))
+        if (tag != null && tag.equals(Constants.REQUEST_PAYMENT))
             switchToReceivedPaymentRequestDetailsFragment(getIntent().getExtras());
         else if (tag != null && tag.equals(Constants.REQUEST))
             switchToReceivedRequestReviewFragment();

@@ -21,12 +21,12 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ManagePeopleActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.CreateEmployeeRequest;
@@ -39,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.UpdateEmp
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.UpdateEmployeeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class EmployeePrivilegeFragment extends Fragment implements HttpResponseListener {
 
@@ -210,7 +211,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mCreateEmployeeAsyncTask = null;
-            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+            Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -222,17 +223,17 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), mCreateEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), mCreateEmployeeResponse.getMessage(), Toast.LENGTH_LONG);
                             ((ManagePeopleActivity) getActivity()).switchToEmployeeManagementFragment();
                         }
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), mCreateEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), mCreateEmployeeResponse.getMessage(), Toast.LENGTH_LONG);
                         }
                     }
                 } catch (Exception e) {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.new_employee_creation_failed, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.new_employee_creation_failed, Toast.LENGTH_LONG);
                 }
                 break;
 
@@ -242,17 +243,17 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), mEditEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), mEditEmployeeResponse.getMessage(), Toast.LENGTH_LONG);
                             ((ManagePeopleActivity) getActivity()).switchToEmployeeManagementFragment();
                         }
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), mEditEmployeeResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), mEditEmployeeResponse.getMessage(), Toast.LENGTH_LONG);
                         }
                     }
                 } catch (Exception e) {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.edit_employee_details_failed, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.edit_employee_details_failed, Toast.LENGTH_LONG);
                 }
                 break;
 
@@ -289,12 +290,12 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                         }
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG);
                         }
                     }
                 } catch (Exception e) {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.fetching_employee_details_failed, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.fetching_employee_details_failed, Toast.LENGTH_LONG);
                 }
                 break;
             default:

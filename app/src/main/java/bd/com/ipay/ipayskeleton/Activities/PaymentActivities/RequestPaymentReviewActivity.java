@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -12,15 +11,17 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteToiPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments.RequestPaymentReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestPaymentReviewActivity extends BaseActivity implements HttpResponseListener {
@@ -41,7 +42,7 @@ public class RequestPaymentReviewActivity extends BaseActivity implements HttpRe
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mReceiverMobileNumber = getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
+        mReceiverMobileNumber = getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
 
         getProfileInfo(mReceiverMobileNumber);
     }
@@ -104,7 +105,7 @@ public class RequestPaymentReviewActivity extends BaseActivity implements HttpRe
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetProfileInfoTask = null;
-            Toast.makeText(this, R.string.service_not_available, Toast.LENGTH_LONG).show();
+            Toaster.makeText(this, R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -118,14 +119,14 @@ public class RequestPaymentReviewActivity extends BaseActivity implements HttpRe
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String name = mGetUserInfoResponse.getName();
                     String profilePicture;
-                    Log.d("Profile Pictures", mGetUserInfoResponse.getProfilePictures().toString());
+                    Logger.logD("Profile Pictures", mGetUserInfoResponse.getProfilePictures().toString());
                     profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
 
                     switchToRequestReviewFragment(name, profilePicture);
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                     switchToSendInviteFragment();
                 } else {
-                    Toast.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                    Toaster.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                     finish();
                 }
 
@@ -133,7 +134,7 @@ public class RequestPaymentReviewActivity extends BaseActivity implements HttpRe
             } catch (Exception e) {
                 e.printStackTrace();
 
-                Toast.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 finish();
             }
 

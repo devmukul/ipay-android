@@ -9,8 +9,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ManageBanksActivity;
-import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
