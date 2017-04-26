@@ -23,9 +23,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelResponse;
@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMone
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class PaymentRequestSentDetailsFragment extends ReviewFragment implements HttpResponseListener {
@@ -162,7 +163,7 @@ public class PaymentRequestSentDetailsFragment extends ReviewFragment implements
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
+                 Toaster.makeText(getActivity(), R.string.fetch_info_failed,  Toast.LENGTH_LONG);
             return;
         }
         Gson gson = new Gson();
@@ -175,7 +176,7 @@ public class PaymentRequestSentDetailsFragment extends ReviewFragment implements
                             PaymentAcceptRejectOrCancelResponse.class);
                     String message = mPaymentCancelResponse.getMessage();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                         Toaster.makeText(getActivity(), message,  Toast.LENGTH_LONG);
 
                     if (switchedFromTransactionHistory) {
                         Utilities.finishLauncherActivity(getActivity());
@@ -185,12 +186,12 @@ public class PaymentRequestSentDetailsFragment extends ReviewFragment implements
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+                         Toaster.makeText(getActivity(), R.string.could_not_cancel_money_request,  Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+                     Toaster.makeText(getActivity(), R.string.could_not_cancel_money_request,  Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();

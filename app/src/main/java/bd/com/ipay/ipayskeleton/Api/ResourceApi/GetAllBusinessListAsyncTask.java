@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Api;
+package bd.com.ipay.ipayskeleton.Api.ResourceApi;
 
 import android.content.Context;
 import android.widget.Toast;
@@ -7,11 +7,15 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactResponse;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class GetAllBusinessListAsyncTask extends HttpRequestGetAsyncTask implements HttpResponseListener {
     GetAllBusinessContactResponse mBusinessContactResponse;
@@ -28,8 +32,8 @@ public class GetAllBusinessListAsyncTask extends HttpRequestGetAsyncTask impleme
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            if (getContext() != null) {
-                Toast.makeText(getContext(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG).show();
+            if (context != null) {
+                Toast.makeText(context, R.string.business_contacts_sync_failed, Toast.LENGTH_LONG).show();
                 return;
             }
         }
@@ -43,15 +47,15 @@ public class GetAllBusinessListAsyncTask extends HttpRequestGetAsyncTask impleme
                 DataHelper dataHelper = DataHelper.getInstance(context);
                 dataHelper.createBusinessAccountsList(mBusinessContacts);
             } else {
-                if (getContext() != null) {
-                    Toast.makeText(getContext(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG).show();
+                if (context != null) {
+                    Toaster.makeText(context, R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
 
-            if (getContext() != null) {
-                Toast.makeText(getContext(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG).show();
+            if (context != null) {
+                Toaster.makeText(context, R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
             }
         }
 

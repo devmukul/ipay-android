@@ -15,7 +15,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,29 +37,27 @@ import com.bumptech.glide.request.target.Target;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.DeleteContactAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.SQLiteCursorLoader;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.AskForIntroductionResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.SendInviteResponse;
-import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactRequest;
-import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactNode;
 import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Contact.InviteContactNode;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonColorList.PROFILE_PICTURE_BACKGROUNDS;
@@ -195,8 +192,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
     private void resetSearchKeyword() {
         if (mSearchView != null && !mQuery.isEmpty()) {
-            if (Constants.DEBUG)
-                Log.d("Loader", "Resetting.. Previous query: " + mQuery);
+            Logger.logD("Loader", "Resetting.. Previous query: " + mQuery);
 
             mQuery = "";
             mSearchView.setQuery("", false);
@@ -580,7 +576,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             mSendInviteTask = null;
 
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT);
 
             return;
         }
@@ -602,13 +598,13 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     getLoaderManager().restartLoader(CONTACTS_QUERY_LOADER, null, this);
 
                 } else if (getActivity() != null) {
-                    Toast.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), mSendInviteResponse.getMessage(), Toast.LENGTH_LONG);
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_sending_invitation, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.failed_sending_invitation, Toast.LENGTH_LONG);
                 }
             }
 
@@ -621,16 +617,16 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.introduction_request_sent, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.introduction_request_sent, Toast.LENGTH_LONG);
                     }
                 } else if (getActivity() != null) {
-                    Toast.makeText(getActivity(), mAskForIntroductionResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), mAskForIntroductionResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
 
                 if (getActivity() != null) {
-                    Toast.makeText(getActivity(), R.string.failed_asking_introduction, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.failed_asking_introduction, Toast.LENGTH_LONG);
                 }
             }
 

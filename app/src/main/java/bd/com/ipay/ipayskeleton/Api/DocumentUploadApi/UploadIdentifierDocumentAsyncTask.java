@@ -1,8 +1,7 @@
-package bd.com.ipay.ipayskeleton.Api;
+package bd.com.ipay.ipayskeleton.Api.DocumentUploadApi;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
@@ -19,43 +18,60 @@ import org.apache.http.util.EntityUtils;
 import java.io.File;
 import java.nio.charset.Charset;
 
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, GenericHttpResponse> {
+public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, GenericHttpResponse> {
 
     private final Context mContext;
-    private final String filePath;
+    private final String imagePath;
     private final String API_COMMAND;
-    private long ticketId;
-    private long commentId;
-    private String comment;
+    private final String documentIdNumber;
+    private final String documentType;
+    private int uploadType;
 
     public HttpResponseListener mHttpResponseListener;
 
-    public UploadTicketAttachmentAsyncTask(String API_COMMAND, String filePath, long commentId, Context mContext) {
+    private static final int OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT = 1;
+    private static final int OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT = 2;
+
+    public UploadIdentifierDocumentAsyncTask(String API_COMMAND, String imagePath, Context mContext,
+                                             String documentIdNumber, String documentType) {
         this.mContext = mContext;
-        this.filePath = filePath;
+        this.imagePath = imagePath;
         this.API_COMMAND = API_COMMAND;
-        this.commentId = commentId;
+        this.documentIdNumber = documentIdNumber;
+        this.documentType = documentType;
+    }
+
+    public UploadIdentifierDocumentAsyncTask(String API_COMMAND, String imagePath, Context mContext,
+                                             String documentIdNumber, String documentType, int uploadType) {
+        this.mContext = mContext;
+        this.imagePath = imagePath;
+        this.API_COMMAND = API_COMMAND;
+        this.documentIdNumber = documentIdNumber;
+        this.documentType = documentType;
+        this.uploadType = uploadType;
     }
 
     @Override
     protected GenericHttpResponse doInBackground(Void... params) {
-        if (Constants.DEBUG)
-            Log.w("Document Upload", "Started");
+        Logger.logW("Document Upload", "Started");
 
         GenericHttpResponse mGenericHttpResponse = new GenericHttpResponse();
 
         if (Utilities.isConnectionAvailable(mContext))
-            mGenericHttpResponse = uploadDocument(filePath);
+            mGenericHttpResponse = uploadDocument(imagePath);
         else
-            Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG).show();
+            Toaster.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG);
 
-        if (Constants.DEBUG)
-            Log.w("Document Upload", "Finished");
+        Logger.logW("Document Upload", "Finished");
 
         return mGenericHttpResponse;
     }
@@ -83,31 +99,35 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
 
         try {
             HttpClient client = new DefaultHttpClient();
-
             File file = new File(selectedImagePath);
             HttpPost post = null;
+            if (uploadType == OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT)
+                post = new HttpPost(Constants.BASE_URL_MM + Constants.URL_UPLOAD_DOCUMENTS);
 
-            post = new HttpPost(Constants.BASE_URL_ADMIN + Constants.URL_UPLOAD_TICKET_ATTACHMENT);
+            else if (uploadType == OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT) {
+                post = new HttpPost(Constants.BASE_URL_MM + Constants.URL_UPLOAD_BUSINESS_DOCUMENTS);
+            }
+
+            if (TokenManager.isTokenExists())
+                post.setHeader(Constants.TOKEN, TokenManager.getToken());
+            if (TokenManager.isEmployerAccountActive())
+                post.setHeader(Constants.OPERATING_ON_ACCOUNT_ID, TokenManager.getOperatingOnAccountId());
 
             MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE,
                     Constants.BOUNDARY, Charset.defaultCharset());
 
-            entity.addPart(Constants.TICKET_COMMENT_ID, new StringBody(commentId + ""));
-
-            if(file.exists())
             entity.addPart(Constants.MULTIPART_FORM_DATA_NAME, new FileBody(file));
+            entity.addPart(Constants.DOCUMENT_ID_NUMBER, new StringBody(documentIdNumber));
+            entity.addPart(Constants.DOCUMENT_TYPE, new StringBody(documentType));
             post.setEntity(entity);
 
-            Log.e("POST", entity.toString());
-
-            if (TokenManager.isTokenExists())
-                post.setHeader(Constants.TOKEN, TokenManager.getToken());
+            post.setHeader("Accept", "application/json");
             post.setHeader("Content-Type", "multipart/form-data; boundary=" + Constants.BOUNDARY);
 
             HttpResponse response = client.execute(post);
             HttpEntity httpEntity = response.getEntity();
 
-            Log.e("POST", post.toString());
+            Logger.logE("POST", post.toString());
 
             int status = response.getStatusLine().getStatusCode();
 
@@ -116,7 +136,7 @@ public class UploadTicketAttachmentAsyncTask extends AsyncTask<Void, Void, Gener
             mGenericHttpResponse.setApiCommand(API_COMMAND);
             mGenericHttpResponse.setJsonString(EntityUtils.toString(httpEntity));
 
-            Log.e("Result", mGenericHttpResponse.toString());
+            Logger.logE("Result", mGenericHttpResponse.toString());
 
             return mGenericHttpResponse;
 

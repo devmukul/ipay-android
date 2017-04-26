@@ -12,9 +12,9 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.District;
@@ -26,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.ThanaRequestBui
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CountryList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class AddressInputView extends FrameLayout implements HttpResponseListener {
 
@@ -291,7 +292,7 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
             mGetThanaListAsyncTask = null;
             mGetDistrictListAsyncTask = null;
             if (context != null)
-                Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -312,12 +313,12 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
 
                 } else {
                     if (context != null)
-                        Toast.makeText(context, R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(context, R.string.failed_loading_district_list, Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (context != null)
-                    Toast.makeText(context, R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(context, R.string.failed_loading_district_list, Toast.LENGTH_LONG);
             }
 
             mGetDistrictListAsyncTask = null;
@@ -332,12 +333,12 @@ public class AddressInputView extends FrameLayout implements HttpResponseListene
 
                 } else {
                     if (context != null)
-                        Toast.makeText(context, R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(context, R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (context != null)
-                    Toast.makeText(context, R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(context, R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
             }
 
             mGetThanaListAsyncTask = null;

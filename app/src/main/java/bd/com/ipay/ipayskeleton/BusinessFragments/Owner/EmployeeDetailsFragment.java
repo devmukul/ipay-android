@@ -19,10 +19,10 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ManagePeopleActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.EmployeeDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.GetEmployeeDetailsResponse;
@@ -30,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.Privilege
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.Role;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class EmployeeDetailsFragment extends Fragment implements HttpResponseListener {
 
@@ -94,7 +95,7 @@ public class EmployeeDetailsFragment extends Fragment implements HttpResponseLis
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mEmployeeDetailsAsyncTask = null;
-            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+            Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -105,7 +106,6 @@ public class EmployeeDetailsFragment extends Fragment implements HttpResponseLis
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
-                        //Toast.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                         mEmployeeDetails = mGetEmployeeDetailsResponse.getInfo();
 
@@ -126,21 +126,18 @@ public class EmployeeDetailsFragment extends Fragment implements HttpResponseLis
                             }
                         }
 
-
                         mPrivilegeList = Arrays.asList(ManagePeopleActivity.mRolePrivilegeMap.get(mEmployeeDetails.getRoleId()));
                         mEmployeeDetailsAdapter = new EmployeeDetailsAdapter();
-
                         mPrivilegeListView.setAdapter(mEmployeeDetailsAdapter);
-
                     }
                 } else {
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), mGetEmployeeDetailsResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 }
             } catch (Exception e) {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.fetching_employee_details_failed, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.fetching_employee_details_failed, Toast.LENGTH_LONG);
             }
         }
     }

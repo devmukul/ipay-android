@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,9 +24,9 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpReviewActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
@@ -36,9 +35,12 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class MobileTopupFragment extends Fragment implements HttpResponseListener {
@@ -54,7 +56,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     private TextView mMobileTopUpInfoTextView;
 
     private ProgressDialog mProgressDialog;
-    private SharedPreferences pref;
 
     private List<String> mPackageList;
     private List<String> mOperatorList;
@@ -73,7 +74,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_mobile_topup, container, false);
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mMobileNumberEditText = (CustomContactsSearchView) view.findViewById(R.id.mobile_number);
         mAmountEditText = (EditText) view.findViewById(R.id.amount);
@@ -89,7 +89,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         mUserMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         setOperatorAndPackageAdapter();
 
-        int mobileNumberType = pref.getInt(Constants.MOBILE_NUMBER_TYPE, Constants.MOBILE_TYPE_PREPAID);
+        int mobileNumberType = SharedPrefManager.getMobileNumberType(Constants.MOBILE_TYPE_PREPAID);
         if (mobileNumberType == Constants.MOBILE_TYPE_PREPAID) {
             mPackageEditText.setText(mPackageList.get(Constants.MOBILE_TYPE_PREPAID - 1));
             mSelectedPackageTypeId = Constants.MOBILE_TYPE_PREPAID - 1;
@@ -126,7 +126,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                         launchReviewPage();
                     }
                 } else if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG);
             }
         });
 
@@ -211,8 +211,8 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         BigDecimal maxAmount;
 
         String balance = null;
-        if (pref.contains(Constants.USER_BALANCE)) {
-            balance = pref.getString(Constants.USER_BALANCE, null);
+        if (SharedPrefManager.ifContainsUserBalance()) {
+            balance = SharedPrefManager.getUserBalance(null);
         }
 
         if (mAmountEditText.getText().toString().trim().length() == 0) {
@@ -281,7 +281,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
             mobileNumberType = Constants.MOBILE_TYPE_POSTPAID;
         else
             mobileNumberType = Constants.MOBILE_TYPE_PREPAID;
-        pref.edit().putInt(Constants.MOBILE_NUMBER_TYPE, mobileNumberType).apply();
+        SharedPrefManager.setMobileNumberType(mobileNumberType);
 
         int operatorCode = mSelectedOperatorTypeId + 1;
         String countryCode = "+88"; // TODO: For now Bangladesh Only
@@ -289,7 +289,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         Intent intent = new Intent(getActivity(), TopUpReviewActivity.class);
         intent.putExtra(Constants.MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mobileNumber));
         intent.putExtra(Constants.AMOUNT, amount);
-        intent.putExtra(Constants.MOBILE_NUMBER_TYPE, mobileNumberType);
+        intent.putExtra(SharedPrefConstants.MOBILE_NUMBER_TYPE, mobileNumberType);
         intent.putExtra(Constants.OPERATOR_CODE, operatorCode);
         intent.putExtra(Constants.COUNTRY_CODE, countryCode);
 
@@ -327,7 +327,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -350,12 +350,12 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             }
 
             mGetBusinessRuleTask = null;

@@ -1,14 +1,13 @@
 package bd.com.ipay.ipayskeleton.Aspect;
 
-import android.util.Log;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 @Aspect
 public class ApiValidatorAspect {
@@ -24,7 +23,7 @@ public class ApiValidatorAspect {
         Object[] args = joinPoint.getArgs();
         Object result = null;
 
-        Log.d("Aspect", "Masud aspected something here");
+        Logger.logD("Aspect", "Masud aspected something here");
 
         try {
             GenericHttpResponse mGenericHttpResponse = (GenericHttpResponse) args[0];

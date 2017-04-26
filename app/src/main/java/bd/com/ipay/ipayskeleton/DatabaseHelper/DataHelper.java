@@ -5,14 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class DataHelper {
 
@@ -75,7 +74,7 @@ public class DataHelper {
 
             context.getContentResolver().notifyChange(DBConstants.DB_TABLE_CONTACTS_URI, null);
 
-            if (Constants.DEBUG) Log.i("Contacts", "Inserted into the database");
+            Logger.logI("Contacts", "Inserted into the database");
         }
     }
 
@@ -108,7 +107,7 @@ public class DataHelper {
 
             context.getContentResolver().notifyChange(DBConstants.DB_TABLE_BUSINESS_URI, null);
 
-            if (Constants.DEBUG) Log.i("Business", "Inserted into the database");
+            Logger.logI("Business", "Inserted into the database");
         }
     }
 
@@ -177,8 +176,7 @@ public class DataHelper {
                     + " ELSE "
                     + DBConstants.KEY_ORIGINAL_NAME + " END COLLATE NOCASE";
 
-            if (Constants.DEBUG)
-                Log.w("Query", queryString);
+            Logger.logW("Query", queryString);
 
             cursor = db.rawQuery(queryString, null);
 
@@ -204,15 +202,13 @@ public class DataHelper {
                     + query + "%'" + ")" + " ORDER BY " + DBConstants.KEY_BUSINESS_NAME
                     + " COLLATE NOCASE";
 
-            if (Constants.DEBUG)
-                Log.w("Query", queryString);
+            Logger.logW("Query", queryString);
 
             cursor = db.rawQuery(queryString, null);
 
             if (cursor != null) {
                 cursor.getCount();
-                if (Constants.DEBUG)
-                    Log.w("Query", cursor.getCount() + "");
+                Logger.logW("Query", cursor.getCount() + "");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -231,8 +227,7 @@ public class DataHelper {
             String queryString = "SELECT MAX(" + DBConstants.KEY_BUSINESS_ACCOUNT_ID +
                     ") FROM " + DBConstants.DB_TABLE_BUSINESS_ACCOUNTS;
 
-            if (Constants.DEBUG)
-                Log.w("Query", queryString);
+            Logger.logW("Query", queryString);
 
             cursor = db.rawQuery(queryString, null);
 

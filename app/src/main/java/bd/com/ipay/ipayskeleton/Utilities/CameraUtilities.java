@@ -8,12 +8,13 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 /**
  * Source:
@@ -119,8 +120,7 @@ public class CameraUtilities {
         if (fromCamera) {
             int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
 
-            if (Constants.DEBUG)
-                Log.w("Orientation - Camera", orientation + "");
+            Logger.logW("Orientation - Camera", orientation + "");
 
             switch (orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_90:
@@ -142,8 +142,7 @@ public class CameraUtilities {
             if (cur != null)
                 cur.close();
 
-            if (Constants.DEBUG)
-                Log.w("Orientation - Gallery", orientation + "");
+            Logger.logW("Orientation - Gallery", orientation + "");
 
             return rotateImage(img, orientation);
         }

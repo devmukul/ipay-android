@@ -25,10 +25,10 @@ import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
@@ -37,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ContactsHolderFragment extends Fragment implements HttpResponseListener {
@@ -323,7 +324,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             mGetInviteInfoTask = null;
             mAddContactAsyncTask = null;
             if (getContext() != null)
-                Toast.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                Toaster.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -345,18 +346,18 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.add_contact_successful, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.add_contact_successful, Toast.LENGTH_LONG);
                         new GetContactsAsyncTask(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_add_contact, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.failed_add_contact, Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
 
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_add_contact, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.failed_add_contact, Toast.LENGTH_LONG);
             }
 
             mAddContactAsyncTask = null;
