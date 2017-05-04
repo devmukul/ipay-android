@@ -72,7 +72,6 @@ import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
-import bd.com.ipay.ipayskeleton.Utilities.Config;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -109,7 +108,6 @@ public class HomeActivity extends BaseActivity
     private Menu mOptionsMenu;
 
     private int mBadgeCount = 0;
-    private int savedCriticalPreferenceVersion;
 
     private static boolean switchedToHomeFragment = true;
     private boolean exitFromApplication = false;
@@ -226,10 +224,7 @@ public class HomeActivity extends BaseActivity
         // Send Analytics for test purpose in Firebase
         sendAnalytics();
 
-        // Check if the stored critical preference version is lesser than the version found from config
-        savedCriticalPreferenceVersion = SharedPrefManager.getCriticalPreferenceVersion(0);
-        if (Config.criticalPreferenceVersion > savedCriticalPreferenceVersion)
-            todoCheckList(savedCriticalPreferenceVersion);
+        getAllBusinessAccountsList();
 
         // If profile picture gets updated, we need to refresh the profile picture in the drawer.
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
@@ -314,23 +309,9 @@ public class HomeActivity extends BaseActivity
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
     }
 
-    private void todoCheckList(int storedCriticalPreferenceVersion) {
-
-        // Do not put any try-catch here. The operations must go smoothly.
-        // If anything goes wrong, just store the last successful operation number in preference.
-        // Only the last case will have a break statement like the onUpgrade function in DataBaseOpenHelper
-        switch (storedCriticalPreferenceVersion) {
-            case 0:
-                // Migration code from 0 to 1
-                // Get Business contacts
-                // For the first time load, the lastBusinessId is 0
-                GetAllBusinessContactRequestBuilder mGetAllBusinessContactRequestBuilder = new GetAllBusinessContactRequestBuilder(0);
-                new GetAllBusinessListAsyncTask(this, mGetAllBusinessContactRequestBuilder.getGeneratedUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                break;
-        }
-
-        // Store the updated critical preference version after all necessary actions.
-        SharedPrefManager.setCriticalPreferenceVersion(Config.criticalPreferenceVersion);
+    private void getAllBusinessAccountsList() {
+        GetAllBusinessContactRequestBuilder mGetAllBusinessContactRequestBuilder = new GetAllBusinessContactRequestBuilder(0);
+        new GetAllBusinessListAsyncTask(this, mGetAllBusinessContactRequestBuilder.getGeneratedUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -444,7 +425,6 @@ public class HomeActivity extends BaseActivity
                 ((MyApplication) this.getApplication()).launchLoginPage(null);
             }
         }
-
     }
 
     @Override
@@ -501,7 +481,6 @@ public class HomeActivity extends BaseActivity
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, HomeActivity.this);
         mLogoutTask.mHttpResponseListener = this;
-
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
