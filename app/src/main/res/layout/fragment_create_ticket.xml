@@ -1,72 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite">
+    android:background="@android:color/white">
 
-    <include layout="@layout/layout_progress_container" />
-
-    <LinearLayout
-        android:id="@+id/content_container"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:background="@color/colorWhite">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <include layout="@layout/layout_progress_container" />
 
-            <EditText
-                android:id="@+id/subject_edit_text"
-                style="@style/CustomEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusableInTouchMode="true"
-                android:hint="@string/subject">
-
-                <requestFocus />
-            </EditText>
-
-        </android.support.design.widget.TextInputLayout>
-
-        <View style="@style/Divider" />
-
-        <bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar
-            android:id="@+id/category_edit_text"
+        <LinearLayout
+            android:id="@+id/content_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="false"
-            android:hint="@string/category" />
+            android:orientation="vertical"
+            android:paddingTop="@dimen/activity_vertical_margin">
 
-        <View style="@style/Divider" />
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/subject_edit_text"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusableInTouchMode="true"
+                    android:hint="@string/subject">
 
-            <EditText
-                android:id="@+id/message_edit_text"
-                style="@style/CustomEditText"
+                    <requestFocus />
+                </EditText>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <View style="@style/Divider" />
+
+            <bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar
+                android:id="@+id/category_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/message" />
+                android:focusable="false"
+                android:hint="@string/category" />
 
-        </android.support.design.widget.TextInputLayout>
+            <View style="@style/Divider" />
 
-        <View style="@style/Divider" />
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+                <EditText
+                    android:id="@+id/message_edit_text"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/message" />
 
-        <Button
-            android:id="@+id/button_create_ticket"
-            style="@style/PrimaryMediumButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/create_ticket" />
+            </android.support.design.widget.TextInputLayout>
 
-    </LinearLayout>
-</RelativeLayout>
+            <View style="@style/Divider" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <Button
+                android:id="@+id/button_create_ticket"
+                style="@style/PrimaryMediumButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/create_ticket" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>

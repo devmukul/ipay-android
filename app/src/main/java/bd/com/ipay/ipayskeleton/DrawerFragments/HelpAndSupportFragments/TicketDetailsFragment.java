@@ -342,6 +342,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
                                 || ticketStatus.equals(Constants.TICKET_STATUS_CLOSED)) {
                             mSendCommentButton.setVisibility(View.GONE);
                             mUserCommentEditText.setVisibility(View.GONE);
+                            mAttachFileButton.setVisibility(View.GONE);
                         }
 
                         if (isAdded())
