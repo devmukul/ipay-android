@@ -266,7 +266,7 @@
             android:label="@string/help"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <!-- Receiver and service -->
 
