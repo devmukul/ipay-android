@@ -366,6 +366,8 @@ public class HomeActivity extends BaseActivity
         if (mOptionsMenu != null) {
             if (badgeCount > 0) {
                 ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
+            } else {
+                ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, null);
             }
         }
     }
