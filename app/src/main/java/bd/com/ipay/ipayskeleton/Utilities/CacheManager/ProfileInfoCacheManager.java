@@ -19,11 +19,11 @@ public class ProfileInfoCacheManager {
     }
 
     public static String getPushNotificationToken(String defaultValue) {
-        return pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, defaultValue);
+        return pref.getString(SharedPrefConstants.PUSH_NOTIFICATION_TOKEN, defaultValue);
     }
 
     public static void setPushNotificationToken(String value) {
-        pref.edit().putString(Constants.PUSH_NOTIFICATION_TOKEN, value).apply();
+        pref.edit().putString(SharedPrefConstants.PUSH_NOTIFICATION_TOKEN, value).apply();
     }
 
     public static String getUserName() {

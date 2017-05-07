@@ -2,12 +2,13 @@ package bd.com.ipay.ipayskeleton.Service.FCM;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class TokenRefreshListenerService extends FirebaseInstanceIdService {
     private SharedPreferences pref;
@@ -24,14 +25,14 @@ public class TokenRefreshListenerService extends FirebaseInstanceIdService {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 
-        if (Constants.DEBUG) Log.d("Firebase Token", "Refreshed token: " + refreshedToken);
+        Logger.logD("Firebase Token", "Refreshed token: " + refreshedToken);
 
         pref = this.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         saveRegistrationTokenInPref(refreshedToken);
     }
 
     private void saveRegistrationTokenInPref(String refreshedToken) {
-        pref.edit().putString(Constants.PUSH_NOTIFICATION_TOKEN, refreshedToken).apply();
+        pref.edit().putString(SharedPrefConstants.PUSH_NOTIFICATION_TOKEN, refreshedToken).apply();
     }
 }
 

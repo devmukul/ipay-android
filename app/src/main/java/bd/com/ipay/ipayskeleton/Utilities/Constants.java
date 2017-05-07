@@ -651,15 +651,6 @@ public class Constants {
     public static final String ADDRESS_TYPE_PERMANENT = "PERMANENT";
     public static final String ADDRESS_TYPE_OFFICE = "OFFICE";
 
-    public static final String PUSH_NOTIFICATION_TAG_PROFILE_PICTURE = "PROFILE_PICTURE";
-    public static final String PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE = "PROFILE_INFO";
-    public static final String PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE = "IDENTIFICATION_DOCUMENT";
-    public static final String PUSH_NOTIFICATION_TAG_EMAIL_UPDATE = "EMAIL";
-    public static final String PUSH_NOTIFICATION_TAG_BANK_UPDATE = "BANK";
-    public static final String PUSH_NOTIFICATION_TAG_DEVICE_UPDATE = "DEVICE";
-    public static final String PUSH_NOTIFICATION_TAG_TRUSTED_PERSON_UPDATE = "TRUSTED_PERSON";
-    public static final String PUSH_NOTIFICATION_TOKEN = "token";
-
     public static final String TOTAL = "total";
     public static final String RECEIVER_MOBILE_NUMBER = "receiver";
     public static final String INVOICE_ITEM_NAME_TAG = "item_name";

@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.Service.FCM;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -13,8 +12,8 @@ import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.CreateCustomNotificationAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FCMNotificationResponse;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.AppInstance.AppInstanceUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class FCMListenerService extends FirebaseMessagingService {
     private FCMNotificationResponse mFcmNotificationResponse;
@@ -24,18 +23,17 @@ public class FCMListenerService extends FirebaseMessagingService {
         String from = message.getFrom();
         Map data = message.getData();
 
-        if (Constants.DEBUG) Log.d("Message", "From: " + from);
+        Logger.logD("Message", "From: " + from);
 
         // Check if message contains a data payload.
         if (data.size() > 0) {
-            if (Constants.DEBUG) Log.d("Data", "Message data payload: " + data.toString());
+            Logger.logD("Data", "Message data payload: " + data.toString());
             parseNotificationResponseFromData(data);
         }
 
         // Check if message contains a notification payload.
         if (message.getNotification() != null) {
-            if (Constants.DEBUG)
-                Log.d("Notification Payload", "Message Notification Body: " + message.getNotification().getBody());
+            Logger.logD("Notification Payload", "Message Notification Body: " + message.getNotification().getBody());
 
             if (!(AppInstanceUtilities.isUserActive(this)))
                 createNotification(this, message.getNotification().getTitle(),
