@@ -19,15 +19,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
-import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.EnableDisableSMSBroadcastReceiver;
-import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
@@ -59,8 +54,6 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
     private EditText mOTPEditText;
     private TextView mTimerTextView;
 
-    private SharedPreferences pref;
-
     private String mDeviceID;
     private ProgressDialog mProgressDialog;
 
@@ -82,7 +75,6 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
@@ -329,7 +321,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         ProfileInfoCacheManager.setLoggedInStatus(true);
 
-                        String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+                        String pushRegistrationID = ProfileInfoCacheManager.getPushNotificationToken(null);
                         if (pushRegistrationID != null)
                             new RegisterFCMTokenToServerAsyncTask(getContext());
 

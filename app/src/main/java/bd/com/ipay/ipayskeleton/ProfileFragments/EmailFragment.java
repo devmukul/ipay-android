@@ -49,7 +49,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.GetEmailRe
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.MakePrimaryEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.MakePrimaryRequest;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;

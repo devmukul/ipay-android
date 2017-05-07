@@ -187,13 +187,7 @@ public class HomeActivity extends BaseActivity
         // server again to keep phone and server contacts in sync.
 
         if (Constants.DEBUG) {
-            Log.w("Token", TokenManager.getToken());
-        }
-        // Start service for GCM
-        if (Utilities.checkPlayServices(HomeActivity.this)) {
-            // Start IntentService to register this application with GCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
+            Logger.logW("Token", TokenManager.getToken());
         }
 
         Logger.logW("Token", TokenManager.getToken());

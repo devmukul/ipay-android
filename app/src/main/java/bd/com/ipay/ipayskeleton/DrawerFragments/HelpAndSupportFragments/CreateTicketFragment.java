@@ -54,7 +54,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategory
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.TicketWithCommentId;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomDrawable;

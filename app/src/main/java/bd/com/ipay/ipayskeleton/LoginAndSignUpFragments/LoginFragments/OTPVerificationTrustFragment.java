@@ -20,12 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
-import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.EnableDisableSMSBroadcastReceiver;
-import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -237,7 +232,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                     else
                         ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumberBusiness);
 
-                    String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+                    String pushRegistrationID = ProfileInfoCacheManager.getPushNotificationToken(null);
                     if (pushRegistrationID != null) {
                         new RegisterFCMTokenToServerAsyncTask(getContext());
                     }
