@@ -15,10 +15,10 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.GetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.District;
@@ -30,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.ThanaRequestBui
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 
 public class AddressFragment extends ProgressFragment implements HttpResponseListener {
@@ -212,7 +213,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
             mGetThanaListAsyncTask = null;
 
             if (getActivity() != null) {
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 getActivity().onBackPressed();
             }
 
@@ -235,14 +236,14 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
                         if (this.isAdded()) setContentShown(true);
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                            Toaster.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
                             getActivity().onBackPressed();
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                        Toaster.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
                         getActivity().onBackPressed();
                     }
                 }
@@ -259,14 +260,14 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
 
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
                             getActivity().onBackPressed();
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
                         getActivity().onBackPressed();
                     }
                 }
@@ -283,14 +284,14 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
 
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG);
                             getActivity().onBackPressed();
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG);
                         getActivity().onBackPressed();
                     }
                 }

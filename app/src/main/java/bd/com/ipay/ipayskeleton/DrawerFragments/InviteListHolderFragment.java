@@ -1,18 +1,14 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class InviteListHolderFragment extends Fragment {
 

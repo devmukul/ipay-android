@@ -24,15 +24,18 @@ import com.google.gson.Gson;
 
 import java.io.File;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.UploadIdentifierDocumentAsyncTask;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadIdentifierDocumentAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class DocumentUploadFragment extends Fragment implements HttpResponseListener {
 
@@ -196,10 +199,10 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mUploadIdentifierDocumentAsyncTask = null;
-            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+            Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -215,15 +218,15 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                         // If push is delayed, we would not see the updated document list when we back
                         // to the document list fragment. Setting the update flag to true to force load
                         // the list.
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
 
-                        Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG);
                         ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
                     }
 
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

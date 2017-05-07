@@ -4,11 +4,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPatchAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPatchAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class DeleteContactAsyncTask extends HttpRequestPatchAsyncTask implements HttpResponseListener {
 
@@ -32,7 +33,7 @@ public class DeleteContactAsyncTask extends HttpRequestPatchAsyncTask implements
         try {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 if (context != null) {
-                    Toast.makeText(context, R.string.delete_contact_successful, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(context, R.string.delete_contact_successful, Toast.LENGTH_LONG);
                     new GetContactsAsyncTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }

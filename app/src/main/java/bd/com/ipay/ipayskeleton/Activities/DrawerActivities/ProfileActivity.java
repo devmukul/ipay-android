@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Activities;
+package bd.com.ipay.ipayskeleton.Activities.DrawerActivities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
+import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessInformationFragment;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EditBusinessInformationFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.LinkBankFragment;

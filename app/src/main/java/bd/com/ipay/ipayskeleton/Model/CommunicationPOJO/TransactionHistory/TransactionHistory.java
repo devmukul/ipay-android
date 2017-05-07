@@ -66,7 +66,6 @@ public class TransactionHistory implements Parcelable {
                     return getBankName();
                 case (Constants.TRANSACTION_HISTORY_TOP_UP):
                     return receiverInfo;
-                case (Constants.TRANSACTION_HISTORY_INVOICE):
                 case (Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT):
                     if (additionalInfo != null)
                         return additionalInfo.getUserName();
@@ -145,7 +144,6 @@ public class TransactionHistory implements Parcelable {
                             return Utilities.formatTakaWithComma(netAmount);
                     }
                 }
-            case (Constants.TRANSACTION_HISTORY_INVOICE):
             case (Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber)) {
                     switch (statusCode) {
@@ -372,7 +370,6 @@ public class TransactionHistory implements Parcelable {
                     return "Money Withdrawn";
                 case (Constants.TRANSACTION_HISTORY_TOP_UP):
                     return "Mobile TopUp";
-                case (Constants.TRANSACTION_HISTORY_INVOICE):
                 case (Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT):
                     if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED) {
                         if (originatingMobileNumber.equals(userMobileNumber)) {
@@ -420,7 +417,6 @@ public class TransactionHistory implements Parcelable {
     public String getStatus() {
         try {
             if (serviceID == Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT
-                    || serviceID == Constants.TRANSACTION_HISTORY_INVOICE
                     || serviceID == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
                 switch (statusCode) {
                     case (Constants.TRANSACTION_STATUS_ACCEPTED):
@@ -488,7 +484,6 @@ public class TransactionHistory implements Parcelable {
                 return -netAmount;
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
                 return -netAmount;
-            case (Constants.TRANSACTION_HISTORY_INVOICE):
             case (Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT):
                 if (originatingMobileNumber.equals(userMobileNumber)) {
                     switch (statusCode) {

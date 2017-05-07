@@ -34,6 +34,12 @@ import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -46,8 +52,10 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.VerifyBankWithAmoun
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class BankAccountsFragment extends ProgressFragment implements HttpResponseListener {
@@ -119,11 +127,11 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
             return;
         }
 
-        if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE))
+        if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_BANK_UPDATE))
             getBankList();
         else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE);
+            String json = dataHelper.getPushEvent(SharedPrefConstants.PUSH_NOTIFICATION_TAG_BANK_UPDATE);
 
             if (json == null)
                 getBankList();
@@ -144,7 +152,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                     @Override
                     public void onLoadFailed() {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.failed_available_bank_list_loading, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), R.string.failed_available_bank_list_loading, Toast.LENGTH_LONG);
                             getActivity().finish();
                         }
                     }
@@ -167,13 +175,13 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
     private void attemptVerificationWithAmount(Long userBankID, double amount) {
         if (userBankID == 0) {
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
         if (amount <= 0) {
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.please_enter_amount, Toast.LENGTH_LONG).show();
+                Toaster.makeText(getActivity(), R.string.please_enter_amount, Toast.LENGTH_LONG);
             return;
         }
 
@@ -194,7 +202,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
     private void attemptRemoveBank(long bankAccountID) {
         if (bankAccountID == 0) {
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -228,7 +236,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
 
             mUserBankListAdapter.notifyDataSetChanged();
 
-            PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, false);
+            PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_BANK_UPDATE, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -331,7 +339,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
             mGetBankTask = null;
             mRemoveBankAccountTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -348,7 +356,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
 
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -364,19 +372,19 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                     mRemoveBankAccountResponse = gson.fromJson(result.getJsonString(), RemoveBankAccountResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mRemoveBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), mRemoveBankAccountResponse.getMessage(), Toast.LENGTH_LONG);
 
                         // Refresh bank list
                         refreshBankList();
 
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mRemoveBankAccountResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), mRemoveBankAccountResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_remove_bank, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.failed_remove_bank, Toast.LENGTH_LONG);
                 }
 
                 mProgressDialog.dismiss();
@@ -389,15 +397,15 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
                     mVerifyBankWithAmountResponse = gson.fromJson(result.getJsonString(), VerifyBankWithAmountResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mVerifyBankWithAmountResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), mVerifyBankWithAmountResponse.getMessage(), Toast.LENGTH_LONG);
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mVerifyBankWithAmountResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), mVerifyBankWithAmountResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_to_bank_verification, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.failed_to_bank_verification, Toast.LENGTH_LONG);
                 }
 
                 // Refresh the bank list for updated bank status

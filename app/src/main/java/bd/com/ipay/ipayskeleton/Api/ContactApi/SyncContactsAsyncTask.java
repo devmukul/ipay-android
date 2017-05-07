@@ -5,15 +5,14 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactResponse;
@@ -23,6 +22,7 @@ import bd.com.ipay.ipayskeleton.Model.Contact.UpdateContactResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine.ContactDiff> implements HttpResponseListener {
 
@@ -64,8 +64,8 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
             // Calculate the difference between phone contacts and server contacts
             ContactEngine.ContactDiff contactDiff = ContactEngine.getContactDiff(phoneContacts, serverContacts);
 
-            Log.i("New Contacts", contactDiff.newContacts.toString());
-            Log.i("Updated Contacts", contactDiff.updatedContacts.toString());
+            Logger.logI("New Contacts", contactDiff.newContacts.toString());
+            Logger.logI("Updated Contacts", contactDiff.updatedContacts.toString());
 
             return contactDiff;
         } else {
@@ -105,7 +105,7 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
 
         UpdateContactRequestBuilder updateContactRequestBuilder = new UpdateContactRequestBuilder(contactList);
         mUpdateContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_UPDATE_CONTACTS,
-               updateContactRequestBuilder.generateUri(), updateContactRequestBuilder.getUpdateContactRequest(), context, this);
+                updateContactRequestBuilder.generateUri(), updateContactRequestBuilder.getUpdateContactRequest(), context, this);
         mUpdateContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -124,13 +124,12 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
                 mAddContactResponse = gson.fromJson(result.getJsonString(), AddContactResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     // Server contacts updated, download contacts again
-                    if (Constants.DEBUG)
-                        Log.i("Contact", context.getString(R.string.add_contact_successful));
+                    Logger.logI("Contact", context.getString(R.string.add_contact_successful));
 
                     new GetContactsAsyncTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     if (mAddContactResponse != null)
-                        Log.e(context.getString(R.string.failed_add_contact), mAddContactResponse.getMessage());
+                        Logger.logE(context.getString(R.string.failed_add_contact), mAddContactResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -142,11 +141,10 @@ public class SyncContactsAsyncTask extends AsyncTask<String, Void, ContactEngine
             try {
                 mUpdateContactResponse = gson.fromJson(result.getJsonString(), UpdateContactResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (Constants.DEBUG)
-                        Log.i("Contact", context.getString(R.string.update_contact_successful));
+                    Logger.logI("Contact", context.getString(R.string.update_contact_successful));
                     // Maybe we should download contacts again?
                 } else {
-                    Log.e(context.getString(R.string.failed_update_contact), mUpdateContactResponse.getMessage());
+                    Logger.logE(context.getString(R.string.failed_update_contact), mUpdateContactResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

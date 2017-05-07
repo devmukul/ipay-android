@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,10 +34,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DocumentPreviewActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.UploadIdentifierDocumentAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadIdentifierDocumentAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.DocumentPreviewDetails;
@@ -49,8 +48,10 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.Upload
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class IdentificationDocumentListFragment extends ProgressFragment implements HttpResponseListener {
@@ -131,7 +132,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         getActivity().setTitle(R.string.profile_documents);
 
         mProgressDialog = new ProgressDialog(getActivity());
-        
+
         mDocumentListRecyclerView = (RecyclerView) v.findViewById(R.id.list_documents);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mDocumentListRecyclerView.setLayoutManager(mLayoutManager);
@@ -143,14 +144,14 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE)) {
+        if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE)) {
             if (ProfileInfoCacheManager.isBusinessAccount()) {
                 getIdentificationBusinessDocuments();
             } else
                 getIdentificationDocuments();
         } else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE);
+            String json = dataHelper.getPushEvent(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE);
 
             if (json == null) {
 
@@ -184,8 +185,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         mFileName = temp[temp.length - 1];
                         documentPreviewDetailsList.get(mSelectedItemId).setSelectedFilePath(mFileName);
                         mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent);
-                        if (Constants.DEBUG)
-                            Log.w("Loading document", mSelectedItemId + " " + mSelectedDocumentUri.toString());
+                        Logger.logW("Loading document", mSelectedItemId + " " + mSelectedDocumentUri.toString());
 
                         documentPreviewDetailsList.get(mSelectedItemId).setSelectedDocumentUri(mSelectedDocumentUri);
                         mDocumentListAdapter.notifyDataSetChanged();
@@ -313,8 +313,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
         String selectedOImagePath = documentPreviewDetailsList.get(mID).getSelectedDocumentUri().getPath();
 
-        if (Constants.DEBUG)
-            Log.w("Loading document", mDocumentID + " " + mID + " " + selectedOImagePath + " " + mDocumentType);
+        Logger.logW("Loading document", mDocumentID + " " + mID + " " + selectedOImagePath + " " + mDocumentType);
 
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
@@ -351,9 +350,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         processGetDocumentListResponse(result.getJsonString());
 
                         DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                        dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
+                        dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
 
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.failed_get_document_list, Toast.LENGTH_SHORT).show();
@@ -374,9 +373,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         processGetBusinessDocumentListResponse(result.getJsonString());
 
                         DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                        dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
+                        dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
 
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.failed_get_document_list, Toast.LENGTH_SHORT).show();
@@ -398,8 +397,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                             mSelectedDocumentDetails.getDocumentId(),
                             mSelectedDocumentDetails.getDocumentType());
 
-                    if (Constants.DEBUG)
-                        Log.w("Loading document", documentUrl);
+                    Logger.logW("Loading document", documentUrl);
 
                     Intent intent = new Intent(getActivity(), DocumentPreviewActivity.class);
                     intent.putExtra(Constants.FILE_EXTENSION, Utilities.getExtension(mSelectedDocumentDetails.getDocumentUrl()));
@@ -424,7 +422,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                             // If push is delayed, we would not see the updated document list when we back
                             // to the document list fragment. Setting the update flag to true to force load
                             // the list.
-                            PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
+                            PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
 
                             Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
 

@@ -28,10 +28,10 @@ import java.util.Comparator;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.NotificationActivity;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PendingIntroducerReviewDialog;
@@ -56,6 +56,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class NotificationFragment extends ProgressFragment implements HttpResponseListener {
@@ -250,7 +251,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mProgressDialog.setMessage(getString(R.string.loading));
         mProgressDialog.show();
 
-        int accountType = ProfileInfoCacheManager.getAccountType();
+        int accountType = ProfileInfoCacheManager.getAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
         int accountClass = Constants.DEFAULT_USER_CLASS;
 
         GetServiceChargeRequest mServiceChargeRequest = new GetServiceChargeRequest(serviceId, accountType, accountClass);
@@ -344,7 +345,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
     }
 
-    private void launchInvoiceHistoryFragment() {
+    private void launchPaymentRequestsReceivedDetailsFragment() {
         Bundle bundle = new Bundle();
         bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
         bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
@@ -355,7 +356,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         bundle.putString(Constants.AMOUNT, mAmount.toString());
         bundle.putString(Constants.TITLE, mTitle);
         bundle.putString(Constants.DESCRIPTION, mDescriptionOfRequest);
-        bundle.putString(Constants.TAG, Constants.INVOICE);
+        bundle.putString(Constants.TAG, Constants.REQUEST_PAYMENT);
 
         if (mInvoiceItemList != null)
             bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mInvoiceItemList));
@@ -371,8 +372,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
         bundle.putSerializable(Constants.AMOUNT, mAmount);
-        bundle.putString(Constants.INVOICE_RECEIVER_TAG, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
-        bundle.putString(Constants.INVOICE_DESCRIPTION_TAG, mDescriptionOfRequest);
+        bundle.putString(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
+        bundle.putString(Constants.DESCRIPTION_TAG, mDescriptionOfRequest);
         bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
         bundle.putString(Constants.NAME, mReceiverName);
         bundle.putString(Constants.PHOTO_URI, mPhotoUri);
@@ -453,7 +454,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             if (isAdded()) {
                 mSwipeRefreshLayout.setRefreshing(false);
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG);
             }
 
             return;
@@ -472,12 +473,12 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         } catch (Exception e) {
                             e.printStackTrace();
                             if (getActivity() != null)
-                                Toast.makeText(getActivity(), mGetMoneyAndPaymentRequestResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                Toaster.makeText(getActivity(), mGetMoneyAndPaymentRequestResponse.getMessage(), Toast.LENGTH_LONG);
                         }
 
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), R.string.fetch_notification_failed, Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -495,11 +496,11 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         mIntroductionRequests = mIntroductionRequestsResponse.getVerificationRequestList();
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 }
 
                 mGetIntroductionRequestTask = null;
@@ -514,11 +515,11 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         mBusinessInvitations = mGetBusinessListResponse.getBusinessList();
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mGetBusinessListResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), mGetBusinessListResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 }
 
                 mGetBusinessInvitationTask = null;
@@ -533,11 +534,11 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         mPendingIntroducerList = mPendingIntroducerListResponse.getWantToBeIntroducers();
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), mIntroductionRequestsResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 }
 
                 mGetPendingIntroducerListTask = null;
@@ -554,13 +555,13 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                             mServiceCharge = mGetServiceChargeResponse.getServiceCharge(mAmount);
 
                             if (mServiceCharge.compareTo(BigDecimal.ZERO) < 0) {
-                                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                             } else {
                                 launchReceivedRequestFragment();
                             }
 
                         } else {
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                            Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                             return;
                         }
                     } else {
@@ -570,7 +571,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 }
 
                 mServiceChargeTask = null;
@@ -663,7 +664,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
                             attemptGetServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
                         else {
-                            launchInvoiceHistoryFragment();
+                            launchPaymentRequestsReceivedDetailsFragment();
                         }
                     }
                 });

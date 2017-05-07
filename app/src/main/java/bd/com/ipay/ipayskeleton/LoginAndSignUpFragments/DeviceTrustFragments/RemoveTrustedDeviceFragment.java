@@ -1,8 +1,6 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.DeviceTrustFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,11 +24,11 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 import bd.com.ipay.ipayskeleton.Activities.DeviceTrustActivity;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
@@ -42,6 +40,8 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.TrustedDev
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -152,8 +152,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         String mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
         String mDeviceName = DeviceInfoFactory.getDeviceName();
 
-        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+        String pushRegistrationID = SharedPrefManager.getPushNotificationToken(null);
 
         AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
                 Constants.MOBILE_ANDROID + mDeviceID, pushRegistrationID);
@@ -209,9 +208,9 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                     processTrustedDeviceList(result.getJsonString());
 
                     DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, result.getJsonString());
+                    dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, result.getJsonString());
 
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, false);
+                    PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, false);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mGetTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -262,8 +261,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String UUID = mAddToTrustedDeviceResponse.getUUID();
-                    SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                    pref.edit().putString(Constants.UUID, UUID).apply();
+                    ProfileInfoCacheManager.setUUID(UUID);
 
                     // Launch HomeActivity from here on successful trusted device add
                     ((DeviceTrustActivity) getActivity()).switchToHomeActivity();

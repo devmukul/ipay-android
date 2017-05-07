@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -33,6 +33,8 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.GetTrusted
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.RemoveTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.TrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
@@ -88,11 +90,11 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
             }
         });
 
-        if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE))
+        if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE))
             getTrustedDeviceList();
         else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE);
+            String json = dataHelper.getPushEvent(SharedPrefConstants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE);
 
             if (json == null)
                 getTrustedDeviceList();
@@ -171,9 +173,9 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                     processTrustedDeviceList(result.getJsonString());
 
                     DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, result.getJsonString());
+                    dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, result.getJsonString());
 
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, false);
+                    PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, false);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mGetTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();

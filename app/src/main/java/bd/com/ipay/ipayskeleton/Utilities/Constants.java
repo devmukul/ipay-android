@@ -5,20 +5,12 @@ import bd.com.ipay.ipayskeleton.BuildConfig;
 public class Constants {
     public static final String ApplicationTag = "iPay";
     public static final String ApplicationPackage = "bd.com.ipay.android";
-    public static final String USERID = "USERID";
-    public static final String USER_BALANCE = "USER_BALANCE";
-    public static final String USER_NAME = "USER_NAME";
-    public static final String UUID = "UUID";
+
     public static final String ERROR = "ERROR";
-    public static final String USERCOUNTRY = "USERCOUNTRY";
     public static final String USER_AGENT = "User-Agent";
     public static final String USER_AGENT_MOBILE_ANDROID = "mobile-android";
-    public static final String LOGGED_IN = "LOGGED_IN";
-    public static final String FIRST_LAUNCH = "FIRST_LAUNCH";
-    public static final String CRITICAL_PREFERENCE_VERSION = "CRITICAL_PREFERENCE_VERSION";
-    public static final String PASSWORD = "PASSWORD";
+    public static final String GCM_REGISTRATION_ID_SENT_TO_SERVER = "GCM_REGISTRATION_ID_SENT_TO_SERVER";
     public static final String NEW_PASSWORD = "NEW_PASSWORD";
-    public static final String VERIFICATION_STATUS = "VERIFICATION_STATUS";
     public static final String TARGET_FRAGMENT = "TARGET_FRAGMENT";
     public static final String SIGN_IN = "SIGN_IN";
     public static final String SIGN_UP = "SIGN_UP";
@@ -74,20 +66,17 @@ public class Constants {
     public static final String All_QUESTIONS = "ALL_QUESTIONS";
     public static final String PROFILE_PICTURE = "_PROFILE_PICTURE";
     public static final String MOBILE_NUMBER = "MOBILE_NUMBER";
-    public static final String BIRTHDAY = "BIRTHDAY";
+    public static final String MOBILE_NUMBER_TYPE = "mobile_number_type";
     public static final String DATE_OF_BIRTH = "DATE_OF_BIRTH";
     public static final String GENDER = "GENDER";
-    public static final String ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public static final String BOUNDARY = "iPayBoundary";
     public static final String ANDROID = "Android";
-    public static final String IS_PIN_ADDED = "is-pin-added";
     public static final String IS_IN_CONTACTS = "is-in-contacts";
     public static final String SWITCHED_FROM_BANK_VERIFICATION = "switched_from_bank_validation";
     public static final String IS_STARTED_FROM_PROFILE_COMPLETION = "is_started_from_profile_completion";
     public static final String SWITCHED_FROM_TRANSACTION_HISTORY = "switched_from_transaction_history";
     public static final String MOBILE_ANDROID = "mobile-android-";
     public static final String MULTIPART_FORM_DATA_NAME = "file";
-    public static final String MOBILE_NUMBER_TYPE = "mobile_number_type";
     public static final String OPERATOR_CODE = "operator_code";
     public static final String COUNTRY_CODE = "country_code";
     public static final String EXPAND_PIN = "expand_pin";
@@ -151,8 +140,6 @@ public class Constants {
     public static final int DEFAULT_USER_CLASS = 1;
 
     public static final String IS_FINGERPRINT_AUTHENTICATION_ON = "LOGIN_WITH_FINGERPRINT";
-    public static final String KEY_PASSWORD = "encrypted_password";
-    public static final String KEY_PASSWORD_IV = "encrypted_password_IV";
     public static final String KEY_NAME = "key_name";
     /**
      * All requests and responses to server, as well as token is printed when debug flag is enabled.
@@ -324,7 +311,6 @@ public class Constants {
     public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept";
     public static final String URL_CANCEL_NOTIFICATION_REQUEST = "requests/cancel";
     public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/reject";
-    public static final String URL_GET_ALL_REQUESTS = "requests/all";
 
     // Settings REST
     public static final String URL_CHANGE_PASSWORD = "settings/password";
@@ -348,13 +334,11 @@ public class Constants {
     public static final String URL_SIGN_UP = "signup/activation";
     public static final String URL_SIGN_UP_BUSINESS = "signup/business/activation";
     public static final String URL_OTP_REQUEST = "signup";
-    public static final String URL_CHECK_PROMO_CODE = "signup/checkpromocode";
     public static final String URL_CHECK_IF_USER_EXISTS = "signup/check/";
     public static final String URL_OTP_REQUEST_BUSINESS = "signup/business";
 
     // SM Payment REST
     public static final String URL_SEND_PAYMENT_REQUEST = "payment/invoice/send";
-    public static final String URL_PAYMENT_SAVE_INVOICE = "payment/invoice/save";
     public static final String URL_PAYMENT_GET_INVOICE = "payment/invoice/get/";
 
 
@@ -472,7 +456,6 @@ public class Constants {
 
     public static final String COMMAND_OTP_VERIFICATION = "COMMAND_OTP_VERIFICATION";
     public static final String COMMAND_RESEND_OTP = "COMMAND_RESEND_OTP";
-    public static final String COMMAND_CHECK_PROMO_CODE = "COMMAND_CHECK_PROMO_CODE";
     public static final String COMMAND_CHECK_IF_USER_EXISTS = "COMMAND_CHECK_IF_USER_EXISTS";
     public static final String COMMAND_REFRESH_TOKEN = "COMMAND_REFRESH_TOKEN";
     public static final String COMMAND_REFRESH_FIREBASE_TOKEN = "COMMAND_REFRESH_FIREBASE_TOKEN";
@@ -488,7 +471,6 @@ public class Constants {
     public static final String COMMAND_GET_USER_ACTIVITIES = "COMMAND_GET_USER_ACTIVITIES";
     public static final String COMMAND_GET_TRANSACTION_HISTORY = "COMMAND_GET_TRANSACTION_HISTORY";
     public static final String COMMAND_GET_PENDING_TRANSACTION_HISTORY = "COMMAND_GET_PENDING_TRANSACTION_HISTORY";
-    public static final String COMMAND_GET_SETTLED_TRANSACTION_HISTORY = "COMMAND_GET_SETTLED_TRANSACTION_HISTORY";
     public static final String COMMAND_GET_MONEY_AND_PAYMENT_REQUESTS = "COMMAND_GET_MONEY_AND_PAYMENT_REQUESTS";
     public static final String COMMAND_ADD_TRUSTED_DEVICE = "COMMAND_ADD_TRUSTED_DEVICE";
     public static final String COMMAND_GET_TRUSTED_DEVICES = "COMMAND_GET_TRUSTED_DEVICES";
@@ -578,7 +560,6 @@ public class Constants {
     public static final String COMMAND_GET_TRUSTED_PERSONS = "COMMAND_GET_TRUSTED_PERSONS";
     public static final String COMMAND_ADD_TRUSTED_PERSON = "COMMAND_ADD_TRUSTED_PERSON";
     public static final String COMMAND_REMOVE_TRUSTED_PERSON = "COMMAND_REMOVE_TRUSTED_PERSON";
-    public static final String COMMAND_SET_ACCOUNT_RECOVERY_PERSON = "COMMAND_SET_ACCOUNT_RECOVERY_PERSON";
 
     // Business Information (Owner)
     public static final String COMMAND_GET_BUSINESS_INFORMATION = "COMMAND_GET_BUSINESS_INFORMATION";
@@ -611,7 +592,6 @@ public class Constants {
     public static final int ACTIVITY_TYPE_CHANGE_SECURITY = 5;
 
     public static final String EMAIL_VERIFICATION_STATUS_VERIFIED = "VERIFIED";
-    public static final String EMAIL_VERIFICATION_STATUS_NOT_VERIFIED = "NOT_VERIFIED";
     public static final String EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS = "IN_PROGRESS";
 
     public static final String LINK_BANK = "LINK_BANK";
@@ -636,7 +616,6 @@ public class Constants {
     public static final int TRANSACTION_HISTORY_TOP_UP_ROLLBACK = 2002;
     public static final int TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK = 3003;
     public static final int TRANSACTION_HISTORY_REQUEST_PAYMENT = 6005;
-    public static final int TRANSACTION_HISTORY_INVOICE = 6003;
     public static final int TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT = 3502;
 
     public static final int SERVICE_ID_REQUEST_MONEY = 6001;
@@ -682,9 +661,9 @@ public class Constants {
     public static final String PUSH_NOTIFICATION_TOKEN = "token";
 
     public static final String TOTAL = "total";
-    public static final String INVOICE_RECEIVER_TAG = "receiver";
+    public static final String RECEIVER_MOBILE_NUMBER = "receiver";
     public static final String INVOICE_ITEM_NAME_TAG = "item_name";
-    public static final String INVOICE_DESCRIPTION_TAG = "description";
+    public static final String DESCRIPTION_TAG = "description";
     public static final String REFERENCE_NUMBER = "reference number";
     public static final String INVOICE_QUANTITY_TAG = "quantity";
     public static final String INVOICE_RATE_TAG = "rate";

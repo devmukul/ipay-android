@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Activities;
+package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -10,15 +10,17 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionDetailsFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.SingleTransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.SingleTransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class TransactionDetailsActivity extends BaseActivity implements HttpResponseListener {
 
@@ -94,7 +96,7 @@ public class TransactionDetailsActivity extends BaseActivity implements HttpResp
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mTransactionHistoryTask = null;
             if (this != null)
-                Toast.makeText(this, R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
+                Toaster.makeText(this, R.string.fetch_info_failed, Toast.LENGTH_LONG);
             return;
         }
 
@@ -121,12 +123,12 @@ public class TransactionDetailsActivity extends BaseActivity implements HttpResp
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (this != null)
-                        Toast.makeText(this, R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(this, R.string.transaction_history_get_failed, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (this != null)
-                    Toast.makeText(this, R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(this, R.string.transaction_history_get_failed, Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();

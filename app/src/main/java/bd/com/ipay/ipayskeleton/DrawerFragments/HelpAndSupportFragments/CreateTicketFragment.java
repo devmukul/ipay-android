@@ -32,13 +32,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import bd.com.ipay.ipayskeleton.Activities.HelpAndSupportActivity;
-import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.UploadTicketAttachmentAsyncTask;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.HelpAndSupportActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadTicketAttachmentAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
@@ -54,10 +54,13 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategory
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.TicketWithCommentId;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomDrawable;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.MultipleImagePicker;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CreateTicketFragment extends ProgressFragment implements HttpResponseListener {
@@ -137,11 +140,11 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE))
+        if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE))
             getEmails();
         else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE);
+            String json = dataHelper.getPushEvent(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE);
 
             if (json == null)
                 getEmails();
@@ -400,7 +403,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
             mGetTicketCategoriesTask = null;
 
             if (getActivity() != null) {
-                Toast.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT);
                 mProgressDialog.dismiss();
             }
 
@@ -416,7 +419,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.ticket_created, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), R.string.ticket_created, Toast.LENGTH_LONG);
                             TicketWithCommentId ticketResponseWithCommentId = mCreateTicketResponse.getResponse();
                             CommentIdWithDocumentList commentIdWithDocumentList = ticketResponseWithCommentId.getTicket();
                             mCommentId = commentIdWithDocumentList.getComment_id();
@@ -426,18 +429,18 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                         }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PAYMENT_REQUIRED) {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.no_email_added, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), R.string.no_email_added, Toast.LENGTH_LONG);
                             launchEmailPage();
                         }
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), mCreateTicketResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), mCreateTicketResponse.getMessage(), Toast.LENGTH_LONG);
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mCreateTicketResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), mCreateTicketResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 }
                 mCreateTicketTask = null;
@@ -449,19 +452,19 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                         processGetEmailListResponse(result.getJsonString());
 
                         DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                        dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
+                        dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
 
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
                             getActivity().onBackPressed();
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
                         getActivity().onBackPressed();
                     }
                 }
@@ -479,7 +482,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
                 }
 
                 mProgressDialog.dismiss();

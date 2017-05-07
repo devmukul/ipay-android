@@ -16,14 +16,15 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SetPinFragment extends Fragment implements HttpResponseListener {
@@ -124,7 +125,7 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
             mSavePINTask = null;
 
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -147,7 +148,7 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.save_failed, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.save_failed, Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();

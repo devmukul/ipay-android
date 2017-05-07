@@ -1,9 +1,7 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,12 +24,13 @@ import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SelectAccountTypeFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SignupOrLoginActivity extends AppCompatActivity {
 
-    private SharedPreferences pref;
     private final int OVERLAY_REQUEST_CODE = 1234;
 
     public static String mBirthday;
@@ -62,9 +61,8 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_or_login);
 
-        pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
-        if (pref.contains(Constants.USERID)) {
+        if (SharedPrefManager.ifContainsUserID()) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, new LoginFragment()).commit();
         } else {
@@ -215,7 +213,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
         } else {
-            if (!pref.contains(Constants.USERID)) {
+            if (!SharedPrefManager.ifContainsUserID()) {
                 Intent intent = new Intent(SignupOrLoginActivity.this, TourActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

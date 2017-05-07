@@ -21,9 +21,9 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyResponse;
@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -64,7 +65,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         View v = inflater.inflate(R.layout.fragment_withdraw_money_review, container, false);
 
         mAmount = getActivity().getIntent().getDoubleExtra(Constants.AMOUNT, 0);
-        mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
+        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
         mBankAccountId = getActivity().getIntent().getLongExtra(Constants.BANK_ACCOUNT_ID, -1);
         mBankName = getActivity().getIntent().getStringExtra(Constants.BANK_NAME);
         mBankAccountNumber = getActivity().getIntent().getStringExtra(Constants.BANK_ACCOUNT_NUMBER);
@@ -201,7 +202,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
             mProgressDialog.dismiss();
             mWithdrawMoneyTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 

@@ -1,8 +1,6 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -27,6 +25,11 @@ import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.SMSReaderBroadcastReceiver;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
+import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPRequestBusinessSignup;
@@ -35,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.SignupReq
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.SignupResponseBusiness;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -215,8 +219,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
             return;
         }
 
-        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+        String pushRegistrationID = SharedPrefManager.getPushNotificationToken(null);
 
         mProgressDialog.show();
         LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
@@ -253,13 +256,12 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                     String otp = mSignupResponseBusiness.getOtp();
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                        pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumberBusiness).apply();
-                        pref.edit().putString(Constants.PASSWORD, SignupOrLoginActivity.mPasswordBusiness).apply();
-                        pref.edit().putString(Constants.NAME, SignupOrLoginActivity.mNameBusiness).apply();
-                        pref.edit().putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthdayBusinessHolder).apply();
-                        pref.edit().putString(Constants.GENDER, "M").apply();
-                        pref.edit().putInt(Constants.ACCOUNT_TYPE, Constants.BUSINESS_ACCOUNT_TYPE).apply();
+                        ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumberBusiness);
+                        ProfileInfoCacheManager.setPASSWORD(SignupOrLoginActivity.mPasswordBusiness);
+                        ProfileInfoCacheManager.setNAME(SignupOrLoginActivity.mNameBusiness);
+                        ProfileInfoCacheManager.setBIRTHDAY(SignupOrLoginActivity.mBirthdayBusinessHolder);
+                        ProfileInfoCacheManager.setGENDER("M");
+                        ProfileInfoCacheManager.setAccountType(Constants.BUSINESS_ACCOUNT_TYPE);
 
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), getString(R.string.signup_successful), Toast.LENGTH_LONG).show();
@@ -290,21 +292,20 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                     mOtpResponseBusinessSignup = gson.fromJson(result.getJsonString(), OTPResponseBusinessSignup.class);
                     String message = mOtpResponseBusinessSignup.getMessage();
 
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.otp_sent, Toast.LENGTH_LONG).show();
 
                         // Start timer again
                         mTimerTextView.setVisibility(View.VISIBLE);
                         mResendOTPButton.setEnabled(false);
-                        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
+                        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000 - 500) {
 
                             public void onTick(long millisUntilFinished) {
                                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
                             }
 
                             public void onFinish() {
-                                mTimerTextView.setVisibility(View.INVISIBLE);
                                 mResendOTPButton.setEnabled(true);
                             }
                         }.start();

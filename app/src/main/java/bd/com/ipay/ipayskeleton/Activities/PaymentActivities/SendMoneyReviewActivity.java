@@ -11,15 +11,16 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteToiPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyReviewActivity extends BaseActivity implements HttpResponseListener {
@@ -39,7 +40,7 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mReceiverMobileNumber = getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
+        mReceiverMobileNumber = getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
 
         getProfileInfo(mReceiverMobileNumber);
     }
@@ -103,7 +104,7 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetProfileInfoTask = null;
-            Toast.makeText(this, R.string.service_not_available, Toast.LENGTH_LONG).show();
+            Toaster.makeText(this, R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -124,7 +125,7 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                     switchToSendInviteFragment();
                 } else {
-                    Toast.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                    Toaster.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                     finish();
                 }
 
@@ -132,7 +133,7 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
             } catch (Exception e) {
                 e.printStackTrace();
 
-                Toast.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 finish();
             }
 

@@ -1,7 +1,6 @@
-package bd.com.ipay.ipayskeleton.Api;
+package bd.com.ipay.ipayskeleton.Api.HttpResponse;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -14,6 +13,7 @@ import java.util.Arrays;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -54,8 +54,7 @@ public class HttpResponseParser {
 
                 } else if (header.getName().equals(Constants.REFRESH_TOKEN)) {
                     TokenManager.setRefreshToken(header.getValue());
-                    if (Constants.DEBUG)
-                        Log.d(Constants.REFRESH_TOKEN, TokenManager.getRefreshToken());
+                    Logger.logD(Constants.REFRESH_TOKEN, TokenManager.getRefreshToken());
                 }
             }
         }

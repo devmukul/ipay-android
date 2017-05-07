@@ -21,9 +21,9 @@ import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
@@ -35,6 +35,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -71,8 +72,8 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         View v = inflater.inflate(R.layout.fragment_send_money_review, container, false);
 
         mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
-        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
-        mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
+        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
+        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
 
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
@@ -232,7 +233,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
             mProgressDialog.dismiss();
             mSendMoneyTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(getActivity(), R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -245,12 +246,12 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
                     getActivity().setResult(Activity.RESULT_OK);
                     getActivity().finish();
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
