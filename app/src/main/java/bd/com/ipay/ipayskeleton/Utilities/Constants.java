@@ -170,7 +170,7 @@ public class Constants {
     public static final String BASE_URL_EDU;
     public static final String BASE_URL_CONTACT;
     public static final String BASE_URL_ADMIN;
-    public static final String BASE_URL_NOTIFICATION;
+    public static final String BASE_URL_PUSH_NOTIFICATION;
     public static final String BASE_URL_FTP_SERVER;
     public static final String BASE_URL_WEB;
     private static final String SERVER_NAME;
@@ -184,7 +184,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_CONTACT = "http://10.10.10.11:4000/external/v1/";
             BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/support/";
-            BASE_URL_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
+            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
 //            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             SERVER_NAME = "dev";
@@ -197,7 +197,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_CONTACT = "http://10.15.40.14:4000/external/v1/";
             BASE_URL_ADMIN = "http://10.15.40.15:8085/api/v1/support/";
-            BASE_URL_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
+            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.162:7778/api/v1/notification/";
             BASE_URL_WEB = "http://test.ipay.com.bd";
             SERVER_NAME = "test";
 
@@ -209,7 +209,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
             BASE_URL_CONTACT = "http://10.10.40.14:4000/external/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
-            BASE_URL_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
+            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "http://stage.ipay.com.bd";
             SERVER_NAME = "stage";
 
@@ -221,7 +221,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
             BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
             BASE_URL_ADMIN = "https://www.ipay.com.bd/api/v1/support/";
-            BASE_URL_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
+            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "https://www.ipay.com.bd";
             SERVER_NAME = "live";
 
@@ -233,7 +233,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
-            BASE_URL_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
+            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             SERVER_NAME = "local";
         }
