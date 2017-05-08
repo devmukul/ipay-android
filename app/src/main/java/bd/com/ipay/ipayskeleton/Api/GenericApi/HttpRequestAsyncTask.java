@@ -70,12 +70,8 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                         mGenericHttpResponse = validateApiVersion(mGenericHttpResponse);
                     }
 
-            } else {
-                Logger.logD(Constants.ERROR, API_COMMAND);
-                error = true;
-                return null;
                 } else {
-                    if (Constants.DEBUG) Log.d(Constants.ERROR, API_COMMAND);
+                    Logger.logD(Constants.ERROR, API_COMMAND);
                     error = true;
                     return null;
                 }
