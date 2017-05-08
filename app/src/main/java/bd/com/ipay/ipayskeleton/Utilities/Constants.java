@@ -131,11 +131,11 @@ public class Constants {
     public static final String OFFICE_LAND_LINE_NUMBER_PRIMARY = "+88-02-9852507";
     public static final String OFFICE_LAND_LINE_NUMBER_SECONDARY = "+88-02-9852510";
     public static final String OFFICE_EMAIL = "support@ipay.com.bd";
-    public static final String OFFICE_WEB = "www.ipay.com.bd";
     public static final String FEEDBACK = "feedback@ipay.com.bd";
     public static final String OFFICE_ADDRESS = "Silver Tower (12th Floor)\n52 Gulshan Avenue, Circle-1\nDhaka-1212\nBangladesh\n";
     public static final double OFFICE_LATITUDE = 23.7810729;
     public static final double OFFICE_LONGITUDE = 90.4169212;
+    public static final String HOST_NAME = "www.ipay.com.bd";
 
     public static final int MIN_AGE_LIMIT = 18;
     public static final int MIN_VALID_NAME_LENGTH = 5;
