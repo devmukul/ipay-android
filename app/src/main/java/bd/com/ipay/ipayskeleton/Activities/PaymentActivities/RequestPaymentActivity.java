@@ -17,9 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetSinglePaymentRequestDetailRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentReq
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestPaymentActivity extends BaseActivity implements HttpResponseListener {
@@ -175,7 +176,7 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetSingleRequestPaymentDetailsTask = null;
-            Toast.makeText(this, R.string.service_not_available, Toast.LENGTH_LONG).show();
+            Toaster.makeText(this, R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -209,14 +210,14 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
                         launchSentPaymentRequestDetailsReviewFragment();
                     }
                 } else {
-                    Toast.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                    Toaster.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                     finish();
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
 
-                Toast.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 finish();
             }
 

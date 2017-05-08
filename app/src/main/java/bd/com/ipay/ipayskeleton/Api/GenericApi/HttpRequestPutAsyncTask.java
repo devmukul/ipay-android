@@ -1,14 +1,14 @@
-package bd.com.ipay.ipayskeleton.Api;
+package bd.com.ipay.ipayskeleton.Api.GenericApi;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HTTP;
 
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class HttpRequestPutAsyncTask extends HttpRequestAsyncTask {
 
@@ -26,11 +26,9 @@ public class HttpRequestPutAsyncTask extends HttpRequestAsyncTask {
 
     @Override
     protected HttpRequestBase getRequest() {
-        if (Constants.DEBUG) {
-            Log.w("PUT_URL", mUri);
-            if (mJsonString != null)
-                Log.w("json", mJsonString);
-        }
+        Logger.logW("PUT_URL", mUri);
+        if (mJsonString != null)
+            Logger.logW("json", mJsonString);
 
         HttpPut httpPut = new HttpPut(mUri);
 

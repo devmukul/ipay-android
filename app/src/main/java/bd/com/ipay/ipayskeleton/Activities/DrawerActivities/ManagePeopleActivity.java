@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Activities;
+package bd.com.ipay.ipayskeleton.Activities.DrawerActivities;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -12,9 +12,10 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EmployeeDetailsFragment;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.CreateEmployeeFragment;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EmployeeManagementFragment;
@@ -23,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.GetRolesR
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.Role;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ManagePeopleActivity extends BaseActivity implements HttpResponseListener {
@@ -153,7 +155,7 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetRolesAsyncTask = null;
-            Toast.makeText(ManagePeopleActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
+            Toaster.makeText(ManagePeopleActivity.this, R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -173,12 +175,12 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
 
                     } else {
                         finish();
-                        Toast.makeText(ManagePeopleActivity.this, mGetRolesResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toaster.makeText(ManagePeopleActivity.this, mGetRolesResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     finish();
-                    Toast.makeText(ManagePeopleActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(ManagePeopleActivity.this, R.string.service_not_available, Toast.LENGTH_LONG);
                 }
 
             default:

@@ -22,10 +22,10 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
@@ -106,7 +106,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_single_invoice));
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_payment_request));
         mProgressDialog.show();
         mGetSingleInvoiceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SINGLE_INVOICE,
                 Constants.BASE_URL_SM + Constants.URL_PAYMENT_GET_INVOICE + invoiceId + "/", getActivity());
@@ -225,13 +225,13 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), R.string.failed_fetching_payment_request, Toast.LENGTH_LONG).show();
                         }
                     }
 
                 } else {
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.failed_fetching_payment_request, Toast.LENGTH_LONG).show();
                     }
                 }
 

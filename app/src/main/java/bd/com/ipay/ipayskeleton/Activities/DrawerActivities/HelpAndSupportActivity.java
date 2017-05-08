@@ -1,15 +1,17 @@
-package bd.com.ipay.ipayskeleton.Activities;
+package bd.com.ipay.ipayskeleton.Activities.DrawerActivities;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.MenuItem;
 
+import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HelpAndSupportFragments.CreateTicketFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HelpAndSupportFragments.TicketDetailsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.HelpAndSupportFragments.TicketListFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HelpAndSupportActivity extends BaseActivity {
 
@@ -26,6 +28,7 @@ public class HelpAndSupportActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            Utilities.hideKeyboard(this);
             onBackPressed();
             return true;
         }
