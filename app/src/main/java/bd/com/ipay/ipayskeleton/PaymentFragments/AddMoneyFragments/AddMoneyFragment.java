@@ -28,10 +28,10 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyReviewActivity;
-import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.BankListValidator;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialogWithIcon;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
@@ -44,6 +44,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddMoneyFragment extends Fragment implements HttpResponseListener {
@@ -187,7 +188,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                     @Override
                     public void onLoadFailed() {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.failed_available_bank_list_loading, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), R.string.failed_available_bank_list_loading, Toast.LENGTH_LONG);
                             getActivity().finish();
                         }
                     }
@@ -283,7 +284,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         intent.putExtra(Constants.BANK_NAME, bankName);
         intent.putExtra(Constants.BANK_ACCOUNT_ID, bankAccountId);
         intent.putExtra(Constants.BANK_ACCOUNT_NUMBER, accountNumber);
-        intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
+        intent.putExtra(Constants.DESCRIPTION_TAG, description);
         intent.putExtra(Constants.BANK_CODE, bankCode);
 
         startActivityForResult(intent, ADD_MONEY_REVIEW_REQUEST);
@@ -329,7 +330,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             mProgressDialog.show();
             mGetBankTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -384,12 +385,12 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();
@@ -416,12 +417,12 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             }
 
             mGetBusinessRuleTask = null;

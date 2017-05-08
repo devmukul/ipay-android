@@ -17,14 +17,14 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        createFriendsTable(db);
+        createContactsTable(db);
         createPushNotificationTable(db);
         createBusinessAccountsTable(db);
     }
 
-    private void createFriendsTable(SQLiteDatabase db) {
+    private void createContactsTable(SQLiteDatabase db) {
         db.execSQL("create table if not exists " +
-                DBConstants.DB_TABLE_FRIENDS +
+                DBConstants.DB_TABLE_CONTACTS +
                 "(_id integer primary key autoincrement, " +
                 DBConstants.KEY_MOBILE_NUMBER + " text unique not null, " +
                 DBConstants.KEY_NAME + " text, " +
@@ -74,8 +74,8 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
             case 9:
                 createBusinessAccountsTable(db);
             case 10:
-                dropTable(db, DBConstants.DB_TABLE_FRIENDS);
-                createFriendsTable(db);
+                dropTable(db, DBConstants.DB_TABLE_CONTACTS);
+                createContactsTable(db);
                 break;
         }
     }

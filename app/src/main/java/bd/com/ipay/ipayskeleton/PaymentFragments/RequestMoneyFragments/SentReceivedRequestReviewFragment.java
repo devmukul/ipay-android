@@ -21,23 +21,20 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.AddFriendAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
+import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
-import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SentReceivedRequestReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -84,8 +81,8 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         View v = inflater.inflate(R.layout.fragment_sent_received_request_review, container, false);
 
         mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
-        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
-        mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
+        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
+        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
         mRequestID = (long) getActivity().getIntent().getSerializableExtra(Constants.MONEY_REQUEST_ID);
         mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
         mPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
@@ -191,20 +188,16 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
     private void attempAcceptRequestWithPinCheck() {
         if (mAddInContactsCheckBox.isChecked()) {
-            addFriend(mReceiverName, mReceiverMobileNumber, null);
+            addContact(mReceiverName, mReceiverMobileNumber, null);
         }
 
         if (this.isPinRequired) {
-            final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
-
-            pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
+            new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    acceptRequestMoney(mRequestID, pinInputDialogBuilder.getPin());
+                public void ifPinCheckedAndAdded(String pin) {
+                    acceptRequestMoney(mRequestID, pin);
                 }
             });
-
-            pinInputDialogBuilder.build().show();
         } else {
             acceptRequestMoney(mRequestID, null);
         }
@@ -233,7 +226,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
     private void cancelRequest(Long id) {
         if (mAddInContactsCheckBox.isChecked()) {
-            addFriend(mReceiverName, mReceiverMobileNumber, null);
+            addContact(mReceiverName, mReceiverMobileNumber, null);
         }
 
         if (mCancelRequestTask != null) {
@@ -256,7 +249,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
     private void rejectRequestMoney(long id) {
         if (mAddInContactsCheckBox.isChecked()) {
-            addFriend(mReceiverName, mReceiverMobileNumber, null);
+            addContact(mReceiverName, mReceiverMobileNumber, null);
         }
 
         if (mRejectRequestTask != null) {
@@ -294,16 +287,13 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mAcceptRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void addFriend(String name, String phoneNumber, String relationship) {
-        List<InfoAddFriend> newFriends = new ArrayList<>();
-        newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
+    private void addContact(String name, String phoneNumber, String relationship) {
+        AddContactRequestBuilder addContactRequestBuilder = new
+                AddContactRequestBuilder(name, phoneNumber, relationship);
 
-        AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
-        Gson gson = new Gson();
-        String json = gson.toJson(addFriendRequest);
-
-        new AddFriendAsyncTask(Constants.COMMAND_ADD_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new AddContactAsyncTask(Constants.COMMAND_ADD_CONTACTS,
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(),
+                getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -316,7 +306,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
             mAcceptRequestTask = null;
             mRejectRequestTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -332,7 +322,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), message, Toast.LENGTH_LONG);
 
                             if (switchedFromTransactionHistory) {
                                 Intent intent = new Intent();
@@ -344,12 +334,12 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG);
                 }
 
                 mProgressDialog.dismiss();
@@ -364,7 +354,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), message, Toast.LENGTH_LONG);
 
                             if (switchedFromTransactionHistory) {
                                 Utilities.finishLauncherActivity(getActivity());
@@ -374,13 +364,13 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG);
                 }
 
                 mProgressDialog.dismiss();
@@ -395,7 +385,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                                 RequestMoneyAcceptRejectOrCancelResponse.class);
                         String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), message, Toast.LENGTH_LONG);
 
                             if (switchedFromTransactionHistory) {
                                 Utilities.finishLauncherActivity(getActivity());
@@ -406,12 +396,12 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG);
                     }
 
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG);
                 }
 
                 mProgressDialog.dismiss();

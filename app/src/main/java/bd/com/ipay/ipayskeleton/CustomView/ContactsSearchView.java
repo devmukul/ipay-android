@@ -19,7 +19,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
-import bd.com.ipay.ipayskeleton.Model.Friend.Contact;
+import bd.com.ipay.ipayskeleton.Model.Contact.DBContactNode;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -28,7 +28,7 @@ public class ContactsSearchView extends FrameLayout {
     private CustomAutoCompleteView mCustomAutoCompleteView;
     private TextView mMobileNumberHintView;
 
-    private List<Contact> mContactList;
+    private List<DBContactNode> mContactList;
     private ContactListAdapter mContactsAdapter;
 
     public boolean mFilterByVerifiedUsersOnly;
@@ -106,10 +106,6 @@ public class ContactsSearchView extends FrameLayout {
         return mCustomAutoCompleteView.getText();
     }
 
-    public void setText(String text) {
-        mCustomAutoCompleteView.setText(text);
-    }
-
     public void setError(String error) {
         mCustomAutoCompleteView.setError(error);
     }
@@ -122,9 +118,9 @@ public class ContactsSearchView extends FrameLayout {
         mCustomAutoCompleteView.setFocusable(status);
     }
 
-    public void setTextFromSuggestion(String mobileNumber) {
-        mCustomAutoCompleteView.setText(mobileNumber);
-        mCustomAutoCompleteView.setSelection(mobileNumber.length());
+    public void setText(String text) {
+        mCustomAutoCompleteView.setText(text);
+        mCustomAutoCompleteView.setSelection(text.length());
         mCustomAutoCompleteView.setError(null);
 
         hideSuggestionList();
@@ -134,8 +130,8 @@ public class ContactsSearchView extends FrameLayout {
         mCustomAutoCompleteView.dismissDropDown();
     }
 
-    private List<Contact> getContactList(Cursor cursor) {
-        List<Contact> mContacts;
+    private List<DBContactNode> getContactList(Cursor cursor) {
+        List<DBContactNode> mContacts;
 
         int nameIndex;
         int originalNameIndex;
@@ -158,7 +154,7 @@ public class ContactsSearchView extends FrameLayout {
 
             if (cursor.moveToFirst())
                 do {
-                    Contact contact = new Contact();
+                    DBContactNode contact = new DBContactNode();
 
                     contact.setName(cursor.getString(nameIndex));
                     contact.setOriginalName(cursor.getString(originalNameIndex));
@@ -177,7 +173,7 @@ public class ContactsSearchView extends FrameLayout {
     private void readContactsFromDB() {
         Cursor mCursor;
         DataHelper dataHelper = DataHelper.getInstance(mContext);
-        mCursor = dataHelper.searchFriends(mQuery, mFilterByiPayMembersOnly, mFilterByBusinessMembersOnly, false,
+        mCursor = dataHelper.searchContacts(mQuery, mFilterByiPayMembersOnly, mFilterByBusinessMembersOnly, false,
                 mFilterByVerifiedUsersOnly, false, false, null);
 
         try {
@@ -192,12 +188,12 @@ public class ContactsSearchView extends FrameLayout {
         }
     }
 
-    private void setBusinessContactAdapter(List<Contact> contactList) {
+    private void setBusinessContactAdapter(List<DBContactNode> contactList) {
         mContactsAdapter = new ContactListAdapter(mContext, contactList);
         mCustomAutoCompleteView.setAdapter(mContactsAdapter);
     }
 
-    public class ContactListAdapter extends ArrayAdapter<Contact> {
+    public class ContactListAdapter extends ArrayAdapter<DBContactNode> {
         private LayoutInflater inflater;
 
         private TextView primaryNameView;
@@ -209,7 +205,7 @@ public class ContactsSearchView extends FrameLayout {
         private TextView inviteStatusTextView;
         private Button inviteButton;
 
-        public ContactListAdapter(Context context, List<Contact> objects) {
+        public ContactListAdapter(Context context, List<DBContactNode> objects) {
             super(context, 0, objects);
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
@@ -233,7 +229,7 @@ public class ContactsSearchView extends FrameLayout {
         }
 
         public View bindView(View view, int position) {
-            Contact contact = getItem(position);
+            DBContactNode contact = getItem(position);
 
             final String name = contact.getName();
             final String originalName = contact.getOriginalName();
@@ -268,7 +264,7 @@ public class ContactsSearchView extends FrameLayout {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setTextFromSuggestion(mobileNumber);
+                    setText(mobileNumber);
                 }
             });
 

@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.Utilities;
 import android.app.Application;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -12,15 +11,17 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.GetRefreshTokenRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class MyApplication extends Application implements HttpResponseListener {
 
@@ -47,9 +48,9 @@ public class MyApplication extends Application implements HttpResponseListener {
         super.onCreate();
         myApplicationInstance = this;
 
+        SharedPrefManager.initialize(getApplicationContext());
         ProfileInfoCacheManager.initialize(getApplicationContext());
         PushNotificationStatusHolder.initialize(getApplicationContext());
-
     }
 
     public static MyApplication getMyApplicationInstance() {
@@ -121,8 +122,7 @@ public class MyApplication extends Application implements HttpResponseListener {
     }
 
     private void refreshToken() {
-        if (Constants.DEBUG)
-            Log.w("Token_Timer", "Refresh token called");
+        Logger.logW("Token_Timer", "Refresh token called");
 
         if (mRefreshTokenAsyncTask != null) {
             mRefreshTokenAsyncTask.cancel(true);

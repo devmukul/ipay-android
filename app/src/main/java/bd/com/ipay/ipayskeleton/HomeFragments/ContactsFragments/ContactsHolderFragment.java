@@ -23,23 +23,21 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import bd.com.ipay.ipayskeleton.Api.GetFriendsAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
-import bd.com.ipay.ipayskeleton.Model.Friend.AddFriendRequest;
-import bd.com.ipay.ipayskeleton.Model.Friend.InfoAddFriend;
-import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
-import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.GetInviteInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ContactsHolderFragment extends Fragment implements HttpResponseListener {
@@ -57,7 +55,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     private TextView mContactCount;
     private FloatingActionButton mAddContactButton;
 
-    private HttpRequestPostAsyncTask mAddFriendAsyncTask;
+    private HttpRequestPostAsyncTask mAddContactAsyncTask;
 
     private EditText nameView;
     private EditText mobileNumberView;
@@ -103,7 +101,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         mAddContactButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAddFriendDialog();
+                showAddContactDialog();
             }
         });
 
@@ -138,16 +136,16 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             menu.findItem(R.id.action_filter_by_date).setVisible(false);
     }
 
-    private void showAddFriendDialog() {
-        MaterialDialog.Builder addFriendDialog = new MaterialDialog.Builder(getActivity());
-        addFriendDialog
-                .title(R.string.add_a_friend)
+    private void showAddContactDialog() {
+        MaterialDialog.Builder addContactDialog = new MaterialDialog.Builder(getActivity());
+        addContactDialog
+                .title(R.string.add_a_contact)
                 .autoDismiss(false)
-                .customView(R.layout.dialog_add_friend, false)
+                .customView(R.layout.dialog_add_contact, false)
                 .positiveText(R.string.add)
                 .negativeText(R.string.cancel);
 
-        View dialogView = addFriendDialog.build().getCustomView();
+        View dialogView = addContactDialog.build().getCustomView();
 
         nameView = (EditText) dialogView.findViewById(R.id.edit_text_name);
         mobileNumberView = (EditText) dialogView.findViewById(R.id.edit_text_mobile_number);
@@ -174,13 +172,13 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             }
         });
 
-        addFriendDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+        addContactDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 if (verifyUserInputs()) {
                     mName = nameView.getText().toString();
                     mMobileNumber = mobileNumberView.getText().toString();
-                    mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_friend));
+                    mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_contact));
 
                     if (mRelationship != null)
                         mRelationship = mRelationship.toUpperCase();
@@ -188,7 +186,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
                     if (new ContactSearchHelper(getActivity()).searchMobileNumber(mMobileNumber))
                         Toast.makeText(getContext(), R.string.contact_already_exists, Toast.LENGTH_LONG).show();
                     else
-                        addFriend(mName, mMobileNumber, mRelationship);
+                        addContact(mName, mMobileNumber, mRelationship);
 
                     Utilities.hideKeyboard(getActivity(), nameView);
                     Utilities.hideKeyboard(getActivity(), mobileNumberView);
@@ -198,7 +196,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             }
         });
 
-        addFriendDialog.onNegative(new MaterialDialog.SingleButtonCallback() {
+        addContactDialog.onNegative(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 Utilities.hideKeyboard(getActivity(), nameView);
@@ -208,9 +206,8 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             }
         });
 
-        addFriendDialog.show();
+        addContactDialog.show();
         nameView.requestFocus();
-
     }
 
     private boolean verifyUserInputs() {
@@ -230,24 +227,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             error = true;
         }
         return !error;
-    }
-
-    private void addFriend(String name, String phoneNumber, String relationship) {
-        if (mAddFriendAsyncTask != null) {
-            return;
-        }
-
-        List<InfoAddFriend> newFriends = new ArrayList<>();
-        newFriends.add(new InfoAddFriend(ContactEngine.formatMobileNumberBD(phoneNumber), name, relationship));
-
-        AddFriendRequest addFriendRequest = new AddFriendRequest(newFriends);
-        Gson gson = new Gson();
-        String json = gson.toJson(addFriendRequest);
-
-        mAddFriendAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_FRIENDS,
-                Constants.BASE_URL_FRIEND + Constants.URL_ADD_FRIENDS, json, getActivity(), this);
-        mAddFriendAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     private void getInviteInfo() {
@@ -321,6 +300,19 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         });
     }
 
+    private void addContact(String name, String phoneNumber, String relationship) {
+        if (mAddContactAsyncTask != null) {
+            return;
+        }
+
+        AddContactRequestBuilder addContactRequestBuilder = new
+                AddContactRequestBuilder(name, phoneNumber, relationship);
+
+        mAddContactAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_CONTACTS,
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(), getActivity(), this);
+        mAddContactAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (isAdded()) {
@@ -330,9 +322,9 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetInviteInfoTask = null;
-            mAddFriendAsyncTask = null;
+            mAddContactAsyncTask = null;
             if (getContext() != null)
-                Toast.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                Toaster.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -349,27 +341,26 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
 
             mGetInviteInfoTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_FRIENDS)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_CONTACTS)) {
             try {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.add_friend_successful, Toast.LENGTH_LONG).show();
-                        new GetFriendsAsyncTask(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        Toaster.makeText(getActivity(), R.string.add_contact_successful, Toast.LENGTH_LONG);
+                        new GetContactsAsyncTask(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.failed_add_friend, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.failed_add_contact, Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
 
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_add_friend, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.failed_add_contact, Toast.LENGTH_LONG);
             }
 
-            mAddFriendAsyncTask = null;
+            mAddContactAsyncTask = null;
         }
-
     }
 }

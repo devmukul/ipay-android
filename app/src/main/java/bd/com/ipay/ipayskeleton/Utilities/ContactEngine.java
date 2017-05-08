@@ -15,7 +15,6 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.PhoneLookup;
 import android.provider.ContactsContract.RawContacts;
-import android.util.Log;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
@@ -32,8 +31,9 @@ import java.util.Map;
 import java.util.Set;
 
 import bd.com.ipay.ipayskeleton.BuildConfig;
-import bd.com.ipay.ipayskeleton.Model.Friend.FriendInfo;
-import bd.com.ipay.ipayskeleton.Model.Friend.PhoneName;
+import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
+import bd.com.ipay.ipayskeleton.Model.Contact.PhoneName;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class ContactEngine {
     private static final String TAG = "ContactEngine";
@@ -169,7 +169,7 @@ public class ContactEngine {
     private static void addContactToAccount1(Context context,
                                              String accountName, String accountType, String name, String number) {
         if (BuildConfig.DEBUG)
-            Log.i(TAG, "Adding contact: " + name);
+            Logger.logI(TAG, "Adding contact: " + name);
         ArrayList<ContentProviderOperation> operationList = new ArrayList<>();
 
         ContentProviderOperation.Builder builder = ContentProviderOperation
@@ -219,7 +219,7 @@ public class ContactEngine {
 
     public static void updateOrInsertContact(Context context, String accountName, String accountType, String name, String number) {
         if (BuildConfig.DEBUG)
-            Log.i("ContactEngine", "Searching Contact: Name: " + name + " Number: " + number);
+            Logger.logI("ContactEngine", "Searching DBContactNode: Name: " + name + " Number: " + number);
 
         int id = -1;
         Cursor cursor = context.getContentResolver().query(
@@ -250,7 +250,7 @@ public class ContactEngine {
         }
         if (id != -1) {
             if (BuildConfig.DEBUG)
-                Log.i("ContactEngine", "Contact Already exists!! RawContactID: " + id);
+                Logger.logI("ContactEngine", "DBContactNode Already exists!! RawContactID: " + id);
             /*
              * ArrayList<ContentProviderOperation> operationList = new
 			 * ArrayList<ContentProviderOperation>();
@@ -298,7 +298,7 @@ public class ContactEngine {
 			 */
         } else {
             if (BuildConfig.DEBUG)
-                Log.i("ContactEngine", "Contact not found!! inserting new contact");
+                Logger.logI("ContactEngine", "DBContactNode not found!! inserting new contact");
             addContactToAccount1(context, accountName, accountType, name, number);
         }
     }
@@ -360,7 +360,7 @@ public class ContactEngine {
                 selection, selectionArgs, sortOrder);
         if (cursor != null) {
             if (BuildConfig.DEBUG)
-                Log.d("result found", "" + cursor.getCount());
+                Logger.logD("result found", "" + cursor.getCount());
             int numberIndex = cursor
                     .getColumnIndex(Phone.NUMBER);
             int nameIndex = cursor
@@ -376,10 +376,10 @@ public class ContactEngine {
                 PhoneName pn = new PhoneName();
                 pn.id = cursor.getInt(idIndex);
                 pn.name = cursor.getString(nameIndex);
-                // Log.d("Name",pn.name);
+                // Logger.logD("Name",pn.name);
                 pn.number = cursor.getString(numberIndex);
                 pn.starred = cursor.getString(favIndex);
-                // Log.d("Number",pn.number);
+                // Logger.logD("Number",pn.number);
                 int type = cursor.getInt(typeIndex);
                 if (type == Phone.TYPE_HOME) {
                     pn.type = "Home";
@@ -693,7 +693,7 @@ public class ContactEngine {
         Cursor cursor = context.getContentResolver().query(uri, projection,
                 selection, selectionArgs, sortOrder);
 //        if (BuildConfig.DEBUG)
-//            Log.d("result found", "" + cursor.getCount());
+//            Logger.logD("result found", "" + cursor.getCount());
 
         if (cursor != null && cursor.moveToNext()) {
             int numberIndex = cursor.getColumnIndex(Phone.NUMBER);
@@ -721,7 +721,7 @@ public class ContactEngine {
         Cursor cursor = context.getContentResolver().query(uri, projection,
                 selection, selectionArgs, sortOrder);
 //        if (BuildConfig.DEBUG)
-//            Log.d("result found", "" + cursor.getCount());
+//            Logger.logD("result found", "" + cursor.getCount());
 
         if (cursor != null && cursor.moveToNext()) {
             int mailIndex = cursor
@@ -861,7 +861,7 @@ public class ContactEngine {
         else if (lookupKeys.length > 0)
             selection = lookupSelection;
 
-//        Log.i("ContactEngine", "getContactCursorFromLookUpList generatedSelection: "+selection);
+//        Logger.logI("ContactEngine", "getContactCursorFromLookUpList generatedSelection: "+selection);
 
         Uri queryUri = ContactsContract.Contacts.CONTENT_URI;
 
@@ -897,7 +897,7 @@ public class ContactEngine {
         else if (lookupKeys.length > 0)
             selection = lookupSelection;
 
-//        Log.i("ContactEngine", "getContactCursorFromLookUpList generatedSelection: "+selection);
+//        Logger.logI("ContactEngine", "getContactCursorFromLookUpList generatedSelection: "+selection);
 
         Uri queryUri = ContactsContract.Contacts.CONTENT_URI;
 
@@ -915,8 +915,8 @@ public class ContactEngine {
      * Read all contacts from the phone. If phone number already exists in the iPay contacts database,
      * fetch the corresponding info from the database.
      */
-    public static List<FriendInfo> getAllContacts(Context context) {
-        List<FriendInfo> phoneContacts = new ArrayList<>();
+    public static List<ContactNode> getAllContacts(Context context) {
+        List<ContactNode> phoneContacts = new ArrayList<>();
 
         final String[] projection = new String[]{
                 Phone._ID,
@@ -949,9 +949,9 @@ public class ContactEngine {
                 if (ContactEngine.isValidNumber(phoneNumber)) {
                     phoneNumber = formatMobileNumberBD(phoneNumber);
 
-                    FriendInfo friendInfo;
-                    friendInfo = new FriendInfo(name,phoneNumber, photoUrl);
-                    phoneContacts.add(friendInfo);
+                    ContactNode contactNode;
+                    contactNode = new ContactNode(name,phoneNumber, photoUrl);
+                    phoneContacts.add(contactNode);
                 }
             } while (phoneContactsCursor.moveToNext());
         }
@@ -995,15 +995,15 @@ public class ContactEngine {
      * Pass phone contacts in the newContacts list and server contacts in the oldContacts list
      * to get a list of newly added/updated contacts in the phone book
      */
-    public static ContactDiff getContactDiff(List<FriendInfo> phoneContacts, List<FriendInfo> serverContacts) {
+    public static ContactDiff getContactDiff(List<ContactNode> phoneContacts, List<ContactNode> serverContacts) {
         ContactDiff contactDiff = new ContactDiff();
 
-        Map<String, FriendInfo> serverContactMap = new HashMap<>();
-        for (FriendInfo serverContact : serverContacts) {
+        Map<String, ContactNode> serverContactMap = new HashMap<>();
+        for (ContactNode serverContact : serverContacts) {
             serverContactMap.put(serverContact.getMobileNumber(), serverContact);
         }
 
-        for (FriendInfo phoneContact : phoneContacts) {
+        for (ContactNode phoneContact : phoneContacts) {
             if (serverContactMap.containsKey(phoneContact.getMobileNumber())) {
                 String serverName = serverContactMap.get(phoneContact.getMobileNumber()).getName();
                 String phoneName = phoneContact.getName();
@@ -1053,15 +1053,15 @@ public class ContactEngine {
     }
 
     public static class ContactDiff {
-        public final List<FriendInfo> newContacts;
-        public final List<FriendInfo> updatedContacts;
+        public final List<ContactNode> newContacts;
+        public final List<ContactNode> updatedContacts;
 
         public ContactDiff() {
             newContacts = new ArrayList<>();
             updatedContacts = new ArrayList<>();
         }
 
-        public ContactDiff(List<FriendInfo> newContacts, List<FriendInfo> updatedContacts) {
+        public ContactDiff(List<ContactNode> newContacts, List<ContactNode> updatedContacts) {
             this.newContacts = newContacts;
             this.updatedContacts = updatedContacts;
         }

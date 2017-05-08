@@ -23,10 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.GetAllSecurityQuestionRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.GetAllSecurityQuestionResponse;
@@ -333,6 +333,8 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
 
                 if (mSecurityQuestionAnswerValidationClassList.get(pos).getQuestion() != null)
                     mQuestionEditText.setText(mSecurityQuestionAnswerValidationClassList.get(pos).getQuestion());
+                else
+                    mQuestionEditText.setText("");
 
                 if (mAddSecurityQuestionAnswerClassList.get(pos).getAnswer() != null)
                     mAnswerEditText.setText(mAddSecurityQuestionAnswerClassList.get(pos).getAnswer());
@@ -523,6 +525,9 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
                 if (editable.length() > 0) {
                     mAddSecurityQuestionAnswerClassList.get(position).setAnswer(editable.toString());
                     mSecurityQuestionAnswerValidationClassList.get(position).setAnswerAvailable(true);
+                } else {
+                    mAddSecurityQuestionAnswerClassList.get(position).setAnswer(null);
+                    mSecurityQuestionAnswerValidationClassList.get(position).setAnswerAvailable(false);
                 }
 
             }

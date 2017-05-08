@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,23 +16,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -67,12 +65,12 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         View v = inflater.inflate(R.layout.fragment_withdraw_money_review, container, false);
 
         mAmount = getActivity().getIntent().getDoubleExtra(Constants.AMOUNT, 0);
-        mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
+        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
         mBankAccountId = getActivity().getIntent().getLongExtra(Constants.BANK_ACCOUNT_ID, -1);
         mBankName = getActivity().getIntent().getStringExtra(Constants.BANK_NAME);
         mBankAccountNumber = getActivity().getIntent().getStringExtra(Constants.BANK_ACCOUNT_NUMBER);
-        mBankCode = getActivity().getIntent().getIntExtra(Constants.BANK_CODE,0);
-        Drawable bankIcon =  getResources().getDrawable(mBankCode);
+        mBankCode = getActivity().getIntent().getIntExtra(Constants.BANK_CODE, 0);
+        Drawable bankIcon = getResources().getDrawable(mBankCode);
 
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mLinearLayoutDescriptionHolder = (LinearLayout) v.findViewById(R.id.layout_description_holder);
@@ -132,19 +130,17 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
 
     private void attemptAddMoneyWithPinCheck() {
         if (WithdrawMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
-            final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
-
-            pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
+            new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    attemptWithdrawMoney(pinInputDialogBuilder.getPin());
+                public void ifPinCheckedAndAdded(String pin) {
+                    attemptWithdrawMoney(pin);
                 }
             });
-            pinInputDialogBuilder.build().show();
         } else {
             attemptWithdrawMoney(null);
         }
     }
+
     private void attemptWithdrawMoney(String pin) {
         if (mWithdrawMoneyTask != null) {
             return;
@@ -162,6 +158,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
 
         mWithdrawMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
     private void showErrorDialog() {
         new AlertDialog.Builder(getContext())
                 .setMessage(mError_message)
@@ -205,7 +202,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
             mProgressDialog.dismiss();
             mWithdrawMoneyTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 

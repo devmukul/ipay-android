@@ -1,14 +1,12 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,7 +21,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,16 +37,20 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.HelpAndSupportActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.InviteActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.Api.GetAllBusinessListAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GetBusinessTypesAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GetFriendsAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GetRelationshipListAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAllBusinessListAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetBusinessTypesAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetRelationshipListAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
@@ -69,10 +70,13 @@ import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
 import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.Config;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -94,7 +98,6 @@ public class HomeActivity extends BaseActivity
     private AutoResizeTextView mMobileNumberView;
     private TextView mNameView;
     private ProfileImageView mProfileImageView;
-    private SharedPreferences pref;
     private String mUserID;
     private String mDeviceID;
 
@@ -105,7 +108,6 @@ public class HomeActivity extends BaseActivity
     private Menu mOptionsMenu;
 
     private int mBadgeCount = 0;
-    private int savedCriticalPreferenceVersion;
 
     private static boolean switchedToHomeFragment = true;
     private boolean exitFromApplication = false;
@@ -156,11 +158,10 @@ public class HomeActivity extends BaseActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mUserID = ProfileInfoCacheManager.getMobileNumber();
         mDeviceID = DeviceInfoFactory.getDeviceId(HomeActivity.this);
 
-        pref.edit().putBoolean(Constants.FIRST_LAUNCH, false).apply();
+        SharedPrefManager.setFirstLaunch(false);
 
         mMobileNumberView = (AutoResizeTextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_mobile_number);
         mNameView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_name);
@@ -171,15 +172,15 @@ public class HomeActivity extends BaseActivity
         switchToDashBoard();
 
         // Check if there's anything new from the server
-        int accountType = pref.getInt(Constants.ACCOUNT_TYPE, 0);
+        int accountType = ProfileInfoCacheManager.getAccountType(0);
         if (accountType == Constants.BUSINESS_ACCOUNT_TYPE) {
             getBusinessInformation();
         } else getProfileInfo();
 
         // Sync contacts
-        new GetFriendsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        // Contact sync is done as follows: first all the contacts are downloaded from the server
-        // (#GetFriendsAsyncTask) and stored in the database (#SyncContactsAsyncTask).
+        new GetContactsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        // DBContactNode sync is done as follows: first all the contacts are downloaded from the server
+        // (#GetContactsAsyncTask) and stored in the database (#SyncContactsAsyncTask).
         // Then difference with phone contacts is calculated, and this difference is sent to the
         // server. If there is any new contact on the phone, we download all contacts from the
         // server again to keep phone and server contacts in sync.
@@ -191,9 +192,7 @@ public class HomeActivity extends BaseActivity
             startService(intent);
         }
 
-        if (Constants.DEBUG) {
-            Log.w("Token", TokenManager.getToken());
-        }
+        Logger.logW("Token", TokenManager.getToken());
 
         // The same notification fragment is used when NotificationActivity is launched.
         // We are initializing it here to load notification badge count.
@@ -225,10 +224,7 @@ public class HomeActivity extends BaseActivity
         // Send Analytics for test purpose in Firebase
         sendAnalytics();
 
-        // Check if the stored critical preference version is lesser than the version found from config
-        savedCriticalPreferenceVersion = pref.getInt(Constants.CRITICAL_PREFERENCE_VERSION, 0);
-        if (Config.criticalPreferenceVersion > savedCriticalPreferenceVersion)
-            todoCheckList(savedCriticalPreferenceVersion);
+        getAllBusinessAccountsList();
 
         // If profile picture gets updated, we need to refresh the profile picture in the drawer.
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
@@ -275,7 +271,7 @@ public class HomeActivity extends BaseActivity
     }
 
     private void updateProfileData() {
-        mNameView.setText(ProfileInfoCacheManager.getName());
+        mNameView.setText(ProfileInfoCacheManager.getUserName());
         mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
                 ProfileInfoCacheManager.getProfileImageUrl(), false);
@@ -313,23 +309,9 @@ public class HomeActivity extends BaseActivity
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
     }
 
-    private void todoCheckList(int storedCriticalPreferenceVersion) {
-
-        // Do not put any try-catch here. The operations must go smoothly.
-        // If anything goes wrong, just store the last successful operation number in preference.
-        // Only the last case will have a break statement like the onUpgrade function in DataBaseOpenHelper
-        switch (storedCriticalPreferenceVersion) {
-            case 0:
-                // Migration code from 0 to 1
-                // Get Business contacts
-                // For the first time load, the lastBusinessId is 0
-                GetAllBusinessContactRequestBuilder mGetAllBusinessContactRequestBuilder = new GetAllBusinessContactRequestBuilder(0);
-                new GetAllBusinessListAsyncTask(this, mGetAllBusinessContactRequestBuilder.getGeneratedUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                break;
-        }
-
-        // Store the updated critical preference version after all necessary actions.
-        pref.edit().putInt(Constants.CRITICAL_PREFERENCE_VERSION, Config.criticalPreferenceVersion).commit();
+    private void getAllBusinessAccountsList() {
+        GetAllBusinessContactRequestBuilder mGetAllBusinessContactRequestBuilder = new GetAllBusinessContactRequestBuilder(0);
+        new GetAllBusinessListAsyncTask(this, mGetAllBusinessContactRequestBuilder.getGeneratedUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -339,12 +321,11 @@ public class HomeActivity extends BaseActivity
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
                 for (int i = 0; i < permissions.length; i++) {
-                    if (Constants.DEBUG)
-                        Log.w(permissions[i], grantResults[i] + "");
+                    Logger.logW(permissions[i], grantResults[i] + "");
 
                     if (permissions[i].equals(Manifest.permission.READ_CONTACTS)) {
                         if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            new GetFriendsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            new GetContactsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     }
                 }
@@ -362,10 +343,12 @@ public class HomeActivity extends BaseActivity
     private void updateNotificationBadgeCount(int badgeCount) {
         mBadgeCount = badgeCount;
 
-        Log.d("Notification Count", badgeCount + "");
+        Logger.logD("Notification Count", badgeCount + "");
         if (mOptionsMenu != null) {
             if (badgeCount > 0) {
                 ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
+            } else {
+                ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, null);
             }
         }
     }
@@ -442,7 +425,6 @@ public class HomeActivity extends BaseActivity
                 ((MyApplication) this.getApplication()).launchLoginPage(null);
             }
         }
-
     }
 
     @Override
@@ -499,7 +481,6 @@ public class HomeActivity extends BaseActivity
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, HomeActivity.this);
         mLogoutTask.mHttpResponseListener = this;
-
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -612,15 +593,15 @@ public class HomeActivity extends BaseActivity
                         //saving user info in shared preference
                         ProfileInfoCacheManager.updateCache(mGetUserInfoResponse.getName(), imageUrl, mGetUserInfoResponse.getAccountStatus());
 
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
                     } else {
-                        Toast.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                        Toaster.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                    Toaster.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 }
 
                 mGetProfileInfoTask = null;
@@ -637,15 +618,15 @@ public class HomeActivity extends BaseActivity
 
                         //saving user info in shared preference
                         ProfileInfoCacheManager.updateCache(mGetBusinessInformationResponse.getBusinessName(), imageUrl, mGetBusinessInformationResponse.getVerificationStatus());
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                     } else {
-                        Toast.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);
 
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);
 
                 }
 
@@ -663,8 +644,7 @@ public class HomeActivity extends BaseActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
-            if (Constants.DEBUG)
-                Log.d("Broadcast home activity", newProfilePicture);
+            Logger.logD("Broadcast home activity", newProfilePicture);
 
             mProfileImageView.setProfilePicture(newProfilePicture, true);
 

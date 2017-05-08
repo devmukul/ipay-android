@@ -19,7 +19,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +69,7 @@ import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class Utilities {
 
@@ -365,7 +365,7 @@ public class Utilities {
         byte[] data = Base64.decode(base64, Base64.DEFAULT);
         try {
             String parsedToken = new String(data, "UTF-8");
-            Log.d(Constants.PARSED_TOKEN, Constants.PARSED_TOKEN + parsedToken);
+            Logger.logD(Constants.PARSED_TOKEN, Constants.PARSED_TOKEN + parsedToken);
             Gson gson = new Gson();
             TokenParserClass mTokenParserClass = gson.fromJson(parsedToken, TokenParserClass.class);
 

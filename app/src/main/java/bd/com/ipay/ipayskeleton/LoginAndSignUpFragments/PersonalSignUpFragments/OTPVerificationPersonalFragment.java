@@ -1,8 +1,6 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -21,11 +19,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
-import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.EnableDisableSMSBroadcastReceiver;
-import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.SMSReaderBroadcastReceiver;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
+import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPRequestPersonalSignup;
@@ -34,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.SignupReq
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.SignupResponsePersonal;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -115,14 +114,13 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
         mResendOTPButton.setEnabled(false);
         mTimerTextView.setVisibility(View.VISIBLE);
-        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
+        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000 - 500) {
 
             public void onTick(long millisUntilFinished) {
                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
             }
 
             public void onFinish() {
-                mTimerTextView.setVisibility(View.INVISIBLE);
                 mResendOTPButton.setEnabled(true);
             }
         }.start();
@@ -201,8 +199,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             return;
         }
 
-        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-        String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+        String pushRegistrationID = SharedPrefManager.getPushNotificationToken(null);
 
         mProgressDialog.show();
 
@@ -241,14 +238,14 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     String otp = mSignupResponseModel.getOtp();
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        SharedPreferences pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                        pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumber).apply();
-                        pref.edit().putString(Constants.PASSWORD, SignupOrLoginActivity.mPassword).apply();
-                        pref.edit().putString(Constants.NAME, SignupOrLoginActivity.mName).apply();
-                        pref.edit().putString(Constants.BIRTHDAY, SignupOrLoginActivity.mBirthday).apply();
-                        pref.edit().putString(Constants.GENDER, SignupOrLoginActivity.mGender).apply();
-                        pref.edit().putString(Constants.USERCOUNTRY, "Bangladesh").apply();   // TODO
-                        pref.edit().putInt(Constants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE).apply();
+
+                        ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumber);
+                        ProfileInfoCacheManager.setPASSWORD(SignupOrLoginActivity.mPassword);
+                        ProfileInfoCacheManager.setNAME(SignupOrLoginActivity.mName);
+                        ProfileInfoCacheManager.setBIRTHDAY(SignupOrLoginActivity.mBirthday);
+                        ProfileInfoCacheManager.setGENDER(SignupOrLoginActivity.mGender);
+                        SharedPrefManager.setUSERCOUNTRY("Bangladesh");
+                        ProfileInfoCacheManager.setAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
 
                         // Request a login immediately after sign up
                         if (Utilities.isConnectionAvailable(getActivity()))
@@ -276,21 +273,20 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     mOtpResponsePersonalSignup = gson.fromJson(result.getJsonString(), OTPResponsePersonalSignup.class);
                     String message = mOtpResponsePersonalSignup.getMessage();
 
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.otp_sent, Toast.LENGTH_LONG).show();
 
                         // Start timer again
                         mTimerTextView.setVisibility(View.VISIBLE);
                         mResendOTPButton.setEnabled(false);
-                        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
+                        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000 - 500) {
 
                             public void onTick(long millisUntilFinished) {
                                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
                             }
 
                             public void onFinish() {
-                                mTimerTextView.setVisibility(View.INVISIBLE);
                                 mResendOTPButton.setEnabled(true);
                             }
                         }.start();

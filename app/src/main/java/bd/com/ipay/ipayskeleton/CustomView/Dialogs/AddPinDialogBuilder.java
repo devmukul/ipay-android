@@ -12,14 +12,15 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpResponseListener {
@@ -133,7 +134,7 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
 					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mSavePINTask = null;
             if (getContext() != null)
-                Toast.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                Toaster.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -147,17 +148,17 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getContext() != null)
-                        Toast.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG);
 
                     mAddPinListener.onPinAddSuccess();
                 } else {
                     if (getContext() != null)
-                        Toast.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getContext() != null)
-                    Toast.makeText(getContext(), R.string.save_failed, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getContext(), R.string.save_failed, Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();
