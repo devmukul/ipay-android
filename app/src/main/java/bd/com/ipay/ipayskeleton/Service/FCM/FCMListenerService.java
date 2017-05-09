@@ -54,7 +54,7 @@ public class FCMListenerService extends FirebaseMessagingService {
         mFcmNotificationResponse = gson.fromJson(jsonElement, FCMNotificationResponse.class);
 
         if (AppInstanceUtilities.isUserActive(this))
-            FCMNotificationParser.notificationParser(this, mFcmNotificationResponse);
+            FCMNotificationParser.parseNotificationResponse(this, mFcmNotificationResponse);
     }
 
     private void createNotification(Context context, String title, String message, String imageUrl) {
