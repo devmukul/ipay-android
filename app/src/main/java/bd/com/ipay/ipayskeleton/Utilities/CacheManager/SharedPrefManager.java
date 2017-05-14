@@ -25,17 +25,9 @@ public class SharedPrefManager {
     public static boolean isPinAdded(boolean defaultValue) {
         return pref.getBoolean(SharedPrefConstants.IS_PIN_ADDED, defaultValue);
     }
-    
+
     public static int getMobileNumberType(int defaultValue) {
         return pref.getInt(SharedPrefConstants.MOBILE_NUMBER_TYPE, defaultValue);
-    }
-
-    public static int getCriticalPreferenceVersion(int defaultValue) {
-        return pref.getInt(SharedPrefConstants.CRITICAL_PREFERENCE_VERSION, defaultValue);
-    }
-
-    public static void setCriticalPreferenceVersion(int value) {
-        pref.edit().putInt(SharedPrefConstants.CRITICAL_PREFERENCE_VERSION, value).apply();
     }
 
     public static void setFirstLaunch(boolean defaultValue) {
