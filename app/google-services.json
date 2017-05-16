@@ -1,129 +1,39 @@
 {
   "project_info": {
-    "project_number": "680706480318",
-    "firebase_url": "https://api-project-680706480318.firebaseio.com",
-    "project_id": "api-project-680706480318",
-    "storage_bucket": "api-project-680706480318.appspot.com"
+    "project_number": "799721005986",
+    "firebase_url": "https://ipay-772e8.firebaseio.com",
+    "project_id": "ipay-772e8",
+    "storage_bucket": "ipay-772e8.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:680706480318:android:e4988ba0f8faf6b5",
-        "android_client_info": {
-          "package_name": "com.nati.firebase.firebasetest"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "680706480318-sfp8uc9gcnr4n597h1esokhv04tshhrd.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.nati.firebase.firebasetest",
-            "certificate_hash": "3c6e563b423ca098ed1c730f91a09a31c4f441b2"
-          }
-        },
-        {
-          "client_id": "680706480318-8jsam42mu889n3e5hsaf8b9guiiv9p9r.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAMFy9cPO2hcDdmDcPjrg_LcsL55uB450w"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "680706480318-8jsam42mu889n3e5hsaf8b9guiiv9p9r.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "680706480318-6hk8j1viafk81p2v32jdj3s7l2oht65j.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "bd.com.ipay.ios"
-              }
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:680706480318:android:ea3d871316c31fdc",
-        "android_client_info": {
-          "package_name": "com.nati.firebase"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "680706480318-3rndktuf9a7h1drt0sil3qo5pq7j0n7d.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.nati.firebase",
-            "certificate_hash": "fb5dfc8ff2f9394de2d9d0b433e9ed5944130139"
-          }
-        },
-        {
-          "client_id": "680706480318-8jsam42mu889n3e5hsaf8b9guiiv9p9r.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAMFy9cPO2hcDdmDcPjrg_LcsL55uB450w"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "680706480318-8jsam42mu889n3e5hsaf8b9guiiv9p9r.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "680706480318-6hk8j1viafk81p2v32jdj3s7l2oht65j.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "bd.com.ipay.ios"
-              }
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:680706480318:android:c1135b3d28489c92",
+        "mobilesdk_app_id": "1:799721005986:android:c1135b3d28489c92",
         "android_client_info": {
           "package_name": "bd.com.ipay.android"
         }
       },
       "oauth_client": [
         {
-          "client_id": "680706480318-8jsam42mu889n3e5hsaf8b9guiiv9p9r.apps.googleusercontent.com",
+          "client_id": "799721005986-meorcufsu3to4aoc2nkc63ieu73frnlh.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "799721005986-dr20e3u0eunec56s8hcfk4uo6kfqeng4.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "799721005986-6vblttfvuampsla5jd7tdr74498ae4oh.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "799721005986-4mb33n1ean42mns0amm6p89utvap1fvr.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAMFy9cPO2hcDdmDcPjrg_LcsL55uB450w"
+          "current_key": "AIzaSyB6fiY1MTe0DBchx0-SJtiB7PoIe9cyzh4"
         }
       ],
       "services": {
