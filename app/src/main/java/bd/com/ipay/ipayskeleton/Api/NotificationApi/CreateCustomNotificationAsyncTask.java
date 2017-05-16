@@ -75,8 +75,9 @@ public class CreateCustomNotificationAsyncTask extends AsyncTask<String, Void, B
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
+
         if (result != null)
-            notificationBuilder.setLargeIcon(result);
+          notificationBuilder.setLargeIcon(result);
 
         NotificationManager notificationManager =
                 (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
