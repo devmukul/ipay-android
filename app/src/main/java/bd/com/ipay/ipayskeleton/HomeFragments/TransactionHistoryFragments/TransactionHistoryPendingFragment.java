@@ -207,7 +207,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
         transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
-                new IntentFilter(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST));
+                new IntentFilter(Constants.PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST));
     }
 
     @Override
@@ -219,7 +219,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             mSwipeRefreshLayout.destroyDrawingCache();
             mSwipeRefreshLayout.clearAnimation();
         }
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
     }
 
     @Override

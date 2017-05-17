@@ -119,7 +119,7 @@ dependencies {
 
     compile files('libs/libphonenumber-7.2.8.jar')
     compile 'com.github.johnkil.android-progressfragment:progressfragment:1.4.0'
-    compile 'com.google.android.gms:play-services-gcm:9.2.0'
+    compile 'com.google.firebase:firebase-messaging:9.2.0'
     compile 'com.google.android.gms:play-services-places:9.2.0'
     compile 'com.google.android.gms:play-services-vision:9.2.0'
     compile 'com.android.support:multidex:1.0.1'

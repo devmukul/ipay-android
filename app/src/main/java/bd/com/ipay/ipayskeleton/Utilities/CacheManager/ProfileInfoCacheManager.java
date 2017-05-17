@@ -18,6 +18,14 @@ public class ProfileInfoCacheManager {
         pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
     }
 
+    public static String getPushNotificationToken(String defaultValue) {
+        return pref.getString(SharedPrefConstants.PUSH_NOTIFICATION_TOKEN, defaultValue);
+    }
+
+    public static void setPushNotificationToken(String value) {
+        pref.edit().putString(SharedPrefConstants.PUSH_NOTIFICATION_TOKEN, value).apply();
+    }
+
     public static String getUserName() {
         return pref.getString(SharedPrefConstants.USER_NAME, "");
     }
