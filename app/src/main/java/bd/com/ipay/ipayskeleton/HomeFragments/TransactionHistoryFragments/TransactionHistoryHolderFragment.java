@@ -80,7 +80,6 @@ public class TransactionHistoryHolderFragment extends Fragment {
 
         mProcessedTransactionHistoryCompletedFragment = new TransactionHistoryCompletedFragment();
         getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mProcessedTransactionHistoryCompletedFragment).commit();
-
     }
 
     private void switchToPendingTransactionsFragment() {
@@ -93,5 +92,4 @@ public class TransactionHistoryHolderFragment extends Fragment {
         mPendingTransactionHistoryFragment = new TransactionHistoryPendingFragment();
         getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mPendingTransactionHistoryFragment).commit();
     }
-
 }

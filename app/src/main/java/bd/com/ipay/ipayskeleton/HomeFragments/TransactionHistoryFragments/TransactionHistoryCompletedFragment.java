@@ -97,9 +97,9 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
 
-    private Menu menu;
-
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
+
+    private Menu menu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -210,10 +210,9 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     @Override
     public void onResume() {
         super.onResume();
-
         transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
-                new IntentFilter(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST));
+                new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
     }
 
     @Override
@@ -225,7 +224,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             mSwipeRefreshLayout.destroyDrawingCache();
             mSwipeRefreshLayout.clearAnimation();
         }
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
     }
 
     @Override

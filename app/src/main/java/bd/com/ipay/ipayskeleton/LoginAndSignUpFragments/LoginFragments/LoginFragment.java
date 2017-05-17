@@ -23,6 +23,7 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
@@ -316,6 +317,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     ProfileInfoCacheManager.setLoggedInStatus(true);
+                    String pushRegistrationID = ProfileInfoCacheManager.getPushNotificationToken(null);
+                    if (pushRegistrationID != null) {
+                        new RegisterFCMTokenToServerAsyncTask(getContext());
+                    }
 
                     ProfileInfoCacheManager.setMobileNumber(mUserNameLogin);
                     ProfileInfoCacheManager.setAccountType(mLoginResponseModel.getAccountType());

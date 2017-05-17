@@ -24,7 +24,6 @@ import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SelectAccountTypeFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -52,7 +51,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
 
     public static AddressClass mAddressBusiness;
     public static AddressClass mAddressBusinessHolder;
-    public static AddressClass mAddressPersonal;
 
     private MaterialDialog.Builder mOverlayPermissionDialogBuilder;
     private MaterialDialog mOverlayPermissionDialog;
@@ -83,13 +81,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
             } else if (targetFragment.equals(Constants.SIGN_UP)) {
                 switchToAccountSelectionFragment();
             }
-        }
-
-        // Start service for GCM
-        if (Utilities.checkPlayServices(SignupOrLoginActivity.this)) {
-            // Start IntentService to register this application with GCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
         }
 
         // Initialize the dialog

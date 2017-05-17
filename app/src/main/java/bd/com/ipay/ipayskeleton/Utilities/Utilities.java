@@ -69,6 +69,7 @@ import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class Utilities {
@@ -237,11 +238,6 @@ public class Utilities {
         } catch (IOException ex) {
             return null;
         }*/
-    }
-
-    public static void sendBroadcast(Context context, String intentFilter) {
-        Intent intent = new Intent(intentFilter);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     public static String streamToString(InputStream is) {

@@ -66,8 +66,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletio
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
-import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
+import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
@@ -185,11 +184,8 @@ public class HomeActivity extends BaseActivity
         // server. If there is any new contact on the phone, we download all contacts from the
         // server again to keep phone and server contacts in sync.
 
-        // Start service for GCM
-        if (Utilities.checkPlayServices(HomeActivity.this)) {
-            // Start IntentService to register this application with GCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
+        if (Constants.DEBUG) {
+            Logger.logW("Token", TokenManager.getToken());
         }
 
         Logger.logW("Token", TokenManager.getToken());
@@ -207,6 +203,8 @@ public class HomeActivity extends BaseActivity
         // the number of pending notifications. Once the notifications are loaded, updateNotificationBadgeCount()
         // is called from NotificationFragment.
         mNotificationFragment.getNotificationLists(this);
+        // Registering the notification broadcast receiver
+        mNotificationFragment.registerNotificationBroadcastReceiver(this);
 
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
@@ -649,7 +647,7 @@ public class HomeActivity extends BaseActivity
             mProfileImageView.setProfilePicture(newProfilePicture, true);
 
             // We need to update the profile picture url in ProfileInfoCacheManager. Ideally,
-            // we should have received a push from the server and GcmListenerService should have
+            // we should have received a push from the server and FcmListenerService should have
             // done this task. But as long as push is unreliable, this call is here to stay.
             getProfileInfo();
         }
