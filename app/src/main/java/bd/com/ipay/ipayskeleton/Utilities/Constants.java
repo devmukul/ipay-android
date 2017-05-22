@@ -222,7 +222,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
             BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
             BASE_URL_ADMIN = "https://www.ipay.com.bd/api/v1/support/";
-            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
+            BASE_URL_PUSH_NOTIFICATION = "https://www.ipay.com.bd/api/v1/notification/";
             BASE_URL_WEB = "https://www.ipay.com.bd";
             SERVER_NAME = "live";
 
