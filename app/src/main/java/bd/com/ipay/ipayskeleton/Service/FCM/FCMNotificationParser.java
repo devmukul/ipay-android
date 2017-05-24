@@ -12,29 +12,33 @@ public class FCMNotificationParser {
         int serviceID = fcmNotificationResponse.getServiceId();
         boolean isReceiver = fcmNotificationResponse.isReceiver();
 
-        if (fcmNotificationResponse.getNotificationData() != null) {
-            int status = fcmNotificationResponse.getNotificationData().getStatus();
+        try {
+            if (fcmNotificationResponse.getNotificationData() != null) {
+                int status = fcmNotificationResponse.getNotificationData().getStatus();
 
-            switch (serviceID) {
-                case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
-                case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT): {
-                    MultipleBroadCastServiceIntent.sendBroadcastForPaymentOrSendMoney(context);
-                    break;
-                }
-                case (Constants.TRANSACTION_HISTORY_REQUEST_MONEY):
-                case (Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT): {
-                    if (status == Constants.TRANSACTION_STATUS_PROCESSING) {
-                        MultipleBroadCastServiceIntent.sendBroadcastForPendingMoneyOrPaymentRequest(context, isReceiver);
-
-                    } else if (status == Constants.TRANSACTION_STATUS_ACCEPTED) {
-                        MultipleBroadCastServiceIntent.sendBroadcastForAcceptedMoneyOrPaymentRequest(context);
-
-                    } else if (status == Constants.TRANSACTION_STATUS_REJECTED || status == Constants.TRANSACTION_STATUS_CANCELLED) {
-                        MultipleBroadCastServiceIntent.sendBroadcastForCanceledOrRejectedRequest(context);
+                switch (serviceID) {
+                    case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
+                    case (Constants.TRANSACTION_HISTORY_MAKE_PAYMENT): {
+                        MultipleBroadCastServiceIntent.sendBroadcastForPaymentOrSendMoney(context);
+                        break;
                     }
-                    break;
+                    case (Constants.TRANSACTION_HISTORY_REQUEST_MONEY):
+                    case (Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT): {
+                        if (status == Constants.TRANSACTION_STATUS_PROCESSING) {
+                            MultipleBroadCastServiceIntent.sendBroadcastForPendingMoneyOrPaymentRequest(context, isReceiver);
+
+                        } else if (status == Constants.TRANSACTION_STATUS_ACCEPTED) {
+                            MultipleBroadCastServiceIntent.sendBroadcastForAcceptedMoneyOrPaymentRequest(context);
+
+                        } else if (status == Constants.TRANSACTION_STATUS_REJECTED || status == Constants.TRANSACTION_STATUS_CANCELLED) {
+                            MultipleBroadCastServiceIntent.sendBroadcastForCanceledOrRejectedRequest(context);
+                        }
+                        break;
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
