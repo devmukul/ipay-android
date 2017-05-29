@@ -49,8 +49,11 @@ public class Constants {
     public static final String SMS_READER_BROADCAST_RECEIVER_PDUS = "pdus";
     public static final String PROFILE_INFO_UPDATE_BROADCAST = "PROFILE_INFO_UPDATE_BROADCAST";
     public static final String PROFILE_PICTURE_UPDATE_BROADCAST = "PROFILE_PICTURE_UPDATE_BROADCAST";
-    public static final String TRANSACTION_HISTORY_UPDATE_BROADCAST = "TRANSACTION_HISTORY_UPDATE_BROADCAST";
+    public static final String COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST = "COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST ";
+    public static final String PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST = "PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST ";
+    public static final String BALANCE_UPDATE_BROADCAST = "BALANCE_UPDATE_BROADCAST";
     public static final String PROFILE_COMPLETION_UPDATE_BROADCAST = "PROFILE_COMPLETION_UPDATE_BROADCAST";
+    public static final String NOTIFICATION_UPDATE_BROADCAST = "NOTIFICATION_UPDATE_BROADCAST";
 
     public static final String TOKEN = "token";
     public static final String REFRESH_TOKEN = "refresh-token";
@@ -78,9 +81,11 @@ public class Constants {
     public static final String COUNTRY_CODE = "country_code";
     public static final String EXPAND_PIN = "expand_pin";
     public static final String DEVICE_IS_NOT_TRUSTED = "Device is not trusted";
+    public static final String USERNAME_PASSWORD_INCORRECT = "The provided username or password is incorrect";
     public static final String DOCUMENT_ID = "DOCUMENT_ID";
     public static final String DOCUMENT_TYPE_NAME = "DOCUMENT_TYPE_NAME";
     public static final String MESSAGE = "message";
+    public static final String NOTIFICATION_DATA = "changed_data";
 
     public static final String NAME = "NAME";
 
@@ -119,17 +124,18 @@ public class Constants {
     public static final String OFFICE_LAND_LINE_NUMBER_PRIMARY = "+88-02-9852507";
     public static final String OFFICE_LAND_LINE_NUMBER_SECONDARY = "+88-02-9852510";
     public static final String OFFICE_EMAIL = "support@ipay.com.bd";
-    public static final String OFFICE_WEB = "www.ipay.com.bd";
     public static final String FEEDBACK = "feedback@ipay.com.bd";
     public static final String OFFICE_ADDRESS = "Silver Tower (12th Floor)\n52 Gulshan Avenue, Circle-1\nDhaka-1212\nBangladesh\n";
     public static final double OFFICE_LATITUDE = 23.7810729;
     public static final double OFFICE_LONGITUDE = 90.4169212;
+    public static final String HOST_NAME = "www.ipay.com.bd";
 
     public static final int MIN_AGE_LIMIT = 18;
     public static final int MIN_VALID_NAME_LENGTH = 5;
     public static final int MAX_FILE_ATTACHMENT_LIMIT = 5;
 
     public static final int STARTING_DATE = 01;
+    public static final int SERVER_TYPE_LIVE = 4;
 
     public static final int STARTING_MONTH = 01;
     public static final int STARTING_YEAR = 2016;
@@ -166,6 +172,7 @@ public class Constants {
     public static final String BASE_URL_EDU;
     public static final String BASE_URL_CONTACT;
     public static final String BASE_URL_ADMIN;
+    public static final String BASE_URL_PUSH_NOTIFICATION;
     public static final String BASE_URL_FTP_SERVER;
     public static final String BASE_URL_WEB;
     private static final String SERVER_NAME;
@@ -179,6 +186,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_CONTACT = "http://10.10.10.11:4000/external/v1/";
             BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/support/";
+            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
 //            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             SERVER_NAME = "dev";
@@ -191,6 +199,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_CONTACT = "http://10.15.40.14:4000/external/v1/";
             BASE_URL_ADMIN = "http://10.15.40.15:8085/api/v1/support/";
+            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.162:7778/api/v1/notification/";
             BASE_URL_WEB = "http://test.ipay.com.bd";
             SERVER_NAME = "test";
 
@@ -202,6 +211,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
             BASE_URL_CONTACT = "http://10.10.40.14:4000/external/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
+            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "http://stage.ipay.com.bd";
             SERVER_NAME = "stage";
 
@@ -213,6 +223,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
             BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
             BASE_URL_ADMIN = "https://www.ipay.com.bd/api/v1/support/";
+            BASE_URL_PUSH_NOTIFICATION = "https://www.ipay.com.bd/api/v1/notification/";
             BASE_URL_WEB = "https://www.ipay.com.bd";
             SERVER_NAME = "live";
 
@@ -224,6 +235,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
+            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             SERVER_NAME = "local";
         }
@@ -418,6 +430,9 @@ public class Constants {
     public static final String URL_UPLOAD_TICKET_ATTACHMENT = "ticket/comment/attachment";
     public static final String URL_ADD_COMMENT_WITH_ATTACHMENT = "ticket/add/comment/attachments";
 
+    // FCM notification
+    public static final String URL_REFRESH_FIREBASE_TOKEN = "firebase/login/";
+
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
     public static final int HTTP_RESPONSE_STATUS_PAYMENT_REQUIRED = 402;
@@ -445,6 +460,7 @@ public class Constants {
     public static final String COMMAND_RESEND_OTP = "COMMAND_RESEND_OTP";
     public static final String COMMAND_CHECK_IF_USER_EXISTS = "COMMAND_CHECK_IF_USER_EXISTS";
     public static final String COMMAND_REFRESH_TOKEN = "COMMAND_REFRESH_TOKEN";
+    public static final String COMMAND_REFRESH_FIREBASE_TOKEN = "COMMAND_REFRESH_FIREBASE_TOKEN";
     public static final String COMMAND_SIGN_UP = "COMMAND_SIGN_UP";
     public static final String COMMAND_SIGN_UP_BUSINESS = "COMMAND_SIGN_UP_BUSINESS";
     public static final String COMMAND_LOG_IN = "COMMAND_LOG_IN";

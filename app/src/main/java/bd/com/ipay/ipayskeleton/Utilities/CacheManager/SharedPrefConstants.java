@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.Utilities.CacheManager;
 
 public class SharedPrefConstants {
-    public static final String CRITICAL_PREFERENCE_VERSION = "CRITICAL_PREFERENCE_VERSION";
     public static final String LOGGED_IN = "LOGGED_IN";
     public static final String FIRST_LAUNCH = "FIRST_LAUNCH";
     public static final String UUID = "UUID";

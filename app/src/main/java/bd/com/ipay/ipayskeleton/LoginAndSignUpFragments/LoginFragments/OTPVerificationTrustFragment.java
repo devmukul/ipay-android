@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -230,6 +231,11 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                         ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumber);
                     else
                         ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumberBusiness);
+
+                    String pushRegistrationID = ProfileInfoCacheManager.getPushNotificationToken(null);
+                    if (pushRegistrationID != null) {
+                        new RegisterFCMTokenToServerAsyncTask(getContext());
+                    }
 
                     if (getActivity() != null)
                         ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();

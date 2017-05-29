@@ -17,6 +17,7 @@ import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFr
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryHolderFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class DashBoardFragment extends Fragment {
@@ -78,7 +79,7 @@ public class DashBoardFragment extends Fragment {
                 viewPager.setCurrentItem(tab.getPosition());
 
                 if (tab.getPosition() == TRANSACTION_HISTORY_TAB)
-                    Utilities.sendBroadcast(getActivity(), Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST);
+                    BroadcastServiceIntent.sendBroadcast(getActivity(), Constants.PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST);
             }
 
             @Override

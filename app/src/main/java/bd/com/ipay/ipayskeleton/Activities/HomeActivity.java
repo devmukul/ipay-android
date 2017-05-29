@@ -66,13 +66,11 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletio
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
-import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
+import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
-import bd.com.ipay.ipayskeleton.Utilities.Config;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -109,7 +107,6 @@ public class HomeActivity extends BaseActivity
     private Menu mOptionsMenu;
 
     private int mBadgeCount = 0;
-    private int savedCriticalPreferenceVersion;
 
     private static boolean switchedToHomeFragment = true;
     private boolean exitFromApplication = false;
@@ -187,11 +184,8 @@ public class HomeActivity extends BaseActivity
         // server. If there is any new contact on the phone, we download all contacts from the
         // server again to keep phone and server contacts in sync.
 
-        // Start service for GCM
-        if (Utilities.checkPlayServices(HomeActivity.this)) {
-            // Start IntentService to register this application with GCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
+        if (Constants.DEBUG) {
+            Logger.logW("Token", TokenManager.getToken());
         }
 
         Logger.logW("Token", TokenManager.getToken());
@@ -209,6 +203,8 @@ public class HomeActivity extends BaseActivity
         // the number of pending notifications. Once the notifications are loaded, updateNotificationBadgeCount()
         // is called from NotificationFragment.
         mNotificationFragment.getNotificationLists(this);
+        // Registering the notification broadcast receiver
+        mNotificationFragment.registerNotificationBroadcastReceiver(this);
 
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
@@ -226,10 +222,7 @@ public class HomeActivity extends BaseActivity
         // Send Analytics for test purpose in Firebase
         sendAnalytics();
 
-        // Check if the stored critical preference version is lesser than the version found from config
-        savedCriticalPreferenceVersion = SharedPrefManager.getCriticalPreferenceVersion(0);
-        if (Config.criticalPreferenceVersion > savedCriticalPreferenceVersion)
-            todoCheckList(savedCriticalPreferenceVersion);
+        getAllBusinessAccountsList();
 
         // If profile picture gets updated, we need to refresh the profile picture in the drawer.
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
@@ -314,23 +307,9 @@ public class HomeActivity extends BaseActivity
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
     }
 
-    private void todoCheckList(int storedCriticalPreferenceVersion) {
-
-        // Do not put any try-catch here. The operations must go smoothly.
-        // If anything goes wrong, just store the last successful operation number in preference.
-        // Only the last case will have a break statement like the onUpgrade function in DataBaseOpenHelper
-        switch (storedCriticalPreferenceVersion) {
-            case 0:
-                // Migration code from 0 to 1
-                // Get Business contacts
-                // For the first time load, the lastBusinessId is 0
-                GetAllBusinessContactRequestBuilder mGetAllBusinessContactRequestBuilder = new GetAllBusinessContactRequestBuilder(0);
-                new GetAllBusinessListAsyncTask(this, mGetAllBusinessContactRequestBuilder.getGeneratedUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                break;
-        }
-
-        // Store the updated critical preference version after all necessary actions.
-        SharedPrefManager.setCriticalPreferenceVersion(Config.criticalPreferenceVersion);
+    private void getAllBusinessAccountsList() {
+        GetAllBusinessContactRequestBuilder mGetAllBusinessContactRequestBuilder = new GetAllBusinessContactRequestBuilder(0);
+        new GetAllBusinessListAsyncTask(this, mGetAllBusinessContactRequestBuilder.getGeneratedUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -444,7 +423,6 @@ public class HomeActivity extends BaseActivity
                 ((MyApplication) this.getApplication()).launchLoginPage(null);
             }
         }
-
     }
 
     @Override
@@ -501,7 +479,6 @@ public class HomeActivity extends BaseActivity
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, HomeActivity.this);
         mLogoutTask.mHttpResponseListener = this;
-
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -670,7 +647,7 @@ public class HomeActivity extends BaseActivity
             mProfileImageView.setProfilePicture(newProfilePicture, true);
 
             // We need to update the profile picture url in ProfileInfoCacheManager. Ideally,
-            // we should have received a push from the server and GcmListenerService should have
+            // we should have received a push from the server and FcmListenerService should have
             // done this task. But as long as push is unreliable, this call is here to stay.
             getProfileInfo();
         }
