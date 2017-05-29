@@ -81,6 +81,7 @@ public class Constants {
     public static final String COUNTRY_CODE = "country_code";
     public static final String EXPAND_PIN = "expand_pin";
     public static final String DEVICE_IS_NOT_TRUSTED = "Device is not trusted";
+    public static final String USERNAME_PASSWORD_INCORRECT = "The provided username or password is incorrect";
     public static final String DOCUMENT_ID = "DOCUMENT_ID";
     public static final String DOCUMENT_TYPE_NAME = "DOCUMENT_TYPE_NAME";
     public static final String MESSAGE = "message";

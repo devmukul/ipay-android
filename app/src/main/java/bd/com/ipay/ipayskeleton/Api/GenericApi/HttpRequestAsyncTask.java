@@ -104,7 +104,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                     MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
                     boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
 
-                    if (loggedIn && !ProfileInfoCacheManager.getMobileNumber().isEmpty()) {
+                    if (loggedIn && !result.getJsonString().contains(Constants.USERNAME_PASSWORD_INCORRECT)) {
                         String message = mContext.getString(R.string.please_log_in_again);
                         myApplicationInstance.launchLoginPage(message);
 
