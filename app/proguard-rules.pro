@@ -28,6 +28,7 @@
 -keep class junit.** { *; }
 -keep class org.mockito.** { *; }
 -keep class org.aspectj.** { *; }
+-keep class com.squareup.okhttp.** { *; }
 -keep class android.support.v7.widget.SearchView { *; }
 -keep class bd.com.ipay.ipayskeleton.Model.** { *; }
 -keepclassmembers class bd.com.ipay.ipayskeleton.Model.** { *; }
@@ -41,6 +42,8 @@
 -dontwarn org.junit.**
 -dontwarn org.mockito.**
 -dontwarn com.makeramen.**
+-dontwarn com.squareup.**
+-dontwarn okio.**
 
 -assumenosideeffects class android.util.Log {
     public static *** d(...);
