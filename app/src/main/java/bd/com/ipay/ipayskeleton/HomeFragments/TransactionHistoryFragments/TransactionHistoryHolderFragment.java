@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 public class TransactionHistoryHolderFragment extends Fragment {
 
@@ -34,17 +37,54 @@ public class TransactionHistoryHolderFragment extends Fragment {
         mProcessedTransactionsSelector = (CheckBox) v.findViewById(R.id.checkbox_processed);
         mPendingTransactionsSelector = (CheckBox) v.findViewById(R.id.checkbox_pending);
 
+        mProcessedTransactionsSelector.setChecked(false);
+        mPendingTransactionsSelector.setChecked(true);
+
+        mProcessedTransactionsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
+        mPendingTransactionsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
+
+
         mProcessedTransactionsSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchToProcessedTransactionsFragment();
+                if (mProcessedTransactionsSelector.isChecked()) {
+                    if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION)) {
+                        mProcessedTransactionsSelector.setChecked(true);
+                        mPendingTransactionsSelector.setChecked(false);
+
+                        mPendingTransactionsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
+                        mProcessedTransactionsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, new Fragment()).commit();
+                        return;
+                    }
+                    switchToProcessedTransactionsFragment();
+                } else {
+                    mPendingTransactionsSelector.setChecked(false);
+                    mProcessedTransactionsSelector.setChecked(true);
+                }
             }
         });
 
         mPendingTransactionsSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchToPendingTransactionsFragment();
+                if (mPendingTransactionsSelector.isChecked()) {
+                    if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION)) {
+                        mPendingTransactionsSelector.setChecked(true);
+                        mProcessedTransactionsSelector.setChecked(false);
+
+                        mProcessedTransactionsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
+                        mPendingTransactionsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, new Fragment()).commit();
+                        return;
+                    }
+                    switchToPendingTransactionsFragment();
+                } else {
+                    mPendingTransactionsSelector.setChecked(true);
+                    mProcessedTransactionsSelector.setChecked(false);
+                }
             }
         });
 
@@ -54,7 +94,13 @@ public class TransactionHistoryHolderFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        switchToPendingTransactionsFragment();
+        if (ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.ALL_TRANSACTION)) {
+            if (ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION)) {
+                switchToPendingTransactionsFragment();
+            } else if (ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION)) {
+                switchToProcessedTransactionsFragment();
+            }
+        }
     }
 
     @Override

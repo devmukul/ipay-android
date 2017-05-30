@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.AddNewEmailRequest;
@@ -49,10 +50,13 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.GetEmailRe
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.MakePrimaryEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.MakePrimaryRequest;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EmailFragment extends ProgressFragment implements HttpResponseListener {
@@ -97,6 +101,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
         mFabAddNewEmail.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_EMAILS)
             public void onClick(View v) {
                 showAddNewEmailDialog();
             }
@@ -203,6 +208,10 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_EMAILS)) {
+                            DialogUtils.showServiceNotAllowedDialog(getContext());
+                            return;
+                        }
                         deleteEmail(email.getEmailId());
                     }
                 })
@@ -449,6 +458,34 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         public EmailListAdapter() {
         }
 
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            View v;
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_email,
+                    parent, false);
+
+            return new EmailViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+                EmailViewHolder vh = (EmailViewHolder) holder;
+                vh.bindView(position);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mEmails != null)
+                return mEmails.size();
+            else return 0;
+        }
+
         public class EmailViewHolder extends RecyclerView.ViewHolder {
             private final TextView mEmailView;
             private final ImageView mVerificationStatus;
@@ -512,34 +549,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                     }
                 });
             }
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View v;
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_email,
-                    parent, false);
-
-            return new EmailViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            try {
-                EmailViewHolder vh = (EmailViewHolder) holder;
-                vh.bindView(position);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            if (mEmails != null)
-                return mEmails.size();
-            else return 0;
         }
 
     }

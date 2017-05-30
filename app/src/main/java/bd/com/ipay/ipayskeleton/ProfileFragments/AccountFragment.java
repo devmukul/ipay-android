@@ -25,10 +25,11 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadProfilePictureAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadProfilePictureAsyncTask;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ProfilePictureHelperDialog;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -40,21 +41,22 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AccountFragment extends Fragment implements HttpResponseListener {
 
+    private static final int REQUEST_CODE_PERMISSION = 1001;
+    private final int ACTION_PICK_PROFILE_PICTURE = 100;
     private ProfileImageView mProfilePictureView;
     private TextView mNameView;
     private TextView mMobileNumberView;
     private TextView mProfileCompletionStatusView;
     private ImageView mVerificationStatusView;
-
     private View mProfilePictureHolderView;
     private ImageView mEditProfilePicButton;
-
     private IconifiedTextViewWithButton mBasicInfo;
     private IconifiedTextViewWithButton mEmail;
     private IconifiedTextViewWithButton mDocuments;
@@ -62,28 +64,20 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private IconifiedTextViewWithButton mAddress;
     private IconifiedTextViewWithButton mProfileCompleteness;
     private IconifiedTextViewWithButton mManageEmployee;
-
     private String mName = "";
     private String mMobileNumber = "";
     private String mProfilePicture = "";
     private String mSelectedImagePath = "";
-
     private List<String> mOptionsForImageSelectionList;
     private int mSelectedOptionForImage = -1;
-
     private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask = null;
     private SetProfilePictureResponse mSetProfilePictureResponse;
-
     private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
     private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
-
     private ProgressDialog mProgressDialog;
     private MaterialDialog.Builder mProfilePictureErrorDialogBuilder;
     private MaterialDialog mProfilePictureErrorDialog;
     private ProfilePictureHelperDialog profilePictureHelperDialog;
-
-    private static final int REQUEST_CODE_PERMISSION = 1001;
-    private final int ACTION_PICK_PROFILE_PICTURE = 100;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -135,16 +129,18 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private void setButtonActions() {
         mProfilePictureHolderView.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_PROFILE_PICTURE)
             public void onClick(View v) {
-                if (!ProfileInfoCacheManager.isAccountVerified())
+                if (!ProfileInfoCacheManager.isAccountVerified()) {
                     profilePictureHelperDialog.show();
-                else
+                } else
                     showProfilePictureUpdateRestrictionDialog();
             }
         });
 
         mBasicInfo.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_USER_INFO)
             public void onClick(View view) {
                 if (ProfileInfoCacheManager.isBusinessAccount())
                     ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
@@ -154,6 +150,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         mEmail.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_EMAILS)
             public void onClick(View view) {
                 ((ProfileActivity) getActivity()).switchToEmailFragment();
             }
@@ -161,6 +158,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         mAddress.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_ADDRESSES)
             public void onClick(View view) {
                 ((ProfileActivity) getActivity()).switchToAddressFragment();
             }
@@ -168,6 +166,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         mIntroducer.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_INTRODUCERS)
             public void onClick(View v) {
                 ((ProfileActivity) getActivity()).switchToIntroducerFragment();
             }
@@ -175,6 +174,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         mDocuments.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_IDENTIFICATION_DOCS)
             public void onClick(View view) {
                 ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
             }
@@ -182,6 +182,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         mProfileCompleteness.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_PROFILE_COMPLETION)
             public void onClick(View view) {
                 ((ProfileActivity) getActivity()).switchToProfileCompletionFragment();
             }
@@ -189,6 +190,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         mManageEmployee.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_EMPLOYEE)
             public void onClick(View v) {
                 //((ProfileActivity) getActivity()).switchToEmployeeManagementFragment();
                 Intent intent = new Intent(getActivity(), ManagePeopleActivity.class);

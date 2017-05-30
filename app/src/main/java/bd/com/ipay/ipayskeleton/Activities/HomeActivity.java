@@ -73,7 +73,9 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
@@ -82,36 +84,47 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, HttpResponseListener {
 
+    private static final int REQUEST_CODE_PERMISSION = 1001;
+    public static NotificationFragment mNotificationFragment;
+    private static boolean switchedToHomeFragment = true;
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
-
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
-
     private HttpRequestGetAsyncTask mGetBusinessInformationAsyncTask;
     private GetBusinessInformationResponse mGetBusinessInformationResponse;
-
     private GetBusinessTypesAsyncTask mGetBusinessTypesAsyncTask;
     private GetRelationshipListAsyncTask mGetRelationshipListAsyncTask;
-
     private AutoResizeTextView mMobileNumberView;
     private TextView mNameView;
     private ProfileImageView mProfileImageView;
+    private final BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
+            Logger.logD("Broadcast home activity", newProfilePicture);
+
+            mProfileImageView.setProfilePicture(newProfilePicture, true);
+
+            // We need to update the profile picture url in ProfileInfoCacheManager. Ideally,
+            // we should have received a push from the server and FcmListenerService should have
+            // done this task. But as long as push is unreliable, this call is here to stay.
+            getProfileInfo();
+        }
+    };
+    private final BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateProfileData();
+        }
+    };
     private String mUserID;
     private String mDeviceID;
-
     private ProgressDialog mProgressDialog;
     private NavigationView mNavigationView;
-
-    public static NotificationFragment mNotificationFragment;
     private Menu mOptionsMenu;
-
     private int mBadgeCount = 0;
-
-    private static boolean switchedToHomeFragment = true;
     private boolean exitFromApplication = false;
-
-    private static final int REQUEST_CODE_PERMISSION = 1001;
     private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
@@ -183,10 +196,6 @@ public class HomeActivity extends BaseActivity
         // Then difference with phone contacts is calculated, and this difference is sent to the
         // server. If there is any new contact on the phone, we download all contacts from the
         // server again to keep phone and server contacts in sync.
-
-        if (Constants.DEBUG) {
-            Logger.logW("Token", TokenManager.getToken());
-        }
 
         Logger.logW("Token", TokenManager.getToken());
 
@@ -377,35 +386,48 @@ public class HomeActivity extends BaseActivity
             switchToDashBoard();
 
         } else if (id == R.id.nav_account) {
-
+            if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE)) {
+                DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
+                return;
+            }
             launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_INFO, new Bundle());
-
         } else if (id == R.id.nav_bank_account) {
-
+            if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS)) {
+                DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
+                return;
+            }
             Intent intent = new Intent(HomeActivity.this, ManageBanksActivity.class);
             startActivity(intent);
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_user_activity) {
-
+            if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY)) {
+                DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
+                return;
+            }
             Intent intent = new Intent(HomeActivity.this, ActivityLogActivity.class);
             startActivity(intent);
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_security_settings) {
-
+            if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_SECURITY, ServiceIdConstants.MANAGE_SECURITY)) {
+                DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
+                return;
+            }
             Intent intent = new Intent(HomeActivity.this, SecuritySettingsActivity.class);
             startActivity(intent);
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_invite) {
-
+            if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS)) {
+                DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
+                return;
+            }
             Intent intent = new Intent(this, InviteActivity.class);
             startActivity(intent);
             switchedToHomeFragment = true;
 
         } else if (id == R.id.nav_help) {
-
             Intent intent = new Intent(this, HelpAndSupportActivity.class);
             startActivity(intent);
             switchedToHomeFragment = false;
@@ -637,26 +659,4 @@ public class HomeActivity extends BaseActivity
     public Context setContext() {
         return HomeActivity.this;
     }
-
-    private final BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
-            Logger.logD("Broadcast home activity", newProfilePicture);
-
-            mProfileImageView.setProfilePicture(newProfilePicture, true);
-
-            // We need to update the profile picture url in ProfileInfoCacheManager. Ideally,
-            // we should have received a push from the server and FcmListenerService should have
-            // done this task. But as long as push is unreliable, this call is here to stay.
-            getProfileInfo();
-        }
-    };
-
-    private final BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            updateProfileData();
-        }
-    };
 }

@@ -17,8 +17,9 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.GetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.District;
@@ -30,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.ThanaRequestBui
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 
@@ -161,6 +163,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
 
         mPresentAddressEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_ADDRESS)
             public void onClick(View v) {
                 ((ProfileActivity) getActivity()).switchToEditAddressFragment(presentAddressBundle);
             }
@@ -168,6 +171,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
 
         mPermanentAddressEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_ADDRESS)
             public void onClick(View v) {
                 ((ProfileActivity) getActivity()).switchToEditAddressFragment(permanentAddressBundle);
             }
@@ -175,6 +179,7 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
 
         mOfficeAddressEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_ADDRESS)
             public void onClick(View v) {
                 ((ProfileActivity) getActivity()).switchToEditAddressFragment(officeAddressBundle);
             }

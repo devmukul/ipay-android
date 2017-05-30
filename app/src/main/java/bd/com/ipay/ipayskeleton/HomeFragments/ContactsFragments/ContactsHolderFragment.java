@@ -23,28 +23,30 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
 
-import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ContactsHolderFragment extends Fragment implements HttpResponseListener {
 
-    private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
     public static GetInviteInfoResponse mGetInviteInfoResponse;
-
+    private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
     private BottomSheetLayout mBottomSheetLayout;
     private CheckBox mAllContactsSelector;
     private CheckBox miPayContactsSelector;
@@ -82,24 +84,62 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         mAllContactsSelector = (CheckBox) v.findViewById(R.id.checkbox_contacts_all);
         miPayContactsSelector = (CheckBox) v.findViewById(R.id.checkbox_contacts_ipay);
 
+        mAllContactsSelector.setChecked(true);
+        miPayContactsSelector.setChecked(false);
+
+        miPayContactsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
+        mAllContactsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
+
         mAllContactsSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utilities.hideKeyboard(getActivity());
-                switchToAllContacts();
+                if (mAllContactsSelector.isChecked()) {
+                    if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS)) {
+                        mAllContactsSelector.setChecked(true);
+                        miPayContactsSelector.setChecked(false);
+
+                        miPayContactsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
+                        mAllContactsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, new Fragment()).commit();
+                        return;
+                    }
+                    Utilities.hideKeyboard(getActivity());
+                    switchToAllContacts();
+                } else {
+                    miPayContactsSelector.setChecked(false);
+                    mAllContactsSelector.setChecked(true);
+                }
             }
         });
 
         miPayContactsSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utilities.hideKeyboard(getActivity());
-                switchToiPayContacts();
+                if (miPayContactsSelector.isChecked()) {
+                    if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS)) {
+                        miPayContactsSelector.setChecked(true);
+                        mAllContactsSelector.setChecked(false);
+
+                        mAllContactsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
+                        miPayContactsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, new Fragment()).commit();
+                        return;
+                    }
+                    Utilities.hideKeyboard(getActivity());
+                    switchToiPayContacts();
+                } else {
+                    miPayContactsSelector.setChecked(true);
+                    mAllContactsSelector.setChecked(false);
+                }
+
             }
         });
 
         mAddContactButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.ADD_CONTACTS)
             public void onClick(View v) {
                 showAddContactDialog();
             }
@@ -121,6 +161,9 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS)) {
+            return;
+        }
         switchToiPayContacts();
     }
 

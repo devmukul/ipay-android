@@ -21,10 +21,11 @@ import com.google.gson.Gson;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.IntroduceActionResponse;
@@ -37,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.ThanaRequestBui
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 public class RecommendationReviewFragment extends ProgressFragment implements HttpResponseListener {
 
@@ -135,6 +137,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
 
         mAcceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_INTRODUCERS)
             public void onClick(View v) {
 
                 mIntroductionMessage = getString(R.string.introduction_request_review_dialog_content);
@@ -164,6 +167,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
 
         mRejectButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_INTRODUCERS)
             public void onClick(View v) {
 
                 new MaterialDialog.Builder(getActivity())
@@ -190,6 +194,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
 
         mSpamButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_INTRODUCERS)
             public void onClick(View v) {
 
                 new MaterialDialog.Builder(getActivity())

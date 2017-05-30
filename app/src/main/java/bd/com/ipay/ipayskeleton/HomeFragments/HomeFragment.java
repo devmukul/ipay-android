@@ -28,17 +28,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPinDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -50,27 +51,45 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HomeFragment extends Fragment implements HttpResponseListener {
 
+    private static boolean profileCompletionPromptShown = false;
     private HttpRequestPostAsyncTask mRefreshBalanceTask = null;
     private RefreshBalanceResponse mRefreshBalanceResponse;
-
     private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
+    private final BroadcastReceiver mProfileCompletionInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getProfileCompletionStatus();
+        }
+    };
     private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
-
     private ProgressDialog mProgressDialog;
     private TextView balanceView;
-
     private TextView mNameView;
     private TextView mMobileNumberView;
     private ImageView mVerificationStatusView;
     private ProfileImageView mProfilePictureView;
+    private final BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateProfileData();
+        }
+    };
+    private final BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
+            Logger.logD("Broadcast home fragment", newProfilePicture);
+            mProfilePictureView.setProfilePicture(newProfilePicture, true);
+        }
+    };
     private View mProfileInfo;
-
     private View mAddMoneyButton;
     private View mWithdrawMoneyButton;
     private LinearLayout mSendMoneyButton;
@@ -78,11 +97,17 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private LinearLayout mMobileTopUpButton;
     private LinearLayout mMakePaymentButton;
     private ImageView refreshBalanceButton;
-
+    private final BroadcastReceiver mBalanceUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.BALANCE)) {
+                balanceView.setText(R.string.not_available);
+                return;
+            }
+            refreshBalance();
+        }
+    };
     private View mProfileCompletionPromptView;
-
-    private static boolean profileCompletionPromptShown = false;
-
     private CircularProgressBar mProgressBar;
     private ProgressBar mProgressBarWithoutAnimation;
     private TextView mProfileCompletionMessageView;
@@ -132,6 +157,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess({ServiceIdConstants.ADD_MONEY, ServiceIdConstants.SEE_BANK_ACCOUNTS})
             public void onClick(View v) {
                 PinChecker addMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -146,6 +172,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess({ServiceIdConstants.WITHDRAW_MONEY, ServiceIdConstants.SEE_BANK_ACCOUNTS})
             public void onClick(View v) {
                 PinChecker withdrawMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -160,6 +187,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess({ServiceIdConstants.SEND_MONEY, ServiceIdConstants.GET_CONTACTS})
             public void onClick(View v) {
                 PinChecker sendMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -174,6 +202,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess({ServiceIdConstants.REQUEST_MONEY, ServiceIdConstants.GET_CONTACTS})
             public void onClick(View v) {
                 Intent requestMoneyActivityIntent = new Intent(getActivity(), RequestMoneyActivity.class);
                 startActivity(requestMoneyActivityIntent);
@@ -182,6 +211,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mMakePaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess({ServiceIdConstants.MAKE_PAYMENT, ServiceIdConstants.SEE_BUSINESS})
             public void onClick(View v) {
                 PinChecker makePaymentPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -197,6 +227,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mMobileTopUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess({ServiceIdConstants.TOP_UP, ServiceIdConstants.GET_CONTACTS})
             public void onClick(View v) {
                 PinChecker topUpPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -211,15 +242,16 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         refreshBalanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess({ServiceIdConstants.BALANCE})
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     refreshBalance();
                 }
             }
         });
-
         mProfileInfo.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess({ServiceIdConstants.SEE_PROFILE})
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
                 startActivity(intent);
@@ -255,6 +287,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         // TODO we should refresh the balance only based on push notification, no need to fetch it
         // from the server every time someone navigates to the home activity. Once push is implemented
         // properly, move it to onCreate.
+        if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.BALANCE)) {
+            balanceView.setText(R.string.not_available);
+            return;
+        }
         refreshBalance();
     }
 
@@ -309,6 +345,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                 mProfileCompletionPromptView.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.TOP_UP)
                     public void onClick(View v) {
                         mProfileCompletionPromptView.setVisibility(View.GONE);
                         Intent intent = new Intent(getActivity(), ProfileActivity.class);
@@ -463,34 +500,4 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             mGetProfileCompletionStatusTask = null;
         }
     }
-
-    private final BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            updateProfileData();
-        }
-    };
-
-    private final BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
-            Logger.logD("Broadcast home fragment", newProfilePicture);
-            mProfilePictureView.setProfilePicture(newProfilePicture, true);
-        }
-    };
-
-    private final BroadcastReceiver mBalanceUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            refreshBalance();
-        }
-    };
-
-    private final BroadcastReceiver mProfileCompletionInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            getProfileCompletionStatus();
-        }
-    };
 }

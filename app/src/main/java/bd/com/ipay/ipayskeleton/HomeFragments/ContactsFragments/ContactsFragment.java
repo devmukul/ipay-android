@@ -43,9 +43,10 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.DeleteContactAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -56,6 +57,7 @@ import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Contact.InviteContactNode;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -438,6 +440,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         } else {
             mInviteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
+                @ValidateAccess(ServiceIdConstants.MANAGE_INVITATIONS)
                 public void onClick(View v) {
                     if (mBottomSheetLayout.isSheetShowing()) {
                         mBottomSheetLayout.dismissSheet();
@@ -454,6 +457,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         Button mSendMoneyButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_send_money);
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEND_MONEY)
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SendMoneyActivity.class);
                 intent.putExtra(Constants.MOBILE_NUMBER, mSelectedNumber);
@@ -468,6 +472,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         Button mRequestMoneyButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_request_money);
         mRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.REQUEST_MONEY)
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), RequestMoneyActivity.class);
                 intent.putExtra(Constants.MOBILE_NUMBER, mSelectedNumber);
@@ -496,6 +501,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
         mMakePaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MAKE_PAYMENT)
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PaymentActivity.class);
                 intent.putExtra(Constants.MOBILE_NUMBER, mSelectedNumber);
@@ -731,19 +737,14 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         this.mSelectedNumber = contactNumber;
     }
 
+    public interface ContactLoadFinishListener {
+        void onContactLoadFinish(int contactCount);
+    }
+
     public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int EMPTY_VIEW = 10;
         private static final int CONTACT_VIEW = 100;
-
-        public class EmptyViewHolder extends RecyclerView.ViewHolder {
-            public final TextView mEmptyDescription;
-
-            public EmptyViewHolder(View itemView) {
-                super(itemView);
-                mEmptyDescription = (TextView) itemView.findViewById(R.id.empty_description);
-            }
-        }
 
         public boolean isInvited(String phoneNumber) {
             if (ContactsHolderFragment.mGetInviteInfoResponse == null ||
@@ -752,6 +753,62 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             else if (ContactsHolderFragment.mGetInviteInfoResponse.getInvitees().contains(phoneNumber))
                 return true;
             return false;
+        }
+
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            View v;
+
+            if (viewType == EMPTY_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_description, parent, false);
+                return new EmptyViewHolder(v);
+            } else {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_contact, parent, false);
+                return new ViewHolder(v);
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+
+                if (holder instanceof ViewHolder) {
+                    ViewHolder vh = (ViewHolder) holder;
+                    vh.bindView(position);
+                } else if (holder instanceof EmptyViewHolder) {
+                    EmptyViewHolder vh = (EmptyViewHolder) holder;
+                    vh.mEmptyDescription.setText(getString(R.string.no_contacts));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mCursor == null || mCursor.isClosed())
+                return 0;
+            else
+                return mCursor.getCount();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (getItemCount() == 0)
+                return EMPTY_VIEW;
+            else
+                return CONTACT_VIEW;
+        }
+
+        public class EmptyViewHolder extends RecyclerView.ViewHolder {
+            public final TextView mEmptyDescription;
+
+            public EmptyViewHolder(View itemView) {
+                super(itemView);
+                mEmptyDescription = (TextView) itemView.findViewById(R.id.empty_description);
+            }
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -892,6 +949,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.DELETE_CONTACTS)
                     public boolean onLongClick(View view) {
                         showDeleteContactConfirmationDialog(mobileNumber);
                         return false;
@@ -899,56 +957,5 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 });
             }
         }
-
-        @SuppressWarnings("UnnecessaryLocalVariable")
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View v;
-
-            if (viewType == EMPTY_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_description, parent, false);
-                return new EmptyViewHolder(v);
-            } else {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_contact, parent, false);
-                return new ViewHolder(v);
-            }
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            try {
-
-                if (holder instanceof ViewHolder) {
-                    ViewHolder vh = (ViewHolder) holder;
-                    vh.bindView(position);
-                } else if (holder instanceof EmptyViewHolder) {
-                    EmptyViewHolder vh = (EmptyViewHolder) holder;
-                    vh.mEmptyDescription.setText(getString(R.string.no_contacts));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            if (mCursor == null || mCursor.isClosed())
-                return 0;
-            else
-                return mCursor.getCount();
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (getItemCount() == 0)
-                return EMPTY_VIEW;
-            else
-                return CONTACT_VIEW;
-        }
-    }
-
-    public interface ContactLoadFinishListener {
-        void onContactLoadFinish(int contactCount);
     }
 }

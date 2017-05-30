@@ -25,15 +25,18 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.Employee;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.GetAllEmployeesResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.RemoveEmployeeResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -64,6 +67,10 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
         mFabAddNewEmployee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_EMPLOYEE)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
                 ((ManagePeopleActivity) getActivity()).switchToEmployeeInformationFragment(null);
             }
         });
@@ -198,6 +205,34 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
 
     public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v;
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_employee,
+                    parent, false);
+
+            return new EmployeeViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+                EmployeeViewHolder vh = (EmployeeViewHolder) holder;
+                vh.bindView(position);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mEmployeeList != null)
+                return mEmployeeList.size();
+            else
+                return 0;
+        }
+
         private class EmployeeViewHolder extends RecyclerView.ViewHolder {
             private final ProfileImageView mProfileImageView;
             private final TextView mNameView;
@@ -255,6 +290,10 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_EMPLOYEE)) {
+                            DialogUtils.showServiceNotAllowedDialog(getContext());
+                            return;
+                        }
 
                         mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), employee.getName(), mEmployee_manage_ActionList);
                         mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
@@ -279,34 +318,6 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                     }
                 });
             }
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v;
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_employee,
-                    parent, false);
-
-            return new EmployeeViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            try {
-                EmployeeViewHolder vh = (EmployeeViewHolder) holder;
-                vh.bindView(position);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            if (mEmployeeList != null)
-                return mEmployeeList.size();
-            else
-                return 0;
         }
     }
 }

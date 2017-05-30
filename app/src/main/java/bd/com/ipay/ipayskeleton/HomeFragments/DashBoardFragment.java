@@ -13,11 +13,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryHolderFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class DashBoardFragment extends Fragment {
@@ -26,10 +29,8 @@ public class DashBoardFragment extends Fragment {
     private final int PAY_TAB = 1;
     private final int TRANSACTION_HISTORY_TAB = 2;
     private final int CONTACTS_TAB = 3;
-
-
     private final int TOTAL_PAGE_COUNT = 4;
-
+    private int currentTab = HOME_TAB;
     private HomeFragment mHomeFragment;
     private PayFragment mPayFragment;
     private ContactsHolderFragment mContactsHolderFragment;
@@ -76,10 +77,12 @@ public class DashBoardFragment extends Fragment {
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
 
-                if (tab.getPosition() == TRANSACTION_HISTORY_TAB)
+                viewPager.setCurrentItem(tab.getPosition());
+                if (tab.getPosition() == TRANSACTION_HISTORY_TAB) {
                     BroadcastServiceIntent.sendBroadcast(getActivity(), Constants.PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST);
+                }
+
             }
 
             @Override
@@ -100,6 +103,15 @@ public class DashBoardFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
+                if (position == TRANSACTION_HISTORY_TAB) {
+                    if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.ALL_TRANSACTION)) {
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                        viewPager.setCurrentItem(currentTab);
+                        return;
+                    }
+
+                }
+                currentTab = position;
                 Utilities.hideKeyboard(getActivity());
             }
 

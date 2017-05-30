@@ -44,11 +44,11 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActiv
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
@@ -56,52 +56,84 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TransactionHistoryPendingFragment extends ProgressFragment implements HttpResponseListener {
+    private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
+    private final int REQUEST_PAYMENT_REVIEW_REQUEST = 102;
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
-
     private RecyclerView mTransactionHistoryRecyclerView;
     private TransactionHistoryAdapter mTransactionHistoryAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<TransactionHistory> userTransactionHistories;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
-
     private String mMobileNumber;
-
     private LinearLayout serviceFilterLayout;
     private LinearLayout dateFilterLayout;
-
     private CheckBox mFilterRequestMoney;
     private CheckBox mFilterAddMoney;
     private CheckBox mFilterWithdrawMoney;
     private CheckBox mFilterTopUp;
     private CheckBox mFilterRequestPayment;
     private Button mClearServiceFilterButton;
-
     private Button mFromDateButton;
     private Button mToDateButton;
     private Button clearDateFilterButton;
     private Button filterByDateButton;
     private TextView mEmptyListTextView;
-
     private int historyPageCount = 0;
     private Integer type = null;
     private Calendar fromDate = null;
     private Calendar toDate = null;
+    private final DatePickerDialog.OnDateSetListener mFromDateSetListener =
+            new DatePickerDialog.OnDateSetListener() {
+                public void onDateSet(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+                    fromDate = Calendar.getInstance();
+                    fromDate.clear();
+                    fromDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    fromDate.set(Calendar.MONTH, monthOfYear);
+                    fromDate.set(Calendar.YEAR, year);
 
+                    toDate = Calendar.getInstance();
+                    toDate.setTime(fromDate.getTime());
+                    toDate.add(Calendar.DATE, 1);
+
+                    String fromDateStr = String.format(Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year);
+
+                    mFromDateButton.setText(fromDateStr);
+                    mToDateButton.setText(fromDateStr);
+                }
+            };
+    private final DatePickerDialog.OnDateSetListener mToDateSetListener =
+            new DatePickerDialog.OnDateSetListener() {
+                public void onDateSet(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+                    toDate = Calendar.getInstance();
+                    toDate.clear();
+                    toDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    toDate.set(Calendar.MONTH, monthOfYear);
+                    toDate.set(Calendar.YEAR, year);
+
+                    // If we want to filter transactions until August 1, 2016, we actually need to set toDate to
+                    // August 2, 2016 while sending request to server. Why? Because August 1, 2016 means
+                    // 12:00:00 am at August 1, whereas we need to show all transactions until 11:59:59 pm.
+                    // Simplest way to do this is to just show all transactions until 12:00 am in the next day.
+                    toDate.add(Calendar.DATE, 1);
+
+                    String toDateStr = String.format(Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year);
+
+                    mToDateButton.setText(toDateStr);
+                }
+            };
     private boolean hasNext = false;
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
-
-    private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
-    private final int REQUEST_PAYMENT_REVIEW_REQUEST = 102;
-
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
-
     private Menu menu;
-
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
 
     @Override
@@ -436,49 +468,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         dateFilterLayout.setVisibility(View.GONE);
     }
 
-    private final DatePickerDialog.OnDateSetListener mFromDateSetListener =
-            new DatePickerDialog.OnDateSetListener() {
-                public void onDateSet(DatePicker view, int year,
-                                      int monthOfYear, int dayOfMonth) {
-                    fromDate = Calendar.getInstance();
-                    fromDate.clear();
-                    fromDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                    fromDate.set(Calendar.MONTH, monthOfYear);
-                    fromDate.set(Calendar.YEAR, year);
-
-                    toDate = Calendar.getInstance();
-                    toDate.setTime(fromDate.getTime());
-                    toDate.add(Calendar.DATE, 1);
-
-                    String fromDateStr = String.format(Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year);
-
-                    mFromDateButton.setText(fromDateStr);
-                    mToDateButton.setText(fromDateStr);
-                }
-            };
-
-    private final DatePickerDialog.OnDateSetListener mToDateSetListener =
-            new DatePickerDialog.OnDateSetListener() {
-                public void onDateSet(DatePicker view, int year,
-                                      int monthOfYear, int dayOfMonth) {
-                    toDate = Calendar.getInstance();
-                    toDate.clear();
-                    toDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                    toDate.set(Calendar.MONTH, monthOfYear);
-                    toDate.set(Calendar.YEAR, year);
-
-                    // If we want to filter transactions until August 1, 2016, we actually need to set toDate to
-                    // August 2, 2016 while sending request to server. Why? Because August 1, 2016 means
-                    // 12:00:00 am at August 1, whereas we need to show all transactions until 11:59:59 pm.
-                    // Simplest way to do this is to just show all transactions until 12:00 am in the next day.
-                    toDate.add(Calendar.DATE, 1);
-
-                    String toDateStr = String.format(Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year);
-
-                    mToDateButton.setText(toDateStr);
-                }
-            };
-
     private void getPendingTransactionHistory() {
         if (mTransactionHistoryTask != null) {
             return;
@@ -569,9 +558,110 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         }
     }
 
+    private void launchRequestMoneyReviewPage(TransactionHistory transactionHistory) {
+
+        Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
+        intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
+        intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER,
+                ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getUserMobileNumber()));
+
+        intent.putExtra(Constants.DESCRIPTION_TAG, transactionHistory.getPurpose());
+        intent.putExtra(Constants.MONEY_REQUEST_ID, transactionHistory.getId());
+        intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
+        intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());
+        intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
+
+        if (ProfileInfoCacheManager.getMobileNumber().equals(transactionHistory.getOriginatingMobileNumber())) {
+            intent.putExtra(Constants.IS_IN_CONTACTS,
+                    new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getUserMobileNumber()));
+            intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
+        } else {
+            intent.putExtra(Constants.IS_IN_CONTACTS,
+                    new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getOriginatingMobileNumber()));
+        }
+        startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
+    }
+
+    private void launchRequestPaymentReviewPage(TransactionHistory transactionHistory) {
+        Intent intent = new Intent(getActivity(), RequestPaymentActivity.class);
+        intent.putExtra(Constants.REQUEST_ID, transactionHistory.getId());
+        intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
+
+        startActivityForResult(intent, REQUEST_PAYMENT_REVIEW_REQUEST);
+    }
+
     private class TransactionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int FOOTER_VIEW = 1;
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            View v;
+
+            if (viewType == FOOTER_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
+
+                return new FooterViewHolder(v);
+            }
+
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history, parent, false);
+
+            return new NormalViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+                if (holder instanceof NormalViewHolder) {
+                    NormalViewHolder vh = (NormalViewHolder) holder;
+                    vh.bindView(position);
+                } else if (holder instanceof FooterViewHolder) {
+                    FooterViewHolder vh = (FooterViewHolder) holder;
+                    vh.bindViewFooter();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (userTransactionHistories != null && !userTransactionHistories.isEmpty())
+                return userTransactionHistories.size() + 1;
+            else return 0;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+
+            if (position == userTransactionHistories.size()) {
+                return FOOTER_VIEW;
+            }
+
+            return super.getItemViewType(position);
+        }
+
+        private int getOperatorIcon(String phoneNumber) {
+            phoneNumber = ContactEngine.trimPrefix(phoneNumber);
+
+            final String[] OPERATOR_PREFIXES = getResources().getStringArray(R.array.operator_prefix);
+            int[] operator_array = new int[]{
+                    R.drawable.ic_gp2,
+                    R.drawable.ic_gp2,
+                    R.drawable.ic_robi2,
+                    R.drawable.ic_airtel2,
+                    R.drawable.ic_banglalink2,
+                    R.drawable.ic_teletalk2,
+            };
+
+            for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
+                if (phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
+                    return operator_array[i];
+                }
+            }
+            return 0;
+        }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final TextView mTransactionDescriptionView;
@@ -648,6 +738,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.TRANSACTION_DETAILS)
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing()) {
                             if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY)
@@ -726,107 +817,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 });
             }
         }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View v;
-
-            if (viewType == FOOTER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
-
-                return new FooterViewHolder(v);
-            }
-
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history, parent, false);
-
-            return new NormalViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            try {
-                if (holder instanceof NormalViewHolder) {
-                    NormalViewHolder vh = (NormalViewHolder) holder;
-                    vh.bindView(position);
-                } else if (holder instanceof FooterViewHolder) {
-                    FooterViewHolder vh = (FooterViewHolder) holder;
-                    vh.bindViewFooter();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            if (userTransactionHistories != null && !userTransactionHistories.isEmpty())
-                return userTransactionHistories.size() + 1;
-            else return 0;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-
-            if (position == userTransactionHistories.size()) {
-                return FOOTER_VIEW;
-            }
-
-            return super.getItemViewType(position);
-        }
-
-        private int getOperatorIcon(String phoneNumber) {
-            phoneNumber = ContactEngine.trimPrefix(phoneNumber);
-
-            final String[] OPERATOR_PREFIXES = getResources().getStringArray(R.array.operator_prefix);
-            int[] operator_array = new int[]{
-                    R.drawable.ic_gp2,
-                    R.drawable.ic_gp2,
-                    R.drawable.ic_robi2,
-                    R.drawable.ic_airtel2,
-                    R.drawable.ic_banglalink2,
-                    R.drawable.ic_teletalk2,
-            };
-
-            for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
-                if (phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
-                    return operator_array[i];
-                }
-            }
-            return 0;
-        }
-    }
-
-    private void launchRequestMoneyReviewPage(TransactionHistory transactionHistory) {
-
-        Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
-        intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
-        intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER,
-                ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getUserMobileNumber()));
-
-        intent.putExtra(Constants.DESCRIPTION_TAG, transactionHistory.getPurpose());
-        intent.putExtra(Constants.MONEY_REQUEST_ID, transactionHistory.getId());
-        intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
-        intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());
-        intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
-
-        if (ProfileInfoCacheManager.getMobileNumber().equals(transactionHistory.getOriginatingMobileNumber())) {
-            intent.putExtra(Constants.IS_IN_CONTACTS,
-                    new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getUserMobileNumber()));
-            intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
-        } else {
-            intent.putExtra(Constants.IS_IN_CONTACTS,
-                    new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getOriginatingMobileNumber()));
-        }
-        startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
-    }
-
-    private void launchRequestPaymentReviewPage(TransactionHistory transactionHistory) {
-        Intent intent = new Intent(getActivity(), RequestPaymentActivity.class);
-        intent.putExtra(Constants.REQUEST_ID, transactionHistory.getId());
-        intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
-
-        startActivityForResult(intent, REQUEST_PAYMENT_REVIEW_REQUEST);
     }
 
     private class TransactionHistoryBroadcastReceiver extends BroadcastReceiver {

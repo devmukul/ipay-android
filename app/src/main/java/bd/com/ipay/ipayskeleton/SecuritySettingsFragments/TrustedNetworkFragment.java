@@ -32,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpDeleteWithBodyAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PasswordInputDialogBuilder;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -39,9 +40,10 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.G
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.RemoveTrustedPersonResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.TrustedPerson;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TrustedNetworkFragment extends ProgressFragment implements HttpResponseListener {
@@ -97,6 +99,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
 
         mAddTrustedPersonButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_TRUSTED_PERSON)
             public void onClick(View v) {
                 ((SecuritySettingsActivity) getActivity()).switchToAddTrustedPerson();
             }
@@ -304,12 +307,53 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         public TrustedPersonListAdapter() {
         }
 
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v;
+
+            if (viewType == FOOTER_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trusted_network_footer, parent, false);
+                return new FooterViewHolder(v);
+            } else {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trusted_network, parent, false);
+                return new ViewHolder(v);
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+                if (holder instanceof ViewHolder) {
+                    ViewHolder vh = (ViewHolder) holder;
+                    vh.bindView(position);
+                } else if (holder instanceof FooterViewHolder) {
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mTrustedPersons != null && mTrustedPersons.size() > 0)
+                return mTrustedPersons.size() + 1;
+            else return 0;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (position == getItemCount() - 1) {
+                return FOOTER_VIEW;
+            } else {
+                return TRUSTED_LIST_ITEM_VIEW;
+            }
+        }
+
         public class ViewHolder extends RecyclerView.ViewHolder {
+            private final View divider;
             private TextView mNameView;
             private TextView mMobileNumberView;
             private TextView mRelationshipView;
-            private final View divider;
-
             private List<String> mTrustedPersonActionList;
             private CustomSelectorDialog mCustomSelectorDialog;
 
@@ -355,55 +399,12 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
             }
         }
 
-
         public class FooterViewHolder extends RecyclerView.ViewHolder {
 
             public FooterViewHolder(View itemView) {
                 super(itemView);
             }
 
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v;
-
-            if (viewType == FOOTER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trusted_network_footer, parent, false);
-                return new FooterViewHolder(v);
-            } else {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trusted_network, parent, false);
-                return new ViewHolder(v);
-            }
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            try {
-                if (holder instanceof ViewHolder) {
-                    ViewHolder vh = (ViewHolder) holder;
-                    vh.bindView(position);
-                } else if (holder instanceof FooterViewHolder) {
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            if (mTrustedPersons != null && mTrustedPersons.size() > 0)
-                return mTrustedPersons.size() + 1;
-            else return 0;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (position == getItemCount() - 1) {
-                return FOOTER_VIEW;
-            } else {
-                return TRUSTED_LIST_ITEM_VIEW;
-            }
         }
     }
 }
