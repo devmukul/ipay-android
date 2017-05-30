@@ -14,10 +14,6 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
-/**
- * Created by sajid.shahriar on 5/30/17.
- */
-
 @Aspect
 public class ServiceAccessValidatorAspect {
 
