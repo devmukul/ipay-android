@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.SparseBooleanArray;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -12,10 +13,13 @@ public class ProfileInfoCacheManager {
 
     private static SharedPreferences pref;
     private static Context context;
+    private static SparseBooleanArray allowedServiceArray;
+
 
     public static void initialize(Context context) {
         ProfileInfoCacheManager.context = context;
         pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+        allowedServiceArray = new SparseBooleanArray();
     }
 
     public static String getPushNotificationToken(String defaultValue) {
@@ -38,6 +42,10 @@ public class ProfileInfoCacheManager {
         return pref.getString(SharedPrefConstants.USERID, "");
     }
 
+    public static void setMobileNumber(String value) {
+        pref.edit().putString(SharedPrefConstants.USERID, value).apply();
+    }
+
     public static String getProfileImageUrl() {
         return pref.getString(Constants.PROFILE_PICTURE, "");
     }
@@ -54,20 +62,16 @@ public class ProfileInfoCacheManager {
         return pref.getString(SharedPrefConstants.VERIFICATION_STATUS, "");
     }
 
+    public static void setVerificationStatus(String value) {
+        pref.edit().putString(SharedPrefConstants.VERIFICATION_STATUS, value).apply();
+    }
+
     public static int getAccountType(int defaultValue) {
         return pref.getInt(SharedPrefConstants.ACCOUNT_TYPE, defaultValue);
     }
 
     public static void setProfilePicture(String value) {
         pref.edit().putString(SharedPrefConstants.PROFILE_PICTURE, value).apply();
-    }
-
-    public static void setVerificationStatus(String value) {
-        pref.edit().putString(SharedPrefConstants.VERIFICATION_STATUS, value).apply();
-    }
-
-    public static void setMobileNumber(String value) {
-        pref.edit().putString(SharedPrefConstants.USERID, value).apply();
     }
 
     public static String getUUID(String defaultValue) {
@@ -122,6 +126,17 @@ public class ProfileInfoCacheManager {
         return loggedIn;
     }
 
+    public static boolean hasServicesAccessibility(final int... serviceCodeList) {
+        if (allowedServiceArray == null || serviceCodeList == null || serviceCodeList.length == 0) {
+            return false;
+        }
+        boolean isServiceAllowed = true;
+        for (int serviceCode : serviceCodeList) {
+            isServiceAllowed &= allowedServiceArray.get(serviceCode);
+        }
+        return isServiceAllowed;
+    }
+
     public static boolean getFingerprintAuthenticationStatus(boolean defaultValue) {
         boolean isFingerprintAuthOn = pref.getBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, defaultValue);
         return isFingerprintAuthOn;
@@ -136,6 +151,13 @@ public class ProfileInfoCacheManager {
         editor.putString(SharedPrefConstants.KEY_PASSWORD, "");
         pref.edit().putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false).apply();
         editor.commit();
+    }
+
+    public static void updateAllowedServiceArray(int[] serviceCodeList) {
+        allowedServiceArray = new SparseBooleanArray();
+        for (int serviceCode : serviceCodeList) {
+            allowedServiceArray.put(serviceCode, true);
+        }
     }
 
     public static void updateCache(String name, String mobileNumber, String profileImageUrl, String verificationStatus) {

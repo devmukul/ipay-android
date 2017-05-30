@@ -325,6 +325,11 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                         if (pushRegistrationID != null)
                             new RegisterFCMTokenToServerAsyncTask(getContext());
 
+                        // Saving the allowed services id for the user
+                        if (mLoginResponseModel.getAccessControlList() != null) {
+                            ProfileInfoCacheManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
+                        }
+
                         ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
 
                     } else {

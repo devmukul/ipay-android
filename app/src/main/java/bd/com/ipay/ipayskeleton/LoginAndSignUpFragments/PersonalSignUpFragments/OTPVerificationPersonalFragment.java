@@ -19,10 +19,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
-import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
@@ -316,6 +316,11 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         String pushRegistrationID = ProfileInfoCacheManager.getPushNotificationToken(null);
                         if (pushRegistrationID != null) {
                             new RegisterFCMTokenToServerAsyncTask(getContext());
+                        }
+
+                        // Saving the allowed services id for the user
+                        if (mLoginResponseModel.getAccessControlList() != null) {
+                            ProfileInfoCacheManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
                         }
 
                         ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();

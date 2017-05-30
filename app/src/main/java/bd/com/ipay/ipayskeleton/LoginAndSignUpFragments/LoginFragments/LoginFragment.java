@@ -89,7 +89,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         // Auto Login
         if (SharedPrefManager.ifContainsUserID() && Constants.DEBUG && Constants.AUTO_LOGIN) {
-            mPasswordEditText.setText("qqqqqqq1");
+            mPasswordEditText.setText("Itisfortest1");
             //           mUserNameEditText.setText("+8801677258077");
             attemptLogin();
         }
@@ -326,6 +326,11 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                     ProfileInfoCacheManager.setAccountType(mLoginResponseModel.getAccountType());
                     // When user logs in, we want that by default he would log in to his default account
                     TokenManager.deactivateEmployerAccount();
+
+                    // Saving the allowed services id for the user
+                    if (mLoginResponseModel.getAccessControlList() != null) {
+                        ProfileInfoCacheManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
+                    }
 
                     // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
                     if (!SharedPrefManager.ifContainsUUID())

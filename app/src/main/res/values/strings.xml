@@ -130,6 +130,8 @@
     <string name="to_date">To Date</string>
     <string name="from_date">From Date</string>
     <string name="service_not_available">Service Currently Not Available</string>
+    <string name="service_not_allowed">Service not Allowed</string>
+    <string name="contact_support">Please Contact support for help</string>
     <string name="please_wait">Please wait. Loading... </string>
     <string name="loading">Loading... </string>
     <string name="load_more">Load more...</string>
