@@ -19,29 +19,30 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRes
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.GetRefreshTokenRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class MyApplication extends Application implements HttpResponseListener {
 
-    // Variables for user inactivity
-    private Timer mUserInactiveTimer;
-    private TimerTask mUserInactiveTimerTask;
-
-    public boolean isAppInBackground = false;
-
     // Variables for token timer
     private static Timer mTokenTimer;
     private static TimerTask mTokenTimerTask;
+    private static MyApplication myApplicationInstance;
+    // 5 Minutes inactive time
+    private final long AUTO_LOGOUT_TIMEOUT = 5 * 60 * 1000;
+    public boolean isAppInBackground = false;
+    // Variables for user inactivity
+    private Timer mUserInactiveTimer;
+    private TimerTask mUserInactiveTimerTask;
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private HttpRequestPostAsyncTask mRefreshTokenAsyncTask = null;
     private LogoutResponse mLogOutResponse;
 
-    private static MyApplication myApplicationInstance;
-
-    // 5 Minutes inactive time
-    private final long AUTO_LOGOUT_TIMEOUT = 5 * 60 * 1000;
+    public static MyApplication getMyApplicationInstance() {
+        return myApplicationInstance;
+    }
 
     @Override
     public void onCreate() {
@@ -50,11 +51,8 @@ public class MyApplication extends Application implements HttpResponseListener {
 
         SharedPrefManager.initialize(getApplicationContext());
         ProfileInfoCacheManager.initialize(getApplicationContext());
+        ACLCacheManager.initialize();
         PushNotificationStatusHolder.initialize(getApplicationContext());
-    }
-
-    public static MyApplication getMyApplicationInstance() {
-        return myApplicationInstance;
     }
 
     public void startUserInactivityDetectorTimer() {
