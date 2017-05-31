@@ -86,19 +86,23 @@ public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, HttpResponseListener {
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
-    public static NotificationFragment mNotificationFragment;
-    private static boolean switchedToHomeFragment = true;
+
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
+
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
+
     private HttpRequestGetAsyncTask mGetBusinessInformationAsyncTask;
     private GetBusinessInformationResponse mGetBusinessInformationResponse;
+
     private GetBusinessTypesAsyncTask mGetBusinessTypesAsyncTask;
     private GetRelationshipListAsyncTask mGetRelationshipListAsyncTask;
+
     private AutoResizeTextView mMobileNumberView;
     private TextView mNameView;
     private ProfileImageView mProfileImageView;
+
     private final BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -113,18 +117,26 @@ public class HomeActivity extends BaseActivity
             getProfileInfo();
         }
     };
+
     private final BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             updateProfileData();
         }
     };
+
     private String mUserID;
     private String mDeviceID;
+
     private ProgressDialog mProgressDialog;
     private NavigationView mNavigationView;
+
+    public static NotificationFragment mNotificationFragment;
     private Menu mOptionsMenu;
+
     private int mBadgeCount = 0;
+
+    private static boolean switchedToHomeFragment = true;
     private boolean exitFromApplication = false;
 
     private FirebaseAnalytics mFirebaseAnalytics;
