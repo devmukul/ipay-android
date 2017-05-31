@@ -84,8 +84,9 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
             if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.RECEIVED_REQUEST)) {
                 DialogUtils.showServiceNotAllowedDialog(getContext());
 
-            } else
+            } else {
                 getMoneyRequests();
+            }
         }
 
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
