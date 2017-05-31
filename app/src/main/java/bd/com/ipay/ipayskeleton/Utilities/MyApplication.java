@@ -26,19 +26,24 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class MyApplication extends Application implements HttpResponseListener {
 
-    // Variables for token timer
-    private static Timer mTokenTimer;
-    private static TimerTask mTokenTimerTask;
-    private static MyApplication myApplicationInstance;
     // 5 Minutes inactive time
     private final long AUTO_LOGOUT_TIMEOUT = 5 * 60 * 1000;
-    public boolean isAppInBackground = false;
+
     // Variables for user inactivity
     private Timer mUserInactiveTimer;
     private TimerTask mUserInactiveTimerTask;
+
+    public boolean isAppInBackground = false;
+
+    // Variables for token timer
+    private static Timer mTokenTimer;
+    private static TimerTask mTokenTimerTask;
+
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private HttpRequestPostAsyncTask mRefreshTokenAsyncTask = null;
     private LogoutResponse mLogOutResponse;
+
+    private static MyApplication myApplicationInstance;
 
     public static MyApplication getMyApplicationInstance() {
         return myApplicationInstance;
