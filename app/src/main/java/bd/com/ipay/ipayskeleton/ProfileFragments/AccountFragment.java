@@ -50,13 +50,16 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
     private final int ACTION_PICK_PROFILE_PICTURE = 100;
+
     private ProfileImageView mProfilePictureView;
     private TextView mNameView;
     private TextView mMobileNumberView;
     private TextView mProfileCompletionStatusView;
     private ImageView mVerificationStatusView;
+
     private View mProfilePictureHolderView;
     private ImageView mEditProfilePicButton;
+
     private IconifiedTextViewWithButton mBasicInfo;
     private IconifiedTextViewWithButton mEmail;
     private IconifiedTextViewWithButton mDocuments;
@@ -64,16 +67,21 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private IconifiedTextViewWithButton mAddress;
     private IconifiedTextViewWithButton mProfileCompleteness;
     private IconifiedTextViewWithButton mManageEmployee;
+
     private String mName = "";
     private String mMobileNumber = "";
     private String mProfilePicture = "";
     private String mSelectedImagePath = "";
+
     private List<String> mOptionsForImageSelectionList;
     private int mSelectedOptionForImage = -1;
+
     private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask = null;
     private SetProfilePictureResponse mSetProfilePictureResponse;
+
     private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
     private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
+
     private ProgressDialog mProgressDialog;
     private MaterialDialog.Builder mProfilePictureErrorDialogBuilder;
     private MaterialDialog mProfilePictureErrorDialog;

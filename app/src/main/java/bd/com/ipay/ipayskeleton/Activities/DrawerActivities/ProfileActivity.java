@@ -25,6 +25,7 @@ import bd.com.ipay.ipayskeleton.ProfileFragments.ProfileCompletionFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.RecommendationReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedNetworkFragment;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
@@ -128,18 +129,19 @@ public class ProfileActivity extends BaseActivity {
                     fragment = new TrustedNetworkFragment();
                     break;
                 case BASIC_PROFILE:
-                    if (ProfileInfoCacheManager.isBusinessAccount()) fragment = new BusinessInformationFragment();
+                    if (ProfileInfoCacheManager.isBusinessAccount())
+                        fragment = new BusinessInformationFragment();
                     else fragment = new BasicInfoFragment();
                     break;
                 case BUSINESS_INFO:
-                    if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO)) {
+                    if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO)) {
                         DialogUtils.showServiceNotAllowedDialog(ProfileActivity.this);
                         return;
                     }
                     fragment = new BusinessInformationFragment();
                     break;
                 case PROFILE_PICTURE:
-                    if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE_PICTURE)) {
+                    if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE_PICTURE)) {
                         DialogUtils.showServiceNotAllowedDialog(ProfileActivity.this);
                         return;
                     }
@@ -152,7 +154,8 @@ public class ProfileActivity extends BaseActivity {
                     fragment = new IdentificationHolderFragment();
                     break;
                 case PERSONAL_ADDRESS:
-                    if (ProfileInfoCacheManager.isBusinessAccount()) fragment = new BusinessInformationFragment();
+                    if (ProfileInfoCacheManager.isBusinessAccount())
+                        fragment = new BusinessInformationFragment();
                     else fragment = new AddressFragment();
                     break;
                 case BUSINESS_ADDRESS:
@@ -170,6 +173,7 @@ public class ProfileActivity extends BaseActivity {
                     fragment = new ProfileCompletionFragment();
                     break;
                 case PROFILE_INFO:
+                    fragment = new AccountFragment();
                 default:
                     fragment = new AccountFragment();
             }

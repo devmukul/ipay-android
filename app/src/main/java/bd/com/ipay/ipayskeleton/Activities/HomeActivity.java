@@ -68,6 +68,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -125,6 +126,7 @@ public class HomeActivity extends BaseActivity
     private Menu mOptionsMenu;
     private int mBadgeCount = 0;
     private boolean exitFromApplication = false;
+
     private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
@@ -386,13 +388,13 @@ public class HomeActivity extends BaseActivity
             switchToDashBoard();
 
         } else if (id == R.id.nav_account) {
-            if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE)) {
+            if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE)) {
                 DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
                 return;
             }
             launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_INFO, new Bundle());
         } else if (id == R.id.nav_bank_account) {
-            if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS)) {
+            if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS)) {
                 DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
                 return;
             }
@@ -401,7 +403,7 @@ public class HomeActivity extends BaseActivity
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_user_activity) {
-            if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY)) {
+            if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY)) {
                 DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
                 return;
             }
@@ -410,7 +412,7 @@ public class HomeActivity extends BaseActivity
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_security_settings) {
-            if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_SECURITY, ServiceIdConstants.MANAGE_SECURITY)) {
+            if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_SECURITY, ServiceIdConstants.MANAGE_SECURITY)) {
                 DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
                 return;
             }
@@ -419,7 +421,7 @@ public class HomeActivity extends BaseActivity
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_invite) {
-            if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS)) {
+            if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS)) {
                 DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
                 return;
             }

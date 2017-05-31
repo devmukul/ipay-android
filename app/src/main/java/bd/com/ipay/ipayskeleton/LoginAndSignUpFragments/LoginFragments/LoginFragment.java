@@ -28,6 +28,7 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -89,7 +90,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         // Auto Login
         if (SharedPrefManager.ifContainsUserID() && Constants.DEBUG && Constants.AUTO_LOGIN) {
-            mPasswordEditText.setText("Itisfortest1");
+            mPasswordEditText.setText("qqqqqqq1");
             //           mUserNameEditText.setText("+8801677258077");
             attemptLogin();
         }
@@ -329,7 +330,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
                     // Saving the allowed services id for the user
                     if (mLoginResponseModel.getAccessControlList() != null) {
-                        ProfileInfoCacheManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
+                        ACLCacheManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
                     }
 
                     // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.

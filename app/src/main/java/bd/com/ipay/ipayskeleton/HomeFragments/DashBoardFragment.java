@@ -17,7 +17,7 @@ import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryHolderFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -104,7 +104,7 @@ public class DashBoardFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 if (position == TRANSACTION_HISTORY_TAB) {
-                    if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.ALL_TRANSACTION)) {
+                    if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.ALL_TRANSACTION)) {
                         DialogUtils.showServiceNotAllowedDialog(getContext());
                         viewPager.setCurrentItem(currentTab);
                         return;

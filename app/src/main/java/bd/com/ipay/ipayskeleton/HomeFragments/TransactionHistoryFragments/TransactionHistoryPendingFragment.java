@@ -63,31 +63,39 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class TransactionHistoryPendingFragment extends ProgressFragment implements HttpResponseListener {
     private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
     private final int REQUEST_PAYMENT_REVIEW_REQUEST = 102;
+
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
+
     private RecyclerView mTransactionHistoryRecyclerView;
     private TransactionHistoryAdapter mTransactionHistoryAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<TransactionHistory> userTransactionHistories;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
+
     private String mMobileNumber;
+
     private LinearLayout serviceFilterLayout;
     private LinearLayout dateFilterLayout;
+
     private CheckBox mFilterRequestMoney;
     private CheckBox mFilterAddMoney;
     private CheckBox mFilterWithdrawMoney;
     private CheckBox mFilterTopUp;
     private CheckBox mFilterRequestPayment;
+
     private Button mClearServiceFilterButton;
     private Button mFromDateButton;
     private Button mToDateButton;
     private Button clearDateFilterButton;
     private Button filterByDateButton;
     private TextView mEmptyListTextView;
+
     private int historyPageCount = 0;
     private Integer type = null;
     private Calendar fromDate = null;
     private Calendar toDate = null;
+
     private final DatePickerDialog.OnDateSetListener mFromDateSetListener =
             new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year,

@@ -33,7 +33,7 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -94,7 +94,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             @Override
             public void onClick(View v) {
                 if (mAllContactsSelector.isChecked()) {
-                    if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS)) {
+                    if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS)) {
                         mAllContactsSelector.setChecked(true);
                         miPayContactsSelector.setChecked(false);
 
@@ -117,7 +117,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             @Override
             public void onClick(View v) {
                 if (miPayContactsSelector.isChecked()) {
-                    if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS)) {
+                    if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS)) {
                         miPayContactsSelector.setChecked(true);
                         mAllContactsSelector.setChecked(false);
 
@@ -161,7 +161,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS)) {
+        if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS)) {
             return;
         }
         switchToiPayContacts();

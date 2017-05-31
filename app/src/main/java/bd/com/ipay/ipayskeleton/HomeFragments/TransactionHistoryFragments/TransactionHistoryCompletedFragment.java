@@ -564,17 +564,12 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v;
-
-            if (viewType == FOOTER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
-
-                return new FooterViewHolder(v);
+            switch (viewType) {
+                case FOOTER_VIEW:
+                    return new FooterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false));
+                default:
+                    return new NormalViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history, parent, false));
             }
-
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history, parent, false);
-
-            return new NormalViewHolder(v);
         }
 
         @Override

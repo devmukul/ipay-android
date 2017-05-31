@@ -47,6 +47,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.RefreshBalanceRe
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -100,7 +101,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private final BroadcastReceiver mBalanceUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.BALANCE)) {
+            if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.BALANCE)) {
                 balanceView.setText(R.string.not_available);
                 return;
             }
@@ -287,7 +288,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         // TODO we should refresh the balance only based on push notification, no need to fetch it
         // from the server every time someone navigates to the home activity. Once push is implemented
         // properly, move it to onCreate.
-        if (!ProfileInfoCacheManager.hasServicesAccessibility(ServiceIdConstants.BALANCE)) {
+        if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.BALANCE)) {
             balanceView.setText(R.string.not_available);
             return;
         }
