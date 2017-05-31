@@ -13,7 +13,6 @@ public class ProfileInfoCacheManager {
     private static SharedPreferences pref;
     private static Context context;
 
-
     public static void initialize(Context context) {
         ProfileInfoCacheManager.context = context;
         pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
