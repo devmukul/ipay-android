@@ -369,7 +369,6 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
                         if (!hasServicePermission(propertyDetails.getPropertyName())) {
                             return;
                         }
