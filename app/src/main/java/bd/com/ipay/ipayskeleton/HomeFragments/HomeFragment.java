@@ -60,37 +60,22 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class HomeFragment extends Fragment implements HttpResponseListener {
 
     private static boolean profileCompletionPromptShown = false;
+
     private HttpRequestPostAsyncTask mRefreshBalanceTask = null;
     private RefreshBalanceResponse mRefreshBalanceResponse;
+
     private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
-    private final BroadcastReceiver mProfileCompletionInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            getProfileCompletionStatus();
-        }
-    };
     private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
+
     private ProgressDialog mProgressDialog;
     private TextView balanceView;
+
     private TextView mNameView;
     private TextView mMobileNumberView;
     private ImageView mVerificationStatusView;
     private ProfileImageView mProfilePictureView;
-    private final BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            updateProfileData();
-        }
-    };
-    private final BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
-            Logger.logD("Broadcast home fragment", newProfilePicture);
-            mProfilePictureView.setProfilePicture(newProfilePicture, true);
-        }
-    };
     private View mProfileInfo;
+
     private View mAddMoneyButton;
     private View mWithdrawMoneyButton;
     private LinearLayout mSendMoneyButton;
@@ -98,17 +83,9 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private LinearLayout mMobileTopUpButton;
     private LinearLayout mMakePaymentButton;
     private ImageView refreshBalanceButton;
-    private final BroadcastReceiver mBalanceUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.BALANCE)) {
-                balanceView.setText(R.string.not_available);
-                return;
-            }
-            refreshBalance();
-        }
-    };
+
     private View mProfileCompletionPromptView;
+
     private CircularProgressBar mProgressBar;
     private ProgressBar mProgressBarWithoutAnimation;
     private TextView mProfileCompletionMessageView;
@@ -501,4 +478,38 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             mGetProfileCompletionStatusTask = null;
         }
     }
+
+    private final BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateProfileData();
+        }
+    };
+
+    private final BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
+            Logger.logD("Broadcast home fragment", newProfilePicture);
+            mProfilePictureView.setProfilePicture(newProfilePicture, true);
+        }
+    };
+
+    private final BroadcastReceiver mBalanceUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.BALANCE)) {
+                balanceView.setText(R.string.not_available);
+                return;
+            }
+            refreshBalance();
+        }
+    };
+
+    private final BroadcastReceiver mProfileCompletionInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getProfileCompletionStatus();
+        }
+    };
 }

@@ -737,10 +737,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         this.mSelectedNumber = contactNumber;
     }
 
-    public interface ContactLoadFinishListener {
-        void onContactLoadFinish(int contactCount);
-    }
-
     public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int EMPTY_VIEW = 10;
@@ -753,53 +749,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             else if (ContactsHolderFragment.mGetInviteInfoResponse.getInvitees().contains(phoneNumber))
                 return true;
             return false;
-        }
-
-        @SuppressWarnings("UnnecessaryLocalVariable")
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View v;
-
-            if (viewType == EMPTY_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_description, parent, false);
-                return new EmptyViewHolder(v);
-            } else {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_contact, parent, false);
-                return new ViewHolder(v);
-            }
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            try {
-
-                if (holder instanceof ViewHolder) {
-                    ViewHolder vh = (ViewHolder) holder;
-                    vh.bindView(position);
-                } else if (holder instanceof EmptyViewHolder) {
-                    EmptyViewHolder vh = (EmptyViewHolder) holder;
-                    vh.mEmptyDescription.setText(getString(R.string.no_contacts));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            if (mCursor == null || mCursor.isClosed())
-                return 0;
-            else
-                return mCursor.getCount();
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (getItemCount() == 0)
-                return EMPTY_VIEW;
-            else
-                return CONTACT_VIEW;
         }
 
         public class EmptyViewHolder extends RecyclerView.ViewHolder {
@@ -957,5 +906,56 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 });
             }
         }
+
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            View v;
+
+            if (viewType == EMPTY_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_description, parent, false);
+                return new EmptyViewHolder(v);
+            } else {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_contact, parent, false);
+                return new ViewHolder(v);
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+
+                if (holder instanceof ViewHolder) {
+                    ViewHolder vh = (ViewHolder) holder;
+                    vh.bindView(position);
+                } else if (holder instanceof EmptyViewHolder) {
+                    EmptyViewHolder vh = (EmptyViewHolder) holder;
+                    vh.mEmptyDescription.setText(getString(R.string.no_contacts));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mCursor == null || mCursor.isClosed())
+                return 0;
+            else
+                return mCursor.getCount();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (getItemCount() == 0)
+                return EMPTY_VIEW;
+            else
+                return CONTACT_VIEW;
+        }
+    }
+
+    public interface ContactLoadFinishListener {
+        void onContactLoadFinish(int contactCount);
     }
 }

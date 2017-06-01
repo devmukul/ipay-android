@@ -29,7 +29,9 @@ public class DashBoardFragment extends Fragment {
     private final int PAY_TAB = 1;
     private final int TRANSACTION_HISTORY_TAB = 2;
     private final int CONTACTS_TAB = 3;
+
     private final int TOTAL_PAGE_COUNT = 4;
+
     private int currentTab = HOME_TAB;
     private HomeFragment mHomeFragment;
     private PayFragment mPayFragment;
@@ -77,8 +79,8 @@ public class DashBoardFragment extends Fragment {
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-
                 viewPager.setCurrentItem(tab.getPosition());
+
                 if (tab.getPosition() == TRANSACTION_HISTORY_TAB) {
                     BroadcastServiceIntent.sendBroadcast(getActivity(), Constants.PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST);
                 }

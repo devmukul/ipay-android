@@ -201,34 +201,6 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
 
     public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v;
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_employee,
-                    parent, false);
-
-            return new EmployeeViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            try {
-                EmployeeViewHolder vh = (EmployeeViewHolder) holder;
-                vh.bindView(position);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            if (mEmployeeList != null)
-                return mEmployeeList.size();
-            else
-                return 0;
-        }
-
         private class EmployeeViewHolder extends RecyclerView.ViewHolder {
             private final ProfileImageView mProfileImageView;
             private final TextView mNameView;
@@ -311,6 +283,34 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
                     }
                 });
             }
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v;
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_employee,
+                    parent, false);
+
+            return new EmployeeViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+                EmployeeViewHolder vh = (EmployeeViewHolder) holder;
+                vh.bindView(position);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mEmployeeList != null)
+                return mEmployeeList.size();
+            else
+                return 0;
         }
     }
 }
