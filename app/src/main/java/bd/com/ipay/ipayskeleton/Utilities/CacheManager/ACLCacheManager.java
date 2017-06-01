@@ -19,7 +19,7 @@ public class ACLCacheManager {
         }
         boolean isServiceAllowed = true;
         for (int serviceCode : serviceCodeList) {
-            isServiceAllowed &= allowedServiceArray.get(serviceCode);
+            isServiceAllowed &= allowedServiceArray.get(serviceCode, false);
         }
         return isServiceAllowed;
     }
