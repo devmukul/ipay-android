@@ -32,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PendingIntroducerReviewDialog;
@@ -56,6 +57,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -650,6 +652,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess({ServiceIdConstants.REQUEST_MONEY, ServiceIdConstants.REQUEST_PAYMENT})
                     public void onClick(View v) {
                         mMoneyRequestId = id;
                         mAmount = amount;
@@ -684,6 +687,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.MANAGE_INTRODUCERS)
                     public void onClick(View v) {
                         launchIntroductionRequestReviewFragment((IntroductionRequestClass) mNotifications.get(pos));
                     }
@@ -707,6 +711,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.MANAGE_INVITATIONS)
                     public void onClick(View v) {
                         launchBusinessInvitationReviewFragment((Business) mNotifications.get(pos));
                     }
@@ -729,6 +734,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.MANAGE_INTRODUCERS)
                     public void onClick(View v) {
                         new PendingIntroducerReviewDialog(getActivity(), pendingIntroducer).setActionCheckerListener(
                                 new PendingIntroducerReviewDialog.ActionCheckerListener() {

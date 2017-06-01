@@ -338,6 +338,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.MANAGE_TRUSTED_PERSON)
                     public void onClick(View v) {
                         mTrustedPersonActionList = Arrays.asList(getResources().getStringArray(R.array.trusted_device_or_network_action));
                         mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), trustedPerson.getName(), mTrustedPersonActionList);
