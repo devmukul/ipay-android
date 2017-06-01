@@ -111,7 +111,6 @@ public class DashBoardFragment extends Fragment {
                         viewPager.setCurrentItem(currentTab);
                         return;
                     }
-
                 }
                 currentTab = position;
                 Utilities.hideKeyboard(getActivity());
