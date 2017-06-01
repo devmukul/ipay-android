@@ -76,7 +76,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
-import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
@@ -372,49 +371,32 @@ public class HomeActivity extends BaseActivity
 
     private void gotoDrawerItem(MenuItem item) {
         int id = item.getItemId();
-
+        if (!ACLCacheManager.checkServicesAccessibilityByIntId(id)) {
+            DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
+            return;
+        }
         if (id == R.id.nav_home) {
 
             switchToDashBoard();
 
         } else if (id == R.id.nav_account) {
-            if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE)) {
-                DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
-                return;
-            }
             launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_INFO, new Bundle());
         } else if (id == R.id.nav_bank_account) {
-            if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS)) {
-                DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
-                return;
-            }
             Intent intent = new Intent(HomeActivity.this, ManageBanksActivity.class);
             startActivity(intent);
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_user_activity) {
-            if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY)) {
-                DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
-                return;
-            }
             Intent intent = new Intent(HomeActivity.this, ActivityLogActivity.class);
             startActivity(intent);
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_security_settings) {
-            if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_SECURITY, ServiceIdConstants.MANAGE_SECURITY)) {
-                DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
-                return;
-            }
             Intent intent = new Intent(HomeActivity.this, SecuritySettingsActivity.class);
             startActivity(intent);
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_invite) {
-            if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS)) {
-                DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
-                return;
-            }
             Intent intent = new Intent(this, InviteActivity.class);
             startActivity(intent);
             switchedToHomeFragment = true;

@@ -4,6 +4,7 @@ import android.util.SparseBooleanArray;
 
 import java.util.HashMap;
 
+import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
@@ -24,7 +25,8 @@ import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCo
 public class ACLCacheManager {
     private static SparseBooleanArray allowedServiceArray;
 
-    private static HashMap<String, int[]> serviceAccessMapWithString;
+    private static HashMap<String, Boolean> mapServiceAccessByName;
+    private static SparseBooleanArray mapServiceAccessByIntID;
 
     public static void initialize() {
         allowedServiceArray = new SparseBooleanArray();
@@ -42,7 +44,16 @@ public class ACLCacheManager {
     }
 
     public static boolean checkServicesAccessibilityByName(String serviceName) {
-        return hasServicesAccessibility(serviceAccessMapWithString.get(serviceName));
+        if (mapServiceAccessByName == null) {
+            return false;
+        } else if (mapServiceAccessByName.get(serviceName) == null) {
+            return false;
+        }
+        return mapServiceAccessByName.get(serviceName);
+    }
+
+    public static boolean checkServicesAccessibilityByIntId(int id) {
+        return mapServiceAccessByIntID != null && mapServiceAccessByIntID.get(id, false);
     }
 
     public static void updateAllowedServiceArray(int[] serviceCodeList) {
@@ -50,31 +61,45 @@ public class ACLCacheManager {
         for (int serviceCode : serviceCodeList) {
             allowedServiceArray.put(serviceCode, true);
         }
-        populateServiceAccessMap();
+        populateServiceAccessByNameMapping();
+        populateServiceAccessByIntIDMapping();
     }
 
-    private static void populateServiceAccessMap() {
-        serviceAccessMapWithString = new HashMap<>();
+    private static void populateServiceAccessByIntIDMapping() {
+        mapServiceAccessByIntID = new SparseBooleanArray();
+        mapServiceAccessByIntID.put(R.id.nav_home, true);
+        mapServiceAccessByIntID.put(R.id.nav_account, hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE));
+        mapServiceAccessByIntID.put(R.id.nav_bank_account, hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS));
+        mapServiceAccessByIntID.put(R.id.nav_user_activity, hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY));
+        mapServiceAccessByIntID.put(R.id.nav_security_settings, hasServicesAccessibility(ServiceIdConstants.SEE_SECURITY, ServiceIdConstants.MANAGE_SECURITY));
+        mapServiceAccessByIntID.put(R.id.nav_invite, hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS));
+        mapServiceAccessByIntID.put(R.id.nav_help, true);
+        mapServiceAccessByIntID.put(R.id.nav_about, true);
+        mapServiceAccessByIntID.put(R.id.nav_logout, hasServicesAccessibility(ServiceIdConstants.SIGN_OUT));
+    }
 
-        serviceAccessMapWithString.put(Constants.VERIFY_BANK, new int[]{ServiceIdConstants.MANAGE_BANK_ACCOUNTS});
-        serviceAccessMapWithString.put(Constants.LINK_BANK, new int[]{ServiceIdConstants.MANAGE_BANK_ACCOUNTS});
+    private static void populateServiceAccessByNameMapping() {
+        mapServiceAccessByName = new HashMap<>();
 
-        serviceAccessMapWithString.put(BASIC_PROFILE, new int[]{ServiceIdConstants.MANAGE_PROFILE});
-        serviceAccessMapWithString.put(BUSINESS_INFO, new int[]{ServiceIdConstants.SEE_BUSINESS_INFO});
+        mapServiceAccessByName.put(Constants.VERIFY_BANK, hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
+        mapServiceAccessByName.put(Constants.LINK_BANK, hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
 
-        serviceAccessMapWithString.put(INTRODUCER, new int[]{ServiceIdConstants.MANAGE_INTRODUCERS});
+        mapServiceAccessByName.put(BASIC_PROFILE, hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE));
+        mapServiceAccessByName.put(BUSINESS_INFO, hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO));
 
-        serviceAccessMapWithString.put(PERSONAL_ADDRESS, new int[]{ServiceIdConstants.MANAGE_ADDRESS});
-        serviceAccessMapWithString.put(BUSINESS_ADDRESS, new int[]{ServiceIdConstants.MANAGE_ADDRESS});
+        mapServiceAccessByName.put(INTRODUCER, hasServicesAccessibility(ServiceIdConstants.MANAGE_INTRODUCERS));
 
-        serviceAccessMapWithString.put(VERIFIED_EMAIL, new int[]{ServiceIdConstants.MANAGE_EMAILS});
+        mapServiceAccessByName.put(PERSONAL_ADDRESS, hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS));
+        mapServiceAccessByName.put(BUSINESS_ADDRESS, hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS));
 
-        serviceAccessMapWithString.put(BUSINESS_DOCUMENTS, new int[]{ServiceIdConstants.SEE_BUSINESS_DOCS});
-        serviceAccessMapWithString.put(VERIFICATION_DOCUMENT, new int[]{ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS});
-        serviceAccessMapWithString.put(PHOTOID, new int[]{ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS});
+        mapServiceAccessByName.put(VERIFIED_EMAIL, hasServicesAccessibility(ServiceIdConstants.MANAGE_EMAILS));
 
-        serviceAccessMapWithString.put(PROFILE_COMPLETENESS, new int[]{ServiceIdConstants.SEE_PROFILE_COMPLETION});
-        serviceAccessMapWithString.put(PROFILE_INFO, new int[]{ServiceIdConstants.SEE_PROFILE});
-        serviceAccessMapWithString.put(PROFILE_PICTURE, new int[]{ServiceIdConstants.MANAGE_PROFILE_PICTURE});
+        mapServiceAccessByName.put(BUSINESS_DOCUMENTS, hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_DOCS));
+        mapServiceAccessByName.put(VERIFICATION_DOCUMENT, hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS));
+        mapServiceAccessByName.put(PHOTOID, hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS));
+
+        mapServiceAccessByName.put(PROFILE_COMPLETENESS, hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE_COMPLETION));
+        mapServiceAccessByName.put(PROFILE_INFO, hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE));
+        mapServiceAccessByName.put(PROFILE_PICTURE, hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE_PICTURE));
     }
 }
