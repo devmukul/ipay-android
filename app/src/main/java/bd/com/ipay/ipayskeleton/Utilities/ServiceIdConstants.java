@@ -5,10 +5,10 @@ package bd.com.ipay.ipayskeleton.Utilities;
  */
 public class ServiceIdConstants {
 
-    //Balance
+    // Balance
     public static final int BALANCE = 1002;
 
-    //Send Money
+    // Send Money
     public static final int SEND_MONEY = 1;
 
     //Request Money
@@ -19,14 +19,14 @@ public class ServiceIdConstants {
     public static final int SENT_REQUEST = 1006;
     public static final int RECEIVED_REQUEST = 1007;
 
-    //Top up
+    // Top up
     public static final int TOP_UP = 2001;
 
-    //Payment
+    // Payment
     public static final int MAKE_PAYMENT = 6002;
     public static final int REQUEST_PAYMENT = 6005;
 
-    //Transaction Details
+    // Transaction Details
     public static final int ALL_TRANSACTION = 1008;
     public static final int COMPLETED_TRANSACTION = 1009;
     public static final int PENDING_TRANSACTION = 1010;
@@ -34,11 +34,11 @@ public class ServiceIdConstants {
     public static final int STATEMENT = 1012;
 
 
-    //Bank Transaction
+    // Bank Transaction
     public static final int ADD_MONEY = 3001;
     public static final int WITHDRAW_MONEY = 3002;
 
-    //Contact
+    // Contact
     public static final int GET_CONTACTS = 5001;
     public static final int ADD_CONTACTS = 5002;
     public static final int UPDATE_CONTACTS = 5003;
@@ -48,15 +48,15 @@ public class ServiceIdConstants {
     public static final int IMPORT_OUTLOOK_CSV = 5007;
 
 
-    //Bank Account Manage
+    // Bank Account Manage
     public static final int SEE_BANK_ACCOUNTS = 8001;
     public static final int MANAGE_BANK_ACCOUNTS = 8039;
 
-    //Employee Manage
+    // Employee Manage
     public static final int SEE_EMPLOYEE = 8002;
     public static final int MANAGE_EMPLOYEE = 8003;
 
-    //Account
+    // Account
     public static final int SEE_EMAILS = 8004;
     public static final int SEE_ADDRESSES = 8005;
     public static final int MANAGE_ADDRESS = 8006;
@@ -71,28 +71,28 @@ public class ServiceIdConstants {
     public static final int MANAGE_PARENT = 8036;
     public static final int MANAGE_PROFILE_PICTURE = 8037;
 
-    //Introducer Related
+    // Introducer Related
     public static final int SEE_INTRODUCERS = 8012;
     public static final int MANAGE_INTRODUCERS = 8013;
 
-    //Invitation Related
+    // Invitation Related
     public static final int SEE_INVITATIONS = 8014;
     public static final int MANAGE_INVITATIONS = 8015;
 
-    //Business Related
+    // Business Related
     public static final int SEE_BUSINESS = 8018;
     public static final int MANAGE_BUSINESS = 8019;
 
     public static final int SEE_ACTIVITY = 8017;
     public static final int SEE_OTHER_ACTIVITY = 8046;
 
-    //Identification Document Related
+    // Identification Document Related
     public static final int SEE_BUSINESS_DOCS = 8010;
     public static final int UPLOAD_BUSINESS_DOCS = 8011;
     public static final int SEE_IDENTIFICATION_DOCS = 8020;
     public static final int MANAGE_IDENTIFICATION_DOCS = 8021;
 
-    //Security
+    // Security
     public static final int MANAGE_SECURITY = 8022;
     public static final int SEE_SECURITY = 8023;
     public static final int FORGET_PASSWORD = 8024;
@@ -100,7 +100,7 @@ public class ServiceIdConstants {
     public static final int MANAGE_TRUSTED_PERSON = 8031;
 
 
-    //Login Related
+    // Login Related
     public static final int SIGN_IN = 8025;
     public static final int SIGN_OUT = 8026;
     public static final int SIGN_UP_PERSONAL = 8027;
