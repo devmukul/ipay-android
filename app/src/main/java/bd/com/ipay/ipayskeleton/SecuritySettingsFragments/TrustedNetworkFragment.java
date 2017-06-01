@@ -307,48 +307,6 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         public TrustedPersonListAdapter() {
         }
 
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v;
-
-            if (viewType == FOOTER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trusted_network_footer, parent, false);
-                return new FooterViewHolder(v);
-            } else {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trusted_network, parent, false);
-                return new ViewHolder(v);
-            }
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            try {
-                if (holder instanceof ViewHolder) {
-                    ViewHolder vh = (ViewHolder) holder;
-                    vh.bindView(position);
-                } else if (holder instanceof FooterViewHolder) {
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            if (mTrustedPersons != null && mTrustedPersons.size() > 0)
-                return mTrustedPersons.size() + 1;
-            else return 0;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (position == getItemCount() - 1) {
-                return FOOTER_VIEW;
-            } else {
-                return TRUSTED_LIST_ITEM_VIEW;
-            }
-        }
-
         public class ViewHolder extends RecyclerView.ViewHolder {
             private final View divider;
             private TextView mNameView;
@@ -405,6 +363,48 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                 super(itemView);
             }
 
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v;
+
+            if (viewType == FOOTER_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trusted_network_footer, parent, false);
+                return new FooterViewHolder(v);
+            } else {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trusted_network, parent, false);
+                return new ViewHolder(v);
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+                if (holder instanceof ViewHolder) {
+                    ViewHolder vh = (ViewHolder) holder;
+                    vh.bindView(position);
+                } else if (holder instanceof FooterViewHolder) {
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mTrustedPersons != null && mTrustedPersons.size() > 0)
+                return mTrustedPersons.size() + 1;
+            else return 0;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (position == getItemCount() - 1) {
+                return FOOTER_VIEW;
+            } else {
+                return TRUSTED_LIST_ITEM_VIEW;
+            }
         }
     }
 }
