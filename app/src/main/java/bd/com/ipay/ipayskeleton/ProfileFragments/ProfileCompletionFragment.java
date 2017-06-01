@@ -172,6 +172,120 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
         private static final int VIEW_TYPE_LINK_BANK = 3;
         private static final int VIEW_TYPE_HEADER = 100;
 
+        public abstract class ProfileCompletionViewHolder extends RecyclerView.ViewHolder {
+            private final View itemView;
+            private final ImageView profileCompletionIcon;
+            private final TextView titleView;
+            private final TextView currentStatusView;
+            private final ImageView verificationStatus;
+
+            public ProfileCompletionViewHolder(final View itemView) {
+                super(itemView);
+
+                this.itemView = itemView;
+                profileCompletionIcon = (ImageView) itemView.findViewById(R.id.profile_completion_icon);
+                titleView = (TextView) itemView.findViewById(R.id.textview_title);
+                currentStatusView = (TextView) itemView.findViewById(R.id.textview_current_status);
+                verificationStatus = (ImageView) itemView.findViewById(R.id.verification_status);
+            }
+
+            public abstract void bindViewProfileCompletion(int position);
+
+            public void bindViewProfileCompletion(final ProfileCompletionStatusResponse.PropertyDetails propertyDetails) {
+                if (propertyDetails.getPropertyIcon() != null)
+                    profileCompletionIcon.setImageDrawable(getResources().getDrawable(propertyDetails.getPropertyIcon()));
+                titleView.setText(propertyDetails.getPropertyTitle());
+
+                if (!propertyDetails.isCompleted() && propertyDetails.getThreshold() > 1) {
+                    currentStatusView.setText(propertyDetails.getValue() + "/" + propertyDetails.getThreshold() + " Completed");
+                    currentStatusView.setVisibility(View.VISIBLE);
+                } else {
+                    currentStatusView.setVisibility(View.GONE);
+                }
+
+                if (propertyDetails.isCompleted()) {
+                    verificationStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_tick));
+                    verificationStatus.setVisibility(View.VISIBLE);
+                } else {
+                    titleView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
+                    verificationStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_invite));
+                    verificationStatus.setVisibility(View.GONE);
+                }
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (serviceAccessMap.get(propertyDetails.getPropertyName()) != null && !serviceAccessMap.get(propertyDetails.getPropertyName())) {
+                            return;
+                        }
+                        ((ProfileActivity) getActivity()).switchToFragment(propertyDetails.getPropertyName(), null, true);
+                    }
+                });
+            }
+        }
+
+        public class BasicInfoViewHolder extends ProfileCompletionViewHolder {
+
+            public BasicInfoViewHolder(View itemView) {
+                super(itemView);
+            }
+
+            @Override
+            public void bindViewProfileCompletion(int position) {
+                bindViewProfileCompletion(mProfileCompletionStatusResponse.getBasicInfoCompletionDetails().get(position));
+            }
+        }
+
+        public class AddressViewHolder extends ProfileCompletionViewHolder {
+
+            public AddressViewHolder(View itemView) {
+                super(itemView);
+            }
+
+            @Override
+            public void bindViewProfileCompletion(int position) {
+                bindViewProfileCompletion(mProfileCompletionStatusResponse.getAddressCompletionDetails().get(position));
+            }
+        }
+
+        public class IdentificationViewHolder extends ProfileCompletionViewHolder {
+
+            public IdentificationViewHolder(View itemView) {
+                super(itemView);
+            }
+
+            @Override
+            public void bindViewProfileCompletion(int position) {
+                bindViewProfileCompletion(mProfileCompletionStatusResponse.getIdentificationCompletionDetails().get(position));
+            }
+        }
+
+        public class LinkBankViewHolder extends ProfileCompletionViewHolder {
+
+            public LinkBankViewHolder(View itemView) {
+                super(itemView);
+            }
+
+            @Override
+            public void bindViewProfileCompletion(int position) {
+                bindViewProfileCompletion(mProfileCompletionStatusResponse.getLinkBankCompletionDetails().get(position));
+            }
+        }
+
+        public class HeaderViewHolder extends RecyclerView.ViewHolder {
+            private final TextView headerView;
+
+            public HeaderViewHolder(final View itemView) {
+                super(itemView);
+
+                headerView = (TextView) itemView.findViewById(R.id.textview_header);
+            }
+
+            public void bindViewHeader(String title) {
+                headerView.setText(title);
+            }
+        }
+
         @Override
         public int getItemViewType(int position) {
             int tempPosition = 0;
@@ -316,127 +430,12 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             }
 
         }
-
         @Override
         public int getItemCount() {
             return 1 + mProfileCompletionStatusResponse.getBasicInfoCompletionDetails().size() +
                     1 + mProfileCompletionStatusResponse.getAddressCompletionDetails().size() +
                     1 + mProfileCompletionStatusResponse.getIdentificationCompletionDetails().size() +
                     1 + mProfileCompletionStatusResponse.getLinkBankCompletionDetails().size();
-        }
-
-        public abstract class ProfileCompletionViewHolder extends RecyclerView.ViewHolder {
-            private final View itemView;
-            private final ImageView profileCompletionIcon;
-            private final TextView titleView;
-            private final TextView currentStatusView;
-            private final ImageView verificationStatus;
-
-            public ProfileCompletionViewHolder(final View itemView) {
-                super(itemView);
-
-                this.itemView = itemView;
-                profileCompletionIcon = (ImageView) itemView.findViewById(R.id.profile_completion_icon);
-                titleView = (TextView) itemView.findViewById(R.id.textview_title);
-                currentStatusView = (TextView) itemView.findViewById(R.id.textview_current_status);
-                verificationStatus = (ImageView) itemView.findViewById(R.id.verification_status);
-            }
-
-            public abstract void bindViewProfileCompletion(int position);
-
-            public void bindViewProfileCompletion(final ProfileCompletionStatusResponse.PropertyDetails propertyDetails) {
-                if (propertyDetails.getPropertyIcon() != null)
-                    profileCompletionIcon.setImageDrawable(getResources().getDrawable(propertyDetails.getPropertyIcon()));
-                titleView.setText(propertyDetails.getPropertyTitle());
-
-                if (!propertyDetails.isCompleted() && propertyDetails.getThreshold() > 1) {
-                    currentStatusView.setText(propertyDetails.getValue() + "/" + propertyDetails.getThreshold() + " Completed");
-                    currentStatusView.setVisibility(View.VISIBLE);
-                } else {
-                    currentStatusView.setVisibility(View.GONE);
-                }
-
-                if (propertyDetails.isCompleted()) {
-                    verificationStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_tick));
-                    verificationStatus.setVisibility(View.VISIBLE);
-                } else {
-                    titleView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
-                    verificationStatus.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_invite));
-                    verificationStatus.setVisibility(View.GONE);
-                }
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (serviceAccessMap.get(propertyDetails.getPropertyName()) != null && !serviceAccessMap.get(propertyDetails.getPropertyName())) {
-                            return;
-                        }
-                        ((ProfileActivity) getActivity()).switchToFragment(propertyDetails.getPropertyName(), null, true);
-                    }
-                });
-            }
-        }
-
-        public class BasicInfoViewHolder extends ProfileCompletionViewHolder {
-
-            public BasicInfoViewHolder(View itemView) {
-                super(itemView);
-            }
-
-            @Override
-            public void bindViewProfileCompletion(int position) {
-                bindViewProfileCompletion(mProfileCompletionStatusResponse.getBasicInfoCompletionDetails().get(position));
-            }
-        }
-
-        public class AddressViewHolder extends ProfileCompletionViewHolder {
-
-            public AddressViewHolder(View itemView) {
-                super(itemView);
-            }
-
-            @Override
-            public void bindViewProfileCompletion(int position) {
-                bindViewProfileCompletion(mProfileCompletionStatusResponse.getAddressCompletionDetails().get(position));
-            }
-        }
-
-        public class IdentificationViewHolder extends ProfileCompletionViewHolder {
-
-            public IdentificationViewHolder(View itemView) {
-                super(itemView);
-            }
-
-            @Override
-            public void bindViewProfileCompletion(int position) {
-                bindViewProfileCompletion(mProfileCompletionStatusResponse.getIdentificationCompletionDetails().get(position));
-            }
-        }
-
-        public class LinkBankViewHolder extends ProfileCompletionViewHolder {
-
-            public LinkBankViewHolder(View itemView) {
-                super(itemView);
-            }
-
-            @Override
-            public void bindViewProfileCompletion(int position) {
-                bindViewProfileCompletion(mProfileCompletionStatusResponse.getLinkBankCompletionDetails().get(position));
-            }
-        }
-
-        public class HeaderViewHolder extends RecyclerView.ViewHolder {
-            private final TextView headerView;
-
-            public HeaderViewHolder(final View itemView) {
-                super(itemView);
-
-                headerView = (TextView) itemView.findViewById(R.id.textview_header);
-            }
-
-            public void bindViewHeader(String title) {
-                headerView.setText(title);
-            }
         }
     }
 }

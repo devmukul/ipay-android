@@ -458,34 +458,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         public EmailListAdapter() {
         }
 
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View v;
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_email,
-                    parent, false);
-
-            return new EmailViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            try {
-                EmailViewHolder vh = (EmailViewHolder) holder;
-                vh.bindView(position);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            if (mEmails != null)
-                return mEmails.size();
-            else return 0;
-        }
-
         public class EmailViewHolder extends RecyclerView.ViewHolder {
             private final TextView mEmailView;
             private final ImageView mVerificationStatus;
@@ -549,6 +521,34 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                     }
                 });
             }
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            View v;
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_email,
+                    parent, false);
+
+            return new EmailViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+                EmailViewHolder vh = (EmailViewHolder) holder;
+                vh.bindView(position);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mEmails != null)
+                return mEmails.size();
+            else return 0;
         }
 
     }

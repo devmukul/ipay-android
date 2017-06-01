@@ -251,98 +251,12 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
         } else mEmptyListTextView.setVisibility(View.GONE);
     }
 
-    private void showAlertDialogue(String msg, final int action, final long id) {
-        AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
-        alertDialogue.setTitle(R.string.confirm_query);
-        alertDialogue.setMessage(msg);
-
-        alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-
-                if (action == ACTION_CANCEL_REQUEST)
-                    cancelRequest(id);
-
-            }
-        });
-
-        alertDialogue.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // Do nothing
-            }
-        });
-
-        alertDialogue.show();
-    }
-
     public class SentMoneyRequestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int FOOTER_VIEW = 1;
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
 
         private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View v;
-            if (viewType == MONEY_REQUEST_ITEM_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_request, parent, false);
-                return new MoneyRequestViewHolder(v);
-            } else {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
-                return new FooterViewHolder(v);
-            }
-
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
-            try {
-                if (holder instanceof MoneyRequestViewHolder) {
-                    MoneyRequestViewHolder vh = (MoneyRequestViewHolder) holder;
-                    vh.bindView(position);
-                } else if (holder instanceof FooterViewHolder) {
-                    FooterViewHolder vh = (FooterViewHolder) holder;
-                    vh.bindViewFooter();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            if (pendingMoneyRequests == null || pendingMoneyRequests.isEmpty())
-                return 0;
-            else
-                // Count 1 is added for load more footer
-                return pendingMoneyRequests.size() + 1;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (position == getItemCount() - 1)
-                return FOOTER_VIEW;
-            else
-                return MONEY_REQUEST_ITEM_VIEW;
-        }
-
-        private void launchReviewPage() {
-
-            Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
-            intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
-            intent.putExtra(Constants.AMOUNT, mAmount);
-            intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
-            intent.putExtra(Constants.DESCRIPTION_TAG, mDescription);
-            intent.putExtra(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
-            intent.putExtra(Constants.NAME, mReceiverName);
-            intent.putExtra(Constants.PHOTO_URI, mPhotoUri);
-            intent.putExtra(Constants.IS_IN_CONTACTS, new ContactSearchHelper(getActivity()).searchMobileNumber(mReceiverMobileNumber));
-
-            startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
-        }
 
         public class MoneyRequestViewHolder extends RecyclerView.ViewHolder {
             private final TextView mSenderNumber;
@@ -440,5 +354,91 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                 notifyDataSetChanged();
             }
         }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            View v;
+            if (viewType == MONEY_REQUEST_ITEM_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_request, parent, false);
+                return new MoneyRequestViewHolder(v);
+            } else {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
+                return new FooterViewHolder(v);
+            }
+
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+            try {
+                if (holder instanceof MoneyRequestViewHolder) {
+                    MoneyRequestViewHolder vh = (MoneyRequestViewHolder) holder;
+                    vh.bindView(position);
+                } else if (holder instanceof FooterViewHolder) {
+                    FooterViewHolder vh = (FooterViewHolder) holder;
+                    vh.bindViewFooter();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (pendingMoneyRequests == null || pendingMoneyRequests.isEmpty())
+                return 0;
+            else
+                // Count 1 is added for load more footer
+                return pendingMoneyRequests.size() + 1;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (position == getItemCount() - 1)
+                return FOOTER_VIEW;
+            else
+                return MONEY_REQUEST_ITEM_VIEW;
+        }
+
+        private void launchReviewPage() {
+
+            Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
+            intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
+            intent.putExtra(Constants.AMOUNT, mAmount);
+            intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
+            intent.putExtra(Constants.DESCRIPTION_TAG, mDescription);
+            intent.putExtra(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
+            intent.putExtra(Constants.NAME, mReceiverName);
+            intent.putExtra(Constants.PHOTO_URI, mPhotoUri);
+            intent.putExtra(Constants.IS_IN_CONTACTS, new ContactSearchHelper(getActivity()).searchMobileNumber(mReceiverMobileNumber));
+
+            startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
+        }
+    }
+
+    private void showAlertDialog(String msg, final int action, final long id) {
+        AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
+        alertDialogue.setTitle(R.string.confirm_query);
+        alertDialogue.setMessage(msg);
+
+        alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                if (action == ACTION_CANCEL_REQUEST)
+                    cancelRequest(id);
+
+            }
+        });
+
+        alertDialogue.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+            }
+        });
+
+        alertDialogue.show();
     }
 }
