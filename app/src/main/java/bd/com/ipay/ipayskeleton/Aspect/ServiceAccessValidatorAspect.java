@@ -1,7 +1,5 @@
 package bd.com.ipay.ipayskeleton.Aspect;
 
-import android.view.View;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,6 +10,7 @@ import java.util.Arrays;
 
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 @Aspect
@@ -25,15 +24,15 @@ public class ServiceAccessValidatorAspect {
         Object result = null;
         ValidateAccess myAnnotation = method.getAnnotation(ValidateAccess.class);
 
-        Object[] args = joinPoint.getArgs();
-
         int[] serviceIds = myAnnotation.value();
 
         Logger.logW("ServiceIds", Arrays.toString(serviceIds));
 
         if (!ACLCacheManager.hasServicesAccessibility(serviceIds)) {
-            View view = (View) args[0];
-            DialogUtils.showServiceNotAllowedDialog(view.getContext());
+            MyApplication application = MyApplication.getMyApplicationInstance();
+            if (application != null) {
+                DialogUtils.showServiceNotAllowedDialog(application);
+            }
         } else {
             result = joinPoint.proceed();
         }
