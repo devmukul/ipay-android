@@ -224,6 +224,7 @@ public class TransactionDetailsFragment extends Fragment {
         return v;
     }
 
+    @ValidateAccess
     private void addContact(String name, String phoneNumber, String relationship) {
         AddContactRequestBuilder addContactRequestBuilder = new
                 AddContactRequestBuilder(name, phoneNumber, relationship);

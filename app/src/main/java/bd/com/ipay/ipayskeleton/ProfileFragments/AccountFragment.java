@@ -37,9 +37,11 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetPro
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
@@ -148,11 +150,20 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         mBasicInfo.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess(ServiceIdConstants.SEE_USER_INFO)
             public void onClick(View view) {
-                if (ProfileInfoCacheManager.isBusinessAccount())
-                    ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
-                else ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
+                if (ProfileInfoCacheManager.isBusinessAccount()) {
+                    if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO)) {
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                    } else {
+                        ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
+                    }
+                } else {
+                    if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_USER_INFO)) {
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                    } else {
+                        ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
+                    }
+                }
             }
         });
 
@@ -182,8 +193,18 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         mDocuments.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess(ServiceIdConstants.SEE_IDENTIFICATION_DOCS)
             public void onClick(View view) {
+                if (ProfileInfoCacheManager.isBusinessAccount()) {
+                    if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_DOCS)) {
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                        return;
+                    }
+                } else {
+                    if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_IDENTIFICATION_DOCS)) {
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                        return;
+                    }
+                }
                 ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
             }
         });
@@ -198,7 +219,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         mManageEmployee.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess(ServiceIdConstants.SEE_EMPLOYEE)
+            @ValidateAccess({ServiceIdConstants.SEE_EMPLOYEE, ServiceIdConstants.MANAGE_EMPLOYEE})
             public void onClick(View v) {
                 //((ProfileActivity) getActivity()).switchToEmployeeManagementFragment();
                 Intent intent = new Intent(getActivity(), ManagePeopleActivity.class);

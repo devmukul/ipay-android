@@ -292,6 +292,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mAcceptRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    @ValidateAccess
     private void addContact(String name, String phoneNumber, String relationship) {
         AddContactRequestBuilder addContactRequestBuilder = new
                 AddContactRequestBuilder(name, phoneNumber, relationship);

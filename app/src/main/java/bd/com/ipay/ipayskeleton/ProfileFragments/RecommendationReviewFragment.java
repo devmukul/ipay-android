@@ -274,6 +274,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
         if (this.isAdded()) setContentShown(true);
     }
 
+    @ValidateAccess
     private void addContact(String name, String phoneNumber, String relationship) {
         AddContactRequestBuilder addContactRequestBuilder = new
                 AddContactRequestBuilder(name, phoneNumber, relationship);

@@ -12,6 +12,7 @@ import java.util.Arrays;
 
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 @Aspect
@@ -31,6 +32,18 @@ public class ServiceAccessValidatorAspect {
         if (!ACLCacheManager.hasServicesAccessibility(serviceIds)) {
             View view = (View) joinPoint.getArgs()[0];
             DialogUtils.showServiceNotAllowedDialog(view.getContext());
+        } else {
+            result = joinPoint.proceed();
+        }
+        return result;
+    }
+
+    @Around("execution(* addContact(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
+    public Object aspectserviceValidatorOnAddContact(ProceedingJoinPoint joinPoint) throws Throwable {
+
+        Object result = null;
+
+        if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.ADD_CONTACTS)) {
         } else {
             result = joinPoint.proceed();
         }
