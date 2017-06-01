@@ -103,28 +103,6 @@ public class HomeActivity extends BaseActivity
     private TextView mNameView;
     private ProfileImageView mProfileImageView;
 
-    private final BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
-            Logger.logD("Broadcast home activity", newProfilePicture);
-
-            mProfileImageView.setProfilePicture(newProfilePicture, true);
-
-            // We need to update the profile picture url in ProfileInfoCacheManager. Ideally,
-            // we should have received a push from the server and FcmListenerService should have
-            // done this task. But as long as push is unreliable, this call is here to stay.
-            getProfileInfo();
-        }
-    };
-
-    private final BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            updateProfileData();
-        }
-    };
-
     private String mUserID;
     private String mDeviceID;
 
@@ -673,4 +651,26 @@ public class HomeActivity extends BaseActivity
     public Context setContext() {
         return HomeActivity.this;
     }
+
+    private final BroadcastReceiver mProfilePictureUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
+            Logger.logD("Broadcast home activity", newProfilePicture);
+
+            mProfileImageView.setProfilePicture(newProfilePicture, true);
+
+            // We need to update the profile picture url in ProfileInfoCacheManager. Ideally,
+            // we should have received a push from the server and FcmListenerService should have
+            // done this task. But as long as push is unreliable, this call is here to stay.
+            getProfileInfo();
+        }
+    };
+
+    private final BroadcastReceiver mProfileInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateProfileData();
+        }
+    };
 }
