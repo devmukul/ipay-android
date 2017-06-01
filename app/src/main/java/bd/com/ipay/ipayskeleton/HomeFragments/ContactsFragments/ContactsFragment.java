@@ -742,15 +742,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         private static final int EMPTY_VIEW = 10;
         private static final int CONTACT_VIEW = 100;
 
-        public boolean isInvited(String phoneNumber) {
-            if (ContactsHolderFragment.mGetInviteInfoResponse == null ||
-                    ContactsHolderFragment.mGetInviteInfoResponse.getInvitees() == null)
-                return false;
-            else if (ContactsHolderFragment.mGetInviteInfoResponse.getInvitees().contains(phoneNumber))
-                return true;
-            return false;
-        }
-
         public class EmptyViewHolder extends RecyclerView.ViewHolder {
             public final TextView mEmptyDescription;
 
@@ -758,6 +749,15 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 super(itemView);
                 mEmptyDescription = (TextView) itemView.findViewById(R.id.empty_description);
             }
+        }
+
+        public boolean isInvited(String phoneNumber) {
+            if (ContactsHolderFragment.mGetInviteInfoResponse == null ||
+                    ContactsHolderFragment.mGetInviteInfoResponse.getInvitees() == null)
+                return false;
+            else if (ContactsHolderFragment.mGetInviteInfoResponse.getInvitees().contains(phoneNumber))
+                return true;
+            return false;
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
