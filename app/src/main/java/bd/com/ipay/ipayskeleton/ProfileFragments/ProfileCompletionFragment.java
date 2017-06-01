@@ -16,9 +16,6 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -27,21 +24,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletio
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
-
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BASIC_PROFILE;
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_ADDRESS;
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_DOCUMENTS;
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_INFO;
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.INTRODUCER;
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PERSONAL_ADDRESS;
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PHOTOID;
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROFILE_COMPLETENESS;
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROFILE_INFO;
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROFILE_PICTURE;
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.VERIFICATION_DOCUMENT;
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.VERIFIED_EMAIL;
 
 public class ProfileCompletionFragment extends ProgressFragment implements HttpResponseListener {
     private RecyclerView mProfileCompletionRecyclerView;
@@ -53,8 +36,6 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
 
     private TextView mProfileCompletionStatusView;
     private ProgressBar mProfileCompletionStatusProgressBar;
-
-    private Map<String, Boolean> serviceAccessMap;
 
     @Nullable
     @Override
@@ -69,8 +50,6 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
 
         mProfileCompletionStatusView = (TextView) v.findViewById(R.id.textview_profile_completion_status);
         mProfileCompletionStatusProgressBar = (ProgressBar) v.findViewById(R.id.progress_bar_profile_completion_status);
-
-        populateServiceAccessMap();
         getProfileCompletionStatus();
 
         return v;
@@ -102,31 +81,6 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
         mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
                 Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
         mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void populateServiceAccessMap() {
-        serviceAccessMap = new HashMap<>();
-
-        serviceAccessMap.put(Constants.VERIFY_BANK, ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
-        serviceAccessMap.put(Constants.LINK_BANK, ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
-
-        serviceAccessMap.put(BASIC_PROFILE, ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE));
-        serviceAccessMap.put(BUSINESS_INFO, ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO));
-
-        serviceAccessMap.put(INTRODUCER, ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_INTRODUCERS));
-
-        serviceAccessMap.put(PERSONAL_ADDRESS, ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS));
-        serviceAccessMap.put(BUSINESS_ADDRESS, ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS));
-
-        serviceAccessMap.put(VERIFIED_EMAIL, ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_EMAILS));
-
-        serviceAccessMap.put(BUSINESS_DOCUMENTS, ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_DOCS));
-        serviceAccessMap.put(VERIFICATION_DOCUMENT, ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS));
-        serviceAccessMap.put(PHOTOID, ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS));
-
-        serviceAccessMap.put(PROFILE_COMPLETENESS, ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE_COMPLETION));
-        serviceAccessMap.put(PROFILE_INFO, ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE));
-        serviceAccessMap.put(PROFILE_PICTURE, ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE_PICTURE));
     }
 
     @Override
@@ -215,7 +169,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (serviceAccessMap.get(propertyDetails.getPropertyName()) != null && !serviceAccessMap.get(propertyDetails.getPropertyName())) {
+                        if (ACLCacheManager.checkServicesAccessibilityByName(propertyDetails.getPropertyName())) {
                             return;
                         }
                         ((ProfileActivity) getActivity()).switchToFragment(propertyDetails.getPropertyName(), null, true);
@@ -430,6 +384,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             }
 
         }
+
         @Override
         public int getItemCount() {
             return 1 + mProfileCompletionStatusResponse.getBasicInfoCompletionDetails().size() +

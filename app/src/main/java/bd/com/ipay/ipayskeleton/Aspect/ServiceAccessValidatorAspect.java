@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.Aspect;
 
+import android.view.View;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -30,8 +32,9 @@ public class ServiceAccessValidatorAspect {
 
         if (!ACLCacheManager.hasServicesAccessibility(serviceIds)) {
             MyApplication application = MyApplication.getMyApplicationInstance();
+            View view = (View) joinPoint.getArgs()[0];
             if (application != null) {
-                DialogUtils.showServiceNotAllowedDialog(application);
+                DialogUtils.showServiceNotAllowedDialog(view.getContext());
             }
         } else {
             result = joinPoint.proceed();
