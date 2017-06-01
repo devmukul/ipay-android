@@ -40,7 +40,6 @@ public class DialogUtils {
 
     public static void showServiceNotAllowedDialog(final Context mContext) {
         MaterialDialog dialog = new MaterialDialog.Builder(mContext)
-                .title(R.string.service_not_allowed)
                 .cancelable(false)
                 .content(R.string.contact_support)
                 .negativeText(R.string.cancel)
