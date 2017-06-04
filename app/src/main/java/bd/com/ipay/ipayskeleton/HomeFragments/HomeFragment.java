@@ -150,7 +150,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess({ServiceIdConstants.WITHDRAW_MONEY, ServiceIdConstants.SEE_BANK_ACCOUNTS})
+            @ValidateAccess({ServiceIdConstants.WITHDRAW_MONEY})
             public void onClick(View v) {
                 PinChecker withdrawMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -165,7 +165,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess({ServiceIdConstants.SEND_MONEY, ServiceIdConstants.GET_CONTACTS})
+            @ValidateAccess({ServiceIdConstants.SEND_MONEY})
             public void onClick(View v) {
                 PinChecker sendMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
