@@ -135,7 +135,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess({ServiceIdConstants.ADD_MONEY, ServiceIdConstants.SEE_BANK_ACCOUNTS})
+            @ValidateAccess({ServiceIdConstants.ADD_MONEY})
             public void onClick(View v) {
                 PinChecker addMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
