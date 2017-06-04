@@ -180,7 +180,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess({ServiceIdConstants.REQUEST_MONEY, ServiceIdConstants.GET_CONTACTS})
+            @ValidateAccess({ServiceIdConstants.REQUEST_MONEY})
             public void onClick(View v) {
                 Intent requestMoneyActivityIntent = new Intent(getActivity(), RequestMoneyActivity.class);
                 startActivity(requestMoneyActivityIntent);
@@ -189,7 +189,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mMakePaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess({ServiceIdConstants.MAKE_PAYMENT, ServiceIdConstants.SEE_BUSINESS})
+            @ValidateAccess({ServiceIdConstants.MAKE_PAYMENT})
             public void onClick(View v) {
                 PinChecker makePaymentPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -205,7 +205,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mMobileTopUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess({ServiceIdConstants.TOP_UP, ServiceIdConstants.GET_CONTACTS})
+            @ValidateAccess({ServiceIdConstants.TOP_UP})
             public void onClick(View v) {
                 PinChecker topUpPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override

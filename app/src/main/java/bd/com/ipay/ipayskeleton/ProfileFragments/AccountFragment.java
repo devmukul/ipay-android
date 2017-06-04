@@ -158,7 +158,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                         ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
                     }
                 } else {
-                    if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_USER_INFO)) {
+                    if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_USER_INFO) && !ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_PARENT)) {
                         DialogUtils.showServiceNotAllowedDialog(getContext());
                     } else {
                         ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
