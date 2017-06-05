@@ -17,7 +17,7 @@ import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryHolderFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -110,12 +110,12 @@ public class DashBoardFragment extends Fragment {
                     // ALL_TRANSACTION. If the user have all transaction permission but doesn't have both
                     // PENDING_TRANSACTION and COMPLETED_TRANSACTION with will give access to the Transaction tab but will prompt a
                     // message.
-                    if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.ALL_TRANSACTION)) {
+                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.ALL_TRANSACTION)) {
                         DialogUtils.showServiceNotAllowedDialog(getContext());
                         viewPager.setCurrentItem(currentTab);
                         return;
-                    } else if (!(ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION) ||
-                            ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION))) {
+                    } else if (!(ACLManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION) ||
+                            ACLManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION))) {
                         DialogUtils.showServiceNotAllowedDialog(getContext());
                     }
                 }

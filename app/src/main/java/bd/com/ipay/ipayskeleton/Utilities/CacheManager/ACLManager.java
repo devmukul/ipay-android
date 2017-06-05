@@ -22,7 +22,7 @@ import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCo
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.VERIFIED_EMAIL;
 
 
-public class ACLCacheManager {
+public class ACLManager {
     private static SparseBooleanArray allowedServiceArray;
 
     private static HashMap<String, Boolean> mapServiceAccessByName;

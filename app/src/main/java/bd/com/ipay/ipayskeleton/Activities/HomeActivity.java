@@ -68,7 +68,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -371,7 +371,7 @@ public class HomeActivity extends BaseActivity
 
     private void gotoDrawerItem(MenuItem item) {
         int id = item.getItemId();
-        if (!ACLCacheManager.checkServicesAccessibilityByIntId(id)) {
+        if (!ACLManager.checkServicesAccessibilityByIntId(id)) {
             DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
             return;
         }

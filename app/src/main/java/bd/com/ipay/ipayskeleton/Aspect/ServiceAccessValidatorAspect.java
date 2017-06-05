@@ -10,7 +10,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
@@ -29,7 +29,7 @@ public class ServiceAccessValidatorAspect {
 
         Logger.logW("ServiceIds", Arrays.toString(serviceIds));
 
-        if (!ACLCacheManager.hasServicesAccessibility(serviceIds)) {
+        if (!ACLManager.hasServicesAccessibility(serviceIds)) {
             View view = (View) joinPoint.getArgs()[0];
             DialogUtils.showServiceNotAllowedDialog(view.getContext());
         } else {
@@ -43,7 +43,7 @@ public class ServiceAccessValidatorAspect {
 
         Object result = null;
 
-        if (ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.ADD_CONTACTS)) {
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_CONTACTS)) {
             result = joinPoint.proceed();
         }
         return result;

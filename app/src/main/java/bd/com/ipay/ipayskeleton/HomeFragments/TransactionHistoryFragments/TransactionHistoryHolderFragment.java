@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
@@ -48,7 +48,7 @@ public class TransactionHistoryHolderFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mProcessedTransactionsSelector.isChecked()) {
-                    if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION)) {
+                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION)) {
                         mProcessedTransactionsSelector.setChecked(true);
                         mPendingTransactionsSelector.setChecked(false);
 
@@ -70,7 +70,7 @@ public class TransactionHistoryHolderFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mPendingTransactionsSelector.isChecked()) {
-                    if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION)) {
+                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION)) {
                         mPendingTransactionsSelector.setChecked(true);
                         mProcessedTransactionsSelector.setChecked(false);
 
@@ -94,10 +94,10 @@ public class TransactionHistoryHolderFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.ALL_TRANSACTION)) {
-            if (ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION)) {
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ALL_TRANSACTION)) {
+            if (ACLManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION)) {
                 switchToPendingTransactionsFragment();
-            } else if (ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION)) {
+            } else if (ACLManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION)) {
                 switchToProcessedTransactionsFragment();
             }
         }

@@ -51,7 +51,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.MakePrimar
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.MakePrimaryRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
@@ -208,7 +208,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_EMAILS)) {
+                        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_EMAILS)) {
                             DialogUtils.showServiceNotAllowedDialog(getContext());
                             return;
                         }

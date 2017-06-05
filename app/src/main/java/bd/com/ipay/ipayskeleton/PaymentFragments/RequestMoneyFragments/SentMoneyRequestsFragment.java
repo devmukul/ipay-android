@@ -35,7 +35,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.MoneyReques
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
@@ -91,7 +91,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SENT_REQUEST)) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SENT_REQUEST)) {
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                     return;
                 }
@@ -113,7 +113,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
     @Override
     public void onResume() {
         super.onResume();
-        if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SENT_REQUEST)) {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SENT_REQUEST)) {
             return;
         }
         if (Utilities.isConnectionAvailable(getActivity())) {

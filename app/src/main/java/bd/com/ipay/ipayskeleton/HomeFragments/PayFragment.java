@@ -32,7 +32,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Pay.PayPropertyConstants;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
@@ -171,7 +171,7 @@ public class PayFragment extends Fragment {
                     public void onClick(View v) {
                         switch (serviceAction.text) {
                             case Constants.SERVICE_ACTION_REQUEST_PAYMENT:
-                                if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.REQUEST_PAYMENT)) {
+                                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.REQUEST_PAYMENT)) {
                                     DialogUtils.showServiceNotAllowedDialog(getContext());
                                     return;
                                 }
@@ -186,7 +186,7 @@ public class PayFragment extends Fragment {
                                 pinChecker.execute();
                                 break;
                             case Constants.SERVICE_ACTION_MAKE_PAYMENT:
-                                if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
+                                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
                                     DialogUtils.showServiceNotAllowedDialog(getContext());
                                     return;
                                 }
@@ -202,7 +202,7 @@ public class PayFragment extends Fragment {
                                 pinChecker.execute();
                                 break;
                             case Constants.SERVICE_ACTION_TOP_UP:
-                                if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.TOP_UP)) {
+                                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.TOP_UP)) {
                                     DialogUtils.showServiceNotAllowedDialog(getContext());
                                     return;
                                 }
@@ -226,7 +226,7 @@ public class PayFragment extends Fragment {
                                 pinChecker.execute();
                                 break;*/
                             case Constants.SERVICE_ACTION_PAY_BY_QR_CODE:
-                                if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
+                                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
                                     DialogUtils.showServiceNotAllowedDialog(getContext());
                                     return;
                                 }

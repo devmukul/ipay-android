@@ -40,7 +40,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -103,7 +103,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
         // Block from adding bank if an user is not verified
         if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
-            if (ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS)) {
+            if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS)) {
                 getBankInformation();
             }
         } else {
@@ -165,7 +165,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS)) {
+                        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS)) {
                             DialogUtils.showServiceNotAllowedDialog(getActivity());
                             return;
                         }

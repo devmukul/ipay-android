@@ -31,7 +31,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.MoneyAndPay
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
@@ -81,7 +81,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
 
         // Refresh balance each time home_activity page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
-            if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.RECEIVED_REQUEST)) {
+            if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.RECEIVED_REQUEST)) {
                 DialogUtils.showServiceNotAllowedDialog(getContext());
 
             } else {
@@ -92,7 +92,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.RECEIVED_REQUEST)) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.RECEIVED_REQUEST)) {
                     DialogUtils.showServiceNotAllowedDialog(getContext());
                     return;
                 }
@@ -107,7 +107,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
     public void onResume() {
         super.onResume();
         if (Utilities.isConnectionAvailable(getActivity())) {
-            if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.RECEIVED_REQUEST)) {
+            if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.RECEIVED_REQUEST)) {
                 return;
             }
             refreshMoneyRequestList();
