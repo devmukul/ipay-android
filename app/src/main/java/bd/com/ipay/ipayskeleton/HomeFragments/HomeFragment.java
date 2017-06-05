@@ -220,6 +220,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         refreshBalanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.BALANCE)
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     refreshBalance();

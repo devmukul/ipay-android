@@ -38,22 +38,31 @@
                 android:orientation="horizontal"
                 android:visibility="visible">
 
-                <CheckBox
-                    android:id="@+id/checkbox_contacts_all"
-                    style="@style/ContactsSelectorStyle"
-                    android:layout_width="@dimen/value60"
+                <RadioGroup
+                    android:id="@+id/contact_type_radio_group"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:background="@drawable/background_left_round_checkbox"
-                    android:text="@string/all_contacts" />
+                    android:orientation="horizontal">
 
-                <CheckBox
-                    android:id="@+id/checkbox_contacts_ipay"
-                    style="@style/ContactsSelectorStyle"
-                    android:layout_width="@dimen/value60"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_right_round_checkbox"
-                    android:text="@string/ipay_contacts" />
+                    <RadioButton
+                        android:id="@+id/radio_button_all_contacts"
+                        style="@style/ContactsSelectorStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_left_round_checkbox"
+                        android:text="@string/all_contacts"
+                        android:textColor="@color/radio_button_text_color" />
+
+                    <RadioButton
+                        android:id="@+id/radio_button_ipay_contacts"
+                        style="@style/ContactsSelectorStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_right_round_checkbox"
+                        android:text="@string/ipay_contacts"
+                        android:textColor="@color/radio_button_text_color" />
+
+                </RadioGroup>
             </LinearLayout>
         </RelativeLayout>
 
@@ -61,8 +70,7 @@
             android:id="@+id/fragment_container_contacts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/contact_header">
-        </FrameLayout>
+            android:layout_below="@+id/contact_header"></FrameLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_add_contact"

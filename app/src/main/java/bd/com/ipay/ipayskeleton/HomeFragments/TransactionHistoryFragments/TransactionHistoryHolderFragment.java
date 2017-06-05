@@ -7,17 +7,19 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
-import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 public class TransactionHistoryHolderFragment extends Fragment {
 
-    private CheckBox mProcessedTransactionsSelector;
-    private CheckBox mPendingTransactionsSelector;
+    private RadioGroup transactionHistoryTypeRadioGroup;
+    private RadioButton pendingTransactionRadioButton;
+    private RadioButton completedTransactionRadioButton;
 
     private TransactionHistoryCompletedFragment mProcessedTransactionHistoryCompletedFragment;
     private TransactionHistoryPendingFragment mPendingTransactionHistoryFragment;
@@ -34,56 +36,22 @@ public class TransactionHistoryHolderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_transaction_history_holder, container, false);
 
-        mProcessedTransactionsSelector = (CheckBox) v.findViewById(R.id.checkbox_processed);
-        mPendingTransactionsSelector = (CheckBox) v.findViewById(R.id.checkbox_pending);
+        transactionHistoryTypeRadioGroup = (RadioGroup) v.findViewById(R.id.transaction_history_type_radio_group);
+        pendingTransactionRadioButton = (RadioButton) v.findViewById(R.id.radio_button_pending);
+        completedTransactionRadioButton = (RadioButton) v.findViewById(R.id.radio_button_completed);
 
-        mProcessedTransactionsSelector.setChecked(false);
-        mPendingTransactionsSelector.setChecked(true);
-
-        mProcessedTransactionsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
-        mPendingTransactionsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
-
-
-        mProcessedTransactionsSelector.setOnClickListener(new View.OnClickListener() {
+        transactionHistoryTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                if (mProcessedTransactionsSelector.isChecked()) {
-                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION)) {
-                        mProcessedTransactionsSelector.setChecked(true);
-                        mPendingTransactionsSelector.setChecked(false);
+            @ValidateAccess
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-                        mPendingTransactionsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
-                        mProcessedTransactionsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
-                        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, new Fragment()).commit();
-                        return;
-                    }
-                    switchToProcessedTransactionsFragment();
-                } else {
-                    mPendingTransactionsSelector.setChecked(false);
-                    mProcessedTransactionsSelector.setChecked(true);
-                }
-            }
-        });
-
-        mPendingTransactionsSelector.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mPendingTransactionsSelector.isChecked()) {
-                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION)) {
-                        mPendingTransactionsSelector.setChecked(true);
-                        mProcessedTransactionsSelector.setChecked(false);
-
-                        mProcessedTransactionsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
-                        mPendingTransactionsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
-                        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, new Fragment()).commit();
-                        return;
-                    }
-                    switchToPendingTransactionsFragment();
-                } else {
-                    mPendingTransactionsSelector.setChecked(true);
-                    mProcessedTransactionsSelector.setChecked(false);
+                switch (checkedId) {
+                    case R.id.radio_button_pending:
+                        switchToPendingTransactionsFragment();
+                        break;
+                    case R.id.radio_button_completed:
+                        switchToProcessedTransactionsFragment();
+                        break;
                 }
             }
         });
@@ -96,9 +64,9 @@ public class TransactionHistoryHolderFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ALL_TRANSACTION)) {
             if (ACLManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION)) {
-                switchToPendingTransactionsFragment();
+                pendingTransactionRadioButton.setChecked(true);
             } else if (ACLManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION)) {
-                switchToProcessedTransactionsFragment();
+                completedTransactionRadioButton.setChecked(true);
             }
         }
     }
@@ -118,23 +86,11 @@ public class TransactionHistoryHolderFragment extends Fragment {
     }
 
     private void switchToProcessedTransactionsFragment() {
-        mProcessedTransactionsSelector.setChecked(true);
-        mPendingTransactionsSelector.setChecked(false);
-
-        mProcessedTransactionsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
-        mPendingTransactionsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
-
         mProcessedTransactionHistoryCompletedFragment = new TransactionHistoryCompletedFragment();
         getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mProcessedTransactionHistoryCompletedFragment).commit();
     }
 
     private void switchToPendingTransactionsFragment() {
-        mProcessedTransactionsSelector.setChecked(false);
-        mPendingTransactionsSelector.setChecked(true);
-
-        mProcessedTransactionsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
-        mPendingTransactionsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
-
         mPendingTransactionHistoryFragment = new TransactionHistoryPendingFragment();
         getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mPendingTransactionHistoryFragment).commit();
     }

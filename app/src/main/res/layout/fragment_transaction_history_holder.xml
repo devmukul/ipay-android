@@ -1,5 +1,4 @@
 <com.flipboard.bottomsheet.BottomSheetLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -27,6 +26,32 @@
                 android:orientation="horizontal"
                 android:visibility="visible">
 
+                <RadioGroup
+                    android:id="@+id/transaction_history_type_radio_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radio_button_pending"
+                        style="@style/ContactsSelectorStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_left_round_checkbox"
+                        android:text="@string/pending"
+                        android:textColor="@color/radio_button_text_color" />
+
+                    <RadioButton
+                        android:id="@+id/radio_button_completed"
+                        style="@style/ContactsSelectorStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_right_round_checkbox"
+                        android:text="@string/completed"
+                        android:textColor="@color/radio_button_text_color" />
+
+                </RadioGroup>
+
                 <CheckBox
                     android:id="@+id/checkbox_pending"
                     style="@style/ContactsSelectorStyle"
@@ -34,7 +59,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_left_round_checkbox"
                     android:gravity="center"
-                    android:text="@string/pending" />
+                    android:text="@string/pending"
+                    android:visibility="gone" />
 
                 <CheckBox
                     android:id="@+id/checkbox_processed"
@@ -42,7 +68,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_right_round_checkbox"
-                    android:text="@string/completed" />
+                    android:text="@string/completed"
+                    android:visibility="gone" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -50,8 +77,7 @@
             android:id="@+id/fragment_container_transaction_history"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/transaction_history_header">
-        </FrameLayout>
+            android:layout_below="@+id/transaction_history_header"></FrameLayout>
 
     </RelativeLayout>
 </com.flipboard.bottomsheet.BottomSheetLayout>

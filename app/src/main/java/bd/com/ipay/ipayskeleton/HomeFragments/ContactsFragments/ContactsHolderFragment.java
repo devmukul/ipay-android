@@ -13,8 +13,9 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +39,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
-import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -48,8 +48,10 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     public static GetInviteInfoResponse mGetInviteInfoResponse;
     private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
     private BottomSheetLayout mBottomSheetLayout;
-    private CheckBox mAllContactsSelector;
-    private CheckBox miPayContactsSelector;
+
+    private RadioGroup contactTypeRadioGroup;
+    private RadioButton radioButtonAllContactsSelector;
+    private RadioButton radioButtonIpayContactsSelector;
 
     private ContactsFragment miPayAllContactsFragment;
     private ContactsFragment miPayMemberContactsFragment;
@@ -81,59 +83,22 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         mContactCount = (TextView) v.findViewById(R.id.contact_count);
         mAddContactButton = (FloatingActionButton) v.findViewById(R.id.fab_add_contact);
 
-        mAllContactsSelector = (CheckBox) v.findViewById(R.id.checkbox_contacts_all);
-        miPayContactsSelector = (CheckBox) v.findViewById(R.id.checkbox_contacts_ipay);
+        contactTypeRadioGroup = (RadioGroup) v.findViewById(R.id.contact_type_radio_group);
+        radioButtonAllContactsSelector = (RadioButton) v.findViewById(R.id.radio_button_all_contacts);
+        radioButtonIpayContactsSelector = (RadioButton) v.findViewById(R.id.radio_button_ipay_contacts);
 
-        mAllContactsSelector.setChecked(true);
-        miPayContactsSelector.setChecked(false);
-
-        miPayContactsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
-        mAllContactsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
-
-        mAllContactsSelector.setOnClickListener(new View.OnClickListener() {
+        contactTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                if (mAllContactsSelector.isChecked()) {
-                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS)) {
-                        mAllContactsSelector.setChecked(true);
-                        miPayContactsSelector.setChecked(false);
-
-                        miPayContactsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
-                        mAllContactsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
-                        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, new Fragment()).commit();
-                        return;
-                    }
-                    Utilities.hideKeyboard(getActivity());
-                    switchToAllContacts();
-                } else {
-                    miPayContactsSelector.setChecked(false);
-                    mAllContactsSelector.setChecked(true);
+            @ValidateAccess
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.radio_button_all_contacts:
+                        switchToAllContacts();
+                        break;
+                    case R.id.radio_button_completed:
+                        switchToiPayContacts();
+                        break;
                 }
-            }
-        });
-
-        miPayContactsSelector.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (miPayContactsSelector.isChecked()) {
-                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS)) {
-                        miPayContactsSelector.setChecked(true);
-                        mAllContactsSelector.setChecked(false);
-
-                        mAllContactsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
-                        miPayContactsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
-                        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_contacts, new Fragment()).commit();
-                        return;
-                    }
-                    Utilities.hideKeyboard(getActivity());
-                    switchToiPayContacts();
-                } else {
-                    miPayContactsSelector.setChecked(true);
-                    mAllContactsSelector.setChecked(false);
-                }
-
             }
         });
 
@@ -161,10 +126,9 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS)) {
-            return;
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS)) {
+            radioButtonIpayContactsSelector.setChecked(true);
         }
-        switchToiPayContacts();
     }
 
     @Override
@@ -281,12 +245,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     }
 
     private void switchToAllContacts() {
-        mAllContactsSelector.setChecked(true);
-        miPayContactsSelector.setChecked(false);
-
-        mAllContactsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
-        miPayContactsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
-
         try {
             if (getActivity() != null) {
                 if (miPayAllContactsFragment == null) {
@@ -307,12 +265,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     }
 
     private void switchToiPayContacts() {
-        mAllContactsSelector.setChecked(false);
-        miPayContactsSelector.setChecked(true);
-
-        mAllContactsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
-        miPayContactsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
-
         try {
             if (miPayMemberContactsFragment == null) {
                 miPayMemberContactsFragment = new ContactsFragment();
