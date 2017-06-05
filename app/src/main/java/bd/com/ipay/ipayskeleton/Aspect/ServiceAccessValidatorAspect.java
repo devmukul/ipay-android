@@ -43,8 +43,7 @@ public class ServiceAccessValidatorAspect {
 
         Object result = null;
 
-        if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.ADD_CONTACTS)) {
-        } else {
+        if (ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.ADD_CONTACTS)) {
             result = joinPoint.proceed();
         }
         return result;
