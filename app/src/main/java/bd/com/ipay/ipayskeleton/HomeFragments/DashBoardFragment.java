@@ -106,10 +106,17 @@ public class DashBoardFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 if (position == TRANSACTION_HISTORY_TAB) {
+                    // This if check will not give user access to the Transaction tab if the user doesn't have the permission
+                    // ALL_TRANSACTION. If the user have all transaction permission but doesn't have both
+                    // PENDING_TRANSACTION and COMPLETED_TRANSACTION with will give access to the Transaction tab but will prompt a
+                    // message.
                     if (!ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.ALL_TRANSACTION)) {
                         DialogUtils.showServiceNotAllowedDialog(getContext());
                         viewPager.setCurrentItem(currentTab);
                         return;
+                    } else if (!(ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION) ||
+                            ACLCacheManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION))) {
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
                     }
                 }
                 currentTab = position;

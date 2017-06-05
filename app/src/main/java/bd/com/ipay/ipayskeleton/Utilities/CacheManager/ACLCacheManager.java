@@ -71,7 +71,7 @@ public class ACLCacheManager {
         mapServiceAccessByIntID.put(R.id.nav_account, hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE));
         mapServiceAccessByIntID.put(R.id.nav_bank_account, hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS));
         mapServiceAccessByIntID.put(R.id.nav_user_activity, hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY));
-        mapServiceAccessByIntID.put(R.id.nav_security_settings, hasServicesAccessibility(ServiceIdConstants.SEE_SECURITY, ServiceIdConstants.MANAGE_SECURITY));
+        mapServiceAccessByIntID.put(R.id.nav_security_settings, hasServicesAccessibility(ServiceIdConstants.SEE_SECURITY));
         mapServiceAccessByIntID.put(R.id.nav_invite, hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS, ServiceIdConstants.MANAGE_INVITATIONS));
         mapServiceAccessByIntID.put(R.id.nav_help, true);
         mapServiceAccessByIntID.put(R.id.nav_about, true);
