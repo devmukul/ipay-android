@@ -25,8 +25,8 @@ import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCo
 public class ACLManager {
     private static SparseBooleanArray allowedServiceArray;
 
-    private static HashMap<String, Boolean> mapServiceAccessByName;
-    private static SparseBooleanArray mapServiceAccessByIntID;
+    private static HashMap<String, Boolean> mapServiceAccessByTargetedFragment;
+    private static SparseBooleanArray mapServiceAccessByNavigationMenuId;
 
     public static void initialize() {
         allowedServiceArray = new SparseBooleanArray();
@@ -43,17 +43,17 @@ public class ACLManager {
         return isServiceAllowed;
     }
 
-    public static boolean checkServicesAccessibilityByName(String serviceName) {
-        if (mapServiceAccessByName == null) {
+    public static boolean checkServicesAccessibilityByTargetedFragment(String serviceName) {
+        if (mapServiceAccessByTargetedFragment == null) {
             return false;
-        } else if (mapServiceAccessByName.get(serviceName) == null) {
+        } else if (mapServiceAccessByTargetedFragment.get(serviceName) == null) {
             return false;
         }
-        return mapServiceAccessByName.get(serviceName);
+        return mapServiceAccessByTargetedFragment.get(serviceName);
     }
 
-    public static boolean checkServicesAccessibilityByIntId(int id) {
-        return mapServiceAccessByIntID != null && mapServiceAccessByIntID.get(id, false);
+    public static boolean checkServicesAccessibilityByNavigationMenuId(int id) {
+        return mapServiceAccessByNavigationMenuId != null && mapServiceAccessByNavigationMenuId.get(id, false);
     }
 
     public static void updateAllowedServiceArray(int[] serviceCodeList) {
@@ -66,40 +66,40 @@ public class ACLManager {
     }
 
     private static void populateServiceAccessByIntIDMapping() {
-        mapServiceAccessByIntID = new SparseBooleanArray();
-        mapServiceAccessByIntID.put(R.id.nav_home, true);
-        mapServiceAccessByIntID.put(R.id.nav_account, hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE));
-        mapServiceAccessByIntID.put(R.id.nav_bank_account, hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS));
-        mapServiceAccessByIntID.put(R.id.nav_user_activity, hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY));
-        mapServiceAccessByIntID.put(R.id.nav_security_settings, hasServicesAccessibility(ServiceIdConstants.SEE_SECURITY));
-        mapServiceAccessByIntID.put(R.id.nav_invite, hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS, ServiceIdConstants.MANAGE_INVITATIONS));
-        mapServiceAccessByIntID.put(R.id.nav_help, true);
-        mapServiceAccessByIntID.put(R.id.nav_about, true);
-        mapServiceAccessByIntID.put(R.id.nav_logout, hasServicesAccessibility(ServiceIdConstants.SIGN_OUT));
+        mapServiceAccessByNavigationMenuId = new SparseBooleanArray();
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_home, true);
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_account, hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE));
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_bank_account, hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS));
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_user_activity, hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY));
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_security_settings, hasServicesAccessibility(ServiceIdConstants.SEE_SECURITY));
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_invite, hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS, ServiceIdConstants.MANAGE_INVITATIONS));
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_help, true);
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_about, true);
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_logout, hasServicesAccessibility(ServiceIdConstants.SIGN_OUT));
     }
 
     private static void populateServiceAccessByNameMapping() {
-        mapServiceAccessByName = new HashMap<>();
+        mapServiceAccessByTargetedFragment = new HashMap<>();
 
-        mapServiceAccessByName.put(Constants.VERIFY_BANK, hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
-        mapServiceAccessByName.put(Constants.LINK_BANK, hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
+        mapServiceAccessByTargetedFragment.put(Constants.VERIFY_BANK, hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
+        mapServiceAccessByTargetedFragment.put(Constants.LINK_BANK, hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
 
-        mapServiceAccessByName.put(BASIC_PROFILE, hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE));
-        mapServiceAccessByName.put(BUSINESS_INFO, hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO));
+        mapServiceAccessByTargetedFragment.put(BASIC_PROFILE, hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE));
+        mapServiceAccessByTargetedFragment.put(BUSINESS_INFO, hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO));
 
-        mapServiceAccessByName.put(INTRODUCER, hasServicesAccessibility(ServiceIdConstants.MANAGE_INTRODUCERS));
+        mapServiceAccessByTargetedFragment.put(INTRODUCER, hasServicesAccessibility(ServiceIdConstants.MANAGE_INTRODUCERS));
 
-        mapServiceAccessByName.put(PERSONAL_ADDRESS, hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS));
-        mapServiceAccessByName.put(BUSINESS_ADDRESS, hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS));
+        mapServiceAccessByTargetedFragment.put(PERSONAL_ADDRESS, hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS));
+        mapServiceAccessByTargetedFragment.put(BUSINESS_ADDRESS, hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS));
 
-        mapServiceAccessByName.put(VERIFIED_EMAIL, hasServicesAccessibility(ServiceIdConstants.MANAGE_EMAILS));
+        mapServiceAccessByTargetedFragment.put(VERIFIED_EMAIL, hasServicesAccessibility(ServiceIdConstants.MANAGE_EMAILS));
 
-        mapServiceAccessByName.put(BUSINESS_DOCUMENTS, hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_DOCS));
-        mapServiceAccessByName.put(VERIFICATION_DOCUMENT, hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS));
-        mapServiceAccessByName.put(PHOTOID, hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS));
+        mapServiceAccessByTargetedFragment.put(BUSINESS_DOCUMENTS, hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_DOCS));
+        mapServiceAccessByTargetedFragment.put(VERIFICATION_DOCUMENT, hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS));
+        mapServiceAccessByTargetedFragment.put(PHOTOID, hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS));
 
-        mapServiceAccessByName.put(PROFILE_COMPLETENESS, hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE_COMPLETION));
-        mapServiceAccessByName.put(PROFILE_INFO, hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE));
-        mapServiceAccessByName.put(PROFILE_PICTURE, hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE_PICTURE));
+        mapServiceAccessByTargetedFragment.put(PROFILE_COMPLETENESS, hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE_COMPLETION));
+        mapServiceAccessByTargetedFragment.put(PROFILE_INFO, hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE));
+        mapServiceAccessByTargetedFragment.put(PROFILE_PICTURE, hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE_PICTURE));
     }
 }

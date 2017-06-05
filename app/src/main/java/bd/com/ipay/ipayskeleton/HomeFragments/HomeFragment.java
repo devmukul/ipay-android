@@ -220,7 +220,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         refreshBalanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess({ServiceIdConstants.BALANCE})
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     refreshBalance();
@@ -265,10 +264,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         // TODO we should refresh the balance only based on push notification, no need to fetch it
         // from the server every time someone navigates to the home activity. Once push is implemented
         // properly, move it to onCreate.
-        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.BALANCE)) {
-            balanceView.setText(R.string.not_available);
-            return;
-        }
         refreshBalance();
     }
 
@@ -390,6 +385,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     }
 
     private void refreshBalance() {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.BALANCE)) {
+            balanceView.setText(R.string.not_available);
+            return;
+        }
         if (mRefreshBalanceTask != null || getActivity() == null)
             return;
 
@@ -498,10 +497,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private final BroadcastReceiver mBalanceUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.BALANCE)) {
-                balanceView.setText(R.string.not_available);
-                return;
-            }
             refreshBalance();
         }
     };

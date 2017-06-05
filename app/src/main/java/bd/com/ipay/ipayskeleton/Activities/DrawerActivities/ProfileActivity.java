@@ -29,7 +29,6 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
-import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BASIC_PROFILE;
@@ -110,6 +109,12 @@ public class ProfileActivity extends BaseActivity {
     }
 
     public void switchToFragment(String targetFragment, Bundle bundle, boolean addToBackStack) {
+
+        if (ACLManager.checkServicesAccessibilityByTargetedFragment(targetFragment)) {
+            DialogUtils.showServiceNotAllowedDialog(ProfileActivity.this);
+            return;
+        }
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment fragment;
 
@@ -134,17 +139,9 @@ public class ProfileActivity extends BaseActivity {
                     else fragment = new BasicInfoFragment();
                     break;
                 case BUSINESS_INFO:
-                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO)) {
-                        DialogUtils.showServiceNotAllowedDialog(ProfileActivity.this);
-                        return;
-                    }
                     fragment = new BusinessInformationFragment();
                     break;
                 case PROFILE_PICTURE:
-                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE_PICTURE)) {
-                        DialogUtils.showServiceNotAllowedDialog(ProfileActivity.this);
-                        return;
-                    }
                     fragment = new AccountFragment();
                     break;
                 case PARENT:

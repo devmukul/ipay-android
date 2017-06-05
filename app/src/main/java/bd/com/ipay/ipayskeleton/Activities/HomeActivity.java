@@ -371,7 +371,7 @@ public class HomeActivity extends BaseActivity
 
     private void gotoDrawerItem(MenuItem item) {
         int id = item.getItemId();
-        if (!ACLManager.checkServicesAccessibilityByIntId(id)) {
+        if (!ACLManager.checkServicesAccessibilityByNavigationMenuId(id)) {
             DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
             return;
         }

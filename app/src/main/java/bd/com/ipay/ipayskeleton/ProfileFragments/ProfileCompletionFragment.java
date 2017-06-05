@@ -22,7 +22,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
@@ -169,9 +168,6 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (ACLManager.checkServicesAccessibilityByName(propertyDetails.getPropertyName())) {
-                            return;
-                        }
                         ((ProfileActivity) getActivity()).switchToFragment(propertyDetails.getPropertyName(), null, true);
                     }
                 });
