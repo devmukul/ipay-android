@@ -1,3 +1,4 @@
+/*
 package bd.com.ipay.ipayskeleton.Activities.DrawerActivities;
 
 import android.content.Context;
@@ -188,3 +189,4 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
         }
     }
 }
+*/
