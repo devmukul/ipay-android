@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.Aspect;
 
+import android.app.Dialog;
 import android.view.View;
 import android.widget.RadioGroup;
 
@@ -32,8 +33,13 @@ public class ServiceAccessValidatorAspect {
         Logger.logW("ServiceIds", Arrays.toString(serviceIds));
 
         if (!ACLManager.hasServicesAccessibility(serviceIds)) {
-            View view = (View) joinPoint.getArgs()[0];
-            DialogUtils.showServiceNotAllowedDialog(view.getContext());
+            if (joinPoint.getArgs()[0] instanceof View) {
+                View view = (View) joinPoint.getArgs()[0];
+                DialogUtils.showServiceNotAllowedDialog(view.getContext());
+            } else if (joinPoint.getArgs()[0] instanceof Dialog) {
+                Dialog dialog = (Dialog) joinPoint.getArgs()[0];
+                DialogUtils.showServiceNotAllowedDialog(dialog.getContext());
+            }
         } else {
             result = joinPoint.proceed();
         }

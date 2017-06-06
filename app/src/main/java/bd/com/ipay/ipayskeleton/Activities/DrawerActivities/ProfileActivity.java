@@ -110,7 +110,7 @@ public class ProfileActivity extends BaseActivity {
 
     public void switchToFragment(String targetFragment, Bundle bundle, boolean addToBackStack) {
 
-        if (ACLManager.checkServicesAccessibilityByTargetedFragment(targetFragment)) {
+        if (!ACLManager.checkServicesAccessibilityByTargetedFragment(targetFragment)) {
             DialogUtils.showServiceNotAllowedDialog(ProfileActivity.this);
             return;
         }

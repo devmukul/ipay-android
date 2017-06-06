@@ -711,6 +711,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
         dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_INVITATIONS)
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
                 boolean wantToIntroduce = introduceCheckbox.isChecked();
