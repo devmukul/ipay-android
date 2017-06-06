@@ -17,10 +17,7 @@ import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryHolderFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
-import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class DashBoardFragment extends Fragment {
@@ -32,7 +29,6 @@ public class DashBoardFragment extends Fragment {
 
     private final int TOTAL_PAGE_COUNT = 4;
 
-    private int currentTab = HOME_TAB;
     private HomeFragment mHomeFragment;
     private PayFragment mPayFragment;
     private ContactsHolderFragment mContactsHolderFragment;
@@ -105,21 +101,6 @@ public class DashBoardFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
-                if (position == TRANSACTION_HISTORY_TAB) {
-                    // This if check will not give user access to the Transaction tab if the user doesn't have the permission
-                    // ALL_TRANSACTION. If the user have all transaction permission but doesn't have both
-                    // PENDING_TRANSACTION and COMPLETED_TRANSACTION with will give access to the Transaction tab but will prompt a
-                    // message.
-                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.ALL_TRANSACTION)) {
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
-                        viewPager.setCurrentItem(currentTab);
-                        return;
-                    } else if (!(ACLManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION) ||
-                            ACLManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION))) {
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
-                    }
-                }
-                currentTab = position;
                 Utilities.hideKeyboard(getActivity());
             }
 
