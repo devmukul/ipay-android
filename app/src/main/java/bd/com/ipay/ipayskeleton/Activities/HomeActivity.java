@@ -380,28 +380,34 @@ public class HomeActivity extends BaseActivity
             switchToDashBoard();
 
         } else if (id == R.id.nav_account) {
+
             launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_INFO, new Bundle());
         } else if (id == R.id.nav_bank_account) {
+
             Intent intent = new Intent(HomeActivity.this, ManageBanksActivity.class);
             startActivity(intent);
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_user_activity) {
+
             Intent intent = new Intent(HomeActivity.this, ActivityLogActivity.class);
             startActivity(intent);
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_security_settings) {
+
             Intent intent = new Intent(HomeActivity.this, SecuritySettingsActivity.class);
             startActivity(intent);
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_invite) {
+
             Intent intent = new Intent(this, InviteActivity.class);
             startActivity(intent);
             switchedToHomeFragment = true;
 
         } else if (id == R.id.nav_help) {
+
             Intent intent = new Intent(this, HelpAndSupportActivity.class);
             startActivity(intent);
             switchedToHomeFragment = false;

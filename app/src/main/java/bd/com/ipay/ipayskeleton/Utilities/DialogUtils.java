@@ -41,7 +41,7 @@ public class DialogUtils {
     public static void showServiceNotAllowedDialog(final Context mContext) {
         MaterialDialog dialog = new MaterialDialog.Builder(mContext)
                 .cancelable(false)
-                .content(R.string.contact_support)
+                .content(R.string.contact_support_message)
                 .negativeText(R.string.cancel)
                 .show();
         dialog.show();

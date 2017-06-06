@@ -95,7 +95,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
                     case R.id.radio_button_all_contacts:
                         switchToAllContacts();
                         break;
-                    case R.id.radio_button_completed:
+                    case R.id.radio_button_ipay_contacts:
                         switchToiPayContacts();
                         break;
                 }

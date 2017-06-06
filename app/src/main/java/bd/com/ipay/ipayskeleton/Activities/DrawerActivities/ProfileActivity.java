@@ -136,7 +136,8 @@ public class ProfileActivity extends BaseActivity {
                 case BASIC_PROFILE:
                     if (ProfileInfoCacheManager.isBusinessAccount())
                         fragment = new BusinessInformationFragment();
-                    else fragment = new BasicInfoFragment();
+                    else
+                        fragment = new BasicInfoFragment();
                     break;
                 case BUSINESS_INFO:
                     fragment = new BusinessInformationFragment();
@@ -153,7 +154,8 @@ public class ProfileActivity extends BaseActivity {
                 case PERSONAL_ADDRESS:
                     if (ProfileInfoCacheManager.isBusinessAccount())
                         fragment = new BusinessInformationFragment();
-                    else fragment = new AddressFragment();
+                    else
+                        fragment = new AddressFragment();
                     break;
                 case BUSINESS_ADDRESS:
                     fragment = new AddressFragment();
@@ -171,6 +173,7 @@ public class ProfileActivity extends BaseActivity {
                     break;
                 case PROFILE_INFO:
                     fragment = new AccountFragment();
+                    break;
                 default:
                     fragment = new AccountFragment();
             }
