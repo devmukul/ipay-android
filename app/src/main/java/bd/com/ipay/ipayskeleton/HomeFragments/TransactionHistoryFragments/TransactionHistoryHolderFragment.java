@@ -17,9 +17,9 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 public class TransactionHistoryHolderFragment extends Fragment {
 
-    private RadioGroup transactionHistoryTypeRadioGroup;
-    private RadioButton pendingTransactionRadioButton;
-    private RadioButton completedTransactionRadioButton;
+    private RadioGroup mTransactionHistoryTypeRadioGroup;
+    private RadioButton mPendingTransactionRadioButton;
+    private RadioButton mCompletedTransactionRadioButton;
 
     private TransactionHistoryCompletedFragment mProcessedTransactionHistoryCompletedFragment;
     private TransactionHistoryPendingFragment mPendingTransactionHistoryFragment;
@@ -36,11 +36,11 @@ public class TransactionHistoryHolderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_transaction_history_holder, container, false);
 
-        transactionHistoryTypeRadioGroup = (RadioGroup) v.findViewById(R.id.transaction_history_type_radio_group);
-        pendingTransactionRadioButton = (RadioButton) v.findViewById(R.id.radio_button_pending);
-        completedTransactionRadioButton = (RadioButton) v.findViewById(R.id.radio_button_completed);
+        mTransactionHistoryTypeRadioGroup = (RadioGroup) v.findViewById(R.id.transaction_history_type_radio_group);
+        mPendingTransactionRadioButton = (RadioButton) v.findViewById(R.id.radio_button_pending);
+        mCompletedTransactionRadioButton = (RadioButton) v.findViewById(R.id.radio_button_completed);
 
-        transactionHistoryTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        mTransactionHistoryTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             @ValidateAccess
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -64,9 +64,9 @@ public class TransactionHistoryHolderFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ALL_TRANSACTION)) {
             if (ACLManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION)) {
-                pendingTransactionRadioButton.setChecked(true);
+                mPendingTransactionRadioButton.setChecked(true);
             } else if (ACLManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION)) {
-                completedTransactionRadioButton.setChecked(true);
+                mCompletedTransactionRadioButton.setChecked(true);
             }
         }
     }

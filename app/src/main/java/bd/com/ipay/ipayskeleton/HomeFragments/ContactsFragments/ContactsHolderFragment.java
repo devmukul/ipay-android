@@ -49,9 +49,9 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
     private BottomSheetLayout mBottomSheetLayout;
 
-    private RadioGroup contactTypeRadioGroup;
-    private RadioButton radioButtonAllContactsSelector;
-    private RadioButton radioButtonIpayContactsSelector;
+    private RadioGroup mContactTypeRadioGroup;
+    private RadioButton mRadioButtonAllContactsSelector;
+    private RadioButton mRadioButtonIpayContactsSelector;
 
     private ContactsFragment miPayAllContactsFragment;
     private ContactsFragment miPayMemberContactsFragment;
@@ -83,11 +83,11 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         mContactCount = (TextView) v.findViewById(R.id.contact_count);
         mAddContactButton = (FloatingActionButton) v.findViewById(R.id.fab_add_contact);
 
-        contactTypeRadioGroup = (RadioGroup) v.findViewById(R.id.contact_type_radio_group);
-        radioButtonAllContactsSelector = (RadioButton) v.findViewById(R.id.radio_button_all_contacts);
-        radioButtonIpayContactsSelector = (RadioButton) v.findViewById(R.id.radio_button_ipay_contacts);
+        mContactTypeRadioGroup = (RadioGroup) v.findViewById(R.id.contact_type_radio_group);
+        mRadioButtonAllContactsSelector = (RadioButton) v.findViewById(R.id.radio_button_all_contacts);
+        mRadioButtonIpayContactsSelector = (RadioButton) v.findViewById(R.id.radio_button_ipay_contacts);
 
-        contactTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        mContactTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             @ValidateAccess
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -127,7 +127,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS)) {
-            radioButtonIpayContactsSelector.setChecked(true);
+            mRadioButtonIpayContactsSelector.setChecked(true);
         }
     }
 
