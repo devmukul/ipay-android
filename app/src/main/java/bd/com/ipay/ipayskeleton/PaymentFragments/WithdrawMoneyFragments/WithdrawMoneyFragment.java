@@ -112,6 +112,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
 
         buttonWithdrawMoney.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.WITHDRAW_MONEY)
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     if (verifyUserInputs()) {
@@ -131,6 +132,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         });
         mBankIcon.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_BANK_ACCOUNTS)
             public void onClick(View v) {
                 showBankListAlertDialogue();
             }
@@ -138,12 +140,14 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
 
         mBankBranchTextView.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_BANK_ACCOUNTS)
             public void onClick(View v) {
                 showBankListAlertDialogue();
             }
         });
         mBankAccountTextView.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_BANK_ACCOUNTS)
             public void onClick(View v) {
                 showBankListAlertDialogue();
             }

@@ -112,6 +112,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
         buttonAddMoney.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.ADD_MONEY)
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     if (verifyUserInputs()) {
@@ -131,6 +132,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         });
         mBankIcon.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_BANK_ACCOUNTS)
             public void onClick(View v) {
                 showBankListAlertDialogue();
             }
@@ -138,12 +140,14 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
         mBankBranchTextView.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_BANK_ACCOUNTS)
             public void onClick(View v) {
                 showBankListAlertDialogue();
             }
         });
         mBankAccountTextView.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_BANK_ACCOUNTS)
             public void onClick(View v) {
                 showBankListAlertDialogue();
             }
