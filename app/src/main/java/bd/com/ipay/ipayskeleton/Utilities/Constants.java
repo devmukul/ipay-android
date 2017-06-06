@@ -29,7 +29,6 @@ public class Constants {
     public static final String INVOICE = "INVOICE";
     public static final String REQUEST = "REQUEST";
     public static final String RECOMMENDATION = "RECOMMENDATION";
-    public static final String BUSINESS = "BUSINESS";
     public static final String TRANSACTION_DETAILS = "TRANSACTION_DETAILS";
     public static final String MONEY_REQUEST_ID = "MONEY REQUESTS ID";
     public static final String MONEY_REQUEST_SERVICE_ID = "SERVICE_ID";
