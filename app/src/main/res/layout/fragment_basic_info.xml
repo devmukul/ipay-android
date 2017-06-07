@@ -41,126 +41,151 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/contact_info_holder"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:id="@+id/user_information_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <TextView
-                        style="@style/AddressViewHeader"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/personal_info" />
+                        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/activity_horizontal_margin"
+                        android:paddingRight="@dimen/activity_horizontal_margin">
+
+                        <LinearLayout
+                            android:id="@+id/contact_info_holder"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/AddressViewHeader"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/personal_info" />
+
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/button_edit_contact_information"
+                            style="@style/EditIconButton"
+                            android:padding="@dimen/activity_vertical_margin_card"
+                            android:src="@drawable/ic_editgrey" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextViewInfoLabel"
+                            android:text="@string/name" />
+
+                        <TextView
+                            android:id="@+id/textview_name"
+                            style="@style/TextViewInfoColorPrimary"
+                            android:layout_weight=".3" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextViewInfoLabel"
+                            android:text="@string/date_of_birth" />
+
+                        <TextView
+                            android:id="@+id/textview_dob"
+                            style="@style/TextViewInfoColorPrimary" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextViewInfoLabel"
+                            android:text="@string/occupation" />
+
+                        <TextView
+                            android:id="@+id/textview_occupation"
+                            style="@style/TextViewInfoColorPrimary"
+                            android:layout_weight=".3"
+                            android:text="@string/not_set"
+                            android:textColor="@color/background_red" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextViewInfoLabel"
+                            android:text="@string/organization_name" />
+
+                        <TextView
+                            android:id="@+id/textview_organization_name"
+                            style="@style/TextViewInfoColorPrimary"
+                            android:layout_weight=".5"
+                            android:text="@string/not_set"
+                            android:textColor="@color/background_red" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextViewInfoLabel"
+                            android:text="@string/gender" />
+
+                        <TextView
+                            android:id="@+id/textview_gender"
+                            style="@style/TextViewInfoColorPrimary"
+                            android:text="@string/not_set"
+                            android:textColor="@color/background_red" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextViewInfoLabel"
+                            android:text="@string/member_since" />
+
+                        <TextView
+                            android:id="@+id/textview_signup"
+                            style="@style/TextViewInfoColorPrimary" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-                <ImageButton
-                    android:id="@+id/button_edit_contact_information"
-                    style="@style/EditIconButton"
-                    android:padding="@dimen/activity_vertical_margin_card"
-                    android:src="@drawable/ic_editgrey" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
-
                 <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/name" />
-
-                <TextView
-                    android:id="@+id/textview_name"
-                    style="@style/TextViewInfoColorPrimary"
-                    android:layout_weight=".3" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/date_of_birth" />
-
-                <TextView
-                    android:id="@+id/textview_dob"
-                    style="@style/TextViewInfoColorPrimary" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/occupation" />
-
-                <TextView
-                    android:id="@+id/textview_occupation"
-                    style="@style/TextViewInfoColorPrimary"
-                    android:layout_weight=".3"
-                    android:text="@string/not_set"
-                    android:textColor="@color/background_red" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/organization_name" />
-
-                <TextView
-                    android:id="@+id/textview_organization_name"
-                    style="@style/TextViewInfoColorPrimary"
-                    android:layout_weight=".5"
-                    android:text="@string/not_set"
-                    android:textColor="@color/background_red" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/gender" />
-
-                <TextView
-                    android:id="@+id/textview_gender"
-                    style="@style/TextViewInfoColorPrimary"
-                    android:text="@string/not_set"
-                    android:textColor="@color/background_red" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/member_since" />
-
-                <TextView
-                    android:id="@+id/textview_signup"
-                    style="@style/TextViewInfoColorPrimary" />
-
+                    android:id="@+id/user_info_service_not_allowed_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:text="@string/see_basic_info_service_not_allowed_message"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <View
@@ -170,98 +195,122 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/parent_info_holder"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:id="@+id/parent_information_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <TextView
-                        style="@style/AddressViewHeader"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/parent_info" />
+                        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/activity_horizontal_margin"
+                        android:paddingRight="@dimen/activity_horizontal_margin">
 
+                        <LinearLayout
+                            android:id="@+id/parent_info_holder"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/AddressViewHeader"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/parent_info" />
+
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/button_edit_parent_information"
+                            style="@style/EditIconButton"
+                            android:padding="@dimen/activity_vertical_margin_card"
+                            android:src="@drawable/ic_editgrey" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextViewInfoLabel"
+                            android:text="@string/fathers_name" />
+
+                        <TextView
+                            android:id="@+id/textview_fathers_name"
+                            style="@style/TextViewInfoColorPrimary"
+                            android:layout_weight=".3"
+                            android:text="@string/not_set"
+                            android:textColor="@color/background_red" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextViewInfoLabel"
+                            android:text="@string/mobile" />
+
+                        <TextView
+                            android:id="@+id/textview_fathers_mobile"
+                            style="@style/TextViewInfoColorPrimary"
+                            android:text="@string/not_set"
+                            android:textColor="@color/background_red" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextViewInfoLabel"
+                            android:text="@string/mothers_name" />
+
+                        <TextView
+                            android:id="@+id/textview_mothers_name"
+                            style="@style/TextViewInfoColorPrimary"
+                            android:layout_weight=".3"
+                            android:text="@string/not_set"
+                            android:textColor="@color/background_red" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextViewInfoLabel"
+                            android:text="@string/mobile" />
+
+                        <TextView
+                            android:id="@+id/textview_mothers_mobile"
+                            style="@style/TextViewInfoColorPrimary"
+                            android:text="@string/not_set"
+                            android:textColor="@color/background_red" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <ImageButton
-                    android:id="@+id/button_edit_parent_information"
-                    style="@style/EditIconButton"
-                    android:padding="@dimen/activity_vertical_margin_card"
-                    android:src="@drawable/ic_editgrey" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
-
                 <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/fathers_name" />
-
-                <TextView
-                    android:id="@+id/textview_fathers_name"
-                    style="@style/TextViewInfoColorPrimary"
-                    android:layout_weight=".3"
-                    android:text="@string/not_set"
-                    android:textColor="@color/background_red" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/mobile" />
-
-                <TextView
-                    android:id="@+id/textview_fathers_mobile"
-                    style="@style/TextViewInfoColorPrimary"
-                    android:text="@string/not_set"
-                    android:textColor="@color/background_red" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/mothers_name" />
-
-                <TextView
-                    android:id="@+id/textview_mothers_name"
-                    style="@style/TextViewInfoColorPrimary"
-                    android:layout_weight=".3"
-                    android:text="@string/not_set"
-                    android:textColor="@color/background_red" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewInfoLabel"
-                    android:text="@string/mobile" />
-
-                <TextView
-                    android:id="@+id/textview_mothers_mobile"
-                    style="@style/TextViewInfoColorPrimary"
-                    android:text="@string/not_set"
-                    android:textColor="@color/background_red" />
+                    android:id="@+id/parent_info_service_not_allowed_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:text="@string/see_parent_info_service_not_allowed_message"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
             </LinearLayout>
 
         </LinearLayout>

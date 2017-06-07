@@ -30,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Occupation;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.OccupationRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
@@ -89,6 +90,12 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     private ImageButton mContactEditButton;
     private ImageButton mParentInfoEditButton;
 
+    private View mUserInformationHolder;
+    private View mParentInformationHolder;
+
+    private TextView mUserInfoServiceNotAllowedTextView;
+    private TextView mParentInfoServiceNotAllowedTextView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +126,10 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mProgressDialog = new ProgressDialog(getActivity());
         mContactEditButton = (ImageButton) view.findViewById(R.id.button_edit_contact_information);
         mParentInfoEditButton = (ImageButton) view.findViewById(R.id.button_edit_parent_information);
+        mUserInformationHolder = view.findViewById(R.id.user_information_holder);
+        mParentInformationHolder = view.findViewById(R.id.parent_information_holder);
+        mUserInfoServiceNotAllowedTextView = (TextView) view.findViewById(R.id.user_info_service_not_allowed_text_view);
+        mParentInfoServiceNotAllowedTextView = (TextView) view.findViewById(R.id.parent_info_service_not_allowed_text_view);
 
         if (ProfileInfoCacheManager.isAccountVerified())
             mContactEditButton.setVisibility(View.GONE);
@@ -215,24 +226,36 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     }
 
     private void getProfileInfo() {
-        if (mGetProfileInfoTask != null) {
-            return;
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_USER_INFO)) {
+            mUserInformationHolder.setVisibility(View.GONE);
+            mUserInfoServiceNotAllowedTextView.setVisibility(View.VISIBLE);
+        } else {
+            if (mGetProfileInfoTask != null) {
+                return;
+            }
+
+            setContentShown(false);
+
+            mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
+                    Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this);
+            mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-
-        setContentShown(false);
-
-        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
-                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity(), this);
-        mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void getParentInfo() {
-        if (mGetParentInfoTask != null) {
-            return;
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PARENT)) {
+            mParentInformationHolder.setVisibility(View.GONE);
+            mParentInfoServiceNotAllowedTextView.setVisibility(View.VISIBLE);
+        } else {
+            if (mGetParentInfoTask != null) {
+                return;
+            }
+            mGetParentInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PARENT_INFO_REQUEST,
+                    Constants.BASE_URL_MM + Constants.URL_GET_PARENT_INFO_REQUEST, getActivity(), this);
+            mGetParentInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-        mGetParentInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PARENT_INFO_REQUEST,
-                Constants.BASE_URL_MM + Constants.URL_GET_PARENT_INFO_REQUEST, getActivity(), this);
-        mGetParentInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+
     }
 
     private void getOccupationList() {

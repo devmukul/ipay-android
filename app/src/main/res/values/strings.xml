@@ -806,6 +806,8 @@
     <string name="max_limit_exceed">Max limit of attachment exceed. </string>
     <string name="remove_contact_title">Delete contact </string>
     <string name="remove_contact_message">Delete this contact from iPay? </string>
+    <string name="see_parent_info_service_not_allowed_message">Parent Information can\'t be shown. Please contact support for more info.</string>
+    <string name="see_basic_info_service_not_allowed_message">User Information can\'t be shown. Please contact support for more info.</string>
 
     <string-array name="mobile_operators">
         <item>Grameenphone</item>
