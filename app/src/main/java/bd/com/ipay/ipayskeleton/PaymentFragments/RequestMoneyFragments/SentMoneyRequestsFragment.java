@@ -27,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequest
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.GetMoneyRequest;
@@ -75,6 +76,9 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
     private long mMoneyRequestId;
     private String mDescription;
 
+    private View mProgressContainer;
+    private View mContentContainer;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sent_money_requests, container, false);
@@ -83,6 +87,9 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
 
         mEmptyListTextView = (TextView) view.findViewById(R.id.empty_list_text);
+        mProgressContainer = view.findViewById(R.id.progress_container);
+        mContentContainer = view.findViewById(R.id.content_container);
+
         mPendingRequestsAdapter = new SentMoneyRequestListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mPendingListRecyclerView.setLayoutManager(mLayoutManager);
@@ -91,17 +98,27 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SENT_REQUEST)) {
-                    DialogUtils.showServiceNotAllowedDialog(getContext());
-                    return;
-                }
-                if (Utilities.isConnectionAvailable(getActivity())) {
-                    refreshPendingList();
-                }
+                getSentMoneyList(true);
             }
         });
 
         return view;
+    }
+
+    private void getSentMoneyList(boolean showWarningDialog) {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SENT_REQUEST)) {
+            if (showWarningDialog) DialogUtils.showServiceNotAllowedDialog(getContext());
+
+            mProgressContainer.setVisibility(View.GONE);
+            mContentContainer.setVisibility(View.VISIBLE);
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+            mSwipeRefreshLayout.setRefreshing(false);
+        } else if (Utilities.isConnectionAvailable(getActivity())) {
+            pageCount = 0;
+            clearListAfterLoading = true;
+            getPendingRequests();
+        }
+
     }
 
     @Override
@@ -113,22 +130,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
     @Override
     public void onResume() {
         super.onResume();
-        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SENT_REQUEST)) {
-            return;
-        }
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            pageCount = 0;
-            clearListAfterLoading = true;
-            getPendingRequests();
-        }
-    }
-
-    private void refreshPendingList() {
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            pageCount = 0;
-            clearListAfterLoading = true;
-            getPendingRequests();
-        }
+        getSentMoneyList(false);
     }
 
     private void getPendingRequests() {
@@ -289,6 +291,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.TRANSACTION_DETAILS)
                     public void onClick(View v) {
 
                         mMoneyRequestId = id;

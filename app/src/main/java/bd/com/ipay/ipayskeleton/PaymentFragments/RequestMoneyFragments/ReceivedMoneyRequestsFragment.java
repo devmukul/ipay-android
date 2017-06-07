@@ -24,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequest
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.GetMoneyAndPaymentRequestResponse;
@@ -66,66 +67,65 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
     private String mDescription;
     private TextView mEmptyListTextView;
 
+    private View mProgressContainer;
+    private View mContentContainer;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_received_money_requests, container, false);
+        View view = inflater.inflate(R.layout.fragment_received_money_requests, container, false);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
-        mNotificationsRecyclerView = (RecyclerView) v.findViewById(R.id.list_notification);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        mNotificationsRecyclerView = (RecyclerView) view.findViewById(R.id.list_notification);
 
-        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
+        mEmptyListTextView = (TextView) view.findViewById(R.id.empty_list_text);
+        mProgressContainer = view.findViewById(R.id.progress_container);
+        mContentContainer = view.findViewById(R.id.content_container);
+
         mReceivedMoneyRequestListAdapter = new ReceivedMoneyRequestListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mNotificationsRecyclerView.setLayoutManager(mLayoutManager);
         mNotificationsRecyclerView.setAdapter(mReceivedMoneyRequestListAdapter);
 
-        // Refresh balance each time home_activity page appears
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.RECEIVED_REQUEST)) {
-                DialogUtils.showServiceNotAllowedDialog(getContext());
-
-            } else {
-                getMoneyRequests();
-            }
-        }
-
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.RECEIVED_REQUEST)) {
-                    DialogUtils.showServiceNotAllowedDialog(getContext());
-                    return;
-                }
-                refreshMoneyRequestList();
+                mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        getMoneyRequestList(true);
+                    }
+                });
             }
         });
 
-        return v;
+        return view;
+    }
+
+    private void getMoneyRequestList(boolean showWarningDialog) {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.RECEIVED_REQUEST)) {
+            if (showWarningDialog) DialogUtils.showServiceNotAllowedDialog(getContext());
+
+            mProgressContainer.setVisibility(View.GONE);
+            mContentContainer.setVisibility(View.VISIBLE);
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+            mSwipeRefreshLayout.setRefreshing(false);
+        } else if (Utilities.isConnectionAvailable(getActivity())) {
+            pageCount = 0;
+            clearListAfterLoading = true;
+            getMoneyRequests();
+        }
     }
 
 
     public void onResume() {
         super.onResume();
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.RECEIVED_REQUEST)) {
-                return;
-            }
-            refreshMoneyRequestList();
-        }
+        getMoneyRequestList(false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setContentShown(false);
-    }
-
-    private void refreshMoneyRequestList() {
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            pageCount = 0;
-            clearListAfterLoading = true;
-            getMoneyRequests();
-        }
     }
 
     private void getMoneyRequests() {
@@ -245,6 +245,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.TRANSACTION_DETAILS)
                     public void onClick(View v) {
 
                         mMoneyRequestId = id;
