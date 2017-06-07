@@ -319,7 +319,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                 mProfileCompletionPromptView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    @ValidateAccess(ServiceIdConstants.TOP_UP)
+                    @ValidateAccess(ServiceIdConstants.SEE_PROFILE)
                     public void onClick(View v) {
                         mProfileCompletionPromptView.setVisibility(View.GONE);
                         Intent intent = new Intent(getActivity(), ProfileActivity.class);
