@@ -150,20 +150,12 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         mBasicInfo.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_PROFILE)
             public void onClick(View view) {
-                if (ProfileInfoCacheManager.isBusinessAccount()) {
-                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO)) {
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
-                    } else {
-                        ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
-                    }
-                } else {
-                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_USER_INFO) && !ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PARENT)) {
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
-                    } else {
-                        ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
-                    }
-                }
+                if (ProfileInfoCacheManager.isBusinessAccount())
+                    ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
+                else
+                    ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
             }
         });
 

@@ -39,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Thana;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.ThanaRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -102,6 +103,12 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private List<BusinessType> mBusinessTypes;
     private List<Occupation> mOccupationList;
 
+    private View mBusinessInformationViewHolder;
+    private View mBusinessAddressViewHolder;
+
+    private TextView mBusinessInfoServiceNotAllowedTextView;
+    private TextView mBusinessAddressServiceNotAllowedTextView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -123,6 +130,11 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mOfficeInfoEditButton = (ImageButton) view.findViewById(R.id.button_edit_office_information);
         mPresentAddressEditButton = (ImageButton) view.findViewById(R.id.button_edit_present_address);
         mContactInfoEditButton = (ImageButton) view.findViewById(R.id.button_edit_contact_information);
+
+        mBusinessInformationViewHolder = view.findViewById(R.id.business_information_view_holder);
+        mBusinessAddressViewHolder = view.findViewById(R.id.business_address_view_holder);
+        mBusinessInfoServiceNotAllowedTextView = (TextView) view.findViewById(R.id.business_info_service_not_allowed_text_view);
+        mBusinessAddressServiceNotAllowedTextView = (TextView) view.findViewById(R.id.business_address_service_not_allowed_text_view);
 
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
 
@@ -159,8 +171,15 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setContentShown(false);
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO)) {
+            mBusinessInfoServiceNotAllowedTextView.setVisibility(View.VISIBLE);
+            mBusinessInformationViewHolder.setVisibility(View.GONE);
+            mPresentAddressHolder.setVisibility(View.GONE);
+        } else {
+            getBusinessInformation();
 
-        getBusinessInformation();
+        }
+
 
         if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE)
                 || PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE)) {
@@ -193,6 +212,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
         mPresentAddressEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_ADDRESS)
             public void onClick(View v) {
                 ((ProfileActivity) getActivity()).switchToEditAddressFragment(presentAddressBundle);
             }
@@ -479,7 +499,13 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                     mGetThanaResponse = gson.fromJson(result.getJsonString(), GetThanaResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mThanaList = mGetThanaResponse.getThanas();
-                        getUserAddress();
+                        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_ADDRESSES)) {
+                            getUserAddress();
+                        } else {
+                            mBusinessAddressServiceNotAllowedTextView.setVisibility(View.VISIBLE);
+                            mBusinessAddressViewHolder.setVisibility(View.GONE);
+                            setContentShown(true);
+                        }
 
                     } else {
                         if (getActivity() != null) {

@@ -6,6 +6,7 @@
     android:fillViewport="true">
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -34,53 +35,79 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/office_info_holder"
-                    android:layout_width="0dp"
+                    android:id="@+id/business_information_view_holder"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
-                        style="@style/AddressViewHeader"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/business_information" />
+                        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/activity_horizontal_margin"
+                        android:paddingRight="@dimen/activity_horizontal_margin">
 
+                        <LinearLayout
+                            android:id="@+id/office_info_holder"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/AddressViewHeader"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/business_information" />
+
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/button_edit_office_information"
+                            style="@style/EditIconButton"
+                            android:padding="@dimen/activity_vertical_margin_card"
+                            android:src="@drawable/ic_editgrey" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/LinearLayoutHolderVertical"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin_card">
+
+                        <TextView
+                            android:id="@+id/textview_business_name"
+                            style="@style/TextViewInfoLeftAlign" />
+
+                        <TextView
+                            android:id="@+id/textview_business_type"
+                            style="@style/TextViewInfoLeftAlign" />
+
+                        <TextView
+                            android:id="@+id/textview_signup"
+                            style="@style/TextViewInfoLeftAlign" />
+
+                        <TextView
+                            android:id="@+id/textview_business_mobile_number"
+                            style="@style/TextViewInfoLeftAlign" />
+
+                    </LinearLayout>
                 </LinearLayout>
 
-                <ImageButton
-                    android:id="@+id/button_edit_office_information"
-                    style="@style/EditIconButton"
-                    android:padding="@dimen/activity_vertical_margin_card"
-                    android:src="@drawable/ic_editgrey" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/LinearLayoutHolderVertical"
-                android:layout_marginBottom="@dimen/activity_vertical_margin_card">
-
                 <TextView
-                    android:id="@+id/textview_business_name"
-                    style="@style/TextViewInfoLeftAlign" />
-
-                <TextView
-                    android:id="@+id/textview_business_type"
-                    style="@style/TextViewInfoLeftAlign" />
-
-                <TextView
-                    android:id="@+id/textview_signup"
-                    style="@style/TextViewInfoLeftAlign" />
-
-                <TextView
-                    android:id="@+id/textview_business_mobile_number"
-                    style="@style/TextViewInfoLeftAlign" />
+                    android:id="@+id/business_info_service_not_allowed_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:text="@string/see_business_info_service_not_allowed_message"
+                    android:textColor="@color/colorRed"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
 
             </LinearLayout>
 
@@ -92,86 +119,114 @@
                 android:background="@color/colorDivider" />
 
             <LinearLayout
+                android:id="@+id/business_contact_view_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/contact_info_holder"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
 
-                    <TextView
-                        style="@style/AddressViewHeader"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:id="@+id/contact_info_holder"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/business_contact" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/AddressViewHeader"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/business_contact" />
+
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/button_edit_contact_information"
+                        style="@style/EditIconButton"
+                        android:padding="@dimen/activity_vertical_margin_card"
+                        android:src="@drawable/ic_editgrey" />
 
                 </LinearLayout>
 
-                <ImageButton
-                    android:id="@+id/button_edit_contact_information"
-                    style="@style/EditIconButton"
-                    android:padding="@dimen/activity_vertical_margin_card"
-                    android:src="@drawable/ic_editgrey" />
+                <LinearLayout style="@style/LinearLayoutHolderVertical">
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/textview_name"
+                        style="@style/TextViewInfoLeftAlign" />
 
-            <LinearLayout style="@style/LinearLayoutHolderVertical">
-
-                <TextView
-                    android:id="@+id/textview_name"
-                    style="@style/TextViewInfoLeftAlign" />
-
-                <TextView
+                    ght="@dimen/activity_horizontal_margin"
+                    android:text="@striactivity_horizontal_margin"
+                    android:text="@stri
                     android:id="@+id/textview_occupation"
                     style="@style/TextViewInfoLeftAlign" />
 
-                <TextView
-                    android:id="@+id/textview_organization_name"
-                    style="@style/TextViewInfoLeftAlign" />
+                    <TextView
+                        android:id="@+id/textview_organization_name"
+                        style="@style/TextViewInfoLeftAlign" />
 
-                <TextView
-                    android:id="@+id/textview_mobile_number"
-                    style="@style/TextViewInfoLeftAlign" />
+                    <TextView
+                        android:id="@+id/textview_mobile_number"
+                        style="@style/TextViewInfoLeftAlign" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:padding="@dimen/activity_horizontal_margin">
 
                 <LinearLayout
-                    android:id="@+id/present_address_holder"
-                    android:layout_width="0dp"
+                    android:id="@+id/business_address_view_holder"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
-                    <TextView
-                        style="@style/AddressViewHeader"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:id="@+id/present_address_holder"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/address" />
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/textview_present_address"
-                        style="@style/ProfileAddressTextStyle"
-                        android:layout_marginTop="@dimen/value5" />
+                        <TextView
+                            style="@style/AddressViewHeader"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/address" />
+
+                        <TextView
+                            android:id="@+id/textview_present_address"
+                            style="@style/ProfileAddressTextStyle"
+                            android:layout_marginTop="@dimen/value5" />
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/button_edit_present_address"
+                        style="@style/EditIconButton"
+                        android:padding="@dimen/activity_vertical_margin_card"
+                        android:src="@drawable/ic_editgrey" />
                 </LinearLayout>
 
-                <ImageButton
-                    android:id="@+id/button_edit_present_address"
-                    style="@style/EditIconButton"
-                    android:padding="@dimen/activity_vertical_margin_card"
-                    android:src="@drawable/ic_editgrey" />
+                <TextView
+                    android:id="@+id/business_address_service_not_allowed_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:text="@string/see_business_address_service_not_allowed_message"
+                    android:textColor="@color/colorRed"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
             </LinearLayout>
 
         </LinearLayout>
