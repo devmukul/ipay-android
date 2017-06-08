@@ -28,6 +28,7 @@ public class PasswordRecoveryFragment extends Fragment {
 
         securityQuestionHeader.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_SECURITY)
             public void onClick(View v) {
                 ((SecuritySettingsActivity) getActivity()).switchToSecurityQuestionFragment();
             }

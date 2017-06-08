@@ -81,6 +81,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
     private void setButtonActions() {
         mSetPINHeader.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_SECURITY)
             public void onClick(View v) {
                 ((SecuritySettingsActivity) getActivity()).switchToSetPinFragment();
             }
@@ -88,6 +89,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
 
         mChangePasswordHeader.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_SECURITY)
             public void onClick(View v) {
                 ((SecuritySettingsActivity) getActivity()).switchToChangePasswordFragment();
             }
