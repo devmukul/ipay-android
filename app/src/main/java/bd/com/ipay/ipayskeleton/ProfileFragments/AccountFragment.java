@@ -365,13 +365,18 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     }
 
     private void getProfileCompletionStatus() {
-        if (mGetProfileCompletionStatusTask != null) {
-            return;
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE_COMPLETION)) {
+            if (mGetProfileCompletionStatusTask != null) {
+                return;
+            }
+
+            mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
+                    Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
+            mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            mProfileCompletionStatusView.setVisibility(View.GONE);
         }
 
-        mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
-                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
-        mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void updateProfilePicture(Uri selectedImageUri) {

@@ -5,7 +5,6 @@ import android.util.SparseBooleanArray;
 import java.util.HashMap;
 
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BASIC_PROFILE;
@@ -20,6 +19,8 @@ import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCo
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROFILE_PICTURE;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.VERIFICATION_DOCUMENT;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.VERIFIED_EMAIL;
+import static bd.com.ipay.ipayskeleton.Utilities.Constants.LINK_BANK;
+import static bd.com.ipay.ipayskeleton.Utilities.Constants.VERIFY_BANK;
 
 
 public class ACLManager {
@@ -68,7 +69,7 @@ public class ACLManager {
     private static void populateServiceAccessByIntIDMapping() {
         mapServiceAccessByNavigationMenuId = new SparseBooleanArray();
         mapServiceAccessByNavigationMenuId.put(R.id.nav_home, true);
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_account, hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE));
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_account, true);
         mapServiceAccessByNavigationMenuId.put(R.id.nav_bank_account, hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS));
         mapServiceAccessByNavigationMenuId.put(R.id.nav_user_activity, hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY));
         mapServiceAccessByNavigationMenuId.put(R.id.nav_security_settings, hasServicesAccessibility(ServiceIdConstants.SEE_SECURITY));
@@ -81,10 +82,10 @@ public class ACLManager {
     private static void populateServiceAccessByNameMapping() {
         mapServiceAccessByTargetedFragment = new HashMap<>();
 
-        mapServiceAccessByTargetedFragment.put(Constants.VERIFY_BANK, hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
-        mapServiceAccessByTargetedFragment.put(Constants.LINK_BANK, hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
+        mapServiceAccessByTargetedFragment.put(VERIFY_BANK, hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
+        mapServiceAccessByTargetedFragment.put(LINK_BANK, hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
 
-        mapServiceAccessByTargetedFragment.put(BASIC_PROFILE, hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE));
+        mapServiceAccessByTargetedFragment.put(BASIC_PROFILE, hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE));
         mapServiceAccessByTargetedFragment.put(BUSINESS_INFO, hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO));
 
         mapServiceAccessByTargetedFragment.put(INTRODUCER, hasServicesAccessibility(ServiceIdConstants.MANAGE_INTRODUCERS));
@@ -99,7 +100,7 @@ public class ACLManager {
         mapServiceAccessByTargetedFragment.put(PHOTOID, hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS));
 
         mapServiceAccessByTargetedFragment.put(PROFILE_COMPLETENESS, hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE_COMPLETION));
-        mapServiceAccessByTargetedFragment.put(PROFILE_INFO, hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE));
+        mapServiceAccessByTargetedFragment.put(PROFILE_INFO, true);
         mapServiceAccessByTargetedFragment.put(PROFILE_PICTURE, hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE_PICTURE));
     }
 }

@@ -229,7 +229,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         });
         mProfileInfo.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess({ServiceIdConstants.SEE_PROFILE})
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
                 startActivity(intent);
@@ -319,7 +318,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                 mProfileCompletionPromptView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    @ValidateAccess(ServiceIdConstants.SEE_PROFILE)
+                    @ValidateAccess(ServiceIdConstants.SEE_PROFILE_COMPLETION)
                     public void onClick(View v) {
                         mProfileCompletionPromptView.setVisibility(View.GONE);
                         Intent intent = new Intent(getActivity(), ProfileActivity.class);
@@ -343,7 +342,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 if (incompleteOtherCompletionDetails.size() > 0) {
                     Random random = new Random();
 
-                    /**
+                    /*
                      * We want to show the prompt once in every five launch on average.
                      */
                     if (random.nextInt(5) == 0) {
@@ -358,7 +357,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                         mProfileCompletionMessageView.setText(profileCompletionMessage);
 
-                        /**
+                        /*
                          * For ADD_PIN, we show a PIN input dialog to the user.
                          * For other cases, we forward the user to the corresponding fragment
                          * in the ProfileActivity.
