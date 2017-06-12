@@ -23,7 +23,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrust
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -85,12 +84,10 @@ public class AddTrustedDeviceFragment extends Fragment implements HttpResponseLi
         if (mAddTrustedDeviceTask != null)
             return;
 
-        String pushRegistrationID = SharedPrefManager.getPushNotificationToken(null);
-
         mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_trusted_device));
         mProgressDialog.show();
         AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
-                Constants.MOBILE_ANDROID + mDeviceID, pushRegistrationID);
+                Constants.MOBILE_ANDROID + mDeviceID, null);
         Gson gson = new Gson();
         String json = gson.toJson(mAddToTrustedDeviceRequest);
         mAddTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_DEVICE,

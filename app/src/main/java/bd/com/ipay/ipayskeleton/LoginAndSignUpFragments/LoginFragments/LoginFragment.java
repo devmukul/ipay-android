@@ -282,10 +282,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                 UUID = ProfileInfoCacheManager.getUUID(null);
             }
 
-            String pushRegistrationID = SharedPrefManager.getPushNotificationToken(null);
-
             LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
-                    Constants.MOBILE_ANDROID + mDeviceID, UUID, null, pushRegistrationID, null);
+                    Constants.MOBILE_ANDROID + mDeviceID, UUID, null, null, null);
             Gson gson = new Gson();
             String json = gson.toJson(mLoginModel);
             mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
