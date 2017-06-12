@@ -574,7 +574,6 @@ public class Constants {
     public static final String COMMAND_GET_ALL_ROLES = "COMMAND_GET_ALL_ROLES";
 
     // Business Information (Employee)
-    public static final String COMMAND_GET_BUSINESS_LIST = "COMMAND_GET_BUSINESS_LIST";
     public static final String COMMAND_CONFIRM_BUSINESS_INVITATION = "COMMAND_CONFIRM_BUSINESS_INVITATION";
 
     // Education
