@@ -180,7 +180,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess({ServiceIdConstants.REQUEST_MONEY})
             public void onClick(View v) {
                 Intent requestMoneyActivityIntent = new Intent(getActivity(), RequestMoneyActivity.class);
                 startActivity(requestMoneyActivityIntent);

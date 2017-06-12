@@ -27,7 +27,6 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequest
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.GetMoneyRequest;
@@ -291,7 +290,6 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    @ValidateAccess(ServiceIdConstants.TRANSACTION_DETAILS)
                     public void onClick(View v) {
 
                         mMoneyRequestId = id;
