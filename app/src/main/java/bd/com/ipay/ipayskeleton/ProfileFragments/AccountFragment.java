@@ -204,16 +204,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                 ((ProfileActivity) getActivity()).switchToProfileCompletionFragment();
             }
         });
-
-        mManageEmployee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess({ServiceIdConstants.SEE_EMPLOYEE, ServiceIdConstants.MANAGE_EMPLOYEE})
-            public void onClick(View v) {
-                //((ProfileActivity) getActivity()).switchToEmployeeManagementFragment();
-                Intent intent = new Intent(getActivity(), ManagePeopleActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     private void showProfilePictureUpdateRestrictionDialog() {
