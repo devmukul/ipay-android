@@ -32,7 +32,6 @@ public class GetContactsAsyncTask extends HttpRequestGetAsyncTask implements Htt
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             if (context != null) {
-                Toast.makeText(context, R.string.contacts_sync_failed, Toast.LENGTH_LONG).show();
                 return;
             }
         }
@@ -47,17 +46,9 @@ public class GetContactsAsyncTask extends HttpRequestGetAsyncTask implements Htt
 
                 SyncContactsAsyncTask syncContactsAsyncTask = new SyncContactsAsyncTask(context, mGetAllContactsResponse);
                 syncContactsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            } else {
-                if (context != null) {
-                    Toast.makeText(context, R.string.contacts_sync_failed, Toast.LENGTH_LONG).show();
-                }
             }
         } catch (Exception e) {
             e.printStackTrace();
-
-            if (context != null) {
-                Toast.makeText(context, R.string.contacts_sync_failed, Toast.LENGTH_LONG).show();
-            }
         }
     }
 }

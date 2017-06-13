@@ -256,6 +256,7 @@
     <string name="cancel">Cancel</string>
     <string name="request_money">Request Money</string>
     <string name="requesting_money">Money request processing...</string>
+    <string name="progress_dialog_requesting">Processing request ...</string>
     <string name="add_money">Add Money</string>
     <string name="title">Title</string>
     <string name="note">Note</string>
