@@ -25,16 +25,19 @@ import com.google.zxing.integration.android.IntentResult;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SingleInvoiceActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Pay.PayPropertyConstants;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 public class PayFragment extends Fragment {
     private static final int REQUEST_CODE_PERMISSION = 1001;
@@ -168,6 +171,10 @@ public class PayFragment extends Fragment {
                     public void onClick(View v) {
                         switch (serviceAction.text) {
                             case Constants.SERVICE_ACTION_REQUEST_PAYMENT:
+                                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.REQUEST_PAYMENT)) {
+                                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                                    return;
+                                }
                                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                     @Override
                                     public void ifPinAdded() {
@@ -190,6 +197,10 @@ public class PayFragment extends Fragment {
                                 pinChecker.execute();
                                 break;
                             case Constants.SERVICE_ACTION_TOP_UP:
+                                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.TOP_UP)) {
+                                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                                    return;
+                                }
                                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                     @Override
                                     public void ifPinAdded() {
@@ -210,6 +221,11 @@ public class PayFragment extends Fragment {
                                 pinChecker.execute();
                                 break;*/
                             case Constants.SERVICE_ACTION_PAY_BY_QR_CODE:
+                                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
+                                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                                    return;
+                                }
+
                                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                                     requestPermissions(new String[]{Manifest.permission.CAMERA},
                                             REQUEST_CODE_PERMISSION);

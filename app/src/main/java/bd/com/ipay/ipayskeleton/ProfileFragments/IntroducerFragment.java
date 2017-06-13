@@ -25,8 +25,9 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.GetIntroducerListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.GetRecommendationRequestsResponse;
@@ -35,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.Recom
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.AskForIntroductionResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class IntroducerFragment extends ProgressFragment implements HttpResponseListener {
@@ -178,6 +180,7 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
 
                             mAskForRecommendation.setOnClickListener(new View.OnClickListener() {
                                 @Override
+                                @ValidateAccess(ServiceIdConstants.GET_CONTACTS)
                                 public void onClick(View v) {
                                     Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
                                     intent.putExtra(Constants.VERIFIED_USERS_ONLY, true);                   // Get the verified iPay users only.

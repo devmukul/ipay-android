@@ -25,19 +25,22 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.GetRequestResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.MoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.MoneyRequest;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -72,6 +75,9 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
     private long mMoneyRequestId;
     private String mDescription;
 
+    private View mProgressContainer;
+    private View mContentContainer;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sent_money_requests, container, false);
@@ -80,6 +86,9 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
 
         mEmptyListTextView = (TextView) view.findViewById(R.id.empty_list_text);
+        mProgressContainer = view.findViewById(R.id.progress_container);
+        mContentContainer = view.findViewById(R.id.content_container);
+
         mPendingRequestsAdapter = new SentMoneyRequestListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mPendingListRecyclerView.setLayoutManager(mLayoutManager);
@@ -88,13 +97,27 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity())) {
-                    refreshPendingList();
-                }
+                getSentMoneyList(true);
             }
         });
 
         return view;
+    }
+
+    private void getSentMoneyList(boolean showWarningDialog) {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SENT_REQUEST)) {
+            if (showWarningDialog) DialogUtils.showServiceNotAllowedDialog(getContext());
+
+            mProgressContainer.setVisibility(View.GONE);
+            mContentContainer.setVisibility(View.VISIBLE);
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+            mSwipeRefreshLayout.setRefreshing(false);
+        } else if (Utilities.isConnectionAvailable(getActivity())) {
+            pageCount = 0;
+            clearListAfterLoading = true;
+            getPendingRequests();
+        }
+
     }
 
     @Override
@@ -106,19 +129,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
     @Override
     public void onResume() {
         super.onResume();
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            pageCount = 0;
-            clearListAfterLoading = true;
-            getPendingRequests();
-        }
-    }
-
-    private void refreshPendingList() {
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            pageCount = 0;
-            clearListAfterLoading = true;
-            getPendingRequests();
-        }
+        getSentMoneyList(false);
     }
 
     private void getPendingRequests() {
@@ -165,7 +176,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
             mPendingRequestTask = null;
             mSwipeRefreshLayout.setRefreshing(false);
             if (getActivity() != null) {
-                 Toaster.makeText(getActivity(), R.string.fetch_info_failed,  Toast.LENGTH_LONG);
+                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
             }
             return;
         }
@@ -194,12 +205,12 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                         Toaster.makeText(getActivity(), R.string.pending_get_failed,  Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                     Toaster.makeText(getActivity(), R.string.pending_get_failed,  Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG);
             }
 
             mSwipeRefreshLayout.setRefreshing(false);
@@ -213,7 +224,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                             RequestMoneyAcceptRejectOrCancelResponse.class);
                     String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                     if (getActivity() != null)
-                         Toaster.makeText(getActivity(), message,  Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), message, Toast.LENGTH_LONG);
 
                     // Refresh the pending list
                     if (pendingMoneyRequests != null)
@@ -224,12 +235,12 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                         Toaster.makeText(getActivity(), R.string.could_not_cancel_money_request,  Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                     Toaster.makeText(getActivity(), R.string.could_not_cancel_money_request,  Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();
@@ -247,7 +258,6 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
 
         private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
-
 
         public class MoneyRequestViewHolder extends RecyclerView.ViewHolder {
             private final TextView mSenderNumber;
@@ -410,7 +420,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
         }
     }
 
-    private void showAlertDialogue(String msg, final int action, final long id) {
+    private void showAlertDialog(String msg, final int action, final long id) {
         AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
         alertDialogue.setTitle(R.string.confirm_query);
         alertDialogue.setMessage(msg);

@@ -17,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 public class MoneyRequestListHolderFragment extends Fragment {
     private ViewPager viewPager;
@@ -56,7 +59,19 @@ public class MoneyRequestListHolderFragment extends Fragment {
         tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-
+                final int serviceID;
+                switch (tab.getPosition()) {
+                    case SENT_REQUEST_TAB:
+                        serviceID = ServiceIdConstants.SENT_REQUEST;
+                        break;
+                    case RECEIVED_REQUEST_TAB:
+                    default:
+                        serviceID = ServiceIdConstants.RECEIVED_REQUEST;
+                        break;
+                }
+                if (!ACLManager.hasServicesAccessibility(serviceID)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                }
                 super.onTabSelected(tab);
             }
         });

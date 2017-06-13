@@ -44,18 +44,21 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActiv
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TransactionHistoryPendingFragment extends ProgressFragment implements HttpResponseListener {
@@ -655,9 +658,13 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                             else if (serviceId == Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT)
                                 launchRequestPaymentReviewPage(transactionHistory);
                             else {
-                                Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
-                                intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
-                                startActivity(intent);
+                                if (ACLManager.hasServicesAccessibility(ServiceIdConstants.TRANSACTION_DETAILS)) {
+                                    Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
+                                    intent.putExtra(Constants.TRANSACTION_DETAILS, transactionHistory);
+                                    startActivity(intent);
+                                } else {
+                                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                                }
                             }
                         }
                     }
@@ -795,6 +802,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             }
             return 0;
         }
+
     }
 
     private void launchRequestMoneyReviewPage(TransactionHistory transactionHistory) {

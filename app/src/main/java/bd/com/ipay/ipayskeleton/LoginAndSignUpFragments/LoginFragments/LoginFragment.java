@@ -28,6 +28,7 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -326,6 +327,11 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                     ProfileInfoCacheManager.setAccountType(mLoginResponseModel.getAccountType());
                     // When user logs in, we want that by default he would log in to his default account
                     TokenManager.deactivateEmployerAccount();
+
+                    // Saving the allowed services id for the user
+                    if (mLoginResponseModel.getAccessControlList() != null) {
+                        ACLManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
+                    }
 
                     // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
                     if (!SharedPrefManager.ifContainsUUID())
