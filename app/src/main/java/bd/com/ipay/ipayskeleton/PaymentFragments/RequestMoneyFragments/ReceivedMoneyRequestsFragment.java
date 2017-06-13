@@ -22,18 +22,21 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.GetMoneyAndPaymentRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.MoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -63,54 +66,65 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
     private String mDescription;
     private TextView mEmptyListTextView;
 
+    private View mProgressContainer;
+    private View mContentContainer;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_received_money_requests, container, false);
+        View view = inflater.inflate(R.layout.fragment_received_money_requests, container, false);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
-        mNotificationsRecyclerView = (RecyclerView) v.findViewById(R.id.list_notification);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        mNotificationsRecyclerView = (RecyclerView) view.findViewById(R.id.list_notification);
 
-        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
+        mEmptyListTextView = (TextView) view.findViewById(R.id.empty_list_text);
+        mProgressContainer = view.findViewById(R.id.progress_container);
+        mContentContainer = view.findViewById(R.id.content_container);
+
         mReceivedMoneyRequestListAdapter = new ReceivedMoneyRequestListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mNotificationsRecyclerView.setLayoutManager(mLayoutManager);
         mNotificationsRecyclerView.setAdapter(mReceivedMoneyRequestListAdapter);
 
-        // Refresh balance each time home_activity page appears
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            getMoneyRequests();
-        }
-
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshMoneyRequestList();
+                mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        getMoneyRequestList(true);
+                    }
+                });
             }
         });
 
-        return v;
+        return view;
+    }
+
+    private void getMoneyRequestList(boolean showWarningDialog) {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.RECEIVED_REQUEST)) {
+            if (showWarningDialog) DialogUtils.showServiceNotAllowedDialog(getContext());
+
+            mProgressContainer.setVisibility(View.GONE);
+            mContentContainer.setVisibility(View.VISIBLE);
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+            mSwipeRefreshLayout.setRefreshing(false);
+        } else if (Utilities.isConnectionAvailable(getActivity())) {
+            pageCount = 0;
+            clearListAfterLoading = true;
+            getMoneyRequests();
+        }
     }
 
 
     public void onResume() {
         super.onResume();
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            refreshMoneyRequestList();
-        }
+        getMoneyRequestList(false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setContentShown(false);
-    }
-
-    private void refreshMoneyRequestList() {
-        if (Utilities.isConnectionAvailable(getActivity())) {
-            pageCount = 0;
-            clearListAfterLoading = true;
-            getMoneyRequests();
-        }
     }
 
     private void getMoneyRequests() {
@@ -361,6 +375,4 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
             startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
         }
     }
-
-
 }

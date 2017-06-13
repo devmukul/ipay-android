@@ -25,8 +25,9 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.Employee;
@@ -34,6 +35,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.GetAllEmp
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.RemoveEmployeeResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -63,6 +65,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
         mFabAddNewEmployee = (FloatingActionButton) v.findViewById(R.id.fab_add_employee);
         mFabAddNewEmployee.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_EMPLOYEE)
             public void onClick(View v) {
                 ((ManagePeopleActivity) getActivity()).switchToEmployeeInformationFragment(null);
             }
@@ -254,6 +257,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.MANAGE_EMPLOYEE)
                     public void onClick(View v) {
 
                         mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), employee.getName(), mEmployee_manage_ActionList);

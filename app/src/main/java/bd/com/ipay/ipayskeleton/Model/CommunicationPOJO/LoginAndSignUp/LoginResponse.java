@@ -5,6 +5,7 @@ public class LoginResponse {
     private String message;
     private int accountType;
     private long otpValidFor;
+    private int[] accessControlList;
 
     public LoginResponse() {
     }
@@ -19,5 +20,9 @@ public class LoginResponse {
 
     public int getAccountType() {
         return accountType;
+    }
+
+    public int[] getAccessControlList() {
+        return accessControlList;
     }
 }

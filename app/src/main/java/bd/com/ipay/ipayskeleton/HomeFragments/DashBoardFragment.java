@@ -13,11 +13,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryHolderFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class DashBoardFragment extends Fragment {
@@ -26,7 +26,6 @@ public class DashBoardFragment extends Fragment {
     private final int PAY_TAB = 1;
     private final int TRANSACTION_HISTORY_TAB = 2;
     private final int CONTACTS_TAB = 3;
-
 
     private final int TOTAL_PAGE_COUNT = 4;
 
@@ -78,8 +77,10 @@ public class DashBoardFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
 
-                if (tab.getPosition() == TRANSACTION_HISTORY_TAB)
+                if (tab.getPosition() == TRANSACTION_HISTORY_TAB) {
                     BroadcastServiceIntent.sendBroadcast(getActivity(), Constants.PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST);
+                }
+
             }
 
             @Override
