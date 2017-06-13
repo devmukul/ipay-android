@@ -137,6 +137,7 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
     }
 
     private void proceedToNextIfUserNotExists() {
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_requesting));
         mProgressDialog.show();
 
         CheckIfUserExistsRequestBuilder checkIfUserExistsRequestBuilder = new CheckIfUserExistsRequestBuilder(SignupOrLoginActivity.mMobileNumberBusiness);
