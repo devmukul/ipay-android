@@ -191,6 +191,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private void getMoneyAndPaymentRequest(Context context) {
         if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.RECEIVED_REQUEST))
             return;
+
         if (mGetMoneyAndPaymentRequestTask != null) {
             return;
         }
@@ -209,9 +210,11 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private void getIntroductionRequestList(Context context) {
         if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_INTRODUCERS))
             return;
+
         if (mGetIntroductionRequestTask != null) {
             return;
         }
+
         mGetIntroductionRequestTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS,
                 Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, context, this);
         mGetIntroductionRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -220,6 +223,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private void getPendingIntroducersList(Context context) {
         if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_INTRODUCERS))
             return;
+
         if (mGetPendingIntroducerListTask != null) {
             return;
         }
