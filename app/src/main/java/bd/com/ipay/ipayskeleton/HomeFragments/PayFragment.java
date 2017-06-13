@@ -186,11 +186,6 @@ public class PayFragment extends Fragment {
                                 pinChecker.execute();
                                 break;
                             case Constants.SERVICE_ACTION_MAKE_PAYMENT:
-                                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
-                                    DialogUtils.showServiceNotAllowedDialog(getContext());
-                                    return;
-                                }
-
                                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                     @Override
                                     public void ifPinAdded() {
