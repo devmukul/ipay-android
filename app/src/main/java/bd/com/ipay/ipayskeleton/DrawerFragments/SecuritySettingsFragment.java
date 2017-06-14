@@ -105,7 +105,6 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
 
         mPasswordRecoveryHeader.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess(ServiceIdConstants.CHANGE_PASSWORD)
             public void onClick(View v) {
                 ((SecuritySettingsActivity) getActivity()).switchToPasswordRecoveryFragment();
             }
