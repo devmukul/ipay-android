@@ -93,11 +93,16 @@ public class ServiceIdConstants {
     public static final int MANAGE_IDENTIFICATION_DOCS = 8021;
 
     // Security
-    public static final int MANAGE_SECURITY = 8022;
-    public static final int SEE_SECURITY = 8023;
-    public static final int FORGET_PASSWORD = 8024;
     public static final int SEE_TRUSTED_PERSON = 8030;
     public static final int MANAGE_TRUSTED_PERSON = 8031;
+    public static final int SEE_TRUSTED_DEVICES = 8040;
+    public static final int MANAGE_TRUSTED_DEVICES = 8041;
+    public static final int SEE_PIN_EXISTS = 8047;
+    public static final int CHANGE_PIN = 8048;
+    public static final int CHANGE_PASSWORD = 8049;
+    public static final int SEE_SECURITY_QUESTIONS = 8050;
+    public static final int MANAGE_SECURITY_QUESTIONS = 8051;
+    public static final int SIGN_OUT_FROM_ALL_DEVICES = 8052;
 
 
     // Login Related
@@ -109,8 +114,6 @@ public class ServiceIdConstants {
 
     public static final int SEE_RESOURCE = 8029;
     public static final int SEE_APP_VERSION = 8038;
-    public static final int SEE_DEVICES = 8040;
-    public static final int MANAGE_DEVICES = 8041;
     public static final int SEE_ACCESS_TOKEN = 8042;
     public static final int USER_EXISTENCE_CHECK = 8043;
     public static final int SEE_MAX_ALLOWED_INVITATION = 8044;

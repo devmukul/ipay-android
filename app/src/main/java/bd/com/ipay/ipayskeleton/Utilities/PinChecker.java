@@ -52,7 +52,7 @@ public class PinChecker implements HttpResponseListener {
     }
 
     private void getPinInfo() {
-        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_SECURITY)) {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PIN_EXISTS)) {
             DialogUtils.showServiceNotAllowedDialog(mContext);
             return;
         }
