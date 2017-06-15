@@ -103,7 +103,7 @@ public class ProfileInfoCacheManager {
     }
 
     public static void removeUUID() {
-        pref.edit().remove(SharedPrefConstants.USERID).apply();
+        pref.edit().remove(SharedPrefConstants.UUID).apply();
     }
 
 
