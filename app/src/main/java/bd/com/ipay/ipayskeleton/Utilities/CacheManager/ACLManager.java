@@ -69,14 +69,18 @@ public class ACLManager {
 
     private static void populateServiceAccessByIntIDMapping() {
         mapServiceAccessByNavigationMenuId = new SparseBooleanArray();
+
+        //Following menu will have access by default. Currently these options/menu don't require any access control.
         mapServiceAccessByNavigationMenuId.put(R.id.nav_home, true);
         mapServiceAccessByNavigationMenuId.put(R.id.nav_account, true);
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_bank_account, hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS));
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_user_activity, hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY));
         mapServiceAccessByNavigationMenuId.put(R.id.nav_security_settings, true);
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_invite, hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS, ServiceIdConstants.MANAGE_INVITATIONS));
         mapServiceAccessByNavigationMenuId.put(R.id.nav_help, true);
         mapServiceAccessByNavigationMenuId.put(R.id.nav_about, true);
+
+        //Following menu will require access control. These will be populated from the access control list.
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_bank_account, hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS));
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_user_activity, hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY));
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_invite, hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS, ServiceIdConstants.MANAGE_INVITATIONS));
         mapServiceAccessByNavigationMenuId.put(R.id.nav_logout, hasServicesAccessibility(ServiceIdConstants.SIGN_OUT));
     }
 
