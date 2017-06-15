@@ -12,6 +12,7 @@ import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCo
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_DOCUMENTS;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_INFO;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.INTRODUCER;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.LINK_AND_VERIFY_BANK;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PERSONAL_ADDRESS;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PHOTOID;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROFILE_COMPLETENESS;
@@ -68,14 +69,18 @@ public class ACLManager {
 
     private static void populateServiceAccessByIntIDMapping() {
         mapServiceAccessByNavigationMenuId = new SparseBooleanArray();
+
+        //Following menu will have access by default. Currently these options/menu don't require any access control.
         mapServiceAccessByNavigationMenuId.put(R.id.nav_home, true);
         mapServiceAccessByNavigationMenuId.put(R.id.nav_account, true);
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_bank_account, hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS));
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_user_activity, hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY));
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_security_settings, hasServicesAccessibility(ServiceIdConstants.SEE_SECURITY));
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_invite, hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS, ServiceIdConstants.MANAGE_INVITATIONS));
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_security_settings, true);
         mapServiceAccessByNavigationMenuId.put(R.id.nav_help, true);
         mapServiceAccessByNavigationMenuId.put(R.id.nav_about, true);
+
+        //Following menu will require access control. These will be populated from the access control list.
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_bank_account, hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS));
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_user_activity, hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY));
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_invite, hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS, ServiceIdConstants.MANAGE_INVITATIONS));
         mapServiceAccessByNavigationMenuId.put(R.id.nav_logout, hasServicesAccessibility(ServiceIdConstants.SIGN_OUT));
     }
 
@@ -84,6 +89,7 @@ public class ACLManager {
 
         mapServiceAccessByTargetedFragment.put(VERIFY_BANK, hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
         mapServiceAccessByTargetedFragment.put(LINK_BANK, hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
+        mapServiceAccessByTargetedFragment.put(LINK_AND_VERIFY_BANK, hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
 
         mapServiceAccessByTargetedFragment.put(BASIC_PROFILE, hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE));
         mapServiceAccessByTargetedFragment.put(BUSINESS_INFO, hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO));

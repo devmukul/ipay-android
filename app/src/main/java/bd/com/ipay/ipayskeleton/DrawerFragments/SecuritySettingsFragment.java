@@ -81,7 +81,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
     private void setButtonActions() {
         mSetPINHeader.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess(ServiceIdConstants.MANAGE_SECURITY)
+            @ValidateAccess(ServiceIdConstants.CHANGE_PIN)
             public void onClick(View v) {
                 ((SecuritySettingsActivity) getActivity()).switchToSetPinFragment();
             }
@@ -89,7 +89,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
 
         mChangePasswordHeader.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess(ServiceIdConstants.MANAGE_SECURITY)
+            @ValidateAccess(ServiceIdConstants.CHANGE_PASSWORD)
             public void onClick(View v) {
                 ((SecuritySettingsActivity) getActivity()).switchToChangePasswordFragment();
             }
@@ -97,7 +97,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
 
         mTrustedDevicesHeader.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess(ServiceIdConstants.MANAGE_DEVICES)
+            @ValidateAccess(ServiceIdConstants.SEE_TRUSTED_DEVICES)
             public void onClick(View v) {
                 ((SecuritySettingsActivity) getActivity()).switchToTrustedDeviceFragment();
             }
@@ -112,7 +112,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
 
         mLogoutHeader.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess(ServiceIdConstants.SIGN_OUT)
+            @ValidateAccess(ServiceIdConstants.SIGN_OUT_FROM_ALL_DEVICES)
             public void onClick(View v) {
                 showLogoutFromAllDevicesDialog();
             }

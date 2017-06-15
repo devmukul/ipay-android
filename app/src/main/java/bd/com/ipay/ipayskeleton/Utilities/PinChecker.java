@@ -40,6 +40,10 @@ public class PinChecker implements HttpResponseListener {
     }
 
     public void execute() {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PIN_EXISTS)) {
+            DialogUtils.showServiceNotAllowedDialog(mContext);
+            return;
+        }
         cancel = false;
 
         if (SharedPrefManager.isPinAdded(false)) {
@@ -52,10 +56,6 @@ public class PinChecker implements HttpResponseListener {
     }
 
     private void getPinInfo() {
-        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_SECURITY)) {
-            DialogUtils.showServiceNotAllowedDialog(mContext);
-            return;
-        }
         if (mGetPinInfoTask != null) {
             return;
         }

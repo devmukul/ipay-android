@@ -302,7 +302,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    @ValidateAccess(ServiceIdConstants.MANAGE_DEVICES)
+                    @ValidateAccess(ServiceIdConstants.MANAGE_TRUSTED_DEVICES)
                     public void onClick(View v) {
                         if (!myDeviceID.equals(deviceID)) {
                             mTrustedDeviceActionList = Arrays.asList(getResources().getStringArray(R.array.trusted_device_or_network_action));

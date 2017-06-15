@@ -22,7 +22,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 public class ServiceAccessValidatorAspect {
 
     @Around("execution(* on*Click*(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
-    public Object aspectserviceValidatorOnClick(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object serviceValidatorOnClick(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         Object result = null;
@@ -47,7 +47,7 @@ public class ServiceAccessValidatorAspect {
     }
 
     @Around("execution(* addContact(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
-    public Object aspectserviceValidatorOnAddContact(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object serviceValidatorOnAddContact(ProceedingJoinPoint joinPoint) throws Throwable {
 
         Object result = null;
 
@@ -58,7 +58,7 @@ public class ServiceAccessValidatorAspect {
     }
 
     @Around("execution(* onCheckedChanged(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
-    public Object aspectserviceValidatorOnRadioGroupCheckedChanged(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object serviceValidatorOnRadioGroupCheckedChanged(ProceedingJoinPoint joinPoint) throws Throwable {
 
         Object result = null;
 
