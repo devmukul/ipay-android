@@ -27,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpReviewActivity
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
@@ -40,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -142,6 +144,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         } else {
             mSelectReceiverButton.setOnClickListener(new View.OnClickListener() {
                 @Override
+                @ValidateAccess(ServiceIdConstants.GET_CONTACTS)
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
                     startActivityForResult(intent, PICK_CONTACT_REQUEST);

@@ -23,12 +23,12 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadProfilePictureAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadProfilePictureAsyncTask;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ProfilePictureHelperDialog;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -36,15 +36,21 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetPro
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AccountFragment extends Fragment implements HttpResponseListener {
+
+    private static final int REQUEST_CODE_PERMISSION = 1001;
+    private final int ACTION_PICK_PROFILE_PICTURE = 100;
 
     private ProfileImageView mProfilePictureView;
     private TextView mNameView;
@@ -61,7 +67,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private IconifiedTextViewWithButton mIntroducer;
     private IconifiedTextViewWithButton mAddress;
     private IconifiedTextViewWithButton mProfileCompleteness;
-    private IconifiedTextViewWithButton mManageEmployee;
 
     private String mName = "";
     private String mMobileNumber = "";
@@ -81,9 +86,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private MaterialDialog.Builder mProfilePictureErrorDialogBuilder;
     private MaterialDialog mProfilePictureErrorDialog;
     private ProfilePictureHelperDialog profilePictureHelperDialog;
-
-    private static final int REQUEST_CODE_PERMISSION = 1001;
-    private final int ACTION_PICK_PROFILE_PICTURE = 100;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -106,7 +108,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mIntroducer = (IconifiedTextViewWithButton) view.findViewById(R.id.introducer);
         mDocuments = (IconifiedTextViewWithButton) view.findViewById(R.id.documents);
         mProfileCompleteness = (IconifiedTextViewWithButton) view.findViewById(R.id.profile_completion);
-        mManageEmployee = (IconifiedTextViewWithButton) view.findViewById(R.id.manage_employees);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -135,16 +136,18 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private void setButtonActions() {
         mProfilePictureHolderView.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_PROFILE_PICTURE)
             public void onClick(View v) {
-                if (!ProfileInfoCacheManager.isAccountVerified())
+                if (!ProfileInfoCacheManager.isAccountVerified()) {
                     profilePictureHelperDialog.show();
-                else
+                } else
                     showProfilePictureUpdateRestrictionDialog();
             }
         });
 
         mBasicInfo.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_PROFILE)
             public void onClick(View view) {
                 if (ProfileInfoCacheManager.isBusinessAccount())
                     ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
@@ -154,6 +157,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         mEmail.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_EMAILS)
             public void onClick(View view) {
                 ((ProfileActivity) getActivity()).switchToEmailFragment();
             }
@@ -161,6 +165,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         mAddress.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_ADDRESSES)
             public void onClick(View view) {
                 ((ProfileActivity) getActivity()).switchToAddressFragment();
             }
@@ -168,6 +173,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         mIntroducer.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_INTRODUCERS)
             public void onClick(View v) {
                 ((ProfileActivity) getActivity()).switchToIntroducerFragment();
             }
@@ -176,23 +182,26 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mDocuments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (ProfileInfoCacheManager.isBusinessAccount()) {
+                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_DOCS)) {
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                        return;
+                    }
+                } else {
+                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_IDENTIFICATION_DOCS)) {
+                        DialogUtils.showServiceNotAllowedDialog(getContext());
+                        return;
+                    }
+                }
                 ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
             }
         });
 
         mProfileCompleteness.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_PROFILE_COMPLETION)
             public void onClick(View view) {
                 ((ProfileActivity) getActivity()).switchToProfileCompletionFragment();
-            }
-        });
-
-        mManageEmployee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //((ProfileActivity) getActivity()).switchToEmployeeManagementFragment();
-                Intent intent = new Intent(getActivity(), ManagePeopleActivity.class);
-                startActivity(intent);
             }
         });
     }
@@ -343,13 +352,18 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     }
 
     private void getProfileCompletionStatus() {
-        if (mGetProfileCompletionStatusTask != null) {
-            return;
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE_COMPLETION)) {
+            if (mGetProfileCompletionStatusTask != null) {
+                return;
+            }
+
+            mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
+                    Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
+            mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            mProfileCompletionStatusView.setVisibility(View.GONE);
         }
 
-        mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
-                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
-        mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void updateProfilePicture(Uri selectedImageUri) {

@@ -14,7 +14,6 @@ public class Constants {
     public static final String SIGN_IN = "SIGN_IN";
     public static final String SIGN_UP = "SIGN_UP";
     public static final String SIGNED_IN = "SIGNED IN";
-    public static final String SIGNED_OUT = "SIGNED OUT";
     public static final String DOCUMENT_URL = "DOCUMENT_URL";
     public static final String FILE_EXTENSION = "FILE_EXTENSION";
     public static final String TICKET_ID = "TICKET_ID";
@@ -25,10 +24,8 @@ public class Constants {
     public static final String TIME = "TIME";
     public static final String STATUS = "STATUS";
     public static final String TAG = "TAG";
-    public static final String INVOICE = "INVOICE";
     public static final String REQUEST = "REQUEST";
     public static final String RECOMMENDATION = "RECOMMENDATION";
-    public static final String BUSINESS = "BUSINESS";
     public static final String TRANSACTION_DETAILS = "TRANSACTION_DETAILS";
     public static final String MONEY_REQUEST_ID = "MONEY REQUESTS ID";
     public static final String MONEY_REQUEST_SERVICE_ID = "SERVICE_ID";
@@ -84,14 +81,12 @@ public class Constants {
     public static final String DOCUMENT_ID = "DOCUMENT_ID";
     public static final String DOCUMENT_TYPE_NAME = "DOCUMENT_TYPE_NAME";
     public static final String MESSAGE = "message";
-    public static final String NOTIFICATION_DATA = "changed_data";
 
     public static final String NAME = "NAME";
 
     public static final String OCCUPATION = "OCCUPATION";
     public static final String OCCUPATION_LIST = "OCCUPATION_LIST";
     public static final String ORGANIZATION_NAME = "ORGANIZATION_NAME";
-    public static final String DESIGNATION = "DESIGNATION";
     public static final String BUSINESS_NAME = "BUSINESS_NAME";
 
     public static final String BUSINESS_MOBILE_NUMBER = "BUSINESS_MOBILE_NUMBER";
@@ -102,9 +97,7 @@ public class Constants {
     public static final String MOTHERS_NAME = "MOTHERS_NAME";
     public static final String FATHERS_MOBILE = "FATHERS_MOBILE";
     public static final String MOTHERS_MOBILE = "MOTHERS_MOBILE";
-    public static final String ASSOCIATION_ID = "ASSOCIATION_ID";
 
-    public static final String ROLE_ID = "ROLE_ID";
     public static final String ADDRESS = "ADDRESS";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
@@ -400,18 +393,9 @@ public class Constants {
     // Business Information (Owner)
     public static final String URL_GET_BUSINESS_INFORMATION = "user/profile/business";
     public static final String URL_SET_BUSINESS_INFORMATION = "user/profile/business";
-    public static final String URL_CREATE_EMPLOYEE = "business/user";
-    public static final String URL_UPDATE_EMPLOYEE = "business/user";
-    public static final String URL_GET_EMPLOYEE_LIST = "business/users";
-    public static final String URL_GET_EMPLOYEE_DETAILS = "business/user/";
-    public static final String URL_REMOVE_AN_EMPLOYEE_FIRST_PART = "business/user/";
-    public static final String URL_REMOVE_AN_EMPLOYEE_LAST_PART = "/resignation/confirm";
-    public static final String URL_GET_BUSINESS_ROLES = "business/roles";
 
     // Business Information (Employee)
-    public static final String URL_GET_BUSINESS_LIST = "business/list";
     public static final String URL_GET_BUSINESS_LIST_ALL = "business/list/all";
-    public static final String URL_CONFIRM_BUSINESS_INVITATION = "business/user/confirm";
 
     // Education
     public static final String URL_GET_ALL_INSTITUTIONS_LIST = "institute/all";
@@ -485,7 +469,6 @@ public class Constants {
     public static final String COMMAND_GET_PENDING_REQUESTS_ME = "COMMAND_GET_PENDING_REQUESTS_ME";
     public static final String COMMAND_REQUEST_MONEY = "COMMAND_REQUEST_MONEY";
     public static final String COMMAND_SEND_PAYMENT_REQUEST = "COMMAND_SEND_PAYMENT_REQUEST";
-    public static final String COMMAND_SAVE_INVOICE = "COMMAND_SAVE_INVOICE";
     public static final String COMMAND_GET_SINGLE_INVOICE = "COMMAND_GET_SINGLE_INVOICE";
     public static final String COMMAND_SET_PROFILE_PICTURE = "COMMAND_SET_PROFILE_PICTURE";
     public static final String COMMAND_ADD_A_BANK = "COMMAND_ADD_A_BANK";
@@ -565,16 +548,6 @@ public class Constants {
     // Business Information (Owner)
     public static final String COMMAND_GET_BUSINESS_INFORMATION = "COMMAND_GET_BUSINESS_INFORMATION";
     public static final String COMMAND_SET_BUSINESS_INFORMATION = "COMMAND_SET_BUSINESS_INFORMATION";
-    public static final String COMMAND_CREATE_EMPLOYEE = "COMMAND_CREATE_EMPLOYEE";
-    public static final String COMMAND_UPDATE_EMPLOYEE = "COMMAND_UPDATE_EMPLOYEE";
-    public static final String COMMAND_GET_EMPLOYEE_LIST = "COMMAND_GET_EMPLOYEE_LIST";
-    public static final String COMMAND_REMOVE_AN_EMPLOYEE = "COMMAND_REMOVE_AN_EMPLOYEE";
-    public static final String COMMAND_GET_EMPLOYEE_DETAILS = "COMMAND_GET_EMPLOYEE_DETAILS";
-    public static final String COMMAND_GET_ALL_ROLES = "COMMAND_GET_ALL_ROLES";
-
-    // Business Information (Employee)
-    public static final String COMMAND_GET_BUSINESS_LIST = "COMMAND_GET_BUSINESS_LIST";
-    public static final String COMMAND_CONFIRM_BUSINESS_INVITATION = "COMMAND_CONFIRM_BUSINESS_INVITATION";
 
     // Education
     public static final String COMMAND_GET_INSTITUTION_LIST = "COMMAND_GET_INSTITUTION_LIST";
@@ -657,8 +630,6 @@ public class Constants {
     public static final String INVOICE_ITEM_NAME_TAG = "item_name";
     public static final String DESCRIPTION_TAG = "description";
     public static final String REFERENCE_NUMBER = "reference number";
-    public static final String INVOICE_QUANTITY_TAG = "quantity";
-    public static final String INVOICE_RATE_TAG = "rate";
     public static final String INVOICE_AMOUNT_TAG = "amount";
 
     public static final String SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT = "SENDMONEY_MIN_AMOUNT_SINGLE";
@@ -697,27 +668,18 @@ public class Constants {
     public static final int TRANSACTION_STATUS_CANCELLED = 2;
     public static final int TRANSACTION_STATUS_REJECTED = 3;
 
-    public static final String BUSINESS_INVITATION_ACCEPTED = "ACCEPTED";
-    public static final String BUSINESS_INVITATION_REJECTED = "REJECTED";
-    public static final String BUSINESS_INVITATION_SPAM = "SPAM";
-
-    public static final String BUSINESS_STATUS_PENDING = "PENDING";
-
     public static final String IMAGE_QUALITY_LOW = "low";
     public static final String IMAGE_QUALITY_MEDIUM = "medium";
     public static final String IMAGE_QUALITY_HIGH = "high";
 
     public static final int NOTIFICATION_TYPE_REQUEST_MONEY = 1;
     public static final int NOTIFICATION_TYPE_MAKE_PAYMENT = 2;
-    public static final int NOTIFICATION_TYPE_BUSINESS_ACCOUNT_INVITE = 3;
     public static final int NOTIFICATION_TYPE_INTRODUCTION_REQUEST = 4;
     public static final int NOTIFICATION_TYPE_PENDING_INTRODUCER_REQUEST = 5;
 
     public static final String ACTION_TYPE_VERIFY = "Verify";
     public static final String ACTION_TYPE_REMOVE = "Remove";
     public static final String ACTION_TYPE_MAKE_PRIMARY = "Make Primary";
-    public static final String ACTION_TYPE_EDIT = "Edit";
-    public static final String ACTION_TYPE_VIEW = "View";
     public static final String ACTION_TYPE_TAKE_PICTURE = "Take a picture";
     public static final String ACTION_TYPE_SELECT_FROM_GALLERY = "Select from gallery";
 
@@ -734,9 +696,6 @@ public class Constants {
     public static final String TICKET_STATUS_CLOSED = "closed";
 
     public static final String TICKET_COMMENT_ID = "commentId";
-    public static final String TICKETID = "ticketId";
-    public static final String TICKET_COMMENT = "comment";
-
 
     public static final int REQUEST_TYPE_RECEIVED_REQUEST = 1;
     public static final int REQUEST_TYPE_SENT_REQUEST = 2;

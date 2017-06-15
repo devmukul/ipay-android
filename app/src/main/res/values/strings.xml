@@ -130,6 +130,7 @@
     <string name="to_date">To Date</string>
     <string name="from_date">From Date</string>
     <string name="service_not_available">Service Currently Not Available</string>
+    <string name="contact_support_message">This service is unavailable right now for you. Please contact support for more info.</string>
     <string name="please_wait">Please wait. Loading... </string>
     <string name="loading">Loading... </string>
     <string name="load_more">Load more...</string>
@@ -255,6 +256,7 @@
     <string name="cancel">Cancel</string>
     <string name="request_money">Request Money</string>
     <string name="requesting_money">Money request processing...</string>
+    <string name="progress_dialog_requesting">Processing request ...</string>
     <string name="add_money">Add Money</string>
     <string name="title">Title</string>
     <string name="note">Note</string>
@@ -805,6 +807,11 @@
     <string name="max_limit_exceed">Max limit of attachment exceed. </string>
     <string name="remove_contact_title">Delete contact </string>
     <string name="remove_contact_message">Delete this contact from iPay? </string>
+    <string name="see_parent_info_service_not_allowed_message">Parent Information can\'t be shown. Please contact support for more info.</string>
+    <string name="see_basic_info_service_not_allowed_message">User Information can\'t be shown. Please contact support for more info.</string>
+    <string name="see_business_address_service_not_allowed_message">Business Address can\'t be shown. Please contact support for more info.</string>
+    <string name="see_business_info_service_not_allowed_message">Business Info can\'t be shown. Please contact support for more info.</string>
+
 
     <string-array name="mobile_operators">
         <item>Grameenphone</item>

@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResp
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPRequestTrustedDevice;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPResponseTrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
@@ -233,6 +234,11 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                     String pushRegistrationID = ProfileInfoCacheManager.getPushNotificationToken(null);
                     if (pushRegistrationID != null) {
                         new RegisterFCMTokenToServerAsyncTask(getContext());
+                    }
+
+                    // Saving the allowed services id for the user
+                    if (mLoginResponseModel.getAccessControlList() != null) {
+                        ACLManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
                     }
 
                     if (getActivity() != null)

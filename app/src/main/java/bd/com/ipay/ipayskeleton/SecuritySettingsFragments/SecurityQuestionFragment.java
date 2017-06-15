@@ -25,20 +25,22 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.AddSecurityQuestionAnswerClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.GetAllSecurityQuestionRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.GetAllSecurityQuestionResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.GetPreviousSelectedSecurityQuestionResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.GetPreviousSelectedSecurityQuestionRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.AddSecurityQuestionAnswerClass;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.SecurityQuestionValidationClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.GetPreviousSelectedSecurityQuestionResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.PreviousSecurityQuestionClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.SecurityQuestionValidationClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.SetSecurityAnswerRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.SetSecurityAnswerResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SecurityQuestionFragment extends ProgressFragment implements HttpResponseListener {
@@ -379,6 +381,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.MANAGE_SECURITY_QUESTIONS)
                     public void onClick(View v) {
 
                         Bundle bundle = new Bundle();
@@ -417,6 +420,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
 
                 mSaveButton.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.MANAGE_SECURITY_QUESTIONS)
                     public void onClick(View v) {
                         if (mPasswordView.getText().toString().isEmpty())
                             mPasswordView.setError(getString(R.string.enter_current_pass));

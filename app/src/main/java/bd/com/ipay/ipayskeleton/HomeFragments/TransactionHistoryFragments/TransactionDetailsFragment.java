@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
@@ -23,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TransactionDetailsFragment extends Fragment {
@@ -108,6 +110,7 @@ public class TransactionDetailsFragment extends Fragment {
 
         mAddInContactsButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.ADD_CONTACTS)
             public void onClick(View v) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
                         .setTitle(R.string.are_you_sure)
@@ -116,6 +119,7 @@ public class TransactionDetailsFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 mAddInContactsButton.setVisibility(View.GONE);
+
                                 addContact(transactionHistory.getAdditionalInfo().getUserName(),
                                         transactionHistory.getAdditionalInfo().getUserMobileNumber(), null);
                             }
@@ -220,6 +224,7 @@ public class TransactionDetailsFragment extends Fragment {
         return v;
     }
 
+    @ValidateAccess
     private void addContact(String name, String phoneNumber, String relationship) {
         AddContactRequestBuilder addContactRequestBuilder = new
                 AddContactRequestBuilder(name, phoneNumber, relationship);
