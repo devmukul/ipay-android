@@ -23,7 +23,6 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadProfilePictureAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -68,7 +67,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private IconifiedTextViewWithButton mIntroducer;
     private IconifiedTextViewWithButton mAddress;
     private IconifiedTextViewWithButton mProfileCompleteness;
-    private IconifiedTextViewWithButton mManageEmployee;
 
     private String mName = "";
     private String mMobileNumber = "";
@@ -110,7 +108,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         mIntroducer = (IconifiedTextViewWithButton) view.findViewById(R.id.introducer);
         mDocuments = (IconifiedTextViewWithButton) view.findViewById(R.id.documents);
         mProfileCompleteness = (IconifiedTextViewWithButton) view.findViewById(R.id.profile_completion);
-        mManageEmployee = (IconifiedTextViewWithButton) view.findViewById(R.id.manage_employees);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -205,16 +202,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
             @ValidateAccess(ServiceIdConstants.SEE_PROFILE_COMPLETION)
             public void onClick(View view) {
                 ((ProfileActivity) getActivity()).switchToProfileCompletionFragment();
-            }
-        });
-
-        mManageEmployee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess({ServiceIdConstants.SEE_EMPLOYEE, ServiceIdConstants.MANAGE_EMPLOYEE})
-            public void onClick(View v) {
-                //((ProfileActivity) getActivity()).switchToEmployeeManagementFragment();
-                Intent intent = new Intent(getActivity(), ManagePeopleActivity.class);
-                startActivity(intent);
             }
         });
     }

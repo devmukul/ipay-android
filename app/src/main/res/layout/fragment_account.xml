@@ -171,22 +171,6 @@
             <View style="@style/Divider" />
 
             <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
-                android:id="@+id/manage_employees"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_managepeople"
-                android:paddingBottom="@dimen/value4"
-                android:paddingLeft="@dimen/activity_horizontal_margin_card"
-                android:paddingTop="@dimen/value4"
-                android:text="@string/manage_people"
-                android:visibility="gone" />
-
-            <View
-                android:id="@+id/divider_manage_employee"
-                style="@style/Divider"
-                android:visibility="gone" />
-
-            <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
                 android:id="@+id/profile_completion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
