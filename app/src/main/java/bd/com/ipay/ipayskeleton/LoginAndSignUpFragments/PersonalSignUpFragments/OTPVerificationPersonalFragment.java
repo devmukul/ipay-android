@@ -201,12 +201,10 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             return;
         }
 
-        String pushRegistrationID = SharedPrefManager.getPushNotificationToken(null);
-
         mProgressDialog.show();
 
         LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
-                Constants.MOBILE_ANDROID + mDeviceID, null, otp, pushRegistrationID, null);
+                Constants.MOBILE_ANDROID + mDeviceID, null, otp, null, null);
         Gson gson = new Gson();
         String json = gson.toJson(mLoginModel);
         mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
