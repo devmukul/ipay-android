@@ -13,8 +13,9 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,31 +24,34 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.gson.Gson;
 
-import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ContactsHolderFragment extends Fragment implements HttpResponseListener {
 
-    private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
     public static GetInviteInfoResponse mGetInviteInfoResponse;
-
+    private HttpRequestGetAsyncTask mGetInviteInfoTask = null;
     private BottomSheetLayout mBottomSheetLayout;
-    private CheckBox mAllContactsSelector;
-    private CheckBox miPayContactsSelector;
+
+    private RadioGroup mContactTypeRadioGroup;
+    private RadioButton mRadioButtonAllContactsSelector;
+    private RadioButton mRadioButtonIpayContactsSelector;
 
     private ContactsFragment miPayAllContactsFragment;
     private ContactsFragment miPayMemberContactsFragment;
@@ -79,27 +83,28 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         mContactCount = (TextView) v.findViewById(R.id.contact_count);
         mAddContactButton = (FloatingActionButton) v.findViewById(R.id.fab_add_contact);
 
-        mAllContactsSelector = (CheckBox) v.findViewById(R.id.checkbox_contacts_all);
-        miPayContactsSelector = (CheckBox) v.findViewById(R.id.checkbox_contacts_ipay);
+        mContactTypeRadioGroup = (RadioGroup) v.findViewById(R.id.contact_type_radio_group);
+        mRadioButtonAllContactsSelector = (RadioButton) v.findViewById(R.id.radio_button_all_contacts);
+        mRadioButtonIpayContactsSelector = (RadioButton) v.findViewById(R.id.radio_button_ipay_contacts);
 
-        mAllContactsSelector.setOnClickListener(new View.OnClickListener() {
+        mContactTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                Utilities.hideKeyboard(getActivity());
-                switchToAllContacts();
-            }
-        });
-
-        miPayContactsSelector.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Utilities.hideKeyboard(getActivity());
-                switchToiPayContacts();
+            @ValidateAccess
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.radio_button_all_contacts:
+                        switchToAllContacts();
+                        break;
+                    case R.id.radio_button_ipay_contacts:
+                        switchToiPayContacts();
+                        break;
+                }
             }
         });
 
         mAddContactButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.ADD_CONTACTS)
             public void onClick(View v) {
                 showAddContactDialog();
             }
@@ -121,7 +126,9 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        switchToiPayContacts();
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS)) {
+            mRadioButtonIpayContactsSelector.setChecked(true);
+        }
     }
 
     @Override
@@ -238,12 +245,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     }
 
     private void switchToAllContacts() {
-        mAllContactsSelector.setChecked(true);
-        miPayContactsSelector.setChecked(false);
-
-        mAllContactsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
-        miPayContactsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
-
         try {
             if (getActivity() != null) {
                 if (miPayAllContactsFragment == null) {
@@ -264,12 +265,6 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     }
 
     private void switchToiPayContacts() {
-        mAllContactsSelector.setChecked(false);
-        miPayContactsSelector.setChecked(true);
-
-        mAllContactsSelector.setTextColor(getContext().getResources().getColor(R.color.colorTextPrimary));
-        miPayContactsSelector.setTextColor(getContext().getResources().getColor(android.R.color.white));
-
         try {
             if (miPayMemberContactsFragment == null) {
                 miPayMemberContactsFragment = new ContactsFragment();

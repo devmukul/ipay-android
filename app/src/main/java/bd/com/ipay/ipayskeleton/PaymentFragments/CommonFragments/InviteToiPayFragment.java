@@ -15,14 +15,16 @@ import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.InviteDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class InviteToiPayFragment extends ProgressFragment implements HttpResponseListener {
@@ -54,6 +56,7 @@ public class InviteToiPayFragment extends ProgressFragment implements HttpRespon
         mInviteToIpayButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
+            @ValidateAccess({ServiceIdConstants.MANAGE_INVITATIONS})
             public void onClick(View v) {
 
                 new InviteDialog(getContext(), mMobileNumber).setFinishCheckerListener(new InviteDialog.FinishCheckerListener() {

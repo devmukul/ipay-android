@@ -38,6 +38,10 @@ public class ProfileInfoCacheManager {
         return pref.getString(SharedPrefConstants.USERID, "");
     }
 
+    public static void setMobileNumber(String value) {
+        pref.edit().putString(SharedPrefConstants.USERID, value).apply();
+    }
+
     public static String getProfileImageUrl() {
         return pref.getString(Constants.PROFILE_PICTURE, "");
     }
@@ -54,20 +58,16 @@ public class ProfileInfoCacheManager {
         return pref.getString(SharedPrefConstants.VERIFICATION_STATUS, "");
     }
 
+    public static void setVerificationStatus(String value) {
+        pref.edit().putString(SharedPrefConstants.VERIFICATION_STATUS, value).apply();
+    }
+
     public static int getAccountType(int defaultValue) {
         return pref.getInt(SharedPrefConstants.ACCOUNT_TYPE, defaultValue);
     }
 
     public static void setProfilePicture(String value) {
         pref.edit().putString(SharedPrefConstants.PROFILE_PICTURE, value).apply();
-    }
-
-    public static void setVerificationStatus(String value) {
-        pref.edit().putString(SharedPrefConstants.VERIFICATION_STATUS, value).apply();
-    }
-
-    public static void setMobileNumber(String value) {
-        pref.edit().putString(SharedPrefConstants.USERID, value).apply();
     }
 
     public static String getUUID(String defaultValue) {
@@ -103,7 +103,7 @@ public class ProfileInfoCacheManager {
     }
 
     public static void removeUUID() {
-        pref.edit().remove(SharedPrefConstants.USERID).apply();
+        pref.edit().remove(SharedPrefConstants.UUID).apply();
     }
 
 

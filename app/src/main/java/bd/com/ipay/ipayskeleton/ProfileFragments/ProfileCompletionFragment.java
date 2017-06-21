@@ -18,8 +18,8 @@ import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -49,7 +49,6 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
 
         mProfileCompletionStatusView = (TextView) v.findViewById(R.id.textview_profile_completion_status);
         mProfileCompletionStatusProgressBar = (ProgressBar) v.findViewById(R.id.progress_bar_profile_completion_status);
-
         getProfileCompletionStatus();
 
         return v;
@@ -169,7 +168,6 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
                         ((ProfileActivity) getActivity()).switchToFragment(propertyDetails.getPropertyName(), null, true);
                     }
                 });

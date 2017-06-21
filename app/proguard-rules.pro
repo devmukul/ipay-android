@@ -15,6 +15,7 @@
 #}
 # Obfuscation parameters:
 #-dontobfuscate
+-adaptclassstrings
 -useuniqueclassmembernames
 -allowaccessmodification
 -keep class com.google.** { *; }

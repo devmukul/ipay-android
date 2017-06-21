@@ -32,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PendingIntroducerReviewDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -48,10 +49,12 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.Pendi
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.GetIntroductionRequestsResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.IntroductionRequestClass;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -186,6 +189,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private void getMoneyAndPaymentRequest(Context context) {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.RECEIVED_REQUEST))
+            return;
+
         if (mGetMoneyAndPaymentRequestTask != null) {
             return;
         }
@@ -202,6 +208,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private void getIntroductionRequestList(Context context) {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_INTRODUCERS))
+            return;
+
         if (mGetIntroductionRequestTask != null) {
             return;
         }
@@ -212,6 +221,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private void getPendingIntroducersList(Context context) {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_INTRODUCERS))
+            return;
+
         if (mGetPendingIntroducerListTask != null) {
             return;
         }
@@ -612,6 +624,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.MANAGE_INTRODUCERS)
                     public void onClick(View v) {
                         launchIntroductionRequestReviewFragment((IntroductionRequestClass) mNotifications.get(pos));
                     }
@@ -636,6 +649,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.MANAGE_INTRODUCERS)
                     public void onClick(View v) {
                         new PendingIntroducerReviewDialog(getActivity(), pendingIntroducer).setActionCheckerListener(
                                 new PendingIntroducerReviewDialog.ActionCheckerListener() {

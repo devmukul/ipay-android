@@ -50,14 +50,6 @@ public class SharedPrefManager {
         pref.edit().putString(SharedPrefConstants.USERCOUNTRY, value).apply();
     }
 
-    public static String getPushNotificationToken(String defaultValue) {
-        return pref.getString(SharedPrefConstants.PUSH_NOTIFICATION_TOKEN, defaultValue);
-    }
-
-    public static void setPushNotificationToken(String value) {
-        pref.edit().putString(SharedPrefConstants.PUSH_NOTIFICATION_TOKEN, value).apply();
-    }
-
     public static String getKeyPassword(String defaultValue) {
         return pref.getString(SharedPrefConstants.KEY_PASSWORD, defaultValue);
     }
