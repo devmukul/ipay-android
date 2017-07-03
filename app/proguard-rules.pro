@@ -32,6 +32,7 @@
 -keep class com.squareup.okhttp.** { *; }
 -keep class android.support.v7.widget.SearchView { *; }
 -keep class bd.com.ipay.ipayskeleton.Model.** { *; }
+-keep class com.afollestad.** { *; }
 -keepclassmembers class bd.com.ipay.ipayskeleton.Model.** { *; }
 
 -keepattributes Signature
