@@ -257,23 +257,25 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         if (result == null) {
             return true;
         } else {
-            String content;
+            String errorMessage;
             switch (result) {
                 case Constants.NO_FACE_DETECTED:
-                    content = getString(R.string.no_face_detected);
+                    errorMessage = getString(R.string.no_face_detected);
                     break;
+                case Constants.VALID_PROFILE_PICTURE:
+                    return true;
                 case Constants.MULTIPLE_FACES:
-                    content = getString(R.string.multiple_face_detected);
+                    errorMessage = getString(R.string.multiple_face_detected);
                     break;
                 case Constants.NOT_AN_IMAGE:
-                    content = getString(R.string.not_an_image);
+                    errorMessage = getString(R.string.not_an_image);
                     break;
                 default:
-                    content = getString(R.string.default_profile_pic_inappropriate_message);
+                    errorMessage = getString(R.string.default_profile_pic_inappropriate_message);
                     break;
             }
 
-            showProfilePictureErrorDialog(content);
+            showProfilePictureErrorDialog(errorMessage);
             return false;
         }
     }

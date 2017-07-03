@@ -228,7 +228,7 @@ public class CameraAndImageUtilities {
                         result = Constants.NO_FACE_DETECTED;
                         break;
                     case 1:
-                        result = null; // Set null value when a single face is detected. VALID PROFILE PICTURE
+                        result = Constants.VALID_PROFILE_PICTURE; // This is the valid case
                         break;
                     default:
                         result = Constants.MULTIPLE_FACES;
