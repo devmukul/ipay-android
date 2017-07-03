@@ -45,6 +45,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB6fiY1MTe0DBchx0-SJtiB7PoIe9cyzh4" />
 
+        <meta-data
+            android:name="com.google.android.gms.vision.DEPENDENCIES"
+            android:value="face" />
+
         <activity
             android:name=".Activities.LauncherActivity"
             android:label="@string/app_name"

@@ -39,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CameraAndImageUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
@@ -243,12 +244,12 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         startActivityForResult(imagePickerIntent, ACTION_PICK_PROFILE_PICTURE);
     }
 
-    private boolean isSelectedProfileValid(Uri uri) {
+    private boolean isSelectedProfilePictureValid(Uri uri) {
         String selectedImagePath = uri.getPath();
         String result = null;
 
         try {
-            result = Utilities.validateProfilePicture(getActivity(), selectedImagePath);
+            result = CameraAndImageUtilities.validateProfilePicture(getActivity(), selectedImagePath);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -256,7 +257,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         if (result == null) {
             return true;
         } else {
-            String content = "";
+            String content;
             switch (result) {
                 case Constants.NO_FACE_DETECTED:
                     content = getString(R.string.no_face_detected);
@@ -319,16 +320,11 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                     } else {
                         // Check for a valid profile picture
                         // To remove the face detection feature just remove the if condition
-                        /*
                         // ** Removed face detection for now. Will be added later.
-                        if (isSelectedProfileValid(uri)) {
+                        if (isSelectedProfilePictureValid(uri)) {
                             mProfilePictureView.setProfilePicture(uri.getPath(), true);
                             updateProfilePicture(uri);
                         }
-                        */
-
-                        mProfilePictureView.setProfilePicture(uri.getPath(), true);
-                        updateProfilePicture(uri);
                     }
                 }
                 break;
