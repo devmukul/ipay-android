@@ -169,6 +169,12 @@ public class Constants {
     public static final String BASE_URL_WEB;
     private static final String SERVER_NAME;
 
+    public static final int DEV_SERVER = 1;
+    public static final int TEST_SERVER = 2;
+    public static final int STAGE_SERVER = 3;
+    public static final int LIVE_SERVER = 4;
+    public static final int LOCAL_SERVER = 5;
+
     static {
         if (SERVER_TYPE == 1) {
 
@@ -230,6 +236,19 @@ public class Constants {
             BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             SERVER_NAME = "local";
+        }
+    }
+
+    public static final String INTERCOM_API_KEY;
+    public static final String INTERCOM_ANDROID_SDK_KEY;
+
+    static {
+        if (SERVER_TYPE == LIVE_SERVER) {
+            INTERCOM_API_KEY = "rvba5ye6";
+            INTERCOM_ANDROID_SDK_KEY = "android_sdk-75b180d622ad8a70eb7fd36a84534f9db277f402";
+        } else {
+            INTERCOM_API_KEY = "zlbinvht";
+            INTERCOM_ANDROID_SDK_KEY = "";
         }
     }
 

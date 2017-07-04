@@ -33,7 +33,9 @@ import com.google.gson.Gson;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
@@ -81,6 +83,9 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import io.intercom.android.sdk.Intercom;
+import io.intercom.android.sdk.identity.Registration;
+import io.intercom.android.sdk.models.Avatar;
 
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, HttpResponseListener {
@@ -409,6 +414,19 @@ public class HomeActivity extends BaseActivity
             startActivity(intent);
             switchedToHomeFragment = true;
 
+        } else if (id == R.id.nav_live_chat) {
+            Registration registration = Registration.create().withUserId("1993");
+            Map<String, Object> userAttributes = new HashMap<>();
+            userAttributes.put("name", ProfileInfoCacheManager.getUserName());
+            userAttributes.put("phone", ProfileInfoCacheManager.getMobileNumber());
+            userAttributes.put("email", "sajid.sust.cse@gmail.com");
+            userAttributes.put("type", ProfileInfoCacheManager.getAccountType(1) == 1 ? "Personal A/c" : "Business A/c");
+            userAttributes.put("avatar", Avatar.create("https://www.ipay.com.bd/image/1d758ef6-ce97-43ca-b97b-27959f0516ce.jpg", "avatar"));
+            userAttributes.put("created_at", System.currentTimeMillis());
+            userAttributes.put("signed_up_at", System.currentTimeMillis() - 1000);
+            registration.withUserAttributes(userAttributes);
+            Intercom.client().registerIdentifiedUser(registration);
+            Intercom.client().displayMessenger();
         } else if (id == R.id.nav_help) {
 
             Intent intent = new Intent(this, HelpAndSupportActivity.class);

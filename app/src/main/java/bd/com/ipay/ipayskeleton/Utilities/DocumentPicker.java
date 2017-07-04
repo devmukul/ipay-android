@@ -8,10 +8,12 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +22,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 /**
@@ -105,8 +108,10 @@ public class DocumentPicker {
             File tempFile = getTempFile(context);
 
             takePhotoIntent.putExtra("return-data", true);
+            takePhotoIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             if (tempFile != null)
-                takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile));
+                takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, tempFile));
+
             intentList = addIntentsToList(context, intentList, takePhotoIntent);
         }
         return getChooserIntent(intentList, chooserTitle);
@@ -123,7 +128,7 @@ public class DocumentPicker {
         } else if (id == OPTION_CAMERA) {
             Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             takePhotoIntent.putExtra("return-data", true);
-            takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(context)));
+            takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, getTempFile(context)));
             intentList = addIntentsToList(context, intentList, takePhotoIntent);
         } else {
             Intent pdfIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -192,7 +197,7 @@ public class DocumentPicker {
             if (isCamera) {     /** CAMERA **/
                 return getTempFile(context).getAbsolutePath();
             } else {
-                return FileUtilities.getAbsolutePath(context,returnedIntent.getData());
+                return FileUtilities.getAbsolutePath(context, returnedIntent.getData());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -282,7 +287,7 @@ public class DocumentPicker {
     }
 
     private static File getTempFile(Context context) {
-        File documentFile = new File(context.getExternalCacheDir(), TEMP_DOCUMENT_NAME);
+        File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TEMP_DOCUMENT_NAME);
         if (documentFile != null) {
             documentFile.getParentFile().mkdirs();
             return documentFile;
@@ -290,7 +295,7 @@ public class DocumentPicker {
     }
 
     private static File getFileWithIndex(Context context, int index) throws IOException {
-        File documentFile = new File(context.getExternalCacheDir(), index + TEMP_DOCUMENT_NAME);
+        File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TEMP_DOCUMENT_NAME);
         if (documentFile != null) {
             documentFile.getParentFile().mkdirs();
             return documentFile;

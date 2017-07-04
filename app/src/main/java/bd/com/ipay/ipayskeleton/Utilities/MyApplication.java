@@ -23,6 +23,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import io.intercom.android.sdk.Intercom;
 
 public class MyApplication extends Application implements HttpResponseListener {
 
@@ -58,6 +59,9 @@ public class MyApplication extends Application implements HttpResponseListener {
         ProfileInfoCacheManager.initialize(getApplicationContext());
         ACLManager.initialize();
         PushNotificationStatusHolder.initialize(getApplicationContext());
+        Intercom.initialize(this, Constants.INTERCOM_ANDROID_SDK_KEY, Constants.INTERCOM_API_KEY);
+
+
     }
 
     public void startUserInactivityDetectorTimer() {
