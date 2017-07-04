@@ -247,6 +247,10 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         String selectedImagePath = uri.getPath();
         String result = null;
 
+        // Business account don't need face detection as their profile picture can be logo
+        if (ProfileInfoCacheManager.isBusinessAccount())
+            return true;
+
         try {
             result = CameraAndImageUtilities.validateProfilePicture(getActivity(), selectedImagePath);
         } catch (Exception e) {
@@ -320,8 +324,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                                     Toast.LENGTH_SHORT).show();
                     } else {
                         // Check for a valid profile picture
-                        // To remove the face detection feature just remove the if condition
-                        // ** Removed face detection for now. Will be added later.
                         if (isSelectedProfilePictureValid(uri)) {
                             mProfilePictureView.setProfilePicture(uri.getPath(), true);
                             updateProfilePicture(uri);
