@@ -247,7 +247,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         String selectedImagePath = uri.getPath();
         String result = null;
 
-        // Business account don't need face detection as their profile picture can be logo
+        // Business account doesn't need face detection as the profile picture can be its logo
         if (ProfileInfoCacheManager.isBusinessAccount())
             return true;
 
