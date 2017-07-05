@@ -46,7 +46,6 @@ import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
-import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AccountFragment extends Fragment implements HttpResponseListener {
 
@@ -248,6 +247,10 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         String selectedImagePath = uri.getPath();
         String result = null;
 
+        // Business account doesn't need face detection as the profile picture can be its logo
+        if (ProfileInfoCacheManager.isBusinessAccount())
+            return true;
+
         try {
             result = CameraAndImageUtilities.validateProfilePicture(getActivity(), selectedImagePath);
         } catch (Exception e) {
@@ -285,7 +288,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                 .title(R.string.attention)
                 .content(content)
                 .cancelable(true)
-                .positiveText(R.string.take_again)
+                .positiveText(R.string.try_again)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -321,8 +324,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                                     Toast.LENGTH_SHORT).show();
                     } else {
                         // Check for a valid profile picture
-                        // To remove the face detection feature just remove the if condition
-                        // ** Removed face detection for now. Will be added later.
                         if (isSelectedProfilePictureValid(uri)) {
                             mProfilePictureView.setProfilePicture(uri.getPath(), true);
                             updateProfilePicture(uri);
