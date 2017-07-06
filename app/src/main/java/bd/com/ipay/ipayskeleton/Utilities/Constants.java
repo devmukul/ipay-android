@@ -726,6 +726,7 @@ public class Constants {
     public static final String NOT_AN_IMAGE = "NOT_AN_IMAGE";
     public static final String MULTIPLE_FACES = "MULTIPLE_FACES";
     public static final String NO_FACE_DETECTED = "NO_FACE_DETECTED";
+    public static final String VALID_PROFILE_PICTURE = "VALID_PROFILE_PICTURE";
 
     // API Version Checker
     public static boolean IS_API_VERSION_CHECKED = false;

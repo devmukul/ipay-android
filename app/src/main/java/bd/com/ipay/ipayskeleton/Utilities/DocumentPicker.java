@@ -230,12 +230,12 @@ public class DocumentPicker {
 
                     // Convert the image - handle auto rotate problem in some devices, scale down
                     // image if necessary (max 512*512)
-                    Bitmap convertedBitmap = CameraUtilities.handleSamplingAndRotationBitmap(context,
+                    Bitmap convertedBitmap = CameraAndImageUtilities.handleSamplingAndRotationBitmap(context,
                             isCamera ? selectedImage : returnedIntent.getData(), isCamera);
 
                     // Save to file
                     File tempFile = getTempFile(context);
-                    CameraUtilities.saveBitmapToFile(convertedBitmap, tempFile);
+                    CameraAndImageUtilities.saveBitmapToFile(convertedBitmap, tempFile);
                     selectedImage = Uri.fromFile(tempFile);
                 }
             }
@@ -270,12 +270,12 @@ public class DocumentPicker {
 
                     // Convert the image - handle auto rotate problem in some devices, scale down
                     // image if necessary (max 512*512)
-                    Bitmap convertedBitmap = CameraUtilities.handleSamplingAndRotationBitmap(context,
+                    Bitmap convertedBitmap = CameraAndImageUtilities.handleSamplingAndRotationBitmap(context,
                             isCamera ? selectedImage : returnedIntent.getData(), isCamera);
 
                     // Save to file
                     File tempFile = getFileWithIndex(context, fileIndex);
-                    CameraUtilities.saveBitmapToFile(convertedBitmap, tempFile);
+                    CameraAndImageUtilities.saveBitmapToFile(convertedBitmap, tempFile);
                     selectedImage = Uri.fromFile(tempFile);
                 }
             }

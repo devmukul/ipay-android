@@ -8,6 +8,12 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.SparseArray;
+
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.face.Face;
+import com.google.android.gms.vision.face.FaceDetector;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,7 +27,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
  * http://stackoverflow.com/questions/14066038/why-image-captured-using-camera-intent-gets-rotated-on-some-devices-in-android
  * http://stackoverflow.com/questions/649154/save-bitmap-to-location
  */
-public class CameraUtilities {
+public class CameraAndImageUtilities {
 
     /**
      * This method is responsible for solving the rotation issue if exist. Also scale the images to
@@ -174,5 +180,70 @@ public class CameraUtilities {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Checks if a profile picture is proper or not.
+     *
+     * @param context, selectedImageUri
+     * @return Returns null when its a valid profile picture.
+     * Else returns String stating the problem in the picture which is selected to upload.
+     */
+    public static String validateProfilePicture(Context context, String selectedImageUri) {
+
+        String result;
+        FaceDetector detector;
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        Bitmap bitmap = BitmapFactory.decodeFile(selectedImageUri, options);
+
+        // First, check if the file selected is an image.
+        if (options.outWidth != -1 && options.outHeight != -1) {
+            // This is an image file
+            // Now initialize the face detector
+            detector = new FaceDetector.Builder(context)
+                    .setTrackingEnabled(false)
+                    .setLandmarkType(FaceDetector.ALL_LANDMARKS)
+                    .build();
+
+            // This is a temporary workaround for a bug in the face detector with respect to operating
+            // on very small images.  This will be fixed in a future release.  But in the near term, use
+            // of the SafeFaceDetector class will patch the issue.
+            Detector<Face> safeDetector = new SafeFaceDetector(detector);
+
+            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+            SparseArray<Face> faces = safeDetector.detect(frame);
+
+            // Check if the face detection is operational.
+            if (!safeDetector.isOperational()) {
+                // Face detector needs a native library to be downloaded before it works perfectly.
+                // If the download interrupts, it may fail to initialize and will return erroneous value.
+                // We can not stop user from uploading profile picture if the face detector library is not available. So return valid instead.
+                // So return null
+                result = null;
+            } else {
+                // Face detection is operational
+                switch (faces.size()) {
+                    case 0:
+                        result = Constants.NO_FACE_DETECTED;
+                        break;
+                    case 1:
+                        result = Constants.VALID_PROFILE_PICTURE; // This is the valid case
+                        break;
+                    default:
+                        result = Constants.MULTIPLE_FACES;
+                        break;
+                }
+            }
+
+            // When it is no longer needed in order to free native resources.
+            safeDetector.release();
+
+        } else {
+            // This is not an image file
+            result = Constants.NOT_AN_IMAGE;
+        }
+
+        return result;
     }
 }
