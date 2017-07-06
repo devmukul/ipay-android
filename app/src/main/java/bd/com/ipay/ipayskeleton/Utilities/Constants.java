@@ -187,7 +187,7 @@ public class Constants {
             BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/em/";
-            BASE_URL_FTP_SERVER = "https://dev.ipay.com.bd";
+            BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_CONTACT = "http://10.10.10.11:4000/external/v1/";
             BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/support/";
             BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
@@ -200,7 +200,7 @@ public class Constants {
             BASE_URL_MM = "http://10.15.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/em/";
-            BASE_URL_FTP_SERVER = "https://test.ipay.com.bd";
+            BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_CONTACT = "http://10.15.40.14:4000/external/v1/";
             BASE_URL_ADMIN = "http://10.15.40.15:8085/api/v1/support/";
             BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.162:7778/api/v1/notification/";
@@ -736,18 +736,4 @@ public class Constants {
 
     // Format
     public static final String DATE_FORMAT = "%02d/%02d/%4d";
-
-    //Intercom Attributes
-    public static final String INTERCOM_ATTR_NAME = "name";
-    public static final String INTERCOM_ATTR_PHONE = "phone";
-    public static final String INTERCOM_ATTR_EMAIL = "email";
-    public static final String INTERCOM_ATTR_AVATAR = "avatar";
-    public static final String INTERCOM_ATTR_CUSTOM_ATTRIBUTES = "custom_attributes";
-
-    //Intecom Custom Attributes
-    public static final String INTERCOM_ATTR_TYPE = "type";
-    public static final String INTERCOM_ATTR_IMAGE_URL = "image_url";
-    public static final String INTERCOM_ATTR_CREATED_AT = "created_at";
-    public static final String INTERCOM_ATTR_SIGNED_UP_AT = "signed_up_at";
-    public static final String INTERCOM_ATTR_VERIFICATION_STATUS = "verification_status";
 }
