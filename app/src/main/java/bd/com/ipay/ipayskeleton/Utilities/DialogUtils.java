@@ -46,4 +46,10 @@ public class DialogUtils {
                 .show();
         dialog.show();
     }
+
+    public static void showLiveChatNotAvailableDialog(final Context context) {
+        MaterialDialog.Builder alertDialog = new MaterialDialog.Builder(context);
+        alertDialog.content(R.string.live_chat_not_available);
+        alertDialog.build().show();
+    }
 }

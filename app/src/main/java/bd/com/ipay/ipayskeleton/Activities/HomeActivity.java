@@ -29,7 +29,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
@@ -447,9 +446,7 @@ public class HomeActivity extends BaseActivity
                 Intercom.client().displayConversationsList();
 
             } else {
-                MaterialDialog.Builder alertDialog = new MaterialDialog.Builder(this);
-                alertDialog.content(R.string.live_chat_not_available);
-                alertDialog.build().show();
+                DialogUtils.showLiveChatNotAvailableDialog(this);
             }
         } else if (id == R.id.nav_help) {
 
