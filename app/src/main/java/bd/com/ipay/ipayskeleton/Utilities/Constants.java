@@ -184,7 +184,7 @@ public class Constants {
             BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/em/";
-            BASE_URL_FTP_SERVER = "http://10.10.10.10";
+            BASE_URL_FTP_SERVER = "https://dev.ipay.com.bd";
             BASE_URL_CONTACT = "http://10.10.10.11:4000/external/v1/";
             BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/support/";
             BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
@@ -197,7 +197,7 @@ public class Constants {
             BASE_URL_MM = "http://10.15.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/em/";
-            BASE_URL_FTP_SERVER = "https://dev.ipay.com.bd";
+            BASE_URL_FTP_SERVER = "https://test.ipay.com.bd";
             BASE_URL_CONTACT = "http://10.15.40.14:4000/external/v1/";
             BASE_URL_ADMIN = "http://10.15.40.15:8085/api/v1/support/";
             BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.162:7778/api/v1/notification/";
@@ -209,7 +209,7 @@ public class Constants {
             BASE_URL_MM = "http://10.10.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
             BASE_URL_EDU = "http://10.10.40.11:7150/api/v1/em/";
-            BASE_URL_FTP_SERVER = "https://test.ipay.com.bd";
+            BASE_URL_FTP_SERVER = "http://10.10.40.14";
             BASE_URL_CONTACT = "http://10.10.40.14:4000/external/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
             BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
