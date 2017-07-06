@@ -812,6 +812,7 @@
     <string name="see_basic_info_service_not_allowed_message">User Information can\'t be shown. Please contact support for more info.</string>
     <string name="see_business_address_service_not_allowed_message">Business Address can\'t be shown. Please contact support for more info.</string>
     <string name="see_business_info_service_not_allowed_message">Business Info can\'t be shown. Please contact support for more info.</string>
+    <string name="live_chat_not_available">Live Chat Currently not available. Please Try Again Later</string>
 
 
     <string-array name="mobile_operators">

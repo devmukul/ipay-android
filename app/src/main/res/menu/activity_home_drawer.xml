@@ -29,7 +29,7 @@
             android:visible="true" />
         <item
             android:id="@+id/nav_live_chat"
-            android:icon="@drawable/ic_help"
+            android:icon="@drawable/ic_chat"
             android:title="@string/live_chat" />
         <item
             android:id="@+id/nav_help"

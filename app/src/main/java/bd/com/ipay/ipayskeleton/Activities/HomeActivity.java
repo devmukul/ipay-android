@@ -21,6 +21,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,6 +29,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
@@ -62,8 +64,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBus
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notification;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
@@ -85,7 +86,6 @@ import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import io.intercom.android.sdk.Intercom;
 import io.intercom.android.sdk.identity.Registration;
-import io.intercom.android.sdk.models.Avatar;
 
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, HttpResponseListener {
@@ -96,7 +96,7 @@ public class HomeActivity extends BaseActivity
     private LogoutResponse mLogOutResponse;
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
-    private GetUserInfoResponse mGetUserInfoResponse;
+    private GetProfileInfoResponse mGetProfileInfoResponse;
 
     private HttpRequestGetAsyncTask mGetBusinessInformationAsyncTask;
     private GetBusinessInformationResponse mGetBusinessInformationResponse;
@@ -181,10 +181,13 @@ public class HomeActivity extends BaseActivity
         switchToDashBoard();
 
         // Check if there's anything new from the server
-        int accountType = ProfileInfoCacheManager.getAccountType(0);
+        int accountType = ProfileInfoCacheManager.getAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
+
+        getProfileInfo();
+
         if (accountType == Constants.BUSINESS_ACCOUNT_TYPE) {
             getBusinessInformation();
-        } else getProfileInfo();
+        }
 
         // Sync contacts
         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS))
@@ -415,18 +418,38 @@ public class HomeActivity extends BaseActivity
             switchedToHomeFragment = true;
 
         } else if (id == R.id.nav_live_chat) {
-            Registration registration = Registration.create().withUserId("1993");
-            Map<String, Object> userAttributes = new HashMap<>();
-            userAttributes.put("name", ProfileInfoCacheManager.getUserName());
-            userAttributes.put("phone", ProfileInfoCacheManager.getMobileNumber());
-            userAttributes.put("email", "sajid.sust.cse@gmail.com");
-            userAttributes.put("type", ProfileInfoCacheManager.getAccountType(1) == 1 ? "Personal A/c" : "Business A/c");
-            userAttributes.put("avatar", Avatar.create("https://www.ipay.com.bd/image/1d758ef6-ce97-43ca-b97b-27959f0516ce.jpg", "avatar"));
-            userAttributes.put("created_at", System.currentTimeMillis());
-            userAttributes.put("signed_up_at", System.currentTimeMillis() - 1000);
-            registration.withUserAttributes(userAttributes);
-            Intercom.client().registerIdentifiedUser(registration);
-            Intercom.client().displayMessenger();
+            if (isProfileInfoAvailable()) {
+                Registration registration = Registration.create().withUserId(Integer.toString(ProfileInfoCacheManager.getAccountId()));
+                Map<String, Object> customAttributes = new HashMap<>();
+
+                Map<String, Object> userAttributes = new HashMap<>();
+                userAttributes.put(Constants.INTERCOM_ATTR_NAME, ProfileInfoCacheManager.getUserName());
+                userAttributes.put(Constants.INTERCOM_ATTR_PHONE, ProfileInfoCacheManager.getMobileNumber());
+                userAttributes.put(Constants.INTERCOM_ATTR_EMAIL, ProfileInfoCacheManager.getPrimaryEmail());
+
+                if (!TextUtils.isEmpty(ProfileInfoCacheManager.getProfileImageUrl())) {
+                    Map<String, Object> avatar = new HashMap<>();
+                    avatar.put(Constants.INTERCOM_ATTR_TYPE, "avatar");
+                    avatar.put(Constants.INTERCOM_ATTR_IMAGE_URL, Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl());
+                    userAttributes.put(Constants.INTERCOM_ATTR_AVATAR, avatar);
+                }
+
+                customAttributes.put(Constants.INTERCOM_ATTR_CREATED_AT, System.currentTimeMillis() / 1000L);
+                customAttributes.put(Constants.INTERCOM_ATTR_TYPE, ProfileInfoCacheManager.getAccountType(1) == 1 ? "Personal A/ccccc" : "Business A/ccccc");
+                customAttributes.put(Constants.INTERCOM_ATTR_SIGNED_UP_AT, ProfileInfoCacheManager.getSignupTime() / 1000L);
+                customAttributes.put(Constants.INTERCOM_ATTR_VERIFICATION_STATUS, ProfileInfoCacheManager.getVerificationStatus());
+
+                userAttributes.put(Constants.INTERCOM_ATTR_CUSTOM_ATTRIBUTES, customAttributes);
+                registration.withUserAttributes(userAttributes);
+
+                Intercom.client().registerIdentifiedUser(registration);
+                Intercom.client().displayConversationsList();
+
+            } else {
+                MaterialDialog.Builder alertDialog = new MaterialDialog.Builder(this);
+                alertDialog.content(R.string.live_chat_not_available);
+                alertDialog.build().show();
+            }
         } else if (id == R.id.nav_help) {
 
             Intent intent = new Intent(this, HelpAndSupportActivity.class);
@@ -445,6 +468,16 @@ public class HomeActivity extends BaseActivity
             } else {
                 ((MyApplication) this.getApplication()).launchLoginPage(null);
             }
+        }
+    }
+
+    private boolean isProfileInfoAvailable() {
+        if (ProfileInfoCacheManager.getAccountId() == -1) {
+            return false;
+        } else if (ProfileInfoCacheManager.isBusinessAccount() && TextUtils.isEmpty(ProfileInfoCacheManager.getUserName())) {
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -510,11 +543,8 @@ public class HomeActivity extends BaseActivity
             return;
         }
 
-        GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(ProfileInfoCacheManager.getMobileNumber());
-
-        String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
-        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                mUri, HomeActivity.this);
+        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, HomeActivity.this);
         mGetProfileInfoTask.mHttpResponseListener = this;
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -581,6 +611,7 @@ public class HomeActivity extends BaseActivity
                     mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        Intercom.client().reset();
                         if (!exitFromApplication) {
                             ((MyApplication) this.getApplication()).launchLoginPage(null);
                         } else {
@@ -601,18 +632,20 @@ public class HomeActivity extends BaseActivity
                 mLogoutTask = null;
 
                 break;
-            case Constants.COMMAND_GET_USER_INFO:
+            case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
 
                 try {
-                    mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
+
+                    mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                        mNameView.setText(mGetUserInfoResponse.getName());
+                        if (!ProfileInfoCacheManager.isBusinessAccount())
+                            mNameView.setText(mGetProfileInfoResponse.getName());
 
-                        String imageUrl = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
+                        String imageUrl = Utilities.getImage(mGetProfileInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
 
                         //saving user info in shared preference
-                        ProfileInfoCacheManager.updateCache(mGetUserInfoResponse.getName(), imageUrl, mGetUserInfoResponse.getAccountStatus());
+                        ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
 
                         PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
@@ -638,7 +671,7 @@ public class HomeActivity extends BaseActivity
                         String imageUrl = Utilities.getImage(mGetBusinessInformationResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
 
                         //saving user info in shared preference
-                        ProfileInfoCacheManager.updateCache(mGetBusinessInformationResponse.getBusinessName(), imageUrl, mGetBusinessInformationResponse.getVerificationStatus());
+                        ProfileInfoCacheManager.updateBusinessInfoCache(mGetBusinessInformationResponse);
                         PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                     } else {

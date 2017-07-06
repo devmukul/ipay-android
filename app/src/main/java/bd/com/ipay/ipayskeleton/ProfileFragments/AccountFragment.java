@@ -322,7 +322,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                         /*
                         // ** Removed face detection for now. Will be added later.
                         if (isSelectedProfileValid(uri)) {
-                            mProfilePictureView.setProfilePicture(uri.getPath(), true);
+                            mProfilePictureView.setProfilePictureUrl(uri.getPath(), true);
                             updateProfilePicture(uri);
                         }
                         */

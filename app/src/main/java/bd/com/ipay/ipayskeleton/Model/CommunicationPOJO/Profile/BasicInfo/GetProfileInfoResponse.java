@@ -1,30 +1,32 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class GetProfileInfoResponse {
 
     private String message;
+    private int accountId;
     private String mobileNumber;
     private String name;
-    private String gender;
     private String dob;
-    private int occupation;
+    private String gender;
+    private String primaryEmail;
     private String organizationName;
+    private int occupation;
     private int accountType;
+    private List<UserProfilePictureClass> profilePictures;
     private String verificationStatus;
     private int verifiedByCount;
-    private String father;
-    private String mother;
     private long signupTime;
-
-    private final List<UserProfilePictureClass> profilePictures = new ArrayList<>();
 
     public String getMessage() {
         return message;
+    }
+
+    public int getAccountId() {
+        return accountId;
     }
 
     public String getMobileNumber() {
@@ -35,22 +37,32 @@ public class GetProfileInfoResponse {
         return name;
     }
 
+    public String getDob() {
+        return dob;
+    }
+
     public String getGender() {
         return gender;
     }
 
-    public String getDateOfBirth() {
-        return dob;
+    public String getPrimaryEmail() {
+        return primaryEmail;
+    }
+
+    public String getOrganizationName() {
+        return organizationName;
     }
 
     public int getOccupation() {
         return occupation;
     }
 
-    public String getOrganizationName() { return organizationName; }
-
     public int getAccountType() {
         return accountType;
+    }
+
+    public List<UserProfilePictureClass> getProfilePictures() {
+        return profilePictures;
     }
 
     public String getVerificationStatus() {
@@ -61,24 +73,16 @@ public class GetProfileInfoResponse {
         return verifiedByCount;
     }
 
-    public String getFather() {
-        return father;
+    public long getSignupTime() {
+        return signupTime;
     }
 
-    public String getMother() {
-        return mother;
-    }
-
-    public String getSignUpTime() {
+    public String getSignupTimeFormatted() {
         Date date = new Date();
         date.setTime(signupTime);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         return simpleDateFormat.format(date);
     }
-
-    public List<UserProfilePictureClass> getProfilePictures() {
-        return profilePictures;
-    }
-
 }
+
