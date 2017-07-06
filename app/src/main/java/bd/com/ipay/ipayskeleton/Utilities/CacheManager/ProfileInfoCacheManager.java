@@ -214,6 +214,8 @@ public class ProfileInfoCacheManager {
         setSignupTime(profileInfo.getSignupTime());
 
         sendProfileUpdateBroadCast();
+
+        setProfileInfoFetched(true);
     }
 
     public static void updateBusinessInfoCache(GetBusinessInformationResponse businessInfo) {
@@ -222,8 +224,6 @@ public class ProfileInfoCacheManager {
         setVerificationStatus(businessInfo.getVerificationStatus());
 
         sendProfileUpdateBroadCast();
-
-        setProfileInfoFetched(true);
     }
 
     /**
