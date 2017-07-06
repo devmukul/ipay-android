@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Utilities.SSLPinning;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import io.intercom.android.sdk.Intercom;
 
 public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, GenericHttpResponse> {
 
@@ -107,7 +108,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                     if (loggedIn && !result.getJsonString().contains(Constants.USERNAME_PASSWORD_INCORRECT)) {
                         String message = mContext.getString(R.string.please_log_in_again);
                         myApplicationInstance.launchLoginPage(message);
-
+                        Intercom.client().reset();
                     } else {
                         // Wrong user name or password returns HTTP_RESPONSE_STATUS_UNAUTHORIZED too
                         if (mHttpResponseListener != null)

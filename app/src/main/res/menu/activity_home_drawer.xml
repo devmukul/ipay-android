@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_walletw"
+            android:icon="@drawable/ic_wallet"
             android:title="@string/wallet" />
         <item
             android:id="@+id/nav_account"
@@ -28,8 +28,12 @@
             android:title="@string/invite_a_contact"
             android:visible="true" />
         <item
+            android:id="@+id/nav_live_chat"
+            android:icon="@drawable/ic_chat"
+            android:title="@string/live_chat" />
+        <item
             android:id="@+id/nav_help"
-            android:icon="@drawable/ic_helpw"
+            android:icon="@drawable/ic_help"
             android:title="@string/help" />
         <item
             android:id="@+id/nav_about"

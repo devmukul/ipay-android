@@ -5,8 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ProfileInfoCacheManager {
 
@@ -18,6 +22,30 @@ public class ProfileInfoCacheManager {
         pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
     }
 
+    public static boolean isAccountVerified() {
+        return getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED);
+    }
+
+    public static boolean isBusinessAccount() {
+        return getAccountType(Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE;
+    }
+
+    /**
+     * @return if the profile is fetched and set true it will return true, otherwise false
+     */
+    public static boolean isProfileInfoFetched() {
+        return pref.getBoolean(SharedPrefConstants.PROFILE_INFO_FETCHED, false);
+    }
+
+    /**
+     * After fetching the profile info set the value to true
+     *
+     * @param value Determine the value will be true or false
+     */
+    public static void setProfileInfoFetched(boolean value) {
+        pref.edit().putBoolean(SharedPrefConstants.PROFILE_INFO_FETCHED, value).apply();
+    }
+
     public static String getPushNotificationToken(String defaultValue) {
         return pref.getString(SharedPrefConstants.PUSH_NOTIFICATION_TOKEN, defaultValue);
     }
@@ -26,32 +54,72 @@ public class ProfileInfoCacheManager {
         pref.edit().putString(SharedPrefConstants.PUSH_NOTIFICATION_TOKEN, value).apply();
     }
 
+    /**
+     * @return For Account Type {@link Constants.PERSONAL_ACCOUNT_TYPE} Returns the User Full Name,
+     * For {@link Constants.BUSINESS_ACCOUNT_TYPE} Returns the Name of the Business.
+     */
     public static String getUserName() {
         return pref.getString(SharedPrefConstants.USER_NAME, "");
     }
 
+    /**
+     * @param value For Account Type {@link Constants.PERSONAL_ACCOUNT_TYPE} value have to be the User Full Name,
+     *              For {@link Constants.BUSINESS_ACCOUNT_TYPE} value have to be the Name of the Business.
+     */
     public static void setUserName(String value) {
         pref.edit().putString(SharedPrefConstants.USER_NAME, value).apply();
     }
 
+    /**
+     * @return iPay Account Number
+     */
     public static String getMobileNumber() {
         return pref.getString(SharedPrefConstants.USERID, "");
     }
 
+    /**
+     * @param value iPay Account Number
+     */
     public static void setMobileNumber(String value) {
         pref.edit().putString(SharedPrefConstants.USERID, value).apply();
     }
 
+    /**
+     * @return Relative URL for the Profile Picture
+     */
     public static String getProfileImageUrl() {
         return pref.getString(Constants.PROFILE_PICTURE, "");
     }
 
-    public static boolean isAccountVerified() {
-        return getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED);
+    /**
+     * @param value Save the relative URL of the Profile Picture
+     */
+    public static void setProfilePictureUrl(String value) {
+        pref.edit().putString(SharedPrefConstants.PROFILE_PICTURE, value).apply();
     }
 
-    public static boolean isBusinessAccount() {
-        return getAccountType(Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE;
+    public static String getPrimaryEmail() {
+        return pref.getString(Constants.PRIMARY_EMAIL, "N/A");
+    }
+
+    public static void setPrimaryEmail(String value) {
+        pref.edit().putString(Constants.PRIMARY_EMAIL, !TextUtils.isEmpty(value) ? value : "N/A").apply();
+    }
+
+    public static long getSignupTime() {
+        return pref.getLong(Constants.SIGNUP_TIME, 0L);
+    }
+
+    public static void setSignupTime(long value) {
+        pref.edit().putLong(Constants.SIGNUP_TIME, value).apply();
+    }
+
+    public static int getAccountId() {
+        return pref.getInt(Constants.ACCOUNT_ID, -1);
+    }
+
+    public static void setAccountId(int value) {
+        pref.edit().putInt(Constants.ACCOUNT_ID, value).apply();
     }
 
     public static String getVerificationStatus() {
@@ -66,8 +134,8 @@ public class ProfileInfoCacheManager {
         return pref.getInt(SharedPrefConstants.ACCOUNT_TYPE, defaultValue);
     }
 
-    public static void setProfilePicture(String value) {
-        pref.edit().putString(SharedPrefConstants.PROFILE_PICTURE, value).apply();
+    public static void setAccountType(int value) {
+        pref.edit().putInt(SharedPrefConstants.ACCOUNT_TYPE, value).apply();
     }
 
     public static String getUUID(String defaultValue) {
@@ -86,10 +154,6 @@ public class ProfileInfoCacheManager {
         pref.edit().putString(SharedPrefConstants.UUID, value).apply();
     }
 
-    public static void setAccountType(int value) {
-        pref.edit().putInt(SharedPrefConstants.ACCOUNT_TYPE, value).apply();
-    }
-
     public static void setBIRTHDAY(String value) {
         pref.edit().putString(SharedPrefConstants.BIRTHDAY, value).apply();
     }
@@ -105,7 +169,6 @@ public class ProfileInfoCacheManager {
     public static void removeUUID() {
         pref.edit().remove(SharedPrefConstants.UUID).apply();
     }
-
 
     public static boolean ifPasswordEncrypted() {
         if (pref.getString(SharedPrefConstants.KEY_PASSWORD, "") != "")
@@ -135,27 +198,39 @@ public class ProfileInfoCacheManager {
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(SharedPrefConstants.KEY_PASSWORD, "");
         pref.edit().putBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false).apply();
-        editor.commit();
+        editor.apply();
     }
 
-    public static void updateCache(String name, String mobileNumber, String profileImageUrl, String verificationStatus) {
-        setUserName(name);
-        setMobileNumber(mobileNumber);
-        setProfilePicture(profileImageUrl);
-        setVerificationStatus(verificationStatus);
+    public static void updateProfileInfoCache(GetProfileInfoResponse profileInfo) {
+        // For Business Account It contains the name of the contact person rather than the name of the business.
+        // So We have to check if the Account Type is Personal or not to save this information
+        if (!ProfileInfoCacheManager.isBusinessAccount())
+            setUserName(profileInfo.getName());
 
-        // Send broadcast that profile information has updated, so views showing profile information
-        // (e.g. HomeFragment) could be refreshed
-        Intent intent = new Intent(Constants.PROFILE_INFO_UPDATE_BROADCAST);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        setProfilePictureUrl(Utilities.getImage(profileInfo.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH));
+        setVerificationStatus(profileInfo.getVerificationStatus());
+        setPrimaryEmail(profileInfo.getPrimaryEmail());
+        setAccountId(profileInfo.getAccountId());
+        setSignupTime(profileInfo.getSignupTime());
+
+        sendProfileUpdateBroadCast();
+
+        setProfileInfoFetched(true);
     }
 
-    public static void updateCache(String name, String profileImageUrl, String verificationStatus) {
-        setUserName(name);
-        setProfilePicture(profileImageUrl);
-        setVerificationStatus(verificationStatus);
-        // Send broadcast that profile information has updated, so views showing profile information
-        // (e.g. HomeFragment) could be refreshed
+    public static void updateBusinessInfoCache(GetBusinessInformationResponse businessInfo) {
+        setUserName(businessInfo.getBusinessName());
+        setProfilePictureUrl(Utilities.getImage(businessInfo.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH));
+        setVerificationStatus(businessInfo.getVerificationStatus());
+
+        sendProfileUpdateBroadCast();
+    }
+
+    /**
+     * Send broadcast that profile information has updated, so views showing profile information
+     * (e.g. {@link bd.com.ipay.ipayskeleton.HomeFragments.HomeFragment} ) could be refreshed
+     */
+    private static void sendProfileUpdateBroadCast() {
         Intent intent = new Intent(Constants.PROFILE_INFO_UPDATE_BROADCAST);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }

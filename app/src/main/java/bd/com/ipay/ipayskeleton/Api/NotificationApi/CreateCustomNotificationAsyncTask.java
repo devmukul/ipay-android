@@ -68,7 +68,7 @@ public class CreateCustomNotificationAsyncTask extends AsyncTask<String, Void, B
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(true)
@@ -76,7 +76,7 @@ public class CreateCustomNotificationAsyncTask extends AsyncTask<String, Void, B
                 .setContentIntent(pendingIntent);
 
         if (result != null)
-          notificationBuilder.setLargeIcon(result);
+            notificationBuilder.setLargeIcon(result);
 
         NotificationManager notificationManager =
                 (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);

@@ -23,6 +23,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import io.intercom.android.sdk.Intercom;
 
 public class MyApplication extends Application implements HttpResponseListener {
 
@@ -58,6 +59,9 @@ public class MyApplication extends Application implements HttpResponseListener {
         ProfileInfoCacheManager.initialize(getApplicationContext());
         ACLManager.initialize();
         PushNotificationStatusHolder.initialize(getApplicationContext());
+        Intercom.initialize(this, Constants.INTERCOM_ANDROID_SDK_KEY, Constants.INTERCOM_API_KEY);
+        Intercom.client().reset();
+
     }
 
     public void startUserInactivityDetectorTimer() {
@@ -142,10 +146,11 @@ public class MyApplication extends Application implements HttpResponseListener {
         mRefreshTokenAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void forceLogoutForInactivity() {
+    public void forceLogoutForInactivity() {
         if (Utilities.isConnectionAvailable(getApplicationContext())) attemptLogout();
         else launchLoginPage(getString(R.string.please_log_in_again));
-
+        Intercom.client().reset();
+        Intercom.client().hideMessenger();
     }
 
     // Launch login page for token timeout/un-authorized/logout called for user inactivity

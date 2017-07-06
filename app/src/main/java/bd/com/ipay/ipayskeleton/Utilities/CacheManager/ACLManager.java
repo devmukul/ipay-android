@@ -75,6 +75,7 @@ public class ACLManager {
         mapServiceAccessByNavigationMenuId.put(R.id.nav_home, true);
         mapServiceAccessByNavigationMenuId.put(R.id.nav_account, true);
         mapServiceAccessByNavigationMenuId.put(R.id.nav_security_settings, true);
+        mapServiceAccessByNavigationMenuId.put(R.id.nav_live_chat, true);
         mapServiceAccessByNavigationMenuId.put(R.id.nav_help, true);
         mapServiceAccessByNavigationMenuId.put(R.id.nav_about, true);
 
