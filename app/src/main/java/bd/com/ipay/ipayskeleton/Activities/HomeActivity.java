@@ -78,6 +78,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.IntercomConstants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
@@ -180,14 +181,7 @@ public class HomeActivity extends BaseActivity
 
         switchToDashBoard();
 
-        // Check if there's anything new from the server
-        int accountType = ProfileInfoCacheManager.getAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
-
-        getProfileInfo();
-
-        if (accountType == Constants.BUSINESS_ACCOUNT_TYPE) {
-            getBusinessInformation();
-        }
+        updateProfileInfo();
 
         // Sync contacts
         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS))
@@ -240,6 +234,19 @@ public class HomeActivity extends BaseActivity
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_INFO_UPDATE_BROADCAST));
+    }
+
+    /**
+     * update Profile info fetches from the Profile Information API.
+     * If the account type is business then, an additional task is done by calling the
+     * Business Information API as the Profile API doesn't provide us the Business Name
+     */
+    private void updateProfileInfo() {
+        getProfileInfo();
+
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
+            getBusinessInformation();
+        }
     }
 
     @Override
@@ -420,26 +427,20 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_live_chat) {
             if (isProfileInfoAvailable()) {
                 Registration registration = Registration.create().withUserId(Integer.toString(ProfileInfoCacheManager.getAccountId()));
-                Map<String, Object> customAttributes = new HashMap<>();
+                Map<String, Object> customAttributes = getCustomUserAttributes();
 
                 Map<String, Object> userAttributes = new HashMap<>();
-                userAttributes.put(Constants.INTERCOM_ATTR_NAME, ProfileInfoCacheManager.getUserName());
-                userAttributes.put(Constants.INTERCOM_ATTR_PHONE, ProfileInfoCacheManager.getMobileNumber());
-                userAttributes.put(Constants.INTERCOM_ATTR_EMAIL, ProfileInfoCacheManager.getPrimaryEmail());
-
+                userAttributes.put(IntercomConstants.ATTR_NAME, ProfileInfoCacheManager.getUserName());
+                userAttributes.put(IntercomConstants.ATTR_PHONE, ProfileInfoCacheManager.getMobileNumber());
+                userAttributes.put(IntercomConstants.ATTR_EMAIL, ProfileInfoCacheManager.getPrimaryEmail());
                 if (!TextUtils.isEmpty(ProfileInfoCacheManager.getProfileImageUrl())) {
                     Map<String, Object> avatar = new HashMap<>();
-                    avatar.put(Constants.INTERCOM_ATTR_TYPE, "avatar");
-                    avatar.put(Constants.INTERCOM_ATTR_IMAGE_URL, Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl());
-                    userAttributes.put(Constants.INTERCOM_ATTR_AVATAR, avatar);
+                    avatar.put(IntercomConstants.ATTR_TYPE, "avatar");
+                    avatar.put(IntercomConstants.ATTR_IMAGE_URL, Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl());
+                    userAttributes.put(IntercomConstants.ATTR_AVATAR, avatar);
                 }
 
-                customAttributes.put(Constants.INTERCOM_ATTR_CREATED_AT, System.currentTimeMillis() / 1000L);
-                customAttributes.put(Constants.INTERCOM_ATTR_TYPE, ProfileInfoCacheManager.getAccountType(1) == 1 ? Constants.PERSONAL_ACCOUNT : Constants.BUSINESS_ACCOUNT);
-                customAttributes.put(Constants.INTERCOM_ATTR_SIGNED_UP_AT, ProfileInfoCacheManager.getSignupTime() / 1000L);
-                customAttributes.put(Constants.INTERCOM_ATTR_VERIFICATION_STATUS, ProfileInfoCacheManager.getVerificationStatus());
-
-                userAttributes.put(Constants.INTERCOM_ATTR_CUSTOM_ATTRIBUTES, customAttributes);
+                userAttributes.put(IntercomConstants.ATTR_CUSTOM_ATTRIBUTES, customAttributes);
                 registration.withUserAttributes(userAttributes);
 
                 Intercom.client().registerIdentifiedUser(registration);
@@ -472,7 +473,7 @@ public class HomeActivity extends BaseActivity
     }
 
     private boolean isProfileInfoAvailable() {
-        if (ProfileInfoCacheManager.getAccountId() == -1) {
+        if (!ProfileInfoCacheManager.isProfileInfoFetched()) {
             return false;
         } else if (ProfileInfoCacheManager.isBusinessAccount() && TextUtils.isEmpty(ProfileInfoCacheManager.getUserName())) {
             return false;
@@ -705,7 +706,7 @@ public class HomeActivity extends BaseActivity
             // We need to update the profile picture url in ProfileInfoCacheManager. Ideally,
             // we should have received a push from the server and FcmListenerService should have
             // done this task. But as long as push is unreliable, this call is here to stay.
-            getProfileInfo();
+            updateProfileInfo();
         }
     };
 
@@ -715,4 +716,15 @@ public class HomeActivity extends BaseActivity
             updateProfileData();
         }
     };
+
+    public Map<String, Object> getCustomUserAttributes() {
+        Map<String, Object> customAttributes = new HashMap<>();
+
+        customAttributes.put(IntercomConstants.ATTR_CREATED_AT, System.currentTimeMillis() / 1000L);
+        customAttributes.put(IntercomConstants.ATTR_TYPE, ProfileInfoCacheManager.getAccountType(1) == 1 ? Constants.PERSONAL_ACCOUNT : Constants.BUSINESS_ACCOUNT);
+        customAttributes.put(IntercomConstants.ATTR_SIGNED_UP_AT, ProfileInfoCacheManager.getSignupTime() / 1000L);
+        customAttributes.put(IntercomConstants.ATTR_VERIFICATION_STATUS, ProfileInfoCacheManager.getVerificationStatus());
+
+        return customAttributes;
+    }
 }

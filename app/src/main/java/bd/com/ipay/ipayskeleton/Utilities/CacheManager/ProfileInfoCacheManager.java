@@ -30,6 +30,22 @@ public class ProfileInfoCacheManager {
         return getAccountType(Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE;
     }
 
+    /**
+     * @return if the profile is fetched and set true it will return true, otherwise false
+     */
+    public static boolean isProfileInfoFetched() {
+        return pref.getBoolean(SharedPrefConstants.PROFILE_INFO_FETCHED, false);
+    }
+
+    /**
+     * After fetching the profile info set the value to true
+     *
+     * @param value Determine the value will be true or false
+     */
+    public static void setProfileInfoFetched(boolean value) {
+        pref.edit().putBoolean(SharedPrefConstants.PROFILE_INFO_FETCHED, value).apply();
+    }
+
     public static String getPushNotificationToken(String defaultValue) {
         return pref.getString(SharedPrefConstants.PUSH_NOTIFICATION_TOKEN, defaultValue);
     }
@@ -206,6 +222,8 @@ public class ProfileInfoCacheManager {
         setVerificationStatus(businessInfo.getVerificationStatus());
 
         sendProfileUpdateBroadCast();
+
+        setProfileInfoFetched(true);
     }
 
     /**
