@@ -435,7 +435,7 @@ public class HomeActivity extends BaseActivity
                 }
 
                 customAttributes.put(Constants.INTERCOM_ATTR_CREATED_AT, System.currentTimeMillis() / 1000L);
-                customAttributes.put(Constants.INTERCOM_ATTR_TYPE, ProfileInfoCacheManager.getAccountType(1) == 1 ? "Personal A/ccccc" : "Business A/ccccc");
+                customAttributes.put(Constants.INTERCOM_ATTR_TYPE, ProfileInfoCacheManager.getAccountType(1) == 1 ? Constants.PERSONAL_ACCOUNT : Constants.BUSINESS_ACCOUNT);
                 customAttributes.put(Constants.INTERCOM_ATTR_SIGNED_UP_AT, ProfileInfoCacheManager.getSignupTime() / 1000L);
                 customAttributes.put(Constants.INTERCOM_ATTR_VERIFICATION_STATUS, ProfileInfoCacheManager.getVerificationStatus());
 

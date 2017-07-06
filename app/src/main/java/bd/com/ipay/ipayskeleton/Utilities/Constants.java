@@ -178,6 +178,9 @@ public class Constants {
     public static final int LIVE_SERVER = 4;
     public static final int LOCAL_SERVER = 5;
 
+    public static final String PERSONAL_ACCOUNT = "Personal Account";
+    public static final String BUSINESS_ACCOUNT = "Business Account";
+
     static {
         if (SERVER_TYPE == DEV_SERVER) {
 
