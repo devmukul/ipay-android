@@ -725,6 +725,8 @@ public class Constants {
     public static final int REQUEST_TYPE_RECEIVED_REQUEST = 1;
     public static final int REQUEST_TYPE_SENT_REQUEST = 2;
 
+    public static final int INVALID_ACCOUNT_ID = -1;
+
     // Face detector
     public static final String NOT_AN_IMAGE = "NOT_AN_IMAGE";
     public static final String MULTIPLE_FACES = "MULTIPLE_FACES";
