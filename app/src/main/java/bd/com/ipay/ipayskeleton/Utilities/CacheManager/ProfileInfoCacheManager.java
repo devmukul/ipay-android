@@ -2,11 +2,10 @@ package bd.com.ipay.ipayskeleton.Utilities.CacheManager;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
+import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -28,22 +27,6 @@ public class ProfileInfoCacheManager {
 
     public static boolean isBusinessAccount() {
         return getAccountType(Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE;
-    }
-
-    /**
-     * @return if the profile is fetched and set true it will return true, otherwise false
-     */
-    public static boolean isProfileInfoFetched() {
-        return pref.getBoolean(SharedPrefConstants.PROFILE_INFO_FETCHED, false);
-    }
-
-    /**
-     * After fetching the profile info set the value to true
-     *
-     * @param value Determine the value will be true or false
-     */
-    public static void setProfileInfoFetched(boolean value) {
-        pref.edit().putBoolean(SharedPrefConstants.PROFILE_INFO_FETCHED, value).apply();
     }
 
     public static String getPushNotificationToken(String defaultValue) {
@@ -213,9 +196,7 @@ public class ProfileInfoCacheManager {
         setAccountId(profileInfo.getAccountId());
         setSignupTime(profileInfo.getSignupTime());
 
-        sendProfileUpdateBroadCast();
-
-        setProfileInfoFetched(true);
+        BroadcastServiceIntent.sendBroadcast(context, Constants.PROFILE_INFO_UPDATE_BROADCAST);
     }
 
     public static void updateBusinessInfoCache(GetBusinessInformationResponse businessInfo) {
@@ -223,16 +204,7 @@ public class ProfileInfoCacheManager {
         setProfilePictureUrl(Utilities.getImage(businessInfo.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH));
         setVerificationStatus(businessInfo.getVerificationStatus());
 
-        sendProfileUpdateBroadCast();
-    }
-
-    /**
-     * Send broadcast that profile information has updated, so views showing profile information
-     * (e.g. {@link bd.com.ipay.ipayskeleton.HomeFragments.HomeFragment} ) could be refreshed
-     */
-    private static void sendProfileUpdateBroadCast() {
-        Intent intent = new Intent(Constants.PROFILE_INFO_UPDATE_BROADCAST);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        BroadcastServiceIntent.sendBroadcast(context, Constants.PROFILE_INFO_UPDATE_BROADCAST);
     }
 }
 

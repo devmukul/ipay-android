@@ -54,7 +54,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -668,9 +670,38 @@ public class Utilities {
         activity.finish();
     }
 
+    public static Map<String, Object> getCustomIntercomUserAttributes() {
+        Map<String, Object> customAttributes = new HashMap<>();
+
+        customAttributes.put(IntercomConstants.ATTR_CREATED_AT, System.currentTimeMillis() / 1000L);
+        customAttributes.put(IntercomConstants.ATTR_TYPE, ProfileInfoCacheManager.getAccountType(1) == 1 ? Constants.PERSONAL_ACCOUNT : Constants.BUSINESS_ACCOUNT);
+        customAttributes.put(IntercomConstants.ATTR_SIGNED_UP_AT, ProfileInfoCacheManager.getSignupTime() / 1000L);
+        customAttributes.put(IntercomConstants.ATTR_VERIFICATION_STATUS, ProfileInfoCacheManager.getVerificationStatus());
+
+        return customAttributes;
+    }
+
     public static void resetIntercomInformation() {
         Intercom.client().reset();
         Intercom.client().hideMessenger();
-        ProfileInfoCacheManager.setProfileInfoFetched(false);
+    }
+
+    public static Map<String, Object> getUserAttributesForIntercom() {
+        Map<String, Object> customAttributes = Utilities.getCustomIntercomUserAttributes();
+
+        Map<String, Object> userAttributes = new HashMap<>();
+        userAttributes.put(IntercomConstants.ATTR_NAME, ProfileInfoCacheManager.getUserName());
+        userAttributes.put(IntercomConstants.ATTR_PHONE, ProfileInfoCacheManager.getMobileNumber());
+        userAttributes.put(IntercomConstants.ATTR_EMAIL, ProfileInfoCacheManager.getPrimaryEmail());
+        userAttributes.put(IntercomConstants.ATTR_MOBILE, DeviceInfoFactory.getDeviceName());
+        if (!TextUtils.isEmpty(ProfileInfoCacheManager.getProfileImageUrl())) {
+            Map<String, Object> avatar = new HashMap<>();
+            avatar.put(IntercomConstants.ATTR_TYPE, "avatar");
+            avatar.put(IntercomConstants.ATTR_IMAGE_URL, Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl());
+            userAttributes.put(IntercomConstants.ATTR_AVATAR, avatar);
+        }
+
+        userAttributes.put(IntercomConstants.ATTR_CUSTOM_ATTRIBUTES, customAttributes);
+        return userAttributes;
     }
 }
