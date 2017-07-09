@@ -61,7 +61,9 @@ import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import io.intercom.android.sdk.Intercom;
 
 public class Utilities {
 
@@ -366,7 +368,6 @@ public class Utilities {
     }
 
 
-
     public static String getFilePathFromData(Context context, Uri uri) {
         String[] projection = new String[]{"_data"};
         Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
@@ -665,5 +666,11 @@ public class Utilities {
         Intent intent = new Intent();
         activity.setResult(Activity.RESULT_OK, intent);
         activity.finish();
+    }
+
+    public static void resetIntercomInformation() {
+        Intercom.client().reset();
+        Intercom.client().hideMessenger();
+        ProfileInfoCacheManager.setProfileInfoFetched(false);
     }
 }

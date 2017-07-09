@@ -432,6 +432,7 @@ public class HomeActivity extends BaseActivity
                 userAttributes.put(IntercomConstants.ATTR_NAME, ProfileInfoCacheManager.getUserName());
                 userAttributes.put(IntercomConstants.ATTR_PHONE, ProfileInfoCacheManager.getMobileNumber());
                 userAttributes.put(IntercomConstants.ATTR_EMAIL, ProfileInfoCacheManager.getPrimaryEmail());
+                userAttributes.put(IntercomConstants.ATTR_MOBILE, DeviceInfoFactory.getDeviceName());
                 if (!TextUtils.isEmpty(ProfileInfoCacheManager.getProfileImageUrl())) {
                     Map<String, Object> avatar = new HashMap<>();
                     avatar.put(IntercomConstants.ATTR_TYPE, "avatar");
@@ -609,7 +610,7 @@ public class HomeActivity extends BaseActivity
                     mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        Intercom.client().reset();
+                        Utilities.resetIntercomInformation();
                         if (!exitFromApplication) {
                             ((MyApplication) this.getApplication()).launchLoginPage(null);
                         } else {

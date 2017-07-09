@@ -5,6 +5,7 @@ public class IntercomConstants {
     public static final String ATTR_PHONE = "phone";
     public static final String ATTR_EMAIL = "email";
     public static final String ATTR_AVATAR = "avatar";
+    public static final String ATTR_MOBILE = "mobile";
     public static final String ATTR_CUSTOM_ATTRIBUTES = "custom_attributes";
 
     //Custom Attributes
