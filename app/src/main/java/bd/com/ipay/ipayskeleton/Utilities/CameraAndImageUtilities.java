@@ -190,60 +190,76 @@ public class CameraAndImageUtilities {
      * Else returns String stating the problem in the picture which is selected to upload.
      */
     public static String validateProfilePicture(Context context, String selectedImageUri) {
+        int MAX_HEIGHT = 512;
+        int MAX_WIDTH = 512;
 
         String result;
         FaceDetector detector;
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        Bitmap bitmap = BitmapFactory.decodeFile(selectedImageUri, options);
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true; // Decode with inJustDecodeBounds=true to check dimensions
+            BitmapFactory.decodeFile(selectedImageUri, options);
 
-        // First, check if the file selected is an image.
-        if (options.outWidth != -1 && options.outHeight != -1) {
-            // This is an image file
-            // Now initialize the face detector
-            detector = new FaceDetector.Builder(context)
-                    .setTrackingEnabled(false)
-                    .setLandmarkType(FaceDetector.ALL_LANDMARKS)
-                    .build();
+            // For larger bitmap will try to load a smaller version into memory.
+            // So will reduced the inSampleSize value that is a power of two based on a target width and height.
+            options.inSampleSize = calculateInSampleSize(options, MAX_WIDTH, MAX_HEIGHT);
 
-            // This is a temporary workaround for a bug in the face detector with respect to operating
-            // on very small images.  This will be fixed in a future release.  But in the near term, use
-            // of the SafeFaceDetector class will patch the issue.
-            Detector<Face> safeDetector = new SafeFaceDetector(detector);
+            options.inJustDecodeBounds = false;
+            Bitmap bitmap = BitmapFactory.decodeFile(selectedImageUri, options); // Decode bitmap with reduced size
 
-            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-            SparseArray<Face> faces = safeDetector.detect(frame);
+            // First, check if the file selected is an image.
+            if (options.outWidth != -1 && options.outHeight != -1) {
+                // This is an image file
+                // Now initialize the face detector
+                detector = new FaceDetector.Builder(context)
+                        .setTrackingEnabled(false)
+                        .setLandmarkType(FaceDetector.ALL_LANDMARKS)
+                        .build();
 
-            // Check if the face detection is operational.
-            if (!safeDetector.isOperational()) {
-                // Face detector needs a native library to be downloaded before it works perfectly.
-                // If the download interrupts, it may fail to initialize and will return erroneous value.
-                // We can not stop user from uploading profile picture if the face detector library is not available. So return valid instead.
-                // So return null
-                result = null;
-            } else {
-                // Face detection is operational
-                switch (faces.size()) {
-                    case 0:
-                        result = Constants.NO_FACE_DETECTED;
-                        break;
-                    case 1:
-                        result = Constants.VALID_PROFILE_PICTURE; // This is the valid case
-                        break;
-                    default:
-                        result = Constants.MULTIPLE_FACES;
-                        break;
+                // This is a temporary workaround for a bug in the face detector with respect to operating
+                // on very small images.  This will be fixed in a future release.  But in the near term, use
+                // of the SafeFaceDetector class will patch the issue.
+                Detector<Face> safeDetector = new SafeFaceDetector(detector);
+
+                Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+                SparseArray<Face> faces = safeDetector.detect(frame);
+
+                // Check if the face detection is operational.
+                if (!safeDetector.isOperational()) {
+                    // Face detector needs a native library to be downloaded before it works perfectly.
+                    // If the download interrupts, it may fail to initialize and will return erroneous value.
+                    // We can not stop user from uploading profile picture if the face detector library is not available. So return valid instead.
+                    // So return null
+                    result = null;
+                } else {
+                    // Face detection is operational
+                    switch (faces.size()) {
+                        case 0:
+                            result = Constants.NO_FACE_DETECTED;
+                            break;
+                        case 1:
+                            result = Constants.VALID_PROFILE_PICTURE; // This is the valid case
+                            break;
+                        default:
+                            result = Constants.MULTIPLE_FACES;
+                            break;
+                    }
                 }
+
+                // When it is no longer needed in order to free native resources.
+                safeDetector.release();
+
+            } else {
+                // This is not an image file
+                result = Constants.NOT_AN_IMAGE;
             }
 
-            // When it is no longer needed in order to free native resources.
-            safeDetector.release();
-
-        } else {
-            // This is not an image file
-            result = Constants.NOT_AN_IMAGE;
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = null;
+            return result;
         }
-
-        return result;
     }
 }
