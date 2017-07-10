@@ -69,6 +69,7 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
             IntentResult scanResult = IntentIntegrator.parseActivityResult(
                     requestCode, resultCode, data);
             if (scanResult == null) {
+                getActivity().finish();
                 return;
             }
             final String result = scanResult.getContents();
@@ -104,6 +105,8 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
                     }
                 });
             }
+        } else {
+            getActivity().finish();
         }
     }
 
@@ -114,6 +117,7 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Utilities.initiateQRCodeScan(this);
                 } else {
+                    getActivity().finish();
                     Toaster.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG);
                 }
             }

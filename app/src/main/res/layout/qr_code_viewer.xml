@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:background="@android:color/white"
+    android:gravity="center"
     android:padding="@dimen/activity_vertical_margin">
 
     <TextView
@@ -17,9 +17,19 @@
     <ImageView
         android:id="@+id/qr_code_imageview"
         android:layout_width="250dp"
-        android:layout_below="@+id/qr_code_text"
         android:layout_height="250dp"
+        android:layout_below="@+id/qr_code_text"
         android:layout_centerHorizontal="true"
         android:scaleType="centerCrop" />
+
+    <Button
+        android:id="@+id/share_button"
+        style="@style/PrimaryMediumButtonWithNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/qr_code_imageview"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:text="@string/share" />
 
 </RelativeLayout>
