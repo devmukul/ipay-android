@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.QRCodePaymentFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -15,12 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -48,6 +51,7 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
     private HttpRequestGetAsyncTask mGetUserInfoTask;
 
     private String mobileNumber;
+
 
     @Nullable
     @Override
@@ -79,7 +83,6 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
                     @Override
                     public void run() {
                         if (ContactEngine.isValidNumber(result)) {
-
                             if (Utilities.isConnectionAvailable(getActivity())) {
                                 mobileNumber = ContactEngine.formatMobileNumberBD(result);
                                 GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
@@ -99,9 +102,9 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
                                 mProgressDialog.cancel();
                                 getActivity().finish();
                             }
-                        } else if (getActivity() != null)
-                            Toaster.makeText(getActivity(), getResources().getString(
-                                    R.string.please_scan_a_valid_pin), Toast.LENGTH_SHORT);
+                        } else if (getActivity() != null) {
+                            showAlertDialog(getString(R.string.please_scan_a_valid_pin));
+                        }
                     }
                 });
             }
@@ -140,15 +143,35 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
                     if (getUserInfoResponse.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
                         switchActivityForPayment(SendMoneyActivity.class);
                     } else if (getUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
-                        switchActivityForPayment(PaymentActivity.class);
+                        if (getUserInfoResponse.getAccountStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
+                            switchActivityForPayment(PaymentActivity.class);
+                        } else {
+                            showAlertDialog(getString(R.string.business_account_not_verified));
+                        }
                     }
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-                    Toaster.makeText(getActivity(), getResources().getString(
-                            R.string.please_scan_a_valid_pin), Toast.LENGTH_SHORT);
-                    getActivity().finish();
+                    showAlertDialog(getString(R.string.please_scan_a_valid_pin));
                 }
                 break;
         }
+    }
+
+    private void showAlertDialog(String message) {
+        MaterialDialog materialDialog;
+        MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
+        materialDialogBuilder.positiveText(R.string.ok);
+        materialDialogBuilder.content(message);
+        materialDialogBuilder.dismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Intent intent = new Intent(getActivity(), QRCodePaymentActivity.class);
+                getActivity().startActivity(intent);
+                getActivity().finish();
+
+            }
+        });
+        materialDialog = materialDialogBuilder.build();
+        materialDialog.show();
     }
 
     private void switchActivityForPayment(Class tClass) {
