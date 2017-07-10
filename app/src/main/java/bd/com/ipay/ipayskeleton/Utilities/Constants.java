@@ -608,6 +608,7 @@ public class Constants {
     public static final int TRANSACTION_HISTORY_SEND_MONEY = 1;
     public static final int TRANSACTION_HISTORY_REQUEST_MONEY = 6001;
     public static final int TRANSACTION_HISTORY_ADD_MONEY = 3001;
+    public static final int TRANSACTION_HISTORY_ADD_MONEY_REVERT = 963001;
     public static final int TRANSACTION_HISTORY_WITHDRAW_MONEY = 3002;
     public static final int TRANSACTION_HISTORY_TOP_UP = 2001;
     public static final int TRANSACTION_HISTORY_MAKE_PAYMENT = 6002;
