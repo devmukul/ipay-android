@@ -202,6 +202,21 @@
 
 
                 <ImageView
+                    android:id="@+id/user_qr_code_show_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:backgroundTint="@android:color/white"
+                    android:clickable="true"
+                    android:padding="@dimen/activity_horizontal_margin_card"
+                    android:src="@drawable/ic_qrc4"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/refresh_balance_button"
+                    android:layout_toStartOf="@+id/refresh_balance_button"
+                    android:layout_marginRight="7dp"
+                    android:layout_marginEnd="7dp" />
+
+                <ImageView
                     android:id="@+id/refresh_balance_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -33,6 +34,7 @@ import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -703,5 +705,17 @@ public class Utilities {
 
         userAttributes.put(IntercomConstants.ATTR_CUSTOM_ATTRIBUTES, customAttributes);
         return userAttributes;
+    }
+
+    public static void performQRCodeScan(Fragment fragment, int requestCode) {
+        if (ContextCompat.checkSelfPermission(fragment.getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            fragment.requestPermissions(new String[]{Manifest.permission.CAMERA}, requestCode);
+        } else {
+            initiateQRCodeScan(fragment);
+        }
+    }
+
+    public static void initiateQRCodeScan(Fragment fragment) {
+        IntentIntegrator.forSupportFragment(fragment).initiateScan();
     }
 }

@@ -35,6 +35,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivit
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -91,6 +92,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private TextView mProfileCompletionMessageView;
     private ImageButton mCloseButton;
 
+    private ImageView mUserQrCodeShowButton;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +128,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mProgressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.profile_completion_percentage);
         mProfileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
         mCloseButton = (ImageButton) mProfileCompletionPromptView.findViewById(R.id.button_close);
+
+        mUserQrCodeShowButton = (ImageView) v.findViewById(R.id.user_qr_code_show_button);
 
         mCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -230,6 +235,17 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mUserQrCodeShowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), QRCodeViewerActivity.class);
+
+                intent.putExtra(Constants.STRING_TO_ENCODE, ProfileInfoCacheManager.getMobileNumber());
+                intent.putExtra(Constants.ACTIVITY_TITLE, "QR Code to Share");
                 startActivity(intent);
             }
         });

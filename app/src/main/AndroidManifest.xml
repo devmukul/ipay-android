@@ -280,6 +280,13 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
+        <activity
+            android:name=".Activities.PaymentActivities.QRCodePaymentActivity"
+            android:label="@string/pay_by_QR_code"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ActionBarNoElevation"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <!-- FCM-->
         <service android:name=".Service.FCM.FCMListenerService">
             <intent-filter>
