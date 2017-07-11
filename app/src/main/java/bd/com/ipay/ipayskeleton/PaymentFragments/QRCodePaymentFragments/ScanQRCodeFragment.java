@@ -36,10 +36,6 @@ import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-/**
- * Created by sajid.shahriar on 7/10/17.
- */
-
 public class ScanQRCodeFragment extends Fragment implements HttpResponseListener {
 
     private View mRootView;

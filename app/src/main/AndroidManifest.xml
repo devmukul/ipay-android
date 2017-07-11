@@ -190,7 +190,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activities.QRCodeViewerActivity"
-            android:label="@string/qr_code"
+            android:label="@string/my_qr_code"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
