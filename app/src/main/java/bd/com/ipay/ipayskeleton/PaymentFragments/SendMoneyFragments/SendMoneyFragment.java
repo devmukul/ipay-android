@@ -58,14 +58,6 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
-    public static Fragment instantiate(String mobileNumber) {
-        SendMoneyFragment sendMoneyFragment = new SendMoneyFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.MOBILE_NUMBER, mobileNumber);
-        sendMoneyFragment.setArguments(bundle);
-        return sendMoneyFragment;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
