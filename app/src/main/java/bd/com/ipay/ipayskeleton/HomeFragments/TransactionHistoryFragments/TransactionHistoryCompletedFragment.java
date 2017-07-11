@@ -631,7 +631,8 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 mNetAmountView.setText(netAmountWithSign);
                 mTimeView.setText(responseTime);
 
-                if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
+                if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY
+                        || serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
                     if (bankCode != null) mOtherImageView.setImageResource(bankIcon);

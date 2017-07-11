@@ -577,7 +577,7 @@
     <string name="enter_pin">Enter PIN</string>
     <string name="ok">OK</string>
     <string name="got_it">GOT IT</string>
-    <string name="take_again">Take Again</string>
+    <string name="try_again">Try Again</string>
     <string name="confirm_ipay_invitation">Invite him/her to iPay?</string>
     <string name="amount_to_transfer">Amount to Transfer</string>
     <string name="total_received">Total Received</string>
@@ -635,10 +635,10 @@
     <string name="you_need_to_upload_identification_documents_to_get_verified">You need to upload at least one identification documents to get verified</string>
     <string name="document_id">Document ID</string>
     <string name="verify_identity">Please verify your identity</string>
-    <string name="no_face_detected">Sorry, the picture selected is not appropriate for your iPay account.\nPlease take a clear image of your face.</string>
-    <string name="not_an_image">Sorry, the file selected is not an image. Please take the picture again.</string>
-    <string name="default_profile_pic_inappropriate_message">Sorry, can not update the profile picture. Please take the picture again.</string>
-    <string name="multiple_face_detected">Sorry, the picture selected is not appropriate for your iPay account.\nPlease upload your picture only.</string>
+    <string name="no_face_detected">Sorry, the picture is not appropriate for your iPay account. It should contain a clear image of your face.</string>
+    <string name="not_an_image">Sorry, the file selected is not an image. Please select the picture again.</string>
+    <string name="default_profile_pic_inappropriate_message">Sorry, can not upload the profile picture. Please select the picture again.</string>
+    <string name="multiple_face_detected">Sorry, the picture selected is not appropriate for your iPay account.\nPlease select your picture only.</string>
     <string name="no_file_selected">No file selected</string>
     <string name="please_select_a_file_to_upload">Please select a file to upload</string>
     <string name="select_a_file">Select a file</string>
@@ -768,6 +768,7 @@
     <string name="you_cannot_send_money_to_your_number">You can\'t send money to your own mobile number</string>
     <string name="you_cannot_make_payment_to_your_number">You can\'t make payment to your own mobile number</string>
     <string name="you_cannot_request_money_from_your_number">You can\'t request money from your own mobile number</string>
+    <string name="live_chat">Live Chat</string>
     <string name="help">Help</string>
     <string name="create_ticket">Create Ticket</string>
     <string name="subject">Subject</string>
@@ -811,6 +812,7 @@
     <string name="see_basic_info_service_not_allowed_message">User Information can\'t be shown. Please contact support for more info.</string>
     <string name="see_business_address_service_not_allowed_message">Business Address can\'t be shown. Please contact support for more info.</string>
     <string name="see_business_info_service_not_allowed_message">Business Info can\'t be shown. Please contact support for more info.</string>
+    <string name="live_chat_not_available">Live Chat is currently unavailable. Please try again later</string>
 
 
     <string-array name="mobile_operators">

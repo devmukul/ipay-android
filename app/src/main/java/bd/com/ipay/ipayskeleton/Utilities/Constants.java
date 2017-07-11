@@ -65,6 +65,9 @@ public class Constants {
     public static final String MOBILE_NUMBER_TYPE = "mobile_number_type";
     public static final String DATE_OF_BIRTH = "DATE_OF_BIRTH";
     public static final String GENDER = "GENDER";
+    public static final String PRIMARY_EMAIL = "PRIMARY_EMAIL";
+    public static final String ACCOUNT_ID = "ACCOUNT_ID";
+    public static final String SIGNUP_TIME = "SIGNUP_TIME";
     public static final String BOUNDARY = "iPayBoundary";
     public static final String ANDROID = "Android";
     public static final String IS_IN_CONTACTS = "is-in-contacts";
@@ -169,8 +172,17 @@ public class Constants {
     public static final String BASE_URL_WEB;
     private static final String SERVER_NAME;
 
+    public static final int DEV_SERVER = 1;
+    public static final int TEST_SERVER = 2;
+    public static final int STAGE_SERVER = 3;
+    public static final int LIVE_SERVER = 4;
+    public static final int LOCAL_SERVER = 5;
+
+    public static final String PERSONAL_ACCOUNT = "Personal Account";
+    public static final String BUSINESS_ACCOUNT = "Business Account";
+
     static {
-        if (SERVER_TYPE == 1) {
+        if (SERVER_TYPE == DEV_SERVER) {
 
             BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
@@ -183,7 +195,7 @@ public class Constants {
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             SERVER_NAME = "dev";
 
-        } else if (SERVER_TYPE == 2) {
+        } else if (SERVER_TYPE == TEST_SERVER) {
 
             BASE_URL_MM = "http://10.15.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
@@ -195,7 +207,7 @@ public class Constants {
             BASE_URL_WEB = "http://test.ipay.com.bd";
             SERVER_NAME = "test";
 
-        } else if (SERVER_TYPE == 3) {
+        } else if (SERVER_TYPE == STAGE_SERVER) {
 
             BASE_URL_MM = "http://10.10.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
@@ -207,7 +219,7 @@ public class Constants {
             BASE_URL_WEB = "http://stage.ipay.com.bd";
             SERVER_NAME = "stage";
 
-        } else if (SERVER_TYPE == 4) {
+        } else if (SERVER_TYPE == LIVE_SERVER) {
 
             BASE_URL_MM = "https://www.ipay.com.bd/api/v1/";
             BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";
@@ -230,6 +242,19 @@ public class Constants {
             BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             SERVER_NAME = "local";
+        }
+    }
+
+    public static final String INTERCOM_API_KEY;
+    public static final String INTERCOM_ANDROID_SDK_KEY;
+
+    static {
+        if (SERVER_TYPE == LIVE_SERVER) {
+            INTERCOM_API_KEY = "rvba5ye6";
+            INTERCOM_ANDROID_SDK_KEY = "android_sdk-75b180d622ad8a70eb7fd36a84534f9db277f402";
+        } else {
+            INTERCOM_API_KEY = "zlbinvht";
+            INTERCOM_ANDROID_SDK_KEY = "android_sdk-534f3bfed2dbd05497dffe8d9a629a92e6a8583b";
         }
     }
 
@@ -583,6 +608,7 @@ public class Constants {
     public static final int TRANSACTION_HISTORY_SEND_MONEY = 1;
     public static final int TRANSACTION_HISTORY_REQUEST_MONEY = 6001;
     public static final int TRANSACTION_HISTORY_ADD_MONEY = 3001;
+    public static final int TRANSACTION_HISTORY_ADD_MONEY_REVERT = 963001;
     public static final int TRANSACTION_HISTORY_WITHDRAW_MONEY = 3002;
     public static final int TRANSACTION_HISTORY_TOP_UP = 2001;
     public static final int TRANSACTION_HISTORY_MAKE_PAYMENT = 6002;
@@ -700,10 +726,13 @@ public class Constants {
     public static final int REQUEST_TYPE_RECEIVED_REQUEST = 1;
     public static final int REQUEST_TYPE_SENT_REQUEST = 2;
 
+    public static final int INVALID_ACCOUNT_ID = -1;
+
     // Face detector
     public static final String NOT_AN_IMAGE = "NOT_AN_IMAGE";
     public static final String MULTIPLE_FACES = "MULTIPLE_FACES";
     public static final String NO_FACE_DETECTED = "NO_FACE_DETECTED";
+    public static final String VALID_PROFILE_PICTURE = "VALID_PROFILE_PICTURE";
 
     // API Version Checker
     public static boolean IS_API_VERSION_CHECKED = false;
