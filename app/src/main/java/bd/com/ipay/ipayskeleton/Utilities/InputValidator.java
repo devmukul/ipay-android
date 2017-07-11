@@ -89,7 +89,7 @@ public class InputValidator {
     public static String isValidNIDNo(Context context, String nidNo) {
         int length = nidNo.length();
         if (length == 0) {
-            return context.getString(R.string.please_enter_id);
+            return context.getString(R.string.please_enter_nid);
         } else if (length >= 10 && length <= 17) {
             return null;
         } else if (length < 10) {
@@ -101,7 +101,7 @@ public class InputValidator {
 
     public static String isValidPassportNo(Context context, String passPortNo) {
         if (passPortNo.equals(""))
-            return context.getString(R.string.please_enter_id);
+            return context.getString(R.string.please_enter_passport_id);
         else if (passPortNo.matches("[A-Z]{2}[0-9]{0,6}|[A-Z]{1}"))
             return context.getString(R.string.invalid_passport_no_insufficient_length);
         else if (passPortNo.matches("[A-Z]{2}[0-9]{7}"))
@@ -113,7 +113,7 @@ public class InputValidator {
 
     public static String isValidDrivingLicenseNo(Context context, String drivingLicenseNo) {
         if (drivingLicenseNo.equals(""))
-            return context.getString(R.string.please_enter_id);
+            return context.getString(R.string.please_enter_driving_license_id);
         else if (drivingLicenseNo.matches("[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{5}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{4}"))
             return null;
         else if (drivingLicenseNo.matches("[A-Z]{2}[0-9]{0,7}|[A-Z]{1}|[A-Z]{2}[0-9]{7}[A-Z]{1,2}|" +
