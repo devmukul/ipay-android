@@ -155,7 +155,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                             mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
                         } else if (getActivity() != null)
                             Toaster.makeText(getActivity(), getResources().getString(
-                                    R.string.please_scan_a_valid_pin), Toast.LENGTH_SHORT);
+                                    R.string.scan_valid_qr_code), Toast.LENGTH_SHORT);
                     }
                 });
             }

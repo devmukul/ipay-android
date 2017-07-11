@@ -10,8 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.view.Display;
@@ -36,6 +34,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Contents;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.QRCodeEncoder;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class QRCodeViewerActivity extends BaseActivity {
 
@@ -47,6 +46,8 @@ public class QRCodeViewerActivity extends BaseActivity {
 
     public static final int REQUEST_CODE_PERMISSION = 1001;
 
+    private static final String[] NECESSARY_PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,10 +58,10 @@ public class QRCodeViewerActivity extends BaseActivity {
         mShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(QRCodeViewerActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(QRCodeViewerActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_PERMISSION);
+                if (Utilities.isNecessaryPermissionExists(QRCodeViewerActivity.this, NECESSARY_PERMISSIONS)) {
+                    Utilities.requestRequiredPermissions(QRCodeViewerActivity.this, REQUEST_CODE_PERMISSION, NECESSARY_PERMISSIONS);
                 } else {
-                    performShareAction();
+                    shareQrCode();
                 }
             }
         });
@@ -84,7 +85,7 @@ public class QRCodeViewerActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void performShareAction() {
+    private void shareQrCode() {
         String imageName = saveImageBitmap(bitmap);
         if (!TextUtils.isEmpty(imageName)) {
 
@@ -111,7 +112,7 @@ public class QRCodeViewerActivity extends BaseActivity {
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    performShareAction();
+                    shareQrCode();
                 } else {
                     Toaster.makeText(this, R.string.ef_ltitle_permission_denied, Toast.LENGTH_LONG);
                 }

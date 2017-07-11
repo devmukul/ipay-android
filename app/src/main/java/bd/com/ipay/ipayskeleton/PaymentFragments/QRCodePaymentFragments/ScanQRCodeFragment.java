@@ -99,7 +99,7 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
                                 getActivity().finish();
                             }
                         } else if (getActivity() != null) {
-                            showAlertDialog(getString(R.string.please_scan_a_valid_pin));
+                            showAlertDialog(getString(R.string.scan_valid_qr_code));
                         }
                     }
                 });
@@ -146,7 +146,7 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
                         }
                     }
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-                    showAlertDialog(getString(R.string.please_scan_a_valid_pin));
+                    showAlertDialog(getString(R.string.scan_valid_qr_code));
                 }
                 break;
         }
