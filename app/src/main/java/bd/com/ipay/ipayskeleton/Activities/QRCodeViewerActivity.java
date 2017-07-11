@@ -123,7 +123,9 @@ public class QRCodeViewerActivity extends BaseActivity {
         try {
             final String qrImageName = "QR Payment" + ".png";
             File documentFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), qrImageName);
-            documentFile.getParentFile().mkdirs();
+            if (!documentFile.exists()) {
+                documentFile.getParentFile().mkdirs();
+            }
 
             FileOutputStream stream = new FileOutputStream(documentFile); // overwrites this image every time
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
