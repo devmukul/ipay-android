@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private TextView mProfileCompletionMessageView;
     private ImageButton mCloseButton;
 
-    private ImageView mUserQrCodeShowButton;
+    private ImageView mShowQRCodeButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -129,7 +129,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mProfileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
         mCloseButton = (ImageButton) mProfileCompletionPromptView.findViewById(R.id.button_close);
 
-        mUserQrCodeShowButton = (ImageView) v.findViewById(R.id.user_qr_code_show_button);
+        mShowQRCodeButton = (ImageView) v.findViewById(R.id.show_qr_code_button);
 
         mCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,7 +239,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-        mUserQrCodeShowButton.setOnClickListener(new View.OnClickListener() {
+        mShowQRCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), QRCodeViewerActivity.class);

@@ -80,7 +80,7 @@
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
-                            android:layout_toLeftOf="@+id/user_qr_code_show_button"
+                            android:layout_toLeftOf="@+id/show_qr_code_button"
                             android:gravity="start"
                             android:orientation="horizontal">
 
