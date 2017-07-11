@@ -813,7 +813,7 @@
     <string name="see_business_address_service_not_allowed_message">Business Address can\'t be shown. Please contact support for more info.</string>
     <string name="see_business_info_service_not_allowed_message">Business Info can\'t be shown. Please contact support for more info.</string>
     <string name="live_chat_not_available">Live Chat is currently unavailable. Please try again later</string>
-    <string name="share">Share</string>
+    <string name="share">Share QR Code</string>
     <string name="business_account_not_verified">This business account is not verified. In order to make payment, the business account must be verified.</string>
     <string name="qr_code_unavailable">Unable to Genarate your QR Code. Please Try again later.</string>
     <string name="file_save_failed">Unable to save file.</string>

@@ -50,7 +50,7 @@ public class QRCodeViewerActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.qr_code_viewer);
+        setContentView(R.layout.activity_qr_code_viewer);
 
         mShareButton = (Button) findViewById(R.id.share_button);
 
