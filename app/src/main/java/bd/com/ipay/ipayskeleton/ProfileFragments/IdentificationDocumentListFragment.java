@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -516,6 +518,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             private final EditText mSelectFile;
             private final Button mUploadButton;
             private final ImageView mPicker;
+            private String documentTypeName;
 
             private CustomUploadPickerDialog customUploadPickerDialog;
             private List<String> mPickerList;
@@ -544,12 +547,13 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mPickerList = new ArrayList<>();
                 mBitmap = null;
 
-                String documentTypeName = documentPreviewDetailsList.get(pos).getDocumentTypeName();
+                documentTypeName = documentPreviewDetailsList.get(pos).getDocumentTypeName();
                 String documentID = documentPreviewDetailsList.get(pos).getDocumentId();
                 String verificationStatus = documentPreviewDetailsList.get(pos).getVerificationStatus();
                 String documentHintType = DOCUMENT_HINT_TYPES[pos];
 
                 mDocumentIdTextInputLayoutView.setHint(documentHintType);
+                setAppropriateKeyboard(pos);
 
                 // Unverified, document not yet uploaded
                 if (verificationStatus == null) {
@@ -659,18 +663,53 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mUploadButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mDocumentIdEditTextView.getText().toString() == null || mDocumentIdEditTextView.getText().toString().isEmpty()) {
-                            mDocumentIdEditTextView.setError(getString(R.string.please_enter_document_number));
-                            mDocumentIdEditTextView.requestFocus();
-                        } else if (documentPreviewDetailsList.get(pos).getSelectedDocumentUri() == null)
-                            mSelectFile.setError(getString(R.string.please_select_a_file_to_upload));
-                        else {
-                            Utilities.hideKeyboard(getActivity());
-                            documentPreviewDetailsList.get(pos).setDocumentId(mDocumentIdEditTextView.getText().toString());
-                            uploadDocument(documentPreviewDetailsList.get(pos).getDocumentId(), documentPreviewDetailsList.get(pos).getDocumentType(), pos);
-                        }
+                        mDocumentIdEditTextView.setError(null);
+                        mSelectFile.setError(null);
+                        Utilities.hideKeyboard(getActivity());
+                        attemptUploadDocument(documentTypeName, pos);
                     }
                 });
+            }
+
+            private void attemptUploadDocument(String documentTypeName, int pos) {
+                String nationalID = getResources().getString(R.string.national_id);
+                String passportID = getResources().getString(R.string.passport);
+                String drivingLicenseID = getResources().getString(R.string.driving_license);
+                Boolean cancel = false;
+                String errorMessage = "";
+                if (documentTypeName.equals(nationalID)) {
+                    errorMessage = InputValidator.isValidNIDNo(getActivity(), mDocumentIdEditTextView.getText().toString());
+                    if (errorMessage != null)
+                        cancel = true;
+                } else if (documentTypeName.equals(passportID)) {
+                    errorMessage = InputValidator.isValidPassportNo(getActivity(), mDocumentIdEditTextView.getText().toString());
+                    if (errorMessage != null)
+                        cancel = true;
+                } else if (documentTypeName.equals(drivingLicenseID)) {
+                    errorMessage = InputValidator.isValidDrivingLicenseNo(getActivity(), mDocumentIdEditTextView.getText().toString());
+                    if (errorMessage != null)
+                        cancel = true;
+                }
+                if (cancel) {
+                    mDocumentIdEditTextView.requestFocus();
+                    mDocumentIdEditTextView.setError(errorMessage);
+                } else {
+                    if (documentPreviewDetailsList.get(pos).getSelectedDocumentUri() == null)
+                        mSelectFile.setError(getString(R.string.please_select_a_file_to_upload));
+                    else {
+                        Utilities.hideKeyboard(getActivity());
+                        documentPreviewDetailsList.get(pos).setDocumentId(mDocumentIdEditTextView.getText().toString());
+                        uploadDocument(documentPreviewDetailsList.get(pos).getDocumentId(), documentPreviewDetailsList.get(pos).getDocumentType(), pos);
+                    }
+                }
+            }
+
+            private void setAppropriateKeyboard(int pos) {
+                if (documentPreviewDetailsList.get(pos).getDocumentTypeName().equals(getResources().getString(R.string.national_id)))
+                    mDocumentIdEditTextView.setInputType(InputType.TYPE_CLASS_NUMBER);
+                else {
+                    mDocumentIdEditTextView.setInputType(InputType.TYPE_CLASS_TEXT);
+                }
             }
         }
 
