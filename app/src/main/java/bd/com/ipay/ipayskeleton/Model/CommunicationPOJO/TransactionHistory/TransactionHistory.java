@@ -92,6 +92,7 @@ public class TransactionHistory implements Parcelable {
         if ((serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null)
                 || (serviceID != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK
                 && serviceID != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT
+                && serviceID != Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT
                 && receiverInfo == null))
             return Utilities.formatTakaWithComma(netAmount);
 
@@ -287,7 +288,7 @@ public class TransactionHistory implements Parcelable {
                     else
                         return "Failed to add " + Utilities.formatTaka(getNetAmount()) + " from account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")";
                 case (Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT):
-                    return "Add money reverted " + Utilities.formatTaka(getNetAmount());
+                    return description;
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
                     if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
                         return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")";
@@ -298,7 +299,7 @@ public class TransactionHistory implements Parcelable {
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
                     return "Withdraw money failed and returned " + Utilities.formatTaka(getNetAmount());
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT):
-                    return "Withdraw money reverted " + Utilities.formatTaka(getNetAmount());
+                    return description;
                 case (Constants.TRANSACTION_HISTORY_TOP_UP):
                     if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
                         return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo;
