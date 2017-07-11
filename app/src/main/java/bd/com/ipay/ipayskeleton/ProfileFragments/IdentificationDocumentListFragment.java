@@ -54,6 +54,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class IdentificationDocumentListFragment extends ProgressFragment implements HttpResponseListener {
@@ -305,7 +306,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mGetDocumentAccessTokenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void uploadDocument(String mDocumentID, String mDocumentType,String mDocumentTypeName, int mID) {
+    private void uploadDocument(String mDocumentID, String mDocumentType, String mDocumentTypeName, int mID) {
 
         if (mUploadIdentifierDocumentAsyncTask != null)
             return;
@@ -699,7 +700,10 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     else {
                         Utilities.hideKeyboard(getActivity());
                         documentPreviewDetailsList.get(pos).setDocumentId(mDocumentIdEditTextView.getText().toString());
-                        uploadDocument(documentPreviewDetailsList.get(pos).getDocumentId(), documentPreviewDetailsList.get(pos).getDocumentType(),documentTypeName, pos);
+                        if (Utilities.isConnectionAvailable(getActivity()))
+                            uploadDocument(documentPreviewDetailsList.get(pos).getDocumentId(), documentPreviewDetailsList.get(pos).getDocumentType(), documentTypeName, pos);
+                        else
+                            Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
                     }
                 }
             }
