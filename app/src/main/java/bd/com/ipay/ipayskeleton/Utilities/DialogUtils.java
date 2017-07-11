@@ -38,18 +38,30 @@ public class DialogUtils {
         dialog.show();
     }
 
-    public static void showServiceNotAllowedDialog(final Context mContext) {
-        MaterialDialog dialog = new MaterialDialog.Builder(mContext)
+    public static void showServiceNotAllowedDialog(final Context context) {
+        showAlertDialog(context, context.getString(R.string.contact_support_message));
+    }
+
+    public static void showLiveChatNotAvailableDialog(final Context context) {
+        showAlertDialog(context, context.getString(R.string.live_chat_not_available));
+    }
+
+    public static void showQRCodeNotAvailableDialog(final Context context) {
+        showAlertDialog(context, context.getString(R.string.qr_code_unavailable));
+    }
+
+    public static void showUnableToSaveFileDialog(Context context) {
+        showAlertDialog(context, context.getString(R.string.file_save_failed));
+    }
+
+
+    public static void showAlertDialog(final Context context, String message) {
+        MaterialDialog dialog = new MaterialDialog.Builder(context)
                 .cancelable(false)
-                .content(R.string.contact_support_message)
+                .content(message)
                 .negativeText(R.string.cancel)
                 .show();
         dialog.show();
     }
 
-    public static void showLiveChatNotAvailableDialog(final Context context) {
-        MaterialDialog.Builder alertDialog = new MaterialDialog.Builder(context);
-        alertDialog.content(R.string.live_chat_not_available);
-        alertDialog.build().show();
-    }
 }
