@@ -699,7 +699,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     else {
                         Utilities.hideKeyboard(getActivity());
                         documentPreviewDetailsList.get(pos).setDocumentId(mDocumentIdEditTextView.getText().toString());
-                        uploadDocument(documentPreviewDetailsList.get(pos).getDocumentId(), documentPreviewDetailsList.get(pos).getDocumentTypeName(), pos);
+                        uploadDocument(documentPreviewDetailsList.get(pos).getDocumentId(), documentPreviewDetailsList.get(pos).getDocumentType(), pos);
                     }
                 }
             }

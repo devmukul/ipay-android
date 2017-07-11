@@ -64,9 +64,9 @@
     <string name="invalid_driving_license_no_insufficient_length">Driving license ID should be 15 characters long</string>
     <string name="invalid_nid_min_length">NID should be at least 10 digits long</string>
     <string name="invalid_nid_max_length">NID should be max 17 digits long</string>
-    <string name="please_enter_nid">Please enter a NID</string>
-    <string name="please_enter_passport_id">Please enter a Passport ID</string>
-    <string name="please_enter_driving_license_id">Please enter a Driving license ID</string>
+    <string name="please_enter_nid">Please enter your national ID number</string>
+    <string name="please_enter_passport_id">Please enter your passport ID number</string>
+    <string name="please_enter_driving_license_id">Please enter your driving license ID number</string>
     <string name="occupation">Occupation</string>
     <string name="organization_name">Organization Name</string>
     <string name="mobile_number">Mobile Number</string>
