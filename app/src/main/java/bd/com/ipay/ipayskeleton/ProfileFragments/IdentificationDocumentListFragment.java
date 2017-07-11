@@ -305,12 +305,12 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mGetDocumentAccessTokenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void uploadDocument(String mDocumentID, String mDocumentType, int mID) {
+    private void uploadDocument(String mDocumentID, String mDocumentType,String mDocumentTypeName, int mID) {
 
         if (mUploadIdentifierDocumentAsyncTask != null)
             return;
 
-        mProgressDialog.setMessage(getString(R.string.uploading) + " " + mDocumentType);
+        mProgressDialog.setMessage(getString(R.string.uploading) + " " + mDocumentTypeName);
         mProgressDialog.show();
 
         String selectedOImagePath = documentPreviewDetailsList.get(mID).getSelectedDocumentUri().getPath();
@@ -699,7 +699,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     else {
                         Utilities.hideKeyboard(getActivity());
                         documentPreviewDetailsList.get(pos).setDocumentId(mDocumentIdEditTextView.getText().toString());
-                        uploadDocument(documentPreviewDetailsList.get(pos).getDocumentId(), documentPreviewDetailsList.get(pos).getDocumentType(), pos);
+                        uploadDocument(documentPreviewDetailsList.get(pos).getDocumentId(), documentPreviewDetailsList.get(pos).getDocumentType(),documentTypeName, pos);
                     }
                 }
             }
