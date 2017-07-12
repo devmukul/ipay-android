@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -554,7 +553,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 String documentHintType = DOCUMENT_HINT_TYPES[pos];
 
                 mDocumentIdTextInputLayoutView.setHint(documentHintType);
-                setAppropriateKeyboard(pos);
+                Utilities.setAppropriateKeyboard(getActivity(), documentTypeName, mDocumentIdEditTextView);
 
                 // Unverified, document not yet uploaded
                 if (verificationStatus == null) {
@@ -658,6 +657,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                             }
                         });
                         customUploadPickerDialog.show();
+                        Utilities.hideKeyboard(getActivity());
                     }
                 });
 
@@ -701,14 +701,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         else
                             Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
                     }
-                }
-            }
-
-            private void setAppropriateKeyboard(int pos) {
-                if (documentPreviewDetailsList.get(pos).getDocumentTypeName().equals(getResources().getString(R.string.national_id)))
-                    mDocumentIdEditTextView.setInputType(InputType.TYPE_CLASS_NUMBER);
-                else {
-                    mDocumentIdEditTextView.setInputType(InputType.TYPE_CLASS_TEXT);
                 }
             }
         }

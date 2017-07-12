@@ -14,6 +14,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
@@ -63,6 +64,7 @@ import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
+import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import io.intercom.android.sdk.Intercom;
@@ -75,6 +77,12 @@ public class Utilities {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
         return info != null && info.isConnected();
+    }
+
+    public static void setAppropriateKeyboard(Context context, String documentType, EditText editText) {
+        if (documentType.equals(context.getString(R.string.national_id)))
+            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        else editText.setInputType(InputType.TYPE_CLASS_TEXT);
     }
 
     public static boolean isTabletDevice(Context context) {
