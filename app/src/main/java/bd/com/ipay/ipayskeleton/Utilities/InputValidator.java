@@ -121,4 +121,47 @@ public class InputValidator {
             return context.getString(R.string.invalid_driving_license_no_insufficient_length);
         else return context.getString(R.string.invalid_driving_license_no);
     }
+
+    public static String isDocumentIDValid(Context context, String documentType, String documentID) {
+        String nID = context.getString(R.string.national_id);
+        String passportID = context.getString(R.string.passport);
+        String errorMessage = "";
+        if (documentID.length() == 0) {
+            if (documentType.equals(nID))
+                errorMessage = context.getString(R.string.please_enter_nid);
+
+            else if (documentType.equals(passportID))
+                errorMessage = context.getString(R.string.please_enter_passport_id);
+
+            else errorMessage = context.getString(R.string.please_enter_driving_license_id);
+
+        } else {
+            if (documentType.equals(nID)) {
+                int length = documentID.length();
+                if (length >= 10 && length <= 17) {
+                    errorMessage = null;
+                } else if (length < 10) {
+                    errorMessage = context.getString(R.string.invalid_nid_min_length);
+                } else {
+                    errorMessage = context.getString(R.string.invalid_nid_max_length);
+                }
+            } else if (documentType.equals(passportID)) {
+                if (documentID.matches("[A-Z]{2}[0-9]{0,6}|[A-Z]{1}"))
+                    errorMessage = context.getString(R.string.invalid_passport_no_insufficient_length);
+                else if (documentID.matches("[A-Z]{2}[0-9]{7}"))
+                    errorMessage = null;
+                else {
+                    errorMessage = context.getString(R.string.invalid_passport_no);
+                }
+            } else {
+                if (documentID.matches("[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{5}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{4}"))
+                    errorMessage = null;
+                else if (documentID.matches("[A-Z]{2}[0-9]{0,7}|[A-Z]{1}|[A-Z]{2}[0-9]{7}[A-Z]{1,2}|" +
+                        "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{1,4}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{1,3}"))
+                    errorMessage = context.getString(R.string.invalid_driving_license_no_insufficient_length);
+                else errorMessage = context.getString(R.string.invalid_driving_license_no);
+            }
+        }
+        return errorMessage;
+    }
 }

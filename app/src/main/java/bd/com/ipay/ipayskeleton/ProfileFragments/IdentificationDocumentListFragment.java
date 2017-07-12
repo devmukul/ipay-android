@@ -673,25 +673,21 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             }
 
             private void attemptUploadDocument(String documentTypeName, int pos) {
-                String nationalID = getResources().getString(R.string.national_id);
-                String passportID = getResources().getString(R.string.passport);
-                String drivingLicenseID = getResources().getString(R.string.driving_license);
-                Boolean cancel = false;
-                String errorMessage = "";
-                if (documentTypeName.equals(nationalID)) {
-                    errorMessage = InputValidator.isValidNIDNo(getActivity(), mDocumentIdEditTextView.getText().toString());
-                    if (errorMessage != null)
-                        cancel = true;
-                } else if (documentTypeName.equals(passportID)) {
-                    errorMessage = InputValidator.isValidPassportNo(getActivity(), mDocumentIdEditTextView.getText().toString());
-                    if (errorMessage != null)
-                        cancel = true;
-                } else if (documentTypeName.equals(drivingLicenseID)) {
-                    errorMessage = InputValidator.isValidDrivingLicenseNo(getActivity(), mDocumentIdEditTextView.getText().toString());
-                    if (errorMessage != null)
-                        cancel = true;
-                }
-                if (cancel) {
+                String typeNID = getResources().getString(R.string.national_id);
+                String typePassport = getResources().getString(R.string.passport);
+                String typeDrivingLicense = getResources().getString(R.string.driving_license);
+                String documentID = mDocumentIdEditTextView.getText().toString();
+                String errorMessage;
+                if (documentTypeName.equals(typeNID))
+                    errorMessage = InputValidator.isDocumentIDValid(getActivity(), typeNID, documentID);
+
+                else if (documentTypeName.equals(typePassport))
+                    errorMessage = InputValidator.isDocumentIDValid(getActivity(), typePassport, documentID);
+
+                else
+                    errorMessage = InputValidator.isDocumentIDValid(getActivity(), typeDrivingLicense, documentID);
+
+                if (errorMessage != null) {
                     mDocumentIdEditTextView.requestFocus();
                     mDocumentIdEditTextView.setError(errorMessage);
                 } else {
@@ -699,9 +695,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         mSelectFile.setError(getString(R.string.please_select_a_file_to_upload));
                     else {
                         Utilities.hideKeyboard(getActivity());
-                        documentPreviewDetailsList.get(pos).setDocumentId(mDocumentIdEditTextView.getText().toString());
+                        documentPreviewDetailsList.get(pos).setDocumentId(documentID);
                         if (Utilities.isConnectionAvailable(getActivity()))
-                            uploadDocument(documentPreviewDetailsList.get(pos).getDocumentId(), documentPreviewDetailsList.get(pos).getDocumentType(), documentTypeName, pos);
+                            uploadDocument(documentID, documentPreviewDetailsList.get(pos).getDocumentType(), documentTypeName, pos);
                         else
                             Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
                     }
