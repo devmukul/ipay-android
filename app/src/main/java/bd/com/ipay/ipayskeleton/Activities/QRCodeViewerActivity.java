@@ -24,11 +24,10 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CameraAndImageUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Contents;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
@@ -86,7 +85,8 @@ public class QRCodeViewerActivity extends BaseActivity {
     }
 
     private void shareQrCode() {
-        String imageName = saveImageBitmap(bitmap);
+        String imageName = "Qr payment.png";
+        CameraAndImageUtilities.saveImageBitmap(imageName, bitmap, QRCodeViewerActivity.this);
         if (!TextUtils.isEmpty(imageName)) {
 
             File qrCodeFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), imageName);
@@ -121,26 +121,6 @@ public class QRCodeViewerActivity extends BaseActivity {
                 break;
         }
     }
-
-    private String saveImageBitmap(Bitmap bitmap) {
-        try {
-            final String qrImageName = "QR Payment" + ".png";
-            File documentFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), qrImageName);
-            if (!documentFile.exists()) {
-                documentFile.getParentFile().mkdirs();
-            }
-
-            FileOutputStream stream = new FileOutputStream(documentFile); // overwrites this image every time
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            stream.close();
-            return qrImageName;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
