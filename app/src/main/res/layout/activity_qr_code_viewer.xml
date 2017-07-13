@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/qr_code_imageview"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
+        android:layout_width="@dimen/value180"
+        android:layout_height="@dimen/value180"
         android:layout_centerHorizontal="true"
         android:scaleType="centerCrop" />
 
