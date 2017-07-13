@@ -38,16 +38,14 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ScanQRCodeFragment extends Fragment implements HttpResponseListener {
 
-    private View mRootView;
-
-    private ProgressDialog mProgressDialog;
-
     public static final int REQUEST_CODE_PERMISSION = 1001;
 
     private HttpRequestGetAsyncTask mGetUserInfoTask;
 
-    private String mobileNumber;
+    private View mRootView;
+    private ProgressDialog mProgressDialog;
 
+    private String mobileNumber;
 
     @Nullable
     @Override

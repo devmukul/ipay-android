@@ -30,7 +30,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/select_receiver_from_contacts"
-                android:src="@drawable/ic_qrc3x"
+                android:src="@drawable/ic_qr_input"
+                android:layout_marginRight="@dimen/value5"
                 android:visibility="visible" />
 
             <ImageView

@@ -59,9 +59,9 @@ public class QRCodeViewerActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (Utilities.isNecessaryPermissionExists(QRCodeViewerActivity.this, NECESSARY_PERMISSIONS)) {
-                    Utilities.requestRequiredPermissions(QRCodeViewerActivity.this, REQUEST_CODE_PERMISSION, NECESSARY_PERMISSIONS);
-                } else {
                     shareQrCode();
+                } else {
+                    Utilities.requestRequiredPermissions(QRCodeViewerActivity.this, REQUEST_CODE_PERMISSION, NECESSARY_PERMISSIONS);
                 }
             }
         });
@@ -97,8 +97,10 @@ public class QRCodeViewerActivity extends BaseActivity {
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // temp permission for receiving app to read this file
                 shareIntent.setType(getContentResolver().getType(contentUri));
+                shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "iPay pay by QR code");
+                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Please Scan this QR Code and Pay using iPay.");
                 shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-                startActivity(Intent.createChooser(shareIntent, "Choose an app"));
+                startActivity(Intent.createChooser(shareIntent, "Choose an app to share"));
             } else {
                 DialogUtils.showUnableToSaveFileDialog(QRCodeViewerActivity.this);
             }

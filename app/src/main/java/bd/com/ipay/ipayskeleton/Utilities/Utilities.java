@@ -712,9 +712,9 @@ public class Utilities {
     public static void performQRCodeScan(Fragment fragment, int requestCode) {
         final String[] qrCodeScanPermissionList = {Manifest.permission.CAMERA};
         if (isNecessaryPermissionExists(fragment.getActivity(), qrCodeScanPermissionList)) {
-            requestRequiredPermissions(fragment, requestCode, new String[]{Manifest.permission.CAMERA});
-        } else {
             initiateQRCodeScan(fragment);
+        } else {
+            requestRequiredPermissions(fragment, requestCode, new String[]{Manifest.permission.CAMERA});
         }
     }
 
@@ -733,7 +733,7 @@ public class Utilities {
     public static void requestRequiredPermissions(Fragment fragment, int permissionCode, String[] permissionList) {
         List<String> requiredPermissions = new ArrayList<>();
         for (String permission : permissionList) {
-            if (isNecessaryPermissionExists(fragment.getActivity(), permission))
+            if (!isNecessaryPermissionExists(fragment.getActivity(), permission))
                 requiredPermissions.add(permission);
         }
 
@@ -743,7 +743,7 @@ public class Utilities {
     public static void requestRequiredPermissions(Activity activity, int permissionCode, String[] permissionList) {
         List<String> requiredPermissions = new ArrayList<>();
         for (String permission : permissionList) {
-            if (isNecessaryPermissionExists(activity, permission))
+            if (!isNecessaryPermissionExists(activity, permission))
                 requiredPermissions.add(permission);
         }
 
