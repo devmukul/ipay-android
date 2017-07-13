@@ -132,6 +132,10 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     Gson gson = new GsonBuilder().create();
                     GetUserInfoResponse getUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
+
+                    // We will do a check here to know if the account is a personal account or business account.
+                    // For Personal Account we have to launch the SendMoneyActivity
+                    // For Business Account we have to launch the PaymentActivity with a account status verification check
                     if (getUserInfoResponse.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
                         switchActivity(SendMoneyActivity.class);
                     } else if (getUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
@@ -141,6 +145,7 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
                             DialogUtils.showDialogForInvalidQRCode(ScanQRCodeFragment.this, REQUEST_CODE_PERMISSION, getString(R.string.business_account_not_verified));
                         }
                     }
+
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                     DialogUtils.showDialogForInvalidQRCode(ScanQRCodeFragment.this, REQUEST_CODE_PERMISSION, getString(R.string.scan_valid_qr_code));
                 }
