@@ -291,7 +291,7 @@
     <string name="failed_to_bank_verification">Failed to verify your bank account. Please try again later.</string>
     <string name="failed_empty_pin">PIN cannot be empty</string>
     <string name="account_number">Account Number</string>
-    <string name="scan_valid_qr_code">Please scan a valid iPay account</string>
+    <string name="scan_valid_ipay_qr_code">Please scan a valid iPay account</string>
     <string name="please_check_terms_and_conditions">Please check the terms &amp; conditions</string>
     <string name="please_scan_a_valid_ticket">The ticket is invalid.</string>
     <string name="oath_sign_up"><![CDATA[I agree to the]]> </string>
