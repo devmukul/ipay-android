@@ -3,12 +3,13 @@ package bd.com.ipay.ipayskeleton.Utilities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.R;
 
 public class DialogUtils {
@@ -53,15 +54,17 @@ public class DialogUtils {
         dialog.show();
     }
 
-    public static void showDialogForInvalidQRCode(final Fragment fragment, final int requestCode, String message) {
+    public static void showDialogForInvalidQRCode(final Activity activity, String message) {
         MaterialDialog materialDialog;
-        MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(fragment.getActivity());
+        MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(activity);
         materialDialogBuilder.positiveText(R.string.ok);
         materialDialogBuilder.content(message);
         materialDialogBuilder.dismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                Utilities.performQRCodeScan(fragment, requestCode);
+                Intent intent;
+                intent = new Intent(activity, QRCodePaymentActivity.class);
+                activity.startActivity(intent);
 
             }
         });
