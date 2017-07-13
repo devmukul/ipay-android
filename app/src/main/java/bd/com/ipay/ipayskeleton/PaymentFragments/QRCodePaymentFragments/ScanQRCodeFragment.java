@@ -95,7 +95,7 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
                                 getActivity().finish();
                             }
                         } else if (getActivity() != null) {
-                            DialogUtils.showDialogForInvalidQRCode(ScanQRCodeFragment.this, REQUEST_CODE_PERMISSION, getString(R.string.scan_valid_qr_code));
+                            DialogUtils.showDialogForInvalidQRCode(ScanQRCodeFragment.this, REQUEST_CODE_PERMISSION, getString(R.string.scan_valid_ipay_qr_code));
                         }
                     }
                 });
@@ -147,7 +147,7 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
                     }
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-                    DialogUtils.showDialogForInvalidQRCode(ScanQRCodeFragment.this, REQUEST_CODE_PERMISSION, getString(R.string.scan_valid_qr_code));
+                    DialogUtils.showDialogForInvalidQRCode(ScanQRCodeFragment.this, REQUEST_CODE_PERMISSION, getString(R.string.scan_valid_ipay_qr_code));
                 }
                 break;
         }

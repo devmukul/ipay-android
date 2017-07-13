@@ -138,7 +138,6 @@ public class QRCodeViewerActivity extends BaseActivity {
         Point size = new Point();
         display.getSize(size);
         int smallerDimension = size.x < size.y ? size.x : size.y;
-        smallerDimension = smallerDimension * 3 / 4;
 
         // Encode with a QR Code image
         QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(stringToEncode, null,
