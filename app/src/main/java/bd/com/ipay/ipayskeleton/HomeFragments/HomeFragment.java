@@ -323,7 +323,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.ic_not_verified);
         }
         int resizeDimension = getResources().getDimensionPixelSize(R.dimen.value15);
-        return new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(drawable.getBitmap(), resizeDimension, resizeDimension, false));
+        return new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(drawable.getBitmap(), resizeDimension, resizeDimension, true));
     }
 
     private void promptForProfileCompletion() {
