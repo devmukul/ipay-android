@@ -65,6 +65,7 @@ public class DialogUtils {
                 Intent intent;
                 intent = new Intent(activity, QRCodePaymentActivity.class);
                 activity.startActivity(intent);
+                activity.finish();
 
             }
         });

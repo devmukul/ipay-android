@@ -95,7 +95,7 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
                                 getActivity().finish();
                             }
                         } else if (getActivity() != null) {
-                            DialogUtils.showDialogForInvalidQRCode(ScanQRCodeFragment.this, getString(R.string.scan_valid_ipay_qr_code));
+                            DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.scan_valid_ipay_qr_code));
                         }
                     }
                 });
@@ -142,12 +142,12 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
                         if (getUserInfoResponse.getAccountStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
                             switchActivity(PaymentActivity.class);
                         } else {
-                            DialogUtils.showDialogForInvalidQRCode(ScanQRCodeFragment.this, getString(R.string.business_account_not_verified));
+                            DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.business_account_not_verified));
                         }
                     }
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-                    DialogUtils.showDialogForInvalidQRCode(ScanQRCodeFragment.this, getString(R.string.scan_valid_ipay_qr_code));
+                    DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.scan_valid_ipay_qr_code));
                 }
                 break;
         }
