@@ -431,7 +431,7 @@ public class HomeActivity extends BaseActivity
                 Intercom.client().displayConversationsList();
 
             } else {
-                DialogUtils.showLiveChatNotAvailableDialog(this);
+                DialogUtils.showAlertDialog(this, getString(R.string.live_chat_not_available));
             }
         } else if (id == R.id.nav_help) {
 

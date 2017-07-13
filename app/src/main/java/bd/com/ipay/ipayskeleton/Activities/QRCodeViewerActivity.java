@@ -102,10 +102,10 @@ public class QRCodeViewerActivity extends BaseActivity {
                 shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
                 startActivity(Intent.createChooser(shareIntent, "Choose an app to share"));
             } else {
-                DialogUtils.showUnableToSaveFileDialog(QRCodeViewerActivity.this);
+                DialogUtils.showAlertDialog(QRCodeViewerActivity.this, getString(R.string.file_save_failed));
             }
         } else {
-            DialogUtils.showQRCodeNotAvailableDialog(QRCodeViewerActivity.this);
+            DialogUtils.showAlertDialog(QRCodeViewerActivity.this, getString(R.string.qr_code_unavailable));
         }
     }
 

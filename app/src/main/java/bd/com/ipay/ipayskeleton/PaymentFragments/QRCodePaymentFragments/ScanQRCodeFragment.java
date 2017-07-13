@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.QRCodePaymentFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -16,14 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -33,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -97,7 +95,7 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
                                 getActivity().finish();
                             }
                         } else if (getActivity() != null) {
-                            showAlertDialog(getString(R.string.scan_valid_qr_code));
+                            DialogUtils.showDialogForInvalidQRCode(ScanQRCodeFragment.this, REQUEST_CODE_PERMISSION, getString(R.string.scan_valid_qr_code));
                         }
                     }
                 });
@@ -135,40 +133,22 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
                     Gson gson = new GsonBuilder().create();
                     GetUserInfoResponse getUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
                     if (getUserInfoResponse.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
-                        switchActivityForPayment(SendMoneyActivity.class);
+                        switchActivity(SendMoneyActivity.class);
                     } else if (getUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
                         if (getUserInfoResponse.getAccountStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
-                            switchActivityForPayment(PaymentActivity.class);
+                            switchActivity(PaymentActivity.class);
                         } else {
-                            showAlertDialog(getString(R.string.business_account_not_verified));
+                            DialogUtils.showDialogForInvalidQRCode(ScanQRCodeFragment.this, REQUEST_CODE_PERMISSION, getString(R.string.business_account_not_verified));
                         }
                     }
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-                    showAlertDialog(getString(R.string.scan_valid_qr_code));
+                    DialogUtils.showDialogForInvalidQRCode(ScanQRCodeFragment.this, REQUEST_CODE_PERMISSION, getString(R.string.scan_valid_qr_code));
                 }
                 break;
         }
     }
 
-    private void showAlertDialog(String message) {
-        MaterialDialog materialDialog;
-        MaterialDialog.Builder materialDialogBuilder = new MaterialDialog.Builder(getActivity());
-        materialDialogBuilder.positiveText(R.string.ok);
-        materialDialogBuilder.content(message);
-        materialDialogBuilder.dismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                Intent intent = new Intent(getActivity(), QRCodePaymentActivity.class);
-                getActivity().startActivity(intent);
-                getActivity().finish();
-
-            }
-        });
-        materialDialog = materialDialogBuilder.build();
-        materialDialog.show();
-    }
-
-    private void switchActivityForPayment(Class tClass) {
+    private void switchActivity(Class tClass) {
         Intent intent = new Intent(getActivity(), tClass);
         intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
         startActivity(intent);
