@@ -50,6 +50,7 @@ public class TransactionHistory implements Parcelable {
             switch (serviceID) {
                 case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
                     return receiverInfo;
+                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT):
                     return getBankName();
@@ -61,8 +62,7 @@ public class TransactionHistory implements Parcelable {
                     else
                         return "";
                 case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
-                    return getBankName();
-                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
+                case (Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT):
                     return getBankName();
                 case (Constants.TRANSACTION_HISTORY_TOP_UP):
                     return receiverInfo;
@@ -92,6 +92,7 @@ public class TransactionHistory implements Parcelable {
         if ((serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE && originatingMobileNumber == null)
                 || (serviceID != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK
                 && serviceID != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT
+                && serviceID != Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT
                 && receiverInfo == null))
             return Utilities.formatTakaWithComma(netAmount);
 
@@ -106,6 +107,8 @@ public class TransactionHistory implements Parcelable {
         switch (serviceID) {
             case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
                 return Utilities.formatTakaWithSignAndComma("+", netAmount);
+            case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
+                return Utilities.formatTakaWithSignAndComma("-", netAmount);
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT):
                 return Utilities.formatTakaWithSignAndComma("+", netAmount);
@@ -119,7 +122,7 @@ public class TransactionHistory implements Parcelable {
                     return Utilities.formatTakaWithSignAndComma("-", netAmount);
             case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
                 return Utilities.formatTakaWithSignAndComma("+", netAmount);
-            case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
+            case (Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT):
                 return Utilities.formatTakaWithSignAndComma("-", netAmount);
             case (Constants.TRANSACTION_HISTORY_TOP_UP):
                 return Utilities.formatTakaWithSignAndComma("-", netAmount);
@@ -232,10 +235,6 @@ public class TransactionHistory implements Parcelable {
             switch (serviceID) {
                 case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
                     return "Top up failed and returned " + Utilities.formatTaka(getNetAmount());
-                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
-                    return "Withdraw money failed and returned " + Utilities.formatTaka(getNetAmount());
-                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT):
-                    return "Withdraw money reverted " + Utilities.formatTaka(getNetAmount());
                 case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
                     return "Opening balance from iPay";
                 case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
@@ -288,6 +287,8 @@ public class TransactionHistory implements Parcelable {
                         return "Adding " + Utilities.formatTaka(getNetAmount()) + "  from account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")";
                     else
                         return "Failed to add " + Utilities.formatTaka(getNetAmount()) + " from account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")";
+                case (Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT):
+                    return description;
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
                     if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
                         return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")";
@@ -295,6 +296,10 @@ public class TransactionHistory implements Parcelable {
                         return "Transferred " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")";
                     else
                         return "Failed to transfer " + Utilities.formatTaka(getNetAmount()) + " to account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")";
+                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
+                    return "Withdraw money failed and returned " + Utilities.formatTaka(getNetAmount());
+                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT):
+                    return description;
                 case (Constants.TRANSACTION_HISTORY_TOP_UP):
                     if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
                         return "Mobile TopUp of " + Utilities.formatTaka(getNetAmount()) + " to " + receiverInfo;
@@ -350,10 +355,6 @@ public class TransactionHistory implements Parcelable {
             switch (serviceID) {
                 case (Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK):
                     return "TopUp Rollback";
-                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
-                    return "Withdraw Money Rollback";
-                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT):
-                    return "Withdraw Money Revert";
                 case (Constants.TRANSACTION_HISTORY_OPENING_BALANCE):
                     return "Opening Balance";
                 case (Constants.TRANSACTION_HISTORY_SEND_MONEY):
@@ -366,8 +367,14 @@ public class TransactionHistory implements Parcelable {
                     }
                 case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
                     return "Money Added";
+                case (Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT):
+                    return "Add Money Revert";
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
                     return "Money Withdrawn";
+                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK):
+                    return "Withdraw Money Rollback";
+                case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT):
+                    return "Withdraw Money Revert";
                 case (Constants.TRANSACTION_HISTORY_TOP_UP):
                     return "Mobile TopUp";
                 case (Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT):

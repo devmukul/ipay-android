@@ -139,7 +139,8 @@ public class TransactionDetailsFragment extends Fragment {
             purposeLayout.setVisibility(View.GONE);
         }
 
-        if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
+        if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY
+                || serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT) {
             mNameView.setText(bankName);
             mMobileNumberView.setText(bankAccountNumber);
             mProfileImageView.setVisibility(View.GONE);

@@ -274,6 +274,7 @@
     <string name="events">Events</string>
     <string name="education">Education</string>
     <string name="education_payment">Education Payment</string>
+    <string name="my_qr_code">My QR Code</string>
     <string name="qr_code">QR Code</string>
     <string name="scan_the_qr_code">Please scan the QR Code to send money to this person</string>
     <string name="enter_mobile_number">Enter Mobile Number (+8801xxxxxxxx)</string>
@@ -299,7 +300,7 @@
     <string name="failed_to_bank_verification">Failed to verify your bank account. Please try again later.</string>
     <string name="failed_empty_pin">PIN cannot be empty</string>
     <string name="account_number">Account Number</string>
-    <string name="please_scan_a_valid_pin">Please scan a valid iPay account</string>
+    <string name="scan_valid_ipay_qr_code">Please scan a valid iPay account</string>
     <string name="please_check_terms_and_conditions">Please check the terms &amp; conditions</string>
     <string name="please_scan_a_valid_ticket">The ticket is invalid.</string>
     <string name="oath_sign_up"><![CDATA[I agree to the]]> </string>
@@ -822,6 +823,10 @@
     <string name="see_business_address_service_not_allowed_message">Business Address can\'t be shown. Please contact support for more info.</string>
     <string name="see_business_info_service_not_allowed_message">Business Info can\'t be shown. Please contact support for more info.</string>
     <string name="live_chat_not_available">Live Chat is currently unavailable. Please try again later</string>
+    <string name="share">Share QR Code</string>
+    <string name="business_account_not_verified">This business account is not verified. In order to make payment, the business account must be verified.</string>
+    <string name="qr_code_unavailable">Unable to Genarate your QR Code. Please Try again later.</string>
+    <string name="file_save_failed">Unable to save file.</string>
 
 
     <string-array name="mobile_operators">
