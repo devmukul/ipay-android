@@ -305,11 +305,13 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mGetDocumentAccessTokenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void uploadDocument(String mDocumentID, String mDocumentType, String mDocumentTypeName, int mID) {
+    private void uploadDocument(String mDocumentID, int mID) {
 
         if (mUploadIdentifierDocumentAsyncTask != null)
             return;
 
+        String mDocumentTypeName = documentPreviewDetailsList.get(mID).getDocumentTypeName();
+        String mDocumentType = documentPreviewDetailsList.get(mID).getDocumentType();
         mProgressDialog.setMessage(getString(R.string.uploading) + " " + mDocumentTypeName);
         mProgressDialog.show();
 
@@ -673,20 +675,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             }
 
             private void attemptUploadDocument(String documentTypeName, int pos) {
-                String typeNID = getResources().getString(R.string.national_id);
-                String typePassport = getResources().getString(R.string.passport);
-                String typeDrivingLicense = getResources().getString(R.string.driving_license);
                 String documentID = mDocumentIdEditTextView.getText().toString();
-                String errorMessage;
-                if (documentTypeName.equals(typeNID))
-                    errorMessage = InputValidator.isDocumentIDValid(getActivity(), typeNID, documentID);
-
-                else if (documentTypeName.equals(typePassport))
-                    errorMessage = InputValidator.isDocumentIDValid(getActivity(), typePassport, documentID);
-
-                else
-                    errorMessage = InputValidator.isDocumentIDValid(getActivity(), typeDrivingLicense, documentID);
-
+                String errorMessage = InputValidator.isValidDocumentID(getActivity(), documentTypeName, documentID, DOCUMENT_TYPE_NAMES);
                 if (errorMessage != null) {
                     mDocumentIdEditTextView.requestFocus();
                     mDocumentIdEditTextView.setError(errorMessage);
@@ -697,7 +687,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         Utilities.hideKeyboard(getActivity());
                         documentPreviewDetailsList.get(pos).setDocumentId(documentID);
                         if (Utilities.isConnectionAvailable(getActivity()))
-                            uploadDocument(documentID, documentPreviewDetailsList.get(pos).getDocumentType(), documentTypeName, pos);
+                            uploadDocument(documentID, pos);
                         else
                             Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
                     }

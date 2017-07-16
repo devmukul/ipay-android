@@ -58,10 +58,10 @@
     <string name="invalid_district">Please select a District</string>
     <string name="postcode">Postcode</string>
     <string name="invalid_postcode">Please enter a valid 4-digit postcode</string>
-    <string name="invalid_passport_no_insufficient_length">Passport ID should be 9 characters long </string>
-    <string name="invalid_passport_no">Invalid passport ID</string>
-    <string name="invalid_driving_license_no">Invalid driving license ID</string>
-    <string name="invalid_driving_license_no_insufficient_length">Driving license ID should be 15 characters long</string>
+    <string name="invalid_passport_ID_insufficient_length">Passport ID should be 9 characters long </string>
+    <string name="invalid_passport_ID">Invalid passport ID</string>
+    <string name="invalid_driving_license_ID">Invalid driving license ID</string>
+    <string name="invalid_driving_license_ID_insufficient_length">Driving license ID should be 15 characters long</string>
     <string name="invalid_nid_min_length">NID should be at least 10 digits long</string>
     <string name="invalid_nid_max_length">NID should be max 17 digits long</string>
     <string name="please_enter_nid">Please enter your national ID number</string>
