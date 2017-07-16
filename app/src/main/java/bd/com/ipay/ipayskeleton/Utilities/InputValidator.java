@@ -12,6 +12,11 @@ import bd.com.ipay.ipayskeleton.R;
  * Validates user inputs (e.g. email, password, date of birth)
  */
 public class InputValidator {
+    private static final String invalidPassportIDInsufficientLength = "[A-Z]{2}[0-9]{0,6}|[A-Z]{1}";
+    private static final String validPassPortID = "[A-Z]{2}[0-9]{7}";
+    private static final String invalidDrivingLicenseIDInsufficientLength = "[A-Z]{2}[0-9]{0,7}|[A-Z]{1}|[A-Z]{2}[0-9]{7}[A-Z]{1,2}|" +
+            "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{1,4}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{1,3}";
+    private static final String validDrivingLicenseID = "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{5}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{4}";
 
     public static String isPasswordValid(String password) {
         // Return empty string if the password is valid
@@ -110,8 +115,7 @@ public class InputValidator {
                     errorMessage = context.getString(R.string.invalid_nid_max_length);
                 }
             } else if (documentType.equals(passportID)) {
-                String invalidPassportIDInsufficientLength = "[A-Z]{2}[0-9]{0,6}|[A-Z]{1}";
-                String validPassPortID = "[A-Z]{2}[0-9]{7}";
+
                 if (documentID.matches(invalidPassportIDInsufficientLength))
                     errorMessage = context.getString(R.string.invalid_passport_ID_insufficient_length);
                 else if (documentID.matches(validPassPortID))
@@ -120,11 +124,6 @@ public class InputValidator {
                     errorMessage = context.getString(R.string.invalid_passport_ID);
                 }
             } else {
-                String invalidDrivingLicenseIDInsufficientLength = "[A-Z]{2}[0-9]{0,7}|[A-Z]{1}|[A-Z]{2}[0-9]{7}[A-Z]{1,2}|" +
-                        "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{1,4}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{1,3}";
-
-                String validDrivingLicenseID = "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{5}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{4}";
-
                 if (documentID.matches(validDrivingLicenseID))
                     errorMessage = null;
                 else if (documentID.matches(invalidDrivingLicenseIDInsufficientLength))
