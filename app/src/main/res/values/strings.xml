@@ -936,6 +936,12 @@
         <item>Driving License ID</item>
     </string-array>
 
+    <string-array name="personal_document_type_validation">
+        <item>National ID</item>
+        <item>Passport</item>
+        <item>Driving License</item>
+    </string-array>
+
     <string-array name="business_document_id">
         <item>NID</item>
         <item>Business TIN ID</item>

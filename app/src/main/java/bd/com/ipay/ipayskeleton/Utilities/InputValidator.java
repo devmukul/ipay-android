@@ -91,44 +91,41 @@ public class InputValidator {
         return errorMessage;
     }
 
-    public static String isValidDocumentID(Context context, String documentType, String documentID, int[] documentTypeNames) {
-        String nID = context.getString(documentTypeNames[0]);
-        String passportID = context.getString(documentTypeNames[1]);
+    public static String isValidDocumentID(Context context, String documentID, String documentType, int pos) {
+        String document_types[] = context.getResources().getStringArray(R.array.personal_document_type_validation);
         String errorMessage = "";
         if (documentID.length() == 0) {
-            if (documentType.equals(nID))
-                errorMessage = context.getString(R.string.please_enter_nid);
-
-            else if (documentType.equals(passportID))
-                errorMessage = context.getString(R.string.please_enter_passport_id);
-
-            else errorMessage = context.getString(R.string.please_enter_driving_license_id);
-
+            errorMessage = "Please Enter Your "+document_types[pos] + " Number";
         } else {
-            if (documentType.equals(nID)) {
-                int length = documentID.length();
-                if (length >= Constants.MINIMUM_REQUIRED_NID_LENGTH && length <= Constants.MAXIMUM_REQUIRED_NID_LENGTH) {
-                    errorMessage = null;
-                } else if (length < Constants.MINIMUM_REQUIRED_NID_LENGTH) {
-                    errorMessage = context.getString(R.string.invalid_nid_min_length);
-                } else {
-                    errorMessage = context.getString(R.string.invalid_nid_max_length);
-                }
-            } else if (documentType.equals(passportID)) {
+            switch (documentType) {
+                case Constants.DOCUMENT_TYPE_NATIONAL_ID:
+                    int length = documentID.length();
+                    if (length >= Constants.MINIMUM_REQUIRED_NID_LENGTH && length <= Constants.MAXIMUM_REQUIRED_NID_LENGTH)
+                        errorMessage = null;
+                    else if (length < Constants.MINIMUM_REQUIRED_NID_LENGTH)
+                        errorMessage = context.getString(R.string.invalid_nid_min_length);
+                    else errorMessage = context.getString(R.string.invalid_nid_max_length);
 
-                if (documentID.matches(invalidPassportIDInsufficientLength))
-                    errorMessage = context.getString(R.string.invalid_passport_ID_insufficient_length);
-                else if (documentID.matches(validPassPortID))
-                    errorMessage = null;
-                else {
-                    errorMessage = context.getString(R.string.invalid_passport_ID);
-                }
-            } else {
-                if (documentID.matches(validDrivingLicenseID))
-                    errorMessage = null;
-                else if (documentID.matches(invalidDrivingLicenseIDInsufficientLength))
-                    errorMessage = context.getString(R.string.invalid_driving_license_ID_insufficient_length);
-                else errorMessage = context.getString(R.string.invalid_driving_license_ID);
+                    break;
+
+                case Constants.DOCUMENT_TYPE_PASSPORT:
+                    if (documentID.matches(invalidPassportIDInsufficientLength))
+                        errorMessage = context.getString(R.string.invalid_passport_ID_insufficient_length);
+                    else if (documentID.matches(validPassPortID))
+                        errorMessage = null;
+                    else errorMessage = context.getString(R.string.invalid_passport_ID);
+
+                    break;
+
+                case Constants.DOCUMENT_TYPE_DRIVING_LICENSE:
+                    if (documentID.matches(validDrivingLicenseID))
+                        errorMessage = null;
+                    else if (documentID.matches(invalidDrivingLicenseIDInsufficientLength))
+                        errorMessage = context.getString(R.string.invalid_driving_license_ID_insufficient_length);
+
+                    else errorMessage = context.getString(R.string.invalid_driving_license_ID);
+
+                    break;
             }
         }
         return errorMessage;

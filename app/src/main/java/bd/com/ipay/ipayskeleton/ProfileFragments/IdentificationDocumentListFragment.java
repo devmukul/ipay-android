@@ -676,7 +676,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
             private void attemptUploadDocument(String documentTypeName, int pos) {
                 String documentID = mDocumentIdEditTextView.getText().toString();
-                String errorMessage = InputValidator.isValidDocumentID(getActivity(), documentTypeName, documentID, DOCUMENT_TYPE_NAMES);
+                String errorMessage = InputValidator.isValidDocumentID(getActivity(), documentID, DOCUMENT_TYPES[pos] , pos);
                 if (errorMessage != null) {
                     mDocumentIdEditTextView.requestFocus();
                     mDocumentIdEditTextView.setError(errorMessage);
