@@ -43,9 +43,10 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.DeleteContactAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -56,6 +57,7 @@ import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Contact.InviteContactNode;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -438,6 +440,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         } else {
             mInviteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
+                @ValidateAccess(ServiceIdConstants.MANAGE_INVITATIONS)
                 public void onClick(View v) {
                     if (mBottomSheetLayout.isSheetShowing()) {
                         mBottomSheetLayout.dismissSheet();
@@ -454,6 +457,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         Button mSendMoneyButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_send_money);
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEND_MONEY)
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SendMoneyActivity.class);
                 intent.putExtra(Constants.MOBILE_NUMBER, mSelectedNumber);
@@ -468,6 +472,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         Button mRequestMoneyButton = (Button) mSheetViewIpayMember.findViewById(R.id.button_request_money);
         mRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.REQUEST_MONEY)
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), RequestMoneyActivity.class);
                 intent.putExtra(Constants.MOBILE_NUMBER, mSelectedNumber);
@@ -496,6 +501,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
         mMakePaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MAKE_PAYMENT)
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PaymentActivity.class);
                 intent.putExtra(Constants.MOBILE_NUMBER, mSelectedNumber);
@@ -705,6 +711,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
         dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_INVITATIONS)
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
                 boolean wantToIntroduce = introduceCheckbox.isChecked();
@@ -892,6 +899,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.DELETE_CONTACTS)
                     public boolean onLongClick(View view) {
                         showDeleteContactConfirmationDialog(mobileNumber);
                         return false;

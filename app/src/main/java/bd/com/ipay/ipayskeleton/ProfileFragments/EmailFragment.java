@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.AddNewEmailRequest;
@@ -49,10 +50,13 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.GetEmailRe
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.MakePrimaryEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.MakePrimaryRequest;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EmailFragment extends ProgressFragment implements HttpResponseListener {
@@ -97,6 +101,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
         mFabAddNewEmail.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_EMAILS)
             public void onClick(View v) {
                 showAddNewEmailDialog();
             }
@@ -203,6 +208,10 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_EMAILS)) {
+                            DialogUtils.showServiceNotAllowedDialog(getContext());
+                            return;
+                        }
                         deleteEmail(email.getEmailId());
                     }
                 })

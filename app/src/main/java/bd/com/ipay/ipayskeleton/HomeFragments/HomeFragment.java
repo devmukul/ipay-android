@@ -5,6 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,17 +31,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPinDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -46,15 +51,19 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Balance.RefreshBalanceRe
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HomeFragment extends Fragment implements HttpResponseListener {
+
+    private static boolean profileCompletionPromptShown = false;
 
     private HttpRequestPostAsyncTask mRefreshBalanceTask = null;
     private RefreshBalanceResponse mRefreshBalanceResponse;
@@ -67,7 +76,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
     private TextView mNameView;
     private TextView mMobileNumberView;
-    private ImageView mVerificationStatusView;
     private ProfileImageView mProfilePictureView;
     private View mProfileInfo;
 
@@ -81,12 +89,12 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
     private View mProfileCompletionPromptView;
 
-    private static boolean profileCompletionPromptShown = false;
-
     private CircularProgressBar mProgressBar;
     private ProgressBar mProgressBarWithoutAnimation;
     private TextView mProfileCompletionMessageView;
     private ImageButton mCloseButton;
+
+    private ImageView mShowQRCodeButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,7 +114,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mVerificationStatusView = (ImageView) v.findViewById(R.id.verification_status);
         mProfilePictureView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mProfileInfo = v.findViewById(R.id.profile_info);
 
@@ -123,6 +130,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mProfileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
         mCloseButton = (ImageButton) mProfileCompletionPromptView.findViewById(R.id.button_close);
 
+        mShowQRCodeButton = (ImageView) v.findViewById(R.id.show_qr_code_button);
+
         mCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,6 +141,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess({ServiceIdConstants.ADD_MONEY})
             public void onClick(View v) {
                 PinChecker addMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -146,6 +156,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess({ServiceIdConstants.WITHDRAW_MONEY})
             public void onClick(View v) {
                 PinChecker withdrawMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -160,6 +171,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess({ServiceIdConstants.SEND_MONEY})
             public void onClick(View v) {
                 PinChecker sendMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -182,6 +194,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mMakePaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess({ServiceIdConstants.MAKE_PAYMENT})
             public void onClick(View v) {
                 PinChecker makePaymentPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -197,6 +210,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mMobileTopUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess({ServiceIdConstants.TOP_UP})
             public void onClick(View v) {
                 PinChecker topUpPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -211,17 +225,28 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         refreshBalanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.BALANCE)
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     refreshBalance();
                 }
             }
         });
-
         mProfileInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mShowQRCodeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), QRCodeViewerActivity.class);
+
+                intent.putExtra(Constants.STRING_TO_ENCODE, ProfileInfoCacheManager.getMobileNumber());
+                intent.putExtra(Constants.ACTIVITY_TITLE, "QR Code to Share");
                 startActivity(intent);
             }
         });
@@ -239,8 +264,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_PICTURE_UPDATE_BROADCAST));
 
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mTransactionHistoryBroadcastReceiver,
-                new IntentFilter(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBalanceUpdateBroadcastReceiver,
+                new IntentFilter(Constants.BALANCE_UPDATE_BROADCAST));
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfileCompletionInfoUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_COMPLETION_UPDATE_BROADCAST));
@@ -262,7 +287,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     public void onDestroyView() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfileInfoUpdateBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfilePictureUpdateBroadcastReceiver);
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mTransactionHistoryBroadcastReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBalanceUpdateBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mProfileCompletionInfoUpdateBroadcastReceiver);
 
         super.onDestroyView();
@@ -286,10 +311,19 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
                 ProfileInfoCacheManager.getProfileImageUrl(), false);
 
-        if (ProfileInfoCacheManager.isAccountVerified())
-            mVerificationStatusView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_verified_profile));
-        else
-            mVerificationStatusView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_not_verified));
+        Drawable verificationIconDrawable = getVerificationIconDrawable(ProfileInfoCacheManager.isAccountVerified());
+        mNameView.setCompoundDrawablesWithIntrinsicBounds(null, null, verificationIconDrawable, null);
+    }
+
+    private Drawable getVerificationIconDrawable(boolean accountVerified) {
+        BitmapDrawable drawable;
+        if (accountVerified) {
+            drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.ic_verified_profile);
+        } else {
+            drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.ic_not_verified);
+        }
+        int resizeDimension = getResources().getDimensionPixelSize(R.dimen.value15);
+        return new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(drawable.getBitmap(), resizeDimension, resizeDimension, true));
     }
 
     private void promptForProfileCompletion() {
@@ -309,6 +343,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                 mProfileCompletionPromptView.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.SEE_PROFILE_COMPLETION)
                     public void onClick(View v) {
                         mProfileCompletionPromptView.setVisibility(View.GONE);
                         Intent intent = new Intent(getActivity(), ProfileActivity.class);
@@ -332,7 +367,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
                 if (incompleteOtherCompletionDetails.size() > 0) {
                     Random random = new Random();
 
-                    /**
+                    /*
                      * We want to show the prompt once in every five launch on average.
                      */
                     if (random.nextInt(5) == 0) {
@@ -347,7 +382,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
                         mProfileCompletionMessageView.setText(profileCompletionMessage);
 
-                        /**
+                        /*
                          * For ADD_PIN, we show a PIN input dialog to the user.
                          * For other cases, we forward the user to the corresponding fragment
                          * in the ProfileActivity.
@@ -375,6 +410,10 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     }
 
     private void refreshBalance() {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.BALANCE)) {
+            balanceView.setText(R.string.not_available);
+            return;
+        }
         if (mRefreshBalanceTask != null || getActivity() == null)
             return;
 
@@ -480,7 +519,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         }
     };
 
-    private final BroadcastReceiver mTransactionHistoryBroadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mBalanceUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             refreshBalance();

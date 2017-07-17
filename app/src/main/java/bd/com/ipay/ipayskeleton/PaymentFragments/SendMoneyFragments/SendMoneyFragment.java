@@ -1,15 +1,12 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.app.Fragment;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -108,10 +105,8 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
             @Override
             public void onClick(View v) {
 
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA},
-                            REQUEST_CODE_PERMISSION);
-                } else initiateScan();
+                Utilities.performQRCodeScan(SendMoneyFragment.this, REQUEST_CODE_PERMISSION);
+
             }
         });
 
@@ -127,16 +122,12 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    initiateScan();
+                    Utilities.initiateQRCodeScan(this);
                 } else {
                     Toaster.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG);
                 }
             }
         }
-    }
-
-    public void initiateScan() {
-        IntentIntegrator.forFragment(this).initiateScan();
     }
 
     @Override
@@ -164,7 +155,7 @@ public class SendMoneyFragment extends Fragment implements HttpResponseListener 
                             mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
                         } else if (getActivity() != null)
                             Toaster.makeText(getActivity(), getResources().getString(
-                                    R.string.please_scan_a_valid_pin), Toast.LENGTH_SHORT);
+                                    R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT);
                     }
                 });
             }

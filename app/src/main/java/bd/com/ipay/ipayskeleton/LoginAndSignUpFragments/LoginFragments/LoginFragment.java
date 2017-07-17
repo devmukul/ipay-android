@@ -23,10 +23,12 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -281,10 +283,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                 UUID = ProfileInfoCacheManager.getUUID(null);
             }
 
-            String pushRegistrationID = SharedPrefManager.getPushNotificationToken(null);
-
             LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
-                    Constants.MOBILE_ANDROID + mDeviceID, UUID, null, pushRegistrationID, null);
+                    Constants.MOBILE_ANDROID + mDeviceID, UUID, null, null, null);
             Gson gson = new Gson();
             String json = gson.toJson(mLoginModel);
             mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
@@ -316,11 +316,20 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     ProfileInfoCacheManager.setLoggedInStatus(true);
+                    String pushRegistrationID = ProfileInfoCacheManager.getPushNotificationToken(null);
+                    if (pushRegistrationID != null) {
+                        new RegisterFCMTokenToServerAsyncTask(getContext());
+                    }
 
                     ProfileInfoCacheManager.setMobileNumber(mUserNameLogin);
                     ProfileInfoCacheManager.setAccountType(mLoginResponseModel.getAccountType());
                     // When user logs in, we want that by default he would log in to his default account
                     TokenManager.deactivateEmployerAccount();
+
+                    // Saving the allowed services id for the user
+                    if (mLoginResponseModel.getAccessControlList() != null) {
+                        ACLManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
+                    }
 
                     // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
                     if (!SharedPrefManager.ifContainsUUID())

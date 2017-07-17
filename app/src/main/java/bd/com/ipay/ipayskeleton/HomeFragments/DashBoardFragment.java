@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
+import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryHolderFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -25,7 +26,6 @@ public class DashBoardFragment extends Fragment {
     private final int PAY_TAB = 1;
     private final int TRANSACTION_HISTORY_TAB = 2;
     private final int CONTACTS_TAB = 3;
-
 
     private final int TOTAL_PAGE_COUNT = 4;
 
@@ -77,8 +77,10 @@ public class DashBoardFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
 
-                if (tab.getPosition() == TRANSACTION_HISTORY_TAB)
-                    Utilities.sendBroadcast(getActivity(), Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST);
+                if (tab.getPosition() == TRANSACTION_HISTORY_TAB) {
+                    BroadcastServiceIntent.sendBroadcast(getActivity(), Constants.PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST);
+                }
+
             }
 
             @Override
@@ -134,7 +136,7 @@ public class DashBoardFragment extends Fragment {
     }
 
     private void setTabIconsWithTexts() {
-        ((ImageView) homeTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_walletw);
+        ((ImageView) homeTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_wallet);
         ((ImageView) contactsTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_contact);
         ((ImageView) transactionHistoryTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_transaction);
         ((ImageView) payTabView.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_pay);

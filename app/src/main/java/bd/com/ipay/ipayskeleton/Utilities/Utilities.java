@@ -8,18 +8,16 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -36,11 +34,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.vision.Detector;
-import com.google.android.gms.vision.Frame;
-import com.google.android.gms.vision.face.Face;
-import com.google.android.gms.vision.face.FaceDetector;
 import com.google.gson.Gson;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -59,17 +54,22 @@ import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import io.intercom.android.sdk.Intercom;
 
 public class Utilities {
 
@@ -239,11 +239,6 @@ public class Utilities {
         }*/
     }
 
-    public static void sendBroadcast(Context context, String intentFilter) {
-        Intent intent = new Intent(intentFilter);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-    }
-
     public static String streamToString(InputStream is) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
@@ -377,7 +372,6 @@ public class Utilities {
         }
         return timeForTokenExpiration;
     }
-
 
 
     public static String getFilePathFromData(Context context, Uri uri) {
@@ -555,71 +549,6 @@ public class Utilities {
             return "";
     }
 
-    /**
-     * Checks if a profile picture is proper or not.
-     *
-     * @param context, selectedImageUri
-     * @return Returns null when its a valid profile picture.
-     * Else returns String stating the problem in the picture which is selected to upload.
-     */
-    public static String validateProfilePicture(Context context, String selectedImageUri) {
-
-        String result;
-        FaceDetector detector;
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        Bitmap bitmap = BitmapFactory.decodeFile(selectedImageUri, options);
-
-        // First, check if the file selected is an image.
-        if (options.outWidth != -1 && options.outHeight != -1) {
-            // This is an image file
-            // Now initialize the face detector
-            detector = new FaceDetector.Builder(context)
-                    .setTrackingEnabled(false)
-                    .setLandmarkType(FaceDetector.ALL_LANDMARKS)
-                    .build();
-
-            // This is a temporary workaround for a bug in the face detector with respect to operating
-            // on very small images.  This will be fixed in a future release.  But in the near term, use
-            // of the SafeFaceDetector class will patch the issue.
-            Detector<Face> safeDetector = new SafeFaceDetector(detector);
-
-            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-            SparseArray<Face> faces = safeDetector.detect(frame);
-
-            // Check if the face detection is operational.
-            if (!safeDetector.isOperational()) {
-                // Face detector needs a native library to be downloaded before it works perfectly.
-                // If the download interrupts, it may fail to initialize and will return erroneous value.
-                // We can not stop user from uploading profile picture if the face detector library is not available. So return valid instead.
-                // So return null
-                result = null;
-            } else {
-                // Face detection is operational
-                switch (faces.size()) {
-                    case 0:
-                        result = Constants.NO_FACE_DETECTED;
-                        break;
-                    case 1:
-                        result = null; // Set null value when a single face is detected. VALID PROFILE PICTURE
-                        break;
-                    default:
-                        result = Constants.MULTIPLE_FACES;
-                        break;
-                }
-            }
-
-            // When it is no longer needed in order to free native resources.
-            safeDetector.release();
-
-        } else {
-            // This is not an image file
-            result = Constants.NOT_AN_IMAGE;
-        }
-
-        return result;
-    }
-
     public static String getImage(List<UserProfilePictureClass> profilePictureClasses, String quality) {
         String imageQualityHigh = null;
         String imageQualityMedium = null;
@@ -743,5 +672,81 @@ public class Utilities {
         Intent intent = new Intent();
         activity.setResult(Activity.RESULT_OK, intent);
         activity.finish();
+    }
+
+    public static Map<String, Object> getCustomIntercomUserAttributes() {
+        Map<String, Object> customAttributes = new HashMap<>();
+
+        customAttributes.put(IntercomConstants.ATTR_CREATED_AT, System.currentTimeMillis() / 1000L);
+        customAttributes.put(IntercomConstants.ATTR_TYPE, ProfileInfoCacheManager.getAccountType(1) == 1 ? Constants.PERSONAL_ACCOUNT : Constants.BUSINESS_ACCOUNT);
+        customAttributes.put(IntercomConstants.ATTR_SIGNED_UP_AT, ProfileInfoCacheManager.getSignupTime() / 1000L);
+        customAttributes.put(IntercomConstants.ATTR_VERIFICATION_STATUS, ProfileInfoCacheManager.getVerificationStatus());
+
+        return customAttributes;
+    }
+
+    public static void resetIntercomInformation() {
+        Intercom.client().reset();
+        Intercom.client().hideMessenger();
+    }
+
+    public static Map<String, Object> getUserAttributesForIntercom() {
+        Map<String, Object> customAttributes = Utilities.getCustomIntercomUserAttributes();
+
+        Map<String, Object> userAttributes = new HashMap<>();
+        userAttributes.put(IntercomConstants.ATTR_NAME, ProfileInfoCacheManager.getUserName());
+        userAttributes.put(IntercomConstants.ATTR_PHONE, ProfileInfoCacheManager.getMobileNumber());
+        userAttributes.put(IntercomConstants.ATTR_EMAIL, ProfileInfoCacheManager.getPrimaryEmail());
+        userAttributes.put(IntercomConstants.ATTR_MOBILE, DeviceInfoFactory.getDeviceName());
+        if (!TextUtils.isEmpty(ProfileInfoCacheManager.getProfileImageUrl())) {
+            Map<String, Object> avatar = new HashMap<>();
+            avatar.put(IntercomConstants.ATTR_TYPE, "avatar");
+            avatar.put(IntercomConstants.ATTR_IMAGE_URL, Constants.BASE_URL_FTP_SERVER + ProfileInfoCacheManager.getProfileImageUrl());
+            userAttributes.put(IntercomConstants.ATTR_AVATAR, avatar);
+        }
+
+        userAttributes.put(IntercomConstants.ATTR_CUSTOM_ATTRIBUTES, customAttributes);
+        return userAttributes;
+    }
+
+    public static void performQRCodeScan(Fragment fragment, int requestCode) {
+        final String[] qrCodeScanPermissionList = {Manifest.permission.CAMERA};
+        if (isNecessaryPermissionExists(fragment.getActivity(), qrCodeScanPermissionList)) {
+            initiateQRCodeScan(fragment);
+        } else {
+            requestRequiredPermissions(fragment, requestCode, new String[]{Manifest.permission.CAMERA});
+        }
+    }
+
+    public static void initiateQRCodeScan(Fragment fragment) {
+        IntentIntegrator.forSupportFragment(fragment).initiateScan();
+    }
+
+    public static boolean isNecessaryPermissionExists(Context context, String... permissionList) {
+        for (String permission : permissionList) {
+            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED)
+                return false;
+        }
+        return true;
+    }
+
+    public static void requestRequiredPermissions(Fragment fragment, int permissionCode, String[] permissionList) {
+        List<String> requiredPermissions = new ArrayList<>();
+        for (String permission : permissionList) {
+            if (!isNecessaryPermissionExists(fragment.getActivity(), permission))
+                requiredPermissions.add(permission);
+        }
+
+        fragment.requestPermissions(requiredPermissions.toArray(new String[requiredPermissions.size()]), permissionCode);
+    }
+
+    public static void requestRequiredPermissions(Activity activity, int permissionCode, String[] permissionList) {
+        List<String> requiredPermissions = new ArrayList<>();
+        for (String permission : permissionList) {
+            if (!isNecessaryPermissionExists(activity, permission))
+                requiredPermissions.add(permission);
+        }
+
+        ActivityCompat.requestPermissions(activity, requiredPermissions.toArray(new String[requiredPermissions.size()]), permissionCode);
     }
 }

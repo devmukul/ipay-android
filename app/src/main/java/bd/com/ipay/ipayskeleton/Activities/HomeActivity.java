@@ -21,6 +21,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ import com.mikepenz.actionitembadge.library.ActionItemBadge;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
@@ -60,35 +62,39 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBus
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notification;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
-import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
+import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
-import bd.com.ipay.ipayskeleton.Utilities.Config;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import io.intercom.android.sdk.Intercom;
+import io.intercom.android.sdk.identity.Registration;
 
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, HttpResponseListener {
+
+    private static final int REQUEST_CODE_PERMISSION = 1001;
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
-    private GetUserInfoResponse mGetUserInfoResponse;
+    private GetProfileInfoResponse mGetProfileInfoResponse;
 
     private HttpRequestGetAsyncTask mGetBusinessInformationAsyncTask;
     private GetBusinessInformationResponse mGetBusinessInformationResponse;
@@ -99,6 +105,7 @@ public class HomeActivity extends BaseActivity
     private AutoResizeTextView mMobileNumberView;
     private TextView mNameView;
     private ProfileImageView mProfileImageView;
+
     private String mUserID;
     private String mDeviceID;
 
@@ -109,12 +116,10 @@ public class HomeActivity extends BaseActivity
     private Menu mOptionsMenu;
 
     private int mBadgeCount = 0;
-    private int savedCriticalPreferenceVersion;
 
     private static boolean switchedToHomeFragment = true;
     private boolean exitFromApplication = false;
 
-    private static final int REQUEST_CODE_PERMISSION = 1001;
     private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
@@ -173,26 +178,16 @@ public class HomeActivity extends BaseActivity
 
         switchToDashBoard();
 
-        // Check if there's anything new from the server
-        int accountType = ProfileInfoCacheManager.getAccountType(0);
-        if (accountType == Constants.BUSINESS_ACCOUNT_TYPE) {
-            getBusinessInformation();
-        } else getProfileInfo();
+        updateProfileInfo();
 
         // Sync contacts
-        new GetContactsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS))
+            new GetContactsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         // DBContactNode sync is done as follows: first all the contacts are downloaded from the server
         // (#GetContactsAsyncTask) and stored in the database (#SyncContactsAsyncTask).
         // Then difference with phone contacts is calculated, and this difference is sent to the
         // server. If there is any new contact on the phone, we download all contacts from the
         // server again to keep phone and server contacts in sync.
-
-        // Start service for GCM
-        if (Utilities.checkPlayServices(HomeActivity.this)) {
-            // Start IntentService to register this application with GCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
-        }
 
         Logger.logW("Token", TokenManager.getToken());
 
@@ -209,6 +204,8 @@ public class HomeActivity extends BaseActivity
         // the number of pending notifications. Once the notifications are loaded, updateNotificationBadgeCount()
         // is called from NotificationFragment.
         mNotificationFragment.getNotificationLists(this);
+        // Registering the notification broadcast receiver
+        mNotificationFragment.registerNotificationBroadcastReceiver(this);
 
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
@@ -226,10 +223,7 @@ public class HomeActivity extends BaseActivity
         // Send Analytics for test purpose in Firebase
         sendAnalytics();
 
-        // Check if the stored critical preference version is lesser than the version found from config
-        savedCriticalPreferenceVersion = SharedPrefManager.getCriticalPreferenceVersion(0);
-        if (Config.criticalPreferenceVersion > savedCriticalPreferenceVersion)
-            todoCheckList(savedCriticalPreferenceVersion);
+        getAllBusinessAccountsList();
 
         // If profile picture gets updated, we need to refresh the profile picture in the drawer.
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
@@ -237,6 +231,19 @@ public class HomeActivity extends BaseActivity
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_INFO_UPDATE_BROADCAST));
+    }
+
+    /**
+     * update Profile info fetches from the Profile Information API.
+     * If the account type is business then, an additional task is done by calling the
+     * Business Information API as the Profile API doesn't provide us the Business Name
+     */
+    private void updateProfileInfo() {
+        getProfileInfo();
+
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
+            getBusinessInformation();
+        }
     }
 
     @Override
@@ -314,23 +321,9 @@ public class HomeActivity extends BaseActivity
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
     }
 
-    private void todoCheckList(int storedCriticalPreferenceVersion) {
-
-        // Do not put any try-catch here. The operations must go smoothly.
-        // If anything goes wrong, just store the last successful operation number in preference.
-        // Only the last case will have a break statement like the onUpgrade function in DataBaseOpenHelper
-        switch (storedCriticalPreferenceVersion) {
-            case 0:
-                // Migration code from 0 to 1
-                // Get Business contacts
-                // For the first time load, the lastBusinessId is 0
-                GetAllBusinessContactRequestBuilder mGetAllBusinessContactRequestBuilder = new GetAllBusinessContactRequestBuilder(0);
-                new GetAllBusinessListAsyncTask(this, mGetAllBusinessContactRequestBuilder.getGeneratedUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                break;
-        }
-
-        // Store the updated critical preference version after all necessary actions.
-        SharedPrefManager.setCriticalPreferenceVersion(Config.criticalPreferenceVersion);
+    private void getAllBusinessAccountsList() {
+        GetAllBusinessContactRequestBuilder mGetAllBusinessContactRequestBuilder = new GetAllBusinessContactRequestBuilder(0);
+        new GetAllBusinessListAsyncTask(this, mGetAllBusinessContactRequestBuilder.getGeneratedUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -344,7 +337,8 @@ public class HomeActivity extends BaseActivity
 
                     if (permissions[i].equals(Manifest.permission.READ_CONTACTS)) {
                         if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            new GetContactsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS))
+                                new GetContactsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     }
                 }
@@ -392,7 +386,10 @@ public class HomeActivity extends BaseActivity
 
     private void gotoDrawerItem(MenuItem item) {
         int id = item.getItemId();
-
+        if (!ACLManager.checkServicesAccessibilityByNavigationMenuId(id)) {
+            DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
+            return;
+        }
         if (id == R.id.nav_home) {
 
             switchToDashBoard();
@@ -400,7 +397,6 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_account) {
 
             launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_INFO, new Bundle());
-
         } else if (id == R.id.nav_bank_account) {
 
             Intent intent = new Intent(HomeActivity.this, ManageBanksActivity.class);
@@ -425,6 +421,18 @@ public class HomeActivity extends BaseActivity
             startActivity(intent);
             switchedToHomeFragment = true;
 
+        } else if (id == R.id.nav_live_chat) {
+            if (isProfileInfoAvailable()) {
+                Registration registration = Registration.create().withUserId(Integer.toString(ProfileInfoCacheManager.getAccountId()));
+                Map<String, Object> userAttributes = Utilities.getUserAttributesForIntercom();
+                registration.withUserAttributes(userAttributes);
+
+                Intercom.client().registerIdentifiedUser(registration);
+                Intercom.client().displayConversationsList();
+
+            } else {
+                DialogUtils.showAlertDialog(this, getString(R.string.live_chat_not_available));
+            }
         } else if (id == R.id.nav_help) {
 
             Intent intent = new Intent(this, HelpAndSupportActivity.class);
@@ -444,7 +452,16 @@ public class HomeActivity extends BaseActivity
                 ((MyApplication) this.getApplication()).launchLoginPage(null);
             }
         }
+    }
 
+    private boolean isProfileInfoAvailable() {
+        if (ProfileInfoCacheManager.getAccountId() == Constants.INVALID_ACCOUNT_ID) {
+            return false;
+        } else if (ProfileInfoCacheManager.isBusinessAccount() && TextUtils.isEmpty(ProfileInfoCacheManager.getUserName())) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override
@@ -501,7 +518,6 @@ public class HomeActivity extends BaseActivity
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, HomeActivity.this);
         mLogoutTask.mHttpResponseListener = this;
-
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -510,11 +526,8 @@ public class HomeActivity extends BaseActivity
             return;
         }
 
-        GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(ProfileInfoCacheManager.getMobileNumber());
-
-        String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
-        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                mUri, HomeActivity.this);
+        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, HomeActivity.this);
         mGetProfileInfoTask.mHttpResponseListener = this;
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -581,6 +594,7 @@ public class HomeActivity extends BaseActivity
                     mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        Utilities.resetIntercomInformation();
                         if (!exitFromApplication) {
                             ((MyApplication) this.getApplication()).launchLoginPage(null);
                         } else {
@@ -601,18 +615,20 @@ public class HomeActivity extends BaseActivity
                 mLogoutTask = null;
 
                 break;
-            case Constants.COMMAND_GET_USER_INFO:
+            case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
 
                 try {
-                    mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
+
+                    mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                        mNameView.setText(mGetUserInfoResponse.getName());
+                        if (!ProfileInfoCacheManager.isBusinessAccount())
+                            mNameView.setText(mGetProfileInfoResponse.getName());
 
-                        String imageUrl = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
+                        String imageUrl = Utilities.getImage(mGetProfileInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
 
                         //saving user info in shared preference
-                        ProfileInfoCacheManager.updateCache(mGetUserInfoResponse.getName(), imageUrl, mGetUserInfoResponse.getAccountStatus());
+                        ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
 
                         PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
@@ -638,7 +654,7 @@ public class HomeActivity extends BaseActivity
                         String imageUrl = Utilities.getImage(mGetBusinessInformationResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH);
 
                         //saving user info in shared preference
-                        ProfileInfoCacheManager.updateCache(mGetBusinessInformationResponse.getBusinessName(), imageUrl, mGetBusinessInformationResponse.getVerificationStatus());
+                        ProfileInfoCacheManager.updateBusinessInfoCache(mGetBusinessInformationResponse);
                         PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                     } else {
@@ -670,9 +686,9 @@ public class HomeActivity extends BaseActivity
             mProfileImageView.setProfilePicture(newProfilePicture, true);
 
             // We need to update the profile picture url in ProfileInfoCacheManager. Ideally,
-            // we should have received a push from the server and GcmListenerService should have
+            // we should have received a push from the server and FcmListenerService should have
             // done this task. But as long as push is unreliable, this call is here to stay.
-            getProfileInfo();
+            updateProfileInfo();
         }
     };
 

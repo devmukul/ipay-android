@@ -40,8 +40,9 @@ import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
@@ -51,6 +52,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -97,9 +99,9 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
 
-    private Menu menu;
-
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
+
+    private Menu menu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -210,10 +212,9 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     @Override
     public void onResume() {
         super.onResume();
-
         transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
-                new IntentFilter(Constants.TRANSACTION_HISTORY_UPDATE_BROADCAST));
+                new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
     }
 
     @Override
@@ -225,7 +226,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             mSwipeRefreshLayout.destroyDrawingCache();
             mSwipeRefreshLayout.clearAnimation();
         }
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
     }
 
     @Override
@@ -631,7 +631,8 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 mNetAmountView.setText(netAmountWithSign);
                 mTimeView.setText(responseTime);
 
-                if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
+                if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY
+                        || serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
                     if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
@@ -672,6 +673,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.TRANSACTION_DETAILS)
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing()) {
                             Intent intent = new Intent(getActivity(), TransactionDetailsActivity.class);
@@ -747,17 +749,12 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v;
-
-            if (viewType == FOOTER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false);
-
-                return new FooterViewHolder(v);
+            switch (viewType) {
+                case FOOTER_VIEW:
+                    return new FooterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_load_more_footer, parent, false));
+                default:
+                    return new NormalViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history, parent, false));
             }
-
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history, parent, false);
-
-            return new NormalViewHolder(v);
         }
 
         @Override
@@ -812,6 +809,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             }
             return 0;
         }
+
     }
 
     private class TransactionHistoryBroadcastReceiver extends BroadcastReceiver {

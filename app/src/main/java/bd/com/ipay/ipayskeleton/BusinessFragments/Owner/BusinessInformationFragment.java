@@ -21,6 +21,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetBusinessTypesAsyncTask;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
@@ -37,10 +38,12 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.OccupationReque
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Thana;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.ThanaRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -100,6 +103,12 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private List<BusinessType> mBusinessTypes;
     private List<Occupation> mOccupationList;
 
+    private View mBusinessInformationViewHolder;
+    private View mBusinessAddressViewHolder;
+
+    private TextView mBusinessInfoServiceNotAllowedTextView;
+    private TextView mBusinessAddressServiceNotAllowedTextView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -122,6 +131,11 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mPresentAddressEditButton = (ImageButton) view.findViewById(R.id.button_edit_present_address);
         mContactInfoEditButton = (ImageButton) view.findViewById(R.id.button_edit_contact_information);
 
+        mBusinessInformationViewHolder = view.findViewById(R.id.business_information_view_holder);
+        mBusinessAddressViewHolder = view.findViewById(R.id.business_address_view_holder);
+        mBusinessInfoServiceNotAllowedTextView = (TextView) view.findViewById(R.id.business_info_service_not_allowed_text_view);
+        mBusinessAddressServiceNotAllowedTextView = (TextView) view.findViewById(R.id.business_address_service_not_allowed_text_view);
+
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
 
         if (ProfileInfoCacheManager.isAccountVerified()) {
@@ -134,6 +148,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
         mOfficeInfoEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.UPDATE_BUSINESS_INFO)
             public void onClick(View v) {
                 launchEditBusinessInformationFragment();
             }
@@ -141,6 +156,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
         mContactInfoEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.UPDATE_BUSINESS_INFO)
             public void onClick(View v) {
                 launchEditContactInformationFragment();
             }
@@ -155,8 +171,15 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setContentShown(false);
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO)) {
+            mBusinessInfoServiceNotAllowedTextView.setVisibility(View.VISIBLE);
+            mBusinessInformationViewHolder.setVisibility(View.GONE);
+            mPresentAddressHolder.setVisibility(View.GONE);
+        } else {
+            getBusinessInformation();
 
-        getBusinessInformation();
+        }
+
 
         if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE)
                 || PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE)) {
@@ -189,6 +212,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
         mPresentAddressEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_ADDRESS)
             public void onClick(View v) {
                 ((ProfileActivity) getActivity()).switchToEditAddressFragment(presentAddressBundle);
             }
@@ -332,14 +356,14 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             if (mGetProfileInfoResponse.getMobileNumber() != null)
                 mMobileNumber = mGetProfileInfoResponse.getMobileNumber();
 
-            if (mGetProfileInfoResponse.getDateOfBirth() != null)
-                mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
+            if (mGetProfileInfoResponse.getDob() != null)
+                mDateOfBirth = mGetProfileInfoResponse.getDob();
 
             if (mGetProfileInfoResponse.getGender() != null)
                 mGender = mGetProfileInfoResponse.getGender();
 
-            if (mGetProfileInfoResponse.getSignUpTime() != null) {
-                mSignUpTime = mGetProfileInfoResponse.getSignUpTime();
+            if (mGetProfileInfoResponse.getSignupTimeFormatted() != null) {
+                mSignUpTime = mGetProfileInfoResponse.getSignupTimeFormatted();
             }
 
             mOccupation = mGetProfileInfoResponse.getOccupation();
@@ -475,7 +499,13 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                     mGetThanaResponse = gson.fromJson(result.getJsonString(), GetThanaResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mThanaList = mGetThanaResponse.getThanas();
-                        getUserAddress();
+                        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_ADDRESSES)) {
+                            getUserAddress();
+                        } else {
+                            mBusinessAddressServiceNotAllowedTextView.setVisibility(View.VISIBLE);
+                            mBusinessAddressViewHolder.setVisibility(View.GONE);
+                            setContentShown(true);
+                        }
 
                     } else {
                         if (getActivity() != null) {

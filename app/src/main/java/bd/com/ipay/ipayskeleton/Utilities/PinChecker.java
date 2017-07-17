@@ -14,6 +14,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPinDialogBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.PinInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 
 /**
@@ -39,6 +40,10 @@ public class PinChecker implements HttpResponseListener {
     }
 
     public void execute() {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PIN_EXISTS)) {
+            DialogUtils.showServiceNotAllowedDialog(mContext);
+            return;
+        }
         cancel = false;
 
         if (SharedPrefManager.isPinAdded(false)) {

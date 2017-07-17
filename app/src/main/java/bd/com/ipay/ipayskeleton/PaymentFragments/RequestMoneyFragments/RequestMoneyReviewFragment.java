@@ -18,9 +18,10 @@ import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyResponse;
@@ -147,6 +148,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mRequestMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    @ValidateAccess
     private void addContact(String name, String phoneNumber, String relationship) {
         AddContactRequestBuilder addContactRequestBuilder = new
                 AddContactRequestBuilder(name, phoneNumber, relationship);

@@ -1,6 +1,7 @@
 import org.aspectj.bridge.IMessage
 import org.aspectj.bridge.MessageHandler
 import org.aspectj.tools.ajc.Main
+
 apply plugin: 'com.android.application'
 
 def keystorePropertiesFile = rootProject.file("../iPay_KeyStore/keystore.properties")
@@ -8,7 +9,7 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 25
     buildToolsVersion '25.0.0'
 
     signingConfigs {
@@ -23,9 +24,9 @@ android {
     defaultConfig {
         applicationId "bd.com.ipay.android"
         minSdkVersion 16
-        targetSdkVersion 23
-        versionCode 82
-        versionName "1.1.6"
+        targetSdkVersion 25
+        versionCode 90
+        versionName "1.2.5"
         multiDexEnabled true
     }
 
@@ -88,17 +89,17 @@ repositories {
 
 configurations.all {
     resolutionStrategy {
-        force 'com.android.support:design:23.4.0'
-        force 'com.android.support:support-v4:23.4.0'
-        force 'com.android.support:appcompat-v7:23.4.0'
+        force 'com.android.support:design:25.3.1'
+        force 'com.android.support:support-v4:25.3.1'
+        force 'com.android.support:appcompat-v7:25.3.1'
     }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:design:23.4.0'
-    compile 'com.android.support:cardview-v7:23.4.0'
-    compile 'com.android.support:recyclerview-v7:23.4.0'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:cardview-v7:25.3.1'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.journeyapps:zxing-android-embedded:3.0.1@aar'
     compile 'com.google.zxing:core:3.2.0'
@@ -119,9 +120,9 @@ dependencies {
 
     compile files('libs/libphonenumber-7.2.8.jar')
     compile 'com.github.johnkil.android-progressfragment:progressfragment:1.4.0'
-    compile 'com.google.android.gms:play-services-gcm:9.2.0'
-    compile 'com.google.android.gms:play-services-places:9.2.0'
-    compile 'com.google.android.gms:play-services-vision:9.2.0'
+    compile 'com.google.firebase:firebase-messaging:10.2.1'
+    compile 'com.google.android.gms:play-services-places:10.2.1'
+    compile 'com.google.android.gms:play-services-vision:10.2.1'
     compile 'com.android.support:multidex:1.0.1'
 
     // Notification badge
@@ -133,6 +134,13 @@ dependencies {
 
     // Multiple image picker
     compile 'com.github.esafirm.android-image-picker:imagepicker:1.3.2@aar'
+
+    // SSL pinning
+    compile 'com.squareup.okhttp:okhttp:2.1.0'
+
+    //Intercom
+    compile 'io.intercom.android:intercom-sdk-base:3.+'
+    compile 'io.intercom.android:intercom-sdk-fcm:3.+'
 
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:1.9.5"

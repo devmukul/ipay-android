@@ -9,13 +9,11 @@ public class Constants {
     public static final String ERROR = "ERROR";
     public static final String USER_AGENT = "User-Agent";
     public static final String USER_AGENT_MOBILE_ANDROID = "mobile-android";
-    public static final String GCM_REGISTRATION_ID_SENT_TO_SERVER = "GCM_REGISTRATION_ID_SENT_TO_SERVER";
     public static final String NEW_PASSWORD = "NEW_PASSWORD";
     public static final String TARGET_FRAGMENT = "TARGET_FRAGMENT";
     public static final String SIGN_IN = "SIGN_IN";
     public static final String SIGN_UP = "SIGN_UP";
     public static final String SIGNED_IN = "SIGNED IN";
-    public static final String SIGNED_OUT = "SIGNED OUT";
     public static final String DOCUMENT_URL = "DOCUMENT_URL";
     public static final String FILE_EXTENSION = "FILE_EXTENSION";
     public static final String TICKET_ID = "TICKET_ID";
@@ -26,10 +24,8 @@ public class Constants {
     public static final String TIME = "TIME";
     public static final String STATUS = "STATUS";
     public static final String TAG = "TAG";
-    public static final String INVOICE = "INVOICE";
     public static final String REQUEST = "REQUEST";
     public static final String RECOMMENDATION = "RECOMMENDATION";
-    public static final String BUSINESS = "BUSINESS";
     public static final String TRANSACTION_DETAILS = "TRANSACTION_DETAILS";
     public static final String MONEY_REQUEST_ID = "MONEY REQUESTS ID";
     public static final String MONEY_REQUEST_SERVICE_ID = "SERVICE_ID";
@@ -49,8 +45,11 @@ public class Constants {
     public static final String SMS_READER_BROADCAST_RECEIVER_PDUS = "pdus";
     public static final String PROFILE_INFO_UPDATE_BROADCAST = "PROFILE_INFO_UPDATE_BROADCAST";
     public static final String PROFILE_PICTURE_UPDATE_BROADCAST = "PROFILE_PICTURE_UPDATE_BROADCAST";
-    public static final String TRANSACTION_HISTORY_UPDATE_BROADCAST = "TRANSACTION_HISTORY_UPDATE_BROADCAST";
+    public static final String COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST = "COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST ";
+    public static final String PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST = "PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST ";
+    public static final String BALANCE_UPDATE_BROADCAST = "BALANCE_UPDATE_BROADCAST";
     public static final String PROFILE_COMPLETION_UPDATE_BROADCAST = "PROFILE_COMPLETION_UPDATE_BROADCAST";
+    public static final String NOTIFICATION_UPDATE_BROADCAST = "NOTIFICATION_UPDATE_BROADCAST";
 
     public static final String TOKEN = "token";
     public static final String REFRESH_TOKEN = "refresh-token";
@@ -66,6 +65,9 @@ public class Constants {
     public static final String MOBILE_NUMBER_TYPE = "mobile_number_type";
     public static final String DATE_OF_BIRTH = "DATE_OF_BIRTH";
     public static final String GENDER = "GENDER";
+    public static final String PRIMARY_EMAIL = "PRIMARY_EMAIL";
+    public static final String ACCOUNT_ID = "ACCOUNT_ID";
+    public static final String SIGNUP_TIME = "SIGNUP_TIME";
     public static final String BOUNDARY = "iPayBoundary";
     public static final String ANDROID = "Android";
     public static final String IS_IN_CONTACTS = "is-in-contacts";
@@ -78,6 +80,7 @@ public class Constants {
     public static final String COUNTRY_CODE = "country_code";
     public static final String EXPAND_PIN = "expand_pin";
     public static final String DEVICE_IS_NOT_TRUSTED = "Device is not trusted";
+    public static final String USERNAME_PASSWORD_INCORRECT = "The provided username or password is incorrect";
     public static final String DOCUMENT_ID = "DOCUMENT_ID";
     public static final String DOCUMENT_TYPE_NAME = "DOCUMENT_TYPE_NAME";
     public static final String MESSAGE = "message";
@@ -87,7 +90,6 @@ public class Constants {
     public static final String OCCUPATION = "OCCUPATION";
     public static final String OCCUPATION_LIST = "OCCUPATION_LIST";
     public static final String ORGANIZATION_NAME = "ORGANIZATION_NAME";
-    public static final String DESIGNATION = "DESIGNATION";
     public static final String BUSINESS_NAME = "BUSINESS_NAME";
 
     public static final String BUSINESS_MOBILE_NUMBER = "BUSINESS_MOBILE_NUMBER";
@@ -98,9 +100,7 @@ public class Constants {
     public static final String MOTHERS_NAME = "MOTHERS_NAME";
     public static final String FATHERS_MOBILE = "FATHERS_MOBILE";
     public static final String MOTHERS_MOBILE = "MOTHERS_MOBILE";
-    public static final String ASSOCIATION_ID = "ASSOCIATION_ID";
 
-    public static final String ROLE_ID = "ROLE_ID";
     public static final String ADDRESS = "ADDRESS";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
@@ -119,17 +119,18 @@ public class Constants {
     public static final String OFFICE_LAND_LINE_NUMBER_PRIMARY = "+88-02-9852507";
     public static final String OFFICE_LAND_LINE_NUMBER_SECONDARY = "+88-02-9852510";
     public static final String OFFICE_EMAIL = "support@ipay.com.bd";
-    public static final String OFFICE_WEB = "www.ipay.com.bd";
     public static final String FEEDBACK = "feedback@ipay.com.bd";
     public static final String OFFICE_ADDRESS = "Silver Tower (12th Floor)\n52 Gulshan Avenue, Circle-1\nDhaka-1212\nBangladesh\n";
     public static final double OFFICE_LATITUDE = 23.7810729;
     public static final double OFFICE_LONGITUDE = 90.4169212;
+    public static final String HOST_NAME = "www.ipay.com.bd";
 
     public static final int MIN_AGE_LIMIT = 18;
     public static final int MIN_VALID_NAME_LENGTH = 5;
     public static final int MAX_FILE_ATTACHMENT_LIMIT = 5;
 
     public static final int STARTING_DATE = 01;
+    public static final int SERVER_TYPE_LIVE = 4;
 
     public static final int STARTING_MONTH = 01;
     public static final int STARTING_YEAR = 2016;
@@ -166,12 +167,22 @@ public class Constants {
     public static final String BASE_URL_EDU;
     public static final String BASE_URL_CONTACT;
     public static final String BASE_URL_ADMIN;
+    public static final String BASE_URL_PUSH_NOTIFICATION;
     public static final String BASE_URL_FTP_SERVER;
     public static final String BASE_URL_WEB;
     private static final String SERVER_NAME;
 
+    public static final int DEV_SERVER = 1;
+    public static final int TEST_SERVER = 2;
+    public static final int STAGE_SERVER = 3;
+    public static final int LIVE_SERVER = 4;
+    public static final int LOCAL_SERVER = 5;
+
+    public static final String PERSONAL_ACCOUNT = "Personal Account";
+    public static final String BUSINESS_ACCOUNT = "Business Account";
+
     static {
-        if (SERVER_TYPE == 1) {
+        if (SERVER_TYPE == DEV_SERVER) {
 
             BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
@@ -179,11 +190,12 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_CONTACT = "http://10.10.10.11:4000/external/v1/";
             BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/support/";
+            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
 //            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             SERVER_NAME = "dev";
 
-        } else if (SERVER_TYPE == 2) {
+        } else if (SERVER_TYPE == TEST_SERVER) {
 
             BASE_URL_MM = "http://10.15.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
@@ -191,10 +203,11 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_CONTACT = "http://10.15.40.14:4000/external/v1/";
             BASE_URL_ADMIN = "http://10.15.40.15:8085/api/v1/support/";
+            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.162:7778/api/v1/notification/";
             BASE_URL_WEB = "http://test.ipay.com.bd";
             SERVER_NAME = "test";
 
-        } else if (SERVER_TYPE == 3) {
+        } else if (SERVER_TYPE == STAGE_SERVER) {
 
             BASE_URL_MM = "http://10.10.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
@@ -202,10 +215,11 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
             BASE_URL_CONTACT = "http://10.10.40.14:4000/external/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
+            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "http://stage.ipay.com.bd";
             SERVER_NAME = "stage";
 
-        } else if (SERVER_TYPE == 4) {
+        } else if (SERVER_TYPE == LIVE_SERVER) {
 
             BASE_URL_MM = "https://www.ipay.com.bd/api/v1/";
             BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";
@@ -213,6 +227,7 @@ public class Constants {
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
             BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
             BASE_URL_ADMIN = "https://www.ipay.com.bd/api/v1/support/";
+            BASE_URL_PUSH_NOTIFICATION = "https://www.ipay.com.bd/api/v1/notification/";
             BASE_URL_WEB = "https://www.ipay.com.bd";
             SERVER_NAME = "live";
 
@@ -224,8 +239,22 @@ public class Constants {
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
+            BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             SERVER_NAME = "local";
+        }
+    }
+
+    public static final String INTERCOM_API_KEY;
+    public static final String INTERCOM_ANDROID_SDK_KEY;
+
+    static {
+        if (SERVER_TYPE == LIVE_SERVER) {
+            INTERCOM_API_KEY = "rvba5ye6";
+            INTERCOM_ANDROID_SDK_KEY = "android_sdk-75b180d622ad8a70eb7fd36a84534f9db277f402";
+        } else {
+            INTERCOM_API_KEY = "zlbinvht";
+            INTERCOM_ANDROID_SDK_KEY = "android_sdk-534f3bfed2dbd05497dffe8d9a629a92e6a8583b";
         }
     }
 
@@ -389,18 +418,9 @@ public class Constants {
     // Business Information (Owner)
     public static final String URL_GET_BUSINESS_INFORMATION = "user/profile/business";
     public static final String URL_SET_BUSINESS_INFORMATION = "user/profile/business";
-    public static final String URL_CREATE_EMPLOYEE = "business/user";
-    public static final String URL_UPDATE_EMPLOYEE = "business/user";
-    public static final String URL_GET_EMPLOYEE_LIST = "business/users";
-    public static final String URL_GET_EMPLOYEE_DETAILS = "business/user/";
-    public static final String URL_REMOVE_AN_EMPLOYEE_FIRST_PART = "business/user/";
-    public static final String URL_REMOVE_AN_EMPLOYEE_LAST_PART = "/resignation/confirm";
-    public static final String URL_GET_BUSINESS_ROLES = "business/roles";
 
     // Business Information (Employee)
-    public static final String URL_GET_BUSINESS_LIST = "business/list";
     public static final String URL_GET_BUSINESS_LIST_ALL = "business/list/all";
-    public static final String URL_CONFIRM_BUSINESS_INVITATION = "business/user/confirm";
 
     // Education
     public static final String URL_GET_ALL_INSTITUTIONS_LIST = "institute/all";
@@ -417,6 +437,9 @@ public class Constants {
     public static final String URL_ADD_COMMENT = "ticket/add/comment";
     public static final String URL_UPLOAD_TICKET_ATTACHMENT = "ticket/comment/attachment";
     public static final String URL_ADD_COMMENT_WITH_ATTACHMENT = "ticket/add/comment/attachments";
+
+    // FCM notification
+    public static final String URL_REFRESH_FIREBASE_TOKEN = "firebase/login/";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
@@ -445,6 +468,7 @@ public class Constants {
     public static final String COMMAND_RESEND_OTP = "COMMAND_RESEND_OTP";
     public static final String COMMAND_CHECK_IF_USER_EXISTS = "COMMAND_CHECK_IF_USER_EXISTS";
     public static final String COMMAND_REFRESH_TOKEN = "COMMAND_REFRESH_TOKEN";
+    public static final String COMMAND_REFRESH_FIREBASE_TOKEN = "COMMAND_REFRESH_FIREBASE_TOKEN";
     public static final String COMMAND_SIGN_UP = "COMMAND_SIGN_UP";
     public static final String COMMAND_SIGN_UP_BUSINESS = "COMMAND_SIGN_UP_BUSINESS";
     public static final String COMMAND_LOG_IN = "COMMAND_LOG_IN";
@@ -470,7 +494,6 @@ public class Constants {
     public static final String COMMAND_GET_PENDING_REQUESTS_ME = "COMMAND_GET_PENDING_REQUESTS_ME";
     public static final String COMMAND_REQUEST_MONEY = "COMMAND_REQUEST_MONEY";
     public static final String COMMAND_SEND_PAYMENT_REQUEST = "COMMAND_SEND_PAYMENT_REQUEST";
-    public static final String COMMAND_SAVE_INVOICE = "COMMAND_SAVE_INVOICE";
     public static final String COMMAND_GET_SINGLE_INVOICE = "COMMAND_GET_SINGLE_INVOICE";
     public static final String COMMAND_SET_PROFILE_PICTURE = "COMMAND_SET_PROFILE_PICTURE";
     public static final String COMMAND_ADD_A_BANK = "COMMAND_ADD_A_BANK";
@@ -550,16 +573,6 @@ public class Constants {
     // Business Information (Owner)
     public static final String COMMAND_GET_BUSINESS_INFORMATION = "COMMAND_GET_BUSINESS_INFORMATION";
     public static final String COMMAND_SET_BUSINESS_INFORMATION = "COMMAND_SET_BUSINESS_INFORMATION";
-    public static final String COMMAND_CREATE_EMPLOYEE = "COMMAND_CREATE_EMPLOYEE";
-    public static final String COMMAND_UPDATE_EMPLOYEE = "COMMAND_UPDATE_EMPLOYEE";
-    public static final String COMMAND_GET_EMPLOYEE_LIST = "COMMAND_GET_EMPLOYEE_LIST";
-    public static final String COMMAND_REMOVE_AN_EMPLOYEE = "COMMAND_REMOVE_AN_EMPLOYEE";
-    public static final String COMMAND_GET_EMPLOYEE_DETAILS = "COMMAND_GET_EMPLOYEE_DETAILS";
-    public static final String COMMAND_GET_ALL_ROLES = "COMMAND_GET_ALL_ROLES";
-
-    // Business Information (Employee)
-    public static final String COMMAND_GET_BUSINESS_LIST = "COMMAND_GET_BUSINESS_LIST";
-    public static final String COMMAND_CONFIRM_BUSINESS_INVITATION = "COMMAND_CONFIRM_BUSINESS_INVITATION";
 
     // Education
     public static final String COMMAND_GET_INSTITUTION_LIST = "COMMAND_GET_INSTITUTION_LIST";
@@ -595,6 +608,7 @@ public class Constants {
     public static final int TRANSACTION_HISTORY_SEND_MONEY = 1;
     public static final int TRANSACTION_HISTORY_REQUEST_MONEY = 6001;
     public static final int TRANSACTION_HISTORY_ADD_MONEY = 3001;
+    public static final int TRANSACTION_HISTORY_ADD_MONEY_REVERT = 963001;
     public static final int TRANSACTION_HISTORY_WITHDRAW_MONEY = 3002;
     public static final int TRANSACTION_HISTORY_TOP_UP = 2001;
     public static final int TRANSACTION_HISTORY_MAKE_PAYMENT = 6002;
@@ -642,8 +656,6 @@ public class Constants {
     public static final String INVOICE_ITEM_NAME_TAG = "item_name";
     public static final String DESCRIPTION_TAG = "description";
     public static final String REFERENCE_NUMBER = "reference number";
-    public static final String INVOICE_QUANTITY_TAG = "quantity";
-    public static final String INVOICE_RATE_TAG = "rate";
     public static final String INVOICE_AMOUNT_TAG = "amount";
 
     public static final String SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT = "SENDMONEY_MIN_AMOUNT_SINGLE";
@@ -682,27 +694,18 @@ public class Constants {
     public static final int TRANSACTION_STATUS_CANCELLED = 2;
     public static final int TRANSACTION_STATUS_REJECTED = 3;
 
-    public static final String BUSINESS_INVITATION_ACCEPTED = "ACCEPTED";
-    public static final String BUSINESS_INVITATION_REJECTED = "REJECTED";
-    public static final String BUSINESS_INVITATION_SPAM = "SPAM";
-
-    public static final String BUSINESS_STATUS_PENDING = "PENDING";
-
     public static final String IMAGE_QUALITY_LOW = "low";
     public static final String IMAGE_QUALITY_MEDIUM = "medium";
     public static final String IMAGE_QUALITY_HIGH = "high";
 
     public static final int NOTIFICATION_TYPE_REQUEST_MONEY = 1;
     public static final int NOTIFICATION_TYPE_MAKE_PAYMENT = 2;
-    public static final int NOTIFICATION_TYPE_BUSINESS_ACCOUNT_INVITE = 3;
     public static final int NOTIFICATION_TYPE_INTRODUCTION_REQUEST = 4;
     public static final int NOTIFICATION_TYPE_PENDING_INTRODUCER_REQUEST = 5;
 
     public static final String ACTION_TYPE_VERIFY = "Verify";
     public static final String ACTION_TYPE_REMOVE = "Remove";
     public static final String ACTION_TYPE_MAKE_PRIMARY = "Make Primary";
-    public static final String ACTION_TYPE_EDIT = "Edit";
-    public static final String ACTION_TYPE_VIEW = "View";
     public static final String ACTION_TYPE_TAKE_PICTURE = "Take a picture";
     public static final String ACTION_TYPE_SELECT_FROM_GALLERY = "Select from gallery";
 
@@ -719,17 +722,17 @@ public class Constants {
     public static final String TICKET_STATUS_CLOSED = "closed";
 
     public static final String TICKET_COMMENT_ID = "commentId";
-    public static final String TICKETID = "ticketId";
-    public static final String TICKET_COMMENT = "comment";
-
 
     public static final int REQUEST_TYPE_RECEIVED_REQUEST = 1;
     public static final int REQUEST_TYPE_SENT_REQUEST = 2;
+
+    public static final int INVALID_ACCOUNT_ID = -1;
 
     // Face detector
     public static final String NOT_AN_IMAGE = "NOT_AN_IMAGE";
     public static final String MULTIPLE_FACES = "MULTIPLE_FACES";
     public static final String NO_FACE_DETECTED = "NO_FACE_DETECTED";
+    public static final String VALID_PROFILE_PICTURE = "VALID_PROFILE_PICTURE";
 
     // API Version Checker
     public static boolean IS_API_VERSION_CHECKED = false;

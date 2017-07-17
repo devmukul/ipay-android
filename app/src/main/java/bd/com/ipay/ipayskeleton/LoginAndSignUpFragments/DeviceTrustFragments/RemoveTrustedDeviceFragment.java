@@ -38,10 +38,9 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.GetTrusted
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.RemoveTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.TrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -152,10 +151,8 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         String mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
         String mDeviceName = DeviceInfoFactory.getDeviceName();
 
-        String pushRegistrationID = SharedPrefManager.getPushNotificationToken(null);
-
         AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
-                Constants.MOBILE_ANDROID + mDeviceID, pushRegistrationID);
+                Constants.MOBILE_ANDROID + mDeviceID, null);
         Gson gson = new Gson();
         String json = gson.toJson(mAddToTrustedDeviceRequest);
         mAddTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_DEVICE,

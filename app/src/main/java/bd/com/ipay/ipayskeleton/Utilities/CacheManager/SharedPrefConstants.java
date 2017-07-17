@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.Utilities.CacheManager;
 
 public class SharedPrefConstants {
-    public static final String CRITICAL_PREFERENCE_VERSION = "CRITICAL_PREFERENCE_VERSION";
     public static final String LOGGED_IN = "LOGGED_IN";
     public static final String FIRST_LAUNCH = "FIRST_LAUNCH";
     public static final String UUID = "UUID";
@@ -16,6 +15,7 @@ public class SharedPrefConstants {
     public static final String PUSH_NOTIFICATION_TAG_TRANSACTION = "TRANSACTION";
     public static final String PUSH_NOTIFICATION_TOKEN = "token";
     public static final String PUSH_NOTIFICATION_EVENT = "EVENT";
+    public static final String PROFILE_INFO_FETCHED = "PROFILE_INFO_FETCHED";
 
     public static final String USER_BALANCE = "USER_BALANCE";
     public static final String IS_PIN_ADDED = "is-pin-added";

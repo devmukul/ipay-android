@@ -18,12 +18,17 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutReq
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.GetRefreshTokenRequest;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import io.intercom.android.sdk.Intercom;
 
 public class MyApplication extends Application implements HttpResponseListener {
+
+    // 5 Minutes inactive time
+    private final long AUTO_LOGOUT_TIMEOUT = 5 * 60 * 1000;
 
     // Variables for user inactivity
     private Timer mUserInactiveTimer;
@@ -34,14 +39,16 @@ public class MyApplication extends Application implements HttpResponseListener {
     // Variables for token timer
     private static Timer mTokenTimer;
     private static TimerTask mTokenTimerTask;
+
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private HttpRequestPostAsyncTask mRefreshTokenAsyncTask = null;
     private LogoutResponse mLogOutResponse;
 
     private static MyApplication myApplicationInstance;
 
-    // 5 Minutes inactive time
-    private final long AUTO_LOGOUT_TIMEOUT = 5 * 60 * 1000;
+    public static MyApplication getMyApplicationInstance() {
+        return myApplicationInstance;
+    }
 
     @Override
     public void onCreate() {
@@ -50,11 +57,11 @@ public class MyApplication extends Application implements HttpResponseListener {
 
         SharedPrefManager.initialize(getApplicationContext());
         ProfileInfoCacheManager.initialize(getApplicationContext());
+        ACLManager.initialize();
         PushNotificationStatusHolder.initialize(getApplicationContext());
-    }
+        Intercom.initialize(this, Constants.INTERCOM_ANDROID_SDK_KEY, Constants.INTERCOM_API_KEY);
+        Utilities.resetIntercomInformation();
 
-    public static MyApplication getMyApplicationInstance() {
-        return myApplicationInstance;
     }
 
     public void startUserInactivityDetectorTimer() {
@@ -139,10 +146,10 @@ public class MyApplication extends Application implements HttpResponseListener {
         mRefreshTokenAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void forceLogoutForInactivity() {
+    public void forceLogoutForInactivity() {
         if (Utilities.isConnectionAvailable(getApplicationContext())) attemptLogout();
         else launchLoginPage(getString(R.string.please_log_in_again));
-
+        Utilities.resetIntercomInformation();
     }
 
     // Launch login page for token timeout/un-authorized/logout called for user inactivity

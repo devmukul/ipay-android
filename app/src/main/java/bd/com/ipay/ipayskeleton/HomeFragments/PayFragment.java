@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -25,16 +23,20 @@ import com.google.zxing.integration.android.IntentResult;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SingleInvoiceActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Pay.PayPropertyConstants;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 public class PayFragment extends Fragment {
     private static final int REQUEST_CODE_PERMISSION = 1001;
@@ -168,6 +170,10 @@ public class PayFragment extends Fragment {
                     public void onClick(View v) {
                         switch (serviceAction.text) {
                             case Constants.SERVICE_ACTION_REQUEST_PAYMENT:
+                                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.REQUEST_PAYMENT)) {
+                                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                                    return;
+                                }
                                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                     @Override
                                     public void ifPinAdded() {
@@ -190,6 +196,10 @@ public class PayFragment extends Fragment {
                                 pinChecker.execute();
                                 break;
                             case Constants.SERVICE_ACTION_TOP_UP:
+                                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.TOP_UP)) {
+                                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                                    return;
+                                }
                                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                     @Override
                                     public void ifPinAdded() {
@@ -210,10 +220,13 @@ public class PayFragment extends Fragment {
                                 pinChecker.execute();
                                 break;*/
                             case Constants.SERVICE_ACTION_PAY_BY_QR_CODE:
-                                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                                    requestPermissions(new String[]{Manifest.permission.CAMERA},
-                                            REQUEST_CODE_PERMISSION);
-                                } else initiateScan();
+                                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
+                                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                                } else {
+                                    Intent intent;
+                                    intent = new Intent(getActivity(), QRCodePaymentActivity.class);
+                                    startActivity(intent);
+                                }
                                 break;
                         }
                     }

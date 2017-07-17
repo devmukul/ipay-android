@@ -273,6 +273,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+            mProgressDialog.setMessage(getString(R.string.progress_dialog_requesting));
             mProgressDialog.show();
             OTPRequestPersonalSignup mOtpRequestPersonalSignup = new OTPRequestPersonalSignup(SignupOrLoginActivity.mMobileNumber,
                     Constants.MOBILE_ANDROID + mDeviceID, Constants.PERSONAL_ACCOUNT_TYPE);

@@ -7,24 +7,24 @@ import android.view.MenuItem;
 import android.view.View;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.MoneyRequestListHolderFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.RequestMoneyFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestMoneyActivity extends BaseActivity {
-
-    private FloatingActionButton mFabRequestMoney;
-    private boolean switchedToPendingList = true;
 
     /**
      * If this value is set in the intent extras,
      * you would be taken directly to the new request page
      */
     public static final String LAUNCH_NEW_REQUEST = "LAUNCH_NEW_REQUEST";
-
     public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
+    private FloatingActionButton mFabRequestMoney;
+    private boolean switchedToPendingList = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +34,7 @@ public class RequestMoneyActivity extends BaseActivity {
 
         mFabRequestMoney.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.REQUEST_MONEY)
             public void onClick(View v) {
                 switchToRequestMoneyFragment();
             }

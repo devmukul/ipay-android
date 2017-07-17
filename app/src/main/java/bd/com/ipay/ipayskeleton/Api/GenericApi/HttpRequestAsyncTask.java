@@ -27,6 +27,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.SSLPinning;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -55,23 +56,25 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         GenericHttpResponse mGenericHttpResponse = null;
 
         try {
-            if (Utilities.isConnectionAvailable(mContext)) {
-                if (Constants.IS_API_VERSION_CHECKED) {
-                    mHttpResponse = makeRequest();
-                    mGenericHttpResponse = parseHttpResponse(mHttpResponse);
-                    mGenericHttpResponse.setUpdateNeeded(false);
+            if (SSLPinning.validatePinning()) {
+                if (Utilities.isConnectionAvailable(mContext)) {
+                    if (Constants.IS_API_VERSION_CHECKED) {
+                        mHttpResponse = makeRequest();
+                        mGenericHttpResponse = parseHttpResponse(mHttpResponse);
+                        mGenericHttpResponse.setUpdateNeeded(false);
+                    } else {
+                        mHttpResponse = makeApiVersionCheckRequest();
+                        mGenericHttpResponse = parseHttpResponse(mHttpResponse);
+
+                        // Validate the Api version and set whether the update is required or not
+                        mGenericHttpResponse = validateApiVersion(mGenericHttpResponse);
+                    }
+
                 } else {
-                    mHttpResponse = makeApiVersionCheckRequest();
-                    mGenericHttpResponse = parseHttpResponse(mHttpResponse);
-
-                    // Validate the Api version and set whether the update is required or not
-                    mGenericHttpResponse = validateApiVersion(mGenericHttpResponse);
+                    Logger.logD(Constants.ERROR, API_COMMAND);
+                    error = true;
+                    return null;
                 }
-
-            } else {
-                Logger.logD(Constants.ERROR, API_COMMAND);
-                error = true;
-                return null;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,10 +104,10 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
                     MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
                     boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
 
-                    if (loggedIn && !ProfileInfoCacheManager.getMobileNumber().isEmpty()) {
+                    if (loggedIn && !result.getJsonString().contains(Constants.USERNAME_PASSWORD_INCORRECT)) {
                         String message = mContext.getString(R.string.please_log_in_again);
                         myApplicationInstance.launchLoginPage(message);
-
+                        Utilities.resetIntercomInformation();
                     } else {
                         // Wrong user name or password returns HTTP_RESPONSE_STATUS_UNAUTHORIZED too
                         if (mHttpResponseListener != null)

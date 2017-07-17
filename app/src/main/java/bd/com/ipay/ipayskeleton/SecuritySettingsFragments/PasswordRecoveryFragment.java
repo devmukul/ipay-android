@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 public class PasswordRecoveryFragment extends Fragment {
 
@@ -26,6 +28,7 @@ public class PasswordRecoveryFragment extends Fragment {
 
         securityQuestionHeader.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_SECURITY_QUESTIONS)
             public void onClick(View v) {
                 ((SecuritySettingsActivity) getActivity()).switchToSecurityQuestionFragment();
             }
@@ -33,6 +36,7 @@ public class PasswordRecoveryFragment extends Fragment {
 
         trustedPersonHeader.setOnClickListener(new View.OnClickListener() {
             @Override
+            @ValidateAccess(ServiceIdConstants.SEE_TRUSTED_PERSON)
             public void onClick(View v) {
                 ((SecuritySettingsActivity) getActivity()).switchToTrustedPersonFragment();
             }

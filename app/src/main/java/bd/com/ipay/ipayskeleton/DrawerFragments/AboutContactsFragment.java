@@ -41,7 +41,7 @@ public class AboutContactsFragment extends Fragment {
         mPhoneView.setText(": " + Constants.OFFICE_LAND_LINE_NUMBER_PRIMARY + "; "
                 + Constants.OFFICE_LAND_LINE_NUMBER_SECONDARY);
         mEmailView.setText(": " + Constants.OFFICE_EMAIL);
-        mWebView.setText(": " + Constants.OFFICE_WEB);
+        mWebView.setText(": " + Constants.HOST_NAME);
 
         mFabFeedback.setOnClickListener(new View.OnClickListener() {
             @Override

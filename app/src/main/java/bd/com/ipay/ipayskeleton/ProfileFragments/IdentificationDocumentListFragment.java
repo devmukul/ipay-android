@@ -34,10 +34,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DocumentPreviewActivity;
+import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadIdentifierDocumentAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadIdentifierDocumentAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.DocumentPreviewDetails;
@@ -46,7 +46,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.GetIde
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.IdentificationDocument;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;

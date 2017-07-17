@@ -13,7 +13,6 @@
     <string name="mobile_android">mobile-android-</string>
     <string name="no_iPay_account">The user doesn\'t have an iPay account</string>
     <string name="enter_OTP_sent_to_your_mobile">Enter OTP sent to your mobile</string>
-    <string name="gcm_sender_id">799721005986</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="prompt_mobile">Enter your mobile number </string>
@@ -131,6 +130,7 @@
     <string name="to_date">To Date</string>
     <string name="from_date">From Date</string>
     <string name="service_not_available">Service Currently Not Available</string>
+    <string name="contact_support_message">This service is unavailable right now for you. Please contact support for more info.</string>
     <string name="please_wait">Please wait. Loading... </string>
     <string name="loading">Loading... </string>
     <string name="load_more">Load more...</string>
@@ -256,6 +256,7 @@
     <string name="cancel">Cancel</string>
     <string name="request_money">Request Money</string>
     <string name="requesting_money">Money request processing...</string>
+    <string name="progress_dialog_requesting">Processing request ...</string>
     <string name="add_money">Add Money</string>
     <string name="title">Title</string>
     <string name="note">Note</string>
@@ -264,6 +265,7 @@
     <string name="events">Events</string>
     <string name="education">Education</string>
     <string name="education_payment">Education Payment</string>
+    <string name="my_qr_code">My QR Code</string>
     <string name="qr_code">QR Code</string>
     <string name="scan_the_qr_code">Please scan the QR Code to send money to this person</string>
     <string name="enter_mobile_number">Enter Mobile Number (+8801xxxxxxxx)</string>
@@ -289,7 +291,7 @@
     <string name="failed_to_bank_verification">Failed to verify your bank account. Please try again later.</string>
     <string name="failed_empty_pin">PIN cannot be empty</string>
     <string name="account_number">Account Number</string>
-    <string name="please_scan_a_valid_pin">Please scan a valid iPay account</string>
+    <string name="scan_valid_ipay_qr_code">Please scan a valid iPay account</string>
     <string name="please_check_terms_and_conditions">Please check the terms &amp; conditions</string>
     <string name="please_scan_a_valid_ticket">The ticket is invalid.</string>
     <string name="oath_sign_up"><![CDATA[I agree to the]]> </string>
@@ -576,7 +578,7 @@
     <string name="enter_pin">Enter PIN</string>
     <string name="ok">OK</string>
     <string name="got_it">GOT IT</string>
-    <string name="take_again">Take Again</string>
+    <string name="try_again">Try Again</string>
     <string name="confirm_ipay_invitation">Invite him/her to iPay?</string>
     <string name="amount_to_transfer">Amount to Transfer</string>
     <string name="total_received">Total Received</string>
@@ -634,10 +636,10 @@
     <string name="you_need_to_upload_identification_documents_to_get_verified">You need to upload at least one identification documents to get verified</string>
     <string name="document_id">Document ID</string>
     <string name="verify_identity">Please verify your identity</string>
-    <string name="no_face_detected">Sorry, the picture selected is not appropriate for your iPay account.\nPlease take a clear image of your face.</string>
-    <string name="not_an_image">Sorry, the file selected is not an image. Please take the picture again.</string>
-    <string name="default_profile_pic_inappropriate_message">Sorry, can not update the profile picture. Please take the picture again.</string>
-    <string name="multiple_face_detected">Sorry, the picture selected is not appropriate for your iPay account.\nPlease upload your picture only.</string>
+    <string name="no_face_detected">Sorry, the picture is not appropriate for your iPay account. It should contain a clear image of your face.</string>
+    <string name="not_an_image">Sorry, the file selected is not an image. Please select the picture again.</string>
+    <string name="default_profile_pic_inappropriate_message">Sorry, can not upload the profile picture. Please select the picture again.</string>
+    <string name="multiple_face_detected">Sorry, the picture selected is not appropriate for your iPay account.\nPlease select your picture only.</string>
     <string name="no_file_selected">No file selected</string>
     <string name="please_select_a_file_to_upload">Please select a file to upload</string>
     <string name="select_a_file">Select a file</string>
@@ -767,6 +769,7 @@
     <string name="you_cannot_send_money_to_your_number">You can\'t send money to your own mobile number</string>
     <string name="you_cannot_make_payment_to_your_number">You can\'t make payment to your own mobile number</string>
     <string name="you_cannot_request_money_from_your_number">You can\'t request money from your own mobile number</string>
+    <string name="live_chat">Live Chat</string>
     <string name="help">Help</string>
     <string name="create_ticket">Create Ticket</string>
     <string name="subject">Subject</string>
@@ -806,6 +809,16 @@
     <string name="max_limit_exceed">Max limit of attachment exceed. </string>
     <string name="remove_contact_title">Delete contact </string>
     <string name="remove_contact_message">Delete this contact from iPay? </string>
+    <string name="see_parent_info_service_not_allowed_message">Parent Information can\'t be shown. Please contact support for more info.</string>
+    <string name="see_basic_info_service_not_allowed_message">User Information can\'t be shown. Please contact support for more info.</string>
+    <string name="see_business_address_service_not_allowed_message">Business Address can\'t be shown. Please contact support for more info.</string>
+    <string name="see_business_info_service_not_allowed_message">Business Info can\'t be shown. Please contact support for more info.</string>
+    <string name="live_chat_not_available">Live Chat is currently unavailable. Please try again later</string>
+    <string name="share">Share QR Code</string>
+    <string name="business_account_not_verified">This business account is not verified. In order to make payment, the business account must be verified.</string>
+    <string name="qr_code_unavailable">Unable to Genarate your QR Code. Please Try again later.</string>
+    <string name="file_save_failed">Unable to save file.</string>
+
 
     <string-array name="mobile_operators">
         <item>Grameenphone</item>

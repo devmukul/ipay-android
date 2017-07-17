@@ -1,11 +1,14 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,12 +32,10 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PendingIntroducerReviewDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.Business;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
@@ -43,16 +44,17 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.GetMoneyAnd
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.MoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notification;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.BusinessListRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.GetPendingIntroducerListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.PendingIntroducer;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.GetIntroductionRequestsResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.IntroductionRequestClass;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -67,9 +69,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private HttpRequestGetAsyncTask mGetIntroductionRequestTask = null;
     private GetIntroductionRequestsResponse mIntroductionRequestsResponse;
 
-    private HttpRequestGetAsyncTask mGetBusinessInvitationTask = null;
-    private GetBusinessListResponse mGetBusinessListResponse;
-
     private HttpRequestGetAsyncTask mGetPendingIntroducerListTask = null;
     private GetPendingIntroducerListResponse mPendingIntroducerListResponse;
 
@@ -83,7 +82,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private List<Notification> mNotifications;
     private List<MoneyAndPaymentRequest> mMoneyAndPaymentRequests;
     private List<IntroductionRequestClass> mIntroductionRequests;
-    private List<Business> mBusinessInvitations;
     private List<PendingIntroducer> mPendingIntroducerList;
 
     // These variables hold the information needed to populate the review dialog
@@ -99,6 +97,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private String mDescriptionOfRequest;
 
     private OnNotificationUpdateListener mOnNotificationUpdateListener;
+    private NotificationBroadcastReceiver notificationBroadcastReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -134,9 +133,19 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     public void onResume() {
         super.onResume();
+
+        notificationBroadcastReceiver = new NotificationBroadcastReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(notificationBroadcastReceiver,
+                new IntentFilter(Constants.NOTIFICATION_UPDATE_BROADCAST));
         if (Utilities.isConnectionAvailable(getActivity())) {
             refreshNotificationLists(getActivity());
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(notificationBroadcastReceiver);
+        super.onDestroyView();
     }
 
     @Override
@@ -150,6 +159,12 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         postProcessNotificationList();
     }
 
+    public void registerNotificationBroadcastReceiver(Context context) {
+        notificationBroadcastReceiver = new NotificationBroadcastReceiver();
+        LocalBroadcastManager.getInstance(context).registerReceiver(notificationBroadcastReceiver,
+                new IntentFilter(Constants.NOTIFICATION_UPDATE_BROADCAST));
+    }
+
     public void setOnNotificationUpdateListener(OnNotificationUpdateListener listener) {
         this.mOnNotificationUpdateListener = listener;
     }
@@ -157,12 +172,10 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     public void getNotificationLists(Context context) {
         getMoneyAndPaymentRequest(context);
         getIntroductionRequestList(context);
-        getBusinessInvitationList(context);
         getPendingIntroducersList(context);
     }
 
     public void refreshNotificationLists(Context context) {
-        refreshBusinessInvitationList(context);
         refreshIntroductionRequestList(context);
         refreshMoneyAndPaymentRequestList(context);
         refreshPendingIntroducerList(context);
@@ -176,6 +189,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private void getMoneyAndPaymentRequest(Context context) {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.RECEIVED_REQUEST))
+            return;
+
         if (mGetMoneyAndPaymentRequestTask != null) {
             return;
         }
@@ -192,6 +208,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private void getIntroductionRequestList(Context context) {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_INTRODUCERS))
+            return;
+
         if (mGetIntroductionRequestTask != null) {
             return;
         }
@@ -201,18 +220,10 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mGetIntroductionRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void getBusinessInvitationList(Context context) {
-        if (mGetBusinessInvitationTask != null) {
-            return;
-        }
-
-        BusinessListRequestBuilder businessListRequestBuilder = new BusinessListRequestBuilder();
-        mGetBusinessInvitationTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_LIST,
-                businessListRequestBuilder.getPendingBusinessListUri(), context, this);
-        mGetBusinessInvitationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     private void getPendingIntroducersList(Context context) {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_INTRODUCERS))
+            return;
+
         if (mGetPendingIntroducerListTask != null) {
             return;
         }
@@ -257,13 +268,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
     }
 
-    private void refreshBusinessInvitationList(Context context) {
-        if (Utilities.isConnectionAvailable(context)) {
-            mBusinessInvitations = null;
-            getBusinessInvitationList(context);
-        }
-    }
-
     private void refreshPendingIntroducerList(Context context) {
         if (Utilities.isConnectionAvailable(context)) {
             mPendingIntroducerList = null;
@@ -272,7 +276,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private boolean isAllNotificationsLoaded() {
-        return mGetMoneyAndPaymentRequestTask == null && mGetIntroductionRequestTask == null && mGetBusinessInvitationTask == null;
+        return mGetMoneyAndPaymentRequestTask == null && mGetIntroductionRequestTask == null;
     }
 
     private List<Notification> mergeNotificationLists() {
@@ -281,8 +285,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             notifications.addAll(mMoneyAndPaymentRequests);
         if (mIntroductionRequests != null)
             notifications.addAll(mIntroductionRequests);
-        if (mBusinessInvitations != null)
-            notifications.addAll(mBusinessInvitations);
         if (mPendingIntroducerList != null)
             notifications.addAll(mPendingIntroducerList);
 
@@ -366,28 +368,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         startActivity(intent);
     }
 
-    private void launchBusinessInvitationReviewFragment(final Business businessInvitation) {
-        final String senderName = businessInvitation.getName();
-        final String senderMobileNumber = businessInvitation.getMobileNumber();
-        final String photoUri = businessInvitation.getImageUrl();
-        final String designation = businessInvitation.getDesignation();
-        final long associationId = businessInvitation.getAssociationId();
-        final int roleId = businessInvitation.getRoleId();
-
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.NAME, senderName);
-        bundle.putString(Constants.PHOTO_URI, photoUri);
-        bundle.putString(Constants.MOBILE_NUMBER, senderMobileNumber);
-        bundle.putString(Constants.DESIGNATION, designation);
-        bundle.putLong(Constants.ASSOCIATION_ID, associationId);
-        bundle.putInt(Constants.ROLE_ID, roleId);
-        bundle.putString(Constants.TAG, Constants.BUSINESS);
-
-        Intent intent = new Intent(getActivity(), NotificationActivity.class);
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
     private void launchIntroductionRequestReviewFragment(final IntroductionRequestClass introductionRequest) {
         final long requestID = introductionRequest.getId();
 
@@ -427,7 +407,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetMoneyAndPaymentRequestTask = null;
             mServiceChargeTask = null;
-            mGetBusinessInvitationTask = null;
             mGetIntroductionRequestTask = null;
             mGetPendingIntroducerListTask = null;
 
@@ -484,25 +463,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 }
 
                 mGetIntroductionRequestTask = null;
-                postProcessNotificationList();
-                break;
-
-            case Constants.COMMAND_GET_BUSINESS_LIST:
-                try {
-                    mGetBusinessListResponse = gson.fromJson(result.getJsonString(), GetBusinessListResponse.class);
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mBusinessInvitations = mGetBusinessListResponse.getBusinessList();
-                    } else {
-                        if (getActivity() != null)
-                            Toaster.makeText(getActivity(), mGetBusinessListResponse.getMessage(), Toast.LENGTH_LONG);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-                }
-
-                mGetBusinessInvitationTask = null;
                 postProcessNotificationList();
                 break;
 
@@ -664,6 +624,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.MANAGE_INTRODUCERS)
                     public void onClick(View v) {
                         launchIntroductionRequestReviewFragment((IntroductionRequestClass) mNotifications.get(pos));
                     }
@@ -672,27 +633,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         }
 
-        public class BusinessInvitationViewHolder extends NotificationViewHolder {
-
-            private List<String> mReceivedRequestActionList;
-            private CustomSelectorDialog mCustomSelectorDialog;
-
-            public BusinessInvitationViewHolder(View itemView) {
-                super(itemView);
-            }
-
-            @Override
-            public void bindView(final int pos) {
-                super.bindView(pos);
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        launchBusinessInvitationReviewFragment((Business) mNotifications.get(pos));
-                    }
-                });
-            }
-        }
 
         public class PendingIntroductionListViewHolder extends NotificationViewHolder {
 
@@ -709,6 +649,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    @ValidateAccess(ServiceIdConstants.MANAGE_INTRODUCERS)
                     public void onClick(View v) {
                         new PendingIntroducerReviewDialog(getActivity(), pendingIntroducer).setActionCheckerListener(
                                 new PendingIntroducerReviewDialog.ActionCheckerListener() {
@@ -733,10 +674,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             if (viewType == Constants.NOTIFICATION_TYPE_INTRODUCTION_REQUEST) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_requests_notification, parent, false);
                 return new IntroductionRequestViewHolder(v);
-
-            } else if (viewType == Constants.NOTIFICATION_TYPE_BUSINESS_ACCOUNT_INVITE) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_business_invitation, parent, false);
-                return new BusinessInvitationViewHolder(v);
             } else if (viewType == Constants.NOTIFICATION_TYPE_PENDING_INTRODUCER_REQUEST) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_requests_notification, parent, false);
                 return new PendingIntroductionListViewHolder(v);
@@ -769,4 +706,10 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
     }
 
+    private class NotificationBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            refreshNotificationLists(context);
+        }
+    }
 }
