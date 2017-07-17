@@ -6,18 +6,21 @@ import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.AddTrustedPersonFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.ChangePasswordFragment;
+import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.FingerPrintAuthenticationSettingsFragment;
+import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.PasswordRecoveryFragment;
+import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.SecurityQuestionFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.SetPinFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedDeviceFragment;
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.DrawerFragments.SecuritySettingsFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.UpdateSecurityQuestionFragment;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SecuritySettingsActivity extends BaseActivity {
 
-    private boolean switchedToSettingsFragment = false;
-    private boolean switchedToAddTrustedPersonFragment = false;
+    public static long otpDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +36,10 @@ public class SecuritySettingsActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             Utilities.hideKeyboard(this);
-            if (switchedToSettingsFragment)
-                switchToAccountSettingsFragment();
-            else if(switchedToAddTrustedPersonFragment)
-                switchToPasswordRecovery();
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+                getSupportFragmentManager().popBackStack();
             else {
-                onBackPressed();
+                finish();
             }
             return true;
         } else {
@@ -49,50 +50,94 @@ public class SecuritySettingsActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         Utilities.hideKeyboard(this);
-        if (switchedToSettingsFragment)
-            switchToAccountSettingsFragment();
-        else if(switchedToAddTrustedPersonFragment)
-          switchToPasswordRecovery();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
         else
             super.onBackPressed();
     }
 
-   public void switchToAccountSettingsFragment() {
+    public void switchToAccountSettingsFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStackImmediate();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new SecuritySettingsFragment()).commit();
-        switchedToSettingsFragment = false;
-        switchedToAddTrustedPersonFragment=false;
 
     }
-    public void switchToPasswordRecovery() {
+
+    public void switchToPasswordRecoveryFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
+            getSupportFragmentManager().popBackStackImmediate();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new TrustedNetworkFragment()).commit();
-        switchedToSettingsFragment = true;
-        switchedToAddTrustedPersonFragment=false;
+                new PasswordRecoveryFragment()).addToBackStack(null).commit();
     }
-    public void switchToAddTrustedPerson() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new AddTrustedPersonFragment()).commit();
-        switchedToSettingsFragment = false;
-        switchedToAddTrustedPersonFragment=true;
-    }
+
     public void switchToSetPinFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
+            getSupportFragmentManager().popBackStackImmediate();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new SetPinFragment()).commit();
-        switchedToSettingsFragment = true;
-        switchedToAddTrustedPersonFragment=false;
+                new SetPinFragment()).addToBackStack(null).commit();
     }
+
     public void switchToChangePasswordFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
+            getSupportFragmentManager().popBackStackImmediate();
+
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new ChangePasswordFragment()).commit();
-        switchedToSettingsFragment = true;
-        switchedToAddTrustedPersonFragment=false;
+                .replace(R.id.fragment_container, new ChangePasswordFragment()).addToBackStack(null).commit();
     }
+
     public void switchToTrustedDeviceFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
+            getSupportFragmentManager().popBackStackImmediate();
+
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new TrustedDeviceFragment()).commit();
-        switchedToSettingsFragment = true;
-        switchedToAddTrustedPersonFragment=false;
+                .replace(R.id.fragment_container, new TrustedDeviceFragment()).addToBackStack(null).commit();
+    }
+
+    public void switchToTrustedPersonFragment() {
+        Utilities.hideKeyboard(this);
+        while (getSupportFragmentManager().getBackStackEntryCount() > 2)
+            getSupportFragmentManager().popBackStackImmediate();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new TrustedNetworkFragment()).addToBackStack(null).commit();
+    }
+
+    public void switchToAddTrustedPerson() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 3)
+            getSupportFragmentManager().popBackStackImmediate();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new AddTrustedPersonFragment()).addToBackStack(null).commit();
+    }
+
+    public void switchToSecurityQuestionFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 2)
+            getSupportFragmentManager().popBackStackImmediate();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new SecurityQuestionFragment()).addToBackStack(null).commit();
+    }
+
+    public void switchToUpdateSecurityQuestionFragment(Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 3)
+            getSupportFragmentManager().popBackStackImmediate();
+
+        UpdateSecurityQuestionFragment updateSecurityQuestionFragment = new UpdateSecurityQuestionFragment();
+        updateSecurityQuestionFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().
+                replace(R.id.fragment_container, updateSecurityQuestionFragment).addToBackStack(null).commit();
+    }
+
+    public void switchToFingerprintAuthenticationSettingsFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
+            getSupportFragmentManager().popBackStackImmediate();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new FingerPrintAuthenticationSettingsFragment()).addToBackStack(null).commit();
     }
 
     @Override

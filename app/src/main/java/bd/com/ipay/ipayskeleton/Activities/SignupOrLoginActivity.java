@@ -1,33 +1,37 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
-import android.app.Activity;
+import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 
-import bd.com.ipay.ipayskeleton.ForgotPasswordFragments.ForgetPasswordFragment;
+import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.OTPVerificationBusinessFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepOneFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepThreeFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.SignupBusinessStepTwoFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments.LoginFragment;
-import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments.OTPVerificationBusinessFragment;
-import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.OTPVerificationPersonalFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments.OTPVerificationTrustFragment;
-import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SelectAccountTypeFragment;
+import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.OTPVerificationPersonalFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.SignupPersonalStepOneFragment;
-import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.SignupPersonalStepTwoFragment;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
+import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SelectAccountTypeFragment;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SignupOrLoginActivity extends AppCompatActivity {
 
-    private SharedPreferences pref;
+    private final int OVERLAY_REQUEST_CODE = 1234;
 
     public static String mBirthday;
     public static String mPassword;
@@ -44,21 +48,22 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public static String mBirthdayBusinessHolder;
     public static String mMobileNumberPersonal;
     public static long mTypeofBusiness;
-    public static String mPromoCode;
     public static long otpDuration;
 
     public static AddressClass mAddressBusiness;
     public static AddressClass mAddressBusinessHolder;
     public static AddressClass mAddressPersonal;
 
+    private MaterialDialog.Builder mOverlayPermissionDialogBuilder;
+    private MaterialDialog mOverlayPermissionDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_or_login);
 
-        pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
 
-        if (pref.contains(Constants.USERID)) {
+        if (SharedPrefManager.ifContainsUserID()) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, new LoginFragment()).commit();
         } else {
@@ -86,6 +91,49 @@ public class SignupOrLoginActivity extends AppCompatActivity {
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }
+
+        // Initialize the dialog
+        initializeErrorDialogForOverlayPermission();
+
+        // Check for overlay permission
+        if (checkDrawOverlayPermission()) {
+            // Do nothing
+        } else showErrorDialogOnOverlayPermission();
+
+    }
+
+    private void initializeErrorDialogForOverlayPermission() {
+        mOverlayPermissionDialogBuilder = new MaterialDialog.Builder(SignupOrLoginActivity.this)
+                .title(R.string.attention)
+                .content(R.string.allow_overlay_permission)
+                .cancelable(false)
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        checkDrawOverlayPermission();
+                    }
+                });
+        mOverlayPermissionDialog = mOverlayPermissionDialogBuilder.build();
+    }
+
+    private void showErrorDialogOnOverlayPermission() {
+        mOverlayPermissionDialog.show();
+    }
+
+    public boolean checkDrawOverlayPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+
+        if (!Settings.canDrawOverlays(this)) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, OVERLAY_REQUEST_CODE);
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public void switchToLoginFragment() {
@@ -106,14 +154,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
                 .replace(R.id.fragment_container, new SignupPersonalStepOneFragment()).addToBackStack(null).commit();
     }
 
-    public void switchToSignupPersonalStepTwoFragment() {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 2) {
-            getSupportFragmentManager().popBackStackImmediate();
-        }
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SignupPersonalStepTwoFragment()).addToBackStack(null).commit();
-    }
-
     public void switchToOTPVerificationBusinessFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new OTPVerificationBusinessFragment()).addToBackStack(null).commit();
@@ -129,13 +169,15 @@ public class SignupOrLoginActivity extends AppCompatActivity {
                 .replace(R.id.fragment_container, new SelectAccountTypeFragment()).commit();
     }
 
-    public void switchToForgetPasswordFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new ForgetPasswordFragment()).addToBackStack(null).commit();
-    }
-
     public void switchToHomeActivity() {
         Intent intent = new Intent(SignupOrLoginActivity.this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        this.finish();
+    }
+
+    public void switchToDeviceTrustActivity() {
+        Intent intent = new Intent(SignupOrLoginActivity.this, DeviceTrustActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         this.finish();
@@ -179,10 +221,28 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
         } else {
-            Intent intent = new Intent(SignupOrLoginActivity.this, TourActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            this.finish();
+            if (!SharedPrefManager.ifContainsUserID()) {
+                Intent intent = new Intent(SignupOrLoginActivity.this, TourActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                this.finish();
+            } else
+                this.finish();
+        }
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.M)
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == OVERLAY_REQUEST_CODE) {
+
+            // Dismiss the dialog
+            mOverlayPermissionDialog.dismiss();
+
+            if (Settings.canDrawOverlays(this)) {
+                // Do nothing
+            } else
+                showErrorDialogOnOverlayPermission();  // Request the permission again
         }
     }
 

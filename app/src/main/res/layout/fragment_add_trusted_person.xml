@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/name"
-                android:inputType="textPersonName"
+                android:inputType="textCapWords"
                 android:maxLines="1"
                 android:singleLine="true" />
 
@@ -29,19 +29,33 @@
 
         <View style="@style/Divider" />
 
-        <android.support.design.widget.TextInputLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/edit_text_mobile_number"
-                style="@style/CustomEditText"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edit_text_mobile_number"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/mobile_number"
+                    android:inputType="phone"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/select_number_from_contacts"
+                style="@style/ButtonStyleWithIcon"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/mobile_number"
-                android:inputType="number"
-                android:maxLines="1" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_alignParentRight="true"
+                android:clickable="true"
+                android:src="@drawable/ic_book3x" />
+        </RelativeLayout>
 
         <View style="@style/Divider" />
 

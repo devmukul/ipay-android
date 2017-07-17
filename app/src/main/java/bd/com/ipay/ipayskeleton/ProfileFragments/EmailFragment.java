@@ -33,23 +33,24 @@ import java.util.Comparator;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.AddNewEmailRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.AddNewEmailResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.DeleteEmailResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.Email;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.EmailVerificationResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.GetEmailResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.MakePrimaryEmailResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Email.MakePrimaryRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.AddNewEmailRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.AddNewEmailResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.DeleteEmailResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.Email;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.EmailVerificationResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.GetEmailResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.MakePrimaryEmailResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.MakePrimaryRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -82,6 +83,8 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     private ProgressDialog mProgressDialog;
 
     private TextView mPrimaryEmailView;
+    private TextView mPrimaryEmailViewHeader;
+    private TextView mOtherEmailViewHeader;
     private ImageView mPrimaryVerificationStatus;
 
     private TextView mEmptyListTextView;
@@ -102,6 +105,8 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         getActivity().setTitle(R.string.email);
 
         mPrimaryEmailView = (TextView) v.findViewById(R.id.textview_email);
+        mPrimaryEmailViewHeader = (TextView) v.findViewById(R.id.primary_email_header);
+        mOtherEmailViewHeader = (TextView) v.findViewById(R.id.other_email_header);
         mPrimaryVerificationStatus = (ImageView) v.findViewById(R.id.email_verification_status);
         mEmailListRecyclerView = (RecyclerView) v.findViewById(R.id.list_email);
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
@@ -131,11 +136,11 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
         super.onActivityCreated(savedInstanceState);
         setContentShown(false);
 
-        if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE))
+        if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE))
             getEmails();
         else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE);
+            String json = dataHelper.getPushEvent(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE);
 
             if (json == null)
                 getEmails();
@@ -149,6 +154,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     private void showAddNewEmailDialog() {
         MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.add_an_email)
+                .autoDismiss(false)
                 .customView(R.layout.dialog_add_new_email, true)
                 .positiveText(R.string.add)
                 .negativeText(R.string.cancel)
@@ -166,12 +172,14 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 String email = emailView.getText().toString().trim();
 
-                imm.hideSoftInputFromWindow(emailView.getWindowToken(), 0);
-
                 if (!InputValidator.isValidEmail(email)) {
-                    Toast.makeText(getActivity(), R.string.enter_valid_email, Toast.LENGTH_LONG).show();
+                    emailView.setError(getString(R.string.enter_valid_email));
+                    emailView.requestFocus();
                 } else {
+                    imm.hideSoftInputFromWindow(emailView.getWindowToken(), 0);
                     addNewEmail(email);
+
+                    dialog.dismiss();
                 }
             }
         });
@@ -180,6 +188,8 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 imm.hideSoftInputFromWindow(emailView.getWindowToken(), 0);
+
+                dialog.dismiss();
             }
         });
 
@@ -262,7 +272,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
 
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         mProgressDialog.dismiss();
 
@@ -289,9 +299,9 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                         processGetEmailListResponse(result.getJsonString());
 
                         DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                        dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
+                        dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
 
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
                     } else {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), mGetEmailResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -379,41 +389,57 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     }
 
     private void processGetEmailListResponse(String json) {
-        Gson gson = new Gson();
-        mGetEmailResponse = gson.fromJson(json, GetEmailResponse.class);
 
-        mEmails = mGetEmailResponse.getEmailAdressList();
+        try {
+            Gson gson = new Gson();
+            mGetEmailResponse = gson.fromJson(json, GetEmailResponse.class);
 
-        Collections.sort(mEmails, new Comparator<Email>() {
-            @Override
-            public int compare(Email lhs, Email rhs) {
+            mEmails = mGetEmailResponse.getEmailAdressList();
 
-                if ((lhs.isPrimary() && !rhs.isPrimary()) || (!lhs.isPrimary() && rhs.isPrimary())) {
-                    if (lhs.isPrimary())
-                        return -1;
-                    else
-                        return 1;
-                } else {
-                    return (int) (lhs.getEmailId() - rhs.getEmailId());
+            Collections.sort(mEmails, new Comparator<Email>() {
+                @Override
+                public int compare(Email lhs, Email rhs) {
+
+                    if ((lhs.isPrimary() && !rhs.isPrimary()) || (!lhs.isPrimary() && rhs.isPrimary())) {
+                        if (lhs.isPrimary())
+                            return -1;
+                        else
+                            return 1;
+                    } else {
+                        return (int) (lhs.getEmailId() - rhs.getEmailId());
+                    }
                 }
+            });
+
+            if (mEmails != null && mEmails.size() == 0)
+                mEmptyListTextView.setVisibility(View.VISIBLE);
+            else mEmptyListTextView.setVisibility(View.GONE);
+
+            if (mEmails.size() > 0 && mEmails.get(0).isPrimary()) {
+                mPrimaryEmailViewHeader.setVisibility(View.VISIBLE);
+                mPrimaryEmailView.setVisibility(View.VISIBLE);
+                mPrimaryVerificationStatus.setVisibility(View.VISIBLE);
+                mPrimaryEmailView.setText(mEmails.get(0).getEmailAddress());
+                mEmails.remove(0);
+
+            } else {
+                mPrimaryEmailViewHeader.setVisibility(View.GONE);
+                mPrimaryEmailView.setVisibility(View.GONE);
+                mPrimaryVerificationStatus.setVisibility(View.GONE);
             }
-        });
 
-        if (mEmails != null && mEmails.size() == 0)
-            mEmptyListTextView.setVisibility(View.VISIBLE);
-        else mEmptyListTextView.setVisibility(View.GONE);
+            if (mEmails.size() > 0)
+                mOtherEmailViewHeader.setVisibility(View.VISIBLE);
+            else
+                mOtherEmailViewHeader.setVisibility(View.GONE);
 
-        if (mEmails.size() > 0 && mEmails.get(0).isPrimary()) {
-            mPrimaryEmailView.setText(mEmails.get(0).getEmailAddress());
-            mEmails.remove(0);
-        } else {
-            mPrimaryEmailView.setText(R.string.not_set_yet);
-            mPrimaryVerificationStatus.setVisibility(View.INVISIBLE);
+            setContentShown(true);
+
+            mEmailListAdapter.notifyDataSetChanged();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        setContentShown(true);
-
-        mEmailListAdapter.notifyDataSetChanged();
 
     }
 

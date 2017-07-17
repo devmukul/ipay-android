@@ -83,10 +83,10 @@
 
                 <TextView
                     style="@style/TextViewInfoLabelReview"
-                    android:text="@string/net_amount" />
+                    android:text="@string/recipient_net_amount" />
 
                 <TextView
-                    android:id="@+id/textview_net_received"
+                    android:id="@+id/textview_net_amount"
                     style="@style/TextViewInfoColorPrimaryReview" />
             </LinearLayout>
 
@@ -116,6 +116,16 @@
                 android:id="@+id/textview_description"
                 style="@style/TextViewDescription" />
         </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/add_in_contacts"
+            style="@style/CheckboxRightStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+            android:drawableTint="@color/colorPrimary"
+            android:text="@string/add_to_contacts"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/button_send_money"

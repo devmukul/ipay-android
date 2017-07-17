@@ -90,6 +90,40 @@
 
             </LinearLayout>
 
+            <View style="@style/Divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReview"
+                    android:text="@string/service_charge" />
+
+                <TextView
+                    android:id="@+id/textview_service_charge"
+                    style="@style/TextViewInfoColorPrimaryReview" />
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReview"
+                    android:text="@string/net_amount" />
+
+                <TextView
+                    android:id="@+id/textview_net_amount"
+                    style="@style/TextViewInfoColorPrimaryReview" />
+            </LinearLayout>
+
+
         </LinearLayout>
 
         <View
@@ -118,7 +152,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/button_create_invoice"
+            android:id="@+id/button_create_payment_request"
             style="@style/PrimaryMediumButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

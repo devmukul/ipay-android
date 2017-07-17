@@ -16,14 +16,15 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPutAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.SetPinResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SetPinFragment extends Fragment implements HttpResponseListener {
@@ -46,7 +47,7 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
         mEnterPasswordEditText = (EditText) v.findViewById(R.id.password);
         mSetPINButton = (Button) v.findViewById(R.id.save_pin);
 
-        mEnterPasswordEditText.requestFocus();
+        mEnterPINEditText.requestFocus();
         final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
@@ -62,9 +63,6 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
     }
 
     private void attemptSavePIN() {
-
-        //hiding keyboard after save button pressed in set pin
-        Utilities.hideKeyboard(getActivity());
 
         if (mSavePINTask != null) {
             return;
@@ -96,6 +94,9 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
             // form field with an error.
             focusView.requestFocus();
         } else {
+            // Hiding keyboard after save button pressed in set pin
+            Utilities.hideKeyboard(getActivity());
+
             String pin = mEnterPINEditText.getText().toString().trim();
             String password = mEnterPasswordEditText.getText().toString().trim();
 
@@ -116,7 +117,7 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -124,7 +125,7 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
             mSavePINTask = null;
 
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -147,7 +148,7 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.save_failed, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.save_failed, Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();

@@ -13,20 +13,21 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.District;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.DistrictRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetDistrictResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetThanaResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.ThanaRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.District;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.DistrictRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetDistrictResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetThanaResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Thana;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.ThanaRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CountryList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class AddressInputSignUpView extends FrameLayout implements HttpResponseListener {
 
@@ -54,6 +55,8 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
     private EditText mDistrictSelection;
     private EditText mCountrySelection;
     private EditText mPostalCodeField;
+    private EditTextWithProgressBar mDistrictEditTextProgressBar;
+    private EditTextWithProgressBar mThanaEditTextProgressBar;
 
     private ResourceSelectorDialog<District> districtSelectorDialog;
     private ResourceSelectorDialog<Thana> thanaSelectorDialog;
@@ -82,11 +85,13 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
         mAddressLine2FieldInputLayout = (TextInputLayout) v.findViewById(R.id.text_input_address_line_2);
         mAddressLine1Field = (EditText) v.findViewById(R.id.address_line_1);
         mAddressLine2Field = (EditText) v.findViewById(R.id.address_line_2);
-        mThanaSelection = (EditText) v.findViewById(R.id.thana);
-        mDistrictSelection = (EditText) v.findViewById(R.id.district);
         mCountrySelection = (EditText) v.findViewById(R.id.country);
         mCountrySelection.setEnabled(false);
         mPostalCodeField = (EditText) v.findViewById(R.id.postcode);
+        mThanaEditTextProgressBar = (EditTextWithProgressBar) v.findViewById(R.id.thana);
+        mThanaSelection = mThanaEditTextProgressBar.getEditText();
+        mDistrictEditTextProgressBar = (EditTextWithProgressBar) v.findViewById(R.id.district);
+        mDistrictSelection = mDistrictEditTextProgressBar.getEditText();
 
         addView(v);
         getDistrictList();
@@ -96,6 +101,7 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
         if (mGetThanaListAsyncTask != null) {
             return;
         }
+        mThanaEditTextProgressBar.showProgressBar();
 
         mGetThanaListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_THANA_LIST,
                 new ThanaRequestBuilder(districtId).getGeneratedUri(), context, this);
@@ -106,6 +112,7 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
         if (mGetDistrictListAsyncTask != null) {
             return;
         }
+        mDistrictEditTextProgressBar.showProgressBar();
 
         mGetDistrictListAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DISTRICT_LIST,
                 new DistrictRequestBuilder().getGeneratedUri(), context, this);
@@ -118,7 +125,7 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
     }
 
     private void setThanaAdapter(List<Thana> thanaList) {
-        thanaSelectorDialog = new ResourceSelectorDialog<>(context, context.getString(R.string.select_a_thana), thanaList, mSelectedThanaId);
+        thanaSelectorDialog = new ResourceSelectorDialog<>(context, context.getString(R.string.select_a_thana), thanaList);
         thanaSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
@@ -137,7 +144,7 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
     }
 
     private void setDistrictAdapter(List<District> districtList) {
-        districtSelectorDialog = new ResourceSelectorDialog<>(context, context.getString(R.string.select_a_district), districtList, mSelectedDistrictId);
+        districtSelectorDialog = new ResourceSelectorDialog<>(context, context.getString(R.string.select_a_district), districtList);
         districtSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
@@ -274,13 +281,13 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetThanaListAsyncTask = null;
             mGetDistrictListAsyncTask = null;
             if (context != null)
-                Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -292,6 +299,7 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mDistrictList = mGetDistrictResponse.getDistricts();
+                    mDistrictEditTextProgressBar.hideProgressBar();
                     setDistrictAdapter(mDistrictList);
                     setDistrictName(mSelectedDistrictId);
                     if (mSelectedDistrictId >= 0) {
@@ -300,12 +308,12 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
 
                 } else {
                     if (context != null)
-                        Toast.makeText(context, R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(context, R.string.failed_loading_district_list, Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (context != null)
-                    Toast.makeText(context, R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(context, R.string.failed_loading_district_list, Toast.LENGTH_LONG);
             }
 
             mGetDistrictListAsyncTask = null;
@@ -314,17 +322,18 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
                 mGetThanaResponse = gson.fromJson(result.getJsonString(), GetThanaResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mThanaList = mGetThanaResponse.getThanas();
+                    mThanaEditTextProgressBar.hideProgressBar();
                     setThanaAdapter(mThanaList);
                     setThanaName(mSelectedThanaId);
 
                 } else {
                     if (context != null)
-                        Toast.makeText(context, R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(context, R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (context != null)
-                    Toast.makeText(context, R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(context, R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
             }
 
             mGetThanaListAsyncTask = null;

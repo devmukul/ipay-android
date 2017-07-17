@@ -16,23 +16,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.design.widget.TextInputLayout
+            <bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView
+                android:id="@+id/mobile_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true">
-
-                <EditText
-                    android:id="@+id/mobile_number"
-                    style="@style/CustomEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/enter_mobile_number"
-                    android:inputType="phone"
-                    android:maxLength="14"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
-            </android.support.design.widget.TextInputLayout>
+                android:layout_alignParentLeft="true"
+                android:inputType="text"
+                android:maxLines="1" />
 
             <ImageView
                 android:id="@+id/select_receiver_from_contacts"
@@ -110,21 +100,17 @@
 
         <Button
             android:id="@+id/button_recharge"
-            style="@style/PrimaryMediumButton"
+            style="@style/PrimaryMediumButtonWithNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/continue_mobile_recharge" />
 
         <TextView
             android:id="@+id/text_view_mobile_restriction_info"
-            android:layout_width="wrap_content"
+            style="@style/CustomNoteTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/activity_vertical_margin_card"
-            android:gravity="center"
             android:text="@string/mobile_topup_restriction_info"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="italic"
             android:visibility="gone" />
     </LinearLayout>
 </ScrollView>

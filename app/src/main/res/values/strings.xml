@@ -1,5 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">iPay</string>
+    <string name="copyright">Copyright</string>
     <string name="iPay_system">iPay Systems Ltd.</string>
     <string name="iPay_copyright">Copyright 2016 iPay Systems Ltd.</string>
     <string name="all_rights_reserved">All Rights Reserved. </string>
@@ -25,9 +26,11 @@
     <string name="error_invalid_QR_code">This QR code is invalid</string>
     <string name="password_hint">Password must contain minimum 8 characters and be alphanumeric. </string>
     <string name="name">Name</string>
-    <string name="enter_new_pin">Enter your PIN(4 digit)</string>
-    <string name="confirm_your_pin">Confirm your PIN</string>
+    <string name="enter_new_pin">PIN (4 digit)</string>
+    <string name="confirm_your_pin">Confirm PIN</string>
     <string name="enter_new_pass">Enter a new password</string>
+    <string name="enter_your_pass">Enter your password</string>
+    <string name="new_pass">New password</string>
     <string name="confirm_new_pass">Confirm new password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="email">Email</string>
@@ -40,11 +43,14 @@
     <string name="address_line_1">Address Line 1</string>
     <string name="invalid_address_line_1">Please enter Address Line 1</string>
     <string name="select_from_date_first">Please select the from date first</string>
+    <string name="select_a_valid_date">Please select a valid date</string>
     <string name="browsers_and_apps"><![CDATA[Browsers & Apps]]></string>
     <string name="same_as_present_address">Same as Present Address</string>
     <string name="introduced_on">Introduced on: </string>
 
     <string name="invalid_business_name">Enter a business name</string>
+    <string name="invalid_business_type">Enter a business type</string>
+    <string name="not_set">Not Set</string>
     <string name="thana">Thana</string>
     <string name="invalid_thana">Please select a Thana</string>
     <string name="district">District</string>
@@ -54,6 +60,7 @@
     <string name="postcode">Postcode</string>
     <string name="invalid_postcode">Please enter a valid 4-digit postcode</string>
     <string name="occupation">Occupation</string>
+    <string name="organization_name">Organization Name</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="phone_number">Phone Number</string>
     <string name="inception_date">Inception Date</string>
@@ -62,8 +69,11 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="contacts_info">iPay will be pleased to discuss any concern or scope of improvement in our Payment Application. Please feel free to contact us.</string>
     <string name="contact_person_mobile_number">Mobile number of contact person</string>
+    <string name="contact_already_exists">Contact already exists</string>
     <string name="business_mobile_number">Business Mobile Number</string>
     <string name="confirm_password_not_matched">Password did not match</string>
+    <string name="change_password_success">Password change successful</string>
+    <string name="change_password_success_message">Your password is changed successfully. Now you will be logged out from all devices. Please login again to continue.</string>
     <string name="confirm_pin_not_matched">PIN did not match</string>
     <string name="empty_bank_account_list">You have no bank account linked with iPay. Please link a bank to add money in your iPay account.</string>
     <string name="empty_payable_list">You have no payable items at this moment. Click + button to add a fee to pay.</string>
@@ -71,13 +81,17 @@
     <string name="empty_list">Nothing to show right now.</string>
     <string name="not_empty_list_for_password_recovery"> If you forget your password and try to recover it, we will send text messages to the persons in your Trusted Network, you will be asked to enter the codes contained in those messages.</string>
     <string name="empty_list_for_password_recovery">Tap + to add a person to your Trusted Network.\n\nIf you forget your password and try to recover it, we will send text messages to the persons in your Trusted Network.\nYou will be asked to enter the codes contained in those messages.</string>
+    <string name="remove_trusted_device_message">Removing device from your trusted device list</string>
+    <string name="remove_trusted_person_message">Removing from your trusted network</string>
     <string name="error_invalid_mobile_number">Please enter a valid mobile number</string>
     <string name="error_invalid_pin">PIN must be 4 digit</string>
     <string name="error_invalid_otp">Please enter the OTP sent to your mobile</string>
+    <string name="error_invalid_otp_with_required_length">OTP must be 6 digit</string>
     <string name="error_promo_code_empty">Please enter the promo code</string>
     <string name="error_invalid_first_name">Please enter name</string>
-    <string name="error_invalid_parent_name">Parents Name should have minimum length of 5 characters</string>
     <string name="error_invalid_name">Please enter name</string>
+    <string name="business_name_required">Business name is required</string>
+    <string name="error_invalid_name_with_required_length">Please enter a valid name of minimum 5 characters</string>
     <string name="error_invalid_birthday">Please enter birthday</string>
     <string name="please_select_institution">Please select an institution</string>
     <string name="please_select_payment_item">Please select a fee</string>
@@ -90,10 +104,12 @@
     <string name="enter_the_amount_we_sent">Enter the amount we sent to your bank account here.</string>
     <string name="bank_verification_help">Steps to verify a bank account: \n\nStep 1. iPay will send a small amount of money to your bank account, this may take 3-5 business days. \nStep 2. You have to contact your bank to know the exact amount. \nStep 3. Tap the name of your bank and select Verify. \nStep 4. Enter the exact amount and tap OK. \n\n*Entering an incorrect amount 5 times will permanently block the bank account.</string>
     <string name="are_you_sure">Are you sure?</string>
-    <string name="are_you_sure_to_invite">Are you sure you know this person and want to invite him/her to iPay?</string>
+    <string name="are_you_sure_to_invite">Do you want to invite this person to iPay? By inviting to iPay you acknowledge that you know this person personally.</string>
     <string name="are_you_sure_to_remove_employee">Are you sure you want to remove this employee?</string>
     <string name="accept">Accept</string>
+    <string name="this_person">this person</string>
     <string name="are_you_sure_to_remove_bank_account">Are you sure you want to remove this account from your bank list?</string>
+    <string name="blocked_bank_message">Sorry, you have taken too many attempts to verify this bank account. Please contact with our customer support for any further queries.</string>
     <string name="cancel_money_request_confirm">Are you sure you want to cancel your request for money?</string>
     <string name="cancel_payment_request_confirm">Are you sure you want to cancel your request for payment?</string>
     <string name="account_type_personal">Personal Account</string>
@@ -128,6 +144,10 @@
     <string name="get_student_failed">Failed to find the details of the student</string>
     <string name="get_student_not_found">Found no student with this student ID</string>
     <string name="confirm_query">Are you sure?</string>
+    <string name="introduction_request_review_dialog_content">You are ensuring the authenticity and credibility of \'this person\' when you introduce him/her.
+        Do you want to introduce \'this person\'?</string>
+    <string name="introduction_request_reject_dialog_content">You want to reject the request?</string>
+    <string name="introduction_request_spam_dialog_content">This is a spam request</string>
     <string name="profile_info_save_failed">Failed to save profile information.</string>
     <string name="profile_picture_set_failed">Failed to set profile picture.</string>
     <string name="parent_info_save_failed">Failed to save parent information.</string>
@@ -140,15 +160,21 @@
     <string name="select_a_fee_item">Select a fee item</string>
     <string name="select_session">Select Session</string>
     <string name="save">Save</string>
+    <string name="update">Update</string>
+    <string name="update_ipay">Please update iPay</string>
+    <string name="update_your_application">Please update your application from Google Play Store.</string>
+    <string name="add_to_contacts">Add to Contacts</string>
     <string name="ipay_contacts">iPay</string>
-    <string name="activity_log">Activity log</string>
+    <string name="security_questions">Security Questions</string>
+    <string name="update_security_questions">Update Security Question</string>
+    <string name="activity_log">Activity Log</string>
     <string name="payments">Payments</string>
     <string name="please_enter_an_account_name">Please provide your Account Name and try again</string>
     <string name="please_select_a_bank">Please select a bank</string>
     <string name="please_select_a_district">Please select a district</string>
     <string name="please_select_a_branch">Please select a branch</string>
     <string name="please_enter_an_account_number">Please provide your Account Number and try again</string>
-    <string name="please_enter_an_account_number_of_minimum_digit">Account number must be at least 8 digit long</string>
+    <string name="please_enter_an_account_number_of_minimum_digit">Account number must be at least 10 digits long</string>
     <string name="business_information">Business Information</string>
     <string name="account_holder_information">Information of Account Holder</string>
     <string name="yes">Yes</string>
@@ -162,6 +188,7 @@
     <string name="could_not_fetch_the_number">Could not fetch the mobile number.</string>
     <string name="progress_dialog_text_logging_in">Signing in...</string>
     <string name="event_not_found">Event not found. The event might have been removed.</string>
+    <string name="progress_dialog_send_for_introduction">Sending introduction request...</string>
     <string name="progress_dialog_send_for_recommendation">Sending recommendation request...</string>
     <string name="progress_dialog_saving_new_pass">Saving new password...</string>
     <string name="please_link_a_bank_for_cash_in">Please link your bank account with iPay to add money from your bank account. You can use this feature once your linked bank account gets verified!</string>
@@ -171,20 +198,23 @@
     <string name="progress_dialog_text_payment">Payment in progress. Please wait...</string>
     <string name="progress_dialog_text_sending_sms">Sending SMS to your mobile...</string>
     <string name="progress_dialog_validating_promo_code">Validating invitation code...</string>
-    <string name="progress_dialog_processing">Processing TopUp. You would receive money in your mobile shortly.</string>
+    <string name="progress_dialog_processing">Processing TopUp...</string>
     <string name="progress_dialog_fetching_bank_info">Fetching bank information...</string>
     <string name="progress_dialog_cancelling">Cancelling request...</string>
     <string name="progress_dialog_fetching_bank_list">Fetching bank list...</string>
     <string name="progress_dialog_sending_invite">Sending invitation...</string>
     <string name="progress_dialog_fetching_business_types">Loading business types..</string>
-    <string name="progress_dialog_sending_invoice">Sending Invoice...</string>
+    <string name="progress_dialog_sending_payment_request">Sending Payment Request...</string>
     <string name="progress_dialog_rejecting">Rejecting request...</string>
     <string name="progress_dialog_accepted">Accepting request...</string>
     <string name="progress_dialog_signing_out">Signing out...</string>
+    <string name="progress_dialog_adding_trusted_device">Adding this device as trusted...</string>
     <string name="signup_successful">Sign up successful. Welcome to iPay</string>
     <string name="login_failed">Login failed. Please check your user name and password.</string>
     <string name="logout_failed">Could not sign out properly</string>
+    <string name="logout_from_this_device">Logout from this device</string>
     <string name="enter_otp">Enter Code</string>
+    <string name="otp">otp</string>
     <string name="enter_promo_code">Invitation Code</string>
     <string name="failed_to_reset_password">Failed to reset password. Please try again.</string>
     <string name="invalid_otp">Enter a valid OTP</string>
@@ -218,6 +248,8 @@
     <string name="sending_for_verification">Sending for verification...</string>
     <string name="sending_for_verification_with_amount">Bank verification in progress...</string>
     <string name="verifying_user">Verifying user...</string>
+    <string name="adding_introducer">"Adding the person as an introducer... "</string>
+    <string name="removing_introducer">"Rejecting... "</string>
     <string name="add">Add</string>
     <string name="add_email">Add Email</string>
     <string name="confirm">Confirm</string>
@@ -250,7 +282,7 @@
     <string name="submitting_request_money">Submitting your request for money</string>
     <string name="failed_request_money">Money request failed</string>
     <string name="failed_to_fetch_categories">Failed to fetch event categories</string>
-    <string name="failed_invoice_creation">Invoice creation failed</string>
+    <string name="failed_request_payment">Payment request failed</string>
     <string name="failed_remove_bank">Failed to remove this bank from your iPay account. Please try again later.</string>
     <string name="failed_to_fetch_branch">Failed to fetch branches for this bank</string>
     <string name="failed_to_send_for_bank_verification">Failed to send request.</string>
@@ -273,6 +305,8 @@
     <string name="please_select_a_gender">Please select a gender</string>
     <string name="otp_request_failed">Could not send OTP. Please try again</string>
     <string name="try_again_later">Could not connect to iPay. Please try again later.</string>
+    <string name="later">Later</string>
+    <string name="update_now">Update Now</string>
     <string name="enter_rate">Enter rate per item in BDT</string>
     <string name="event_name">Name of the event</string>
     <string name="event_category">Category</string>
@@ -295,7 +329,10 @@
     <string name="please_add_description">Please add a description</string>
     <string name="please_add_item_name">Please add item name</string>
     <string name="add_title">Add a title</string>
+    <string name="attention">Attention</string>
+    <string name="update_required">Update required!</string>
     <string name="otp_sent">OTP sent. Please wait...</string>
+    <string name="please_enter_valid_name">Please enter a valid name.</string>
     <string name="please_enter_valid_mobile_number">Please enter a valid mobile number.</string>
     <string name="please_enter_valid_date_of_birth">Please enter a valid date of birth.</string>
     <string name="please_enter_occupation">Please enter your occupation.</string>
@@ -304,7 +341,7 @@
     <string name="please_write_title">Please write a title.</string>
     <string name="please_enter_minimum_amount">Please enter minimum amount of </string>
     <string name="insufficient_balance">Balance insufficient.</string>
-    <string name="please_enter_not_more_than_max_amount">You can not send more than </string>
+    <string name="please_enter_not_more_than_max_amount">Maximum limit of amount is </string>
     <string name="please_enter_vat_amount">Please enter VAT amount.</string>
     <string name="please_select_relation">Please select a relation</string>
     <string name="start_date">Start date (dd/mm/yyyy)</string>
@@ -320,22 +357,40 @@
     <string name="fetch_info_failed">Failed to fetch information</string>
     <string name="fetch_notification_failed">Failed to fetch notifications.</string>
     <string name="user_activity_get_failed">Could not fetch user activities</string>
+    <string name="security_question_get_failed">Could not fetch security questions</string>
+    <string name="security_answer_set_failed">Failed to set security answers</string>
     <string name="transaction_history_get_failed">Could not fetch transaction histories</string>
     <string name="pending_get_failed">Could not fetch pending requests</string>
     <string name="events_get_failed">Could not fetch my events</string>
     <string name="recharging_balance">Processing mobile recharge...</string>
     <string name="saving_pin">Saving PIN...</string>
+    <string name="device_name">device name</string>
+    <string name="trusted_device_limit_exceed_text">You have reached the limit of your trusted device. To add a new device, please remove minimum one device from the following list.</string>
+    <string name="add_trusted_device_alert">Do you want to add this device as trusted?</string>
+    <string name="add_trusted_device_alert_detail">You can use iPay mobile application from trusted device only. Please add this device as trusted to continue.</string>
+    <string name="add_this_as_trusted_device">Add this device as trusted</string>
     <string name="failed_add_trusted_device">Could not add trusted device</string>
     <string name="change_password_progress">Change password on progress...</string>
+    <string name="change_password_validation">Password validation on progress...</string>
     <string name="enter_current_pass">Enter current password</string>
+    <string name="current_pass">Current password</string>
+    <string name="enter_question">Select Question</string>
+    <string name="enter_answer">Enter Answer</string>
+    <string name="trusted_person">Trusted Person</string>
+    <string name="trusted_network">Trusted Network</string>
     <string name="server_down">Can not process your request right now. Please try again later</string>
     <string name="add_money_failed">Could not submit request for add money</string>
     <string name="wallet">Wallet</string>
     <string name="next">Next</string>
     <string name="continue_sign_up">Continue</string>
     <string name="bank_list">Banks</string>
-    <string name="bank_branch">Select Branch</string>
-    <string name="logout">Log out</string>
+    <string name="add_bank_agreement_title">Declaration by iPay Member for the linked bank account</string>
+    <string name="add_bank_agreement">I am hereby authorizing iPay Systems Ltd to debit or credit my below mentioned bank account for bank transaction instructions generated from the settlement bank of iPay Systems Ltd.</string>
+    <string name="add_bank_agreement_additional_message">We will deposit a random amount in your bank account as a part of verification process. You need to provide the deposited verification amount to link the bank with your iPay account. Please note that, bank verification process may take up to 3 working days.</string>
+    <string name="bank_branch">Branch</string>
+    <string name="i_agree">I agree</string>
+    <string name="disagree">Disagree</string>
+    <string name="logout">Log Out</string>
     <string name="bdt">BDT</string>
     <string name="make_payment">Make Payment</string>
     <string name="pay_by_QR_code">Pay by QR Code</string>
@@ -349,12 +404,14 @@
     <string name="select_a_district">Select District</string>
     <string name="select_a_thana">Select Thana</string>
     <string name="select_an_occupation">Select Occupation</string>
-    <string name="select_a_package">Select Package</string>
+    <string name="select_a_package">Operator Type</string>
     <string name="select_an_operator">Select Operator</string>
     <string name="recharge_to">Topup to</string>
     <string name="opening_balance_to">Opening balance to</string>
     <string name="are_you_sure_to_exit">Do you want to exit the application?</string>
+    <string name="sorry">Sorry</string>
     <string name="support_not_available">Customer support is not available right now. Please try again later.</string>
+    <string name="allow_overlay_permission">You need to allow the overlay permission for this application to work smoothly.</string>
     <string name="education_not_available">Education service is not available right now. Please try again later.</string>
     <string name="purpose">Purpose</string>
     <string name="failure_cause">Failure Cause</string>
@@ -362,13 +419,21 @@
     <string name="filter_system_event">System Events</string>
     <string name="filter">Filter</string>
     <string name="ticket_verified">Ticket Verified</string>
-    <string name="introducers">Introducer</string>
+    <string name="Introducer">Introducer</string>
+    <string name="introducer">introducer</string>
+    <string name="introducers">introducers</string>
+    <string name="introducer_request">Introducer request</string>
+    <string name="introduce_this_person">Introduce this person</string>
+    <string name="request_to_introduce">Request to introduce you</string>
+    <string name="request_to_introduce_detail">This person wants to be your introducer to iPay. You can accept or reject this request.</string>
     <string name="business_invitation">Business Invitation</string>
     <string name="in_progress">In Progress</string>
     <string name="transaction_failed">Failed</string>
     <string name="transaction_cancelled">Cancelled</string>
     <string name="transaction_rejected">Rejected</string>
-    <string name="draft">Saved but not send</string>
+    <string name="save_not_send">Saved but not send</string>
+    <string name="pending">Pending</string>
+    <string name="completed">Completed</string>
     <string name="filter_by_date">Filter by date</string>
     <string name="filter_by_service">Filter by service</string>
     <string name="filter_by_event">Filter by event</string>
@@ -376,6 +441,9 @@
     <string name="filter_security_changes">Security Changes</string>
     <string name="clear_filter">Clear Filter</string>
     <string name="select_a_bank">Select Bank</string>
+    <string name="remove_bank_title">Remove this account?</string>
+    <string name="blocked_bank_title">Blocked!</string>
+    <string name="bank_name">Bank Name</string>
     <string name="saving_profile_information">Saving profile information</string>
     <string name="saving_parent_information">Saving parent information</string>
     <string name="title_login_page">Login</string>
@@ -386,10 +454,31 @@
     <string name="title_otp_verification_for_personal">Enter Code</string>
     <string name="title_otp_verification_for_add_trusted_device">Enter Code</string>
     <string name="title_otp_verification_for_business">Enter Code</string>
+    <string name="title_otp_verification_for_change_password">Enter Code</string>
     <string name="title_select_account_type_page">Welcome</string>
     <string name="version">Version</string>
+    <string name="select_a_question">Select Question</string>
+    <string name="question">Question</string>
+    <string name="answer">Answer</string>
+    <string name="set_security_answer">Saving answers</string>
 
-    <!-- ARCA -->
+    <!-- Finger Print Auth -->
+    <string name="use_fingerprint_for_login">Use Fingerprint for Login</string>
+    <string name="fingerprint_authentication">Fingerprint Authentication</string>
+    <string name="use_password">Use password</string>
+    <string name="save_password_by_fingerprint">Please enter any of your valid fingerprint to save your password.</string>
+    <string name="touch_sensor">Touch sensor</string>
+    <string name="fingerprint_recognized">Fingerprint authentication successful</string>
+    <string name="fingerprint_not_recognized">Fingerprint not recognized. Try again</string>
+    <string name="use_fingerprint_to_authenticate_title">Use fingerprint to login</string>
+    <string name="activate_fingerprint">Activate fingerprint</string>
+    <string name="deactivate_fingerprint">Deactivate fingerprint</string>
+    <string name="fingerprint_authentication_activated">Fingerprint Authentication activated</string>
+    <string name="fingerprint_authentication_deactivated">Fingerprint authentication deactivated</string>
+    <string name="fingerprint_settings_description">You can use your fingerprint for faster login. Your password will be safely stored.</string>
+    <string name="login_failed_with_touch_id">It seems you have changed your password since you logged in the last time from this device. Please enter your new password.</string>
+    <string name="settings_changed_for_touch_id">It seems that fingerprint settings of this device is changed. Please login with your password and reactivate fingerprint authentication manually.</string>
+    <string name="remove_fingerprint_authentication_alert_message">Are you sure you want to deactivate fingerprint authentication?</string>
 
     <!-- PUSH -->
     <string name="push_profile_picture_updated_title">Profile Picture Changed</string>
@@ -415,22 +504,25 @@
     <string name="ask_for_introduction">Ask for Introduction</string>
     <string name="failed_sending_invitation">Invitation sending failed. Please try again</string>
     <string name="failed_asking_recommendation">Failed to place a recommendation request.</string>
+    <string name="failed_asking_introduction">Failed to place an introduction request.</string>
     <string name="invitaiton_limit_exceeded">Maximum invitation limit exceeded</string>
     <string name="failed_request">Request failed</string>
     <string name="invitation_sent">Invitation sent</string>
     <string name="ask_for_recommendation_sent">Recommendation request sent</string>
+    <string name="introduction_request_sent">Introduction request sent</string>
     <string name="please_log_in_again">Please log in again</string>
     <string name="identification">Identification</string>
     <string name="identification_documents">Identification Documents</string>
     <string name="action_search">Search</string>
     <string name="filter_send_money">Money Sent/Received</string>
+    <string name="filter_request_money">Request Money</string>
     <string name="filter_add_money">Money Added</string>
     <string name="filter_withdraw_money">Money Withdrawn</string>
     <string name="filter_top_up">Top Up</string>
     <string name="filter_payment">Payment</string>
+    <string name="filter_request_payment">Request Payment</string>
     <string name="filter_opening_balance">Opening Balance</string>
     <string name="filter_education">Education</string>
-
     <string name="basic_info">Basic Information</string>
     <string name="student_info">Student Information</string>
     <string name="pay_education_fee">Pay education fees</string>
@@ -452,29 +544,39 @@
     <string name="unverified">Not Verified</string>
     <string name="invited">Invited</string>
     <string name="trusted_devices">Trusted Devices</string>
-
-    <string name="logout_from_all_device">Log Out From All Devices</string>
+    <string name="trust_this_device">Trusted this device?</string>
+    <string name="logout_from_all_device">Log Out from All Devices</string>
     <string name="logout_from_all_device_warning">Are you sure you want to log out from all devices?</string>
     <string name="progress_dialog_loading_trusted_devices">Loading trusted device list</string>
     <string name="success_device_removed">Device removed successfully</string>
+    <string name="success_remove">Removed successfully</string>
     <string name="confirmation_remove_trusted_device">Are you sure you want to remove this device from trusted device list?</string>
+    <string name="profile_pic_help_text">A clear front faced image without shades where face can be identified is recommended.</string>
+    <string name="confirmation_remove_trusted_person">Are you sure you want to remove this person from your trusted network?</string>
     <string name="select_an_image">Select an Image</string>
     <string name="select_a_document">Select a Document</string>
     <string name="mobile_topup">Mobile TopUp</string>
-    <string name="mobile_topup_restriction_info">* Unverified users can recharge only their own mobile number</string>
+    <string name="mobile_topup_restriction_info">Unverified users can recharge only their own mobile number</string>
+    <string name="send_money_description_info">Enter the details of the recipient to send money</string>
+    <string name="request_money_description_info">Enter the details of the recipient to request money</string>
+    <string name="make_payment_description_info">Enter the details of the recipient to make payment</string>
     <string name="total_amount">Total Amount</string>
     <string name="review_and_create_invoice"><![CDATA[Review & Create Invoice]]></string>
     <string name="amount">Amount</string>
+    <string name="payment_amount">amount</string>
+    <string name="payment_total_amount">total amount</string>
     <string name="item">Item</string>
     <string name="fee">Fee</string>
     <string name="net_payable">Net Payable</string>
-    <string name="service_charge">Service Charge</string>
-    <string name="topup_package">Package</string>
+    <string name="service_charge">(-) Service Charge</string>
+    <string name="topup_package">Type</string>
     <string name="operator">Operator</string>
     <string name="invite_this_person_to_ipay" tools:keep="@string/invite_this_person_to_ipay">Invite this person to iPay</string>
     <string name="your_number">Your Number</string>
     <string name="enter_pin">Enter PIN</string>
     <string name="ok">OK</string>
+    <string name="got_it">GOT IT</string>
+    <string name="take_again">Take Again</string>
     <string name="confirm_ipay_invitation">Invite him/her to iPay?</string>
     <string name="amount_to_transfer">Amount to Transfer</string>
     <string name="total_received">Total Received</string>
@@ -487,6 +589,7 @@
     <string name="fathers_name">Father\'s Name</string>
     <string name="mothers_name">Mother\'s Name</string>
     <string name="mobile">Mobile No.</string>
+    <string name="history">History</string>
     <string name="this_device">This device</string>
     <string name="present_address">Present Address</string>
     <string name="permanent_address">Permanent Address</string>
@@ -505,7 +608,9 @@
     <string name="progress_dialog_make_primary_email">Making this email primary...</string>
     <string name="failed_make_primary">Failed to make this primary email</string>
     <string name="confirmation_remove_email_address">Remove this email address?</string>
+    <string name="confirmation_add_to_contacts">Add this number to contacts?</string>
     <string name="link_bank">Link Bank</string>
+    <string name="bank_consent_agreement">Bank consent agreement</string>
     <string name="progress_dialog_if_pin_exists">Preparing. Please wait...</string>
     <string name="failed_loading_pin">Failed loading PIN</string>
     <string name="add_a_trusted_person">Add a trusted person</string>
@@ -523,20 +628,26 @@
     <string name="dialog_prompt_add_pin">Please set your PIN first</string>
     <string name="enter_a_new_pin">Enter a new PIN</string>
     <string name="get_verified_to_invite">You can invite him/her to iPay once you get verified</string>
+    <string name="get_verified">Get verified first!</string>
     <string name="failed_get_document_list">Failed to fetch the list of documents</string>
     <string name="not_submitted">Not Submitted</string>
     <string name="you_need_to_upload_identification_documents_to_get_verified">You need to upload at least one identification documents to get verified</string>
     <string name="document_id">Document ID</string>
+    <string name="verify_identity">Please verify your identity</string>
+    <string name="no_face_detected">Sorry, the picture selected is not appropriate for your iPay account.\nPlease take a clear image of your face.</string>
+    <string name="not_an_image">Sorry, the file selected is not an image. Please take the picture again.</string>
+    <string name="default_profile_pic_inappropriate_message">Sorry, can not update the profile picture. Please take the picture again.</string>
+    <string name="multiple_face_detected">Sorry, the picture selected is not appropriate for your iPay account.\nPlease upload your picture only.</string>
     <string name="no_file_selected">No file selected</string>
     <string name="please_select_a_file_to_upload">Please select a file to upload</string>
     <string name="select_a_file">Select a file</string>
     <string name="failed_fetching_money_requests">Failed to fetch money requests</string>
-    <string name="failed_fetching_single_invoice">Failed to fetch invoice</string>
+    <string name="failed_fetching_payment_request">Failed to fetch payment request</string>
     <string name="not_a_valid_invoice_id">Please scan a valid invoice Id</string>
     <string name="failed_fetching_profile_completion_status">Failed to fetch profile completion status</string>
     <string name="can_not_change_picture">Verified user can not change profile picture</string>
     <string name="profile_completeness">Profile Completeness</string>
-    <string name="profile_completion_text">Yout profile is 0% complete. Complete profile to get verified</string>
+    <string name="profile_completion_text">Your profile is 0% complete.</string>
     <string name="business_contact">Business Contact</string>
     <string name="edit_basic_info">Edit Basic Info</string>
     <string name="edit_contact_info">Edit Contact Info</string>
@@ -547,15 +658,20 @@
     <string name="introduced_list_header">I have Introduced</string>
     <string name="introducer_list_header">Introduced by</string>
     <string name="select_a_contact">Select a contact</string>
-    <string name="progress_dialog_single_invoice">Fetching invoice...</string>
-    <string name="failed_add_friend">Add friend failed</string>
-    <string name="failed_invite_friend">Invite friend failed</string>
-    <string name="failed_update_friend">Update friend failed</string>
+    <string name="progress_dialog_payment_request">Fetching payment request...</string>
+    <string name="add_contact_successful">Contact added successfully. Refreshing contact list...</string>
+    <string name="delete_contact_successful">Contact deleted successfully. Refreshing contact list...</string>
+    <string name="update_contact_successful">Update contact successful</string>
+    <string name="failed_add_contact">Add contact failed</string>
+    <string name="failed_invite_contact">Invite contact failed</string>
+    <string name="failed_update_contact">Update contact failed</string>
+    <string name="confirm_request_accept">Are you sure you want to accept this request?</string>
     <string name="confirm_request_rejection">Are you sure you want to reject this request?</string>
     <string name="contacts_sync_failed">Contacts Sync Failed</string>
+    <string name="business_contacts_sync_failed">Fail to fetch business contacts</string>
     <string name="search">Search</string>
     <string name="member_since">Member Since</string>
-    <string name="select_district">Select District</string>
+    <string name="select_district">District</string>
     <string name="add_bank_prompt">You need to have verified bank accounts to add or withdraw money. Do you want to link a bank account now?</string>
     <string name="verify_bank_prompt">You need to have at least one verified bank account to add or withdraw money. Do you want to verify a bank account now?</string>
     <string name="add_bank">Add Bank</string>
@@ -589,6 +705,7 @@
     <string name="edit_employee">Save Changes</string>
     <string name="user_has_no_ipay_account">Sorry, this user has no iPay account</string>
     <string name="preparing">Preparing</string>
+    <string name="processing">Processing</string>
     <string name="see_other_activity">See Other Activity</string>
     <string name="manage_people">Manage People</string>
     <string name="received_request">Requests Received</string>
@@ -615,8 +732,8 @@
     <string name="edit_business_information">Edit Business Information</string>
     <string name="get_balance">Get Balance</string>
     <string name="get_transactions">Get Transactions</string>
-    <string name="friend_read">See frieds</string>
-    <string name="friend_write">Add friends</string>
+    <string name="contact_read">See contacts</string>
+    <string name="contact_write">Add contacts</string>
     <string name="see_owner_info">See business owner information</string>
     <string name="manage_owner_info">Manage business owner information</string>
     <string name="see_docs">See personal documents</string>
@@ -636,33 +753,36 @@
     <string name="session">Session</string>
     <string name="student_name">Student Name</string>
     <string name="net_amount">Net Amount</string>
+    <string name="recipient_net_amount">Recipient will get</string>
     <string name="status">Status</string>
     <string name="time">Time</string>
     <string name="topup_rollback">TopUp Rollback</string>
-    <string name="add_a_friend">Add a Friend</string>
-    <string name="invite_a_friend">Invite a Friend</string>
-    <string name="progress_dialog_adding_friend">Adding friend...</string>
-    <string name="add_friend_successful">Add Friend Successful. Refreshing friend list...</string>
+    <string name="add_a_contact">Add a Contact</string>
+    <string name="invite_a_contact">Invite a Contact</string>
+    <string name="progress_dialog_adding_contact">Adding contact...</string>
     <string name="dialog_requesting_top_up">Preparing for Top Up...</string>
-
     <string name="term_link">https://www.ipay.com.bd/legal/tos</string>
     <string name="privacy_link">https://www.ipay.com.bd/legal/privacy-policy</string>
     <string name="forget_password_link">https://www.ipay.com.bd/forgot-password</string>
-
     <string name="you_cannot_send_money_to_your_number">You can\'t send money to your own mobile number</string>
     <string name="you_cannot_make_payment_to_your_number">You can\'t make payment to your own mobile number</string>
     <string name="you_cannot_request_money_from_your_number">You can\'t request money from your own mobile number</string>
     <string name="help">Help</string>
     <string name="create_ticket">Create Ticket</string>
     <string name="subject">Subject</string>
+    <string name="category">Category</string>
     <string name="ticket_created">Ticket Created</string>
     <string name="creating_ticket">Creating ticket...</string>
+    <string name="select_category">Select a category</string>
     <string name="no_email_added">No Email Added</string>
+    <string name="can_not_add_bank_if_not_verified">You can not link your bank until your iPay account gets verified by our system. After submitting your documents and other information it might take a while for verification.</string>
     <string name="dialog_add_new_email">You need to set up your primary email to use the support system. Add an email now?</string>
+    <string name="ticket_created_dialog_text">Request to create a ticket for your issue has been placed successfully. It may take a little while to show up in your ticket list.</string>
     <string name="dialog_verify_email">You need to set up your primary email to use the support system. Verify your email now?</string>
     <string name="no_primary_email">No Primary Email</string>
     <string name="no_tickets_available">"You haven't created any ticket. Press '+' to create one"</string>
     <string name="message">Message</string>
+    <string name="validating_profile_picture">Checking the picture selected...</string>
     <string name="failed_empty_subject">Subject cannot be empty</string>
     <string name="failed_empty_message">Message cannot be empty</string>
     <string name="failed_loading_ticket_details">Failed to load ticket details</string>
@@ -671,9 +791,21 @@
     <string name="failed_adding_comment">Failed to add comment</string>
     <string name="comment">Comment</string>
     <string name="add_comment">Add Comment</string>
-    <string name="comment_cannot_be_empty">Comment cannot be empty</string>
+    <string name="comment_cannot_be_empty">Please enter your message.</string>
     <string name="not_available">Not available</string>
-
+    <string name="accepted">Accepted</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="rejected">Rejected</string>
+    <string name="draft">Draft</string>
+    <string name="attachment">attachment</string>
+    <string name="attachments">attachments</string>
+    <string name="album">Album</string>
+    <string name="tap_to_select_images">Tap to select images</string>
+    <string name="camera">Camera</string>
+    <string name="pdf">pdf</string>
+    <string name="max_limit_exceed">Max limit of attachment exceed. </string>
+    <string name="remove_contact_title">Delete contact </string>
+    <string name="remove_contact_message">Delete this contact from iPay? </string>
 
     <string-array name="mobile_operators">
         <item>Grameenphone</item>
@@ -689,16 +821,7 @@
         <item>Post-paid </item>
     </string-array>
 
-    <string-array name="relationship">
-        <item>Father</item>
-        <item>Mother</item>
-        <item>Brother</item>
-        <item>Sister</item>
-        <item>Friend</item>
-    </string-array>
-
-
-    <string-array name="trusted_device_action">
+    <string-array name="trusted_device_or_network_action">
         <item>Remove</item>
     </string-array>
 
@@ -725,14 +848,20 @@
     </string-array>
 
     <string-array name="upload_picker_action">
-        <item>Take a Picture</item>
-        <item>Select from Gallery</item>
+        <item>Take a picture</item>
+        <item>Select from gallery</item>
     </string-array>
 
     <string-array name="pending_picker_action">
-        <item>Take a Picture</item>
-        <item>Select from Gallery</item>
-        <item>View Uploaded Document</item>
+        <item>Take a picture</item>
+        <item>Select from gallery</item>
+        <item>View uploaded document</item>
+    </string-array>
+
+    <string-array name="attach_file_picker_action">
+        <item>Take a picture</item>
+        <item>Select from gallery</item>
+        <item>Select a PDF</item>
     </string-array>
 
     <string-array name="verified_picker_action">
@@ -786,6 +915,7 @@
     </string-array>
 
     <string-array name="business_document_id">
+        <item>NID</item>
         <item>Business TIN ID</item>
         <item>Trade License ID</item>
         <item>VAT Registration Certificate ID</item>

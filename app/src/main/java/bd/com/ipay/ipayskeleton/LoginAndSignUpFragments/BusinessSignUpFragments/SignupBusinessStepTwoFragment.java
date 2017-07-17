@@ -15,10 +15,10 @@ import android.widget.Toast;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
-import bd.com.ipay.ipayskeleton.Api.GetBusinessTypesAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputSignUpView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -112,9 +112,12 @@ public class SignupBusinessStepTwoFragment extends Fragment {
             focusView = mBusinessNameView;
             cancel = true;
 
-        } else if (!mBusinessAddressView.verifyUserInputs()) {
+        } else if (mSelectedBusinessTypeId == -1) {
+            mBusinessType.setError(getString(R.string.invalid_business_type));
+            focusView = mBusinessType;
             cancel = true;
-        }
+        } else if (!mBusinessAddressView.verifyUserInputs())
+            cancel = true;
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -147,7 +150,7 @@ public class SignupBusinessStepTwoFragment extends Fragment {
 
 
     private void setTypeAdapter(List<BusinessType> businessTypeList) {
-        businessTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), getString(R.string.business_type), businessTypeList, mSelectedBusinessTypeId);
+        businessTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), getString(R.string.business_type), businessTypeList);
         businessTypeResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {

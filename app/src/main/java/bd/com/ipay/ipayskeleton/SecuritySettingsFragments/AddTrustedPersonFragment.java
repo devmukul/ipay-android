@@ -1,8 +1,10 @@
 package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,23 +14,24 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.Arrays;
-import java.util.List;
-
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.AddTrustedPersonRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.TrustedNetwork.AddTrustedPersonResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.AddTrustedPersonRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.AddTrustedPersonResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddTrustedPersonFragment extends Fragment implements HttpResponseListener {
@@ -39,18 +42,18 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
     private EditText mEditTextName;
     private EditText mEditTextMobileNumber;
     private EditText mEditTextRelationship;
+    private ImageView mSelectContactButton;
     private Button mAddButton;
 
-    private CustomSelectorDialog mCustomSelectorDialog;
+    private ResourceSelectorDialog mResourceSelectorDialog;
     private ProgressDialog mProgressDialog;
-
-    private List<String> mRelationshipList;
 
     private String mName;
     private String mRelationship;
     private String mMobileNumber;
 
     private int mSelectedRelationId = -1;
+    private final int PICK_CONTACT_REQUEST = 100;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,29 +70,37 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
         mEditTextMobileNumber = (EditText) v.findViewById(R.id.edit_text_mobile_number);
         mEditTextRelationship = (EditText) v.findViewById(R.id.edit_text_relationship);
         mAddButton = (Button) v.findViewById(R.id.button_add_trusted_person);
+        mSelectContactButton = (ImageView) v.findViewById(R.id.select_number_from_contacts);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
+        mEditTextName.requestFocus();
         final InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
-        mRelationshipList = Arrays.asList(getResources().getStringArray(R.array.relationship));
-        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), getString(R.string.relationship), mRelationshipList);
-
-        mEditTextRelationship.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCustomSelectorDialog.show();
-            }
-        });
-
-        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+        mResourceSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.relationship), CommonData.getRelationshipList());
+        mResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int selectedIndex, String mRelation) {
                 mEditTextRelationship.setError(null);
                 mEditTextRelationship.setText(mRelation);
                 mSelectedRelationId = selectedIndex;
                 mRelationship = mRelation;
+            }
+        });
+
+        mEditTextRelationship.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mResourceSelectorDialog.show();
+            }
+        });
+
+        mSelectContactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
+                startActivityForResult(intent, PICK_CONTACT_REQUEST);
             }
         });
 
@@ -106,6 +117,18 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
         });
 
         return v;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
+                if (mobileNumber != null)
+                    mEditTextMobileNumber.setText(mobileNumber);
+                mEditTextMobileNumber.setError(null);
+            }
+        }
     }
 
     private boolean verifyUserInputs() {
@@ -157,14 +180,14 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mAddTrustedPersonTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -177,7 +200,7 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    ((SecuritySettingsActivity) getActivity()).switchToPasswordRecovery();
+                    ((SecuritySettingsActivity) getActivity()).switchToTrustedPersonFragment();
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -185,7 +208,7 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.failed_adding_trusted_person, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.failed_adding_trusted_person, Toast.LENGTH_LONG);
             }
 
             mAddTrustedPersonTask = null;

@@ -4,8 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Bank;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Bank;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 
 public class CommonData {
     private static List<Bank> availableBanks;
@@ -14,6 +15,7 @@ public class CommonData {
     private static List<BusinessType> businessTypes;
     private static Map<Integer, BusinessType> businessIdToTypeMap;
     private static Map<String, Integer> businessNameToIdMap;
+    private static List<Relationship> relationshipList;
 
     public static List<Bank> getAvailableBanks() {
         return availableBanks;
@@ -44,8 +46,6 @@ public class CommonData {
         }
     }
 
-
-
     public static List<BusinessType> getBusinessTypes() {
         return businessTypes;
     }
@@ -71,13 +71,21 @@ public class CommonData {
         return businessIdToTypeMap.get(id);
     }
 
+    public static List<Relationship> getRelationshipList() {
+        return CommonData.relationshipList;
+    }
+
     public static void setBusinessTypes(List<BusinessType> businessTypes) {
         CommonData.businessTypes = businessTypes;
         businessIdToTypeMap = new HashMap<>();
         businessNameToIdMap = new HashMap<>();
-        for (BusinessType businessType: businessTypes) {
+        for (BusinessType businessType : businessTypes) {
             businessIdToTypeMap.put(businessType.getId(), businessType);
             businessNameToIdMap.put(businessType.getName(), businessType.getId());
         }
+    }
+
+    public static void setRelationshipList(List<Relationship> relationshipList) {
+        CommonData.relationshipList = relationshipList;
     }
 }

@@ -19,17 +19,18 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.SetBusinessInformationRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Owner.SetBusinessInformationResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.SetBusinessInformationRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Owner.SetBusinessInformationResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EditBusinessInformationFragment extends Fragment implements HttpResponseListener {
@@ -67,7 +68,7 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
         mBusinessTypeId = getArguments().getInt(Constants.BUSINESS_TYPE);
         mBusinessTypes = getArguments().getParcelableArrayList(Constants.BUSINESS_TYPE_LIST);
 
-        businessTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), getString(R.string.business_type), mBusinessTypes, mBusinessTypeId);
+        businessTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), getString(R.string.business_type), mBusinessTypes);
         businessTypeResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
@@ -141,16 +142,15 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
         boolean cancel = false;
         View focusView = null;
 
-        mBusinessName = mBusinessNameEditText.getText().toString();
+        mBusinessName = mBusinessNameEditText.getText().toString().trim();
         mBusinessMobileNumber = ContactEngine.formatMobileNumberBD(mBusinessMobileNumberEditText.getText().toString());
         /** mBusinessTypeId has already been selected when the user picked an item from the dialog **/
 
         if (mBusinessName.isEmpty()) {
-            mBusinessNameEditText.setError(getString(R.string.error_invalid_name));
+            mBusinessNameEditText.setError(getString(R.string.business_name_required));
             cancel = true;
             focusView = mBusinessNameEditText;
         }
-
         if (!ContactEngine.isValidNumber(mBusinessMobileNumber)) {
             mBusinessMobileNumberEditText.setError(getString(R.string.error_invalid_mobile_number));
             cancel = true;
@@ -166,7 +166,7 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
@@ -181,17 +181,17 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
                 mSetBusinessInformationResponse = gson.fromJson(result.getJsonString(), SetBusinessInformationResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mSetBusinessInformationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), mSetBusinessInformationResponse.getMessage(), Toast.LENGTH_LONG);
                         ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
                     }
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), mSetBusinessInformationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), mSetBusinessInformationResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.business_information_saving_failed, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.business_information_saving_failed, Toast.LENGTH_LONG);
             }
 
             mSetBusinessInformationRequestAsyncTask = null;

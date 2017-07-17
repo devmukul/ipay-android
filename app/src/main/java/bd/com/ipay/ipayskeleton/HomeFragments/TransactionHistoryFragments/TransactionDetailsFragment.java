@@ -1,26 +1,33 @@
 package bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments;
 
+import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TransactionHistory.TransactionHistoryClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TransactionDetailsFragment extends Fragment {
 
-    private TransactionHistoryClass transactionHistory;
+    private TransactionHistory transactionHistory;
 
     private TextView descriptionTextView;
     private TextView timeTextView;
@@ -39,6 +46,8 @@ public class TransactionDetailsFragment extends Fragment {
     private ImageView otherImageView;
     private TextView mMobileNumberView;
     private TextView mNameView;
+    private Button mAddInContactsButton;
+
 
     @Nullable
     @Override
@@ -65,15 +74,18 @@ public class TransactionDetailsFragment extends Fragment {
         otherImageView = (ImageView) v.findViewById(R.id.other_image);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
+        mAddInContactsButton = (Button) v.findViewById(R.id.add_in_contacts);
 
         String mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
-        descriptionTextView.setText(transactionHistory.getDescription(mMobileNumber));
-        timeTextView.setText(Utilities.getDateFormat(transactionHistory.getResponseTime()));
+        if (transactionHistory.getDescription(mMobileNumber) != null)
+            descriptionTextView.setText(transactionHistory.getDescription(mMobileNumber));
+        timeTextView.setText(Utilities.formatDateWithTime(transactionHistory.getResponseTime()));
         amountTextView.setText(Utilities.formatTaka(transactionHistory.getAmount()));
         feeTextView.setText(Utilities.formatTaka(transactionHistory.getFee()));
         transactionIDTextView.setText(transactionHistory.getTransactionID());
         netAmountTextView.setText(Utilities.formatTaka(transactionHistory.getNetAmount()));
-        balanceTextView.setText(Utilities.formatTaka(transactionHistory.getBalance()));
+        if (transactionHistory.getBalance() != null)
+            balanceTextView.setText(Utilities.formatTaka(transactionHistory.getBalance()));
         mobileNumberTextView.setText(ProfileInfoCacheManager.getMobileNumber());
 
         int serviceId = transactionHistory.getServiceID();
@@ -87,6 +99,33 @@ public class TransactionDetailsFragment extends Fragment {
         final String otherProfilePicture = transactionHistory.getAdditionalInfo().getUserProfilePic();
         final String otherMobileNumber = transactionHistory.getAdditionalInfo().getUserMobileNumber();
         final String otherName = transactionHistory.getAdditionalInfo().getUserName();
+
+        if (serviceId == Constants.TRANSACTION_HISTORY_SEND_MONEY || serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
+            if (!new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getUserMobileNumber())) {
+                mAddInContactsButton.setVisibility(View.VISIBLE);
+            }
+        }
+
+        mAddInContactsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.are_you_sure)
+                        .setMessage(getString(R.string.confirmation_add_to_contacts))
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mAddInContactsButton.setVisibility(View.GONE);
+                                addContact(transactionHistory.getAdditionalInfo().getUserName(),
+                                        transactionHistory.getAdditionalInfo().getUserMobileNumber(), null);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null);
+
+                dialog.show();
+            }
+        });
+
 
         if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
             purposeLayout.setVisibility(View.GONE);
@@ -104,7 +143,9 @@ public class TransactionDetailsFragment extends Fragment {
             if (bankCode != null) otherImageView.setImageResource(bankIcon);
             else otherImageView.setImageResource(R.drawable.ic_tran_add);
 
-        } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
+        } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
+                || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT
+                || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK) {
             mNameView.setText(bankName);
             mMobileNumberView.setText(bankAccountNumber);
             mProfileImageView.setVisibility(View.GONE);
@@ -151,31 +192,41 @@ public class TransactionDetailsFragment extends Fragment {
         }
 
         final Integer statusCode = transactionHistory.getStatusCode();
+        final String status = transactionHistory.getStatus();
 
         if (statusCode != Constants.TRANSACTION_STATUS_ACCEPTED && statusCode != Constants.TRANSACTION_STATUS_PROCESSING) {
             final String status_description = transactionHistory.getStatusDescription();
             failureCauseTextView.setText(status_description);
             failureCauseTextView.setTextColor(getResources().getColor(R.color.background_red));
             failureCauseLayout.setVisibility(View.VISIBLE);
-
         } else
             failureCauseLayout.setVisibility(View.GONE);
 
+        statusTextView.setText(status);
+
         if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
-            statusTextView.setText(getString(R.string.transaction_successful));
             statusTextView.setTextColor(getResources().getColor(R.color.bottle_green));
         } else if (statusCode == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
-            statusTextView.setText(getString(R.string.in_progress));
             statusTextView.setTextColor(getResources().getColor(R.color.colorAmber));
         } else {
-            if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY) {
+            if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP
+                    && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
+                    && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY) {
                 balanceTextView.setText(getString(R.string.not_applicable));
             }
-            statusTextView.setText(getString(R.string.transaction_failed));
             statusTextView.setTextColor(getResources().getColor(R.color.background_red));
         }
 
         return v;
+    }
+
+    private void addContact(String name, String phoneNumber, String relationship) {
+        AddContactRequestBuilder addContactRequestBuilder = new
+                AddContactRequestBuilder(name, phoneNumber, relationship);
+
+        new AddContactAsyncTask(Constants.COMMAND_ADD_CONTACTS,
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(),
+                getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 

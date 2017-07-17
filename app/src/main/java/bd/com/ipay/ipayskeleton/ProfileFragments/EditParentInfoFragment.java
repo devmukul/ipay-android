@@ -1,6 +1,8 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,18 +12,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetParentInfoRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetParentInfoResponse;
+import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetParentInfoRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetParentInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class EditParentInfoFragment extends Fragment implements HttpResponseListener {
@@ -35,6 +40,9 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
     private EditText mFathersMobileEditText;
     private EditText mMothersMobileEditText;
 
+    private ImageView mSelectFatherMobileContactButton;
+    private ImageView mSelectMotherMobileContactButton;
+
     private ProgressDialog mProgressDialog;
 
     private String mFathersName = "";
@@ -45,6 +53,9 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
 
     private Button mInfoSaveButton;
 
+    private final int PICK_FATHERS_MOBILE_NUMBER_REQUEST = 100;
+    private final int PICK_MOTHERS_MOBILE_NUMBER_REQUEST = 101;
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
@@ -54,7 +65,7 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_edit_parent_info, container, false);
+        View view = inflater.inflate(R.layout.fragment_edit_parent_info, container, false);
 
         getActivity().setTitle(getString(R.string.edit_parent_info));
         Bundle bundle = getArguments();
@@ -64,18 +75,35 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
         mFathersMobile = bundle.getString(Constants.FATHERS_MOBILE);
         mMothersMobile = bundle.getString(Constants.MOTHERS_MOBILE);
 
-        mFathersNameEditText = (EditText) v.findViewById(R.id.fathers_name);
-        mMothersNameEditText = (EditText) v.findViewById(R.id.mothers_name);
-        mFathersMobileEditText = (EditText) v.findViewById(R.id.fathers_mobile);
-        mMothersMobileEditText = (EditText) v.findViewById(R.id.mothers_mobile);
+        mFathersNameEditText = (EditText) view.findViewById(R.id.fathers_name);
+        mMothersNameEditText = (EditText) view.findViewById(R.id.mothers_name);
+        mFathersMobileEditText = (EditText) view.findViewById(R.id.fathers_mobile);
+        mMothersMobileEditText = (EditText) view.findViewById(R.id.mothers_mobile);
+        mSelectFatherMobileContactButton = (ImageView) view.findViewById(R.id.father_number);
+        mSelectMotherMobileContactButton = (ImageView) view.findViewById(R.id.mother_number);
 
-        mInfoSaveButton = (Button) v.findViewById(R.id.button_save);
+        mInfoSaveButton = (Button) view.findViewById(R.id.button_save);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
 
         setParentInformation();
 
+        mSelectFatherMobileContactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
+                startActivityForResult(intent, PICK_FATHERS_MOBILE_NUMBER_REQUEST);
+            }
+        });
+
+        mSelectMotherMobileContactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
+                startActivityForResult(intent, PICK_MOTHERS_MOBILE_NUMBER_REQUEST);
+            }
+        });
 
         mInfoSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +115,26 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
             }
         });
 
-        return v;
+        return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_FATHERS_MOBILE_NUMBER_REQUEST && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
+                if (mobileNumber != null)
+                    mFathersMobileEditText.setText(mobileNumber);
+                mFathersMobileEditText.setError(null);
+            }
+        } else if (requestCode == PICK_MOTHERS_MOBILE_NUMBER_REQUEST && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
+                if (mobileNumber != null)
+                    mMothersMobileEditText.setText(mobileNumber);
+                mMothersMobileEditText.setError(null);
+            }
+        }
     }
 
     private boolean verifyUserInputs() {
@@ -104,8 +151,8 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
             mFathersNameEditText.setError(getString(R.string.error_invalid_first_name));
             focusView = mFathersNameEditText;
             cancel = true;
-        } else if (mFathersName.length() < 5 ) {
-            mFathersNameEditText.setError(getString(R.string.error_invalid_parent_name));
+        } else if (!InputValidator.isValidNameWithRequiredLength(mFathersName)) {
+            mFathersNameEditText.setError(getString(R.string.error_invalid_name_with_required_length));
             focusView = mFathersNameEditText;
             cancel = true;
         }
@@ -114,14 +161,14 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
             mMothersNameEditText.setError(getString(R.string.error_invalid_first_name));
             focusView = mMothersNameEditText;
             cancel = true;
-        } else if (mMothersName.length() < 5 ) {
-            mMothersNameEditText.setError(getString(R.string.error_invalid_parent_name));
+        } else if (!InputValidator.isValidNameWithRequiredLength(mMothersName)) {
+            mMothersNameEditText.setError(getString(R.string.error_invalid_name_with_required_length));
             focusView = mMothersNameEditText;
             cancel = true;
         }
 
         if (mFathersMobile.isEmpty()) mFathersMobile = null;
-        else if ( !ContactEngine.isValidNumber(mFathersMobile)) {
+        else if (!ContactEngine.isValidNumber(mFathersMobile)) {
             mFathersMobileEditText.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mFathersMobileEditText;
             cancel = true;
@@ -166,7 +213,7 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
 
     }
 
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {

@@ -1,7 +1,9 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,16 +22,19 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
+import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SentReceivedRequestReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -49,62 +55,67 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     private String mReceiverMobileNumber;
     private String mPhotoUri;
     private String mDescription;
-    private String mTitle;
     private long mRequestID;
 
     private ProfileImageView mProfileImageView;
     private TextView mNameView;
     private TextView mMobileNumberView;
     private TextView mDescriptionTagView;
-    private TextView mTitleTagView;
     private TextView mDescriptionView;
-    private TextView mTitleView;
     private View mDescriptionHolder;
     private TextView mAmountView;
     private TextView mServiceChargeView;
-    private TextView mNetReceivedView;
+    private TextView mNetAmountTitleView;
+    private TextView mNetAmountView;
     private Button mRejectButton;
     private Button mAcceptButton;
     private Button mCancelButton;
+    private CheckBox mAddInContactsCheckBox;
+
+    private boolean isInContacts;
     private boolean isPinRequired = true;
+    private boolean switchedFromTransactionHistory = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_sent_received_request_review, container, false);
 
-        mRequestType = getActivity().getIntent().getIntExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
-
-        if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST)
-            getActivity().setTitle(R.string.send_money);
-        else
-            getActivity().setTitle(R.string.request_money);
-
         mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
-        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.INVOICE_RECEIVER_TAG);
-        mDescription = getActivity().getIntent().getStringExtra(Constants.INVOICE_DESCRIPTION_TAG);
-        mTitle = getActivity().getIntent().getStringExtra(Constants.INVOICE_TITLE_TAG);
+        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
+        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
         mRequestID = (long) getActivity().getIntent().getSerializableExtra(Constants.MONEY_REQUEST_ID);
-
         mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
         mPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
+        mRequestType = getActivity().getIntent()
+                .getIntExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
+
+        isInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
+        switchedFromTransactionHistory = getActivity().getIntent()
+                .getBooleanExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, false);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mDescriptionTagView = (TextView) v.findViewById(R.id.description);
-        mTitleTagView = (TextView) v.findViewById(R.id.title);
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
-        mTitleView = (TextView) v.findViewById(R.id.textview_title);
         mDescriptionHolder = v.findViewById(R.id.layout_description_holder);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
-        mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
+        mNetAmountTitleView = (TextView) v.findViewById(R.id.net_amount_title);
+        mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
+        mAddInContactsCheckBox = (CheckBox) v.findViewById(R.id.add_in_contacts);
 
         mAcceptButton = (Button) v.findViewById(R.id.button_accept);
         mRejectButton = (Button) v.findViewById(R.id.button_reject);
         mCancelButton = (Button) v.findViewById(R.id.button_cancel);
 
         mProgressDialog = new ProgressDialog(getActivity());
+
+        if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST) {
+            getActivity().setTitle(R.string.send_money);
+            mNetAmountTitleView.setText(getString(R.string.recipient_net_amount));
+        } else
+            getActivity().setTitle(R.string.request_money);
 
         mProfileImageView.setProfilePicture(mPhotoUri, false);
 
@@ -122,12 +133,6 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         } else
             mDescriptionView.setText(mDescription);
 
-        if (mTitle == null || mTitle.isEmpty()) {
-            mTitleTagView.setVisibility(View.GONE);
-            mTitleView.setVisibility(View.GONE);
-        } else
-            mTitleView.setText(mTitle);
-
         if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST) {
             mAcceptButton.setVisibility(View.VISIBLE);
             mRejectButton.setVisibility(View.VISIBLE);
@@ -136,6 +141,11 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
             mAcceptButton.setVisibility(View.GONE);
             mRejectButton.setVisibility(View.GONE);
             mCancelButton.setVisibility(View.VISIBLE);
+        }
+
+        if (!isInContacts) {
+            mAddInContactsCheckBox.setVisibility(View.VISIBLE);
+            mAddInContactsCheckBox.setChecked(true);
         }
 
         mAmountView.setText(Utilities.formatTaka(mAmount));
@@ -177,17 +187,17 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     }
 
     private void attempAcceptRequestWithPinCheck() {
-        if (this.isPinRequired) {
-            final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
+        if (mAddInContactsCheckBox.isChecked()) {
+            addContact(mReceiverName, mReceiverMobileNumber, null);
+        }
 
-            pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
+        if (this.isPinRequired) {
+            new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    acceptRequestMoney(mRequestID, pinInputDialogBuilder.getPin());
+                public void ifPinCheckedAndAdded(String pin) {
+                    acceptRequestMoney(mRequestID, pin);
                 }
             });
-
-            pinInputDialogBuilder.build().show();
         } else {
             acceptRequestMoney(mRequestID, null);
         }
@@ -215,13 +225,17 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     }
 
     private void cancelRequest(Long id) {
+        if (mAddInContactsCheckBox.isChecked()) {
+            addContact(mReceiverName, mReceiverMobileNumber, null);
+        }
+
         if (mCancelRequestTask != null) {
             return;
         }
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_cancelling));
         mProgressDialog.show();
-        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
         // No PIN needed for now to place a request from me
         RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
                 new RequestMoneyAcceptRejectOrCancelRequest(id, null);
@@ -234,13 +248,17 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     }
 
     private void rejectRequestMoney(long id) {
+        if (mAddInContactsCheckBox.isChecked()) {
+            addContact(mReceiverName, mReceiverMobileNumber, null);
+        }
+
         if (mRejectRequestTask != null) {
             return;
         }
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_rejecting));
         mProgressDialog.show();
-        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
         RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
                 new RequestMoneyAcceptRejectOrCancelRequest(id);
         Gson gson = new Gson();
@@ -258,7 +276,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_accepted));
         mProgressDialog.show();
-        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
         RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
                 new RequestMoneyAcceptRejectOrCancelRequest(id, pin);
         Gson gson = new Gson();
@@ -269,8 +287,17 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mAcceptRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void addContact(String name, String phoneNumber, String relationship) {
+        AddContactRequestBuilder addContactRequestBuilder = new
+                AddContactRequestBuilder(name, phoneNumber, relationship);
+
+        new AddContactAsyncTask(Constants.COMMAND_ADD_CONTACTS,
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(),
+                getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
@@ -279,7 +306,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
             mAcceptRequestTask = null;
             mRejectRequestTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -295,18 +322,24 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                            getActivity().onBackPressed();
+                            Toaster.makeText(getActivity(), message, Toast.LENGTH_LONG);
+
+                            if (switchedFromTransactionHistory) {
+                                Intent intent = new Intent();
+                                getActivity().setResult(Activity.RESULT_OK, intent);
+                                getActivity().finish();
+                            } else
+                                getActivity().onBackPressed();
                         }
 
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG);
                 }
 
                 mProgressDialog.dismiss();
@@ -321,19 +354,23 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                            getActivity().onBackPressed();
+                            Toaster.makeText(getActivity(), message, Toast.LENGTH_LONG);
+
+                            if (switchedFromTransactionHistory) {
+                                Utilities.finishLauncherActivity(getActivity());
+                            } else
+                                getActivity().onBackPressed();
                         }
 
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.could_not_reject_money_request, Toast.LENGTH_LONG);
                 }
 
                 mProgressDialog.dismiss();
@@ -348,19 +385,23 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                                 RequestMoneyAcceptRejectOrCancelResponse.class);
                         String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                            getActivity().onBackPressed();
+                            Toaster.makeText(getActivity(), message, Toast.LENGTH_LONG);
+
+                            if (switchedFromTransactionHistory) {
+                                Utilities.finishLauncherActivity(getActivity());
+                            } else
+                                getActivity().onBackPressed();
                         }
 
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG);
                     }
 
                 } else {
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG);
                 }
 
                 mProgressDialog.dismiss();
@@ -372,7 +413,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
     @Override
     public int getServiceID() {
-        return Constants.SERVICE_ID_SEND_MONEY;
+        return Constants.SERVICE_ID_REQUEST_MONEY;
     }
 
     @Override
@@ -383,12 +424,11 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mNetReceivedView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
     }
 
     @Override
     public void onPinLoadFinished(boolean isPinRequired) {
-
         this.isPinRequired = isPinRequired;
     }
 }

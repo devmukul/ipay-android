@@ -7,16 +7,19 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
@@ -25,20 +28,23 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyReviewActivity;
-import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.BankListValidator;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialogWithIcon;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
-import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddMoneyFragment extends Fragment implements HttpResponseListener {
@@ -58,7 +64,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     private EditText mAmountEditText;
     private TextView mLinkABankNoteTextView;
     private ImageView mBankIcon;
-    private RelativeLayout mAccountNumberLayout;
     private List<UserBankClass> mListUserBankClasses;
     private ArrayList<String> mUserBankNameList;
     private ArrayList<String> mUserBankAccountNumberList;
@@ -82,7 +87,9 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         buttonAddMoney = (Button) v.findViewById(R.id.button_cash_in);
         mLinkABankNoteTextView = (TextView) v.findViewById(R.id.link_a_bank_note);
         mBankIcon = (ImageView) v.findViewById(R.id.portrait);
-        mAccountNumberLayout = (RelativeLayout) v.findViewById(R.id.account_number_layout);
+
+        // Allow user to write not more than two digits after decimal point for an input of an amount
+        mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
@@ -90,13 +97,11 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         mUserBankAccountNumberList = new ArrayList<>();
         mUserBankList = new ArrayList<>();
 
-        // It might be possible that we have failed to load the available bank list during
-        // application startup. In that case first try to load the available bank list first, and
-        // then load user bank details. Otherwise directly load the bank list.
-        if (CommonData.isAvailableBankListLoaded()) {
-            getBankList();
+        // Block from adding bank if an user is not verified
+        if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
+            getBankInformation();
         } else {
-            attemptRefreshAvailableBankNames();
+            showGetVerifiedDialog();
         }
 
         buttonAddMoney.setOnClickListener(new View.OnClickListener() {
@@ -143,6 +148,34 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         return v;
     }
 
+    private void showGetVerifiedDialog() {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
+        dialog
+                .content(R.string.get_verified)
+                .cancelable(false)
+                .content(getString(R.string.can_not_add_bank_if_not_verified))
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        getActivity().onBackPressed();
+                    }
+                });
+
+        dialog.show();
+    }
+
+    private void getBankInformation() {
+        // It might be possible that we have failed to load the available bank list during
+        // application startup. In that case first try to load the available bank list first, and
+        // then load user bank details. Otherwise directly load the bank list.
+        if (CommonData.isAvailableBankListLoaded()) {
+            getBankList();
+        } else {
+            attemptRefreshAvailableBankNames();
+        }
+    }
+
     private void attemptRefreshAvailableBankNames() {
         GetAvailableBankAsyncTask mGetAvailableBankAsyncTask = new GetAvailableBankAsyncTask(getActivity(),
                 new GetAvailableBankAsyncTask.BankLoadListener() {
@@ -155,7 +188,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                     @Override
                     public void onLoadFailed() {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.failed_available_bank_list_loading, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), R.string.failed_available_bank_list_loading, Toast.LENGTH_LONG);
                             getActivity().finish();
                         }
                     }
@@ -251,7 +284,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         intent.putExtra(Constants.BANK_NAME, bankName);
         intent.putExtra(Constants.BANK_ACCOUNT_ID, bankAccountId);
         intent.putExtra(Constants.BANK_ACCOUNT_NUMBER, accountNumber);
-        intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
+        intent.putExtra(Constants.DESCRIPTION_TAG, description);
         intent.putExtra(Constants.BANK_CODE, bankCode);
 
         startActivityForResult(intent, ADD_MONEY_REVIEW_REQUEST);
@@ -291,13 +324,13 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.show();
             mGetBankTask = null;
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -321,7 +354,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                     if (!bankListValidator.isBankAdded()) {
                         bankListValidator.showAddBankDialog(getActivity());
                     } else if (!bankListValidator.isVerifiedBankAdded()) {
-                        bankListValidator.showVerifiedBankDialog(getActivity());
+                        bankListValidator.showVerifyBankDialog(getActivity());
                     } else {
                         mLinkABankNoteTextView.setVisibility(View.GONE);
 
@@ -352,12 +385,12 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();
@@ -384,12 +417,12 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             }
 
             mGetBusinessRuleTask = null;

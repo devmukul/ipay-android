@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -26,13 +25,12 @@ import com.google.zxing.integration.android.IntentResult;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationPaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.InvoiceActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SingleInvoiceActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Pay.PayPropertyConstants;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Pay.PayPropertyConstants;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -60,7 +58,7 @@ public class PayFragment extends Fragment {
         }
         mServiceActionList.add(new ServiceAction(getString(R.string.pay_by_QR_code)));
         mServiceActionList.add(new ServiceAction(getString(R.string.mobile_topup)));
-        mServiceActionList.add(new ServiceAction(getString(R.string.education_payment)));
+        // mServiceActionList.add(new ServiceAction(getString(R.string.education_payment)));
 
         mServiceActionListView = (ListView) v.findViewById(R.id.list_services);
         mServiceActionListAdapter = new WalletActionListAdapter(getActivity(), R.layout.list_item_services, mServiceActionList);
@@ -132,6 +130,11 @@ public class PayFragment extends Fragment {
         super.onPrepareOptionsMenu(menu);
         if (menu.findItem(R.id.action_search_contacts) != null)
             menu.findItem(R.id.action_search_contacts).setVisible(false);
+
+        if (menu.findItem(R.id.action_filter_by_service) != null)
+            menu.findItem(R.id.action_filter_by_service).setVisible(false);
+        if (menu.findItem(R.id.action_filter_by_date) != null)
+            menu.findItem(R.id.action_filter_by_date).setVisible(false);
     }
 
     private class WalletActionListAdapter extends ArrayAdapter<ServiceAction> {
@@ -169,7 +172,7 @@ public class PayFragment extends Fragment {
                                     @Override
                                     public void ifPinAdded() {
                                         Intent intent;
-                                        intent = new Intent(getActivity(), InvoiceActivity.class);
+                                        intent = new Intent(getActivity(), RequestPaymentActivity.class);
                                         startActivity(intent);
                                     }
                                 });
@@ -196,7 +199,7 @@ public class PayFragment extends Fragment {
                                 });
                                 pinChecker.execute();
                                 break;
-                            case Constants.SERVICE_ACTION_EDUCATION_PAYMENT:
+                            /*case Constants.SERVICE_ACTION_EDUCATION_PAYMENT:
                                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                     @Override
                                     public void ifPinAdded() {
@@ -205,7 +208,7 @@ public class PayFragment extends Fragment {
                                     }
                                 });
                                 pinChecker.execute();
-                                break;
+                                break;*/
                             case Constants.SERVICE_ACTION_PAY_BY_QR_CODE:
                                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                                     requestPermissions(new String[]{Manifest.permission.CAMERA},

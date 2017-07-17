@@ -18,21 +18,20 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.Date;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfileInfoRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.SetProfileInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetOccupationResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Occupation;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.OccupationRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetProfileInfoRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetProfileInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Occupation;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -48,6 +47,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private EditText mNameEditText;
     private EditText mDateOfBirthEditText;
     private EditText mOccupationEditText;
+    private EditText mOrganizationNameEditText;
     private CheckBox mFemaleCheckBox;
     private CheckBox mMaleCheckBox;
     private Button mInfoSaveButton;
@@ -55,11 +55,15 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     private ProgressDialog mProgressDialog;
 
     private String mName = "";
+
+    private DatePickerDialog mDatePickerDialog;
     private String mDateOfBirth = "";
+    private Date mDate;
+
+    private String mGender = null;
+    private String mOrganizationName;
 
     private int mOccupation = -1;
-    private String mGender = "";
-
     private List<Occupation> mOccupationList;
 
     @Override
@@ -71,9 +75,10 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_edit_basic_info, container, false);
+        View view = inflater.inflate(R.layout.fragment_edit_basic_info, container, false);
 
-        if (ProfileInfoCacheManager.isBusinessAccount()) getActivity().setTitle(getString(R.string.edit_contact_info));
+        if (ProfileInfoCacheManager.isBusinessAccount())
+            getActivity().setTitle(getString(R.string.edit_contact_info));
         else getActivity().setTitle(getString(R.string.edit_basic_info));
         Bundle bundle = getArguments();
 
@@ -81,23 +86,35 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         mDateOfBirth = bundle.getString(Constants.DATE_OF_BIRTH);
         mGender = bundle.getString(Constants.GENDER);
         mOccupation = bundle.getInt(Constants.OCCUPATION);
-        mOccupationList= bundle.getParcelableArrayList(Constants.OCCUPATION_LIST);
+        mOccupationList = bundle.getParcelableArrayList(Constants.OCCUPATION_LIST);
+        mOrganizationName = bundle.getString(Constants.ORGANIZATION_NAME);
 
-        mInfoSaveButton = (Button) v.findViewById(R.id.button_save);
-        mNameEditText = (EditText) v.findViewById(R.id.name);
-        mDateOfBirthEditText = (EditText) v.findViewById(R.id.birthdayEditText);
-        mOccupationEditText = (EditText) v.findViewById(R.id.occupationEditText);
-        mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
-        mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
+        mInfoSaveButton = (Button) view.findViewById(R.id.button_save);
+        mNameEditText = (EditText) view.findViewById(R.id.name);
+        mDateOfBirthEditText = (EditText) view.findViewById(R.id.birthdayEditText);
+        mOccupationEditText = (EditText) view.findViewById(R.id.occupationEditText);
+        mOrganizationNameEditText = (EditText) view.findViewById(R.id.organizationNameEditText);
+        mMaleCheckBox = (CheckBox) view.findViewById(R.id.checkBoxMale);
+        mFemaleCheckBox = (CheckBox) view.findViewById(R.id.checkBoxFemale);
         mProgressDialog = new ProgressDialog(getActivity());
+
+        mDate = Utilities.formatDateFromString(mDateOfBirth);
+        mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), mDate, mDateSetListener);
+
+        mDateOfBirthEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDatePickerDialog.show();
+            }
+        });
 
         mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mMaleCheckBox.setChecked(true);
                 mFemaleCheckBox.setChecked(false);
-                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mMaleCheckBox.setTextColor((Color.WHITE));
+
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         });
 
@@ -106,9 +123,8 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             public void onClick(View view) {
                 mFemaleCheckBox.setChecked(true);
                 mMaleCheckBox.setChecked(false);
-                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-                mFemaleCheckBox.setTextColor((Color.WHITE));
 
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
             }
         });
 
@@ -122,21 +138,24 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
             }
         });
 
-        final DatePickerDialog dialog = new DatePickerDialog(
-                getActivity(), mDateSetListener, 1990, 0, 1);
-        mDateOfBirthEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-            }
-        });
-
         setProfileInformation();
 
         setOccupationAdapter();
         setOccupation();
 
-        return v;
+        return view;
+    }
+
+    private void setGenderCheckBoxTextColor(boolean maleCheckBoxChecked, boolean femaleCheckBoxChecked) {
+        if (maleCheckBoxChecked)
+            mMaleCheckBox.setTextColor((Color.WHITE));
+        else
+            mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+
+        if (femaleCheckBoxChecked)
+            mFemaleCheckBox.setTextColor((Color.WHITE));
+        else
+            mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
     }
 
     private boolean verifyUserInputs() {
@@ -145,6 +164,10 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
         mName = mNameEditText.getText().toString().trim();
         mDateOfBirth = mDateOfBirthEditText.getText().toString().trim();
+        mOrganizationName = mOrganizationNameEditText.getText().toString().trim();
+
+        if (mOrganizationName.isEmpty())
+            mOrganizationName = null;
 
         if (mMaleCheckBox.isChecked())
             mGender = GenderList.genderNameToCodeMap.get(
@@ -161,6 +184,10 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
         if (mName.isEmpty()) {
             mNameEditText.setError(getString(R.string.error_invalid_first_name));
+            focusView = mNameEditText;
+            cancel = true;
+        } else if (!InputValidator.isValidNameWithRequiredLength(mName)) {
+            mNameEditText.setError(getString(R.string.error_invalid_name_with_required_length));
             focusView = mNameEditText;
             cancel = true;
         }
@@ -186,7 +213,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         Gson gson = new Gson();
 
         SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(mName, mGender, mDateOfBirth,
-                mOccupation);
+                mOccupation, mOrganizationName);
 
         String profileInfoJson = gson.toJson(setProfileInfoRequest);
         mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
@@ -195,25 +222,26 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     }
 
     private void setProfileInformation() {
-
         mNameEditText.setText(mName);
-
         mDateOfBirthEditText.setText(mDateOfBirth);
+        mOrganizationNameEditText.setText(mOrganizationName);
 
         String[] genderArray = GenderList.genderNames;
 
-        if (mGender.equals(GenderList.genderNameToCodeMap.get(
-                genderArray[0]))) {
-            mMaleCheckBox.setChecked(true);
-            mFemaleCheckBox.setChecked(false);
-            mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-            mMaleCheckBox.setTextColor((Color.WHITE));
-        } else if (mGender.equals(GenderList.genderNameToCodeMap.get(
-                genderArray[1]))) {
-            mMaleCheckBox.setChecked(false);
-            mFemaleCheckBox.setChecked(true);
-            mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
-            mFemaleCheckBox.setTextColor((Color.WHITE));
+        if (mGender != null) {
+            if (mGender.equals(GenderList.genderNameToCodeMap.get(
+                    genderArray[0]))) {
+                mMaleCheckBox.setChecked(true);
+                mFemaleCheckBox.setChecked(false);
+
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
+            } else if (mGender.equals(GenderList.genderNameToCodeMap.get(
+                    genderArray[1]))) {
+                mMaleCheckBox.setChecked(false);
+                mFemaleCheckBox.setChecked(true);
+
+                setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
+            }
         }
     }
 
@@ -222,11 +250,11 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                 public void onDateSet(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {
                     mDateOfBirthEditText.setText(
-                            String.format("%02d/%02d/%4d", dayOfMonth, monthOfYear + 1, year));
+                            String.format(Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year));
                 }
             };
 
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -235,7 +263,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
-
 
         Gson gson = new Gson();
 
@@ -252,7 +279,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                             // But by default, the basic info stored in our database is refreshed only when a push is received.
                             // It might be the case that push notification is not yet received on the phone and user already
                             // navigated to the basic info page. To handle this case, we are setting updateNeeded to true.
-                            PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, true);
+                            PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, true);
 
                             getActivity().onBackPressed();
                         }
@@ -286,7 +313,7 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
     }
 
     private void setOccupationAdapter() {
-        mOccupationTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), getString(R.string.select_an_occupation), mOccupationList, mOccupation);
+        mOccupationTypeResourceSelectorDialog = new ResourceSelectorDialog<>(getActivity(), getString(R.string.select_an_occupation), mOccupationList);
         mOccupationTypeResourceSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {

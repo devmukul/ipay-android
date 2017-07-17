@@ -4,10 +4,11 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
@@ -25,19 +28,22 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyReviewActivity;
-import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.BankListValidator;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialogWithIcon;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.GetBankListResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
-import bd.com.ipay.ipayskeleton.Model.MMModule.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -64,7 +70,6 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
     private int[] mBankIconArray;
     private int selectedBankPosition = 0;
 
-    private SharedPreferences pref;
     private ProgressDialog mProgressDialog;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
@@ -83,21 +88,20 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         mLinkABankNoteTextView = (TextView) v.findViewById(R.id.link_a_bank_note);
         mBankIcon = (ImageView) v.findViewById(R.id.portrait);
 
+        // Allow user to write not more than two digits after decimal point for an input of an amount
+        mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
+
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
         mUserBankNameList = new ArrayList<>();
         mUserBankAccountNumberList = new ArrayList<>();
         mUserBankList = new ArrayList<>();
 
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-
-        // It might be possible that we have failed to load the available bank list during
-        // application startup. In that case first try to load the available bank list first, and
-        // then load user bank details. Otherwise directly load the bank list.
-        if (CommonData.isAvailableBankListLoaded()) {
-            getBankList();
+        // Block from adding bank if an user is not verified
+        if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
+            getBankInformation();
         } else {
-            attemptRefreshAvailableBankNames();
+            showGetVerifiedDialog();
         }
 
         buttonWithdrawMoney.setOnClickListener(new View.OnClickListener() {
@@ -138,11 +142,38 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
             }
         });
 
-
         // Get business rule
         attemptGetBusinessRule(Constants.SERVICE_ID_WITHDRAW_MONEY);
 
         return v;
+    }
+
+    private void showGetVerifiedDialog() {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
+        dialog
+                .content(R.string.get_verified)
+                .cancelable(false)
+                .content(getString(R.string.can_not_add_bank_if_not_verified))
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        getActivity().onBackPressed();
+                    }
+                });
+
+        dialog.show();
+    }
+
+    private void getBankInformation() {
+        // It might be possible that we have failed to load the available bank list during
+        // application startup. In that case first try to load the available bank list first, and
+        // then load user bank details. Otherwise directly load the bank list.
+        if (CommonData.isAvailableBankListLoaded()) {
+            getBankList();
+        } else {
+            attemptRefreshAvailableBankNames();
+        }
     }
 
     private void attemptGetBusinessRule(int serviceID) {
@@ -199,8 +230,8 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         View focusView = null;
 
         String balance = null;
-        if (pref.contains(Constants.USER_BALANCE)) {
-            balance = pref.getString(Constants.USER_BALANCE, null);
+        if (SharedPrefManager.ifContainsUserBalance()) {
+            balance = SharedPrefManager.getUserBalance(null);
         }
 
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
@@ -223,7 +254,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
             }
         }
 
-        if (! (mDescriptionEditText.getText().toString().trim().length() > 0)) {
+        if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
             focusView = mDescriptionEditText;
             mDescriptionEditText.setError(getString(R.string.please_write_note));
             cancel = true;
@@ -260,7 +291,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         intent.putExtra(Constants.BANK_NAME, bankName);
         intent.putExtra(Constants.BANK_ACCOUNT_ID, bankAccountId);
         intent.putExtra(Constants.BANK_ACCOUNT_NUMBER, accountNumber);
-        intent.putExtra(Constants.INVOICE_DESCRIPTION_TAG, description);
+        intent.putExtra(Constants.DESCRIPTION_TAG, description);
         intent.putExtra(Constants.BANK_CODE, bankCode);
 
         startActivityForResult(intent, WITHDRAW_MONEY_REVIEW_REQUEST);
@@ -300,7 +331,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.show();
@@ -330,7 +361,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
                     if (!bankListValidator.isBankAdded()) {
                         bankListValidator.showAddBankDialog(getActivity());
                     } else if (!bankListValidator.isVerifiedBankAdded()) {
-                        bankListValidator.showVerifiedBankDialog(getActivity());
+                        bankListValidator.showVerifyBankDialog(getActivity());
                     } else {
                         mLinkABankNoteTextView.setVisibility(View.GONE);
                         mBankIconArray = new int[mListUserBankClasses.size()];
@@ -387,12 +418,12 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                 }
 
             } else {
                 if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.pending_get_failed, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             }
 
             mGetBusinessRuleTask = null;

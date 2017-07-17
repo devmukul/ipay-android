@@ -16,22 +16,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.design.widget.TextInputLayout
+            <bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView
+                android:id="@+id/mobile_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:theme="@style/CustomTextInputLayout">
-
-                <EditText
-                    android:id="@+id/mobile_number"
-                    style="@style/CustomEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/mobile_number"
-                    android:inputType="phone"
-                    android:maxLength="14"
-                    android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
+                android:inputType="text"
+                android:maxLines="1" />
 
             <ImageView
                 android:id="@+id/button_scan_qr_code"
@@ -39,7 +30,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/select_receiver_from_contacts"
-                android:src="@drawable/ic_qrc3x" />
+                android:src="@drawable/ic_qrc3x"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/select_receiver_from_contacts"
@@ -82,7 +74,7 @@
                 style="@style/CustomEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/send_money_description"
+                android:hint="@string/note"
                 android:inputType="text"
                 android:maxLines="1"
                 android:singleLine="true" />
@@ -92,10 +84,16 @@
 
         <Button
             android:id="@+id/button_send_money"
-            style="@style/PrimaryMediumButton"
+            style="@style/PrimaryMediumButtonWithNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/continue_send_money" />
+
+        <TextView
+            style="@style/CustomNoteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/send_money_description_info" />
 
     </LinearLayout>
 </ScrollView>

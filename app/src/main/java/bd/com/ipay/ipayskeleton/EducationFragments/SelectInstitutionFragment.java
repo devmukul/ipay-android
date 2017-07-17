@@ -20,15 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationPaymentActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Education.EventParticipant;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Education.GetSessionRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Education.GetStudentInfoByStudentIDRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Education.Institution;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Education.SemesterOrSession;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.EventParticipant;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.GetSessionRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.GetStudentInfoByStudentIDRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.Institution;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.SemesterOrSession;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -134,7 +134,7 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
             mInstitutionsList.add(institution);
         }
 
-        institutionsSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_an_institution), mInstitutionsList, mSelectedInstitutionId);
+        institutionsSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_an_institution), mInstitutionsList);
         institutionsSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
@@ -163,7 +163,7 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
             mSessionsList.add(session);
         }
 
-        sessionsSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_session), mSessionsList, mSelectedSessionId);
+        sessionsSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_session), mSessionsList);
         sessionsSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {
@@ -241,7 +241,7 @@ public class SelectInstitutionFragment extends ProgressFragment implements HttpR
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {

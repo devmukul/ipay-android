@@ -26,6 +26,16 @@
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_margin="5dp"
+                android:gravity="left"
+                android:text="@string/mandatory_field"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_small" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,7 +54,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/full_name"
-                        android:inputType="textPersonName"
+                        android:inputType="textCapWords"
                         android:maxLines="1"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
@@ -76,13 +86,16 @@
                     </android.support.design.widget.TextInputLayout>
                 </RelativeLayout>
 
-                <View style="@style/DividerOnly" />
+                <View
+                    style="@style/DividerOnly"
+                    android:visibility="gone" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/value5"
-                    android:paddingTop="@dimen/value5">
+                    android:paddingTop="@dimen/value5"
+                    android:visibility="gone">
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="wrap_content"
@@ -140,8 +153,8 @@
                     android:id="@+id/checkboxBusinessAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@android:color/white"
-                    android:layout_marginTop="-6dp" />
+                    android:layout_marginTop="-6dp"
+                    android:buttonTint="@android:color/white" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -168,13 +181,15 @@
                     android:id="@+id/checkBoxTermsConditions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@android:color/white"
-                    android:layout_marginTop="-5dp" />
+                    android:layout_alignParentLeft="true"
+                    android:backgroundTintMode="@android:color/white"
+                    android:buttonTint="@android:color/white" />
 
                 <LinearLayout
                     android:id="@+id/signUpTermsWrapperLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/checkBoxTermsConditions"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:visibility="visible">
@@ -205,6 +220,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/signUpTermsWrapperLayout"
+                    android:layout_toRightOf="@id/checkBoxTermsConditions"
                     android:gravity="center_horizontal">
 
                     <TextView

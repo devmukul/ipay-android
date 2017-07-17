@@ -3,18 +3,18 @@ package bd.com.ipay.ipayskeleton.Utilities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPinDialogBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.ChangeCredentials.PinInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.PinInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 
 /**
  * Checks if pin has been added for this user. If not, show pin input dialog. Otherwise,
@@ -29,7 +29,6 @@ public class PinChecker implements HttpResponseListener {
     private PinInfoResponse mPinInfoResponse;
 
     private final ProgressDialog mProgressDialog;
-    private final SharedPreferences pref;
 
     private boolean cancel;
 
@@ -37,14 +36,12 @@ public class PinChecker implements HttpResponseListener {
         mContext = context;
         mPinCheckerListener = pinCheckerListener;
         mProgressDialog = new ProgressDialog(context);
-
-        pref = mContext.getSharedPreferences(Constants.ApplicationTag, Context.MODE_PRIVATE);
     }
 
     public void execute() {
         cancel = false;
 
-        if (pref.getBoolean(Constants.IS_PIN_ADDED, false)) {
+        if (SharedPrefManager.isPinAdded(false)) {
             if (mPinCheckerListener != null) {
                 mPinCheckerListener.ifPinAdded();
             }
@@ -74,11 +71,11 @@ public class PinChecker implements HttpResponseListener {
 
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetPinInfoTask = null;
             if (mContext != null)
                 Toast.makeText(mContext, R.string.fetch_info_failed, Toast.LENGTH_LONG).show();
@@ -101,7 +98,7 @@ public class PinChecker implements HttpResponseListener {
                             }
 
                             // Save the information so that we don't need to get pin info again and again
-                            pref.edit().putBoolean(Constants.IS_PIN_ADDED, true).apply();
+                            SharedPrefManager.setPinAdded(true);
 
                         } else {
                             AddPinDialogBuilder addPinDialogBuilder = new AddPinDialogBuilder(mContext, new AddPinDialogBuilder.AddPinListener() {

@@ -28,28 +28,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <LinearLayout
+                    <TextView
                         android:id="@+id/primary_email_header"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/divider"
-                            android:background="@color/colorBalanceBackground"
-                            android:padding="@dimen/activity_horizontal_margin_card"
-                            android:text="@string/primary_email_address"
-                            android:textSize="20dp" />
-
-                        <View
-                            android:id="@+id/divider"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/divider_space"
-                            android:background="@color/colorDivider" />
-
-                    </LinearLayout>
+                        android:background="@color/divider_gray"
+                        android:paddingBottom="@dimen/activity_horizontal_margin_card"
+                        android:paddingLeft="@dimen/activity_horizontal_margin"
+                        android:paddingTop="@dimen/activity_horizontal_margin_card"
+                        android:text="@string/primary_email_address"
+                        android:textSize="@dimen/text_size_small_medium_value18" />
 
                     <RelativeLayout
                         android:id="@+id/info_layout"
@@ -57,7 +45,6 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/primary_email_header"
                         android:paddingLeft="@dimen/activity_horizontal_margin">
-
 
                         <TextView
                             android:id="@+id/textview_email"
@@ -68,40 +55,31 @@
                             android:gravity="left"
                             android:singleLine="true" />
 
-
                         <ImageView
                             android:id="@+id/email_verification_status"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/icon_size"
+                            android:layout_height="@dimen/icon_size"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:padding="@dimen/activity_horizontal_margin"
+                            android:paddingBottom="@dimen/activity_horizontal_margin_card"
+                            android:paddingLeft="@dimen/activity_vertical_margin_card"
+                            android:paddingRight="@dimen/activity_vertical_margin_semi_card"
+                            android:paddingTop="@dimen/activity_horizontal_margin_card"
                             android:src="@drawable/ic_verified" />
                     </RelativeLayout>
-
-                    <View
-                        android:id="@+id/divider1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/divider_space"
-                        android:layout_below="@+id/info_layout"
-                        android:background="@color/colorDivider" />
 
                     <TextView
                         android:id="@+id/other_email_header"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/divider1"
-                        android:background="@color/colorBalanceBackground"
-                        android:padding="@dimen/activity_horizontal_margin_card"
+                        android:layout_below="@+id/info_layout"
+                        android:background="@color/divider_gray"
+                        android:paddingBottom="@dimen/activity_horizontal_margin_card"
+                        android:paddingLeft="@dimen/activity_horizontal_margin"
+                        android:paddingTop="@dimen/activity_horizontal_margin_card"
                         android:text="@string/other_email_address"
-                        android:textSize="20dp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/divider_space"
-                        android:layout_below="@+id/other_email_header"
-                        android:background="@color/colorDivider" />
-
+                        android:textSize="@dimen/text_size_small_medium_value18"
+                        android:visibility="gone" />
                 </RelativeLayout>
 
                 <android.support.v7.widget.RecyclerView

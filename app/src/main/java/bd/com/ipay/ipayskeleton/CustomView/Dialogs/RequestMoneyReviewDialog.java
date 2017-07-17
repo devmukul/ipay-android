@@ -15,16 +15,17 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements HttpResponseListener {
@@ -54,7 +55,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
     private TextView mTitleView;
     private TextView mAmountView;
     private TextView mServiceChargeView;
-    private TextView mNetReceivedView;
+    private TextView mNetAmountView;
     private EditText mPinField;
 
     public RequestMoneyReviewDialog(Context context, long moneyRequestId, String receiverMobileNumber,
@@ -90,7 +91,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
         mTitleView = (TextView) v.findViewById(R.id.textview_title);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
-        mNetReceivedView = (TextView) v.findViewById(R.id.textview_net_received);
+        mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
         mPinField = (EditText) v.findViewById(R.id.pin);
 
         mProfileImageView.setProfilePicture(mPhotoUri, false);
@@ -111,7 +112,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
 
         mAmountView.setText(Utilities.formatTaka(mAmount));
         mServiceChargeView.setText(Utilities.formatTaka(mServiceCharge));
-        mNetReceivedView.setText(Utilities.formatTaka(mAmount.subtract(mServiceCharge)));
+        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(mServiceCharge)));
 
         positiveText(R.string.send_money);
         negativeText(R.string.cancel);
@@ -179,7 +180,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
 					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -187,7 +188,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
             mAcceptRequestTask = null;
             mAcceptPaymentTask = null;
             if (context != null)
-                Toast.makeText(context, R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(context, R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -200,19 +201,19 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                     if (context != null)
-                        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(context, message, Toast.LENGTH_LONG);
 
                     if (mReviewFinishListener != null)
                         mReviewFinishListener.onReviewFinish();
 
                 } else {
                     if (context != null)
-                        Toast.makeText(context, mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toaster.makeText(context, mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (context != null)
-                    Toast.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();
@@ -226,7 +227,7 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
                             PaymentAcceptRejectOrCancelResponse.class);
                     String message = mPaymentAcceptRejectOrCancelResponse.getMessage();
                     if (context != null)
-                        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(context, message, Toast.LENGTH_LONG);
 
                     if (mReviewFinishListener != null)
                         mReviewFinishListener.onReviewFinish();
@@ -234,12 +235,12 @@ public class RequestMoneyReviewDialog extends MaterialDialog.Builder implements 
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (context != null)
-                        Toast.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG);
                 }
 
             } else {
                 if (context != null)
-                    Toast.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(context, R.string.could_not_accept_money_request, Toast.LENGTH_LONG);
             }
 
             mProgressDialog.dismiss();

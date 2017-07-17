@@ -1,14 +1,12 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,7 +21,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,32 +37,47 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.HelpAndSupportActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.InviteActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
-import bd.com.ipay.ipayskeleton.Api.GetAvailableBankAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GetFriendsAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAllBusinessListAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetBusinessTypesAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetRelationshipListAsyncTask;
+import bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.GetBusinessInformationResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LogoutResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.Notification;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetUserInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.AddToTrustedDeviceResponse;
+import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notification;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Service.GCM.RegistrationIntentService;
 import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
+import bd.com.ipay.ipayskeleton.Utilities.Config;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -75,21 +87,18 @@ public class HomeActivity extends BaseActivity
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
 
-    public static HttpRequestPostAsyncTask mRefreshTokenAsyncTask = null;
-
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
-
-    private HttpRequestPostAsyncTask mAddTrustedDeviceTask = null;
-    private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
 
     private HttpRequestGetAsyncTask mGetBusinessInformationAsyncTask;
     private GetBusinessInformationResponse mGetBusinessInformationResponse;
 
-    private TextView mMobileNumberView;
+    private GetBusinessTypesAsyncTask mGetBusinessTypesAsyncTask;
+    private GetRelationshipListAsyncTask mGetRelationshipListAsyncTask;
+
+    private AutoResizeTextView mMobileNumberView;
     private TextView mNameView;
     private ProfileImageView mProfileImageView;
-    private SharedPreferences pref;
     private String mUserID;
     private String mDeviceID;
 
@@ -100,8 +109,10 @@ public class HomeActivity extends BaseActivity
     private Menu mOptionsMenu;
 
     private int mBadgeCount = 0;
+    private int savedCriticalPreferenceVersion;
 
     private static boolean switchedToHomeFragment = true;
+    private boolean exitFromApplication = false;
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -149,13 +160,12 @@ public class HomeActivity extends BaseActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mUserID = ProfileInfoCacheManager.getMobileNumber();
         mDeviceID = DeviceInfoFactory.getDeviceId(HomeActivity.this);
 
-        pref.edit().putBoolean(Constants.FIRST_LAUNCH, false).apply();
+        SharedPrefManager.setFirstLaunch(false);
 
-        mMobileNumberView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_mobile_number);
+        mMobileNumberView = (AutoResizeTextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_mobile_number);
         mNameView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_name);
         mProfileImageView = (ProfileImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_picture);
         mMobileNumberView.setText(mUserID);
@@ -164,16 +174,15 @@ public class HomeActivity extends BaseActivity
         switchToDashBoard();
 
         // Check if there's anything new from the server
-        int accountType = pref.getInt(Constants.ACCOUNT_TYPE, 0);
+        int accountType = ProfileInfoCacheManager.getAccountType(0);
         if (accountType == Constants.BUSINESS_ACCOUNT_TYPE) {
             getBusinessInformation();
         } else getProfileInfo();
 
-
         // Sync contacts
-        new GetFriendsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        // Contact sync is done as follows: first all the contacts are downloaded from the server
-        // (#GetFriendsAsyncTask) and stored in the database (#SyncContactsAsyncTask).
+        new GetContactsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        // DBContactNode sync is done as follows: first all the contacts are downloaded from the server
+        // (#GetContactsAsyncTask) and stored in the database (#SyncContactsAsyncTask).
         // Then difference with phone contacts is calculated, and this difference is sent to the
         // server. If there is any new contact on the phone, we download all contacts from the
         // server again to keep phone and server contacts in sync.
@@ -185,15 +194,7 @@ public class HomeActivity extends BaseActivity
             startService(intent);
         }
 
-        // Add to trusted device
-        if (!pref.contains(Constants.UUID)) {
-            if (Utilities.isConnectionAvailable(this))
-                addToTrustedDeviceList();
-        }
-
-        if (Constants.DEBUG) {
-            Log.w("Token", TokenManager.getToken());
-        }
+        Logger.logW("Token", TokenManager.getToken());
 
         // The same notification fragment is used when NotificationActivity is launched.
         // We are initializing it here to load notification badge count.
@@ -212,11 +213,23 @@ public class HomeActivity extends BaseActivity
         // Load the list of available banks, which will be accessed from multiple activities
         getAvailableBankList();
 
+        // Load the list of available business types, which will be accessed from multiple activities
+        getAvailableBusinessTypes();
+
+        // Fetch available relationship list
+        getRelationshipList();
+
         // Check if important permissions (e.g. Contacts permission) is given. If not,
         // request user for permission.
         attemptRequestForPermission();
 
+        // Send Analytics for test purpose in Firebase
         sendAnalytics();
+
+        // Check if the stored critical preference version is lesser than the version found from config
+        savedCriticalPreferenceVersion = SharedPrefManager.getCriticalPreferenceVersion(0);
+        if (Config.criticalPreferenceVersion > savedCriticalPreferenceVersion)
+            todoCheckList(savedCriticalPreferenceVersion);
 
         // If profile picture gets updated, we need to refresh the profile picture in the drawer.
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
@@ -240,12 +253,10 @@ public class HomeActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
             case R.id.action_notification:
                 Intent intent = new Intent(this, NotificationActivity.class);
                 startActivity(intent);
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -265,12 +276,11 @@ public class HomeActivity extends BaseActivity
     }
 
     private void updateProfileData() {
-        mNameView.setText(ProfileInfoCacheManager.getName());
+        mNameView.setText(ProfileInfoCacheManager.getUserName());
         mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
                 ProfileInfoCacheManager.getProfileImageUrl(), false);
     }
-
 
     private void attemptRequestForPermission() {
         String[] requiredPermissions = {Manifest.permission.READ_CONTACTS};
@@ -304,24 +314,23 @@ public class HomeActivity extends BaseActivity
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
     }
 
-    private void addToTrustedDeviceList() {
-        if (mAddTrustedDeviceTask != null) {
-            return;
+    private void todoCheckList(int storedCriticalPreferenceVersion) {
+
+        // Do not put any try-catch here. The operations must go smoothly.
+        // If anything goes wrong, just store the last successful operation number in preference.
+        // Only the last case will have a break statement like the onUpgrade function in DataBaseOpenHelper
+        switch (storedCriticalPreferenceVersion) {
+            case 0:
+                // Migration code from 0 to 1
+                // Get Business contacts
+                // For the first time load, the lastBusinessId is 0
+                GetAllBusinessContactRequestBuilder mGetAllBusinessContactRequestBuilder = new GetAllBusinessContactRequestBuilder(0);
+                new GetAllBusinessListAsyncTask(this, mGetAllBusinessContactRequestBuilder.getGeneratedUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                break;
         }
 
-        String mDeviceID = DeviceInfoFactory.getDeviceId(this);
-        String mDeviceName = DeviceInfoFactory.getDeviceName();
-
-        String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
-
-        AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
-                Constants.MOBILE_ANDROID + mDeviceID, pushRegistrationID);
-        Gson gson = new Gson();
-        String json = gson.toJson(mAddToTrustedDeviceRequest);
-        mAddTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_DEVICE,
-                Constants.BASE_URL_MM + Constants.URL_ADD_TRUSTED_DEVICE, json, this);
-        mAddTrustedDeviceTask.mHttpResponseListener = this;
-        mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        // Store the updated critical preference version after all necessary actions.
+        SharedPrefManager.setCriticalPreferenceVersion(Config.criticalPreferenceVersion);
     }
 
     @Override
@@ -331,17 +340,16 @@ public class HomeActivity extends BaseActivity
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
                 for (int i = 0; i < permissions.length; i++) {
-                    Log.w(permissions[i], grantResults[i] + "");
+                    Logger.logW(permissions[i], grantResults[i] + "");
 
                     if (permissions[i].equals(Manifest.permission.READ_CONTACTS)) {
                         if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            new GetFriendsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            new GetContactsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     }
                 }
 
                 break;
-
         }
     }
 
@@ -354,14 +362,15 @@ public class HomeActivity extends BaseActivity
     private void updateNotificationBadgeCount(int badgeCount) {
         mBadgeCount = badgeCount;
 
-        Log.d("Notification Count", badgeCount + "");
+        Logger.logD("Notification Count", badgeCount + "");
         if (mOptionsMenu != null) {
             if (badgeCount > 0) {
                 ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
+            } else {
+                ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, null);
             }
         }
     }
-
 
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
@@ -404,12 +413,6 @@ public class HomeActivity extends BaseActivity
             startActivity(intent);
             switchedToHomeFragment = false;
 
-        } else if (id == R.id.nav_event) {
-
-            Intent intent = new Intent(HomeActivity.this, EventActivity.class);
-            startActivity(intent);
-            switchedToHomeFragment = false;
-
         } else if (id == R.id.nav_security_settings) {
 
             Intent intent = new Intent(HomeActivity.this, SecuritySettingsActivity.class);
@@ -435,17 +438,10 @@ public class HomeActivity extends BaseActivity
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_logout) {
-
-            if (Utilities.isConnectionAvailable(HomeActivity.this))
+            if (Utilities.isConnectionAvailable(HomeActivity.this)) {
                 attemptLogout();
-            else {
-                SharedPreferences pref;
-                pref = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-                pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
-
-                finish();
-                Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
-                startActivity(intent);
+            } else {
+                ((MyApplication) this.getApplication()).launchLoginPage(null);
             }
         }
 
@@ -465,7 +461,14 @@ public class HomeActivity extends BaseActivity
                     .setMessage(R.string.are_you_sure_to_exit)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            finish();
+                            if (Utilities.isConnectionAvailable(HomeActivity.this)) {
+                                exitFromApplication = true;
+                                attemptLogout();
+                            } else {
+                                ProfileInfoCacheManager.setLoggedInStatus(false);
+                                ((MyApplication) HomeActivity.this.getApplication()).clearTokenAndTimer();
+                                finish();
+                            }
                         }
                     })
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -494,9 +497,6 @@ public class HomeActivity extends BaseActivity
         LogoutRequest mLogoutModel = new LogoutRequest(ProfileInfoCacheManager.getMobileNumber());
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
-
-        // Set the preference
-        pref.edit().putBoolean(Constants.LOGGED_IN, false).apply();
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
                 Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, HomeActivity.this);
@@ -533,15 +533,41 @@ public class HomeActivity extends BaseActivity
         getAvailableBanksTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getAvailableBusinessTypes() {
+        // Load business types, then extract the name of the business type from businessTypeId
+        mGetBusinessTypesAsyncTask = new GetBusinessTypesAsyncTask(this, new GetBusinessTypesAsyncTask.BusinessTypeLoadListener() {
+            @Override
+            public void onLoadSuccess(List<BusinessType> businessTypes) {
+            }
+
+            @Override
+            public void onLoadFailed() {
+            }
+        });
+        mGetBusinessTypesAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getRelationshipList() {
+        mGetRelationshipListAsyncTask = new GetRelationshipListAsyncTask(this, new GetRelationshipListAsyncTask.RelationshipLoadListener() {
+            @Override
+            public void onLoadSuccess(List<Relationship> relationshipList) {
+            }
+
+            @Override
+            public void onLoadFailed() {
+
+            }
+        });
+        mGetRelationshipListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mLogoutTask = null;
             mGetProfileInfoTask = null;
-            mAddTrustedDeviceTask = null;
             mGetBusinessInformationAsyncTask = null;
-            mRefreshTokenAsyncTask = null;
             Toast.makeText(HomeActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
@@ -555,13 +581,13 @@ public class HomeActivity extends BaseActivity
                     mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
-                        if (TokenManager.getTokenTimer() != null)
-                            TokenManager.getTokenTimer().cancel();
-
-                        finish();
-                        Intent intent = new Intent(HomeActivity.this, SignupOrLoginActivity.class);
-                        startActivity(intent);
+                        if (!exitFromApplication) {
+                            ((MyApplication) this.getApplication()).launchLoginPage(null);
+                        } else {
+                            // Exit the application
+                            ((MyApplication) this.getApplication()).clearTokenAndTimer();
+                            finish();
+                        }
                     } else {
                         Toast.makeText(HomeActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
@@ -588,15 +614,15 @@ public class HomeActivity extends BaseActivity
                         //saving user info in shared preference
                         ProfileInfoCacheManager.updateCache(mGetUserInfoResponse.getName(), imageUrl, mGetUserInfoResponse.getAccountStatus());
 
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
                     } else {
-                        Toast.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                        Toaster.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT).show();
+                    Toaster.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 }
 
                 mGetProfileInfoTask = null;
@@ -613,39 +639,19 @@ public class HomeActivity extends BaseActivity
 
                         //saving user info in shared preference
                         ProfileInfoCacheManager.updateCache(mGetBusinessInformationResponse.getBusinessName(), imageUrl, mGetBusinessInformationResponse.getVerificationStatus());
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                     } else {
-                        Toast.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);
 
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
+                    Toaster.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);
 
                 }
 
                 mGetBusinessInformationAsyncTask = null;
-                break;
-            case Constants.COMMAND_ADD_TRUSTED_DEVICE:
-
-                try {
-                    mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        String UUID = mAddToTrustedDeviceResponse.getUUID();
-                        pref.edit().putString(Constants.UUID, UUID).apply();
-                    } else {
-                        Toast.makeText(this, mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
-                }
-
-                mAddTrustedDeviceTask = null;
-
                 break;
         }
     }
@@ -659,9 +665,8 @@ public class HomeActivity extends BaseActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
-            if (Constants.DEBUG)
-                Log.d("Broadcast home activity", newProfilePicture);
-            
+            Logger.logD("Broadcast home activity", newProfilePicture);
+
             mProfileImageView.setProfilePicture(newProfilePicture, true);
 
             // We need to update the profile picture url in ProfileInfoCacheManager. Ideally,

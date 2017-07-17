@@ -37,5 +37,11 @@
         <attr name="arrowVisibility" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="EditTextWithProgressBar">
+        <attr name="android:text" />
+        <attr name="android:hint" />
+        <attr name="android:inputType" />
+    </declare-styleable>
+
 
 </resources>

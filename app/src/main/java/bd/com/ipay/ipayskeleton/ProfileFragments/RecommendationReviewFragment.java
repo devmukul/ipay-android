@@ -1,35 +1,40 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroduceActionResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.District;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.DistrictRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetDistrictResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetThanaResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.ThanaRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.IntroduceActionResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.District;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.DistrictRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetDistrictResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetThanaResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Thana;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.ThanaRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -52,7 +57,11 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     private String mPhotoUri;
     private String mFathersName = null;
     private String mMothersname = null;
-    private AddressClass mAddress;
+    private String mIntroductionMessage;
+
+    private AddressClass mAddress = null;
+
+    private boolean isInContacts;
 
     private List<Thana> mThanaList;
     private List<District> mDistrictList;
@@ -69,12 +78,13 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     private Button mAcceptButton;
     private Button mSpamButton;
 
+    private CheckBox mAddInContactsCheckBox;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_recommendation_review, container, false);
 
-        getActivity().setTitle(R.string.introducers);
-
+        getActivity().setTitle(R.string.Introducer);
         Bundle bundle = getArguments();
 
         mRequestID = bundle.getLong(Constants.REQUEST_ID);
@@ -84,6 +94,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
         mMothersname = bundle.getString(Constants.MOTHERS_NAME);
         mFathersName = bundle.getString(Constants.FATHERS_NAME);
         mAddress = (AddressClass) getArguments().getSerializable(Constants.ADDRESS);
+        isInContacts = bundle.getBoolean(Constants.IS_IN_CONTACTS, false);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mSenderNameView = (TextView) v.findViewById(R.id.textview_name);
@@ -91,6 +102,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
         mFathersNameView = (TextView) v.findViewById(R.id.textview_fathers_name);
         mMothersNameView = (TextView) v.findViewById(R.id.textview_mothers_name);
         mAddressView = (TextView) v.findViewById(R.id.textview_present_address);
+        mAddInContactsCheckBox = (CheckBox) v.findViewById(R.id.add_in_contacts);
 
         mAcceptButton = (Button) v.findViewById(R.id.button_accept);
         mRejectButton = (Button) v.findViewById(R.id.button_reject);
@@ -114,25 +126,39 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
             mMothersNameView.setText(mMothersname);
         }
 
-        mSenderMobileNumberView.setText(mSenderMobileNumber);
+        if (!isInContacts) {
+            mAddInContactsCheckBox.setVisibility(View.VISIBLE);
+            mAddInContactsCheckBox.setChecked(true);
+        }
 
+        mSenderMobileNumberView.setText(mSenderMobileNumber);
 
         mAcceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new android.app.AlertDialog.Builder(getActivity())
-                        .setTitle(R.string.are_you_sure)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+
+                mIntroductionMessage = getString(R.string.introduction_request_review_dialog_content);
+                mIntroductionMessage = mIntroductionMessage.replace(getString(R.string.this_person), mSenderName);
+
+                new MaterialDialog.Builder(getActivity())
+                        .title(R.string.are_you_sure)
+                        .content(mIntroductionMessage)
+                        .positiveText(R.string.yes)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 attemptSetRecommendationStatus(mRequestID, Constants.INTRODUCTION_REQUEST_ACTION_APPROVE);
                             }
                         })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+                        .negativeText(R.string.no)
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 // Do nothing
                             }
                         })
                         .show();
+
             }
         });
 
@@ -140,15 +166,20 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
             @Override
             public void onClick(View v) {
 
-                new android.app.AlertDialog.Builder(getActivity())
-                        .setTitle(R.string.are_you_sure)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+                new MaterialDialog.Builder(getActivity())
+                        .title(R.string.are_you_sure)
+                        .content(R.string.introduction_request_reject_dialog_content)
+                        .positiveText(R.string.yes)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 attemptSetRecommendationStatus(mRequestID, Constants.INTRODUCTION_REQUEST_ACTION_REJECT);
                             }
                         })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+                        .negativeText(R.string.no)
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 // Do nothing
                             }
                         })
@@ -160,15 +191,21 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
         mSpamButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new android.app.AlertDialog.Builder(getActivity())
-                        .setTitle(R.string.are_you_sure)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+
+                new MaterialDialog.Builder(getActivity())
+                        .title(R.string.are_you_sure)
+                        .content(R.string.introduction_request_spam_dialog_content)
+                        .positiveText(R.string.yes)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 attemptSetRecommendationStatus(mRequestID, Constants.INTRODUCTION_REQUEST_ACTION_MARK_AS_SPAM);
                             }
                         })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+                        .negativeText(R.string.no)
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 // Do nothing
                             }
                         })
@@ -176,20 +213,28 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
             }
         });
 
-        if (mAddress != null) {
-            getDistrictList();
-        } else
-            setContentShown(true);
         return v;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setContentShown(false);
+
+        if (mAddress != null) getDistrictList();
+        else setContentShown(true);
+
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setContentShown(false);
     }
 
     private void attemptSetRecommendationStatus(long requestID, String recommendationStatus) {
+        if (mAddInContactsCheckBox.isChecked()) {
+            addContact(mSenderName, mSenderMobileNumber, null);
+        }
         if (requestID == 0) {
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
@@ -218,17 +263,23 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     }
 
     private void loadAddresses() {
-        if (mAddress == null) {
-            mAddressView.setVisibility(View.GONE);
-        } else {
+        if (mAddress != null)
             mAddressView.setText(mAddress.toString(mThanaList, mDistrictList));
-        }
-        setContentShown(true);
 
+        if (this.isAdded()) setContentShown(true);
+    }
+
+    private void addContact(String name, String phoneNumber, String relationship) {
+        AddContactRequestBuilder addContactRequestBuilder = new
+                AddContactRequestBuilder(name, phoneNumber, relationship);
+
+        new AddContactAsyncTask(Constants.COMMAND_ADD_CONTACTS,
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(),
+                getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -244,7 +295,6 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
 
         Gson gson = new Gson();
 
-        //if (this.isAdded()) setContentShown(true);
         switch (result.getApiCommand()) {
 
             case Constants.COMMAND_INTRODUCE_ACTION:

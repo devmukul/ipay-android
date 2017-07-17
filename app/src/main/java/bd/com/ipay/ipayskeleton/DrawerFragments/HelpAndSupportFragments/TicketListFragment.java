@@ -1,9 +1,8 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments.HelpAndSupportFragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -22,14 +23,15 @@ import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.HelpAndSupportActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.GetTicketsResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Ticket.Ticket;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.HelpAndSupportActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketsResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.Ticket;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TicketListFragment extends ProgressFragment implements HttpResponseListener {
@@ -41,7 +43,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     private RecyclerView.LayoutManager mLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private FloatingActionButton mNewTicketButton;
+    private FloatingActionButton mFabCreateNewTicket;
     private TextView mEmptyListTextView;
 
     private List<Ticket> mTickets;
@@ -52,12 +54,13 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_ticket_list, container, false);
 
+        setTitle();
 
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
 
-        mNewTicketButton = (FloatingActionButton) v.findViewById(R.id.fab_new_ticket);
+        mFabCreateNewTicket = (FloatingActionButton) v.findViewById(R.id.fab_new_ticket);
 
-        mNewTicketButton.setOnClickListener(new View.OnClickListener() {
+        mFabCreateNewTicket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((HelpAndSupportActivity) getActivity()).switchToCreateTicketFragment();
@@ -83,6 +86,11 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
         return v;
     }
 
+    private void setTitle() {
+        getActivity().setTitle(R.string.help);
+    }
+
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -101,20 +109,22 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
     }
 
     private void showErrorDialog() {
-        new AlertDialog.Builder(getContext())
-                .setMessage(R.string.support_not_available)
-                .setCancelable(false)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+        new MaterialDialog.Builder(getActivity())
+                .title(R.string.sorry)
+                .content(R.string.support_not_available)
+                .cancelable(false)
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         getActivity().onBackPressed();
                     }
                 })
-                .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         if (getActivity() != null) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -122,7 +132,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetTicketsTask = null;
             if (getActivity() != null) {
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 showErrorDialog();
             }
             return;
@@ -139,6 +149,8 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
             case Constants.COMMAND_GET_TICKETS:
                 if (isAdded())
                     setContentShown(true);
+                mFabCreateNewTicket.setVisibility(View.VISIBLE);
+
                 try {
                     mGetTicketsResponse = gson.fromJson(result.getJsonString(), GetTicketsResponse.class);
 
@@ -154,8 +166,13 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                         } else
                             mEmptyListTextView.setVisibility(View.VISIBLE);
 
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND ||
+                            result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
                         mEmptyListTextView.setVisibility(View.VISIBLE);
+
+                        if (getActivity() != null) {
+                            showErrorDialog();
+                        }
 
                     } else {
                         if (getActivity() != null) {
@@ -171,19 +188,17 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
 
                 mGetTicketsTask = null;
                 break;
-
         }
     }
 
     private class TicketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int ITEM_TYPE_TICKET = 1;
-        private static final int ITEM_TYPE_FOOTER = 2;
 
         private class TicketViewHolder extends RecyclerView.ViewHolder {
 
             private TextView subjectView;
-            private TextView descriptionView;
+            private TextView categoryView;
             private TextView timeView;
             private TextView statusView;
 
@@ -191,7 +206,7 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
                 super(itemView);
 
                 subjectView = (TextView) itemView.findViewById(R.id.textview_subject);
-                descriptionView = (TextView) itemView.findViewById(R.id.textview_description);
+                categoryView = (TextView) itemView.findViewById(R.id.textview_category);
                 timeView = (TextView) itemView.findViewById(R.id.textview_time);
                 statusView = (TextView) itemView.findViewById(R.id.textview_status);
             }
@@ -199,9 +214,9 @@ public class TicketListFragment extends ProgressFragment implements HttpResponse
             public void bindView(int pos) {
                 final Ticket ticket = mTickets.get(pos);
 
-                subjectView.setText(ticket.getSubject());
-                descriptionView.setText(ticket.getDescription());
-                timeView.setText(Utilities.getDateFormat(ticket.getCreatedAt()));
+                subjectView.setText(ticket.getId() + " : " + ticket.getSubject());
+                categoryView.setText(getString(R.string.category) + ": " + ticket.getCategory());
+                timeView.setText(Utilities.formatDateWithTime(ticket.getCreatedAt()));
                 statusView.setText(ticket.getStatus().toUpperCase());
 
                 switch (ticket.getStatus()) {

@@ -40,7 +40,10 @@ public class PinInputDialogBuilder extends MaterialDialog.Builder {
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
                 if (!getPin().isEmpty()) {
+                    Utilities.hideKeyboard(context, mPinField);
+
                     onSubmitListener.onClick(dialog, which);
+
                     build().dismiss();
                     dialog.dismiss();
                 } else {
@@ -48,8 +51,6 @@ public class PinInputDialogBuilder extends MaterialDialog.Builder {
                     View focusView = mPinField;
                     focusView.requestFocus();
                 }
-
-                Utilities.hideKeyboard(context, mPinField);
             }
         });
 

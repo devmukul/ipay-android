@@ -18,23 +18,22 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.GetIntroducedListResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Introducer.Introduced;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.GetIntroductionRequestsResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.IntroductionAndInvite.IntroductionRequestClass;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.GetIntroducedListResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Introducer.Introduced;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.GetIntroductionRequestsResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.IntroductionRequestClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class IntroducedFragment extends ProgressFragment implements HttpResponseListener {
-    ;
-
     private GetIntroducedListResponse mIntroducedListResponse;
     private HttpRequestGetAsyncTask mGetIntroducedTask = null;
 
@@ -93,9 +92,8 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     }
 
     private void getIntroducedList() {
-        if (mGetIntroducedTask != null) {
-            return;
-        }
+        if (mGetIntroducedTask != null) return;
+
         mGetIntroducedTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_INTRODUCED_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_APPROVED_INTRODUCTION_REQUESTS, getActivity());
         mGetIntroducedTask.mHttpResponseListener = this;
@@ -103,9 +101,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     }
 
     private void getRecommendationRequestsList() {
-        if (mGetRecommendationRequestsTask != null) {
-            return;
-        }
+        if (mGetRecommendationRequestsTask != null) return;
 
         mGetRecommendationRequestsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_RECOMMENDATION_REQUESTS,
                 Constants.BASE_URL_MM + Constants.URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS, getActivity());
@@ -115,9 +111,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) throws RuntimeException {
-
-
+    public void httpResponseReceiver(GenericHttpResponse result) throws RuntimeException {
         mGetRecommendationRequestsTask = null;
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -144,7 +138,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                             mIntroducedList.clear();
                             mIntroducedList.addAll(tempIntroducedClasses);
                         }
-                        //mBaseList.addAll(mIntroducedList);
                         mIntroduceAdapter.notifyDataSetChanged();
 
                     } else {
@@ -191,9 +184,7 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                 break;
         }
         try {
-            if (isAdded()) {
-                setContentShown(true);
-            }
+            if (isAdded()) setContentShown(true);
             if (mIntroducedList != null && mIntroducedList.size() == 0 && mRecommendationRequestList != null && mRecommendationRequestList.size() == 0)
                 mEmptyListTextView.setVisibility(View.VISIBLE);
             else mEmptyListTextView.setVisibility(View.GONE);
@@ -204,7 +195,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
     }
 
     private class IntroducedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
         private static final int RECOMMENDATION_ITEM_VIEW = 1;
         private static final int INTRODUCED_LIST_ITEM_VIEW = 2;
         private static final int INTRODUCED_LIST_HEADER_VIEW = 3;
@@ -214,12 +204,12 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            private final TextView mIntroducedName;
-            private final TextView mIntroducedMobileNumber;
+            private final TextView mIntroducedNameView;
+            private final TextView mIntroducedMobileNumberView;
             private final ProfileImageView mIntroducedProfilePictureView;
-            private final TextView mSenderName;
-            private final TextView mSenderMobileNumber;
-            private final TextView mDate;
+            private final TextView mSenderNameView;
+            private final TextView mSenderMobileNumberView;
+            private final TextView mTimeView;
             private final ProfileImageView mRecommendationProfilePictureView;
             private final View divider;
 
@@ -227,31 +217,36 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
             public ViewHolder(final View itemView) {
                 super(itemView);
 
-                mIntroducedName = (TextView) itemView.findViewById(R.id.introduced_name);
-                mIntroducedMobileNumber = (TextView) itemView.findViewById(R.id.introduced_mobile_number);
+                mIntroducedNameView = (TextView) itemView.findViewById(R.id.introduced_name);
+                mIntroducedMobileNumberView = (TextView) itemView.findViewById(R.id.introduced_mobile_number);
                 mIntroducedProfilePictureView = (ProfileImageView) itemView.findViewById(R.id.introduced_profile_picture);
 
-                mSenderName = (TextView) itemView.findViewById(R.id.textview_title);
-                mSenderMobileNumber = (TextView) itemView.findViewById(R.id.textview_description);
-                mDate = (TextView) itemView.findViewById(R.id.textview_time);
+                mSenderNameView = (TextView) itemView.findViewById(R.id.sender_name);
+                mSenderMobileNumberView = (TextView) itemView.findViewById(R.id.sender_mobile_number);
+                mTimeView = (TextView) itemView.findViewById(R.id.time);
                 mRecommendationProfilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 divider = itemView.findViewById(R.id.divider);
             }
 
             public void bindViewRecommendationList(int pos) {
-
                 final long requestID = mRecommendationRequestList.get(pos).getId();
                 final String senderName = mRecommendationRequestList.get(pos).getName();
                 final String senderMobileNumber = mRecommendationRequestList.get(pos).getSenderMobileNumber();
                 final String photoUri = mRecommendationRequestList.get(pos).getImageUrl();
-                final String time = Utilities.getDateFormat(mRecommendationRequestList.get(pos).getDate());
                 final AddressClass mAddress = mRecommendationRequestList.get(pos).getPresentAddress();
                 final String fathersName = mRecommendationRequestList.get(pos).getFather();
                 final String mothersName = mRecommendationRequestList.get(pos).getMother();
 
-                mSenderName.setText(senderName);
-                mSenderMobileNumber.setText(senderMobileNumber);
-                mDate.setText(time);
+                mSenderNameView.setText(senderName);
+                mSenderMobileNumberView.setText(senderMobileNumber);
+
+                final long requestTime = mRecommendationRequestList.get(pos).getDate();
+                if (requestTime == 0) mTimeView.setVisibility(View.GONE);
+                else {
+                    mTimeView.setVisibility(View.VISIBLE);
+                    final String time = Utilities.formatDateWithTime(mRecommendationRequestList.get(pos).getDate());
+                    mTimeView.setText(time);
+                }
                 mRecommendationProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + photoUri, false);
 
                 if (pos == mRecommendationRequestList.size() - 1)
@@ -269,6 +264,8 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
                         bundle.putString(Constants.FATHERS_NAME, fathersName);
                         bundle.putString(Constants.MOTHERS_NAME, mothersName);
                         bundle.putSerializable(Constants.ADDRESS, mAddress);
+                        bundle.putBoolean(Constants.IS_IN_CONTACTS,
+                                new ContactSearchHelper(getActivity()).searchMobileNumber(senderMobileNumber));
 
                         ((ProfileActivity) getActivity()).switchToRecommendationReviewFragment(bundle);
                     }
@@ -276,16 +273,15 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
             }
 
             public void bindViewForIntroducedList(int pos) {
-
                 if (mRecommendationRequestList != null && mRecommendationRequestList.size() != 0)
                     pos = pos - mRecommendationRequestList.size() - 1;
 
-                final String introducedName = mIntroducedList.get(pos).getName();
-                final String introducedMobileNumber = mIntroducedList.get(pos).getMobileNumber();
+                String introducedName = mIntroducedList.get(pos).getName();
+                String introducedMobileNumber = mIntroducedList.get(pos).getMobileNumber();
                 String imageUrl = mIntroducedList.get(pos).getProfilePictureUrl();
                 mIntroducedProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
-                mIntroducedName.setText(introducedName);
-                mIntroducedMobileNumber.setText(introducedMobileNumber);
+                mIntroducedNameView.setText(introducedName);
+                mIntroducedMobileNumberView.setText(introducedMobileNumber);
             }
         }
 
@@ -310,7 +306,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
             View v;
 
             if (viewType == INTRODUCED_LIST_ITEM_VIEW) {
@@ -330,7 +325,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
             try {
                 if (holder instanceof IntroducedListItemViewHolder) {
                     IntroducedListItemViewHolder vh = (IntroducedListItemViewHolder) holder;
@@ -348,7 +342,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
         @Override
         public int getItemCount() {
-
             int introducedListSize = 0;
             int recommendationRequestListSize = 0;
 
@@ -372,7 +365,6 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
 
         @Override
         public int getItemViewType(int position) {
-
             int recommendationRequestListSize = 0;
             int introducedListSize = 0;
 
@@ -399,5 +391,4 @@ public class IntroducedFragment extends ProgressFragment implements HttpResponse
             } else return RECOMMENDATION_ITEM_VIEW;
         }
     }
-
 }

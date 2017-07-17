@@ -1,9 +1,6 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
-import android.os.CountDownTimer;
-import android.util.Log;
-
-import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 /**
  * We get an authentication token from the server when the user logs in. This token needs to be
@@ -46,6 +43,10 @@ public class TokenManager {
         return token;
     }
 
+    public static void invalidateToken() {
+        token = "";
+    }
+
     public static void setToken(String token) {
         TokenManager.token = token;
     }
@@ -56,18 +57,6 @@ public class TokenManager {
 
     public static void setRefreshToken(String refreshToken) {
         TokenManager.refreshToken = refreshToken;
-    }
-
-    public static CountDownTimer getTokenTimer() {
-        return BaseActivity.tokenTimer;
-    }
-
-    public static void setTokenTimer(CountDownTimer tokenTimer) {
-        BaseActivity.tokenTimer = tokenTimer;
-    }
-
-    public static void stopTokenTimer() {
-        BaseActivity.tokenTimer.cancel();
     }
 
     public static long getiPayTokenTimeInMs() {
@@ -87,8 +76,7 @@ public class TokenManager {
     }
 
     public static void setiPayTokenTimeInMs(long iPayTokenTimeInMs) {
-        if (Constants.DEBUG)
-            Log.w("Token Timer Interval", iPayTokenTimeInMs + "");
+        Logger.logW("Token Timer Interval", iPayTokenTimeInMs + "");
         TokenManager.iPayTokenTimeInMs = iPayTokenTimeInMs;
     }
 }

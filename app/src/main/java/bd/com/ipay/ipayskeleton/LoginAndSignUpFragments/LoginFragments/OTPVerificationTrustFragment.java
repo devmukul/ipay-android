@@ -1,8 +1,6 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.LoginFragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -22,16 +20,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.EnableDisableSMSBroadcastReceiver;
-import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.SMSReaderBroadcastReceiver;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.LoginResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPRequestTrustedDevice;
-import bd.com.ipay.ipayskeleton.Model.MMModule.LoginAndSignUp.OTPResponseTrustedDevice;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
+import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPRequestTrustedDevice;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPResponseTrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -51,7 +51,6 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
 
     private String mDeviceID;
     private ProgressDialog mProgressDialog;
-    private SharedPreferences pref;
 
     private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
 
@@ -66,7 +65,6 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_otp_verification_trusted_device, container, false);
-        pref = getActivity().getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
         mActivateButton = (Button) v.findViewById(R.id.buttonVerifyOTP);
         mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
@@ -157,7 +155,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
 
         OTPRequestTrustedDevice mOTPRequestTrustedDevice = new OTPRequestTrustedDevice
                 (mUserNameLogin, mPasswordLogin,
-                        Constants.MOBILE_ANDROID + mDeviceID, SignupOrLoginActivity.mAccountType, SignupOrLoginActivity.mPromoCode);
+                        Constants.MOBILE_ANDROID + mDeviceID, SignupOrLoginActivity.mAccountType);
         Gson gson = new Gson();
         String json = gson.toJson(mOTPRequestTrustedDevice);
         mRequestOTPTask = new HttpRequestPostAsyncTask(Constants.COMMAND_OTP_VERIFICATION,
@@ -184,10 +182,10 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-        } else {
 
+        } else {
             String otp = mOTPEditText.getText().toString().trim();
-            String pushRegistrationID = pref.getString(Constants.PUSH_NOTIFICATION_TOKEN, null);
+            String pushRegistrationID = SharedPrefManager.getPushNotificationToken(null);
 
             mProgressDialog.show();
 
@@ -203,7 +201,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (isAdded()) mProgressDialog.dismiss();
 
@@ -224,16 +222,17 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                 String message = mLoginResponseModel.getMessage();
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    pref.edit().putBoolean(Constants.LOGGED_IN, true).apply();
-                    pref.edit().putInt(Constants.ACCOUNT_TYPE, mLoginResponseModel.getAccountType()).apply();
+                    ProfileInfoCacheManager.setLoggedInStatus(true);
+
+                    ProfileInfoCacheManager.setAccountType(mLoginResponseModel.getAccountType());
 
                     if (mLoginResponseModel.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE)
-                        pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumber).apply();
+                        ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumber);
                     else
-                        pref.edit().putString(Constants.USERID, SignupOrLoginActivity.mMobileNumberBusiness).apply();
+                        ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumberBusiness);
 
                     if (getActivity() != null)
-                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
 
                 } else {
                     if (getActivity() != null)
@@ -245,37 +244,40 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                     Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
             }
             mLoginTask = null;
+
         } else if (result.getApiCommand().equals(Constants.COMMAND_OTP_VERIFICATION)) {
 
-            mOTPResponseTrustedDevice = gson.fromJson(result.getJsonString(), OTPResponseTrustedDevice.class);
-            SignupOrLoginActivity.otpDuration = mOTPResponseTrustedDevice.getOtpValidFor();
-            String message = mOTPResponseTrustedDevice.getMessage();
+            try {
+                mOTPResponseTrustedDevice = gson.fromJson(result.getJsonString(), OTPResponseTrustedDevice.class);
+                SignupOrLoginActivity.otpDuration = mOTPResponseTrustedDevice.getOtpValidFor();
+                String message = mOTPResponseTrustedDevice.getMessage();
 
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.otp_sent, Toast.LENGTH_LONG).show();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.otp_sent, Toast.LENGTH_LONG).show();
 
-                // Start timer again
-                mTimerTextView.setVisibility(View.VISIBLE);
-                mResendOTPButton.setEnabled(false);
-                new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
+                    // Start timer again
+                    mTimerTextView.setVisibility(View.VISIBLE);
+                    mResendOTPButton.setEnabled(false);
+                    new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000 - 500) {
 
-                    public void onTick(long millisUntilFinished) {
-                        mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
-                    }
+                        public void onTick(long millisUntilFinished) {
+                            mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
+                        }
 
-                    public void onFinish() {
-                        mTimerTextView.setVisibility(View.INVISIBLE);
-                        mResendOTPButton.setEnabled(true);
-                    }
-                }.start();
-            } else {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        public void onFinish() {
+                            mResendOTPButton.setEnabled(true);
+                        }
+                    }.start();
+                } else {
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             mRequestOTPTask = null;
-
         }
     }
 }

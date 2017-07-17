@@ -2,20 +2,24 @@ package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -32,6 +36,10 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.face.Face;
+import com.google.android.gms.vision.face.FaceDetector;
 import com.google.gson.Gson;
 
 import java.io.BufferedInputStream;
@@ -49,14 +57,19 @@ import java.net.NetworkInterface;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.UserProfilePictureClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RefreshToken.TokenParserClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class Utilities {
 
@@ -215,7 +228,8 @@ public class Utilities {
                 return buf.toString();
             }
         } catch (Exception ignored) {
-        } // for now eat exceptions
+            // For now eat exceptions
+        }
         return "";
         /*try {
             // this is so Linux hack
@@ -223,6 +237,11 @@ public class Utilities {
         } catch (IOException ex) {
             return null;
         }*/
+    }
+
+    public static void sendBroadcast(Context context, String intentFilter) {
+        Intent intent = new Intent(intentFilter);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     public static String streamToString(InputStream is) {
@@ -346,7 +365,7 @@ public class Utilities {
         byte[] data = Base64.decode(base64, Base64.DEFAULT);
         try {
             String parsedToken = new String(data, "UTF-8");
-            Log.d(Constants.PARSED_TOKEN, Constants.PARSED_TOKEN + parsedToken);
+            Logger.logD(Constants.PARSED_TOKEN, Constants.PARSED_TOKEN + parsedToken);
             Gson gson = new Gson();
             TokenParserClass mTokenParserClass = gson.fromJson(parsedToken, TokenParserClass.class);
 
@@ -359,19 +378,9 @@ public class Utilities {
         return timeForTokenExpiration;
     }
 
-    public static String getFilePath(Context context, Uri uri) {
-        String[] projection = {MediaStore.Video.Media.DATA};
-        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
-        String filePath = null;
-        if (cursor != null && cursor.moveToFirst()) {
-            filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
-            cursor.close();
-        }
 
-        return filePath;
-    }
 
-    public static String getFilePathfromData(Context context, Uri uri) {
+    public static String getFilePathFromData(Context context, Uri uri) {
         String[] projection = new String[]{"_data"};
         Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
         String filePath = null;
@@ -383,6 +392,7 @@ public class Utilities {
 
         return filePath;
     }
+
     public static void setLayoutAnim_slideDown(ViewGroup panel) {
 
         AnimationSet set = new AnimationSet(true);
@@ -445,11 +455,18 @@ public class Utilities {
         return String.format("\u09F3%s", numberFormat.format(amount));
     }
 
+    public static String formatTakaWithSignAndComma(String sign, double amount) {
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMaximumFractionDigits(2);
+        return sign + String.format("\u09F3%s", numberFormat.format(amount));
+    }
+
     public static String takaWithComma(double amount) {
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
         numberFormat.setMinimumFractionDigits(2);
         numberFormat.setMaximumFractionDigits(2);
-        return  numberFormat.format(amount);
+        return numberFormat.format(amount);
     }
 
     public static String formatTaka(BigDecimal amount) {
@@ -504,8 +521,24 @@ public class Utilities {
         });
     }
 
-    public static String getDateFormat(long time) {
+    public static String formatDateWithTime(long time) {
         return new SimpleDateFormat("MMM d, yyyy, h:mm a").format(time);
+    }
+
+    public static String formatDateWithoutTime(long time) {
+        return new SimpleDateFormat("MMM d, yyyy").format(time);
+    }
+
+    public static Date formatDateFromString(String dateString) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date newDate = null;
+        try {
+            newDate = format.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return newDate;
     }
 
     public static boolean checkPlayServices(Context context) {
@@ -522,8 +555,69 @@ public class Utilities {
             return "";
     }
 
-    public static String[] parseEventTicket(String qrcodeEncoded) {
-        return qrcodeEncoded.split(":");
+    /**
+     * Checks if a profile picture is proper or not.
+     *
+     * @param context, selectedImageUri
+     * @return Returns null when its a valid profile picture.
+     * Else returns String stating the problem in the picture which is selected to upload.
+     */
+    public static String validateProfilePicture(Context context, String selectedImageUri) {
+
+        String result;
+        FaceDetector detector;
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        Bitmap bitmap = BitmapFactory.decodeFile(selectedImageUri, options);
+
+        // First, check if the file selected is an image.
+        if (options.outWidth != -1 && options.outHeight != -1) {
+            // This is an image file
+            // Now initialize the face detector
+            detector = new FaceDetector.Builder(context)
+                    .setTrackingEnabled(false)
+                    .setLandmarkType(FaceDetector.ALL_LANDMARKS)
+                    .build();
+
+            // This is a temporary workaround for a bug in the face detector with respect to operating
+            // on very small images.  This will be fixed in a future release.  But in the near term, use
+            // of the SafeFaceDetector class will patch the issue.
+            Detector<Face> safeDetector = new SafeFaceDetector(detector);
+
+            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+            SparseArray<Face> faces = safeDetector.detect(frame);
+
+            // Check if the face detection is operational.
+            if (!safeDetector.isOperational()) {
+                // Face detector needs a native library to be downloaded before it works perfectly.
+                // If the download interrupts, it may fail to initialize and will return erroneous value.
+                // We can not stop user from uploading profile picture if the face detector library is not available. So return valid instead.
+                // So return null
+                result = null;
+            } else {
+                // Face detection is operational
+                switch (faces.size()) {
+                    case 0:
+                        result = Constants.NO_FACE_DETECTED;
+                        break;
+                    case 1:
+                        result = null; // Set null value when a single face is detected. VALID PROFILE PICTURE
+                        break;
+                    default:
+                        result = Constants.MULTIPLE_FACES;
+                        break;
+                }
+            }
+
+            // When it is no longer needed in order to free native resources.
+            safeDetector.release();
+
+        } else {
+            // This is not an image file
+            result = Constants.NOT_AN_IMAGE;
+        }
+
+        return result;
     }
 
     public static String getImage(List<UserProfilePictureClass> profilePictureClasses, String quality) {
@@ -574,11 +668,80 @@ public class Utilities {
         return "";
     }
 
+    private static void setCalenderWithAgeLimit(Calendar calendar) {
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        int minYear = currentYear - Constants.MIN_AGE_LIMIT;
+        int minMonth = currentMonth;
+        int minDay = currentDay;
+
+        calendar.set(minYear, minMonth, minDay);
+    }
+
+    public static DatePickerDialog initDatePickerDialog(Context context, Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {
+        final Calendar calendar = Calendar.getInstance();
+
+        if (date == null) {
+            setCalenderWithAgeLimit(calendar); // If no date was selected
+        } else
+            calendar.setTime(date);
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                context, onDateSetListener, year, month, day);
+
+        setLimitInDatePickerDialog(datePickerDialog);
+        return datePickerDialog;
+    }
+
+    private static void setLimitInDatePickerDialog(DatePickerDialog datePickerDialog) {
+        final Calendar calendar = Calendar.getInstance();
+
+        setCalenderWithAgeLimit(calendar);
+        long minDateInMilliSeconds = calendar.getTimeInMillis();
+
+        // Set 18 years from today as max limit of date picker
+        datePickerDialog.getDatePicker().setMaxDate(minDateInMilliSeconds);
+        datePickerDialog.setTitle(null);
+    }
+
+    public static DatePickerDialog getDatePickerDialog(Context context, Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {
+        final DatePickerDialog datePickerDialog = initDatePickerDialog(context, date, onDateSetListener);
+
+        return datePickerDialog;
+    }
+
     public static void setActionBarTitle(Activity activity, String title) {
         activity.getActionBar().setTitle(title);
     }
 
-    public static BigDecimal bigDecimalPercentage(BigDecimal base, BigDecimal pct){
+    public static BigDecimal bigDecimalPercentage(BigDecimal base, BigDecimal pct) {
         return base.multiply(pct).divide(new BigDecimal(100));
+    }
+
+    public static int getRandomNumber() {
+        Random r = new Random();
+        int number = r.nextInt(100 - 1) + 1;
+        return number;
+    }
+
+    public static void goToiPayInAppStore(Context mContext) {
+        final String appPackageName = mContext.getPackageName();
+        try {
+            mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
+    }
+
+    public static void finishLauncherActivity(Activity activity) {
+        Intent intent = new Intent();
+        activity.setResult(Activity.RESULT_OK, intent);
+        activity.finish();
     }
 }

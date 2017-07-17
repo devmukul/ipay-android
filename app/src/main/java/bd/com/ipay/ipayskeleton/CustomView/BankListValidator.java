@@ -9,8 +9,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Bank.UserBankClass;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -46,30 +47,30 @@ public class BankListValidator {
     public void showAddBankDialog(final Activity activity) {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(activity);
         dialog
-            .content(R.string.add_bank_prompt)
-            .cancelable(false)
-            .positiveText(R.string.add_bank)
-            .negativeText(R.string.cancel)
-            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    activity.onBackPressed();
-                    Intent intent = new Intent(activity, ProfileActivity.class);
-                    intent.putExtra(Constants.TARGET_FRAGMENT, Constants.LINK_BANK);
-                    activity.startActivity(intent);
-                }
-            })
-            .onNegative(new MaterialDialog.SingleButtonCallback() {
-                @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    activity.onBackPressed();
-                }
-            });
+                .content(R.string.add_bank_prompt)
+                .cancelable(false)
+                .positiveText(R.string.add_bank)
+                .negativeText(R.string.cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        activity.onBackPressed();
+                        Intent intent = new Intent(activity, ManageBanksActivity.class);
+                        intent.putExtra(Constants.SWITCHED_FROM_BANK_VERIFICATION, true);
+                        activity.startActivity(intent);
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        activity.onBackPressed();
+                    }
+                });
 
         dialog.show();
     }
 
-    public void showVerifiedBankDialog(final Activity activity) {
+    public void showVerifyBankDialog(final Activity activity) {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(activity);
         dialog
                 .content(R.string.verify_bank_prompt)

@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.EducationPaymentActivity;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Education.PayableItem;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.PayableItem;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 
@@ -82,7 +82,7 @@ public class AddPayAbleFragment extends Fragment {
         }
 
         // Set the selector here
-        paymentItemsSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_session), mPayablesList, mSelectedPaymentItemID);
+        paymentItemsSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_session), mPayablesList);
         paymentItemsSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
             @Override
             public void onResourceSelected(int id, String name) {

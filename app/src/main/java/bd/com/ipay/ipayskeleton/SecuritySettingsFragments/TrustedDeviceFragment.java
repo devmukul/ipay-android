@@ -1,18 +1,17 @@
 package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,17 +22,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.HttpRequestDeleteAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.GetTrustedDeviceResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.RemoveTrustedDeviceResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.TrustedDevice.TrustedDevice;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.GetTrustedDeviceResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.RemoveTrustedDeviceResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.TrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -45,8 +46,14 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
 
     private HttpRequestDeleteAsyncTask mRemoveTrustedDeviceTask = null;
     private RemoveTrustedDeviceResponse mRemoveTrustedDeviceResponse = null;
-    private ListView mTrustedDevicesListView;
+
+    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
+
+    private ArrayList<TrustedDevice> mTrustedDeviceList;
     private TrustedDeviceAdapter mTrustedDeviceAdapter;
+
+    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView mTrustedDevicesRecyclerView;
 
     private ProgressDialog mProgressDialog;
 
@@ -58,13 +65,14 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_trusted_devices, container, false);
+        View view = inflater.inflate(R.layout.fragment_trusted_devices, container, false);
         setTitle();
 
-        mTrustedDevicesListView = (ListView) v.findViewById(R.id.list_trusted_devices);
+        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        mTrustedDevicesRecyclerView = (RecyclerView) view.findViewById(R.id.list_trusted_devices);
         mProgressDialog = new ProgressDialog(getActivity());
 
-        return v;
+        return view;
     }
 
     @Override
@@ -73,11 +81,19 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
 
         setContentShown(false);
 
-        if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE))
+        mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (Utilities.isConnectionAvailable(getActivity()))
+                    getTrustedDeviceList();
+            }
+        });
+
+        if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE))
             getTrustedDeviceList();
         else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE);
+            String json = dataHelper.getPushEvent(SharedPrefConstants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE);
 
             if (json == null)
                 getTrustedDeviceList();
@@ -87,17 +103,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
         }
     }
 
-    private void getTrustedDeviceList() {
-        if (mGetTrustedDeviceTask != null) {
-            return;
-        }
-
-        mGetTrustedDeviceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_DEVICES,
-                Constants.BASE_URL_MM + Constants.URL_GET_TRUSTED_DEVICES, getActivity(), this);
-        mGetTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void showTrustedDeviceRemoveConfirmationDialog(final long id, String name) {
+    private void showTrustedDeviceRemoveConfirmationDialog(final long id) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog
                 .setMessage(getString(R.string.confirmation_remove_trusted_device))
@@ -115,11 +121,21 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                 }).show();
     }
 
+    private void getTrustedDeviceList() {
+        if (mGetTrustedDeviceTask != null) {
+            return;
+        }
+
+        mGetTrustedDeviceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_DEVICES,
+                Constants.BASE_URL_MM + Constants.URL_GET_TRUSTED_DEVICES, getActivity(), this);
+        mGetTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private void removeTrustedDevice(long id) {
         if (mRemoveTrustedDeviceTask != null)
             return;
 
-        mProgressDialog.setMessage("Removing device from your trusted device list");
+        mProgressDialog.setMessage(getString(R.string.remove_trusted_device_message));
         mProgressDialog.show();
 
         mRemoveTrustedDeviceTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_TRUSTED_DEVICE,
@@ -132,7 +148,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -156,9 +172,9 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                     processTrustedDeviceList(result.getJsonString());
 
                     DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                    dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, result.getJsonString());
+                    dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, result.getJsonString());
 
-                    PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, false);
+                    PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, false);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mGetTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -170,6 +186,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                 }
             }
 
+            mSwipeRefreshLayout.setRefreshing(false);
             mProgressDialog.dismiss();
             mGetTrustedDeviceTask = null;
 
@@ -208,96 +225,127 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
     private void processTrustedDeviceList(String json) {
         Gson gson = new Gson();
         mGetTrustedDeviceResponse = gson.fromJson(json, GetTrustedDeviceResponse.class);
+        mTrustedDeviceList = (ArrayList<TrustedDevice>) mGetTrustedDeviceResponse.getDevices();
 
-        ArrayList<TrustedDevice> mTrustedDeviceList = (ArrayList<TrustedDevice>) mGetTrustedDeviceResponse.getDevices();
-        mTrustedDeviceAdapter = new TrustedDeviceAdapter(getActivity(), mTrustedDeviceList);
-        mTrustedDevicesListView.setAdapter(mTrustedDeviceAdapter);
-        Utilities.setUpNonScrollableListView(mTrustedDevicesListView);
+        mTrustedDeviceAdapter = new TrustedDeviceAdapter();
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mTrustedDevicesRecyclerView.setLayoutManager(mLayoutManager);
+        mTrustedDevicesRecyclerView.setAdapter(mTrustedDeviceAdapter);
 
         setContentShown(true);
     }
 
-    public class TrustedDeviceAdapter extends ArrayAdapter<TrustedDevice> {
+    public class TrustedDeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private LayoutInflater inflater;
-        private CustomSelectorDialog mCustomSelectorDialog;
-        private List<String> mTrustedDeviceActionList;
-        private int ACTION_REMOVE = 0;
-
-        public TrustedDeviceAdapter(Context context, List<TrustedDevice> objects) {
-            super(context, 0, objects);
-            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        public TrustedDeviceAdapter() {
         }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final TrustedDevice trustedDevice = getItem(position);
+        public class TrustedDeviceViewHolder extends RecyclerView.ViewHolder {
+            private final ImageView mDeviceImageView;
+            private final TextView mDeviceNameView;
+            private final TextView mGrantTimeView;
+            private final TextView mThisDeviceView;
 
-            View view = convertView;
-            if (view == null)
-                view = inflater.inflate(R.layout.list_item_trusted_device, null);
+            private List<String> mTrustedDeviceActionList;
+            private int ACTION_REMOVE = 0;
+            private CustomSelectorDialog mCustomSelectorDialog;
 
-            ImageView deviceImageView = (ImageView) view.findViewById(R.id.trusted_device_imageView);
-            TextView deviceNameView = (TextView) view.findViewById(R.id.textview_device_name);
-            TextView grantTimeView = (TextView) view.findViewById(R.id.textview_time);
-            TextView thisDeviceView = (TextView) view.findViewById(R.id.textview_this_device);
 
-            //Setting the correct image based on trusted device type
-            int[] images = {
-                    R.drawable.ic_browser3x,
-                    R.drawable.ic_android3x,
-            };
+            public TrustedDeviceViewHolder(final View itemView) {
+                super(itemView);
 
-            String deviceID = trustedDevice.getDeviceId();
-            String Android = getString(R.string.android);
-            String IOS = getString(R.string.ios);
-            String Computer = getString(R.string.browser);
-            if (deviceID.toLowerCase().contains(Android.toLowerCase())) {
-                deviceImageView.setImageResource(images[1]);
-
-            } else if (deviceID.toLowerCase().contains(IOS.toLowerCase())) {
-                deviceImageView.setImageResource(images[1]);
-
-            } else if (deviceID.toLowerCase().contains(Computer.toLowerCase())) {
-                deviceImageView.setImageResource(images[0]);
-
+                mDeviceImageView = (ImageView) itemView.findViewById(R.id.trusted_device_imageView);
+                mDeviceNameView = (TextView) itemView.findViewById(R.id.textview_device_name);
+                mGrantTimeView = (TextView) itemView.findViewById(R.id.textview_time);
+                mThisDeviceView = (TextView) itemView.findViewById(R.id.textview_this_device);
             }
 
-            String myDeviceID = getString(R.string.mobile_android);
-            myDeviceID = myDeviceID.concat(DeviceInfoFactory.getDeviceId(getActivity()));
+            public void bindView(int pos) {
 
-            deviceNameView.setText(trustedDevice.getDeviceName());
-            grantTimeView.setText(trustedDevice.getCreatedTimeString());
+                final TrustedDevice trustedDevice = mTrustedDeviceList.get(pos);
 
-            if (myDeviceID.equals(deviceID)) {
-                deviceNameView.setText(trustedDevice.getDeviceName());
-                thisDeviceView.setVisibility(View.VISIBLE);
-                deviceNameView.setTextColor(getResources().getColor(R.color.colorPrimary));
-            } else {
-                thisDeviceView.setVisibility(View.GONE);
-                deviceNameView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
-                view.setOnClickListener(new View.OnClickListener() {
+                //Setting the correct image based on trusted device type
+                int[] images = {
+                        R.drawable.ic_browser3x,
+                        R.drawable.ic_android3x,
+                };
+
+                final String deviceID = trustedDevice.getDeviceId();
+                String Android = getString(R.string.android);
+                String IOS = getString(R.string.ios);
+                String Computer = getString(R.string.browser);
+
+                if (deviceID.toLowerCase().contains(Android.toLowerCase()))
+                    mDeviceImageView.setImageResource(images[1]);
+
+                else if (deviceID.toLowerCase().contains(IOS.toLowerCase()))
+                    mDeviceImageView.setImageResource(images[1]);
+
+                else if (deviceID.toLowerCase().contains(Computer.toLowerCase()))
+                    mDeviceImageView.setImageResource(images[0]);
+
+                final String myDeviceID = getString(R.string.mobile_android).concat(DeviceInfoFactory.getDeviceId(getActivity()));
+
+                mDeviceNameView.setText(trustedDevice.getDeviceName());
+                mGrantTimeView.setText(trustedDevice.getCreatedTimeString());
+
+                if (myDeviceID.equals(deviceID)) {
+                    mDeviceNameView.setText(trustedDevice.getDeviceName());
+                    mThisDeviceView.setVisibility(View.VISIBLE);
+                    mDeviceNameView.setTextColor(getResources().getColor(R.color.colorPrimary));
+                } else {
+                    mThisDeviceView.setVisibility(View.GONE);
+                    mDeviceNameView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
+                }
+
+                itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mTrustedDeviceActionList = Arrays.asList(getResources().getStringArray(R.array.trusted_device_action));
-                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), trustedDevice.getDeviceName(), mTrustedDeviceActionList);
-                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
-                            @Override
-                            public void onResourceSelected(int selectedIndex, String mName) {
-                                if (selectedIndex == ACTION_REMOVE) {
-                                    showTrustedDeviceRemoveConfirmationDialog(
-                                            trustedDevice.getId(), trustedDevice.getDeviceName());
+                        if (!myDeviceID.equals(deviceID)) {
+                            mTrustedDeviceActionList = Arrays.asList(getResources().getStringArray(R.array.trusted_device_or_network_action));
+                            mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), trustedDevice.getDeviceName(), mTrustedDeviceActionList);
+                            mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
+                                @Override
+                                public void onResourceSelected(int selectedIndex, String mName) {
+                                    if (selectedIndex == ACTION_REMOVE) {
+                                        showTrustedDeviceRemoveConfirmationDialog(
+                                                trustedDevice.getId());
+                                    }
                                 }
-                            }
-                        });
-                        mCustomSelectorDialog.show();
-
+                            });
+                            mCustomSelectorDialog.show();
+                        }
                     }
                 });
             }
-
-            return view;
         }
-    }
 
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v;
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_trusted_device,
+                    parent, false);
+
+            return new TrustedDeviceViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+                TrustedDeviceViewHolder vh = (TrustedDeviceViewHolder) holder;
+                vh.bindView(position);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mTrustedDeviceList != null)
+                return mTrustedDeviceList.size();
+            else return 0;
+        }
+
+    }
 }

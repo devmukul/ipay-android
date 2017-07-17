@@ -16,30 +16,32 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileActivity;
-import bd.com.ipay.ipayskeleton.Api.GetBusinessTypesAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Business.Employee.GetBusinessInformationResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.AddressClass;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.Address.GetUserAddressResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Profile.BasicInfo.GetProfileInfoResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.BusinessType;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.District;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.DistrictRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetDistrictResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetOccupationResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.GetThanaResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Occupation;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.OccupationRequestBuilder;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.Thana;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Resource.ThanaRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.GetUserAddressResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.District;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.DistrictRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetDistrictResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetOccupationResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetThanaResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Occupation;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.OccupationRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Thana;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.ThanaRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.GCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class BusinessInformationFragment extends ProgressFragment implements HttpResponseListener {
@@ -70,74 +72,64 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private TextView mNameView;
     private TextView mMobileNumberView;
     private TextView mOccupationView;
+    private TextView mOrganizationNameView;
     private TextView mVerificationStatusView;
-
     private TextView mSignUpTimeView;
 
     private TextView mPresentAddressView;
-
     private View mPresentAddressHolder;
+    private AddressClass mPresentAddress;
 
     private ImageButton mPresentAddressEditButton;
-    private ImageButton mContactEditButton;
-
+    private ImageButton mContactInfoEditButton;
     private ImageButton mOfficeInfoEditButton;
-
-    private AddressClass mPresentAddress;
 
     private String mName = "";
     private String mMobileNumber = "";
     private String mProfileImageUrl = "";
-
     private String mDateOfBirth = "";
 
     private int mOccupation = 0;
-    private String occupation = "";
-    private String mGender = "";
+    private String mOrganizationName = "";
+    private String mGender;
     private String mSignUpTime = "";
     private String mVerificationStatus = null;
-
 
     private List<Thana> mThanaList;
     private List<District> mDistrictList;
     private List<BusinessType> mBusinessTypes;
     private List<Occupation> mOccupationList;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_business_information, container, false);
+        View view = inflater.inflate(R.layout.fragment_business_information, container, false);
         getActivity().setTitle(R.string.basic_info);
 
-        mBusinessNameView = (TextView) v.findViewById(R.id.textview_business_name);
-        mBusinessMobileNumberView = (TextView) v.findViewById(R.id.textview_business_mobile_number);
-        mBusinessTypeView = (TextView) v.findViewById(R.id.textview_business_type);
+        mBusinessNameView = (TextView) view.findViewById(R.id.textview_business_name);
+        mBusinessMobileNumberView = (TextView) view.findViewById(R.id.textview_business_mobile_number);
+        mBusinessTypeView = (TextView) view.findViewById(R.id.textview_business_type);
+        mNameView = (TextView) view.findViewById(R.id.textview_name);
+        mOccupationView = (TextView) view.findViewById(R.id.textview_occupation);
+        mOrganizationNameView = (TextView) view.findViewById(R.id.textview_organization_name);
+        mMobileNumberView = (TextView) view.findViewById(R.id.textview_mobile_number);
+        mVerificationStatusView = (TextView) view.findViewById(R.id.textview_verification_status);
+        mSignUpTimeView = (TextView) view.findViewById(R.id.textview_signup);
+        mPresentAddressView = (TextView) view.findViewById(R.id.textview_present_address);
+        mPresentAddressHolder = view.findViewById(R.id.present_address_holder);
 
-        mOfficeInfoEditButton = (ImageButton) v.findViewById(R.id.button_edit_office_information);
-
-        mNameView = (TextView) v.findViewById(R.id.textview_name);
-        mOccupationView = (TextView) v.findViewById(R.id.textview_occupation);
-        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mVerificationStatusView = (TextView) v.findViewById(R.id.textview_verification_status);
+        mOfficeInfoEditButton = (ImageButton) view.findViewById(R.id.button_edit_office_information);
+        mPresentAddressEditButton = (ImageButton) view.findViewById(R.id.button_edit_present_address);
+        mContactInfoEditButton = (ImageButton) view.findViewById(R.id.button_edit_contact_information);
 
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
 
-        mSignUpTimeView = (TextView) v.findViewById(R.id.textview_signup);
-
-        mPresentAddressView = (TextView) v.findViewById(R.id.textview_present_address);
-
-        mPresentAddressEditButton = (ImageButton) v.findViewById(R.id.button_edit_present_address);
-        mContactEditButton = (ImageButton) v.findViewById(R.id.button_edit_contact_information);
-
-        mPresentAddressHolder = v.findViewById(R.id.present_address_holder);
-
         if (ProfileInfoCacheManager.isAccountVerified()) {
             mOfficeInfoEditButton.setVisibility(View.GONE);
-            mContactEditButton.setVisibility(View.GONE);
+            mContactInfoEditButton.setVisibility(View.GONE);
         } else {
             mOfficeInfoEditButton.setVisibility(View.VISIBLE);
-            mContactEditButton.setVisibility(View.VISIBLE);
+            mContactInfoEditButton.setVisibility(View.VISIBLE);
         }
 
         mOfficeInfoEditButton.setOnClickListener(new View.OnClickListener() {
@@ -147,18 +139,16 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             }
         });
 
-        mContactEditButton.setOnClickListener(new View.OnClickListener() {
+        mContactInfoEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchEditFragment();
+                launchEditContactInformationFragment();
             }
         });
 
         setHasOptionsMenu(true);
 
-        getDistrictList();
-
-        return v;
+        return view;
     }
 
     @Override
@@ -168,12 +158,12 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
         getBusinessInformation();
 
-        if (PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE)
-                || PushNotificationStatusHolder.isUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE)) {
+        if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE)
+                || PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE)) {
             getProfileInfo();
         } else {
             DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE);
+            String json = dataHelper.getPushEvent(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE);
 
             if (json == null)
                 getProfileInfo();
@@ -184,7 +174,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     }
 
     private void loadAddresses() {
-
         if (mPresentAddress == null) {
             mPresentAddressView.setVisibility(View.GONE);
         } else {
@@ -229,7 +218,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     }
 
 
-    private void launchEditFragment() {
+    private void launchEditContactInformationFragment() {
         Bundle bundle = new Bundle();
 
         bundle.putString(Constants.MOBILE_NUMBER, mMobileNumber);
@@ -238,16 +227,20 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         bundle.putString(Constants.PROFILE_PICTURE, mProfileImageUrl);
         bundle.putString(Constants.GENDER, mGender);
         bundle.putInt(Constants.OCCUPATION, mOccupation);
+        bundle.putString(Constants.ORGANIZATION_NAME, mOrganizationName);
         bundle.putParcelableArrayList(Constants.OCCUPATION_LIST, new ArrayList<>(mOccupationList));
         ((ProfileActivity) getActivity()).switchToEditBasicInfoFragment(bundle);
     }
 
     private void setProfileInformation() {
-
         mMobileNumberView.setText(getString(R.string.phone_number) + ": " + mMobileNumber);
         mNameView.setText(getString(R.string.name) + ": " + mName);
+        mSignUpTimeView.setText(getString(R.string.member_since) + ": " + mSignUpTime);
 
-        mSignUpTimeView.setText(getString(R.string.inception_date) + ": " + mSignUpTime);
+        if (mOrganizationName != null && !mOrganizationName.isEmpty())
+            mOrganizationNameView.setText(getString(R.string.organization_name) + ": " + mOrganizationName);
+        else
+            mOrganizationNameView.setText(getString(R.string.organization_name) + ": " + getString(R.string.not_available));
 
         if (mVerificationStatus != null) {
             if (mVerificationStatus.equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
@@ -305,12 +298,9 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     }
 
     private void processBusinessInformationResponse() {
-
         mBusinessNameView.setText(mGetBusinessInformationResponse.getBusinessName());
         mBusinessMobileNumberView.setText(getString(R.string.phone_number) + ": " + mGetBusinessInformationResponse.getMobileNumber());
         mBusinessTypeView.setText(R.string.loading);
-
-        setContentShown(true);
 
         // Load business types, then extract the name of the business type from businessTypeId
         mGetBusinessTypesAsyncTask = new GetBusinessTypesAsyncTask(getActivity(), new GetBusinessTypesAsyncTask.BusinessTypeLoadListener() {
@@ -333,35 +323,41 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     }
 
     private void processProfileInfoResponse(String json) {
-        Gson gson = new Gson();
-        mGetProfileInfoResponse = gson.fromJson(json, GetProfileInfoResponse.class);
+        try {
+            Gson gson = new Gson();
+            mGetProfileInfoResponse = gson.fromJson(json, GetProfileInfoResponse.class);
 
-        if (mGetProfileInfoResponse.getName() != null)
-            mName = mGetProfileInfoResponse.getName();
-        if (mGetProfileInfoResponse.getMobileNumber() != null)
-            mMobileNumber = mGetProfileInfoResponse.getMobileNumber();
+            if (mGetProfileInfoResponse.getName() != null)
+                mName = mGetProfileInfoResponse.getName();
+            if (mGetProfileInfoResponse.getMobileNumber() != null)
+                mMobileNumber = mGetProfileInfoResponse.getMobileNumber();
 
-        if (mGetProfileInfoResponse.getDateOfBirth() != null)
-            mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
+            if (mGetProfileInfoResponse.getDateOfBirth() != null)
+                mDateOfBirth = mGetProfileInfoResponse.getDateOfBirth();
 
-        if (mGetProfileInfoResponse.getGender() != null)
-            mGender = mGetProfileInfoResponse.getGender();
+            if (mGetProfileInfoResponse.getGender() != null)
+                mGender = mGetProfileInfoResponse.getGender();
 
-        if (mGetProfileInfoResponse.getSignUpTime() != null) {
-            mSignUpTime = mGetProfileInfoResponse.getSignUpTime();
+            if (mGetProfileInfoResponse.getSignUpTime() != null) {
+                mSignUpTime = mGetProfileInfoResponse.getSignUpTime();
+            }
+
+            mOccupation = mGetProfileInfoResponse.getOccupation();
+            mOrganizationName = mGetProfileInfoResponse.getOrganizationName();
+            mVerificationStatus = mGetProfileInfoResponse.getVerificationStatus();
+
+            mProfileImageUrl = Utilities.getImage(mGetProfileInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
+
+            setProfileInformation();
+            getOccupationList();
+            getDistrictList();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        mOccupation = mGetProfileInfoResponse.getOccupation();
-        mVerificationStatus = mGetProfileInfoResponse.getVerificationStatus();
-
-        mProfileImageUrl = Utilities.getImage(mGetProfileInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
-
-        setProfileInformation();
-        getOccupationList();
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
 
@@ -373,7 +369,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             mGetThanaListAsyncTask = null;
 
             if (getActivity() != null) {
-                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
                 ((ProfileActivity) getActivity()).switchToProfileFragment();
             }
 
@@ -391,19 +387,20 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                         processBusinessInformationResponse();
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), R.string.failed_loading_business_information, Toast.LENGTH_LONG);
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
 
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_loading_business_information, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.failed_loading_business_information, Toast.LENGTH_LONG);
                     }
                 }
 
                 mGetBusinessInformationAsyncTask = null;
                 break;
+
             case Constants.COMMAND_GET_OCCUPATIONS_REQUEST:
                 try {
                     mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
@@ -417,7 +414,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                     } else {
                         mOccupationView.setText(getString(R.string.occupation) + ": " + getString(R.string.not_available));
                     }
-                    setContentShown(true);
                 } catch (Exception e) {
                     e.printStackTrace();
                     mOccupationView.setText(getString(R.string.occupation) + ": " + getString(R.string.not_available));
@@ -427,54 +423,53 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                 break;
 
             case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
-
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         processProfileInfoResponse(result.getJsonString());
 
                         DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                        dataHelper.updatePushEvents(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
+                        dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
 
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
-                        PushNotificationStatusHolder.setUpdateNeeded(Constants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
+                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
 
                     } else {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                            Toaster.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                        Toaster.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
                 }
 
                 mGetProfileInfoTask = null;
                 break;
+
             case Constants.COMMAND_GET_USER_ADDRESS_REQUEST:
                 try {
                     mGetUserAddressResponse = gson.fromJson(result.getJsonString(), GetUserAddressResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mPresentAddress = mGetUserAddressResponse.getPresentAddress();
-
                         loadAddresses();
                         setContentShown(true);
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                            Toaster.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
                             getActivity().onBackPressed();
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT).show();
+                        Toaster.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);
                         getActivity().onBackPressed();
                     }
                 }
 
                 mGetUserAddressTask = null;
-
                 break;
+
             case Constants.COMMAND_GET_THANA_LIST:
                 try {
                     mGetThanaResponse = gson.fromJson(result.getJsonString(), GetThanaResponse.class);
@@ -484,20 +479,21 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
                             getActivity().onBackPressed();
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.failed_loading_thana_list, Toast.LENGTH_LONG);
                         getActivity().onBackPressed();
                     }
                 }
 
                 mGetThanaListAsyncTask = null;
                 break;
+
             case Constants.COMMAND_GET_DISTRICT_LIST:
                 try {
                     mGetDistrictResponse = gson.fromJson(result.getJsonString(), GetDistrictResponse.class);
@@ -508,14 +504,14 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
                     } else {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
+                            Toaster.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG);
                             getActivity().onBackPressed();
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG).show();
+                        Toaster.makeText(getActivity(), R.string.failed_loading_district_list, Toast.LENGTH_LONG);
                         getActivity().onBackPressed();
                     }
                 }

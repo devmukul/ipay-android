@@ -22,18 +22,18 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.HttpResponseObject;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PinInputDialogBuilder;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.ItemList;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.MakePayment.PaymentAcceptRejectOrCancelResponse;
-import bd.com.ipay.ipayskeleton.Model.MMModule.Notification.MoneyAndPaymentRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
-import bd.com.ipay.ipayskeleton.Model.MMModule.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.MoneyAndPaymentRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -56,7 +56,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
     private HttpRequestPostAsyncTask mRejectRequestTask = null;
     private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
 
-    private List<ItemList> mItemList;
+    private List<InvoiceItem> mInvoiceItemList;
     private BigDecimal mAmount;
     private BigDecimal mNetAmount;
     private BigDecimal mVat;
@@ -106,7 +106,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_single_invoice));
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_payment_request));
         mProgressDialog.show();
         mGetSingleInvoiceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SINGLE_INVOICE,
                 Constants.BASE_URL_SM + Constants.URL_PAYMENT_GET_INVOICE + invoiceId + "/", getActivity());
@@ -114,19 +114,14 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
         mGetSingleInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-
-    private void attempAccepttPaymentRequestWithPinCheck() {
+    private void attemptAcceptPaymentRequestWithPinCheck() {
         if (this.isPinRequired) {
-            final PinInputDialogBuilder pinInputDialogBuilder = new PinInputDialogBuilder(getActivity());
-
-            pinInputDialogBuilder.onSubmit(new MaterialDialog.SingleButtonCallback() {
+            new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    acceptPaymentRequest(mRequestId, pinInputDialogBuilder.getPin());
+                public void ifPinCheckedAndAdded(String pin) {
+                    acceptPaymentRequest(mRequestId, pin);
                 }
             });
-
-            pinInputDialogBuilder.build().show();
         } else {
             acceptPaymentRequest(mRequestId, null);
         }
@@ -141,7 +136,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
 
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_accepted));
         mProgressDialog.show();
-        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
         PaymentAcceptRejectOrCancelRequest mPaymentAcceptRejectOrCancelRequest =
                 new PaymentAcceptRejectOrCancelRequest(id, pin);
         Gson gson = new Gson();
@@ -159,7 +154,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
 
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_rejecting));
         mProgressDialog.show();
-        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
         RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
                 new RequestMoneyAcceptRejectOrCancelRequest(id);
         Gson gson = new Gson();
@@ -194,7 +189,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
     }
 
     @Override
-    public void httpResponseReceiver(HttpResponseObject result) {
+    public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -223,20 +218,20 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
                         mRequestId = mGetSingleInvoiceResponse.getId();
                         mAmount = mGetSingleInvoiceResponse.getAmount();
                         mVat = mGetSingleInvoiceResponse.getVat();
-                        mItemList = mGetSingleInvoiceResponse.getItemList();
+                        mInvoiceItemList = mGetSingleInvoiceResponse.getItemList();
 
                         mReviewRecyclerView.setAdapter(paymentReviewAdapter);
 
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), R.string.failed_fetching_payment_request, Toast.LENGTH_LONG).show();
                         }
                     }
 
                 } else {
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), R.string.failed_fetching_single_invoice, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.failed_fetching_payment_request, Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -353,13 +348,13 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
                 // Decrease pos by 1 as there is a header view now.
                 pos = pos - 1;
 
-                mItemNameView.setText(mItemList.get(pos).getItem());
-                mQuantityView.setText(mItemList.get(pos).getQuantity().toString());
-                mAmountView.setText(Utilities.formatTaka(mItemList.get(pos).getAmount()));
+                mItemNameView.setText(mInvoiceItemList.get(pos).getItem());
+                mQuantityView.setText(mInvoiceItemList.get(pos).getQuantity().toString());
+                mAmountView.setText(Utilities.formatTaka(mInvoiceItemList.get(pos).getAmount()));
             }
 
             public void bindViewForHeader() {
-                if (mItemList == null || mItemList.size() == 0) {
+                if (mInvoiceItemList == null || mInvoiceItemList.size() == 0) {
                     headerView.setVisibility(View.GONE);
                 }
 
@@ -398,7 +393,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
                 mAcceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        attempAccepttPaymentRequestWithPinCheck();
+                        attemptAcceptPaymentRequestWithPinCheck();
                     }
                 });
 
@@ -480,26 +475,26 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
 
         @Override
         public int getItemCount() {
-            if (mItemList == null) return 0;
-            if (mItemList.size() == 0) return 2;
-            if (mItemList.size() > 0)
-                return 1 + mItemList.size() + 1;
+            if (mInvoiceItemList == null) return 0;
+            if (mInvoiceItemList.size() == 0) return 2;
+            if (mInvoiceItemList.size() > 0)
+                return 1 + mInvoiceItemList.size() + 1;
             else return 0;
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (mItemList == null) return super.getItemViewType(position);
+            if (mInvoiceItemList == null) return super.getItemViewType(position);
 
-            if (mItemList.size() == 0) {
+            if (mInvoiceItemList.size() == 0) {
                 if (position == 0) return NOTIFICATION_REVIEW_LIST_HEADER_VIEW;
                 else return NOTIFICATION_REVIEW_LIST_FOOTER_VIEW;
 
             }
 
-            if (mItemList.size() > 0) {
+            if (mInvoiceItemList.size() > 0) {
                 if (position == 0) return NOTIFICATION_REVIEW_LIST_HEADER_VIEW;
-                else if (position == mItemList.size() + 1)
+                else if (position == mInvoiceItemList.size() + 1)
                     return NOTIFICATION_REVIEW_LIST_FOOTER_VIEW;
                 else return NOTIFICATION_REVIEW_LIST_ITEM_VIEW;
             }

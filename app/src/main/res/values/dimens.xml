@@ -5,6 +5,7 @@
     <dimen name="activity_horizontal_margin_semi_double">24dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin_semi_card">12dp</dimen>
     <dimen name="activity_vertical_margin_card">8dp</dimen>
     <dimen name="activity_horizontal_margin_card">8dp</dimen>
     <dimen name="activity_vertical_margin_double">24dp</dimen>
@@ -22,11 +23,13 @@
     <dimen name="value20">20.0dip</dimen>
     <dimen name="value25">25.0dip</dimen>
     <dimen name="value30">30.0dip</dimen>
+    <dimen name="value34">34.0dip</dimen>
     <dimen name="value48">48.0dip</dimen>
     <dimen name="value50">50.0dip</dimen>
     <dimen name="value60">60.0dp</dimen>
     <dimen name="value70">70.0dp</dimen>
     <dimen name="value80">80dip</dimen>
+    <dimen name="value100">100dp</dimen>
     <dimen name="value110">110dip</dimen>
     <dimen name="value140">140dip</dimen>
     <dimen name="value150">150dip</dimen>
@@ -39,6 +42,7 @@
     <dimen name="text_size_small_medium">16sp</dimen>
     <dimen name="text_size_small_medium_value18">18sp</dimen>
     <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_mini">12sp</dimen>
     <dimen name="text_size_extra_small">12sp</dimen>
     <dimen name="text_size_extra_smaller">10sp</dimen>
     <dimen name="review_item_vertical_spacing_dialog">12dp</dimen>
@@ -50,4 +54,5 @@
     <dimen name="contact_switcher_radius">4dp</dimen>
     <dimen name="ticket_comment_radius">3dp</dimen>
     <dimen name="ticket_profile_picture_size">40dp</dimen>
+    <dimen name="icon_size">40dp</dimen>
 </resources>

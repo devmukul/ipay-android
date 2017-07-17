@@ -133,6 +133,10 @@
                     style="@style/TextViewInfoLeftAlign" />
 
                 <TextView
+                    android:id="@+id/textview_organization_name"
+                    style="@style/TextViewInfoLeftAlign" />
+
+                <TextView
                     android:id="@+id/textview_mobile_number"
                     style="@style/TextViewInfoLeftAlign" />
             </LinearLayout>
