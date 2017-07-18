@@ -17,7 +17,7 @@ public class InputValidator {
     private static final String
             INVALID_DRIVING_LICENSE_ID_PATTERN_INSUFFICIENT_LENGTH = "[A-Z]{2}[0-9]{0,7}|[A-Z]{1}|[A-Z]{2}[0-9]{7}[A-Z]{1,2}|" +
             "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{1,4}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{1,3}";
-    private static final String VALID_DRIVING_LICENSE_ID = "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{5}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{4}";
+    private static final String VALID_DRIVING_LICENSE_ID_PATTERN = "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{5}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{4}";
 
     public static String isPasswordValid(String password) {
         // Return empty string if the password is valid
@@ -119,7 +119,7 @@ public class InputValidator {
                     break;
 
                 case Constants.DOCUMENT_TYPE_DRIVING_LICENSE:
-                    if (documentID.matches(VALID_DRIVING_LICENSE_ID))
+                    if (documentID.matches(VALID_DRIVING_LICENSE_ID_PATTERN))
                         errorMessage = null;
                     else if (documentID.matches(INVALID_DRIVING_LICENSE_ID_PATTERN_INSUFFICIENT_LENGTH))
                         errorMessage = context.getString(R.string.invalid_driving_license_ID_insufficient_length);
