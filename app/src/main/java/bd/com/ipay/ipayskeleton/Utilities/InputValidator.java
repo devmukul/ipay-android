@@ -145,7 +145,7 @@ public class InputValidator {
 
                 case Constants.DOCUMENT_TYPE_VAT_REG_CERT:
                     if (documentID.length() != Constants.VAT_REG_CERT_ID_LENGTH)
-                        errorMessage = context.getString(R.string.invalid_vat_reg_cert_id_wrong_length);
+                        errorMessage = context.getString(R.string.invalid_vat_reg_cert_ID_wrong_length);
                     else
                         errorMessage = null;
                     break;
