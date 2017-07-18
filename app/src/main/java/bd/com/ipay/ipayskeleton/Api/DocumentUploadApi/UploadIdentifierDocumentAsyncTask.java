@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.Api.DocumentUploadApi;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -23,7 +22,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
-import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -68,8 +66,6 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Gen
 
         if (Utilities.isConnectionAvailable(mContext))
             mGenericHttpResponse = uploadDocument(imagePath);
-        else
-            Toaster.makeText(mContext, "Please check your internet connection", Toast.LENGTH_LONG);
 
         Logger.logW("Document Upload", "Finished");
 

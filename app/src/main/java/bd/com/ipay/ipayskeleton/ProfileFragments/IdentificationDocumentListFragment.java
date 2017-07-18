@@ -51,7 +51,9 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class IdentificationDocumentListFragment extends ProgressFragment implements HttpResponseListener {
@@ -303,12 +305,14 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mGetDocumentAccessTokenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void uploadDocument(String mDocumentID, String mDocumentType, int mID) {
+    private void uploadDocument(String mDocumentID, int mID) {
 
         if (mUploadIdentifierDocumentAsyncTask != null)
             return;
 
-        mProgressDialog.setMessage(getString(R.string.uploading) + " " + mDocumentType);
+        String mDocumentTypeName = documentPreviewDetailsList.get(mID).getDocumentTypeName();
+        String mDocumentType = documentPreviewDetailsList.get(mID).getDocumentType();
+        mProgressDialog.setMessage(getString(R.string.uploading) + " " + mDocumentTypeName);
         mProgressDialog.show();
 
         String selectedOImagePath = documentPreviewDetailsList.get(mID).getSelectedDocumentUri().getPath();
@@ -516,6 +520,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             private final EditText mSelectFile;
             private final Button mUploadButton;
             private final ImageView mPicker;
+            private String documentTypeName;
 
             private CustomUploadPickerDialog customUploadPickerDialog;
             private List<String> mPickerList;
@@ -544,12 +549,13 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mPickerList = new ArrayList<>();
                 mBitmap = null;
 
-                String documentTypeName = documentPreviewDetailsList.get(pos).getDocumentTypeName();
+                documentTypeName = documentPreviewDetailsList.get(pos).getDocumentTypeName();
                 String documentID = documentPreviewDetailsList.get(pos).getDocumentId();
                 String verificationStatus = documentPreviewDetailsList.get(pos).getVerificationStatus();
                 String documentHintType = DOCUMENT_HINT_TYPES[pos];
 
                 mDocumentIdTextInputLayoutView.setHint(documentHintType);
+                Utilities.setAppropriateKeyboard(getActivity(), documentTypeName, mDocumentIdEditTextView);
 
                 // Unverified, document not yet uploaded
                 if (verificationStatus == null) {
@@ -653,24 +659,44 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                             }
                         });
                         customUploadPickerDialog.show();
+                        Utilities.hideKeyboard(getActivity());
                     }
                 });
 
                 mUploadButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mDocumentIdEditTextView.getText().toString() == null || mDocumentIdEditTextView.getText().toString().isEmpty()) {
-                            mDocumentIdEditTextView.setError(getString(R.string.please_enter_document_number));
-                            mDocumentIdEditTextView.requestFocus();
-                        } else if (documentPreviewDetailsList.get(pos).getSelectedDocumentUri() == null)
-                            mSelectFile.setError(getString(R.string.please_select_a_file_to_upload));
-                        else {
-                            Utilities.hideKeyboard(getActivity());
-                            documentPreviewDetailsList.get(pos).setDocumentId(mDocumentIdEditTextView.getText().toString());
-                            uploadDocument(documentPreviewDetailsList.get(pos).getDocumentId(), documentPreviewDetailsList.get(pos).getDocumentType(), pos);
-                        }
+                        mDocumentIdEditTextView.setError(null);
+                        mSelectFile.setError(null);
+                        Utilities.hideKeyboard(getActivity());
+                        attemptUploadDocument(pos);
                     }
                 });
+            }
+
+            private void attemptUploadDocument(int pos) {
+                String documentID = mDocumentIdEditTextView.getText().toString();
+                String errorMessage;
+                if (ProfileInfoCacheManager.isBusinessAccount())
+                    errorMessage = InputValidator.isValidDocumentID(getActivity(), documentID, BUSINESS_DOCUMENT_TYPES[pos], pos, true);
+                else
+                    errorMessage = InputValidator.isValidDocumentID(getActivity(), documentID, DOCUMENT_TYPES[pos], pos, false);
+
+                if (errorMessage != null) {
+                    mDocumentIdEditTextView.requestFocus();
+                    mDocumentIdEditTextView.setError(errorMessage);
+                } else {
+                    if (documentPreviewDetailsList.get(pos).getSelectedDocumentUri() == null)
+                        mSelectFile.setError(getString(R.string.please_select_a_file_to_upload));
+                    else {
+                        Utilities.hideKeyboard(getActivity());
+                        documentPreviewDetailsList.get(pos).setDocumentId(documentID);
+                        if (Utilities.isConnectionAvailable(getActivity()))
+                            uploadDocument(documentID, pos);
+                        else
+                            Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
+                    }
+                }
             }
         }
 
