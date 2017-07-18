@@ -13,6 +13,8 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -33,6 +35,7 @@ import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -51,6 +54,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -703,5 +707,46 @@ public class Utilities {
 
         userAttributes.put(IntercomConstants.ATTR_CUSTOM_ATTRIBUTES, customAttributes);
         return userAttributes;
+    }
+
+    public static void performQRCodeScan(Fragment fragment, int requestCode) {
+        final String[] qrCodeScanPermissionList = {Manifest.permission.CAMERA};
+        if (isNecessaryPermissionExists(fragment.getActivity(), qrCodeScanPermissionList)) {
+            initiateQRCodeScan(fragment);
+        } else {
+            requestRequiredPermissions(fragment, requestCode, new String[]{Manifest.permission.CAMERA});
+        }
+    }
+
+    public static void initiateQRCodeScan(Fragment fragment) {
+        IntentIntegrator.forSupportFragment(fragment).initiateScan();
+    }
+
+    public static boolean isNecessaryPermissionExists(Context context, String... permissionList) {
+        for (String permission : permissionList) {
+            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED)
+                return false;
+        }
+        return true;
+    }
+
+    public static void requestRequiredPermissions(Fragment fragment, int permissionCode, String[] permissionList) {
+        List<String> requiredPermissions = new ArrayList<>();
+        for (String permission : permissionList) {
+            if (!isNecessaryPermissionExists(fragment.getActivity(), permission))
+                requiredPermissions.add(permission);
+        }
+
+        fragment.requestPermissions(requiredPermissions.toArray(new String[requiredPermissions.size()]), permissionCode);
+    }
+
+    public static void requestRequiredPermissions(Activity activity, int permissionCode, String[] permissionList) {
+        List<String> requiredPermissions = new ArrayList<>();
+        for (String permission : permissionList) {
+            if (!isNecessaryPermissionExists(activity, permission))
+                requiredPermissions.add(permission);
+        }
+
+        ActivityCompat.requestPermissions(activity, requiredPermissions.toArray(new String[requiredPermissions.size()]), permissionCode);
     }
 }

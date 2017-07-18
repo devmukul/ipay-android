@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -26,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SingleInvoiceActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
@@ -223,13 +222,11 @@ public class PayFragment extends Fragment {
                             case Constants.SERVICE_ACTION_PAY_BY_QR_CODE:
                                 if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
                                     DialogUtils.showServiceNotAllowedDialog(getContext());
-                                    return;
+                                } else {
+                                    Intent intent;
+                                    intent = new Intent(getActivity(), QRCodePaymentActivity.class);
+                                    startActivity(intent);
                                 }
-
-                                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                                    requestPermissions(new String[]{Manifest.permission.CAMERA},
-                                            REQUEST_CODE_PERMISSION);
-                                } else initiateScan();
                                 break;
                         }
                     }
