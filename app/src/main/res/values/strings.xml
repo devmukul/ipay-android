@@ -66,7 +66,7 @@
     <string name="invalid_nid_max_length">NID should be max 17 digits long</string>
     <string name="invalid_business_tin_wrong_length">Business TIN should be 12 digits long</string>
     <string name="invalid_trade_license_ID_wrong_length">Trade License ID should be 8 digits long</string>
-    <string name="invalid_vat_reg_cert_ID_wrong_length">Vat Registration Certificate ID 11 digits long</string>
+    <string name="invalid_vat_reg_cert_ID_wrong_length">Vat Registration Certificate ID should be 11 digits long</string>
     <string name="please_enter_nid">Please enter your national ID number</string>
     <string name="please_enter_passport_id">Please enter your passport ID number</string>
     <string name="please_enter_driving_license_id">Please enter your driving license ID number</string>
