@@ -84,9 +84,12 @@ public class Utilities {
     }
 
     public static void setAppropriateKeyboard(Context context, String documentType, EditText editText) {
-        if (documentType.equals(context.getString(R.string.national_id)))
+        if (documentType.equals(context.getString(R.string.national_id)) ||
+                documentType.equals(context.getString(R.string.business_tin)) ||
+                documentType.equals(context.getString(R.string.vat_registration_certificate)) ||
+                documentType.equals(context.getString(R.string.trade_license))) {
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-        else editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        } else editText.setInputType(InputType.TYPE_CLASS_TEXT);
     }
 
     public static boolean isTabletDevice(Context context) {

@@ -92,8 +92,12 @@ public class InputValidator {
         return errorMessage;
     }
 
-    public static String isValidDocumentID(Context context, String documentID, String documentType, int pos) {
-        String document_types[] = context.getResources().getStringArray(R.array.personal_document_type_validation);
+    public static String isValidDocumentID(Context context, String documentID, String documentType, int pos, boolean isBusinessAccount) {
+        String document_types[];
+        if (isBusinessAccount)
+            document_types = context.getResources().getStringArray(R.array.business_document_id);
+        else
+            document_types = context.getResources().getStringArray(R.array.personal_document_id);
         String errorMessage = "";
         if (documentID.length() == 0) {
             errorMessage = "Please Enter Your " + document_types[pos] + " Number";
@@ -106,7 +110,6 @@ public class InputValidator {
                     else if (length < Constants.MINIMUM_REQUIRED_NID_LENGTH)
                         errorMessage = context.getString(R.string.invalid_nid_min_length);
                     else errorMessage = context.getString(R.string.invalid_nid_max_length);
-
                     break;
 
                 case Constants.DOCUMENT_TYPE_PASSPORT:
@@ -115,7 +118,6 @@ public class InputValidator {
                     else if (documentID.matches(VALID_PASSPORT_ID_PATTERN))
                         errorMessage = null;
                     else errorMessage = context.getString(R.string.invalid_passport_ID);
-
                     break;
 
                 case Constants.DOCUMENT_TYPE_DRIVING_LICENSE:
@@ -125,7 +127,27 @@ public class InputValidator {
                         errorMessage = context.getString(R.string.invalid_driving_license_ID_insufficient_length);
 
                     else errorMessage = context.getString(R.string.invalid_driving_license_ID);
+                    break;
 
+                case Constants.DOCUMENT_TYPE_BUSINESS_TIN:
+                    if (documentID.length() != Constants.BUSINESS_TIN_LENGTH)
+                        errorMessage = context.getString(R.string.invalid_business_tin_wrong_length);
+                    else
+                        errorMessage = null;
+                    break;
+
+                case Constants.DOCUMENT_TYPE_TRADE_LICENSE:
+                    if (documentID.length() != Constants.TRADE_LICENSE_ID_LENGTH)
+                        errorMessage = context.getString(R.string.invalid_trade_license_ID_wrong_length);
+                    else
+                        errorMessage = null;
+                    break;
+
+                case Constants.DOCUMENT_TYPE_VAT_REG_CERT:
+                    if (documentID.length() != Constants.VAT_REG_CERT_ID_LENGTH)
+                        errorMessage = context.getString(R.string.invalid_vat_reg_cert_id_wrong_length);
+                    else
+                        errorMessage = null;
                     break;
             }
         }
