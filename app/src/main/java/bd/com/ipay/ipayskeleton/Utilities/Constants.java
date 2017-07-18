@@ -180,6 +180,9 @@ public class Constants {
 
     public static final String PERSONAL_ACCOUNT = "Personal Account";
     public static final String BUSINESS_ACCOUNT = "Business Account";
+    public static final String SERVICE_ID_SET = "SERVICE_ID_SET";
+    public static final String NAVIGATION_MENU_SERVICE_ACCESS_SET = "NAVIGATION_MENU_SERVICE_ACCESS_SET";
+    public static final String FRAGMENT_SERVICE_ACCESS_SET = "FRAGMENT_SERVICE_ACCESS_SET";
 
     static {
         if (SERVER_TYPE == DEV_SERVER) {

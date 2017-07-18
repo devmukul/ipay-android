@@ -1,10 +1,13 @@
 package bd.com.ipay.ipayskeleton.Utilities.CacheManager;
 
-import android.util.SparseBooleanArray;
+import android.content.Context;
+import android.content.SharedPreferences;
 
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BASIC_PROFILE;
@@ -26,90 +29,132 @@ import static bd.com.ipay.ipayskeleton.Utilities.Constants.VERIFY_BANK;
 
 
 public class ACLManager {
-    private static SparseBooleanArray allowedServiceArray;
+    private static SharedPreferences preferences;
 
-    private static HashMap<String, Boolean> mapServiceAccessByTargetedFragment;
-    private static SparseBooleanArray mapServiceAccessByNavigationMenuId;
-
-    public static void initialize() {
-        allowedServiceArray = new SparseBooleanArray();
+    public static void initialize(Context context) {
+        preferences = context.getSharedPreferences(Constants.ApplicationTag, Context.MODE_PRIVATE);
     }
 
     public static boolean hasServicesAccessibility(final int... serviceCodeList) {
-        if (allowedServiceArray == null || serviceCodeList == null || serviceCodeList.length == 0) {
+        Set<String> serviceIdSet = preferences.getStringSet(Constants.SERVICE_ID_SET, null);
+        if (serviceIdSet == null || serviceCodeList == null || serviceCodeList.length == 0) {
             return false;
         }
         boolean isServiceAllowed = true;
         for (int serviceCode : serviceCodeList) {
-            isServiceAllowed &= allowedServiceArray.get(serviceCode, false);
+            isServiceAllowed &= serviceIdSet.contains(Integer.toString(serviceCode));
         }
         return isServiceAllowed;
     }
 
     public static boolean checkServicesAccessibilityByTargetedFragment(String serviceName) {
-        if (mapServiceAccessByTargetedFragment == null) {
-            return false;
-        } else if (mapServiceAccessByTargetedFragment.get(serviceName) == null) {
-            return false;
-        }
-        return mapServiceAccessByTargetedFragment.get(serviceName);
+        Set<String> fragmentAccessServiceIdSet = preferences.getStringSet(Constants.FRAGMENT_SERVICE_ACCESS_SET, null);
+
+        return fragmentAccessServiceIdSet != null && fragmentAccessServiceIdSet.contains(serviceName);
     }
 
     public static boolean checkServicesAccessibilityByNavigationMenuId(int id) {
-        return mapServiceAccessByNavigationMenuId != null && mapServiceAccessByNavigationMenuId.get(id, false);
+        Set<String> navigationMenuServiceIdSet = preferences.getStringSet(Constants.NAVIGATION_MENU_SERVICE_ACCESS_SET, null);
+        return navigationMenuServiceIdSet != null && navigationMenuServiceIdSet.contains(Integer.toString(id));
     }
 
     public static void updateAllowedServiceArray(int[] serviceCodeList) {
-        allowedServiceArray = new SparseBooleanArray();
+        Set<String> serviceIdSet = new HashSet<>();
         for (int serviceCode : serviceCodeList) {
-            allowedServiceArray.put(serviceCode, true);
+            serviceIdSet.add(Integer.toString(serviceCode));
         }
+        preferences.edit().putStringSet(Constants.SERVICE_ID_SET, serviceIdSet).apply();
         populateServiceAccessByNameMapping();
         populateServiceAccessByIntIDMapping();
     }
 
     private static void populateServiceAccessByIntIDMapping() {
-        mapServiceAccessByNavigationMenuId = new SparseBooleanArray();
+        Set<String> navigationMenuServiceIdSet = new HashSet<>();
 
         //Following menu will have access by default. Currently these options/menu don't require any access control.
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_home, true);
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_account, true);
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_security_settings, true);
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_live_chat, true);
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_help, true);
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_about, true);
+        navigationMenuServiceIdSet.add(Integer.toString(R.id.nav_home));
+        navigationMenuServiceIdSet.add(Integer.toString(R.id.nav_account));
+        navigationMenuServiceIdSet.add(Integer.toString(R.id.nav_security_settings));
+        navigationMenuServiceIdSet.add(Integer.toString(R.id.nav_live_chat));
+        navigationMenuServiceIdSet.add(Integer.toString(R.id.nav_help));
+        navigationMenuServiceIdSet.add(Integer.toString(R.id.nav_about));
 
         //Following menu will require access control. These will be populated from the access control list.
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_bank_account, hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS));
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_user_activity, hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY));
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_invite, hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS, ServiceIdConstants.MANAGE_INVITATIONS));
-        mapServiceAccessByNavigationMenuId.put(R.id.nav_logout, hasServicesAccessibility(ServiceIdConstants.SIGN_OUT));
+        if (hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS)) {
+            navigationMenuServiceIdSet.add(Integer.toString(R.id.nav_bank_account));
+        }
+        if (hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY)) {
+            navigationMenuServiceIdSet.add(Integer.toString(R.id.nav_user_activity));
+        }
+        if (hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS, ServiceIdConstants.MANAGE_INVITATIONS)) {
+            navigationMenuServiceIdSet.add(Integer.toString(R.id.nav_invite));
+        }
+        if (hasServicesAccessibility(ServiceIdConstants.SIGN_OUT)) {
+            navigationMenuServiceIdSet.add(Integer.toString(R.id.nav_logout));
+        }
+
+        preferences.edit().putStringSet(Constants.NAVIGATION_MENU_SERVICE_ACCESS_SET, navigationMenuServiceIdSet).apply();
+
     }
 
     private static void populateServiceAccessByNameMapping() {
-        mapServiceAccessByTargetedFragment = new HashMap<>();
+        Set<String> fragmentAccessServiceIdSet = new HashSet<>();
 
-        mapServiceAccessByTargetedFragment.put(VERIFY_BANK, hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
-        mapServiceAccessByTargetedFragment.put(LINK_BANK, hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
-        mapServiceAccessByTargetedFragment.put(LINK_AND_VERIFY_BANK, hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS));
-        mapServiceAccessByTargetedFragment.put(PARENT, hasServicesAccessibility(ServiceIdConstants.SEE_PARENT));
+        fragmentAccessServiceIdSet.add(PROFILE_INFO);
 
-        mapServiceAccessByTargetedFragment.put(BASIC_PROFILE, hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE));
-        mapServiceAccessByTargetedFragment.put(BUSINESS_INFO, hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO));
+        if (hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS)) {
+            fragmentAccessServiceIdSet.add(VERIFY_BANK);
+        }
+        if (hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS)) {
+            fragmentAccessServiceIdSet.add(LINK_BANK);
+        }
+        if (hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS)) {
+            fragmentAccessServiceIdSet.add(LINK_AND_VERIFY_BANK);
+        }
+        if (hasServicesAccessibility(ServiceIdConstants.SEE_PARENT)) {
+            fragmentAccessServiceIdSet.add(PARENT);
+        }
 
-        mapServiceAccessByTargetedFragment.put(INTRODUCER, hasServicesAccessibility(ServiceIdConstants.MANAGE_INTRODUCERS));
+        if (hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE)) {
+            fragmentAccessServiceIdSet.add(BASIC_PROFILE);
+        }
+        if (hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO)) {
+            fragmentAccessServiceIdSet.add(BUSINESS_INFO);
+        }
 
-        mapServiceAccessByTargetedFragment.put(PERSONAL_ADDRESS, hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS));
-        mapServiceAccessByTargetedFragment.put(BUSINESS_ADDRESS, hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS));
+        if (hasServicesAccessibility(ServiceIdConstants.MANAGE_INTRODUCERS)) {
+            fragmentAccessServiceIdSet.add(INTRODUCER);
+        }
 
-        mapServiceAccessByTargetedFragment.put(VERIFIED_EMAIL, hasServicesAccessibility(ServiceIdConstants.MANAGE_EMAILS));
+        if (hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS)) {
+            fragmentAccessServiceIdSet.add(PERSONAL_ADDRESS);
+        }
+        if (hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS)) {
+            fragmentAccessServiceIdSet.add(BUSINESS_ADDRESS);
+        }
 
-        mapServiceAccessByTargetedFragment.put(BUSINESS_DOCUMENTS, hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_DOCS));
-        mapServiceAccessByTargetedFragment.put(VERIFICATION_DOCUMENT, hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS));
-        mapServiceAccessByTargetedFragment.put(PHOTOID, hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS));
+        if (hasServicesAccessibility(ServiceIdConstants.MANAGE_EMAILS)) {
+            fragmentAccessServiceIdSet.add(VERIFIED_EMAIL);
+        }
 
-        mapServiceAccessByTargetedFragment.put(PROFILE_COMPLETENESS, hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE_COMPLETION));
-        mapServiceAccessByTargetedFragment.put(PROFILE_INFO, true);
-        mapServiceAccessByTargetedFragment.put(PROFILE_PICTURE, hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE_PICTURE));
+        if (hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_DOCS)) {
+            fragmentAccessServiceIdSet.add(BUSINESS_DOCUMENTS);
+        }
+        if (hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS)) {
+            fragmentAccessServiceIdSet.add(VERIFICATION_DOCUMENT);
+        }
+        if (hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS)) {
+            fragmentAccessServiceIdSet.add(PHOTOID);
+        }
+
+        if (hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE_COMPLETION)) {
+            fragmentAccessServiceIdSet.add(PROFILE_COMPLETENESS);
+        }
+
+        if (hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE_PICTURE)) {
+            fragmentAccessServiceIdSet.add(PROFILE_PICTURE);
+        }
+
+        preferences.edit().putStringSet(Constants.FRAGMENT_SERVICE_ACCESS_SET, fragmentAccessServiceIdSet).apply();
     }
 }
