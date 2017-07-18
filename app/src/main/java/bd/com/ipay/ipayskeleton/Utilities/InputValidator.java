@@ -12,11 +12,12 @@ import bd.com.ipay.ipayskeleton.R;
  * Validates user inputs (e.g. email, password, date of birth)
  */
 public class InputValidator {
-    private static final String invalidPassportIDInsufficientLength = "[A-Z]{2}[0-9]{0,6}|[A-Z]{1}";
-    private static final String validPassPortID = "[A-Z]{2}[0-9]{7}";
-    private static final String invalidDrivingLicenseIDInsufficientLength = "[A-Z]{2}[0-9]{0,7}|[A-Z]{1}|[A-Z]{2}[0-9]{7}[A-Z]{1,2}|" +
+    private static final String INVALID_PASSPORT_ID_PATTERN_INSUFFICIENT_LENGTH = "[A-Z]{2}[0-9]{0,6}|[A-Z]{1}";
+    private static final String VALID_PASSPORT_ID_PATTERN = "[A-Z]{2}[0-9]{7}";
+    private static final String
+            INVALID_DRIVING_LICENSE_ID_PATTERN_INSUFFICIENT_LENGTH = "[A-Z]{2}[0-9]{0,7}|[A-Z]{1}|[A-Z]{2}[0-9]{7}[A-Z]{1,2}|" +
             "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{1,4}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{1,3}";
-    private static final String validDrivingLicenseID = "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{5}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{4}";
+    private static final String VALID_DRIVING_LICENSE_ID = "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{5}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{4}";
 
     public static String isPasswordValid(String password) {
         // Return empty string if the password is valid
@@ -95,7 +96,7 @@ public class InputValidator {
         String document_types[] = context.getResources().getStringArray(R.array.personal_document_type_validation);
         String errorMessage = "";
         if (documentID.length() == 0) {
-            errorMessage = "Please Enter Your "+document_types[pos] + " Number";
+            errorMessage = "Please Enter Your " + document_types[pos] + " Number";
         } else {
             switch (documentType) {
                 case Constants.DOCUMENT_TYPE_NATIONAL_ID:
@@ -109,18 +110,18 @@ public class InputValidator {
                     break;
 
                 case Constants.DOCUMENT_TYPE_PASSPORT:
-                    if (documentID.matches(invalidPassportIDInsufficientLength))
+                    if (documentID.matches(INVALID_PASSPORT_ID_PATTERN_INSUFFICIENT_LENGTH))
                         errorMessage = context.getString(R.string.invalid_passport_ID_insufficient_length);
-                    else if (documentID.matches(validPassPortID))
+                    else if (documentID.matches(VALID_PASSPORT_ID_PATTERN))
                         errorMessage = null;
                     else errorMessage = context.getString(R.string.invalid_passport_ID);
 
                     break;
 
                 case Constants.DOCUMENT_TYPE_DRIVING_LICENSE:
-                    if (documentID.matches(validDrivingLicenseID))
+                    if (documentID.matches(VALID_DRIVING_LICENSE_ID))
                         errorMessage = null;
-                    else if (documentID.matches(invalidDrivingLicenseIDInsufficientLength))
+                    else if (documentID.matches(INVALID_DRIVING_LICENSE_ID_PATTERN_INSUFFICIENT_LENGTH))
                         errorMessage = context.getString(R.string.invalid_driving_license_ID_insufficient_length);
 
                     else errorMessage = context.getString(R.string.invalid_driving_license_ID);
