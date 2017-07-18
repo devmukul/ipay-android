@@ -59,7 +59,7 @@
     <string name="postcode">Postcode</string>
     <string name="invalid_postcode">Please enter a valid 4-digit postcode</string>
     <string name="invalid_passport_ID_insufficient_length">Passport ID should be 9 characters long </string>
-    <string name="invalid_passport_ID">Invalid passport ID</string>
+    <string name="invalid_passport_ID">Invalid Passport ID</string>
     <string name="invalid_driving_license_ID">Invalid driving license ID</string>
     <string name="invalid_driving_license_ID_insufficient_length">Driving License ID should be 15 characters long</string>
     <string name="invalid_nid_min_length">NID should be at least 10 digits long</string>
