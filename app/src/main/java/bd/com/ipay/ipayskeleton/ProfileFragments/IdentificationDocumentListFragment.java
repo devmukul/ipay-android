@@ -669,18 +669,18 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         mDocumentIdEditTextView.setError(null);
                         mSelectFile.setError(null);
                         Utilities.hideKeyboard(getActivity());
-                        attemptUploadDocument(documentTypeName, pos);
+                        attemptUploadDocument(pos);
                     }
                 });
             }
 
-            private void attemptUploadDocument(String documentTypeName, int pos) {
+            private void attemptUploadDocument(int pos) {
                 String documentID = mDocumentIdEditTextView.getText().toString();
                 String errorMessage;
                 if (ProfileInfoCacheManager.isBusinessAccount())
-                    errorMessage = InputValidator.isValidDocumentID(getActivity(), documentID, BUSINESS_DOCUMENT_TYPES[pos], pos,true);
+                    errorMessage = InputValidator.isValidDocumentID(getActivity(), documentID, BUSINESS_DOCUMENT_TYPES[pos], pos, true);
                 else
-                    errorMessage = InputValidator.isValidDocumentID(getActivity(), documentID, DOCUMENT_TYPES[pos], pos,false);
+                    errorMessage = InputValidator.isValidDocumentID(getActivity(), documentID, DOCUMENT_TYPES[pos], pos, false);
 
                 if (errorMessage != null) {
                     mDocumentIdEditTextView.requestFocus();

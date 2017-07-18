@@ -132,6 +132,7 @@ public class InputValidator {
                 case Constants.DOCUMENT_TYPE_BUSINESS_TIN:
                     if (documentID.length() != Constants.BUSINESS_TIN_LENGTH)
                         errorMessage = context.getString(R.string.invalid_business_tin_wrong_length);
+
                     else
                         errorMessage = null;
                     break;
