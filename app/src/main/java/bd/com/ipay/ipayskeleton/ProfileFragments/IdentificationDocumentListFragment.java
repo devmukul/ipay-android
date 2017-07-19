@@ -666,10 +666,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
                 mUploadButton.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        mDocumentIdEditTextView.setError(null);
-                        mSelectFile.setError(null);
-                        Utilities.hideKeyboard(getActivity());
+                    public void onClick(View v){
                         attemptUploadDocument(pos);
                     }
                 });
