@@ -104,7 +104,7 @@ public class InputValidator {
                     int length = documentID.length();
                     if (length < Constants.MINIMUM_REQUIRED_NID_LENGTH)
                         errorMessage = context.getString(R.string.invalid_nid_min_length);
-                    else if (length > Constants.MINIMUM_REQUIRED_NID_LENGTH)
+                    else if (length > Constants.MAXIMUM_REQUIRED_NID_LENGTH)
                         errorMessage = context.getString(R.string.invalid_nid_max_length);
                     break;
 
@@ -138,7 +138,7 @@ public class InputValidator {
                     int length = documentID.length();
                     if (length < Constants.MINIMUM_REQUIRED_NID_LENGTH)
                         errorMessage = context.getString(R.string.invalid_nid_min_length);
-                    else if (length > Constants.MINIMUM_REQUIRED_NID_LENGTH)
+                    else if (length > Constants.MAXIMUM_REQUIRED_NID_LENGTH)
                         errorMessage = context.getString(R.string.invalid_nid_max_length);
                     break;
 
