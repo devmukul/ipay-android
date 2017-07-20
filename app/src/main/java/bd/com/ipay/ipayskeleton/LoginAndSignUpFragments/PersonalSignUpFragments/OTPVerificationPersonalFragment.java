@@ -37,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
+import bd.com.ipay.ipayskeleton.Utilities.MoreAccurateTimer;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationPersonalFragment extends Fragment implements HttpResponseListener {
@@ -116,16 +117,30 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
         mResendOTPButton.setEnabled(false);
         mTimerTextView.setVisibility(View.VISIBLE);
-        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000 - 500) {
 
+        new MoreAccurateTimer(SignupOrLoginActivity.otpDuration, 1000 - 500) {
+            @Override
             public void onTick(long millisUntilFinished) {
                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
             }
 
+            @Override
             public void onFinish() {
+                //mTimerTextView.setVisibility(View.INVISIBLE);
                 mResendOTPButton.setEnabled(true);
             }
         }.start();
+
+//        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
+//
+//            public void onTick(long millisUntilFinished) {
+//                mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
+//            }
+//
+//            public void onFinish() {
+//                mResendOTPButton.setEnabled(true);
+//            }
+//        }.start();
 
         return v;
     }
@@ -280,16 +295,30 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         // Start timer again
                         mTimerTextView.setVisibility(View.VISIBLE);
                         mResendOTPButton.setEnabled(false);
-                        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000 - 500) {
 
+                        new MoreAccurateTimer(SignupOrLoginActivity.otpDuration, 1000 - 500) {
+                            @Override
                             public void onTick(long millisUntilFinished) {
                                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
                             }
 
+                            @Override
                             public void onFinish() {
+                                //mTimerTextView.setVisibility(View.INVISIBLE);
                                 mResendOTPButton.setEnabled(true);
                             }
                         }.start();
+
+//                        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000) {
+//
+//                            public void onTick(long millisUntilFinished) {
+//                                mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
+//                            }
+//
+//                            public void onFinish() {
+//                                mResendOTPButton.setEnabled(true);
+//                            }
+//                        }.start();
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
