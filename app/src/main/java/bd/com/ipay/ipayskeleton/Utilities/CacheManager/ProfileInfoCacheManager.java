@@ -141,10 +141,6 @@ public class ProfileInfoCacheManager {
         pref.edit().putString(SharedPrefConstants.BIRTHDAY, value).apply();
     }
 
-    public static void setPASSWORD(String value) {
-        pref.edit().putString(SharedPrefConstants.PASSWORD, value).apply();
-    }
-
     public static void setGENDER(String value) {
         pref.edit().putString(SharedPrefConstants.GENDER, value).apply();
     }

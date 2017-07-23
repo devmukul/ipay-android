@@ -247,7 +247,6 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumberBusiness);
-                        ProfileInfoCacheManager.setPASSWORD(SignupOrLoginActivity.mPasswordBusiness);
                         ProfileInfoCacheManager.setNAME(SignupOrLoginActivity.mNameBusiness);
                         ProfileInfoCacheManager.setBIRTHDAY(SignupOrLoginActivity.mBirthdayBusinessHolder);
                         ProfileInfoCacheManager.setGENDER("M");
