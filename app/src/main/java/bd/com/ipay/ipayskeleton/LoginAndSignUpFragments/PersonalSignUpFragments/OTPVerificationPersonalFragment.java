@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -116,7 +117,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
         mResendOTPButton.setEnabled(false);
         mTimerTextView.setVisibility(View.VISIBLE);
-        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000 - 500) {
+        new CustomCountDownTimer(SignupOrLoginActivity.otpDuration, 500) {
 
             public void onTick(long millisUntilFinished) {
                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
@@ -280,7 +281,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         // Start timer again
                         mTimerTextView.setVisibility(View.VISIBLE);
                         mResendOTPButton.setEnabled(false);
-                        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000 - 500) {
+                        new CustomCountDownTimer(SignupOrLoginActivity.otpDuration, 500) {
 
                             public void onTick(long millisUntilFinished) {
                                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
