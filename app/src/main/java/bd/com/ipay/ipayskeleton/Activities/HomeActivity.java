@@ -53,6 +53,7 @@ import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetRelationshipListAsyncTask;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
@@ -367,6 +368,7 @@ public class HomeActivity extends BaseActivity
     }
 
     @Override
+    @ValidateAccess
     public boolean onNavigationItemSelected(final MenuItem item) {
         int id = item.getItemId();
         // Handle navigation view item clicks here.
@@ -386,10 +388,7 @@ public class HomeActivity extends BaseActivity
 
     private void gotoDrawerItem(MenuItem item) {
         int id = item.getItemId();
-        if (!ACLManager.checkServicesAccessibilityByNavigationMenuId(id)) {
-            DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
-            return;
-        }
+
         if (id == R.id.nav_home) {
 
             switchToDashBoard();
