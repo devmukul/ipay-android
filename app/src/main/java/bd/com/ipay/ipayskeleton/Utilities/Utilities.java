@@ -72,6 +72,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import io.intercom.android.sdk.Intercom;
+import io.intercom.android.sdk.identity.Registration;
 
 public class Utilities {
 
@@ -685,7 +686,7 @@ public class Utilities {
         activity.finish();
     }
 
-    public static Map<String, Object> getCustomIntercomUserAttributes() {
+    private static Map<String, Object> getCustomIntercomUserAttributes() {
         Map<String, Object> customAttributes = new HashMap<>();
 
         customAttributes.put(IntercomConstants.ATTR_CREATED_AT, System.currentTimeMillis() / 1000L);
@@ -696,12 +697,21 @@ public class Utilities {
         return customAttributes;
     }
 
+    public static void initIntercomLogin() {
+        Registration registration = Registration.create().withUserId(Integer.toString(ProfileInfoCacheManager.getAccountId()));
+        Map<String, Object> userAttributes = Utilities.getUserAttributesForIntercom();
+        registration.withUserAttributes(userAttributes);
+
+        Intercom.client().registerIdentifiedUser(registration);
+        Intercom.client().displayConversationsList();
+    }
+
     public static void resetIntercomInformation() {
         Intercom.client().reset();
         Intercom.client().hideMessenger();
     }
 
-    public static Map<String, Object> getUserAttributesForIntercom() {
+    private static Map<String, Object> getUserAttributesForIntercom() {
         Map<String, Object> customAttributes = Utilities.getCustomIntercomUserAttributes();
 
         Map<String, Object> userAttributes = new HashMap<>();
