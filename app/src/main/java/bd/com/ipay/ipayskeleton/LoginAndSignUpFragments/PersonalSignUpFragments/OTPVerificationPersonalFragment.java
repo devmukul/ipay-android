@@ -227,7 +227,8 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.dismiss();
+            hideProgressDialog();
+
             mSignUpTask = null;
             mRequestOTPTask = null;
             mLoginTask = null;
@@ -241,6 +242,8 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_SIGN_UP:
+                hideProgressDialog();
+
                 try {
                     mSignupResponseModel = gson.fromJson(result.getJsonString(), SignupResponsePersonal.class);
                     String message = mSignupResponseModel.getMessage();
@@ -272,11 +275,12 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
                 }
 
-                mProgressDialog.dismiss();
                 mSignUpTask = null;
 
                 break;
             case Constants.COMMAND_OTP_VERIFICATION:
+                hideProgressDialog();
+
                 try {
                     mOtpResponsePersonalSignup = gson.fromJson(result.getJsonString(), OTPResponsePersonalSignup.class);
                     String message = mOtpResponsePersonalSignup.getMessage();
@@ -308,7 +312,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         Toast.makeText(getActivity(), R.string.otp_request_failed, Toast.LENGTH_LONG).show();
                 }
 
-                mProgressDialog.dismiss();
                 mRequestOTPTask = null;
 
                 break;
@@ -333,19 +336,24 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         attemptAddTrustedDevice();
 
                     } else {
+                        hideProgressDialog();
+
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
+                    hideProgressDialog();
+
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
                 }
 
-                mProgressDialog.dismiss();
                 mLoginTask = null;
                 break;
             case Constants.COMMAND_ADD_TRUSTED_DEVICE:
+                hideProgressDialog();
+
                 try {
                     mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
 
@@ -365,7 +373,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
                 }
 
-                mProgressDialog.dismiss();
                 mAddTrustedDeviceTask = null;
                 break;
             default:
@@ -375,12 +382,15 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         }
     }
 
+    private void hideProgressDialog() {
+        if (isAdded()) mProgressDialog.dismiss();
+    }
+
     private void attemptAddTrustedDevice() {
         if (mAddTrustedDeviceTask != null)
             return;
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_trusted_device));
-        mProgressDialog.show();
+
         AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
                 Constants.MOBILE_ANDROID + mDeviceID, null);
         Gson gson = new Gson();
