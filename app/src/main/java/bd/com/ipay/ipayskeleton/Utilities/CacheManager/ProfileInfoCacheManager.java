@@ -164,8 +164,8 @@ public class ProfileInfoCacheManager {
         return loggedIn;
     }
 
-    public static boolean getFingerprintAuthenticationStatus(boolean defaultValue) {
-        boolean isFingerprintAuthOn = pref.getBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, defaultValue);
+    public static boolean getFingerprintAuthenticationStatus() {
+        boolean isFingerprintAuthOn = pref.getBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false);
         return isFingerprintAuthOn;
     }
 
