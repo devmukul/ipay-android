@@ -122,7 +122,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         mGenderView = (TextView) view.findViewById(R.id.textview_gender);
         mSignUpTimeView = (TextView) view.findViewById(R.id.textview_signup);
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
-        mDateOfBirth = ProfileInfoCacheManager.getBIRTHDAY("");
+        mDateOfBirth = ProfileInfoCacheManager.getBirthday();
         mProgressDialog = new ProgressDialog(getActivity());
         mContactEditButton = (ImageButton) view.findViewById(R.id.button_edit_contact_information);
         mParentInfoEditButton = (ImageButton) view.findViewById(R.id.button_edit_parent_information);

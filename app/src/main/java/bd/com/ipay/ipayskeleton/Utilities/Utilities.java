@@ -71,6 +71,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParser
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import io.intercom.android.sdk.Intercom;
+import io.intercom.android.sdk.identity.Registration;
 
 public class Utilities {
 
@@ -684,15 +685,24 @@ public class Utilities {
         activity.finish();
     }
 
-    public static Map<String, Object> getCustomIntercomUserAttributes() {
+    private static Map<String, Object> getCustomIntercomUserAttributes() {
         Map<String, Object> customAttributes = new HashMap<>();
 
         customAttributes.put(IntercomConstants.ATTR_CREATED_AT, System.currentTimeMillis() / 1000L);
-        customAttributes.put(IntercomConstants.ATTR_TYPE, ProfileInfoCacheManager.getAccountType(1) == 1 ? Constants.PERSONAL_ACCOUNT : Constants.BUSINESS_ACCOUNT);
+        customAttributes.put(IntercomConstants.ATTR_TYPE, ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE ? Constants.PERSONAL_ACCOUNT : Constants.BUSINESS_ACCOUNT);
         customAttributes.put(IntercomConstants.ATTR_SIGNED_UP_AT, ProfileInfoCacheManager.getSignupTime() / 1000L);
         customAttributes.put(IntercomConstants.ATTR_VERIFICATION_STATUS, ProfileInfoCacheManager.getVerificationStatus());
 
         return customAttributes;
+    }
+
+    public static void initIntercomLogin() {
+        Registration registration = Registration.create().withUserId(Integer.toString(ProfileInfoCacheManager.getAccountId()));
+        Map<String, Object> userAttributes = Utilities.getUserAttributesForIntercom();
+        registration.withUserAttributes(userAttributes);
+
+        Intercom.client().registerIdentifiedUser(registration);
+        Intercom.client().displayConversationsList();
     }
 
     public static void resetIntercomInformation() {
@@ -700,7 +710,7 @@ public class Utilities {
         Intercom.client().hideMessenger();
     }
 
-    public static Map<String, Object> getUserAttributesForIntercom() {
+    private static Map<String, Object> getUserAttributesForIntercom() {
         Map<String, Object> customAttributes = Utilities.getCustomIntercomUserAttributes();
 
         Map<String, Object> userAttributes = new HashMap<>();

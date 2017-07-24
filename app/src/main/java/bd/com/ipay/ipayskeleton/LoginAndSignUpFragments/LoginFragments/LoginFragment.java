@@ -202,7 +202,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         FingerPrintAuthenticationManager fingerPrintAuthenticationManager = new FingerPrintAuthenticationManager(getActivity());
         if (fingerPrintAuthenticationManager.ifFingerprintAuthenticationSupported()) {
             // If fingerprint auth option is on
-            boolean isFingerPrintAuthOn = ProfileInfoCacheManager.getFingerprintAuthenticationStatus(false);
+            boolean isFingerPrintAuthOn = ProfileInfoCacheManager.getFingerprintAuthenticationStatus();
             if (isFingerPrintAuthOn) {
                 // If Fingerprint option is on and fingerprint is encrypted
                 if (ProfileInfoCacheManager.ifPasswordEncrypted()) {
@@ -288,7 +288,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
             String UUID = null;
             if (SharedPrefManager.ifContainsUUID()) {
-                UUID = ProfileInfoCacheManager.getUUID(null);
+                UUID = ProfileInfoCacheManager.getUUID();
             }
 
             LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
