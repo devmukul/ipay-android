@@ -68,7 +68,6 @@ import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
-import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import io.intercom.android.sdk.Intercom;
@@ -83,11 +82,11 @@ public class Utilities {
         return info != null && info.isConnected();
     }
 
-    public static void setAppropriateKeyboard(Context context, String documentType, EditText editText) {
-        if (documentType.equals(context.getString(R.string.national_id)) ||
-                documentType.equals(context.getString(R.string.business_tin)) ||
-                documentType.equals(context.getString(R.string.vat_registration_certificate)) ||
-                documentType.equals(context.getString(R.string.trade_license))) {
+    public static void setAppropriateKeyboard(Context c, String documentType, EditText editText) {
+        if (documentType.equals(Constants.DOCUMENT_TYPE_NATIONAL_ID) ||
+                documentType.equals(Constants.DOCUMENT_TYPE_BUSINESS_TIN) ||
+                documentType.equals(Constants.DOCUMENT_TYPE_VAT_REG_CERT) ||
+                documentType.equals(Constants.DOCUMENT_TYPE_TRADE_LICENSE)) {
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         } else editText.setInputType(InputType.TYPE_CLASS_TEXT);
     }

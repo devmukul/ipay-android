@@ -13,6 +13,7 @@
     <string name="mobile_android">mobile-android-</string>
     <string name="no_iPay_account">The user doesn\'t have an iPay account</string>
     <string name="enter_OTP_sent_to_your_mobile">Enter OTP sent to your mobile</string>
+    <string name="enter">Please enter your</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="prompt_mobile">Enter your mobile number </string>
@@ -71,6 +72,7 @@
     <string name="organization_name">Organization Name</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="phone_number">Phone Number</string>
+    <string name="number">number</string>
     <string name="inception_date">Inception Date</string>
     <string name="contact_us">Contact Us</string>
     <string name="terms_of_service">Terms of Service</string>
@@ -931,13 +933,13 @@
     </string-array>
 
     <string-array name="personal_document_id">
-        <item>NID</item>
+        <item>National ID</item>
         <item>Passport ID</item>
         <item>Driving License ID</item>
     </string-array>
 
     <string-array name="business_document_id">
-        <item>NID</item>
+        <item>National ID</item>
         <item>Business TIN ID</item>
         <item>Trade License ID</item>
         <item>VAT Registration Certificate ID</item>
