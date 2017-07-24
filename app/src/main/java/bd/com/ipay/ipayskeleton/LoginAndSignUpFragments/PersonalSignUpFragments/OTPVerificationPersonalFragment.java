@@ -240,9 +240,9 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                         ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumber);
-                        ProfileInfoCacheManager.setNAME(SignupOrLoginActivity.mName);
-                        ProfileInfoCacheManager.setBIRTHDAY(SignupOrLoginActivity.mBirthday);
-                        ProfileInfoCacheManager.setGENDER(SignupOrLoginActivity.mGender);
+                        ProfileInfoCacheManager.setName(SignupOrLoginActivity.mName);
+                        ProfileInfoCacheManager.setBirthday(SignupOrLoginActivity.mBirthday);
+                        ProfileInfoCacheManager.setGender(SignupOrLoginActivity.mGender);
                         SharedPrefManager.serUserCountry("Bangladesh");
                         ProfileInfoCacheManager.setAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
 

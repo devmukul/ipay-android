@@ -690,7 +690,7 @@ public class Utilities {
         Map<String, Object> customAttributes = new HashMap<>();
 
         customAttributes.put(IntercomConstants.ATTR_CREATED_AT, System.currentTimeMillis() / 1000L);
-        customAttributes.put(IntercomConstants.ATTR_TYPE, ProfileInfoCacheManager.getAccountType(1) == 1 ? Constants.PERSONAL_ACCOUNT : Constants.BUSINESS_ACCOUNT);
+        customAttributes.put(IntercomConstants.ATTR_TYPE, ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE ? Constants.PERSONAL_ACCOUNT : Constants.BUSINESS_ACCOUNT);
         customAttributes.put(IntercomConstants.ATTR_SIGNED_UP_AT, ProfileInfoCacheManager.getSignupTime() / 1000L);
         customAttributes.put(IntercomConstants.ATTR_VERIFICATION_STATUS, ProfileInfoCacheManager.getVerificationStatus());
 

@@ -280,7 +280,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
             String UUID = null;
             if (SharedPrefManager.ifContainsUUID()) {
-                UUID = ProfileInfoCacheManager.getUUID(null);
+                UUID = ProfileInfoCacheManager.getUUID();
             }
 
             LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,

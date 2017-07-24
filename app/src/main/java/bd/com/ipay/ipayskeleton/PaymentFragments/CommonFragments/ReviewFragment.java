@@ -67,7 +67,7 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
             return;
         }
 
-        int accountType = ProfileInfoCacheManager.getAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
+        int accountType = ProfileInfoCacheManager.getAccountType();
         int accountClass = Constants.DEFAULT_USER_CLASS;
 
         mProgressDialog = new ProgressDialog(getActivity());
