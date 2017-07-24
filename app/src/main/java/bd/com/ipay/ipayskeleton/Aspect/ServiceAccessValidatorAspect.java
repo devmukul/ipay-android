@@ -1,6 +1,9 @@
 package bd.com.ipay.ipayskeleton.Aspect;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioGroup;
 
@@ -12,8 +15,10 @@ import org.aspectj.lang.reflect.MethodSignature;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
@@ -21,7 +26,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 @Aspect
 public class ServiceAccessValidatorAspect {
 
-    @Around("execution(* on*Click*(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
+    @Around("execution(* on*Click(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
     public Object serviceValidatorOnClick(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
@@ -61,7 +66,6 @@ public class ServiceAccessValidatorAspect {
     public Object serviceValidatorOnRadioGroupCheckedChanged(ProceedingJoinPoint joinPoint) throws Throwable {
 
         Object result = null;
-
         RadioGroup radioGroup = (RadioGroup) joinPoint.getArgs()[0];
         final int checkedId = radioGroup.getCheckedRadioButtonId();
 
@@ -95,6 +99,127 @@ public class ServiceAccessValidatorAspect {
             default:
                 result = joinPoint.proceed();
                 break;
+        }
+        return result;
+    }
+
+    @Around("execution(* onNavigationItemSelected(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
+    public Object serviceValidatorOnNavigationItemSelect(ProceedingJoinPoint joinPoint) throws Throwable {
+        Object result = null;
+        boolean hasNavigationAccess = true;
+        MenuItem item = (MenuItem) joinPoint.getArgs()[0];
+        switch (item.getItemId()) {
+            case R.id.nav_bank_account:
+                hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS);
+                break;
+            case R.id.nav_user_activity:
+                hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_ACTIVITY);
+                break;
+            case R.id.nav_invite:
+                hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS, ServiceIdConstants.MANAGE_INVITATIONS);
+                break;
+            case R.id.nav_logout:
+                hasNavigationAccess = ACLManager.hasServicesAccessibility(ServiceIdConstants.SIGN_OUT);
+                break;
+            case R.id.nav_home:
+            case R.id.nav_account:
+            case R.id.nav_security_settings:
+            case R.id.nav_live_chat:
+            case R.id.nav_help:
+            case R.id.nav_about:
+                hasNavigationAccess = true;
+                break;
+        }
+
+        if (!hasNavigationAccess) {
+            Context context = null;
+            if (joinPoint.getTarget() instanceof Context) {
+                context = (Context) joinPoint.getTarget();
+            } else if (joinPoint.getTarget() instanceof Fragment) {
+                context = ((Fragment) joinPoint.getTarget()).getContext();
+            } else if (joinPoint.getTarget() instanceof android.app.Fragment) {
+                context = ((android.app.Fragment) joinPoint.getTarget()).getActivity();
+            }
+            if (context != null) {
+                DialogUtils.showServiceNotAllowedDialog(context);
+            }
+        } else {
+            result = joinPoint.proceed();
+        }
+        return result;
+    }
+
+    @Around("execution(* switchToFragment(..)) && @annotation(bd.com.ipay.ipayskeleton.Aspect.ValidateAccess)")
+    public Object serviceValidatorOnSwitchFragment(ProceedingJoinPoint joinPoint) throws Throwable {
+        Object result = null;
+        boolean canSwitchFragment = true;
+        final String serviceName = (String) joinPoint.getArgs()[0];
+        switch (serviceName) {
+            case Constants.VERIFY_BANK:
+                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS);
+                break;
+            case Constants.LINK_BANK:
+                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS);
+                break;
+            case ProfileCompletionPropertyConstants.LINK_AND_VERIFY_BANK:
+                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS);
+                break;
+            case ProfileCompletionPropertyConstants.PARENT:
+                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PARENT);
+                break;
+            case ProfileCompletionPropertyConstants.BASIC_PROFILE:
+                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE);
+                break;
+            case ProfileCompletionPropertyConstants.BUSINESS_INFO:
+                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO);
+                break;
+            case ProfileCompletionPropertyConstants.INTRODUCER:
+                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_INTRODUCERS);
+                break;
+            case ProfileCompletionPropertyConstants.PERSONAL_ADDRESS:
+                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS);
+                break;
+            case ProfileCompletionPropertyConstants.BUSINESS_ADDRESS:
+                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_ADDRESS);
+                break;
+            case ProfileCompletionPropertyConstants.VERIFIED_EMAIL:
+                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_EMAILS);
+                break;
+            case ProfileCompletionPropertyConstants.BUSINESS_DOCUMENTS:
+                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_DOCS);
+                break;
+            case ProfileCompletionPropertyConstants.VERIFICATION_DOCUMENT:
+                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS);
+                break;
+            case ProfileCompletionPropertyConstants.PHOTOID:
+                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_IDENTIFICATION_DOCS);
+                break;
+            case ProfileCompletionPropertyConstants.PROFILE_COMPLETENESS:
+                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE_COMPLETION);
+                break;
+            case Constants.PROFILE_PICTURE:
+                canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_PROFILE_PICTURE);
+                break;
+            case ProfileCompletionPropertyConstants.PROFILE_INFO:
+                canSwitchFragment = true;
+                break;
+
+        }
+
+        if (!canSwitchFragment) {
+            Context context = null;
+            if (joinPoint.getTarget() instanceof Context) {
+                context = (Context) joinPoint.getTarget();
+            } else if (joinPoint.getTarget() instanceof Fragment) {
+                context = ((Fragment) joinPoint.getTarget()).getContext();
+            } else if (joinPoint.getTarget() instanceof android.app.Fragment) {
+                context = ((android.app.Fragment) joinPoint.getTarget()).getActivity();
+            }
+            if (context != null) {
+                DialogUtils.showServiceNotAllowedDialog(context);
+            }
+        } else {
+            result = joinPoint.proceed();
         }
         return result;
     }
