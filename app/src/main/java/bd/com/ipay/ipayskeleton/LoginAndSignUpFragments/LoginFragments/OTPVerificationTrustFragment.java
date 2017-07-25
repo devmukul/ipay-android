@@ -210,11 +210,10 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-
-        if (isAdded()) mProgressDialog.dismiss();
-
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            hideProgressDialog();
+
             mLoginTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
@@ -252,10 +251,14 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                         attemptTrustedDeviceAdd();
 
                     } else {
+                        hideProgressDialog();
+
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
+                    hideProgressDialog();
+
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
@@ -263,6 +266,8 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                 mLoginTask = null;
                 break;
             case Constants.COMMAND_OTP_VERIFICATION:
+                hideProgressDialog();
+
                 try {
                     mOTPResponseTrustedDevice = gson.fromJson(result.getJsonString(), OTPResponseTrustedDevice.class);
                     SignupOrLoginActivity.otpDuration = mOTPResponseTrustedDevice.getOtpValidFor();
@@ -296,6 +301,8 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                 mRequestOTPTask = null;
                 break;
             case Constants.COMMAND_ADD_TRUSTED_DEVICE:
+                hideProgressDialog();
+
                 try {
                     mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
 
@@ -319,18 +326,22 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                 mAddTrustedDeviceTask = null;
                 break;
             default:
+                hideProgressDialog();
+
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                 break;
         }
     }
 
+    private void hideProgressDialog() {
+        if (isAdded()) mProgressDialog.dismiss();
+    }
+
     private void attemptTrustedDeviceAdd() {
         if (mAddTrustedDeviceTask != null)
             return;
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_trusted_device));
-        mProgressDialog.show();
         AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
                 Constants.MOBILE_ANDROID + mDeviceID, null);
         Gson gson = new Gson();

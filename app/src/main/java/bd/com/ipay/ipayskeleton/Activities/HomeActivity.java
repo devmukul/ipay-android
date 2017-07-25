@@ -29,7 +29,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
 
@@ -68,7 +67,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
-import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
@@ -117,14 +115,12 @@ public class HomeActivity extends BaseActivity
     private static boolean switchedToHomeFragment = true;
     private boolean exitFromApplication = false;
 
-    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         mProgressDialog = new ProgressDialog(HomeActivity.this);
 
@@ -217,9 +213,6 @@ public class HomeActivity extends BaseActivity
         // request user for permission.
         attemptRequestForPermission();
 
-        // Send Analytics for test purpose in Firebase
-        sendAnalytics();
-
         if (ProfileInfoCacheManager.isAccountVerified()) {
             getAllBusinessAccountsList();
         }
@@ -302,22 +295,6 @@ public class HomeActivity extends BaseActivity
             ActivityCompat.requestPermissions(this, permissionsToRequest.toArray(new String[permissionsToRequest.size()]),
                     REQUEST_CODE_PERMISSION);
         }
-    }
-
-    private void sendAnalytics() {
-        Bundle bundle = new Bundle();
-        bundle.putString(AnalyticsConstants.USER_ID, mUserID);
-        bundle.putString(AnalyticsConstants.IP_V4_ADDRESS, Utilities.getIPAddress(true));
-        bundle.putString(AnalyticsConstants.IP_V6_ADDRESS, Utilities.getIPAddress(false));
-        bundle.putString(AnalyticsConstants.W_LAN_0, Utilities.getMACAddress(AnalyticsConstants.W_LAN_0));
-        bundle.putString(AnalyticsConstants.ETH_0, Utilities.getMACAddress(AnalyticsConstants.ETH_0));
-        bundle.putString(AnalyticsConstants.DEVICE_ID, mDeviceID);
-
-        String longLat = Utilities.getLongLatWithoutGPS(HomeActivity.this);
-        if (longLat != null)
-            bundle.putString(AnalyticsConstants.DEVICE_LONG_LAT, longLat);
-
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
     }
 
     private void getAllBusinessAccountsList() {
