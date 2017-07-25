@@ -220,7 +220,9 @@ public class HomeActivity extends BaseActivity
         // Send Analytics for test purpose in Firebase
         sendAnalytics();
 
-        getAllBusinessAccountsList();
+        if (ProfileInfoCacheManager.isAccountVerified()) {
+            getAllBusinessAccountsList();
+        }
 
         // If profile picture gets updated, we need to refresh the profile picture in the drawer.
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
