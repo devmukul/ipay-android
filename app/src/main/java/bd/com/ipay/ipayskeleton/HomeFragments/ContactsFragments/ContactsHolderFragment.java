@@ -39,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -106,7 +107,11 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             @Override
             @ValidateAccess(ServiceIdConstants.ADD_CONTACTS)
             public void onClick(View v) {
-                showAddContactDialog();
+                if (CommonData.getRelationshipList() != null) {
+                    showAddContactDialog();
+                } else {
+                    DialogUtils.showAlertDialog(getContext(), getString(R.string.add_contact_dialog_not_available));
+                }
             }
         });
 
