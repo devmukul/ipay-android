@@ -46,7 +46,7 @@ public class SharedPrefManager {
         pref.edit().putInt(SharedPrefConstants.MOBILE_NUMBER_TYPE, value).apply();
     }
 
-    public static void setUSERCOUNTRY(String value) {
+    public static void serUserCountry(String value) {
         pref.edit().putString(SharedPrefConstants.USERCOUNTRY, value).apply();
     }
 

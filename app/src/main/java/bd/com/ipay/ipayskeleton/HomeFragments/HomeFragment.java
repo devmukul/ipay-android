@@ -5,6 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -35,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivit
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
+import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -72,7 +76,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
     private TextView mNameView;
     private TextView mMobileNumberView;
-    private ImageView mVerificationStatusView;
     private ProfileImageView mProfilePictureView;
     private View mProfileInfo;
 
@@ -90,6 +93,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private ProgressBar mProgressBarWithoutAnimation;
     private TextView mProfileCompletionMessageView;
     private ImageButton mCloseButton;
+
+    private ImageView mShowQRCodeButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,7 +114,6 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
 
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mVerificationStatusView = (ImageView) v.findViewById(R.id.verification_status);
         mProfilePictureView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mProfileInfo = v.findViewById(R.id.profile_info);
 
@@ -125,6 +129,8 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mProgressBar = (CircularProgressBar) mProfileCompletionPromptView.findViewById(R.id.profile_completion_percentage);
         mProfileCompletionMessageView = (TextView) mProfileCompletionPromptView.findViewById(R.id.profile_completion_message);
         mCloseButton = (ImageButton) mProfileCompletionPromptView.findViewById(R.id.button_close);
+
+        mShowQRCodeButton = (ImageView) v.findViewById(R.id.show_qr_code_button);
 
         mCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,6 +240,17 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
             }
         });
 
+        mShowQRCodeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), QRCodeViewerActivity.class);
+
+                intent.putExtra(Constants.STRING_TO_ENCODE, ProfileInfoCacheManager.getMobileNumber());
+                intent.putExtra(Constants.ACTIVITY_TITLE, "QR Code to Share");
+                startActivity(intent);
+            }
+        });
+
         // Refresh balance each time home_activity page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
             getProfileCompletionStatus();
@@ -294,10 +311,19 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
                 ProfileInfoCacheManager.getProfileImageUrl(), false);
 
-        if (ProfileInfoCacheManager.isAccountVerified())
-            mVerificationStatusView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_verified_profile));
-        else
-            mVerificationStatusView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_not_verified));
+        Drawable verificationIconDrawable = getVerificationIconDrawable(ProfileInfoCacheManager.isAccountVerified());
+        mNameView.setCompoundDrawablesWithIntrinsicBounds(null, null, verificationIconDrawable, null);
+    }
+
+    private Drawable getVerificationIconDrawable(boolean accountVerified) {
+        BitmapDrawable drawable;
+        if (accountVerified) {
+            drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.ic_verified_profile);
+        } else {
+            drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.ic_not_verified);
+        }
+        int resizeDimension = getResources().getDimensionPixelSize(R.dimen.value15);
+        return new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(drawable.getBitmap(), resizeDimension, resizeDimension, true));
     }
 
     private void promptForProfileCompletion() {

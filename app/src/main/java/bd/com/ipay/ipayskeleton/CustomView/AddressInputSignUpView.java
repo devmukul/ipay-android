@@ -220,12 +220,6 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
                     return;
                 }
             }
-
-            // No selected thana, select the first thana
-            if (mThanaList.size() > 0) {
-                mSelectedThanaId = mThanaList.get(0).getId();
-                mThanaSelection.setText(mThanaList.get(0).getName());
-            }
         }
     }
 
@@ -323,6 +317,7 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mThanaList = mGetThanaResponse.getThanas();
                     mThanaEditTextProgressBar.hideProgressBar();
+                    mThanaSelection.setText("");
                     setThanaAdapter(mThanaList);
                     setThanaName(mSelectedThanaId);
 

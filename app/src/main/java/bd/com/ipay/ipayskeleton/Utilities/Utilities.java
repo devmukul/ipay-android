@@ -13,7 +13,10 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
@@ -33,6 +36,7 @@ import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -51,6 +55,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -66,6 +71,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParser
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import io.intercom.android.sdk.Intercom;
+import io.intercom.android.sdk.identity.Registration;
 
 public class Utilities {
 
@@ -75,6 +81,15 @@ public class Utilities {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
         return info != null && info.isConnected();
+    }
+
+    public static void setAppropriateKeyboard(Context c, String documentType, EditText editText) {
+        if (documentType.equals(Constants.DOCUMENT_TYPE_NATIONAL_ID) ||
+                documentType.equals(Constants.DOCUMENT_TYPE_BUSINESS_TIN) ||
+                documentType.equals(Constants.DOCUMENT_TYPE_VAT_REG_CERT) ||
+                documentType.equals(Constants.DOCUMENT_TYPE_TRADE_LICENSE)) {
+            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        } else editText.setInputType(InputType.TYPE_CLASS_TEXT);
     }
 
     public static boolean isTabletDevice(Context context) {
@@ -670,15 +685,24 @@ public class Utilities {
         activity.finish();
     }
 
-    public static Map<String, Object> getCustomIntercomUserAttributes() {
+    private static Map<String, Object> getCustomIntercomUserAttributes() {
         Map<String, Object> customAttributes = new HashMap<>();
 
         customAttributes.put(IntercomConstants.ATTR_CREATED_AT, System.currentTimeMillis() / 1000L);
-        customAttributes.put(IntercomConstants.ATTR_TYPE, ProfileInfoCacheManager.getAccountType(1) == 1 ? Constants.PERSONAL_ACCOUNT : Constants.BUSINESS_ACCOUNT);
+        customAttributes.put(IntercomConstants.ATTR_TYPE, ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE ? Constants.PERSONAL_ACCOUNT : Constants.BUSINESS_ACCOUNT);
         customAttributes.put(IntercomConstants.ATTR_SIGNED_UP_AT, ProfileInfoCacheManager.getSignupTime() / 1000L);
         customAttributes.put(IntercomConstants.ATTR_VERIFICATION_STATUS, ProfileInfoCacheManager.getVerificationStatus());
 
         return customAttributes;
+    }
+
+    public static void initIntercomLogin() {
+        Registration registration = Registration.create().withUserId(Integer.toString(ProfileInfoCacheManager.getAccountId()));
+        Map<String, Object> userAttributes = Utilities.getUserAttributesForIntercom();
+        registration.withUserAttributes(userAttributes);
+
+        Intercom.client().registerIdentifiedUser(registration);
+        Intercom.client().displayConversationsList();
     }
 
     public static void resetIntercomInformation() {
@@ -686,7 +710,7 @@ public class Utilities {
         Intercom.client().hideMessenger();
     }
 
-    public static Map<String, Object> getUserAttributesForIntercom() {
+    private static Map<String, Object> getUserAttributesForIntercom() {
         Map<String, Object> customAttributes = Utilities.getCustomIntercomUserAttributes();
 
         Map<String, Object> userAttributes = new HashMap<>();
@@ -703,5 +727,46 @@ public class Utilities {
 
         userAttributes.put(IntercomConstants.ATTR_CUSTOM_ATTRIBUTES, customAttributes);
         return userAttributes;
+    }
+
+    public static void performQRCodeScan(Fragment fragment, int requestCode) {
+        final String[] qrCodeScanPermissionList = {Manifest.permission.CAMERA};
+        if (isNecessaryPermissionExists(fragment.getActivity(), qrCodeScanPermissionList)) {
+            initiateQRCodeScan(fragment);
+        } else {
+            requestRequiredPermissions(fragment, requestCode, new String[]{Manifest.permission.CAMERA});
+        }
+    }
+
+    public static void initiateQRCodeScan(Fragment fragment) {
+        IntentIntegrator.forSupportFragment(fragment).initiateScan();
+    }
+
+    public static boolean isNecessaryPermissionExists(Context context, String... permissionList) {
+        for (String permission : permissionList) {
+            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED)
+                return false;
+        }
+        return true;
+    }
+
+    public static void requestRequiredPermissions(Fragment fragment, int permissionCode, String[] permissionList) {
+        List<String> requiredPermissions = new ArrayList<>();
+        for (String permission : permissionList) {
+            if (!isNecessaryPermissionExists(fragment.getActivity(), permission))
+                requiredPermissions.add(permission);
+        }
+
+        fragment.requestPermissions(requiredPermissions.toArray(new String[requiredPermissions.size()]), permissionCode);
+    }
+
+    public static void requestRequiredPermissions(Activity activity, int permissionCode, String[] permissionList) {
+        List<String> requiredPermissions = new ArrayList<>();
+        for (String permission : permissionList) {
+            if (!isNecessaryPermissionExists(activity, permission))
+                requiredPermissions.add(permission);
+        }
+
+        ActivityCompat.requestPermissions(activity, requiredPermissions.toArray(new String[requiredPermissions.size()]), permissionCode);
     }
 }

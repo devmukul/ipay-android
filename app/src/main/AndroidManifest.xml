@@ -190,7 +190,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activities.QRCodeViewerActivity"
-            android:label="@string/qr_code"
+            android:label="@string/my_qr_code"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
@@ -276,6 +276,13 @@
         <activity
             android:name=".Activities.DrawerActivities.HelpAndSupportActivity"
             android:label="@string/help"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ActionBarNoElevation"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name=".Activities.PaymentActivities.QRCodePaymentActivity"
+            android:label="@string/pay_by_QR_code"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />

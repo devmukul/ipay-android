@@ -27,6 +27,8 @@ import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyn
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -46,6 +48,9 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mLoginTask = null;
     private LoginResponse mLoginResponseModel;
 
+    private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
+    private HttpRequestPostAsyncTask mAddTrustedDeviceTask = null;
+
     private ProfileImageView mProfileImageView;
     private EditText mUserNameEditText;
     private EditText mPasswordEditText;
@@ -57,9 +62,11 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     private ImageView mInfoView;
 
     private ProgressDialog mProgressDialog;
-    private String mDeviceID;
     private boolean tryLogInWithTouchID = false;
     private FingerprintAuthenticationDialog mFingerprintAuthenticationDialog;
+
+    private String mDeviceID;
+    private String mDeviceName;
 
     @Override
     public void onResume() {
@@ -110,6 +117,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         });
 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
+        mDeviceName = DeviceInfoFactory.getDeviceName();
 
         mButtonLogin = (Button) v.findViewById(R.id.login_button);
         mButtonForgetPassword = (Button) v.findViewById(R.id.forget_password_button);
@@ -194,7 +202,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
         FingerPrintAuthenticationManager fingerPrintAuthenticationManager = new FingerPrintAuthenticationManager(getActivity());
         if (fingerPrintAuthenticationManager.ifFingerprintAuthenticationSupported()) {
             // If fingerprint auth option is on
-            boolean isFingerPrintAuthOn = ProfileInfoCacheManager.getFingerprintAuthenticationStatus(false);
+            boolean isFingerPrintAuthOn = ProfileInfoCacheManager.getFingerprintAuthenticationStatus();
             if (isFingerPrintAuthOn) {
                 // If Fingerprint option is on and fingerprint is encrypted
                 if (ProfileInfoCacheManager.ifPasswordEncrypted()) {
@@ -280,7 +288,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
             String UUID = null;
             if (SharedPrefManager.ifContainsUUID()) {
-                UUID = ProfileInfoCacheManager.getUUID(null);
+                UUID = ProfileInfoCacheManager.getUUID();
             }
 
             LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
@@ -310,88 +318,133 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_LOG_IN)) {
-            try {
-                mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_LOG_IN:
+                try {
+                    mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    ProfileInfoCacheManager.setLoggedInStatus(true);
-                    String pushRegistrationID = ProfileInfoCacheManager.getPushNotificationToken(null);
-                    if (pushRegistrationID != null) {
-                        new RegisterFCMTokenToServerAsyncTask(getContext());
-                    }
+                    switch (result.getStatus()) {
+                        case Constants.HTTP_RESPONSE_STATUS_OK:
+                            ProfileInfoCacheManager.setLoggedInStatus(true);
+                            String pushRegistrationID = ProfileInfoCacheManager.getPushNotificationToken(null);
+                            if (pushRegistrationID != null) {
+                                new RegisterFCMTokenToServerAsyncTask(getContext());
+                            }
 
-                    ProfileInfoCacheManager.setMobileNumber(mUserNameLogin);
-                    ProfileInfoCacheManager.setAccountType(mLoginResponseModel.getAccountType());
-                    // When user logs in, we want that by default he would log in to his default account
-                    TokenManager.deactivateEmployerAccount();
+                            ProfileInfoCacheManager.setMobileNumber(mUserNameLogin);
+                            ProfileInfoCacheManager.setAccountType(mLoginResponseModel.getAccountType());
+                            // When user logs in, we want that by default he would log in to his default account
+                            TokenManager.deactivateEmployerAccount();
 
-                    // Saving the allowed services id for the user
-                    if (mLoginResponseModel.getAccessControlList() != null) {
-                        ACLManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
-                    }
+                            // Saving the allowed services id for the user
+                            if (mLoginResponseModel.getAccessControlList() != null) {
+                                ACLManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
+                            }
 
-                    // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
-                    if (!SharedPrefManager.ifContainsUUID())
-                        ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
-                    else ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
-
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
-
-                    // First time login from this device. Verify OTP for secure login
-                    SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
-                    ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
-
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
-
-                    // OTP has not been expired yet
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
-
-                    // Enter previous OTP
-                    SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
-                    ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
-
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED) {
-                    /**
-                     * Two situation might arise here. Wrong user name or password throws 401
-                     * Login request from an untrusted device with invalid UUID throws 401 too.
-                     * We need to handle both case. In case of wrong username or password just showing the response message is enough.
-                     */
-                    if (mLoginResponseModel.getMessage().contains(Constants.DEVICE_IS_NOT_TRUSTED)) {
-                        /**
-                         *  Logged in from an untrusted device with invalid UUID.
-                         *  Remove the saved UUID and send the login request again.
-                         */
-                        ProfileInfoCacheManager.removeUUID();
-
-                        // Attempt login
-                        mLoginTask = null;
-                        attemptLogin();
-                    } else {
-                        if (!tryLogInWithTouchID) {
+                            // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
+                            if (!SharedPrefManager.ifContainsUUID()) attemptAddTrustedDevice();
+                            else ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                            break;
+                        case Constants.HTTP_RESPONSE_STATUS_ACCEPTED:
                             if (getActivity() != null)
                                 Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
-                        } else
-                            removeFingerprintAuthentication();
+
+                            // First time login from this device. Verify OTP for secure login
+                            SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
+                            ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
+                            break;
+                        case Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE:
+                            // OTP has not been expired yet
+                            if (getActivity() != null)
+                                Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
+
+                            // Enter previous OTP
+                            SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
+                            ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
+                            break;
+                        case Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED:
+                            /**
+                             * Two situation might arise here. Wrong user name or password throws 401
+                             * Login request from an untrusted device with invalid UUID throws 401 too.
+                             * We need to handle both case. In case of wrong username or password just showing the response message is enough.
+                             */
+                            if (mLoginResponseModel.getMessage().contains(Constants.DEVICE_IS_NOT_TRUSTED)) {
+                                /**
+                                 *  Logged in from an untrusted device with invalid UUID.
+                                 *  Remove the saved UUID and send the login request again.
+                                 */
+                                ProfileInfoCacheManager.removeUUID();
+
+                                // Attempt login
+                                mLoginTask = null;
+                                attemptLogin();
+                            } else {
+                                if (!tryLogInWithTouchID) {
+                                    if (getActivity() != null)
+                                        Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                } else
+                                    removeFingerprintAuthentication();
+                            }
+                            break;
+                        default:
+                            if (!tryLogInWithTouchID) {
+                                if (getActivity() != null)
+                                    Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
+                            } else
+                                removeFingerprintAuthentication();
+                            break;
                     }
-                } else {
-                    if (!tryLogInWithTouchID) {
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
-                    } else
-                        removeFingerprintAuthentication();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_SHORT).show();
                 }
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_SHORT).show();
-            }
+                mLoginTask = null;
+                break;
+            case Constants.COMMAND_ADD_TRUSTED_DEVICE:
+                try {
+                    mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
 
-            mLoginTask = null;
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        String UUID = mAddToTrustedDeviceResponse.getUUID();
+                        ProfileInfoCacheManager.setUUID(UUID);
+
+                        // Launch HomeActivity from here on successful trusted device add
+                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)
+                        ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
+                    else
+                        Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
+                }
+
+                mProgressDialog.dismiss();
+                mAddTrustedDeviceTask = null;
+                break;
+            default:
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                break;
         }
+    }
+
+    private void attemptAddTrustedDevice() {
+        if (mAddTrustedDeviceTask != null)
+            return;
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_trusted_device));
+        mProgressDialog.show();
+        AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
+                Constants.MOBILE_ANDROID + mDeviceID, null);
+        Gson gson = new Gson();
+        String json = gson.toJson(mAddToTrustedDeviceRequest);
+        mAddTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_DEVICE,
+                Constants.BASE_URL_MM + Constants.URL_ADD_TRUSTED_DEVICE, json, getActivity());
+        mAddTrustedDeviceTask.mHttpResponseListener = this;
+        mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 }

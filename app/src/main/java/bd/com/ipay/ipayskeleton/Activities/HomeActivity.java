@@ -35,7 +35,6 @@ import com.mikepenz.actionitembadge.library.ActionItemBadge;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
@@ -53,6 +52,7 @@ import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetRelationshipListAsyncTask;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
@@ -82,8 +82,6 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
-import io.intercom.android.sdk.Intercom;
-import io.intercom.android.sdk.identity.Registration;
 
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, HttpResponseListener {
@@ -92,7 +90,6 @@ public class HomeActivity extends BaseActivity
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
-
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetProfileInfoResponse mGetProfileInfoResponse;
 
@@ -367,6 +364,7 @@ public class HomeActivity extends BaseActivity
     }
 
     @Override
+    @ValidateAccess
     public boolean onNavigationItemSelected(final MenuItem item) {
         int id = item.getItemId();
         // Handle navigation view item clicks here.
@@ -386,10 +384,7 @@ public class HomeActivity extends BaseActivity
 
     private void gotoDrawerItem(MenuItem item) {
         int id = item.getItemId();
-        if (!ACLManager.checkServicesAccessibilityByNavigationMenuId(id)) {
-            DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
-            return;
-        }
+
         if (id == R.id.nav_home) {
 
             switchToDashBoard();
@@ -423,15 +418,9 @@ public class HomeActivity extends BaseActivity
 
         } else if (id == R.id.nav_live_chat) {
             if (isProfileInfoAvailable()) {
-                Registration registration = Registration.create().withUserId(Integer.toString(ProfileInfoCacheManager.getAccountId()));
-                Map<String, Object> userAttributes = Utilities.getUserAttributesForIntercom();
-                registration.withUserAttributes(userAttributes);
-
-                Intercom.client().registerIdentifiedUser(registration);
-                Intercom.client().displayConversationsList();
-
+                Utilities.initIntercomLogin();
             } else {
-                DialogUtils.showLiveChatNotAvailableDialog(this);
+                DialogUtils.showAlertDialog(this, getString(R.string.live_chat_not_available));
             }
         } else if (id == R.id.nav_help) {
 

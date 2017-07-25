@@ -1,15 +1,12 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,6 +82,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
             mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
         }
+
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,10 +109,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
             @Override
             public void onClick(View v) {
 
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA},
-                            REQUEST_CODE_PERMISSION);
-                } else initiateScan();
+                Utilities.performQRCodeScan(MakePaymentFragment.this, REQUEST_CODE_PERMISSION);
 
             }
         });
@@ -133,16 +128,12 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    initiateScan();
+                    Utilities.initiateQRCodeScan(this);
                 } else {
                     Toast.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG).show();
                 }
             }
         }
-    }
-
-    private void initiateScan() {
-        IntentIntegrator.forSupportFragment(this).initiateScan();
     }
 
     @Override
@@ -170,7 +161,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
                             mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
                         } else if (getActivity() != null)
                             Toast.makeText(getActivity(), getResources().getString(
-                                    R.string.please_scan_a_valid_pin), Toast.LENGTH_SHORT).show();
+                                    R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT).show();
                     }
                 });
             }

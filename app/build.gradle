@@ -1,6 +1,7 @@
 import org.aspectj.bridge.IMessage
 import org.aspectj.bridge.MessageHandler
 import org.aspectj.tools.ajc.Main
+
 apply plugin: 'com.android.application'
 
 def keystorePropertiesFile = rootProject.file("../iPay_KeyStore/keystore.properties")
@@ -24,8 +25,8 @@ android {
         applicationId "bd.com.ipay.android"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 88
-        versionName "1.2.3"
+        versionCode 90
+        versionName "1.2.5"
         multiDexEnabled true
     }
 

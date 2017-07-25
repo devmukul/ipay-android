@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessInformationFragment;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EditBusinessInformationFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.BankAccountsFragment;
@@ -25,10 +26,8 @@ import bd.com.ipay.ipayskeleton.ProfileFragments.ProfileCompletionFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.RecommendationReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedNetworkFragment;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BASIC_PROFILE;
@@ -108,12 +107,8 @@ public class ProfileActivity extends BaseActivity {
         return args;
     }
 
+    @ValidateAccess
     public void switchToFragment(String targetFragment, Bundle bundle, boolean addToBackStack) {
-
-        if (!ACLManager.checkServicesAccessibilityByTargetedFragment(targetFragment)) {
-            DialogUtils.showServiceNotAllowedDialog(ProfileActivity.this);
-            return;
-        }
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment fragment;
