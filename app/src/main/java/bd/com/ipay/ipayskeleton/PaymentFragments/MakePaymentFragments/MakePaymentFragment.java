@@ -57,7 +57,7 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
     private EditText mRefNumberEditText;
-    private View paymentSuggestionHolder;
+    private View paymentSuggestionViewHolder;
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
 
@@ -72,9 +72,9 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mRefNumberEditText = (EditText) v.findViewById(R.id.reference_number);
-        paymentSuggestionHolder = v.findViewById(R.id.payment_suggestion_holder);
+        paymentSuggestionViewHolder = v.findViewById(R.id.payment_suggestion_view_holder);
 
-        paymentSuggestionHolder.setVisibility(ProfileInfoCacheManager.isAccountVerified() ? View.VISIBLE : View.GONE);
+        paymentSuggestionViewHolder.setVisibility(ProfileInfoCacheManager.isAccountVerified() ? View.VISIBLE : View.GONE);
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
