@@ -213,7 +213,9 @@ public class HomeActivity extends BaseActivity
         // request user for permission.
         attemptRequestForPermission();
 
-        getAllBusinessAccountsList();
+        if (ProfileInfoCacheManager.isAccountVerified()) {
+            getAllBusinessAccountsList();
+        }
 
         // If profile picture gets updated, we need to refresh the profile picture in the drawer.
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
