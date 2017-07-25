@@ -25,7 +25,7 @@
                 android:maxLines="1" />
 
             <LinearLayout
-                android:id="@+id/payment_suggestion_view_holder"
+                android:id="@+id/right_side_icon_view_holder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"

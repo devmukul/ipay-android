@@ -830,6 +830,7 @@
     <string name="qr_code_unavailable">Unable to Genarate your QR Code. Please Try again later.</string>
     <string name="file_save_failed">Unable to save file.</string>
     <string name="add_contact_dialog_not_available">Cant add a contact now. Please try again later.</string>
+    <string name="qr_code_prompt">Please scan a QR code</string>
 
 
     <string-array name="mobile_operators">
