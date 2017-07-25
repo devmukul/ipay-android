@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -194,27 +192,6 @@ public class Utilities {
                 is.close();
             } catch (Exception ignored) {
             }
-        }
-    }
-
-    public static String getLongLatWithoutGPS(Context context) {
-        LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        double latitude;
-        double longitude;
-
-        if (ContextCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return null;
-        } else {
-            Location location = lm
-                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-            if (location != null) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-
-                return longitude + ", " + latitude;
-            } else return null;
         }
     }
 
@@ -608,23 +585,17 @@ public class Utilities {
         return "";
     }
 
-    private static void setCalenderWithAgeLimit(Calendar calendar) {
-        int currentYear = calendar.get(Calendar.YEAR);
-        int currentMonth = calendar.get(Calendar.MONTH);
-        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+    public static DatePickerDialog getDatePickerDialog(Context context, Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {
+        final DatePickerDialog datePickerDialog = initDatePickerDialog(context, date, onDateSetListener);
 
-        int minYear = currentYear - Constants.MIN_AGE_LIMIT;
-        int minMonth = currentMonth;
-        int minDay = currentDay;
-
-        calendar.set(minYear, minMonth, minDay);
+        return datePickerDialog;
     }
 
     public static DatePickerDialog initDatePickerDialog(Context context, Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {
         final Calendar calendar = Calendar.getInstance();
 
         if (date == null) {
-            setCalenderWithAgeLimit(calendar); // If no date was selected
+            setCalenderWithAgeLimit(calendar); // If no date was selected previously
         } else
             calendar.setTime(date);
 
@@ -639,22 +610,29 @@ public class Utilities {
         return datePickerDialog;
     }
 
+    private static void setCalenderWithAgeLimit(Calendar calendar) {
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        int minYear = currentYear - Constants.MIN_AGE_LIMIT;
+        int minMonth = currentMonth;
+        int minDay = currentDay;
+
+        calendar.set(minYear, minMonth, minDay);
+    }
+
     private static void setLimitInDatePickerDialog(DatePickerDialog datePickerDialog) {
         final Calendar calendar = Calendar.getInstance();
 
         setCalenderWithAgeLimit(calendar);
         long minDateInMilliSeconds = calendar.getTimeInMillis();
 
-        // Set 18 years from today as max limit of date picker
+        // Set 10 years from today as max limit of date picker
         datePickerDialog.getDatePicker().setMaxDate(minDateInMilliSeconds);
         datePickerDialog.setTitle(null);
     }
 
-    public static DatePickerDialog getDatePickerDialog(Context context, Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {
-        final DatePickerDialog datePickerDialog = initDatePickerDialog(context, date, onDateSetListener);
-
-        return datePickerDialog;
-    }
 
     public static void setActionBarTitle(Activity activity, String title) {
         activity.getActionBar().setTitle(title);

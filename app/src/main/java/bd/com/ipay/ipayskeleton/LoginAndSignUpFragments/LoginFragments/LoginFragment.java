@@ -305,11 +305,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        if (isAdded())
-            mProgressDialog.dismiss();
-
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            hideProgressDialog();
+
             mLoginTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
@@ -342,10 +341,16 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                             }
 
                             // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
-                            if (!SharedPrefManager.ifContainsUUID()) attemptAddTrustedDevice();
-                            else ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                            if (!SharedPrefManager.ifContainsUUID()) {
+                                attemptAddTrustedDevice();
+                            } else {
+                                hideProgressDialog();
+                                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                            }
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_ACCEPTED:
+                            hideProgressDialog();
+
                             if (getActivity() != null)
                                 Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
 
@@ -354,6 +359,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                             ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE:
+                            hideProgressDialog();
+
                             // OTP has not been expired yet
                             if (getActivity() != null)
                                 Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
@@ -363,6 +370,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                             ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED:
+                            hideProgressDialog();
+
                             /**
                              * Two situation might arise here. Wrong user name or password throws 401
                              * Login request from an untrusted device with invalid UUID throws 401 too.
@@ -379,6 +388,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                                 mLoginTask = null;
                                 attemptLogin();
                             } else {
+                                hideProgressDialog();
+
                                 if (!tryLogInWithTouchID) {
                                     if (getActivity() != null)
                                         Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
@@ -387,6 +398,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                             }
                             break;
                         default:
+                            hideProgressDialog();
+
                             if (!tryLogInWithTouchID) {
                                 if (getActivity() != null)
                                     Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
@@ -395,6 +408,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                             break;
                     }
                 } catch (Exception e) {
+                    hideProgressDialog();
+
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_SHORT).show();
@@ -403,6 +418,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                 mLoginTask = null;
                 break;
             case Constants.COMMAND_ADD_TRUSTED_DEVICE:
+                hideProgressDialog();
+
                 try {
                     mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
 
@@ -422,22 +439,25 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                     Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
                 }
 
-                mProgressDialog.dismiss();
                 mAddTrustedDeviceTask = null;
                 break;
             default:
+                hideProgressDialog();
+
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                 break;
         }
     }
 
+    private void hideProgressDialog() {
+        if (isAdded()) mProgressDialog.dismiss();
+    }
+
     private void attemptAddTrustedDevice() {
         if (mAddTrustedDeviceTask != null)
             return;
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_adding_trusted_device));
-        mProgressDialog.show();
         AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
                 Constants.MOBILE_ANDROID + mDeviceID, null);
         Gson gson = new Gson();
