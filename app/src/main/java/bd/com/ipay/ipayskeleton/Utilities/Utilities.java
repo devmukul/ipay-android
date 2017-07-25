@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -194,27 +192,6 @@ public class Utilities {
                 is.close();
             } catch (Exception ignored) {
             }
-        }
-    }
-
-    public static String getLongLatWithoutGPS(Context context) {
-        LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        double latitude;
-        double longitude;
-
-        if (ContextCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return null;
-        } else {
-            Location location = lm
-                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-            if (location != null) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-
-                return longitude + ", " + latitude;
-            } else return null;
         }
     }
 
