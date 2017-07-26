@@ -97,9 +97,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)
-                        && Utilities.isConnectionAvailable(getActivity())) {
-                    // Checked verification status before getting the bank list
+                if (Utilities.isConnectionAvailable(getActivity())) {
                     getBankList();
 
                 } else
