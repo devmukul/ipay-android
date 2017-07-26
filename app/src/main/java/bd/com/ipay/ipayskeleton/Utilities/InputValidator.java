@@ -97,7 +97,7 @@ public class InputValidator {
         document_types = context.getResources().getStringArray(R.array.personal_document_id);
         String errorMessage = null;
         if (documentID.length() == 0) {
-            errorMessage = context.getString(R.string.enter) + " " + document_types[pos] + context.getString(R.string.number);
+            errorMessage = context.getString(R.string.enter) + " " + document_types[pos] + " " + context.getString(R.string.number);
         } else {
             switch (documentType) {
                 case Constants.DOCUMENT_TYPE_NATIONAL_ID:
@@ -131,7 +131,7 @@ public class InputValidator {
         business_document_types = context.getResources().getStringArray(R.array.business_document_id);
         String errorMessage = null;
         if (documentID.length() == 0)
-            errorMessage = context.getString(R.string.enter) + " " + business_document_types[pos] + context.getString(R.string.number);
+            errorMessage = context.getString(R.string.enter) + " " + business_document_types[pos] + " " + context.getString(R.string.number);
         else {
             switch (documentType) {
                 case Constants.DOCUMENT_TYPE_NATIONAL_ID:

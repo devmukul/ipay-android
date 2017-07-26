@@ -66,6 +66,7 @@ import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
+import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import io.intercom.android.sdk.Intercom;
@@ -717,7 +718,7 @@ public class Utilities {
     }
 
     public static void initiateQRCodeScan(Fragment fragment) {
-        IntentIntegrator.forSupportFragment(fragment).initiateScan();
+        IntentIntegrator.forSupportFragment(fragment).setPrompt(fragment.getString(R.string.qr_code_prompt)).initiateScan();
     }
 
     public static boolean isNecessaryPermissionExists(Context context, String... permissionList) {
