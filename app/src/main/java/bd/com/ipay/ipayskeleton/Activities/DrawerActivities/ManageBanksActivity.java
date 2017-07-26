@@ -9,12 +9,11 @@ import android.view.View;
 import java.util.ArrayList;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.ManageBanksFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.ConsentAgreementForBankFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.LinkBankFragment;
-import bd.com.ipay.ipayskeleton.ManageBanksFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranch;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -75,10 +74,7 @@ public class ManageBanksActivity extends BaseActivity {
         if (!switchedFromBankVerification) {
             // If back to bank account fragment then set the visibility of add bank button
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-                // Check if the account is verified before adding a bank account.
-                if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED))
-                    mFabAddNewBank.setVisibility(View.VISIBLE);
-                else mFabAddNewBank.setVisibility(View.GONE);
+                mFabAddNewBank.setVisibility(View.VISIBLE);
             }
         }
 
@@ -96,10 +92,7 @@ public class ManageBanksActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new BankAccountsFragment()).commit();
 
-        // Check if the account is verified before adding a bank account.
-        if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED))
-            mFabAddNewBank.setVisibility(View.VISIBLE);
-        else mFabAddNewBank.setVisibility(View.GONE);
+        mFabAddNewBank.setVisibility(View.VISIBLE);
     }
 
     public void switchToAddNewBankFragment() {
