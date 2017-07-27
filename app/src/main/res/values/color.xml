@@ -49,4 +49,11 @@
     <color name="colorBackgroundButtonWithOpacity">#59009688</color>
     <color name="colorBackgroundButtonWithOpacityPressed">#1A009688</color>
 
+
+    <color name="colorOnBoardTop">#00D3C0</color>
+    <color name="colorOnBoardBottom">#009789</color>
+    <color name="colorFadeWhite">#F3F3F3</color>
+
+    <color name="colorBlack">#000000</color>
+
 </resources>

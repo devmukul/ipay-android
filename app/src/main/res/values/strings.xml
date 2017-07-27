@@ -827,6 +827,21 @@
     <string name="business_account_not_verified">This business account is not verified. In order to make payment, the business account must be verified.</string>
     <string name="qr_code_unavailable">Unable to Genarate your QR Code. Please Try again later.</string>
     <string name="file_save_failed">Unable to save file.</string>
+    <string name="get_started">Sign up to get started now!</string>
+
+    <string name="welcome_to_ipay">Welcome to iPay</string>
+    <string name="Welcome_Back">Welcome Back</string>
+    <string name="on_board_tour_description">A secure payment system that you may choose for your daily transactions.</string>
+    <string name="instant_money">Instant Money</string>
+    <string name="iPay_money_is_fast">iPay money is fast and you can send and receive money instantly.</string>
+    <string name="out_of_money">Out of  money! No problem. Request money when you are in need.</string>
+    <string name="we_love_to_see_you_happy">We love to see you happy in shopping and we are here to make payments for your purchases.</string>
+
+    <string name="ready_to_get_started">Ready to get started?</string>
+    <string name="getting_started_description">Whether you are paying bills, sending money or making purchase, iPay is here to keep your financial information secure.</string>
+
+
+
 
 
     <string-array name="mobile_operators">

@@ -55,4 +55,12 @@
     <dimen name="ticket_comment_radius">3dp</dimen>
     <dimen name="ticket_profile_picture_size">40dp</dimen>
     <dimen name="icon_size">40dp</dimen>
+
+
+    <dimen name="oval_button_radius">50dp</dimen>
+    <dimen name="button_margin">40dp</dimen>
+    <dimen name="tour_page_vertical_margin_large">75dp</dimen>
+    <dimen name="tour_page_vertical_margin">60dp</dimen>
+
+    <dimen name="value40">40.0dip</dimen>
 </resources>
