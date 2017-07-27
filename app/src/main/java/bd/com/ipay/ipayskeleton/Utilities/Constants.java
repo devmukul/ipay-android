@@ -125,9 +125,14 @@ public class Constants {
     public static final double OFFICE_LONGITUDE = 90.4169212;
     public static final String HOST_NAME = "www.ipay.com.bd";
 
-    public static final int MIN_AGE_LIMIT = 18;
+    public static final int MIN_AGE_LIMIT = 10;
     public static final int MIN_VALID_NAME_LENGTH = 5;
     public static final int MAX_FILE_ATTACHMENT_LIMIT = 5;
+    public static final int MINIMUM_REQUIRED_NID_LENGTH = 10;
+    public static final int MAXIMUM_REQUIRED_NID_LENGTH = 17;
+    public static final int BUSINESS_TIN_LENGTH = 12;
+    public static final int TRADE_LICENSE_ID_LENGTH = 8;
+    public static final int VAT_REG_CERT_ID_LENGTH = 11;
 
     public static final int STARTING_DATE = 01;
     public static final int SERVER_TYPE_LIVE = 4;
@@ -180,6 +185,9 @@ public class Constants {
 
     public static final String PERSONAL_ACCOUNT = "Personal Account";
     public static final String BUSINESS_ACCOUNT = "Business Account";
+    public static final String SERVICE_ID_SET = "SERVICE_ID_SET";
+    public static final String NAVIGATION_MENU_SERVICE_ACCESS_SET = "NAVIGATION_MENU_SERVICE_ACCESS_SET";
+    public static final String FRAGMENT_SERVICE_ACCESS_SET = "FRAGMENT_SERVICE_ACCESS_SET";
 
     static {
         if (SERVER_TYPE == DEV_SERVER) {

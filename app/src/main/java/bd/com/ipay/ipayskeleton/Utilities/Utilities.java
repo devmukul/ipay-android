@@ -8,14 +8,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
@@ -67,9 +66,11 @@ import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
+import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import io.intercom.android.sdk.Intercom;
+import io.intercom.android.sdk.identity.Registration;
 
 public class Utilities {
 
@@ -79,6 +80,15 @@ public class Utilities {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
         return info != null && info.isConnected();
+    }
+
+    public static void setAppropriateKeyboard(Context c, String documentType, EditText editText) {
+        if (documentType.equals(Constants.DOCUMENT_TYPE_NATIONAL_ID) ||
+                documentType.equals(Constants.DOCUMENT_TYPE_BUSINESS_TIN) ||
+                documentType.equals(Constants.DOCUMENT_TYPE_VAT_REG_CERT) ||
+                documentType.equals(Constants.DOCUMENT_TYPE_TRADE_LICENSE)) {
+            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        } else editText.setInputType(InputType.TYPE_CLASS_TEXT);
     }
 
     public static boolean isTabletDevice(Context context) {
@@ -183,27 +193,6 @@ public class Utilities {
                 is.close();
             } catch (Exception ignored) {
             }
-        }
-    }
-
-    public static String getLongLatWithoutGPS(Context context) {
-        LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        double latitude;
-        double longitude;
-
-        if (ContextCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return null;
-        } else {
-            Location location = lm
-                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-            if (location != null) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-
-                return longitude + ", " + latitude;
-            } else return null;
         }
     }
 
@@ -597,23 +586,17 @@ public class Utilities {
         return "";
     }
 
-    private static void setCalenderWithAgeLimit(Calendar calendar) {
-        int currentYear = calendar.get(Calendar.YEAR);
-        int currentMonth = calendar.get(Calendar.MONTH);
-        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+    public static DatePickerDialog getDatePickerDialog(Context context, Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {
+        final DatePickerDialog datePickerDialog = initDatePickerDialog(context, date, onDateSetListener);
 
-        int minYear = currentYear - Constants.MIN_AGE_LIMIT;
-        int minMonth = currentMonth;
-        int minDay = currentDay;
-
-        calendar.set(minYear, minMonth, minDay);
+        return datePickerDialog;
     }
 
     public static DatePickerDialog initDatePickerDialog(Context context, Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {
         final Calendar calendar = Calendar.getInstance();
 
         if (date == null) {
-            setCalenderWithAgeLimit(calendar); // If no date was selected
+            setCalenderWithAgeLimit(calendar); // If no date was selected previously
         } else
             calendar.setTime(date);
 
@@ -628,22 +611,29 @@ public class Utilities {
         return datePickerDialog;
     }
 
+    private static void setCalenderWithAgeLimit(Calendar calendar) {
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        int minYear = currentYear - Constants.MIN_AGE_LIMIT;
+        int minMonth = currentMonth;
+        int minDay = currentDay;
+
+        calendar.set(minYear, minMonth, minDay);
+    }
+
     private static void setLimitInDatePickerDialog(DatePickerDialog datePickerDialog) {
         final Calendar calendar = Calendar.getInstance();
 
         setCalenderWithAgeLimit(calendar);
         long minDateInMilliSeconds = calendar.getTimeInMillis();
 
-        // Set 18 years from today as max limit of date picker
+        // Set 10 years from today as max limit of date picker
         datePickerDialog.getDatePicker().setMaxDate(minDateInMilliSeconds);
         datePickerDialog.setTitle(null);
     }
 
-    public static DatePickerDialog getDatePickerDialog(Context context, Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {
-        final DatePickerDialog datePickerDialog = initDatePickerDialog(context, date, onDateSetListener);
-
-        return datePickerDialog;
-    }
 
     public static void setActionBarTitle(Activity activity, String title) {
         activity.getActionBar().setTitle(title);
@@ -674,15 +664,24 @@ public class Utilities {
         activity.finish();
     }
 
-    public static Map<String, Object> getCustomIntercomUserAttributes() {
+    private static Map<String, Object> getCustomIntercomUserAttributes() {
         Map<String, Object> customAttributes = new HashMap<>();
 
         customAttributes.put(IntercomConstants.ATTR_CREATED_AT, System.currentTimeMillis() / 1000L);
-        customAttributes.put(IntercomConstants.ATTR_TYPE, ProfileInfoCacheManager.getAccountType(1) == 1 ? Constants.PERSONAL_ACCOUNT : Constants.BUSINESS_ACCOUNT);
+        customAttributes.put(IntercomConstants.ATTR_TYPE, ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE ? Constants.PERSONAL_ACCOUNT : Constants.BUSINESS_ACCOUNT);
         customAttributes.put(IntercomConstants.ATTR_SIGNED_UP_AT, ProfileInfoCacheManager.getSignupTime() / 1000L);
         customAttributes.put(IntercomConstants.ATTR_VERIFICATION_STATUS, ProfileInfoCacheManager.getVerificationStatus());
 
         return customAttributes;
+    }
+
+    public static void initIntercomLogin() {
+        Registration registration = Registration.create().withUserId(Integer.toString(ProfileInfoCacheManager.getAccountId()));
+        Map<String, Object> userAttributes = Utilities.getUserAttributesForIntercom();
+        registration.withUserAttributes(userAttributes);
+
+        Intercom.client().registerIdentifiedUser(registration);
+        Intercom.client().displayConversationsList();
     }
 
     public static void resetIntercomInformation() {
@@ -690,7 +689,7 @@ public class Utilities {
         Intercom.client().hideMessenger();
     }
 
-    public static Map<String, Object> getUserAttributesForIntercom() {
+    private static Map<String, Object> getUserAttributesForIntercom() {
         Map<String, Object> customAttributes = Utilities.getCustomIntercomUserAttributes();
 
         Map<String, Object> userAttributes = new HashMap<>();
@@ -719,7 +718,7 @@ public class Utilities {
     }
 
     public static void initiateQRCodeScan(Fragment fragment) {
-        IntentIntegrator.forSupportFragment(fragment).initiateScan();
+        IntentIntegrator.forSupportFragment(fragment).setPrompt(fragment.getString(R.string.qr_code_prompt)).initiateScan();
     }
 
     public static boolean isNecessaryPermissionExists(Context context, String... permissionList) {

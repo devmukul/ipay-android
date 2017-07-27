@@ -8,13 +8,13 @@ import bd.com.ipay.ipayskeleton.Utilities.AppInstance.AppInstanceUtilities;
 public class Toaster {
 
     public static void makeText(Context context, String text, int duration) {
-        if (AppInstanceUtilities.isUserActive(context)) {
+        if (context != null && AppInstanceUtilities.isUserActive(context)) {
             Toast.makeText(context, text, duration).show();
         }
     }
 
     public static void makeText(Context context, int resId, int duration) {
-        if (AppInstanceUtilities.isUserActive(context)) {
+        if (context != null && AppInstanceUtilities.isUserActive(context)) {
             Toast.makeText(context, resId, duration).show();
         }
     }
