@@ -80,9 +80,11 @@
 
             <Button
                 android:id="@+id/login_button"
-                style="@style/PrimaryTransparentButton"
+                style="@style/ButtonLightGrayMediumShapedOval"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:textSize="@dimen/text_size_medium"
                 android:text="@string/log_in" />
 
             <RelativeLayout
