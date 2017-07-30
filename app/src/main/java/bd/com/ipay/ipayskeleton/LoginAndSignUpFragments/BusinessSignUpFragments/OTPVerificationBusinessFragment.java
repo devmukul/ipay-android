@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,7 +129,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
             }
 
             public void onFinish() {
-                mTimerTextView.setVisibility(View.INVISIBLE);
+                //mTimerTextView.setVisibility(View.INVISIBLE);
                 mResendOTPButton.setEnabled(true);
             }
         }.start();
@@ -281,6 +282,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                     e.printStackTrace();
                 }
 
+                mProgressDialog.dismiss();
                 mSignUpTask = null;
 
                 break;
@@ -317,6 +319,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                     e.printStackTrace();
                 }
 
+                mProgressDialog.dismiss();
                 mRequestOTPTask = null;
                 break;
 

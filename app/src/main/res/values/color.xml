@@ -49,4 +49,18 @@
     <color name="colorBackgroundButtonWithOpacity">#59009688</color>
     <color name="colorBackgroundButtonWithOpacityPressed">#1A009688</color>
 
+
+    <color name="colorOnBoardTop">#00D3C0</color>
+    <color name="colorOnBoardBottom">#009789</color>
+    <color name="colorFadeWhite">#F3F3F3</color>
+
+    <color name="colorBlack">#000000</color>
+    <color name="colorPrimaryButton">#00B2A2</color>
+    <color name="colorPrimaryButtonPressed">#00D3C0</color>
+    <color name="colorSecondaryButton">#F5F5F5</color>
+    <color name="colorSecondaryButtonPressed">#E0E0E0</color>
+    <color name="colorPageSelectorSelected">#FFFFFF</color>
+    <color name="colorPageSelectorUnselected">#57C2B9</color>
+
+
 </resources>

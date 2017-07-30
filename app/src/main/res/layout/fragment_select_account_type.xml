@@ -1,54 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_bg_pcode"
-    android:focusableInTouchMode="true"
-    android:padding="@dimen/activity_horizontal_margin_card">
+    android:background="@color/colorWhite"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/button_margin"
+    android:paddingRight="@dimen/button_margin">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/activity_vertical_margin_double">
+    <TextView
+        style="@style/HeaderTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/value15"
+        android:text="@string/ready_to_get_started" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/logo_ipay_full_size" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:fontFamily="sans-serif-thin"
-            android:text="@string/sign_up_with_ipay"
-            android:textColor="@android:color/white"
-            android:textSize="36sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/button_holder"
+    <TextView
+        style="@style/DescriptionTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical">
+        android:layout_marginBottom="@dimen/value20"
+        android:text="@string/getting_started_description" />
 
-        <Button
-            android:id="@+id/button_account_type_personal"
-            style="@style/PrimaryTransparentButtonCardMargin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/account_type_personal" />
+    <Button
+        android:id="@+id/button_account_type_personal"
+        style="@style/ButtonLightGreenShapedOval"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/value15"
+        android:text="@string/personal_account" />
 
-        <Button
-            android:id="@+id/button_account_type_business"
-            style="@style/PrimaryTransparentButtonCardMargin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/account_type_business" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/button_account_type_business"
+        style="@style/ButtonLightGrayMediumShapedOval"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/business_account" />
 
-</RelativeLayout>
+</LinearLayout>
