@@ -305,12 +305,13 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mGetDocumentAccessTokenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void uploadDocument(String mDocumentID, int mID) {
+    private void uploadDocument(int mID) {
 
         if (mUploadIdentifierDocumentAsyncTask != null)
             return;
 
         String mDocumentTypeName = documentPreviewDetailsList.get(mID).getDocumentTypeName();
+        String mDocumentID = documentPreviewDetailsList.get(mID).getDocumentId();
         String mDocumentType = documentPreviewDetailsList.get(mID).getDocumentType();
         mProgressDialog.setMessage(getString(R.string.uploading) + " " + mDocumentTypeName);
         mProgressDialog.show();
@@ -555,7 +556,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 String documentHintType = DOCUMENT_HINT_TYPES[pos];
 
                 mDocumentIdTextInputLayoutView.setHint(documentHintType);
-                Utilities.setAppropriateKeyboard(getActivity(), documentTypeName, mDocumentIdEditTextView);
+                Utilities.setAppropriateKeyboard(getActivity(), documentPreviewDetailsList.get(pos).getDocumentType(), mDocumentIdEditTextView);
 
                 // Unverified, document not yet uploaded
                 if (verificationStatus == null) {
@@ -665,10 +666,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
                 mUploadButton.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        mDocumentIdEditTextView.setError(null);
-                        mSelectFile.setError(null);
-                        Utilities.hideKeyboard(getActivity());
+                    public void onClick(View v){
                         attemptUploadDocument(pos);
                     }
                 });
@@ -678,9 +676,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 String documentID = mDocumentIdEditTextView.getText().toString();
                 String errorMessage;
                 if (ProfileInfoCacheManager.isBusinessAccount())
-                    errorMessage = InputValidator.isValidDocumentID(getActivity(), documentID, BUSINESS_DOCUMENT_TYPES[pos], pos, true);
+                    errorMessage = InputValidator.isValidBusinessDocumentID(getActivity(), documentID, BUSINESS_DOCUMENT_TYPES[pos], pos);
                 else
-                    errorMessage = InputValidator.isValidDocumentID(getActivity(), documentID, DOCUMENT_TYPES[pos], pos, false);
+                    errorMessage = InputValidator.isValidDocumentID(getActivity(), documentID, DOCUMENT_TYPES[pos], pos);
 
                 if (errorMessage != null) {
                     mDocumentIdEditTextView.requestFocus();
@@ -692,7 +690,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         Utilities.hideKeyboard(getActivity());
                         documentPreviewDetailsList.get(pos).setDocumentId(documentID);
                         if (Utilities.isConnectionAvailable(getActivity()))
-                            uploadDocument(documentID, pos);
+                            uploadDocument(pos);
                         else
                             Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
                     }

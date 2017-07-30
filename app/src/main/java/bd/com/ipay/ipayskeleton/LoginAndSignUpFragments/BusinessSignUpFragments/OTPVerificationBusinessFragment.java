@@ -31,12 +31,14 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPReques
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPResponseBusinessSignup;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.SignupRequestBusiness;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.SignupResponseBusiness;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
-import bd.com.ipay.ipayskeleton.Utilities.MoreAccurateTimer;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationBusinessFragment extends Fragment implements HttpResponseListener {
@@ -50,12 +52,17 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
     private HttpRequestPostAsyncTask mLoginTask = null;
     private LoginResponse mLoginResponseModel;
 
+    private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
+    private HttpRequestPostAsyncTask mAddTrustedDeviceTask = null;
+
     private Button mActivateButton;
     private TextView mResendOTPButton;
     private EditText mOTPEditText;
     private TextView mTimerTextView;
 
     private String mDeviceID;
+    private String mDeviceName;
+
     private ProgressDialog mProgressDialog;
 
     private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
@@ -76,6 +83,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
+        mDeviceName = DeviceInfoFactory.getDeviceName();
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
@@ -114,31 +122,17 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
 
         mResendOTPButton.setEnabled(false);
         mTimerTextView.setVisibility(View.VISIBLE);
+        new CustomCountDownTimer(SignupOrLoginActivity.otpDuration, 500) {
 
-        new MoreAccurateTimer(SignupOrLoginActivity.otpDuration, 1000 - 500) {
-            @Override
             public void onTick(long millisUntilFinished) {
                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
             }
 
-            @Override
             public void onFinish() {
                 //mTimerTextView.setVisibility(View.INVISIBLE);
                 mResendOTPButton.setEnabled(true);
             }
         }.start();
-
-//        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000 - 500) {
-//
-//            public void onTick(long millisUntilFinished) {
-//                mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
-//            }
-//
-//            public void onFinish() {
-//                mTimerTextView.setVisibility(View.INVISIBLE);
-//                mResendOTPButton.setEnabled(true);
-//            }
-//        }.start();
 
         return v;
     }
@@ -242,7 +236,8 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.dismiss();
+            hideProgressDialog();
+
             mSignUpTask = null;
             mRequestOTPTask = null;
             mLoginTask = null;
@@ -255,6 +250,8 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_SIGN_UP_BUSINESS:
+                hideProgressDialog();
+
                 try {
                     mSignupResponseBusiness = gson.fromJson(result.getJsonString(), SignupResponseBusiness.class);
                     String message = mSignupResponseBusiness.getMessage();
@@ -262,10 +259,9 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumberBusiness);
-                        ProfileInfoCacheManager.setPASSWORD(SignupOrLoginActivity.mPasswordBusiness);
-                        ProfileInfoCacheManager.setNAME(SignupOrLoginActivity.mNameBusiness);
-                        ProfileInfoCacheManager.setBIRTHDAY(SignupOrLoginActivity.mBirthdayBusinessHolder);
-                        ProfileInfoCacheManager.setGENDER("M");
+                        ProfileInfoCacheManager.setName(SignupOrLoginActivity.mNameBusiness);
+                        ProfileInfoCacheManager.setBirthday(SignupOrLoginActivity.mBirthdayBusinessHolder);
+                        ProfileInfoCacheManager.setGender("M");
                         ProfileInfoCacheManager.setAccountType(Constants.BUSINESS_ACCOUNT_TYPE);
 
                         if (getActivity() != null)
@@ -292,6 +288,7 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                 break;
 
             case Constants.COMMAND_OTP_VERIFICATION:
+                hideProgressDialog();
 
                 try {
                     mOtpResponseBusinessSignup = gson.fromJson(result.getJsonString(), OTPResponseBusinessSignup.class);
@@ -304,30 +301,16 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                         // Start timer again
                         mTimerTextView.setVisibility(View.VISIBLE);
                         mResendOTPButton.setEnabled(false);
+                        new CustomCountDownTimer(SignupOrLoginActivity.otpDuration, 500) {
 
-                        new MoreAccurateTimer(SignupOrLoginActivity.otpDuration, 1000 - 500) {
-                            @Override
                             public void onTick(long millisUntilFinished) {
                                 mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
                             }
 
-                            @Override
                             public void onFinish() {
-                                //mTimerTextView.setVisibility(View.INVISIBLE);
                                 mResendOTPButton.setEnabled(true);
                             }
                         }.start();
-
-//                        new CountDownTimer(SignupOrLoginActivity.otpDuration, 1000 - 500) {
-//
-//                            public void onTick(long millisUntilFinished) {
-//                                mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
-//                            }
-//
-//                            public void onFinish() {
-//                                mResendOTPButton.setEnabled(true);
-//                            }
-//                        }.start();
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
@@ -357,20 +340,70 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                             ACLManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
                         }
 
-                        ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
+                        attemptAddTrustedDevice();
 
                     } else {
+                        hideProgressDialog();
+
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
+                    hideProgressDialog();
+
                     e.printStackTrace();
                 }
 
-                mProgressDialog.dismiss();
                 mLoginTask = null;
+                break;
+            case Constants.COMMAND_ADD_TRUSTED_DEVICE:
+                hideProgressDialog();
+
+                try {
+                    mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
+
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        String UUID = mAddToTrustedDeviceResponse.getUUID();
+                        ProfileInfoCacheManager.setUUID(UUID);
+
+                        // Launch HomeActivity from here on successful trusted device add
+                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)
+                        ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
+                    else
+                        Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
+                }
+
+                mAddTrustedDeviceTask = null;
+                break;
+            default:
+                hideProgressDialog();
+
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                 break;
         }
     }
-}
 
+    private void hideProgressDialog() {
+        if (isAdded()) mProgressDialog.dismiss();
+    }
+
+    private void attemptAddTrustedDevice() {
+        if (mAddTrustedDeviceTask != null)
+            return;
+
+        AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
+                Constants.MOBILE_ANDROID + mDeviceID, null);
+        Gson gson = new Gson();
+        String json = gson.toJson(mAddToTrustedDeviceRequest);
+        mAddTrustedDeviceTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_TRUSTED_DEVICE,
+                Constants.BASE_URL_MM + Constants.URL_ADD_TRUSTED_DEVICE, json, getActivity());
+        mAddTrustedDeviceTask.mHttpResponseListener = this;
+        mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+}

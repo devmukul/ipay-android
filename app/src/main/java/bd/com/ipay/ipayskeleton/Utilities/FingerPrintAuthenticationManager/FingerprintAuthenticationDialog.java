@@ -74,7 +74,7 @@ public class FingerprintAuthenticationDialog extends MaterialDialog.Builder {
     private void initDialog() {
         initFingerPrintAuthenticationManager();
 
-        isFingerPrintAuthOn = ProfileInfoCacheManager.getFingerprintAuthenticationStatus(false);
+        isFingerPrintAuthOn = ProfileInfoCacheManager.getFingerprintAuthenticationStatus();
 
         if (mFingerprintAuthenticationManager.ifFingerprintAuthenticationSupported()) {
             if (mStage == Stage.FINGERPRINT_ENCRYPT) {

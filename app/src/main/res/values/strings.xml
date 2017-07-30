@@ -13,6 +13,7 @@
     <string name="mobile_android">mobile-android-</string>
     <string name="no_iPay_account">The user doesn\'t have an iPay account</string>
     <string name="enter_OTP_sent_to_your_mobile">Enter OTP sent to your mobile</string>
+    <string name="enter">Please enter your</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="prompt_mobile">Enter your mobile number </string>
@@ -71,6 +72,7 @@
     <string name="organization_name">Organization Name</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="phone_number">Phone Number</string>
+    <string name="number">number</string>
     <string name="inception_date">Inception Date</string>
     <string name="contact_us">Contact Us</string>
     <string name="terms_of_service">Terms of Service</string>
@@ -787,6 +789,8 @@
     <string name="creating_ticket">Creating ticket...</string>
     <string name="select_category">Select a category</string>
     <string name="no_email_added">No Email Added</string>
+    <string name="can_not_add_money_if_not_verified">You can not add money until your iPay account gets verified by our system. After submitting your documents and other information it might take a while for verification.</string>
+    <string name="can_not_withdraw_money_if_not_verified">You can not withdraw money until your iPay account gets verified by our system. After submitting your documents and other information it might take a while for verification.</string>
     <string name="can_not_add_bank_if_not_verified">You can not link your bank until your iPay account gets verified by our system. After submitting your documents and other information it might take a while for verification.</string>
     <string name="dialog_add_new_email">You need to set up your primary email to use the support system. Add an email now?</string>
     <string name="ticket_created_dialog_text">Request to create a ticket for your issue has been placed successfully. It may take a little while to show up in your ticket list.</string>
@@ -842,6 +846,8 @@
 
 
 
+    <string name="add_contact_dialog_not_available">Cant add a contact now. Please try again later.</string>
+    <string name="qr_code_prompt">Please scan a QR code</string>
 
 
     <string-array name="mobile_operators">
@@ -946,13 +952,13 @@
     </string-array>
 
     <string-array name="personal_document_id">
-        <item>NID</item>
+        <item>National ID</item>
         <item>Passport ID</item>
         <item>Driving License ID</item>
     </string-array>
 
     <string-array name="business_document_id">
-        <item>NID</item>
+        <item>National ID</item>
         <item>Business TIN ID</item>
         <item>Trade License ID</item>
         <item>VAT Registration Certificate ID</item>

@@ -164,7 +164,7 @@ public class WithdrawMoneyFragment extends Fragment implements HttpResponseListe
         dialog
                 .content(R.string.get_verified)
                 .cancelable(false)
-                .content(getString(R.string.can_not_add_bank_if_not_verified))
+                .content(getString(R.string.can_not_withdraw_money_if_not_verified))
                 .positiveText(R.string.ok)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override

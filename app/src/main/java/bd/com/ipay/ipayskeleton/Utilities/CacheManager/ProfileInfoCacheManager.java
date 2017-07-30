@@ -26,7 +26,7 @@ public class ProfileInfoCacheManager {
     }
 
     public static boolean isBusinessAccount() {
-        return getAccountType(Constants.PERSONAL_ACCOUNT_TYPE) == Constants.BUSINESS_ACCOUNT_TYPE;
+        return getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE;
     }
 
     public static String getPushNotificationToken(String defaultValue) {
@@ -113,23 +113,23 @@ public class ProfileInfoCacheManager {
         pref.edit().putString(SharedPrefConstants.VERIFICATION_STATUS, value).apply();
     }
 
-    public static int getAccountType(int defaultValue) {
-        return pref.getInt(SharedPrefConstants.ACCOUNT_TYPE, defaultValue);
+    public static int getAccountType() {
+        return pref.getInt(SharedPrefConstants.ACCOUNT_TYPE, Constants.PERSONAL_ACCOUNT_TYPE);
     }
 
     public static void setAccountType(int value) {
         pref.edit().putInt(SharedPrefConstants.ACCOUNT_TYPE, value).apply();
     }
 
-    public static String getUUID(String defaultValue) {
-        return pref.getString(SharedPrefConstants.UUID, defaultValue);
+    public static String getUUID() {
+        return pref.getString(SharedPrefConstants.UUID, null);
     }
 
-    public static String getBIRTHDAY(String defaultValue) {
-        return pref.getString(SharedPrefConstants.BIRTHDAY, defaultValue);
+    public static String getBirthday() {
+        return pref.getString(SharedPrefConstants.BIRTHDAY, "");
     }
 
-    public static void setNAME(String value) {
+    public static void setName(String value) {
         pref.edit().putString(SharedPrefConstants.NAME, value).apply();
     }
 
@@ -137,15 +137,11 @@ public class ProfileInfoCacheManager {
         pref.edit().putString(SharedPrefConstants.UUID, value).apply();
     }
 
-    public static void setBIRTHDAY(String value) {
+    public static void setBirthday(String value) {
         pref.edit().putString(SharedPrefConstants.BIRTHDAY, value).apply();
     }
 
-    public static void setPASSWORD(String value) {
-        pref.edit().putString(SharedPrefConstants.PASSWORD, value).apply();
-    }
-
-    public static void setGENDER(String value) {
+    public static void setGender(String value) {
         pref.edit().putString(SharedPrefConstants.GENDER, value).apply();
     }
 
@@ -168,8 +164,8 @@ public class ProfileInfoCacheManager {
         return loggedIn;
     }
 
-    public static boolean getFingerprintAuthenticationStatus(boolean defaultValue) {
-        boolean isFingerprintAuthOn = pref.getBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, defaultValue);
+    public static boolean getFingerprintAuthenticationStatus() {
+        boolean isFingerprintAuthOn = pref.getBoolean(Constants.IS_FINGERPRINT_AUTHENTICATION_ON, false);
         return isFingerprintAuthOn;
     }
 

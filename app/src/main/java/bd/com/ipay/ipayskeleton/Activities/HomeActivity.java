@@ -29,13 +29,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
@@ -53,6 +51,7 @@ import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetRelationshipListAsyncTask;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
@@ -68,7 +67,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
-import bd.com.ipay.ipayskeleton.Utilities.AnalyticsConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
@@ -82,8 +80,6 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
-import io.intercom.android.sdk.Intercom;
-import io.intercom.android.sdk.identity.Registration;
 
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, HttpResponseListener {
@@ -92,7 +88,6 @@ public class HomeActivity extends BaseActivity
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
-
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetProfileInfoResponse mGetProfileInfoResponse;
 
@@ -120,14 +115,12 @@ public class HomeActivity extends BaseActivity
     private static boolean switchedToHomeFragment = true;
     private boolean exitFromApplication = false;
 
-    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         mProgressDialog = new ProgressDialog(HomeActivity.this);
 
@@ -220,10 +213,9 @@ public class HomeActivity extends BaseActivity
         // request user for permission.
         attemptRequestForPermission();
 
-        // Send Analytics for test purpose in Firebase
-        sendAnalytics();
-
-        getAllBusinessAccountsList();
+        if (ProfileInfoCacheManager.isAccountVerified()) {
+            getAllBusinessAccountsList();
+        }
 
         // If profile picture gets updated, we need to refresh the profile picture in the drawer.
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
@@ -305,22 +297,6 @@ public class HomeActivity extends BaseActivity
         }
     }
 
-    private void sendAnalytics() {
-        Bundle bundle = new Bundle();
-        bundle.putString(AnalyticsConstants.USER_ID, mUserID);
-        bundle.putString(AnalyticsConstants.IP_V4_ADDRESS, Utilities.getIPAddress(true));
-        bundle.putString(AnalyticsConstants.IP_V6_ADDRESS, Utilities.getIPAddress(false));
-        bundle.putString(AnalyticsConstants.W_LAN_0, Utilities.getMACAddress(AnalyticsConstants.W_LAN_0));
-        bundle.putString(AnalyticsConstants.ETH_0, Utilities.getMACAddress(AnalyticsConstants.ETH_0));
-        bundle.putString(AnalyticsConstants.DEVICE_ID, mDeviceID);
-
-        String longLat = Utilities.getLongLatWithoutGPS(HomeActivity.this);
-        if (longLat != null)
-            bundle.putString(AnalyticsConstants.DEVICE_LONG_LAT, longLat);
-
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
-    }
-
     private void getAllBusinessAccountsList() {
         GetAllBusinessContactRequestBuilder mGetAllBusinessContactRequestBuilder = new GetAllBusinessContactRequestBuilder(0);
         new GetAllBusinessListAsyncTask(this, mGetAllBusinessContactRequestBuilder.getGeneratedUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -367,6 +343,7 @@ public class HomeActivity extends BaseActivity
     }
 
     @Override
+    @ValidateAccess
     public boolean onNavigationItemSelected(final MenuItem item) {
         int id = item.getItemId();
         // Handle navigation view item clicks here.
@@ -386,10 +363,7 @@ public class HomeActivity extends BaseActivity
 
     private void gotoDrawerItem(MenuItem item) {
         int id = item.getItemId();
-        if (!ACLManager.checkServicesAccessibilityByNavigationMenuId(id)) {
-            DialogUtils.showServiceNotAllowedDialog(HomeActivity.this);
-            return;
-        }
+
         if (id == R.id.nav_home) {
 
             switchToDashBoard();
@@ -423,13 +397,7 @@ public class HomeActivity extends BaseActivity
 
         } else if (id == R.id.nav_live_chat) {
             if (isProfileInfoAvailable()) {
-                Registration registration = Registration.create().withUserId(Integer.toString(ProfileInfoCacheManager.getAccountId()));
-                Map<String, Object> userAttributes = Utilities.getUserAttributesForIntercom();
-                registration.withUserAttributes(userAttributes);
-
-                Intercom.client().registerIdentifiedUser(registration);
-                Intercom.client().displayConversationsList();
-
+                Utilities.initIntercomLogin();
             } else {
                 DialogUtils.showAlertDialog(this, getString(R.string.live_chat_not_available));
             }

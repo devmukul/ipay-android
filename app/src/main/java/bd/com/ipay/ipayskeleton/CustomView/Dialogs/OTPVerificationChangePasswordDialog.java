@@ -30,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.Change
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -135,7 +136,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
 
     private void setCountDownTimer() {
         mResendOTPButton.setEnabled(false);
-        new CountDownTimer(SecuritySettingsActivity.otpDuration, 1000 - 500) {
+        new CustomCountDownTimer(SecuritySettingsActivity.otpDuration, 500) {
 
             public void onTick(long millisUntilFinished) {
                 mResendOTPButton.setText(context.getString(R.string.resend) + " " + new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));

@@ -220,12 +220,6 @@ public class AddressInputSignUpView extends FrameLayout implements HttpResponseL
                     return;
                 }
             }
-
-//             //No selected thana, select the first thana
-//            if (mThanaList.size() > 0) {
-//                mSelectedThanaId = mThanaList.get(0).getId();
-//                mThanaSelection.setText(mThanaList.get(0).getName());
-//            }
         }
     }
 

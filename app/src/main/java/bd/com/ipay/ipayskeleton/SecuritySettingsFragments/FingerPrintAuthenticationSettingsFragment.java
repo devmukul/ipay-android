@@ -12,9 +12,9 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager.FingerprintAuthenticationDialog;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager.FingerprintAuthenticationDialog;
 
 public class FingerPrintAuthenticationSettingsFragment extends Fragment {
     private Button mFingerPrintActivateButton;
@@ -49,7 +49,7 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
     }
 
     private void setFingerprintActivationButtonView() {
-        isFingerPrintAuthOn = ProfileInfoCacheManager.getFingerprintAuthenticationStatus(false);
+        isFingerPrintAuthOn = ProfileInfoCacheManager.getFingerprintAuthenticationStatus();
 
         if (isFingerPrintAuthOn) {
             mFingerPrintActivateButton.setBackground(getResources().getDrawable(R.drawable.background_transparent_with_color_primary_border));
