@@ -188,6 +188,7 @@ public class Constants {
     public static final String SERVICE_ID_SET = "SERVICE_ID_SET";
     public static final String NAVIGATION_MENU_SERVICE_ACCESS_SET = "NAVIGATION_MENU_SERVICE_ACCESS_SET";
     public static final String FRAGMENT_SERVICE_ACCESS_SET = "FRAGMENT_SERVICE_ACCESS_SET";
+    public static final String MOBILE_NUMBER_REGEX = "^((\\+)?88)?((0)?1)[5-9][\\d]{8}$";
 
     static {
         if (SERVER_TYPE == DEV_SERVER) {
