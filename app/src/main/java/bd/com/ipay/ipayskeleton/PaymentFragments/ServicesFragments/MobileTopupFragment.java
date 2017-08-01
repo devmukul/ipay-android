@@ -244,7 +244,7 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
-        if (!ContactEngine.isValidNumber(mobileNumber)) {
+        if (!mobileNumber.matches(Constants.MOBILE_NUMBER_REGEX)) {
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             focusView = mMobileNumberEditText;
             cancel = true;
