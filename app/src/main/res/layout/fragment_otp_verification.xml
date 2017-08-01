@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_bg_pcode">
+    android:background="@drawable/background_all_layout">
 
     <!--To prevent EditText from gaining focus, focusable has been set to true -->
     <LinearLayout
@@ -57,7 +57,7 @@
 
             <Button
                 android:id="@+id/buttonResend"
-                style="@style/ButtonStyleMediumGrey"
+                style="@style/ButtonLightGrayMediumShapedOval"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
@@ -68,7 +68,7 @@
 
             <Button
                 android:id="@+id/buttonVerifyOTP"
-                style="@style/ButtonStyleMedium"
+                style="@style/ButtonLightGreenShapedOval"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

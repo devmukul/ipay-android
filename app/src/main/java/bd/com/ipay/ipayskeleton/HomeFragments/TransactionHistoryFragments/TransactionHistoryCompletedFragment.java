@@ -9,7 +9,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -102,6 +105,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
 
     private Menu menu;
+    private PopupMenu popupMenu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,6 +132,18 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 }
             }
         });
+
+        ImageView mMenuButton = (ImageView) v.findViewById(R.id.more_menu);
+        mMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupMenu = new PopupMenu(getActivity(), v);
+                popupMenu.inflate(R.menu.activity_transaction_history);
+                popupMenu.show();
+            }
+        });
+
+
 
         return v;
     }
@@ -254,6 +270,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         menuInflater.inflate(R.menu.clear_filter, menu);
         this.menu = menu;
         menu.findItem(R.id.action_clear_filter).setVisible(false);
+
     }
 
     @Override
@@ -816,6 +833,47 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         @Override
         public void onReceive(Context context, Intent intent) {
             refreshTransactionHistory();
+        }
+    }
+
+    private class OnDismissListener implements PopupMenu.OnDismissListener {
+
+        @Override
+        public void onDismiss(PopupMenu menu) {
+            // TODO Auto-generated method stub
+            Toast.makeText(getContext(), "Popup Menu is dismissed",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private class OnMenuItemClickListener implements
+            PopupMenu.OnMenuItemClickListener {
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            // TODO Auto-generated method stub
+            switch (item.getItemId()) {
+
+                case R.id.action_filter_by_date:
+                    if (serviceFilterLayout.getVisibility() == View.VISIBLE)
+                        serviceFilterLayout.setVisibility(View.GONE);
+                    dateFilterLayout.setVisibility(View.VISIBLE);
+                    return true;
+                case R.id.action_filter_by_service:
+                    if (dateFilterLayout.getVisibility() == View.VISIBLE)
+                        dateFilterLayout.setVisibility(View.GONE);
+                    serviceFilterLayout.setVisibility(View.VISIBLE);
+                    return true;
+                case R.id.action_clear_filter:
+                    clearDateFilters();
+                    clearServiceFilters();
+                    setContentShown(false);
+                    refreshTransactionHistory();
+                    menu.findItem(R.id.action_clear_filter).setVisible(false);
+                    return true;
+            }
+            return false;
         }
     }
 }

@@ -8,26 +8,42 @@
     <color name="colorLightPrimaryAccent">#26A69A</color>
     <color name="colorAccent">#26A69A</color>
     <color name="colorAmber">#FFC107</color>
+    <color name="colorBorderGray">#c3c1c1</color>
+    <color name="colorTextPrimary">#6D6D6D</color>
+    <color name="colorTextSecondary">#B3000000</color>
+    <color name="colorPrimaryButton">#00B2A2</color>
+    <color name="colorPrimaryButtonPressed">#00D3C0</color>
+    <color name="colorSecondaryButton">#F5F5F5</color>
+    <color name="colorSecondaryButtonPressed">#E0E0E0</color>
+
     <color name="colorDivider">#DDDDDD</color>
+    <color name="colorDividerGapGray">#f3f3f3</color>
+    <color name="colorBackground">#F1F2F3</color>
+    <color name="colorBalanceBackground">#e3e3e3</color>
+    <color name="colorPageSelectorSelected">#FFFFFF</color>
+    <color name="colorPageSelectorUnselected">#57C2B9</color>
+
+    <color name="colorOnBoardTop">#00D3C0</color>
+    <color name="colorOnBoardBottom">#009789</color>
+    <color name="colorFadeWhite">#F3F3F3</color>
+    <color name="colorBackgroundButtonWithOpacity">#59009688</color>
+    <color name="colorBackgroundButtonWithOpacityPressed">#1A009688</color>
+
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorTransparent">#00FFFFFF</color>
     <color name="colorLightGray">#E5E5E5</color>
     <color name="colorGray">#737373</color>
     <color name="colorMediumGray">#C5C7C8</color>
     <color name="colorTransparentLightGray">#EEE5E5E5</color>
-    <color name="colorDividerGapGray">#f3f3f3</color>
-    <color name="colorBorderGray">#c3c1c1</color>
-    <color name="colorBackground">#F1F2F3</color>
-    <color name="colorTextPrimary">#6D6D6D</color>
-    <color name="colorTextSecondary">#B3000000</color>
+    <color name="colorDarkKGray">#484848</color>
     <color name="colorBlackTransparent">#70000000</color>
     <color name="bottle_green">#009688</color>
     <color name="colorDarkOrange">#f39431</color>
-    <color name="colorBalanceBackground">#e3e3e3</color>
     <color name="colorRed">#ff0000</color>
     <color name="colorYellow">#ffc000</color>
-    <color name="colorDarkKGray">#484848</color>
     <!-- zxinglib colors -->
     <color name="zxinglib_status_text">#ffffffff</color>
-    <color name="colorWhite">#ffffff</color>
 
     <!-- Random background colors -->
     <color name="background_bright_pink">#C15562</color>
@@ -41,26 +57,9 @@
     <color name="background_magenta">#AE7575</color>
     <color name="background_default">#547bca</color>
     <color name="background_red">#ef5350</color>
-
     <color name="verified_background">#009688</color>
     <color name="background_iconified_button_icon">#26A69A</color>
     <color name="background_iconified_button_disabled">#009688</color>
 
-    <color name="colorBackgroundButtonWithOpacity">#59009688</color>
-    <color name="colorBackgroundButtonWithOpacityPressed">#1A009688</color>
-
-
-    <color name="colorOnBoardTop">#00D3C0</color>
-    <color name="colorOnBoardBottom">#009789</color>
-    <color name="colorFadeWhite">#F3F3F3</color>
-
-    <color name="colorBlack">#000000</color>
-    <color name="colorPrimaryButton">#00B2A2</color>
-    <color name="colorPrimaryButtonPressed">#00D3C0</color>
-    <color name="colorSecondaryButton">#F5F5F5</color>
-    <color name="colorSecondaryButtonPressed">#E0E0E0</color>
-    <color name="colorPageSelectorSelected">#FFFFFF</color>
-    <color name="colorPageSelectorUnselected">#57C2B9</color>
-
-
+    //e0e0e0
 </resources>

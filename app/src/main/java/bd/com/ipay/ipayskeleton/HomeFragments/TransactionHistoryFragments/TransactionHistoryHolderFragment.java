@@ -3,10 +3,12 @@ package bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -26,6 +28,10 @@ public class TransactionHistoryHolderFragment extends Fragment {
 
     private View v;
 
+    private Menu menu;
+    private PopupMenu popupMenu;
+    private ImageView mMenuButton;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +45,10 @@ public class TransactionHistoryHolderFragment extends Fragment {
         mTransactionHistoryTypeRadioGroup = (RadioGroup) v.findViewById(R.id.transaction_history_type_radio_group);
         mPendingTransactionRadioButton = (RadioButton) v.findViewById(R.id.radio_button_pending);
         mCompletedTransactionRadioButton = (RadioButton) v.findViewById(R.id.radio_button_completed);
+
+
+
+//        mMenuButton = (ImageView) v.findViewById(R.id.more_menu);
 
         mTransactionHistoryTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -55,6 +65,15 @@ public class TransactionHistoryHolderFragment extends Fragment {
                 }
             }
         });
+
+//        mMenuButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                popupMenu = new PopupMenu(getActivity(), v);
+//                popupMenu.inflate(R.menu.activity_transaction_history);
+//                popupMenu.show();
+//            }
+//        });
 
         return v;
     }

@@ -35,7 +35,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/status_holder"
-        android:layout_toRightOf="@+id/profile_picture_holder">
+        android:layout_toRightOf="@+id/profile_picture_holder"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp">
     
         <TextView
             android:id="@+id/name1"
@@ -44,7 +46,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:paddingBottom="2dp"
-            android:paddingTop="12dp"
             android:singleLine="true"
             android:textSize="16sp"
             android:textColor="@color/colorTextPrimary"
@@ -68,7 +69,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/name2"
             android:gravity="left"
-            android:paddingBottom="12dp"
             android:singleLine="true"
             android:textColor="@color/colorTextPrimary"
             android:textSize="14sp" />
@@ -88,8 +88,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:gravity="center"
-        android:layout_centerVertical="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_alignBottom="@+id/info_holder">
 
         <ImageView
             android:id="@+id/is_member"
@@ -103,7 +103,7 @@
             android:id="@+id/invite_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@android:style/Widget.Holo.Button.Borderless"
+            style="@style/ButtonStyleMedium"
             android:background="@color/colorPrimary"
             android:minHeight="0dp"
             android:text="@string/invited"
@@ -116,7 +116,7 @@
             android:id="@+id/button_invite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@android:style/Widget.Holo.Button.Borderless"
+            style="@style/ButtonStyleMedium"
             android:background="@color/colorPrimary"
             android:minHeight="0dp"
             android:text="@string/invite"

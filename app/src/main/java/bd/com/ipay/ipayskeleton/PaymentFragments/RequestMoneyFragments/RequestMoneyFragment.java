@@ -203,6 +203,7 @@ public class RequestMoneyFragment extends Fragment implements HttpResponseListen
         }
 
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
+
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
                 mUri, getActivity(), this);
 

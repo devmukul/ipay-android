@@ -153,18 +153,13 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         if (!isDialogFragment()) {
             if (mBottomSheetLayout != null)
                 setUpBottomSheet();
-
-            v.findViewById(R.id.search_contacts).setVisibility(View.GONE);
-
-            // mSearchView will be populated from the onCreateOptionsMenu
-        } else {
-            mSearchView = (SearchView) v.findViewById(R.id.search_contacts);
-            mSearchView.setIconified(false);
-            mSearchView.setOnQueryTextListener(this);
-
-            // prevent auto focus on Dialog launch
-            mSearchView.clearFocus();
         }
+        mSearchView = (SearchView) v.findViewById(R.id.search_contacts);
+        mSearchView.setIconified(false);
+        mSearchView.setOnQueryTextListener(this);
+
+        // prevent auto focus on Dialog launch
+        mSearchView.clearFocus();
 
         if (getArguments() != null) {
             mShowVerifiedUsersOnly = getArguments().getBoolean(Constants.VERIFIED_USERS_ONLY, false);
@@ -209,49 +204,49 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         super.onDestroyView();
     }
 
-    @Override
-    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+//    @Override
+//    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//
+//        if (!isDialogFragment()) {
+//            inflater.inflate(R.menu.contact, menu);
+//
+//            mSearchMenuItem = menu.findItem(R.id.action_search_contacts);
+//            mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
+//
+//            mSearchView.setOnQueryTextListener(this);
+//            mSearchView.setOnSearchClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    setItemsVisibility(menu, mSearchMenuItem, false);
+//                    mSearchView.requestFocus();
+//                    if (mBottomSheetLayout != null && mBottomSheetLayout.isSheetShowing())
+//                        mBottomSheetLayout.dismissSheet();
+//                }
+//            });
+//            mSearchView.setQueryHint(getString(R.string.search));
+//
+//            mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+//                @Override
+//                public boolean onClose() {
+//                    mSearchView.setQuery("", true);
+//                    setItemsVisibility(menu, mSearchMenuItem, true);
+//                    return false;
+//                }
+//            });
+//        }
+//    }
 
-        if (!isDialogFragment()) {
-            inflater.inflate(R.menu.contact, menu);
-
-            mSearchMenuItem = menu.findItem(R.id.action_search_contacts);
-            mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
-
-            mSearchView.setOnQueryTextListener(this);
-            mSearchView.setOnSearchClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setItemsVisibility(menu, mSearchMenuItem, false);
-                    mSearchView.requestFocus();
-                    if (mBottomSheetLayout != null && mBottomSheetLayout.isSheetShowing())
-                        mBottomSheetLayout.dismissSheet();
-                }
-            });
-            mSearchView.setQueryHint(getString(R.string.search));
-
-            mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
-                @Override
-                public boolean onClose() {
-                    mSearchView.setQuery("", true);
-                    setItemsVisibility(menu, mSearchMenuItem, true);
-                    return false;
-                }
-            });
-        }
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        MenuItem searchViewMenuItem = menu.findItem(R.id.action_search_contacts);
-        mSearchView = (SearchView) searchViewMenuItem.getActionView();
-        int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
-        ImageView searchIconImageView = (ImageView) mSearchView.findViewById(searchImgId);
-        searchIconImageView.setImageResource(R.drawable.ic_search);
-        resetSearchKeyword();
-
-    }
+//    @Override
+//    public void onPrepareOptionsMenu(Menu menu) {
+//        MenuItem searchViewMenuItem = menu.findItem(R.id.action_search_contacts);
+//        mSearchView = (SearchView) searchViewMenuItem.getActionView();
+//        int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
+//        ImageView searchIconImageView = (ImageView) mSearchView.findViewById(searchImgId);
+//        searchIconImageView.setImageResource(R.drawable.ic_search);
+//        resetSearchKeyword();
+//
+//    }
 
     private void setItemsVisibility(Menu menu, MenuItem exception, boolean visible) {
         for (int i = 0; i < menu.size(); ++i) {
@@ -834,11 +829,16 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                     verificationStatus.setVisibility(View.GONE);
                 }
 
-                if (mShowNonInvitedNonMembersOnly) {
+                if (!isDialogFragment() && !isMember && !mShowInvitedOnly && !isInvited)
                     inviteButton.setVisibility(View.VISIBLE);
-                } else {
+                else
                     inviteButton.setVisibility(View.GONE);
-                }
+
+//                if (mShowNonInvitedNonMembersOnly) {
+//                    inviteButton.setVisibility(View.VISIBLE);
+//                } else {
+//                    inviteButton.setVisibility(View.GONE);
+//                }
 
                 profilePictureView.setProfilePicture(profilePictureUrlQualityMedium, false);
 
