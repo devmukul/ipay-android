@@ -57,7 +57,7 @@
     <dimen name="icon_size">40dp</dimen>
 
 
-    <dimen name="oval_button_radius">50dp</dimen>
+    <dimen name="oval_button_radius">25dp</dimen>
     <dimen name="button_margin">40dp</dimen>
     <dimen name="tour_page_vertical_margin_large">75dp</dimen>
     <dimen name="tour_page_vertical_margin">60dp</dimen>
