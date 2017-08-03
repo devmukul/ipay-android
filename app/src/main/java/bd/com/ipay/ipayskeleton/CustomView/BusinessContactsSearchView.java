@@ -20,7 +20,6 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.BusinessContact;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -82,7 +81,7 @@ public class BusinessContactsSearchView extends FrameLayout {
 
         @Override
         public void onTextChanged(CharSequence userInput, int start, int before, int count) {
-            if (userInput.length() > 0 && ProfileInfoCacheManager.isAccountVerified()) {
+            if (userInput.length() > 0) {
                 mMobileNumberHintView.setVisibility(VISIBLE);
 
                 mQuery = userInput.toString();
