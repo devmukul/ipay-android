@@ -9,6 +9,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryCompletedFragment;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
@@ -81,7 +84,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
     private ProgressDialog mProgressDialog;
 
-    private Menu menu;
+    private AddMoneyHistoryFragment mAddMoneyHistoryFragment;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -171,34 +174,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     }
 
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        MenuInflater menuInflater = getActivity().getMenuInflater();
-        menuInflater.inflate(R.menu.activity_add_money_history, menu);
-
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        // Remove search action of contacts
-        if (menu.findItem(R.id.action_search_contacts) != null)
-            menu.findItem(R.id.action_search_contacts).setVisible(false);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_history:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     private void showGetVerifiedDialog() {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
         dialog
@@ -220,6 +195,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         dialog.show();
     }
 
+    //f8f8f8
     private void getBankInformation() {
         // It might be possible that we have failed to load the available bank list during
         // application startup. In that case first try to load the available bank list first, and
@@ -323,6 +299,8 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             return true;
         }
     }
+
+
 
     private void launchReviewPage() {
         final String amount = mAmountEditText.getText().toString().trim();
@@ -483,4 +461,5 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             mGetBusinessRuleTask = null;
         }
     }
+
 }

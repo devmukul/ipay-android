@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments;
 
-import android.app.DatePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,20 +9,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,11 +23,7 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -72,15 +60,11 @@ public class AddMoneyHistoryFragment extends ProgressFragment implements HttpRes
     private TextView mEmptyListTextView;
 
     private int historyPageCount = 0;
-    //private Integer type = Constants.TRANSACTION_HISTORY_ADD_MONEY;
-    private Calendar fromDate = null;
-    private Calendar toDate = null;
 
     private boolean hasNext = false;
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
 
-    private Map<CheckBox, Integer> mCheckBoxTypeMap;
 
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
 
@@ -504,6 +488,8 @@ public class AddMoneyHistoryFragment extends ProgressFragment implements HttpRes
         }
 
     }
+
+
 
     private class TransactionHistoryBroadcastReceiver extends BroadcastReceiver {
         @Override

@@ -105,8 +105,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
 
     private Menu menu;
-    private PopupMenu popupMenu;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,16 +128,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     refreshTransactionHistory();
                 }
-            }
-        });
-
-        ImageView mMenuButton = (ImageView) v.findViewById(R.id.more_menu);
-        mMenuButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupMenu = new PopupMenu(getActivity(), v);
-                popupMenu.inflate(R.menu.activity_transaction_history);
-                popupMenu.show();
             }
         });
 

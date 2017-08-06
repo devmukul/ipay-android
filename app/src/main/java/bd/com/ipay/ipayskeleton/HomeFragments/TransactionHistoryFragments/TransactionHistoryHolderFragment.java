@@ -65,16 +65,7 @@ public class TransactionHistoryHolderFragment extends Fragment {
                 }
             }
         });
-
-//        mMenuButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                popupMenu = new PopupMenu(getActivity(), v);
-//                popupMenu.inflate(R.menu.activity_transaction_history);
-//                popupMenu.show();
-//            }
-//        });
-
+        
         return v;
     }
 
