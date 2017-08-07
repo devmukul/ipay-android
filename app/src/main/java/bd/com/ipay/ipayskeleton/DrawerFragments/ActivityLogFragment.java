@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -51,7 +52,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
     private RecyclerView mActivityLogRecyclerView;
     private ActivityLogAdapter mActivityLogAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
     private List<UserActivityClass> userActivityResponsesList;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyListTextView;
@@ -78,6 +79,10 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
     private boolean hasNext = false;
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
+    private boolean mIsScrolled = false;
+    private int mTotalItemCount =0;
+    private  int mPastVisiblesItems;
+    private  int mVisibleItem;
 
     private Menu menu;
 
@@ -166,6 +171,7 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
             getUserActivities();
         }
 
+        implementScrollListener();
         setActionsForEventTypeFilter();
         setActionsForDateFilter();
 
@@ -450,6 +456,40 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
         mUserActivityTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void implementScrollListener() {
+        mActivityLogRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    mIsScrolled = true;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                mVisibleItem = recyclerView.getChildCount();
+                mTotalItemCount =mLayoutManager.getItemCount();
+                mPastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                if (mIsScrolled
+                        && (mVisibleItem + mPastVisiblesItems) == mTotalItemCount && hasNext) {
+                    isLoading = true;
+                    mIsScrolled = false;
+                    historyPageCount = historyPageCount + 1;
+                    mActivityLogAdapter.notifyDataSetChanged();
+                    getUserActivities();
+                }
+
+            }
+
+        });
+
+    }
+
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
@@ -571,18 +611,6 @@ public class ActivityLogFragment extends ProgressFragment implements HttpRespons
 
             public void bindView() {
                 setItemVisibilityOfFooterView();
-
-                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (hasNext) {
-                            historyPageCount = historyPageCount + 1;
-                            showLoadingInFooter();
-                            getUserActivities();
-
-                        }
-                    }
-                });
             }
 
             private void setItemVisibilityOfFooterView() {
