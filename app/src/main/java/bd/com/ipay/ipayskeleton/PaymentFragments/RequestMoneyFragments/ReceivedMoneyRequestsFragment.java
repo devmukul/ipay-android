@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,7 +49,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
 
     private RecyclerView mNotificationsRecyclerView;
     private ReceivedMoneyRequestListAdapter mReceivedMoneyRequestListAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
     private List<MoneyAndPaymentRequest> moneyRequestList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -56,6 +57,10 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
     private boolean hasNext = false;
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
+    private boolean mIsScrolled = false;
+    private int mTotalItemCount =0;
+    private  int mPastVisiblesItems;
+    private  int mVisibleItem;
 
     // These variables hold the information needed to populate the review dialog
     private BigDecimal mAmount;
@@ -84,6 +89,8 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
         mLayoutManager = new LinearLayoutManager(getActivity());
         mNotificationsRecyclerView.setLayoutManager(mLayoutManager);
         mNotificationsRecyclerView.setAdapter(mReceivedMoneyRequestListAdapter);
+
+        implementScrollListener();
 
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -139,6 +146,39 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
                 Constants.BASE_URL_SM + Constants.URL_GET_NOTIFICATIONS, json, getActivity());
         mGetMoneyRequestTask.mHttpResponseListener = this;
         mGetMoneyRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void implementScrollListener() {
+        mNotificationsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    mIsScrolled = true;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                mVisibleItem = recyclerView.getChildCount();
+                mTotalItemCount =mLayoutManager.getItemCount();
+                mPastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                if (mIsScrolled
+                        && (mVisibleItem + mPastVisiblesItems) == mTotalItemCount && hasNext) {
+                    isLoading = true;
+                    mIsScrolled = false;
+                    pageCount = pageCount + 1;
+                    mReceivedMoneyRequestListAdapter.notifyDataSetChanged();
+                    getMoneyRequests();
+                }
+
+            }
+
+        });
+
     }
 
     @Override
@@ -274,17 +314,6 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
 
             public void bindViewFooter() {
                 setItemVisibilityOfFooterView();
-
-                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (hasNext) {
-                            pageCount = pageCount + 1;
-                            showLoadingInFooter();
-                            getMoneyRequests();
-                        }
-                    }
-                });
             }
 
             private void setItemVisibilityOfFooterView() {

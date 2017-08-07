@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +37,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implements HttpResponseListener {
+public class ReceivedMoneyRequestsHistoryFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mReceivedRequestTask = null;
     private GetMoneyAndPaymentRequestResponse mGetReceivedRequestResponse;
@@ -44,7 +45,7 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
     private ProgressDialog mProgressDialog;
     private RecyclerView mReceivedListRecyclerView;
     private ReceivedMoneyRequestListAdapter mReceivedRequestsAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
     private List<MoneyAndPaymentRequest> moneyRequestList;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mEmptyListTextView;
@@ -53,7 +54,10 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
     private boolean hasNext = false;
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
-
+    private boolean mIsScrolled = false;
+    private int mTotalItemCount =0;
+    private  int mPastVisiblesItems;
+    private  int mVisibleItem;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,6 +71,8 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
         mLayoutManager = new LinearLayoutManager(getActivity());
         mReceivedListRecyclerView.setLayoutManager(mLayoutManager);
         mReceivedListRecyclerView.setAdapter(mReceivedRequestsAdapter);
+
+        implementScrollListener();
 
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -119,6 +125,39 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
         }
 
         moneyRequestList.removeAll(tempMoneyRequestClasses);
+    }
+
+    private void implementScrollListener() {
+        mReceivedListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    mIsScrolled = true;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                mVisibleItem = recyclerView.getChildCount();
+                mTotalItemCount =mLayoutManager.getItemCount();
+                mPastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                if (mIsScrolled
+                        && (mVisibleItem + mPastVisiblesItems) == mTotalItemCount && hasNext) {
+                    isLoading = true;
+                    mIsScrolled = false;
+                    pageCount = pageCount + 1;
+                    mReceivedRequestsAdapter.notifyDataSetChanged();
+                    getReceivedRequests();
+                }
+
+            }
+
+        });
+
     }
 
     @Override
@@ -245,17 +284,6 @@ public class ReceivedMoneRequestsHistoryFragment extends ProgressFragment implem
 
             public void bindViewFooter() {
                 setItemVisibilityOfFooterView();
-
-                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (hasNext) {
-                            pageCount = pageCount + 1;
-                            showLoadingInFooter();
-                            getReceivedRequests();
-                        }
-                    }
-                });
             }
 
             private void setItemVisibilityOfFooterView() {
