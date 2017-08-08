@@ -45,6 +45,7 @@ public class TransactionHistory implements Parcelable {
     public String getReceiver() {
         if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE
                 && serviceID != Constants.TRANSACTION_HISTORY_OFFER
+                && serviceID != Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER
                 && originatingMobileNumber == null)
             return "";
 
@@ -83,6 +84,8 @@ public class TransactionHistory implements Parcelable {
                         return additionalInfo.getUserName();
                 case (Constants.TRANSACTION_HISTORY_OFFER):
                     return "iPay";
+                case (Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER):
+                    return additionalInfo.getUserName();
 
             }
         } catch (Exception e) {
@@ -95,10 +98,12 @@ public class TransactionHistory implements Parcelable {
     public String getNetAmountFormatted(String userMobileNumber) {
         if ((serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE
                 && serviceID != Constants.TRANSACTION_HISTORY_OFFER
+                && serviceID != Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER
                 && originatingMobileNumber == null)
                 || (serviceID != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK
                 && serviceID != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT
                 && serviceID != Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT
+                && serviceID != Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER
                 && receiverInfo == null))
             return Utilities.formatTakaWithComma(netAmount);
 
@@ -173,6 +178,11 @@ public class TransactionHistory implements Parcelable {
                 return Utilities.formatTakaWithSignAndComma("-", netAmount);
             case (Constants.TRANSACTION_HISTORY_OFFER):
                 return Utilities.formatTakaWithSignAndComma("+", netAmount);
+            case (Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER):
+                if (additionalInfo.isReceiver()) {
+                    return Utilities.formatTakaWithSignAndComma("-", netAmount);
+                } else
+                    return Utilities.formatTakaWithSignAndComma("+", netAmount);
         }
 
         return Utilities.formatTakaWithComma(netAmount);
@@ -239,6 +249,7 @@ public class TransactionHistory implements Parcelable {
         try {
             if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE
                     && serviceID != Constants.TRANSACTION_HISTORY_OFFER
+                    && serviceID != Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER
                     && originatingMobileNumber == null)
                 return "No information available";
 
@@ -351,6 +362,8 @@ public class TransactionHistory implements Parcelable {
                         return "Education payment of " + Utilities.formatTaka(getNetAmount()) + " for " + additionalInfo.getUserName() + " failed";
                 case (Constants.TRANSACTION_HISTORY_OFFER):
                     return description;
+                case (Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER):
+                    return description;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -363,6 +376,7 @@ public class TransactionHistory implements Parcelable {
         try {
             if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE
                     && serviceID != Constants.TRANSACTION_HISTORY_OFFER
+                    && serviceID != Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER
                     && originatingMobileNumber == null)
                 return "No Information Available";
 
@@ -429,6 +443,8 @@ public class TransactionHistory implements Parcelable {
                     }
                 case (Constants.TRANSACTION_HISTORY_OFFER):
                     return "Offer from iPay";
+                case (Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER):
+                    return "Internal Balance Transfer";
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -489,6 +505,7 @@ public class TransactionHistory implements Parcelable {
     public double getAmount(String userMobileNumber) {
         if (serviceID != Constants.TRANSACTION_HISTORY_OPENING_BALANCE
                 && serviceID != Constants.TRANSACTION_HISTORY_OFFER
+                && serviceID != Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER
                 && (originatingMobileNumber == null || receiverInfo == null))
             return 0;
 
@@ -549,6 +566,12 @@ public class TransactionHistory implements Parcelable {
                     return 0;
             case (Constants.TRANSACTION_HISTORY_OFFER):
                 return +netAmount;
+            case (Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER):
+                if (additionalInfo.isReceiver())
+                    return -netAmount;
+                else
+                    return +netAmount;
+
         }
 
         return 0;

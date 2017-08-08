@@ -684,7 +684,8 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     else mOtherImageView.setImageResource(R.drawable.ic_tran_withdraw);
 
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE
-                        || serviceId == Constants.TRANSACTION_HISTORY_OFFER ) {
+                        || serviceId == Constants.TRANSACTION_HISTORY_OFFER
+                        || serviceId == Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
                     mOtherImageView.setImageResource(R.drawable.ic_transaction_ipaylogo);

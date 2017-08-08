@@ -172,6 +172,12 @@ public class TransactionDetailsFragment extends Fragment {
             otherImageView.setVisibility(View.VISIBLE);
             otherImageView.setImageResource(R.drawable.ic_transaction_ipaylogo);
 
+        }else if (serviceId == Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER) {
+            mNameView.setText(R.string.internal_balance_transfer);
+            mProfileImageView.setVisibility(View.GONE);
+            otherImageView.setVisibility(View.VISIBLE);
+            otherImageView.setImageResource(R.drawable.ic_transaction_ipaylogo);
+
         } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
             mNameView.setText(R.string.recharge_to);
             mMobileNumberView.setText(receiver);
