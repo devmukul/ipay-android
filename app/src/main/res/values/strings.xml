@@ -685,7 +685,7 @@
     <string name="search">Search</string>
     <string name="member_since">Member Since</string>
     <string name="select_district">District</string>
-    <string name="add_bank_prompt">You need to have verified bank accounts to add or withdraw money. Do you want to link a bank account now?</string>
+    <string name="add_bank_prompt">You need to add bank accounts to add or withdraw money. Do you want to link a bank account now?</string>
     <string name="verify_bank_prompt">You need to have at least one verified bank account to add or withdraw money. Do you want to verify a bank account now?</string>
     <string name="add_bank">Add Bank</string>
     <string name="verify_bank">Verify Bank</string>
