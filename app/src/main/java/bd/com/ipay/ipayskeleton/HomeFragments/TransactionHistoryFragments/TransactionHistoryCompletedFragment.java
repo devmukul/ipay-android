@@ -683,12 +683,14 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
                     else mOtherImageView.setImageResource(R.drawable.ic_tran_withdraw);
 
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE
+                        || serviceId == Constants.TRANSACTION_HISTORY_OFFER ) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
                     mOtherImageView.setImageResource(R.drawable.ic_transaction_ipaylogo);
 
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP
+                        || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
                     if (ContactEngine.isValidNumber(receiver)) {
