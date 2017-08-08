@@ -424,6 +424,8 @@
     <string name="select_an_operator">Select Operator</string>
     <string name="recharge_to">Topup to</string>
     <string name="opening_balance_to">Opening balance to</string>
+    <string name="offer_from_iPay">Offer from iPay</string>
+    <string name="internal_balance_transfer">Internal balance Transfer</string>
     <string name="are_you_sure_to_exit">Do you want to exit the application?</string>
     <string name="sorry">Sorry</string>
     <string name="support_not_available">Customer support is not available right now. Please try again later.</string>
@@ -539,6 +541,7 @@
     <string name="filter_request_payment">Request Payment</string>
     <string name="filter_opening_balance">Opening Balance</string>
     <string name="filter_education">Education</string>
+    <string name="filter_offer">Offer from iPay</string>
     <string name="basic_info">Basic Information</string>
     <string name="student_info">Student Information</string>
     <string name="pay_education_fee">Pay education fees</string>

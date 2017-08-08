@@ -87,6 +87,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private Button clearDateFilterButton;
     private Button filterByDateButton;
     private TextView mEmptyListTextView;
+    private CheckBox mFilterOffer;
 
     private int historyPageCount = 0;
     private Integer type = null;
@@ -152,6 +153,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         mFilterPayment = (CheckBox) v.findViewById(R.id.filter_payment);
         mFilterRequestPayment = (CheckBox) v.findViewById(R.id.filter_request_payment);
         mFilterEducation = (CheckBox) v.findViewById(R.id.filter_education);
+        mFilterOffer = (CheckBox) v.findViewById(R.id.filter_offer);
 
         mFromDateButton = (Button) v.findViewById(R.id.fromButton);
         mToDateButton = (Button) v.findViewById(R.id.toButton);
@@ -185,6 +187,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         mCheckBoxTypeMap.put(mFilterPayment, Constants.TRANSACTION_HISTORY_MAKE_PAYMENT);
         mCheckBoxTypeMap.put(mFilterRequestPayment, Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT);
         mCheckBoxTypeMap.put(mFilterEducation, Constants.TRANSACTION_HISTORY_EDUCATION);
+        mCheckBoxTypeMap.put(mFilterOffer, Constants.TRANSACTION_HISTORY_OFFER);
     }
 
     private void handleBackPressWhenFilterIsOn(View v) {
@@ -683,12 +686,15 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
                     else mOtherImageView.setImageResource(R.drawable.ic_tran_withdraw);
 
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE
+                        || serviceId == Constants.TRANSACTION_HISTORY_OFFER
+                        || serviceId == Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
                     mOtherImageView.setImageResource(R.drawable.ic_transaction_ipaylogo);
 
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP
+                        || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
                     if (ContactEngine.isValidNumber(receiver)) {
