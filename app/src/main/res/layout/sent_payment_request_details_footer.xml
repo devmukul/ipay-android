@@ -114,7 +114,7 @@
 
     <Button
         android:id="@+id/button_cancel"
-        style="@style/PrimaryMediumButtonReject"
+        style="@style/ButtonReject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/cancel"

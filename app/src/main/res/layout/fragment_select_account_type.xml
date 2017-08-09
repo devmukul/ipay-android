@@ -24,7 +24,7 @@
 
     <Button
         android:id="@+id/button_account_type_personal"
-        style="@style/ButtonLightGreenShapedOval"
+        style="@style/ButtonPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/value15"
@@ -32,7 +32,7 @@
 
     <Button
         android:id="@+id/button_account_type_business"
-        style="@style/ButtonLightGrayMediumShapedOval"
+        style="@style/ButtonSecondary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/business_account" />

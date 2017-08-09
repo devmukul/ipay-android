@@ -15,6 +15,9 @@
     <color name="colorPrimaryButtonPressed">#00D3C0</color>
     <color name="colorSecondaryButton">#F5F5F5</color>
     <color name="colorSecondaryButtonPressed">#E0E0E0</color>
+    <color name="colorSecondaryButtonDisabled">#F8F8F8</color>
+    <color name="colorPrimaryButtonText">#FFFFFF</color>
+    <color name="colorSecondaryButtonText">#80000000</color>
 
     <color name="colorDivider">#DDDDDD</color>
     <color name="colorDividerGapGray">#f3f3f3</color>

@@ -180,7 +180,7 @@
 
             <Button
                 android:id="@+id/button_clear_filter_service"
-                style="@style/PrimaryMediumButton"
+                style="@style/ButtonPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/clear_filter" />

@@ -45,7 +45,7 @@
 
             <Button
                 android:id="@+id/button_join_now"
-                style="@style/ButtonLightGreenShapedOval"
+                style="@style/ButtonPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/button_margin"
@@ -55,13 +55,13 @@
 
             <Button
                 android:id="@+id/button_sign_in"
-                style="@style/ButtonLightGrayMediumShapedOval"
+                style="@style/ButtonSecondary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/value10"
                 android:layout_marginRight="@dimen/button_margin"
                 android:layout_weight="1"
-                android:text="@string/action_sign_in_short" />
+                android:text="@string/log_in" />
         </LinearLayout>
     </LinearLayout>
 

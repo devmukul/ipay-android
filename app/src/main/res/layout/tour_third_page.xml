@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/TourPageLayoutStyle"
+    style="@style/TourLayoutViewPager"
     android:background="@drawable/background_all_layout"
     android:gravity="center_vertical">
 
@@ -10,11 +10,11 @@
         android:src="@drawable/on_board_request_money"/>
 
     <TextView
-        style="@style/TourPageHeaderTextViewStyle"
+        style="@style/TourTitleTextView"
         android:text="@string/request_money"/>
 
     <TextView
-        style="@style/TourPageDescriptionTextViewStyle"
+        style="@style/TourDescriptionTextView"
         android:text="@string/out_of_money"/>
 
 </LinearLayout>

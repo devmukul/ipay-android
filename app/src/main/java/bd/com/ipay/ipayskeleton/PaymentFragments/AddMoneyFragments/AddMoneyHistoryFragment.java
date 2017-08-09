@@ -79,7 +79,7 @@ public class AddMoneyHistoryFragment extends ProgressFragment implements HttpRes
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_add_money_history, container, false);
-        getActivity().setTitle(R.string.transaction_history);
+        getActivity().setTitle(R.string.add_money_history);
 
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         initializeViews(v);

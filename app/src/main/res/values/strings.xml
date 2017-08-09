@@ -269,6 +269,7 @@
     <string name="requesting_money">Money request processing...</string>
     <string name="progress_dialog_requesting">Processing request ...</string>
     <string name="add_money">Add Money</string>
+    <string name="add_money_history">Add Money History</string>
     <string name="title">Title</string>
     <string name="note">Note</string>
     <string name="additional_info">Additional Information</string>
@@ -555,7 +556,7 @@
     <string name="upload_again">Upload again</string>
     <string name="verified">Verified</string>
     <string name="unverified">Not Verified</string>
-    <string name="invited">Invited</string>
+    <string name="invited">Invited to iPay</string>
     <string name="trusted_devices">Trusted Devices</string>
     <string name="trust_this_device">Trusted this device?</string>
     <string name="logout_from_all_device">Log Out from All Devices</string>
@@ -709,7 +710,7 @@
     <string name="verified_user_can_send_invitation">Only verified users can send invitations</string>
     <string name="failed_loading_business_type">Loading failed</string>
     <string name="failed_loading_business_information">Failed loading business information</string>
-    <string name="invite">Invite</string>
+    <string name="invite">Invite to iPay</string>
     <string name="please_wait_until_information_loading">Please wait until all information are loaded</string>
     <string name="saving_business_information">Saving business information...</string>
     <string name="business_information_saving_failed">Business information saving failed</string>
