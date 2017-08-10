@@ -6,17 +6,17 @@
     android:background="#000000"
     tools:context="bd.com.ipay.ipayskeleton.camera.CameraActivity">
 
-    <com.example.souravsaha.customcamera.CameraSourcePreview
+    <bd.com.ipay.ipayskeleton.camera.CameraSourcePreview
         android:id="@+id/camera_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/capture_layout">
 
-        <com.example.souravsaha.customcamera.CameraOverlay
+        <bd.com.ipay.ipayskeleton.camera.CameraOverlay
             android:id="@+id/face_tracking_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-    </com.example.souravsaha.customcamera.CameraSourcePreview>
+    </bd.com.ipay.ipayskeleton.camera.CameraSourcePreview>
 
     <RelativeLayout
         android:id="@+id/capture_layout"

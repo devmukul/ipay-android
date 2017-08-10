@@ -152,13 +152,9 @@ public class CameraActivity extends AppCompatActivity {
         });
 
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-        if (rc == PackageManager.PERMISSION_GRANTED)
-
-        {
+        if (rc == PackageManager.PERMISSION_GRANTED) {
             createCameraSource(true, false, com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
-        } else
-
-        {
+        } else {
             requestCameraPermission();
         }
     }
@@ -176,8 +172,11 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mCameraPreview.stop();
-        createCameraSource(FLASH_AUTO, FOCUS_AUTO, com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
+        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        if (rc == PackageManager.PERMISSION_GRANTED) {
+            mCameraPreview.stop();
+            createCameraSource(FLASH_AUTO, FOCUS_AUTO, com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
+        }
     }
 
     @Override
@@ -248,12 +247,12 @@ public class CameraActivity extends AppCompatActivity {
                 } else {
                     // handle single touch events
                     if (action == MotionEvent.ACTION_UP) {
-                        handleFocus(event,params);
+                        handleFocus(event, params);
                     }
                 }
                 return true;
             } else return false;
-        }catch(Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
@@ -271,7 +270,7 @@ public class CameraActivity extends AppCompatActivity {
                 mCameraSource.getCamera().autoFocus(new Camera.AutoFocusCallback() {
                     @Override
                     public void onAutoFocus(boolean b, Camera camera) {
-                        Camera.Parameters par=camera.getParameters();
+                        Camera.Parameters par = camera.getParameters();
                         par.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
                         camera.setParameters(par);
                     }
