@@ -21,9 +21,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -149,6 +149,8 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     }
 
     private void attemptTopUp(String pin) {
+        if (mTopupTask != null)
+            return;
         TopupRequest mTopupRequestModel = new TopupRequest(Long.parseLong(mMobileNumber.replaceAll("[^0-9]", "")),
                 mMobileNumber, mMobileNumberType, mOperatorCode, mAmount,
                 mCountryCode, mMobileNumberType, Constants.DEFAULT_USER_CLASS, pin);

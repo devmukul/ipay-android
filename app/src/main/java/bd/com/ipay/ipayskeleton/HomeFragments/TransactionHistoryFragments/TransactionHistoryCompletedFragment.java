@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -56,13 +57,13 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class TransactionHistoryCompletedFragment extends ProgressFragment implements HttpResponseListener {
+public class TransactionHistoryCompletedFragment extends ProgressFragment implements HttpResponseListener{
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
 
     private RecyclerView mTransactionHistoryRecyclerView;
     private TransactionHistoryAdapter mTransactionHistoryAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
     private List<TransactionHistory> userTransactionHistories;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -81,12 +82,12 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private CheckBox mFilterRequestPayment;
     private CheckBox mFilterEducation;
     private Button mClearServiceFilterButton;
-
     private Button mFromDateButton;
     private Button mToDateButton;
     private Button clearDateFilterButton;
     private Button filterByDateButton;
     private TextView mEmptyListTextView;
+    private CheckBox mFilterOffer;
 
     private int historyPageCount = 0;
     private Integer type = null;
@@ -96,11 +97,13 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private boolean hasNext = false;
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
+    private boolean mIsScrolled = false;
+    private int mTotalItemCount =0;
+    private  int mPastVisiblesItems;
+    private  int mVisibleItem;
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
-
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
-
     private Menu menu;
 
     @Override
@@ -150,6 +153,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         mFilterPayment = (CheckBox) v.findViewById(R.id.filter_payment);
         mFilterRequestPayment = (CheckBox) v.findViewById(R.id.filter_request_payment);
         mFilterEducation = (CheckBox) v.findViewById(R.id.filter_education);
+        mFilterOffer = (CheckBox) v.findViewById(R.id.filter_offer);
 
         mFromDateButton = (Button) v.findViewById(R.id.fromButton);
         mToDateButton = (Button) v.findViewById(R.id.toButton);
@@ -162,6 +166,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         setupCheckboxTypeMap();
         setActionsForServiceTypeFilter();
         setActionsForDateFilter();
+        implementScrollListener();
     }
 
     private void setupRecyclerView() {
@@ -182,6 +187,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         mCheckBoxTypeMap.put(mFilterPayment, Constants.TRANSACTION_HISTORY_MAKE_PAYMENT);
         mCheckBoxTypeMap.put(mFilterRequestPayment, Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT);
         mCheckBoxTypeMap.put(mFilterEducation, Constants.TRANSACTION_HISTORY_EDUCATION);
+        mCheckBoxTypeMap.put(mFilterOffer, Constants.TRANSACTION_HISTORY_OFFER);
     }
 
     private void handleBackPressWhenFilterIsOn(View v) {
@@ -525,6 +531,39 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         setContentShown(true);
     }
 
+    private void implementScrollListener() {
+        mTransactionHistoryRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    mIsScrolled = true;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                mVisibleItem = recyclerView.getChildCount();
+                mTotalItemCount =mLayoutManager.getItemCount();
+                mPastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                if (mIsScrolled
+                        && (mVisibleItem + mPastVisiblesItems) == mTotalItemCount && hasNext) {
+                    isLoading = true;
+                    mIsScrolled = false;
+                    historyPageCount = historyPageCount + 1;
+                    mTransactionHistoryAdapter.notifyDataSetChanged();
+                    getTransactionHistory();
+                }
+
+            }
+
+        });
+
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
@@ -647,12 +686,15 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
                     else mOtherImageView.setImageResource(R.drawable.ic_tran_withdraw);
 
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE
+                        || serviceId == Constants.TRANSACTION_HISTORY_OFFER
+                        || serviceId == Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
                     mOtherImageView.setImageResource(R.drawable.ic_transaction_ipaylogo);
 
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP
+                        || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
                     if (ContactEngine.isValidNumber(receiver)) {
@@ -698,18 +740,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
             public void bindViewFooter() {
                 setItemVisibilityOfFooterView();
-
-                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (hasNext) {
-                            historyPageCount = historyPageCount + 1;
-                            showLoadingInFooter();
-                            notifyDataSetChanged();
-                            getTransactionHistory();
-                        }
-                    }
-                });
             }
 
             private void setItemVisibilityOfFooterView() {

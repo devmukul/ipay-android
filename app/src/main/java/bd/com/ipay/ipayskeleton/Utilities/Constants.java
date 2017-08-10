@@ -188,6 +188,7 @@ public class Constants {
     public static final String SERVICE_ID_SET = "SERVICE_ID_SET";
     public static final String NAVIGATION_MENU_SERVICE_ACCESS_SET = "NAVIGATION_MENU_SERVICE_ACCESS_SET";
     public static final String FRAGMENT_SERVICE_ACCESS_SET = "FRAGMENT_SERVICE_ACCESS_SET";
+    public static final String MOBILE_NUMBER_REGEX = "^((\\+)?88)?((0)?1)[35-9][\\d]{8}$";
 
     static {
         if (SERVER_TYPE == DEV_SERVER) {
@@ -625,6 +626,8 @@ public class Constants {
     public static final int TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK = 3003;
     public static final int TRANSACTION_HISTORY_REQUEST_PAYMENT = 6005;
     public static final int TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT = 3502;
+    public static final int TRANSACTION_HISTORY_OFFER = 1100;
+    public static final int TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER = 7001;
 
     public static final int SERVICE_ID_REQUEST_MONEY = 6001;
     public static final int SERVICE_ID_REQUEST_INVOICE = 6003;

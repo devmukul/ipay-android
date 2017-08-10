@@ -558,13 +558,13 @@ public class ContactEngine {
         try {
             Cursor contactLookupCursor = context.getContentResolver().query(
                     Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number)),
-                    new String[] {PhoneLookup.PHOTO_URI},
+                    new String[]{PhoneLookup.PHOTO_URI},
                     null, null, null);
             if (contactLookupCursor != null) {
                 if (contactLookupCursor.moveToFirst()) {
                     photoUri = contactLookupCursor.getString(contactLookupCursor
                             .getColumnIndexOrThrow(PhoneLookup.PHOTO_URI));
-                        return photoUri;
+                    return photoUri;
                 }
                 contactLookupCursor.close();
             }
@@ -635,7 +635,7 @@ public class ContactEngine {
         try {
             Cursor contactLookupCursor = context.getContentResolver().query(
                     Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(contactNumber)),
-                    new String[] {PhoneLookup.DISPLAY_NAME, PhoneLookup._ID},
+                    new String[]{PhoneLookup.DISPLAY_NAME, PhoneLookup._ID},
                     null, null, null);
             if (contactLookupCursor != null) {
                 if (contactLookupCursor.moveToFirst()) {
@@ -950,7 +950,7 @@ public class ContactEngine {
                     phoneNumber = formatMobileNumberBD(phoneNumber);
 
                     ContactNode contactNode;
-                    contactNode = new ContactNode(name,phoneNumber, photoUrl);
+                    contactNode = new ContactNode(name, phoneNumber, photoUrl);
                     phoneContacts.add(contactNode);
                 }
             } while (phoneContactsCursor.moveToNext());
@@ -998,22 +998,26 @@ public class ContactEngine {
     public static ContactDiff getContactDiff(List<ContactNode> phoneContacts, List<ContactNode> serverContacts) {
         ContactDiff contactDiff = new ContactDiff();
 
-        Map<String, ContactNode> serverContactMap = new HashMap<>();
-        for (ContactNode serverContact : serverContacts) {
-            serverContactMap.put(serverContact.getMobileNumber(), serverContact);
-        }
-
-        for (ContactNode phoneContact : phoneContacts) {
-            if (serverContactMap.containsKey(phoneContact.getMobileNumber())) {
-                String serverName = serverContactMap.get(phoneContact.getMobileNumber()).getName();
-                String phoneName = phoneContact.getName();
-
-                if (!serverName.equals(phoneName)) {
-                    contactDiff.updatedContacts.add(phoneContact);
-                }
-            } else {
-                contactDiff.newContacts.add(phoneContact);
+        try {
+            Map<String, ContactNode> serverContactMap = new HashMap<>();
+            for (ContactNode serverContact : serverContacts) {
+                serverContactMap.put(serverContact.getMobileNumber(), serverContact);
             }
+
+            for (ContactNode phoneContact : phoneContacts) {
+                if (serverContactMap.containsKey(phoneContact.getMobileNumber())) {
+                    String serverName = serverContactMap.get(phoneContact.getMobileNumber()).getName();
+                    String phoneName = phoneContact.getName();
+
+                    if (!serverName.equals(phoneName)) {
+                        contactDiff.updatedContacts.add(phoneContact);
+                    }
+                } else {
+                    contactDiff.newContacts.add(phoneContact);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return contactDiff;

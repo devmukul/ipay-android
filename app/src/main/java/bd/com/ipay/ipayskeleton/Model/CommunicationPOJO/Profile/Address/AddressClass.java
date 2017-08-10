@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -84,23 +86,23 @@ public class AddressClass implements Serializable {
     public String toString(List<Thana> thanaList, List<District> districtList) {
         StringBuilder builder = new StringBuilder();
 
-        if (getAddressLine1() != null)
+        if (!TextUtils.isEmpty(getAddressLine1()))
             builder.append(getAddressLine1()).append("\n");
-        if (getAddressLine2().length()>0)
+        if (!TextUtils.isEmpty(getAddressLine2()))
             builder.append(getAddressLine2()).append("\n");
 
         String thanaName = getThana(thanaList);
-        if (thanaName != null)
+        if (!TextUtils.isEmpty(thanaName))
             builder.append(thanaName.trim()).append(", ");
 
         String districtName = getDistrict(districtList);
-        if (districtName != null)
+        if (!TextUtils.isEmpty(districtName))
             builder.append(districtName.trim()).append(" ");
 
-        if (getPostalCode() != null)
+        if (!TextUtils.isEmpty(getPostalCode()))
             builder.append(" - ").append(getPostalCode());
         builder.append("\n");
-        if (getCountry() != null)
+        if (!TextUtils.isEmpty(getCountry()))
             builder.append(getCountry());
 
         return builder.toString();

@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -67,7 +68,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
     private RecyclerView mTransactionHistoryRecyclerView;
     private TransactionHistoryAdapter mTransactionHistoryAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
     private List<TransactionHistory> userTransactionHistories;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -97,6 +98,10 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private boolean hasNext = false;
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
+    private boolean mIsScrolled = false;
+    private int mTotalItemCount =0;
+    private  int mPastVisiblesItems;
+    private  int mVisibleItem;
 
     private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
     private final int REQUEST_PAYMENT_REVIEW_REQUEST = 102;
@@ -161,6 +166,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         setupCheckboxTypeMap();
         setActionsForServiceTypeFilter();
         setActionsForDateFilter();
+        implementScrollListener();
     }
 
     private void setupRecyclerView() {
@@ -524,6 +530,39 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         setContentShown(true);
     }
 
+    private void implementScrollListener() {
+        mTransactionHistoryRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    mIsScrolled = true;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                mVisibleItem = recyclerView.getChildCount();
+                mTotalItemCount =mLayoutManager.getItemCount();
+                mPastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                if (mIsScrolled
+                        && (mVisibleItem + mPastVisiblesItems) == mTotalItemCount && hasNext) {
+                    isLoading = true;
+                    mIsScrolled = false;
+                    historyPageCount = historyPageCount + 1;
+                    mTransactionHistoryAdapter.notifyDataSetChanged();
+                    getPendingTransactionHistory();
+                }
+
+            }
+
+        });
+
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_MONEY_REVIEW_REQUEST || requestCode == REQUEST_PAYMENT_REVIEW_REQUEST) {
@@ -686,17 +725,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
             public void bindViewFooter() {
                 setItemVisibilityOfFooterView();
-
-                mLoadMoreTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (hasNext) {
-                            historyPageCount = historyPageCount + 1;
-                            showLoadingInFooter();
-                            getPendingTransactionHistory();
-                        }
-                    }
-                });
             }
 
             private void setItemVisibilityOfFooterView() {
