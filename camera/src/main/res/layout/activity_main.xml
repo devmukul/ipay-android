@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    tools:context="bd.com.ipay.ipayskeleton.camera.CameraActivity">
+
+    <com.example.souravsaha.customcamera.CameraSourcePreview
+        android:id="@+id/camera_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/capture_layout">
+
+        <com.example.souravsaha.customcamera.CameraOverlay
+            android:id="@+id/face_tracking_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </com.example.souravsaha.customcamera.CameraSourcePreview>
+
+    <RelativeLayout
+        android:id="@+id/capture_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:background="#000000">
+
+        <ImageView
+            android:id="@+id/capture"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/circle"
+            android:text="capture" />
+
+        <ImageView
+            android:id="@+id/camera_change"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30dp"
+            android:src="@drawable/ic_cached_white_24dp" />
+
+        <ImageView
+            android:id="@+id/flash"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="30dp"
+            android:src="@drawable/ic_flash_off_white_24dp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/right"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/ic_done_white_24dp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/cross"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/ic_clear_white_24dp"
+            android:visibility="gone" />
+    </RelativeLayout>
+</RelativeLayout>
