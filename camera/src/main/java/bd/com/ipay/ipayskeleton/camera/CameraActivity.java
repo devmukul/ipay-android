@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -41,9 +42,12 @@ public class CameraActivity extends AppCompatActivity {
 
     private float mDist = 0;
 
-
     private boolean FLASH_AUTO = false;
     private boolean FOCUS_AUTO = false;
+
+    private Context context;
+
+    private  static String TEMP_DOCUMENT_NAME="document.jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,18 +103,7 @@ public class CameraActivity extends AppCompatActivity {
                         @Override
                         public void onPictureTaken(byte[] data) {
                             mCameraPreview.stop();
-                            File mFolder = new File(getFilesDir() + "/sample");
-                            File pictureFile = new File(mFolder.getAbsolutePath() + "/someimage.jpg");
-                            if (!mFolder.exists()) {
-                                mFolder.mkdir();
-                            }
-                            try {
-                                if (!pictureFile.exists()) {
-                                    pictureFile.createNewFile();
-                                }
-                            } catch (Exception e) {
-
-                            }
+                            File pictureFile=getTempFile(getApplicationContext());
                             try {
                                 FileOutputStream fos = new FileOutputStream(pictureFile);
                                 fos.write(data);
@@ -150,6 +143,13 @@ public class CameraActivity extends AppCompatActivity {
                 }
             }
         });
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
 
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
@@ -186,6 +186,16 @@ public class CameraActivity extends AppCompatActivity {
             // we have permission, so create the camerasource
             createCameraSource(true, false, com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
         }
+        else{
+            this.finish();
+        }
+    }
+    private static File getTempFile(Context context) {
+        File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TEMP_DOCUMENT_NAME);
+        if (documentFile != null) {
+            documentFile.getParentFile().mkdirs();
+            return documentFile;
+        } else return null;
     }
 
     private void createCameraSource(boolean autoFocus, boolean useFlash, int cameraFacing) {

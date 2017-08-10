@@ -56,6 +56,9 @@ public class Constants {
     public static final String RESOURCE_TOKEN = "resource-token";
     public static final String OPERATING_ON_ACCOUNT_ID = "operatingOnAccountId";
 
+    public static final String CAMERA_REAR="CAMERA_REAR";
+    public static final String CAMERA_FRONT="CAMERA_FRONT";
+
     public static final String REQUEST_ID = "REQUEST_ID";
     public static final String QUESTION_ID = "QUESTION_ID";
     public static final String PREVIOUS_QUESTION = "PREVIOUS_QUESTIONS";

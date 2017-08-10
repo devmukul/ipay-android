@@ -24,6 +24,7 @@ import java.util.Set;
 
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import bd.com.ipay.ipayskeleton.camera.CameraActivity;
 
 /**
  * Source: https://gist.github.com/Mariovc/f06e70ebe8ca52fbbbe2
@@ -96,25 +97,39 @@ public class DocumentPicker {
 
     public static Intent getPickerIntentByID(Context context, String chooserTitle, int id) {
 
+        return getPickerIntentByID(context, chooserTitle, id, Constants.CAMERA_REAR);
+    }
+
+    public static Intent getPickerIntentByID(Context context, String chooserTitle, int id, String CameraFacing) {
+
         Set<Intent> intentList = new LinkedHashSet<>();
+        Intent returnIntent;
 
         if (id == OPTION_EXTERNAL_STORAGE) {
             Intent pickIntent = new Intent(Intent.ACTION_PICK,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
             intentList = addIntentsToList(context, intentList, pickIntent);
+            returnIntent=getChooserIntent(intentList,chooserTitle);
         } else {
-            Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File tempFile = getTempFile(context);
+            if (CameraFacing.equals(Constants.CAMERA_REAR)) {
+                Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                File tempFile = getTempFile(context);
 
-            takePhotoIntent.putExtra("return-data", true);
-            takePhotoIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            if (tempFile != null)
-                takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, tempFile));
+                takePhotoIntent.putExtra("return-data", true);
+                takePhotoIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                if (tempFile != null)
+                    takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, tempFile));
 
-            intentList = addIntentsToList(context, intentList, takePhotoIntent);
+                intentList = addIntentsToList(context, intentList, takePhotoIntent);
+                returnIntent= getChooserIntent(intentList, chooserTitle);
+            } else {
+                Intent intent = new Intent(context, CameraActivity.class);
+                returnIntent= intent;
+            }
         }
-        return getChooserIntent(intentList, chooserTitle);
+        return returnIntent;
+
     }
 
     public static Intent getPickImageOrPDFIntentByID(Context context, String chooserTitle, int id) {

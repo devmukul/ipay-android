@@ -239,7 +239,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     }
 
     private void selectProfilePictureIntent(int id) {
-        Intent imagePickerIntent = DocumentPicker.getPickerIntentByID(getActivity(), getString(R.string.select_a_document), id);
+        Intent imagePickerIntent = DocumentPicker.getPickerIntentByID(getActivity(), getString(R.string.select_a_document), id,Constants.CAMERA_FRONT);
         startActivityForResult(imagePickerIntent, ACTION_PICK_PROFILE_PICTURE);
     }
 
