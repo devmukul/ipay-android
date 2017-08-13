@@ -24,7 +24,6 @@ public class CameraOverlay extends View {
             mOverlay = overlay;
         }
 
-
         public abstract void draw(Canvas canvas);
 
         public float scaleX(float horizontal) {

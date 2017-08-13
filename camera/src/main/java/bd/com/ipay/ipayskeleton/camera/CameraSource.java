@@ -129,7 +129,7 @@ public class CameraSource {
      * See {@link Frame.Metadata#getRotation()}.
      */
     private int mRotation;
-    private int currentZoom=0;
+    private int currentZoom = 0;
 
     private Size mPreviewSize;
 
@@ -496,7 +496,7 @@ public class CameraSource {
                 return;
             } else {
                 Camera.Parameters par = mCamera.getParameters();
-                if(currentZoom<=par.getMaxZoom()){
+                if (currentZoom <= par.getMaxZoom()) {
                     currentZoom++;
                     par.setZoom(currentZoom);
                     mCamera.setParameters(par);
@@ -506,13 +506,14 @@ public class CameraSource {
 
         }
     }
+
     public void zoomOut() {
         synchronized (mCameraLock) {
             if (mCamera == null) {
                 return;
             } else {
                 Camera.Parameters par = mCamera.getParameters();
-                if(currentZoom>=0){
+                if (currentZoom >= 0) {
                     currentZoom--;
                     par.setZoom(currentZoom);
                     mCamera.setParameters(par);
@@ -521,6 +522,18 @@ public class CameraSource {
             }
 
         }
+    }
+
+    public boolean hasFrontFlash() {
+        Camera.Parameters par = mCamera.getParameters();
+        boolean isFlashAvailable = false;
+        try {
+            if (par.getSupportedFlashModes().size() > 0)
+                isFlashAvailable = true;
+        } catch (Exception e) {
+            isFlashAvailable = false;
+        }
+        return isFlashAvailable;
     }
 
     /**
