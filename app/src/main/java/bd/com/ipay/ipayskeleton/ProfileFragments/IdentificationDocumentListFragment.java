@@ -180,7 +180,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         switch (requestCode) {
             case ACTION_UPLOAD_DOCUMENT:
                 if (resultCode == Activity.RESULT_OK) {
-                    String filePath = DocumentPicker.getFilePathFromResult(getActivity(), resultCode, intent);
+                    String filePath = DocumentPicker.getFilePathFromResult(getActivity(), intent);
 
                     if (filePath != null) {
                         String[] temp = filePath.split(File.separator);
@@ -206,7 +206,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
-                if (DocumentPicker.ifNecessaryPermissionExists(getActivity()))
+                if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
                     selectDocument(mPickerActionId);
                 else
                     Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
@@ -647,11 +647,11 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                                 documentPreviewDetailsList.get(pos).setDocumentId(mDocumentIdEditTextView.getText().toString());
                                 documentPreviewDetailsList.get(pos).setSelectedFilePath(mSelectFile.getText().toString());
                                 if (Constants.ACTION_TYPE_TAKE_PICTURE.equals(action) || Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action))
-                                    if (DocumentPicker.ifNecessaryPermissionExists(getActivity()))
+                                    if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
                                         selectDocument(mActionId);
                                     else {
                                         mPickerActionId = mActionId;
-                                        DocumentPicker.requestRequiredPermissions(IdentificationDocumentListFragment.this, REQUEST_CODE_PERMISSION);
+                                        Utilities.requestRequiredPermissions(IdentificationDocumentListFragment.this, REQUEST_CODE_PERMISSION, DocumentPicker.DOCUMENT_PICK_PERMISSIONS);
                                     }
                                 else {
                                     getDocumentAccessToken();
@@ -666,7 +666,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
                 mUploadButton.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v){
+                    public void onClick(View v) {
                         attemptUploadDocument(pos);
                     }
                 });

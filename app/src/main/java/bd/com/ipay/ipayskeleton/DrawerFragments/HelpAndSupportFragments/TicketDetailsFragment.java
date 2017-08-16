@@ -31,11 +31,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadTicketAttachmentAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadTicketAttachmentAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentRequest;
@@ -175,7 +175,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
-                if (DocumentPicker.ifNecessaryPermissionExists(getActivity()))
+                if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
                     selectDocument(mPickerActionId);
                 else
                     Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
@@ -187,7 +187,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         switch (requestCode) {
             case REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT:
                 if (resultCode == Activity.RESULT_OK) {
-                    String filePath = DocumentPicker.getFilePathForCameraOrPDFResult(getActivity(), resultCode, data);
+                    String filePath = DocumentPicker.getFilePathForCameraOrPDFResult(getActivity(), data);
 
                     if (filePath != null) {
                         int fileIndex = Utilities.getRandomNumber();
@@ -254,11 +254,11 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
             @Override
             public void onResourceSelected(int mActionId, String action) {
                 if (!Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action)) {
-                    if (DocumentPicker.ifNecessaryPermissionExists(getActivity()))
+                    if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
                         selectDocument(mActionId);
                     else {
                         mPickerActionId = mActionId;
-                        DocumentPicker.requestRequiredPermissions(TicketDetailsFragment.this, REQUEST_CODE_PERMISSION);
+                        Utilities.requestRequiredPermissions(TicketDetailsFragment.this, REQUEST_CODE_PERMISSION, DocumentPicker.DOCUMENT_PICK_PERMISSIONS);
                     }
                 } else {
                     setMultipleImagePicker();

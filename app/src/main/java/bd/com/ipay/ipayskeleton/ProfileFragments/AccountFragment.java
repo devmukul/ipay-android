@@ -46,6 +46,7 @@ import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AccountFragment extends Fragment implements HttpResponseListener {
 
@@ -227,11 +228,11 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
             profilePictureHelperDialog.setOnResourceSelectedListener(new ProfilePictureHelperDialog.OnResourceSelectedListener() {
                 @Override
                 public void onResourceSelected(int mActionId, String action) {
-                    if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
+                    if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS)) {
                         selectProfilePictureIntent(mActionId);
                     } else {
                         mSelectedOptionForImage = mActionId;
-                        DocumentPicker.requestRequiredPermissions(AccountFragment.this, REQUEST_CODE_PERMISSION);
+                        Utilities.requestRequiredPermissions(AccountFragment.this, REQUEST_CODE_PERMISSION, DocumentPicker.DOCUMENT_PICK_PERMISSIONS);
                     }
                 }
             });
@@ -239,7 +240,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     }
 
     private void selectProfilePictureIntent(int id) {
-        Intent imagePickerIntent = DocumentPicker.getPickerIntentByID(getActivity(), getString(R.string.select_a_document), id,Constants.CAMERA_FRONT);
+        Intent imagePickerIntent = DocumentPicker.getPickerIntentByID(getActivity(), getString(R.string.select_a_document), id, Constants.CAMERA_FRONT);
         startActivityForResult(imagePickerIntent, ACTION_PICK_PROFILE_PICTURE);
     }
 
@@ -303,7 +304,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
-                if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
+                if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS)) {
                     selectProfilePictureIntent(mSelectedOptionForImage);
                 } else {
                     Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
