@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
+import com.google.android.gms.vision.CameraSource;
+
 import bd.com.ipay.ipayskeleton.BuildConfig;
 
 public class Constants {
@@ -56,8 +58,8 @@ public class Constants {
     public static final String RESOURCE_TOKEN = "resource-token";
     public static final String OPERATING_ON_ACCOUNT_ID = "operatingOnAccountId";
 
-    public static final String CAMERA_REAR="CAMERA_REAR";
-    public static final String CAMERA_FRONT="CAMERA_FRONT";
+    public static final int CAMERA_REAR = CameraSource.CAMERA_FACING_BACK;
+    public static final int CAMERA_FRONT = CameraSource.CAMERA_FACING_FRONT;
 
     public static final String REQUEST_ID = "REQUEST_ID";
     public static final String QUESTION_ID = "QUESTION_ID";

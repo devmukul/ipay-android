@@ -240,7 +240,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     }
 
     private void selectProfilePictureIntent(int id) {
-        Intent imagePickerIntent = DocumentPicker.getPickerIntentByID(getActivity(), getString(R.string.select_a_document), id, Constants.CAMERA_FRONT);
+        Intent imagePickerIntent = DocumentPicker.getPickerIntentByID(getActivity(), getString(R.string.select_a_document), id, Constants.CAMERA_FRONT, "profile_picture.jpg");
         startActivityForResult(imagePickerIntent, ACTION_PICK_PROFILE_PICTURE);
     }
 
@@ -317,7 +317,7 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
         switch (requestCode) {
             case ACTION_PICK_PROFILE_PICTURE:
                 if (resultCode == Activity.RESULT_OK) {
-                    Uri uri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, data);
+                    Uri uri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, data, "profile_picture.jpg");
                     if (uri == null) {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(),

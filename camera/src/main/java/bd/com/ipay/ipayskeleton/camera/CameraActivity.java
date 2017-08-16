@@ -5,12 +5,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -29,9 +30,12 @@ import java.util.List;
 
 
 public class CameraActivity extends AppCompatActivity {
+
+    public static final String CAMERA_FACING_NAME = "CAMERA_FACING_NAME";
+    public static final String DOCUMENT_NAME = "DOCUMENT_NAME";
+    private static final String TAG = CameraActivity.class.getSimpleName();
     private CameraSource mCameraSource;
     private CameraSourcePreview mCameraPreview;
-    private FaceDetector mFaceDetector;
     private CameraOverlay mCameraOverlay;
 
     private ImageView mCameraChangeButton;
@@ -44,10 +48,10 @@ public class CameraActivity extends AppCompatActivity {
 
     private boolean FLASH = false;
     private boolean FOCUS_AUTO = false;
+    private int CAMERA_FACE = com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK;
 
-    private Context context;
+    private static String fileName = "";
 
-    private static String TEMP_DOCUMENT_NAME = "document.jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +60,11 @@ public class CameraActivity extends AppCompatActivity {
         initializeViews();
         setButtonActions();
         int permissionCheck = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        String tempFileName = getIntent().getStringExtra(DOCUMENT_NAME);
+        fileName = !TextUtils.isEmpty(tempFileName) ? tempFileName : "document.jpg";
+        CAMERA_FACE = getIntent().getIntExtra(CAMERA_FACING_NAME, com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            createCameraSource(true, false, com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
+            createCameraSource(true, false, CAMERA_FACE);
         } else {
             requestCameraPermission();
         }
@@ -69,7 +76,7 @@ public class CameraActivity extends AppCompatActivity {
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             mCameraPreview.stop();
-            createCameraSource(FLASH, FOCUS_AUTO, com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
+            createCameraSource(FLASH, FOCUS_AUTO, CAMERA_FACE);
         }
     }
 
@@ -78,22 +85,17 @@ public class CameraActivity extends AppCompatActivity {
         if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
             ActivityCompat.requestPermissions(this, permissions, 1);
-            return;
         }
     }
 
     private void previewFrontCamera() {
         mCameraPreview.stop();
-        FLASH = false;
-        FOCUS_AUTO = true;
-        createCameraSource(FOCUS_AUTO, FLASH, com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
+        createCameraSource(FOCUS_AUTO = true, FLASH = false, CAMERA_FACE = com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
     }
 
     private void previewBackCamera() {
         mCameraPreview.stop();
-        FLASH = false;
-        FOCUS_AUTO = true;
-        createCameraSource(FOCUS_AUTO, FLASH, com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK);
+        createCameraSource(FOCUS_AUTO = true, FLASH = false, CAMERA_FACE = com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK);
     }
 
     private void initializeViews() {
@@ -153,11 +155,12 @@ public class CameraActivity extends AppCompatActivity {
                                 showConfirmImageLayoutAndHideCaptureLayout();
                                 fos.close();
                             } catch (Exception e) {
+                                Log.e(TAG, e.getMessage(), e);
                             }
                         }
                     });
                 } catch (Exception e) {
-
+                    Log.e(TAG, e.getMessage(), e);
                 }
             }
 
@@ -170,9 +173,9 @@ public class CameraActivity extends AppCompatActivity {
                     mCameraPreview.start(mCameraSource, mCameraOverlay);
 
                 } catch (SecurityException e) {
-
+                    Log.e(TAG, e.getMessage(), e);
                 } catch (Exception e) {
-
+                    Log.e(TAG, e.getMessage(), e);
                 }
             }
         });
@@ -189,9 +192,7 @@ public class CameraActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            FOCUS_AUTO = true;
-            FLASH = false;
-            createCameraSource(FOCUS_AUTO, FLASH, com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
+            createCameraSource(FOCUS_AUTO = true, FLASH = false, CAMERA_FACE = com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
         } else {
             this.finish();
         }
@@ -204,17 +205,19 @@ public class CameraActivity extends AppCompatActivity {
             mFlashChangeButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_off_white_24dp));
     }
 
+    @NonNull
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private static File getTempFile(Context context) {
-        File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TEMP_DOCUMENT_NAME);
-        if (documentFile != null) {
+        File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
+        if (!documentFile.getParentFile().exists()) {
             documentFile.getParentFile().mkdirs();
-            return documentFile;
-        } else return null;
+        }
+        return documentFile;
     }
 
     private void createCameraSource(boolean autoFocus, boolean useFlash, int cameraFacing) {
         Context context = getApplicationContext();
-        mFaceDetector = new FaceDetector.Builder(context)
+        FaceDetector mFaceDetector = new FaceDetector.Builder(context)
                 .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
                 .build();
 
@@ -225,10 +228,8 @@ public class CameraActivity extends AppCompatActivity {
                 .setFacing(cameraFacing)
                 .setRequestedPreviewSize(1600, 1024)
                 .setRequestedFps(30.0f);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            builder = builder.setFocusMode(
-                    autoFocus ? Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE : null);
-        }
+        builder = builder.setFocusMode(
+                autoFocus ? Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE : null);
 
         mCameraSource = builder
                 .setFlashMode(useFlash ? Camera.Parameters.FLASH_MODE_OFF : null)
@@ -251,13 +252,14 @@ public class CameraActivity extends AppCompatActivity {
                     }
                 } else {
                     if (action == MotionEvent.ACTION_UP) {
-                        handleFocus(event, params);
+                        handleFocus(params);
                     }
                 }
                 return true;
             } else
                 return false;
         } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
             return false;
         }
     }
@@ -279,12 +281,7 @@ public class CameraActivity extends AppCompatActivity {
         mOkButton.setVisibility(View.VISIBLE);
     }
 
-    public void handleFocus(MotionEvent event, Camera.Parameters params) {
-        int pointerId = event.getPointerId(0);
-        int pointerIndex = event.findPointerIndex(pointerId);
-        float x = event.getX(pointerIndex);
-        float y = event.getY(pointerIndex);
-
+    public void handleFocus(Camera.Parameters params) {
         List<String> supportedFocusModes = params.getSupportedFocusModes();
         if (supportedFocusModes != null && supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
             try {
@@ -297,7 +294,7 @@ public class CameraActivity extends AppCompatActivity {
                     }
                 });
             } catch (Exception e) {
-
+                Log.e(TAG, e.getMessage(), e);
             }
         }
     }
@@ -315,11 +312,12 @@ public class CameraActivity extends AppCompatActivity {
             try {
                 mCameraPreview.start(mCameraSource, mCameraOverlay);
             } catch (SecurityException e) {
+                Log.e(TAG, e.getMessage(), e);
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 mCameraSource.release();
                 mCameraSource = null;
             } catch (Exception e) {
-
+                Log.e(TAG, e.getMessage(), e);
             }
         }
     }
