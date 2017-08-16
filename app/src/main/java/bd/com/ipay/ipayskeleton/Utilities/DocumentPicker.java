@@ -36,6 +36,7 @@ public class DocumentPicker {
     public static final String[] DOCUMENT_PICK_PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE};
     private static final int OPTION_CAMERA = 0;
     private static final int OPTION_EXTERNAL_STORAGE = 1;
+    private static final String TEMP_DOCUMENT_NAME_WITH_INDEX = "document_%d.jpg";
 
     public static Intent getPickImageOrPdfIntent(Context context, String chooserTitle) {
 
@@ -56,7 +57,6 @@ public class DocumentPicker {
     }
 
     public static Intent getPickerIntentByID(Context context, String chooserTitle, int id) {
-
         return getPickerIntentByID(context, chooserTitle, id, Constants.CAMERA_REAR);
     }
 
@@ -263,7 +263,7 @@ public class DocumentPicker {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private static File getTempFile(Context context) {
         File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TEMP_DOCUMENT_NAME);
-        if (!documentFile.exists()) {
+        if (!documentFile.getParentFile().exists()) {
             documentFile.getParentFile().mkdirs();
         }
         return documentFile;
@@ -272,8 +272,8 @@ public class DocumentPicker {
     @NonNull
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private static File getFileWithIndex(Context context, int index) throws IOException {
-        File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), String.format(Locale.US, "document_%d.jpg", index));
-        if (!documentFile.exists()) {
+        File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), String.format(Locale.US, TEMP_DOCUMENT_NAME_WITH_INDEX, index));
+        if (!documentFile.getParentFile().exists()) {
             documentFile.getParentFile().mkdirs();
         }
         return documentFile;
