@@ -42,9 +42,7 @@ public class DocumentPicker {
         Intent pickIntent = new Intent(Intent.ACTION_GET_CONTENT);
         pickIntent.setType("image/*|application/pdf");
 
-        Intent takePhotoIntent = new Intent(context, CameraActivity.class);
-        takePhotoIntent.putExtra(CameraActivity.CAMERA_FACING_NAME, Constants.CAMERA_REAR);
-        takePhotoIntent.putExtra(CameraActivity.DOCUMENT_NAME, TEMP_DOCUMENT_NAME);
+        Intent takePhotoIntent = createCameraIntent(context, Constants.CAMERA_REAR, TEMP_DOCUMENT_NAME);
 
         intentList = addIntentsToList(context, intentList, takePhotoIntent);
         intentList = addIntentsToList(context, intentList, pickIntent);
@@ -73,12 +71,19 @@ public class DocumentPicker {
             intentList = addIntentsToList(context, intentList, pickIntent);
             returnIntent = getChooserIntent(intentList, chooserTitle);
         } else {
-            returnIntent = new Intent(context, CameraActivity.class);
-            returnIntent.putExtra(CameraActivity.CAMERA_FACING_NAME, CameraFacing);
-            returnIntent.putExtra(CameraActivity.DOCUMENT_NAME, fileName);
+            returnIntent = createCameraIntent(context, CameraFacing, fileName);
         }
         return returnIntent;
 
+    }
+
+    @NonNull
+    private static Intent createCameraIntent(Context context, int CameraFacing, String fileName) {
+        Intent returnIntent;
+        returnIntent = new Intent(context, CameraActivity.class);
+        returnIntent.putExtra(CameraActivity.CAMERA_FACING_NAME, CameraFacing);
+        returnIntent.putExtra(CameraActivity.DOCUMENT_NAME, fileName);
+        return returnIntent;
     }
 
     @SuppressLint("InlinedApi")
@@ -91,9 +96,7 @@ public class DocumentPicker {
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             intentList = addIntentsToList(context, intentList, pickIntent);
         } else if (id == OPTION_CAMERA) {
-            Intent takePhotoIntent = new Intent(context, CameraActivity.class);
-            takePhotoIntent.putExtra(CameraActivity.CAMERA_FACING_NAME, Constants.CAMERA_REAR);
-            takePhotoIntent.putExtra(CameraActivity.DOCUMENT_NAME, TEMP_DOCUMENT_NAME);
+            Intent takePhotoIntent = createCameraIntent(context, Constants.CAMERA_REAR, TEMP_DOCUMENT_NAME);
 
             intentList = addIntentsToList(context, intentList, takePhotoIntent);
         } else {
