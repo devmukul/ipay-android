@@ -95,6 +95,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private void previewBackCamera() {
         mCameraPreview.stop();
+        createCameraSource(true, true, com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK);
     }
 
     private void initializeViews() {
