@@ -261,20 +261,14 @@ public class DocumentPicker {
         return getTempFile(context, TEMP_DOCUMENT_NAME);
     }
 
-    @NonNull
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static File getTempFile(Context context, final String fileName) {
-        File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
-        if (!documentFile.getParentFile().exists()) {
-            documentFile.getParentFile().mkdirs();
-        }
-        return documentFile;
+    private static File getFileWithIndex(Context context, int index) throws IOException {
+        return getTempFile(context, String.format(Locale.US, TEMP_DOCUMENT_NAME_WITH_INDEX, index));
     }
 
     @NonNull
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static File getFileWithIndex(Context context, int index) throws IOException {
-        File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), String.format(Locale.US, TEMP_DOCUMENT_NAME_WITH_INDEX, index));
+    private static File getTempFile(Context context, final String fileName) {
+        File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
         if (!documentFile.getParentFile().exists()) {
             documentFile.getParentFile().mkdirs();
         }
