@@ -46,11 +46,11 @@ public class CameraActivity extends AppCompatActivity {
 
     private float mDist = 0;
 
-    private boolean FLASH = false;
-    private boolean FOCUS_AUTO = false;
-    private int CAMERA_FACE = com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK;
+    private boolean useFlash = false;
+    private boolean focusAuto = false;
+    private int cameraFace = com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK;
 
-    private static String fileName = "";
+    private String fileName;
 
 
     @Override
@@ -62,9 +62,9 @@ public class CameraActivity extends AppCompatActivity {
         int permissionCheck = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         String tempFileName = getIntent().getStringExtra(DOCUMENT_NAME);
         fileName = !TextUtils.isEmpty(tempFileName) ? tempFileName : "document.jpg";
-        CAMERA_FACE = getIntent().getIntExtra(CAMERA_FACING_NAME, com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK);
+        cameraFace = getIntent().getIntExtra(CAMERA_FACING_NAME, com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            createCameraSource(true, false, CAMERA_FACE);
+            createCameraSource(true, false, cameraFace);
         } else {
             requestCameraPermission();
         }
@@ -76,7 +76,7 @@ public class CameraActivity extends AppCompatActivity {
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             mCameraPreview.stop();
-            createCameraSource(FLASH, FOCUS_AUTO, CAMERA_FACE);
+            createCameraSource(useFlash, focusAuto, cameraFace);
         }
     }
 
@@ -90,12 +90,11 @@ public class CameraActivity extends AppCompatActivity {
 
     private void previewFrontCamera() {
         mCameraPreview.stop();
-        createCameraSource(FOCUS_AUTO = true, FLASH = false, CAMERA_FACE = com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
+        createCameraSource(true, false, com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
     }
 
     private void previewBackCamera() {
         mCameraPreview.stop();
-        createCameraSource(FOCUS_AUTO = true, FLASH = false, CAMERA_FACE = com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK);
     }
 
     private void initializeViews() {
@@ -113,12 +112,12 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mCameraSource.getCameraFacing() == com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK) {
-                    if (FLASH) {
-                        FLASH = false;
+                    if (useFlash) {
+                        useFlash = false;
                         setAppropriateFlashIcon();
                         mCameraSource.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                     } else {
-                        FLASH = true;
+                        useFlash = true;
                         setAppropriateFlashIcon();
                         mCameraSource.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
                     }
@@ -192,14 +191,14 @@ public class CameraActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            createCameraSource(FOCUS_AUTO = true, FLASH = false, CAMERA_FACE = com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
+            createCameraSource(true, false, com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
         } else {
             this.finish();
         }
     }
 
     private void setAppropriateFlashIcon() {
-        if (FLASH)
+        if (useFlash)
             mFlashChangeButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_on_white_24dp));
         else
             mFlashChangeButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_off_white_24dp));
@@ -207,7 +206,7 @@ public class CameraActivity extends AppCompatActivity {
 
     @NonNull
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static File getTempFile(Context context) {
+    private File getTempFile(Context context) {
         File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
         if (!documentFile.getParentFile().exists()) {
             documentFile.getParentFile().mkdirs();
@@ -215,7 +214,10 @@ public class CameraActivity extends AppCompatActivity {
         return documentFile;
     }
 
-    private void createCameraSource(boolean autoFocus, boolean useFlash, int cameraFacing) {
+    private void createCameraSource(boolean focusAuto, boolean useFlash, int cameraFace) {
+        this.focusAuto = focusAuto;
+        this.useFlash = useFlash;
+        this.cameraFace = cameraFace;
         Context context = getApplicationContext();
         FaceDetector mFaceDetector = new FaceDetector.Builder(context)
                 .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
@@ -225,11 +227,11 @@ public class CameraActivity extends AppCompatActivity {
                 new MultiProcessor.Builder<>(new CameraActivity.GraphicFaceTrackerFactory())
                         .build());
         CameraSource.Builder builder = new CameraSource.Builder(getApplicationContext(), mFaceDetector)
-                .setFacing(cameraFacing)
+                .setFacing(cameraFace)
                 .setRequestedPreviewSize(1600, 1024)
                 .setRequestedFps(30.0f);
         builder = builder.setFocusMode(
-                autoFocus ? Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE : null);
+                focusAuto ? Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE : null);
 
         mCameraSource = builder
                 .setFlashMode(useFlash ? Camera.Parameters.FLASH_MODE_OFF : null)
