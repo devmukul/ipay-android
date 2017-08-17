@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Parcelable;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
 import java.io.File;
@@ -42,11 +41,10 @@ public class DocumentPicker {
 
         Intent pickIntent = new Intent(Intent.ACTION_GET_CONTENT);
         pickIntent.setType("image/*|application/pdf");
-        File tempFile = getTempFile(context);
 
-        Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        takePhotoIntent.putExtra("return-data", true);
-        takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile));
+        Intent takePhotoIntent = new Intent(context, CameraActivity.class);
+        takePhotoIntent.putExtra(CameraActivity.CAMERA_FACING_NAME, Constants.CAMERA_REAR);
+        takePhotoIntent.putExtra(CameraActivity.DOCUMENT_NAME, TEMP_DOCUMENT_NAME);
 
         intentList = addIntentsToList(context, intentList, takePhotoIntent);
         intentList = addIntentsToList(context, intentList, pickIntent);
