@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="@color/colorBlack"
     tools:context="bd.com.ipay.ipayskeleton.camera.CameraActivity">
 
     <bd.com.ipay.ipayskeleton.camera.CameraSourcePreview
