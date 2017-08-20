@@ -96,6 +96,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_add_money, container, false);
+        getActivity().setTitle(R.string.add_money);
         mBankNameTextView = (TextView) v.findViewById(R.id.bank_name);
         mBankBranchTextView = (TextView) v.findViewById(R.id.bank_branch);
         mBankAccountTextView = (TextView) v.findViewById(R.id.bank_account_number);

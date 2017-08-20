@@ -59,7 +59,7 @@ public class AddMoneyActivity extends BaseActivity {
         Utilities.hideKeyboard(this);
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
-            getSupportActionBar().setTitle(R.string.add_money);
+            switchToAddMoneyFragment();
         } else {
             finish();
         }

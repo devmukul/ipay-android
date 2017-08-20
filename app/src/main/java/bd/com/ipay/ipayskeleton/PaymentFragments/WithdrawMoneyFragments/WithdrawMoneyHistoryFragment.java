@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,9 +22,7 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
-import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -45,7 +42,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AddMoneyHistoryFragment extends ProgressFragment implements HttpResponseListener {
+public class WithdrawMoneyHistoryFragment extends ProgressFragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
 
@@ -78,8 +75,8 @@ public class AddMoneyHistoryFragment extends ProgressFragment implements HttpRes
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_add_money_history, container, false);
-        getActivity().setTitle(R.string.add_money_history);
+        View v = inflater.inflate(R.layout.fragment_withdraw_money_history, container, false);
+        getActivity().setTitle(R.string.withdraw_money_history);
 
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         initializeViews(v);
@@ -170,7 +167,7 @@ public class AddMoneyHistoryFragment extends ProgressFragment implements HttpRes
             return;
         }
         TransactionHistoryRequest mTransactionHistoryRequest;
-        mTransactionHistoryRequest = new TransactionHistoryRequest(Constants.TRANSACTION_HISTORY_ADD_MONEY, historyPageCount);
+        mTransactionHistoryRequest = new TransactionHistoryRequest(Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY, historyPageCount);
 
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);

@@ -277,6 +277,7 @@
     <string name="note">Note</string>
     <string name="additional_info">Additional Information</string>
     <string name="withdraw_money">Withdraw Money</string>
+    <string name="withdraw_money_history">Withdraw Money History</string>
     <string name="events">Events</string>
     <string name="education">Education</string>
     <string name="education_payment">Education Payment</string>
@@ -857,9 +858,6 @@
     <string name="ready_to_get_started">Ready to get started?</string>
     <string name="getting_started_description">Whether you are paying bills, sending money or making purchase, iPay is here to keep your financial information secure.</string>
 
-
-
-    <string name="add_contact_dialog_not_available">Cant add a contact now. Please try again later.</string>
     <string name="qr_code_prompt">Please scan a QR code</string>
 
     <string name="select_from_gallery_message">Select from gallery</string>
