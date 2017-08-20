@@ -16,6 +16,7 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
     private String bankName;
     private String branchName;
     private String bankCode;
+    private boolean isReceiver;
     private EducationPaymentDetails educationPayment;
 
     public TransactionHistoryAdditionalInfo(String userName, String userMobileNumber, String userProfilePic,
@@ -66,6 +67,10 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
         Resources resources = context.getResources();
         return resources.getIdentifier("ic_bank" + getBankCode(), "drawable",
                 context.getPackageName());
+    }
+
+    public boolean isReceiver() {
+        return isReceiver;
     }
 
     public EducationPaymentDetails getEducationPayment() {
