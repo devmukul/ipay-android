@@ -4,8 +4,13 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Point;
 import android.hardware.Camera;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -18,6 +23,7 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -29,6 +35,7 @@ import com.google.android.gms.vision.face.FaceDetector;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -46,6 +53,7 @@ public class CameraActivity extends AppCompatActivity {
     private ImageButton mOkButton;
     private ImageButton mCaptureButton;
     private ImageButton mFlashChangeButton;
+    private ImageView mCapturedImageView;
 
     private float mDist = 0;
 
@@ -76,9 +84,28 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-        if (rc == PackageManager.PERMISSION_GRANTED) {
+        if (mCameraPreview != null && mCapturedImageView.getVisibility() == View.GONE) {
+            try {
+                mCameraPreview.start(mCameraSource, mCameraOverlay);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mCameraPreview != null) {
             mCameraPreview.stop();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mCameraPreview != null) {
+            mCameraPreview.release();
         }
     }
 
@@ -102,6 +129,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private void initializeViews() {
         mCameraPreview = (CameraSourcePreview) findViewById(R.id.camera_preview);
+        mCapturedImageView = (ImageView) findViewById(R.id.captured_image_view);
         mCameraOverlay = (CameraOverlay) findViewById(R.id.face_tracking_view);
         mCaptureButton = (ImageButton) findViewById(R.id.capture_button);
         mCameraChangeButton = (ImageButton) findViewById(R.id.camera_change_button);
@@ -184,6 +212,7 @@ public class CameraActivity extends AppCompatActivity {
                                 fos.write(data);
                                 showConfirmImageLayoutAndHideCaptureLayout();
                                 fos.close();
+                                mCapturedImageView.setImageBitmap(rotateImageIfRequired(BitmapFactory.decodeFile(pictureFile.getAbsolutePath()), Uri.fromFile(pictureFile)));
                             } catch (Exception e) {
                                 Log.e(TAG, e.getMessage(), e);
                             }
@@ -216,6 +245,34 @@ public class CameraActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    Bitmap rotateImageIfRequired(Bitmap img, Uri selectedImage) throws IOException {
+
+        ExifInterface ei = new ExifInterface(selectedImage.getPath());
+
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return rotateImage(img, 90);
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return rotateImage(img, 180);
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return rotateImage(img, 270);
+            default:
+                return img;
+        }
+    }
+
+    Bitmap rotateImage(Bitmap img, int degree) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
+        if (rotatedImg != img)      // Android might reuse the same bitmap again
+            img.recycle();
+
+        return rotatedImg;
     }
 
     @Override
@@ -322,6 +379,7 @@ public class CameraActivity extends AppCompatActivity {
     private void showCaptureLayoutAndHideConfirmImageLayout() {
         mCaptureButton.setVisibility(View.VISIBLE);
         mCameraChangeButton.setVisibility(View.VISIBLE);
+        mCapturedImageView.setVisibility(View.GONE);
         mCrossButton.setVisibility(View.GONE);
         mOkButton.setVisibility(View.GONE);
         if (mCameraSource.getCameraFacing() == com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK)
@@ -332,6 +390,7 @@ public class CameraActivity extends AppCompatActivity {
         mCaptureButton.setVisibility(View.INVISIBLE);
         mCameraChangeButton.setVisibility(View.GONE);
         mFlashChangeButton.setVisibility(View.GONE);
+        mCapturedImageView.setVisibility(View.VISIBLE);
         mCrossButton.setVisibility(View.VISIBLE);
         mOkButton.setVisibility(View.VISIBLE);
     }

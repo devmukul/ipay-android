@@ -2,4 +2,5 @@
 <resources>
     <dimen name="value24">24dip</dimen>
     <dimen name="value5">5dip</dimen>
+    <dimen name="value36">36dip</dimen>
 </resources>

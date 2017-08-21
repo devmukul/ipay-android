@@ -20,6 +20,13 @@
             android:layout_centerInParent="true" />
     </bd.com.ipay.ipayskeleton.camera.CameraSourcePreview>
 
+    <ImageView
+        android:id="@+id/captured_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/image"
+        android:visibility="gone" />
+
     <RelativeLayout
         android:id="@+id/capture_layout"
         android:layout_width="match_parent"
@@ -40,8 +47,8 @@
 
         <ImageButton
             android:id="@+id/flash_button"
-            android:layout_width="@dimen/value24"
-            android:layout_height="@dimen/value24"
+            android:layout_width="@dimen/value36"
+            android:layout_height="@dimen/value36"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
@@ -55,8 +62,8 @@
 
         <ImageButton
             android:id="@+id/camera_change_button"
-            android:layout_width="@dimen/value24"
-            android:layout_height="@dimen/value24"
+            android:layout_width="@dimen/value36"
+            android:layout_height="@dimen/value36"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -69,8 +76,8 @@
         <ImageButton
             android:id="@+id/ok_button"
             style="?android:attr/borderlessButtonStyle"
-            android:layout_width="@dimen/value24"
-            android:layout_height="@dimen/value24"
+            android:layout_width="@dimen/value36"
+            android:layout_height="@dimen/value36"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
@@ -84,8 +91,8 @@
 
         <ImageButton
             android:id="@+id/cross_button"
-            android:layout_width="@dimen/value24"
-            android:layout_height="@dimen/value24"
+            android:layout_width="@dimen/value36"
+            android:layout_height="@dimen/value36"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
