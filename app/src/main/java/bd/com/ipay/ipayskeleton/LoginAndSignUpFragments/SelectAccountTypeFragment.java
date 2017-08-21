@@ -1,25 +1,37 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.android.gms.analytics.Tracker;
+
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SelectAccountTypeFragment extends Fragment {
 
     private Button buttonAccountTypePersonal;
     private Button buttonAccountTypeBusiness;
     private View v;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
 
     @Override
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_select_account_type_page);
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_select_account_type) );
     }
 
     @Override

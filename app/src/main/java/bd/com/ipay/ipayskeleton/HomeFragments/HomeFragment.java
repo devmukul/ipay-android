@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -95,11 +97,13 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private ImageButton mCloseButton;
 
     private ImageView mShowQRCodeButton;
+    private Tracker mTracker;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mTracker = Utilities.getTracker(getActivity());
     }
 
     @Override
@@ -281,6 +285,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         // from the server every time someone navigates to the home activity. Once push is implemented
         // properly, move it to onCreate.
         refreshBalance();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_home) );
     }
 
     @Override

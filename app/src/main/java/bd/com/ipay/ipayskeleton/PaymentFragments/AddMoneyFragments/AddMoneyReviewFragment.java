@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appsee.Appsee;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -59,6 +64,19 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
     private Button mAddMoneyButton;
     private ImageView mBankIcon;
     private String mError_message;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_add_money_review) );
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -219,9 +237,25 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
                     getActivity().setResult(Activity.RESULT_OK);
                     // Exit the Add money activity and return to HomeActivity
                     getActivity().finish();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"AddMoney", "Success", "Add Money successful.");
+                    //AppSee event
+                    Map<String, Object> props = new HashMap<String, Object>();
+                    props.put("Status", "Success");
+                    props.put("Label","Add Money successful.");
+                    Appsee.addEvent("AddMoney", props);
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"AddMoney", "Failed", mAddMoneyResponse.getMessage());
+                    //AppSee event
+                    Map<String, Object> props = new HashMap<String, Object>();
+                    props.put("Status", "Failed");
+                    props.put("Label",mAddMoneyResponse.getMessage());
+                    Appsee.addEvent("AddMoney", props);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

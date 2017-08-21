@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
+import com.google.android.gms.analytics.Tracker;
 
 import java.util.List;
 
@@ -38,6 +41,13 @@ public class SignupBusinessStepTwoFragment extends Fragment {
     private int mSelectedBusinessTypeId = -1;
     public int mSelectedThanaId = -1;
     public int mSelectedDistrictId = -1;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -96,6 +106,7 @@ public class SignupBusinessStepTwoFragment extends Fragment {
         getActivity().setTitle(R.string.title_signup_business_page);
         mBusinessAddressView.mSelectedDistrictId = mSelectedDistrictId;
         mBusinessAddressView.mSelectedThanaId = mSelectedThanaId;
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_signup_step_2) );
     }
 
     private void attemptGoNextPage() {

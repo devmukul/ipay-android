@@ -39,7 +39,7 @@ android {
     // Server Type 3 -> stage server
     // Server Type 4 -> live server
     // Server Type 5 -> local server
-    def ServerType = java.lang.System.getProperty('ServerType') ?: "4"
+    def ServerType = java.lang.System.getProperty('ServerType') ?: "1"
     def AutoLogin = java.lang.System.getProperty('AutoLogin') ?: "false"
     def DebugOnOffStatus = java.lang.System.getProperty('DebugOnOffStatus') ?: "false"
 
@@ -142,6 +142,9 @@ dependencies {
     //Intercom
     compile 'io.intercom.android:intercom-sdk-base:3.+'
     compile 'io.intercom.android:intercom-sdk-fcm:3.+'
+
+    //AppSee Analytic
+    compile 'com.appsee:appsee-android:+'
 
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:1.9.5"

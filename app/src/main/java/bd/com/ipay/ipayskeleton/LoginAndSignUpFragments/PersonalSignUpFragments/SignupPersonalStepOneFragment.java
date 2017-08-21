@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.Calendar;
@@ -66,6 +68,13 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     private int mYear;
     private int mMonth;
     private int mDay;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
 
     @Override
     public void onResume() {
@@ -75,6 +84,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             mMaleCheckBox.setTextColor((Color.WHITE));
         if (mFemaleCheckBox.isChecked())
             mFemaleCheckBox.setTextColor((Color.WHITE));
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_personal_signup_step_1) );
     }
 
     @Override

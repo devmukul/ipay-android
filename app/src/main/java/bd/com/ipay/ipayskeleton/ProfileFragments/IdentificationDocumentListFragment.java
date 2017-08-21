@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -109,6 +110,13 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
     private int mSelectedItemId = -1;
     private int mPickerActionId = -1;
+    private Tracker mTracker;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_identification_documents_list) );
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,6 +134,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 Constants.DOCUMENT_TYPE_TRADE_LICENSE,
                 Constants.DOCUMENT_TYPE_VAT_REG_CERT
         };
+        mTracker = Utilities.getTracker(getActivity());
     }
 
     @Override

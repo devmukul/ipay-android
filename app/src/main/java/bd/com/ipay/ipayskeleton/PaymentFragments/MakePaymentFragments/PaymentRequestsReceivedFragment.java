@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -84,6 +85,7 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
 
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
+    private Tracker mTracker;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -123,12 +125,15 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
         if (Utilities.isConnectionAvailable(getActivity())) {
             refreshNotificationList();
         }
+
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_payment_request_received) );
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mTracker = Utilities.getTracker(getActivity());
     }
 
     @Override

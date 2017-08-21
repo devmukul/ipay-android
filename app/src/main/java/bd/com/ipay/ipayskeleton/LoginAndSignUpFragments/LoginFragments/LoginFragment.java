@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.appsee.Appsee;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -67,12 +73,21 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
     private String mDeviceID;
     private String mDeviceName;
+    private Tracker mTracker;
+    Map<String, Object> props = new HashMap<String, Object>();
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
 
     @Override
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_login_page);
         Utilities.showKeyboard(getActivity());
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_login) );
 
         /**
          * If UUID exists, it means device was set as trusted before.
@@ -347,6 +362,13 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                                 hideProgressDialog();
                                 ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                             }
+                            //Google Analytic event
+                            Utilities.sendEventTracker(mTracker,"Login", "ToHome", "Login successful. Navigate to home page.");
+                            //AppSee event
+                            props.put("From", "Login");
+                            props.put("To", "Home");
+                            props.put("Label","Login successful. Navigate to home page.");
+                            Appsee.addEvent("Login", props);
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_ACCEPTED:
                             hideProgressDialog();
@@ -357,6 +379,15 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                             // First time login from this device. Verify OTP for secure login
                             SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
                             ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
+
+                            //Google Analytic event
+                            Utilities.sendEventTracker(mTracker,"Login", "ToOTP", "Navigate to OTP page to verify mobile no.");
+                            //AppSee event
+                            props.put("From", "Login");
+                            props.put("To", "OTP");
+                            props.put("Label","Navigate to OTP page to verify mobile no.");
+                            Appsee.addEvent("Login", props);
+
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE:
                             hideProgressDialog();
@@ -368,6 +399,13 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                             // Enter previous OTP
                             SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
                             ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
+                            //Google Analytic event
+                            Utilities.sendEventTracker(mTracker,"Login", "ToOTP", "Navigate to OTP page to verify mobile no. and add trusted device");
+                            //AppSee event
+                            props.put("From", "Login");
+                            props.put("To", "OTP");
+                            props.put("Label","Navigate to OTP page to verify mobile no. and add trusted device");
+                            Appsee.addEvent("Login", props);
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED:
                             hideProgressDialog();

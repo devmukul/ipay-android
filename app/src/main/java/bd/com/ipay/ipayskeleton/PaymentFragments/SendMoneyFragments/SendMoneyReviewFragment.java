@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appsee.Appsee;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
@@ -66,6 +71,19 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     private TextView mNetAmountView;
     private Button mSendMoneyButton;
     private CheckBox mAddInContactsCheckBox;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_send_money_review) );
+    }
 
 
     @Override
@@ -251,9 +269,24 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
                         Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
                     getActivity().setResult(Activity.RESULT_OK);
                     getActivity().finish();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"SendMoney", "Sent", mSendMoneyResponse.getMessage());
+                    //AppSee event
+                    Map<String, Object> props = new HashMap<String, Object>();
+                    props.put("SendMoney", "Sent");
+                    props.put("Label",mSendMoneyResponse.getMessage());
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"SendMoney", "Failed", mSendMoneyResponse.getMessage());
+                    //AppSee event
+                    Map<String, Object> props = new HashMap<String, Object>();
+                    props.put("Status", "Failed");
+                    props.put("Label", mSendMoneyResponse.getMessage());
+                    Appsee.addEvent("SendMoney", props);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

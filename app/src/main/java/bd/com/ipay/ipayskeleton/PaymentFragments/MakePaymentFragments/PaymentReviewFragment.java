@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appsee.Appsee;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -61,6 +66,19 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     private View mLinearLayoutRefNumberHolder;
     private View mRefNumberDivider;
     private Button mPaymentButton;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_make_payment_review) );
+    }
 
 
     @Override
@@ -238,10 +256,27 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG);
                     getActivity().setResult(Activity.RESULT_OK);
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"MakePayment", "Success", mPaymentResponse.getMessage());
+                    //AppSee event
+                    Map<String, Object> props = new HashMap<String, Object>();
+                    props.put("Status", "Success");
+                    props.put("Label",mPaymentResponse.getMessage());
+                    Appsee.addEvent("MakePayment", props);
+
                     getActivity().finish();
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG);
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"MakePayment", "Failed", mPaymentResponse.getMessage());
+                    //AppSee event
+                    Map<String, Object> props = new HashMap<String, Object>();
+                    props.put("Status", "Failed");
+                    props.put("Label",mPaymentResponse.getMessage());
+                    Appsee.addEvent("MakePayment", props);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

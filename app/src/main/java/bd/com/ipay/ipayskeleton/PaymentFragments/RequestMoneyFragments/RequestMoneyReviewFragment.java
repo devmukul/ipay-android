@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,13 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appsee.Appsee;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
@@ -60,6 +65,19 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
     private TextView mNetAmountView;
     private Button mRequestMoneyButton;
     private CheckBox mAddInContactsCheckBox;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_request_money_review) );
+    }
 
 
     @Override
@@ -186,9 +204,25 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
                     if (getActivity() != null)
                          Toaster.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"RequestMoney", "Sent", mRequestMoneyResponse.getMessage());
+                    //AppSee event
+                    Map<String, Object> props = new HashMap<String, Object>();
+                    props.put("Status", "Sent");
+                    props.put("Label",mRequestMoneyResponse.getMessage());
+                    Appsee.addEvent("RequestMoney", props);
                 } else {
                     if (getActivity() != null)
                          Toaster.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_SHORT);
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"RequestMoney", "Failed", mRequestMoneyResponse.getMessage());
+                    //AppSee event
+                    Map<String, Object> props = new HashMap<String, Object>();
+                    props.put("Status", "Failed");
+                    props.put("Label",mRequestMoneyResponse.getMessage());
+                    Appsee.addEvent("RequestMoney", props);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

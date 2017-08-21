@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -76,6 +78,13 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
     private int mSelectedDistrictId = -1;
 
     private boolean startedFromProfileCompletion = false;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -142,6 +151,7 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
         mDistrictNames = ((ManageBanksActivity) getActivity()).mDistrictNames;
         mBranches = ((ManageBanksActivity) getActivity()).mBranches;
         mBranchNames = ((ManageBanksActivity) getActivity()).mBranchNames;
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_link_bank) );
     }
 
     private void setBankAdapter(List<Bank> bankList) {

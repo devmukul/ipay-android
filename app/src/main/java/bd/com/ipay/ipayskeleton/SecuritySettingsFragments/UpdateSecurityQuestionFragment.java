@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.UpdateSecurityA
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.UpdateSecurityAnswerResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class UpdateSecurityQuestionFragment extends Fragment implements HttpResponseListener {
 
@@ -52,10 +54,18 @@ public class UpdateSecurityQuestionFragment extends Fragment implements HttpResp
     private int mQuestionID;
     private String mAnswer;
     private String mPassword;
+    private Tracker mTracker;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_update_security_question) );
     }
 
     @Override
