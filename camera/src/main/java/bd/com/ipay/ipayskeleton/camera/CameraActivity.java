@@ -4,17 +4,20 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -38,15 +41,15 @@ public class CameraActivity extends AppCompatActivity {
     private CameraSourcePreview mCameraPreview;
     private CameraOverlay mCameraOverlay;
 
-    private ImageView mCameraChangeButton;
-    private ImageView mCrossButton;
-    private ImageView mOkButton;
-    private ImageView mCaptureButton;
-    private ImageView mFlashChangeButton;
+    private ImageButton mCameraChangeButton;
+    private ImageButton mCrossButton;
+    private ImageButton mOkButton;
+    private ImageButton mCaptureButton;
+    private ImageButton mFlashChangeButton;
 
     private float mDist = 0;
 
-    private boolean useFlash = false;
+    private String flashMode = Camera.Parameters.FLASH_MODE_OFF;
     private boolean focusAuto = false;
     private int cameraFace = com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK;
 
@@ -64,7 +67,7 @@ public class CameraActivity extends AppCompatActivity {
         fileName = !TextUtils.isEmpty(tempFileName) ? tempFileName : "document.jpg";
         cameraFace = getIntent().getIntExtra(CAMERA_FACING_NAME, com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            createCameraSource(true, false, cameraFace);
+            createCameraSource(true, Camera.Parameters.FLASH_MODE_OFF, cameraFace);
         } else {
             requestCameraPermission();
         }
@@ -76,7 +79,6 @@ public class CameraActivity extends AppCompatActivity {
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             mCameraPreview.stop();
-            createCameraSource(useFlash, focusAuto, cameraFace);
         }
     }
 
@@ -90,22 +92,22 @@ public class CameraActivity extends AppCompatActivity {
 
     private void previewFrontCamera() {
         mCameraPreview.stop();
-        createCameraSource(true, false, com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
+        createCameraSource(focusAuto, flashMode, com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
     }
 
     private void previewBackCamera() {
         mCameraPreview.stop();
-        createCameraSource(true, true, com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK);
+        createCameraSource(focusAuto, flashMode, com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK);
     }
 
     private void initializeViews() {
         mCameraPreview = (CameraSourcePreview) findViewById(R.id.camera_preview);
         mCameraOverlay = (CameraOverlay) findViewById(R.id.face_tracking_view);
-        mCaptureButton = (ImageView) findViewById(R.id.capture_button);
-        mCameraChangeButton = (ImageView) findViewById(R.id.camera_change_button);
-        mCrossButton = (ImageView) findViewById(R.id.cross_button);
-        mOkButton = (ImageView) findViewById(R.id.ok_button);
-        mFlashChangeButton = (ImageView) findViewById(R.id.flash_button);
+        mCaptureButton = (ImageButton) findViewById(R.id.capture_button);
+        mCameraChangeButton = (ImageButton) findViewById(R.id.camera_change_button);
+        mCrossButton = (ImageButton) findViewById(R.id.cross_button);
+        mOkButton = (ImageButton) findViewById(R.id.ok_button);
+        mFlashChangeButton = (ImageButton) findViewById(R.id.flash_button);
     }
 
     private void setButtonActions() {
@@ -113,14 +115,20 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mCameraSource.getCameraFacing() == com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK) {
-                    if (useFlash) {
-                        useFlash = false;
-                        setAppropriateFlashIcon();
-                        mCameraSource.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                    } else {
-                        useFlash = true;
-                        setAppropriateFlashIcon();
-                        mCameraSource.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+                    if (mCameraSource.getFlashMode() != null) {
+                        if (mCameraSource.getFlashMode().equals(Camera.Parameters.FLASH_MODE_OFF)) {
+                            flashMode = Camera.Parameters.FLASH_MODE_ON;
+                            setAppropriateFlashIcon();
+                            mCameraSource.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+                        } else if (mCameraSource.getFlashMode().equals(Camera.Parameters.FLASH_MODE_ON)) {
+                            flashMode = Camera.Parameters.FLASH_MODE_AUTO;
+                            setAppropriateFlashIcon();
+                            mCameraSource.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+                        } else if (mCameraSource.getFlashMode().equals(Camera.Parameters.FLASH_MODE_AUTO)) {
+                            flashMode = Camera.Parameters.FLASH_MODE_OFF;
+                            setAppropriateFlashIcon();
+                            mCameraSource.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                        }
                     }
                 }
 
@@ -131,12 +139,34 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mCameraSource.getCameraFacing() == com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK) {
-                    previewFrontCamera();
-                    mFlashChangeButton.setVisibility(View.GONE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            previewFrontCamera();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mFlashChangeButton.setVisibility(View.GONE);
+                                }
+                            });
+                        }
+                    }, 100);
+                    setAppropriateCameraFaceIcon();
 
                 } else if (mCameraSource.getCameraFacing() == com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT) {
-                    previewBackCamera();
-                    mFlashChangeButton.setVisibility(View.VISIBLE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            previewBackCamera();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mFlashChangeButton.setVisibility(View.VISIBLE);
+                                }
+                            });
+                        }
+                    }, 100);
+                    setAppropriateCameraFaceIcon();
                 }
             }
         });
@@ -192,17 +222,35 @@ public class CameraActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            createCameraSource(true, false, com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
+            createCameraSource(true, Camera.Parameters.FLASH_MODE_OFF, com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT);
         } else {
             this.finish();
         }
     }
 
     private void setAppropriateFlashIcon() {
-        if (useFlash)
-            mFlashChangeButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_on_white_24dp));
-        else
-            mFlashChangeButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_off_white_24dp));
+        switch (flashMode) {
+            case Camera.Parameters.FLASH_MODE_ON:
+                mFlashChangeButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_on_white_24dp));
+                break;
+            case Camera.Parameters.FLASH_MODE_OFF:
+                mFlashChangeButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_off_white_24dp));
+                break;
+            case Camera.Parameters.FLASH_MODE_AUTO:
+                mFlashChangeButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_auto_white_24dp));
+                break;
+        }
+    }
+
+    private void setAppropriateCameraFaceIcon() {
+        switch (cameraFace) {
+            case com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK:
+                mCameraChangeButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_camera_front_white_24dp));
+                break;
+            case com.google.android.gms.vision.CameraSource.CAMERA_FACING_FRONT:
+                mCameraChangeButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_camera_rear_white_24dip));
+                break;
+        }
     }
 
     @NonNull
@@ -215,27 +263,31 @@ public class CameraActivity extends AppCompatActivity {
         return documentFile;
     }
 
-    private void createCameraSource(boolean focusAuto, boolean useFlash, int cameraFace) {
+    private void createCameraSource(boolean focusAuto, String flashMode, int cameraFace) {
         this.focusAuto = focusAuto;
-        this.useFlash = useFlash;
+        this.flashMode = flashMode;
         this.cameraFace = cameraFace;
+        setAppropriateCameraFaceIcon();
         Context context = getApplicationContext();
         FaceDetector mFaceDetector = new FaceDetector.Builder(context)
                 .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
                 .build();
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
 
         mFaceDetector.setProcessor(
                 new MultiProcessor.Builder<>(new CameraActivity.GraphicFaceTrackerFactory())
                         .build());
         CameraSource.Builder builder = new CameraSource.Builder(getApplicationContext(), mFaceDetector)
                 .setFacing(cameraFace)
-                .setRequestedPreviewSize(1600, 1024)
-                .setRequestedFps(30.0f);
-        builder = builder.setFocusMode(
-                focusAuto ? Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE : null);
+                .setRequestedPreviewSize(size.y, size.x)
+                .setRequestedFps(30.0f)
+                .setFocusMode(focusAuto ? Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE : null);
 
         mCameraSource = builder
-                .setFlashMode(useFlash ? Camera.Parameters.FLASH_MODE_OFF : null)
+                .setFlashMode(TextUtils.isEmpty(flashMode) ? Camera.Parameters.FLASH_MODE_OFF : flashMode)
                 .build();
         startCameraSource();
     }
@@ -277,7 +329,7 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void showConfirmImageLayoutAndHideCaptureLayout() {
-        mCaptureButton.setVisibility(View.GONE);
+        mCaptureButton.setVisibility(View.INVISIBLE);
         mCameraChangeButton.setVisibility(View.GONE);
         mFlashChangeButton.setVisibility(View.GONE);
         mCrossButton.setVisibility(View.VISIBLE);

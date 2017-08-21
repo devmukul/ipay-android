@@ -8,7 +8,8 @@
         android:supportsRtl="true">
         <activity
             android:name=".CameraActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+            android:theme="@style/CameraTheme" />
     </application>
 
 </manifest>
