@@ -32,7 +32,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
-import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder implements HttpResponseListener {
@@ -259,9 +258,8 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
                     }
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (context != null) {
-                        Toaster.makeText(context, mChangePasswordWithOTPResponse.getMessage(), Toast.LENGTH_LONG);
                         Utilities.hideKeyboard(context, view);
-                        ((MyApplication) ((Activity) (getContext())).getApplication()).launchLoginPage(null);
+                        ((MyApplication) ((Activity) (getContext())).getApplication()).launchLoginPage(mChangePasswordWithOTPResponse.getMessage());
                     }
 
                 } else {

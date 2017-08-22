@@ -282,8 +282,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mSetSecurityAnswerResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        ((MyApplication) (getActivity().getApplication())).launchLoginPage(null);
+                        ((MyApplication) (getActivity().getApplication())).launchLoginPage(mSetSecurityAnswerResponse.getMessage());
                     }
                 } else {
                     if (getActivity() != null)

@@ -155,8 +155,7 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
                     mAddPinListener.onPinAddSuccess();
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getContext() != null) {
-                        Toaster.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG);
-                        ((MyApplication)((Activity)getContext()).getApplication()).launchLoginPage(null);
+                        ((MyApplication)((Activity)getContext()).getApplication()).launchLoginPage(mSetPinResponse.getMessage());
                     }
                 } else {
                     if (getContext() != null)

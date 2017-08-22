@@ -26,7 +26,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager.FingerprintAuthenticationDialog;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
-import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ChangePasswordFragment extends Fragment implements HttpResponseListener {
@@ -194,8 +193,7 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
                     }
                 }else if(result.getStatus()==Constants.HTTP_RESPONSE_STATUS_BLOCKED){
                     if(getActivity()!=null){
-                        Toaster.makeText(getActivity(),mChangePasswordValidationResponse.getMessage(),Toast.LENGTH_LONG);
-                        ((MyApplication)getActivity().getApplication()).launchLoginPage(null);
+                        ((MyApplication)getActivity().getApplication()).launchLoginPage(mChangePasswordValidationResponse.getMessage());
                     }
                 } else {
                     if (getActivity() != null)

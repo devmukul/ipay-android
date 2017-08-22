@@ -144,8 +144,7 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        ((MyApplication) getActivity().getApplication()).launchLoginPage(null);
+                        ((MyApplication) getActivity().getApplication()).launchLoginPage(mSetPinResponse.getMessage());
                     }
 
                 } else {

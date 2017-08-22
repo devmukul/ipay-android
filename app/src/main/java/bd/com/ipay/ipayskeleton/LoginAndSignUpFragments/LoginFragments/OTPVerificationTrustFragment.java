@@ -252,8 +252,7 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                         attemptTrustedDeviceAdd();
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         hideProgressDialog();
-                        Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_LONG).show();
-                        ((MyApplication)getActivity().getApplication()).launchLoginPage(null);
+                        ((MyApplication)getActivity().getApplication()).launchLoginPage(mLoginResponseModel.getMessage());
                     } else {
                         hideProgressDialog();
 
