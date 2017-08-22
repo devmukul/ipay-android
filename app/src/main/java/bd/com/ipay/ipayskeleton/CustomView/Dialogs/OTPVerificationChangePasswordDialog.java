@@ -265,7 +265,6 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
                     }
 
                 } else {
-
                     if (context != null)
                         Toast.makeText(context, mChangePasswordWithOTPResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
