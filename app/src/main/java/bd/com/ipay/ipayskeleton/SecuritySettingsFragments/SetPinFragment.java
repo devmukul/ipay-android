@@ -146,7 +146,6 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(null);
-
                     }
 
                 } else {
