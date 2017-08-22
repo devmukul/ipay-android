@@ -43,6 +43,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -274,6 +275,11 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                     mProgressDialog.show();
 
                     getTrustedPersons();
+                }else if(result.getStatus()==Constants.HTTP_RESPONSE_STATUS_BLOCKED){
+                    if(getActivity()!=null){
+                        Toast.makeText(getActivity(),mRemoveTrustedPersonResponse.getMessage(),Toast.LENGTH_LONG).show();
+                        ((MyApplication)getActivity().getApplication()).launchLoginPage(null);
+                    }
                 } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mRemoveTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();

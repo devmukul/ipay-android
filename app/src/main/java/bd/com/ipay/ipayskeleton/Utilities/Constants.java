@@ -459,6 +459,7 @@ public class Constants {
     public static final int HTTP_RESPONSE_STATUS_BAD_REQUEST = 400;
     public static final int HTTP_RESPONSE_STATUS_ACCEPTED = 202;
     public static final int HTTP_RESPONSE_STATUS_INTERNAL_ERROR = 500;
+    public static final int HTTP_RESPONSE_STATUS_BLOCKED=403;
 
     public static final int PERSONAL_ACCOUNT_TYPE = 1;
     public static final int BUSINESS_ACCOUNT_TYPE = 2;

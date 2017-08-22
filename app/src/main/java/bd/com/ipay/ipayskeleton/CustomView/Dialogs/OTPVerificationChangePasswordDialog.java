@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
@@ -18,8 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
@@ -33,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder implements HttpResponseListener {
@@ -257,7 +257,15 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
                         mOTPInputDialog.hide();
                         showChangePasswordSuccessDialog();
                     }
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    if (context != null) {
+                        Toaster.makeText(context, mChangePasswordWithOTPResponse.getMessage(), Toast.LENGTH_LONG);
+                        Utilities.hideKeyboard(context, view);
+                        ((MyApplication) ((Activity) (getContext())).getApplication()).launchLoginPage(null);
+                    }
+
                 } else {
+
                     if (context != null)
                         Toast.makeText(context, mChangePasswordWithOTPResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
