@@ -3,8 +3,8 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp;
 public class TopupResponse {
 
     private String transactionID;
-    private int statusID;
-    private String statusDescription;
+    private int statusCode;
+    private String message;
 
     public TopupResponse() {
     }
@@ -13,11 +13,11 @@ public class TopupResponse {
         return transactionID;
     }
 
-    public int getStatusID() {
-        return statusID;
+    public int getStatusCode() {
+        return statusCode;
     }
 
-    public String getStatusDescription() {
-        return statusDescription;
+    public String getMessage() {
+        return message;
     }
 }
