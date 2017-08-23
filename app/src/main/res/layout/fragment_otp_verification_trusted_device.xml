@@ -55,8 +55,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="@dimen/value2"
-                android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                android:layout_marginRight="@dimen/value2"
                 android:layout_weight="1"
                 android:text="@string/verify" />
 
@@ -65,8 +65,8 @@
                 style="@style/ButtonSecondary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                android:layout_marginRight="@dimen/value2"
+                android:layout_marginLeft="@dimen/value2"
+                android:layout_marginRight="@dimen/activity_horizontal_margin_card"
                 android:layout_weight="1"
                 android:enabled="false"
                 android:text="@string/resend" />
