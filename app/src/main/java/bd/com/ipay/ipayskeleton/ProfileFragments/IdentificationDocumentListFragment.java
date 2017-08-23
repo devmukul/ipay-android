@@ -39,16 +39,13 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
-import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.DocumentPreviewDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.DocumentPreviewRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.GetIdentificationDocumentResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.IdentificationDocument;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -145,29 +142,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE)) {
-            if (ProfileInfoCacheManager.isBusinessAccount()) {
-                getIdentificationBusinessDocuments();
-            } else
-                getIdentificationDocuments();
-        } else {
-            DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE);
-
-            if (json == null) {
-
-                if (ProfileInfoCacheManager.isBusinessAccount())
-                    getIdentificationBusinessDocuments();
-                else
-                    getIdentificationDocuments();
-            } else {
-                if (ProfileInfoCacheManager.isBusinessAccount())
-                    processGetBusinessDocumentListResponse(json);
-                else
-                    processGetDocumentListResponse(json);
-            }
-        }
+        if (ProfileInfoCacheManager.isBusinessAccount()) getIdentificationBusinessDocuments();
+        else getIdentificationDocuments();
 
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             DOCUMENT_HINT_TYPES = getResources().getStringArray(R.array.business_document_id);
@@ -353,11 +329,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         processGetDocumentListResponse(result.getJsonString());
-
-                        DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                        dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
-
-                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.failed_get_document_list, Toast.LENGTH_SHORT).show();
@@ -376,11 +347,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         processGetBusinessDocumentListResponse(result.getJsonString());
-
-                        DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                        dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, result.getJsonString());
-
-                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, false);
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.failed_get_document_list, Toast.LENGTH_SHORT).show();
@@ -424,11 +390,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
-                            // If push is delayed, we would not see the updated document list when we back
-                            // to the document list fragment. Setting the update flag to true to force load
-                            // the list.
-                            PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
-
                             Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                             if (ProfileInfoCacheManager.isBusinessAccount())
@@ -666,7 +627,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
                 mUploadButton.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v){
+                    public void onClick(View v) {
                         attemptUploadDocument(pos);
                     }
                 });
