@@ -35,14 +35,6 @@
 -keep class com.afollestad.** { *; }
 -keepclassmembers class bd.com.ipay.ipayskeleton.Model.** { *; }
 
-#AppSee Rules Start
--keep class com.appsee.** { *; }
--dontwarn com.appsee.**
--keep class android.support.** { *; }
--keep interface android.support.** { *; }
--keepattributes SourceFile,LineNumberTable
-#AppSee Rules Ends
-
 -keepattributes Signature
 -keepattributes *Annotation*
 
