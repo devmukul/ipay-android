@@ -61,7 +61,7 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_bussiness_contact) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_contact));
     }
 
     @Override

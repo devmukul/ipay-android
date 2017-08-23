@@ -120,7 +120,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
         super.onResume();
         if (!mPreviousQuestionClassList.isEmpty() || mPreviousQuestionClassList.size() != 0)
             getAllSecurityQuestions();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_sequrity_question) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_security_question));
     }
 
     private void getAllSecurityQuestions() {

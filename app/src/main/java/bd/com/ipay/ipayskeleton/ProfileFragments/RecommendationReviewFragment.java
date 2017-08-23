@@ -94,7 +94,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_recomendation_review) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_recommendation_review));
     }
 
     @Override

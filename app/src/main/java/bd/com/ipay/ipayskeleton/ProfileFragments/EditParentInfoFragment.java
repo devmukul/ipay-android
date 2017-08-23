@@ -21,8 +21,8 @@ import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetParentInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetParentInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -68,7 +68,7 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_parmanent_info_edit) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_permanent_info_edit));
     }
 
     @Override

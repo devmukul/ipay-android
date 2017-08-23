@@ -57,7 +57,7 @@ public class SecuritySettingsFragment extends Fragment implements HttpResponseLi
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_sequrity_settings) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_security_settings));
     }
 
     @Override

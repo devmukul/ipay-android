@@ -64,7 +64,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_trusted_device) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_trusted_devices));
     }
 
     @Override
