@@ -297,15 +297,24 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                             PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, true);
 
                             getActivity().onBackPressed();
+
+                            //Google Analytic event
+                            Utilities.sendEventTracker(mTracker,"UpdateBasicInfo", "Succeed", mSetProfileInfoResponse.getMessage());
                         }
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
+
+                        //Google Analytic event
+                        Utilities.sendEventTracker(mTracker,"UpdateBasicInfo", "Failed", mSetProfileInfoResponse.getMessage());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"UpdateBasicInfo", "Failed", getString(R.string.profile_info_save_failed));
                 }
 
                 mSetProfileInfoTask = null;

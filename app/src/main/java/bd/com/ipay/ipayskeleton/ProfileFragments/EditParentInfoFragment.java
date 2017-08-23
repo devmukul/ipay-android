@@ -251,15 +251,24 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
                             Toast.makeText(getActivity(), mSetParentInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                             getActivity().onBackPressed();
+
+                            //Google Analytic event
+                            Utilities.sendEventTracker(mTracker,"UpdateParentInfo", "Succeed", mSetParentInfoResponse.getMessage());
                         }
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.parent_info_save_failed, Toast.LENGTH_SHORT).show();
+
+                        //Google Analytic event
+                        Utilities.sendEventTracker(mTracker,"UpdateParentInfo", "Failed", mSetParentInfoResponse.getMessage());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.parent_info_save_failed, Toast.LENGTH_SHORT).show();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"UpdateParentInfo", "Failed", getString(R.string.parent_info_save_failed));
                 }
 
                 mSetParentInfoTask = null;

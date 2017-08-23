@@ -424,14 +424,23 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                     intent.putExtra(Constants.PROFILE_PICTURE, mSelectedImagePath);
                     LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
 
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"ProfilePictureSet", "Succeed", mSetProfilePictureResponse.getMessage());
+
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"ProfilePictureSet", "Failed", mSetProfilePictureResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.profile_picture_set_failed, Toast.LENGTH_SHORT);
+
+                //Google Analytic event
+                Utilities.sendEventTracker(mTracker,"ProfilePictureSet", "Failed", getString( R.string.profile_picture_set_failed));
             }
 
             mUploadProfilePictureAsyncTask = null;

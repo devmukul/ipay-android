@@ -14,8 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.appsee.Appsee;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
@@ -283,11 +281,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
                             //Google Analytic event
                             Utilities.sendEventTracker(mTracker,"TopUp", "Processing", getString(R.string.progress_dialog_processing));
-                            //AppSee event
-                            Map<String, Object> props = new HashMap<String, Object>();
-                            props.put("Status", "Processing");
-                            props.put("Label",getString(R.string.progress_dialog_processing));
-                            Appsee.addEvent("TopUp", props);
                         }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
@@ -297,11 +290,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
                             //Google Analytic event
                             Utilities.sendEventTracker(mTracker,"TopUp", "Succeed", getString(R.string.progress_dialog_processing));
-                            //AppSee event
-                            Map<String, Object> props = new HashMap<String, Object>();
-                            props.put("Status", "Succeed");
-                            props.put("Label",getString(R.string.progress_dialog_processing));
-                            Appsee.addEvent("TopUp", props);
                         }
                     } else {
                         if (getActivity() != null)
@@ -309,11 +297,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
                         //Google Analytic event
                         Utilities.sendEventTracker(mTracker,"TopUp", "Failed", getString(R.string.recharge_failed));
-                        //AppSee event
-                        Map<String, Object> props = new HashMap<String, Object>();
-                        props.put("Status", "Failed");
-                        props.put("Label", getString(R.string.recharge_failed));
-                        Appsee.addEvent("TopUp", props);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

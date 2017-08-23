@@ -231,11 +231,17 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
 
                         Toaster.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG);
                         ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
+
+                        //Google Analytic event
+                        Utilities.sendEventTracker(mTracker,"IdentificationDocumentUpload", "Succeed", mUploadDocumentResponse.getMessage());
                     }
 
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG);
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"IdentificationDocumentUpload", "Failed", mUploadDocumentResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

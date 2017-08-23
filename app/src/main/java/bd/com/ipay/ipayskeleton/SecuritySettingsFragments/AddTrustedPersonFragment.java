@@ -214,14 +214,23 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
                     ((SecuritySettingsActivity) getActivity()).switchToTrustedPersonFragment();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"AddTrustedPerson", "Succeed", mAddTrustedPersonResponse.getMessage());
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"AddTrustedPerson", "Failed", mAddTrustedPersonResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.failed_adding_trusted_person, Toast.LENGTH_LONG);
+
+                //Google Analytic event
+                Utilities.sendEventTracker(mTracker,"AddTrustedPerson", "Succeed", getString(R.string.failed_adding_trusted_person));
             }
 
             mAddTrustedPersonTask = null;

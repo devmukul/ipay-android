@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.appsee.Appsee;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
@@ -259,11 +257,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
 
                     //Google Analytic event
                     Utilities.sendEventTracker(mTracker,"MakePayment", "Success", mPaymentResponse.getMessage());
-                    //AppSee event
-                    Map<String, Object> props = new HashMap<String, Object>();
-                    props.put("Status", "Success");
-                    props.put("Label",mPaymentResponse.getMessage());
-                    Appsee.addEvent("MakePayment", props);
 
                     getActivity().finish();
                 } else {
@@ -272,11 +265,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
 
                     //Google Analytic event
                     Utilities.sendEventTracker(mTracker,"MakePayment", "Failed", mPaymentResponse.getMessage());
-                    //AppSee event
-                    Map<String, Object> props = new HashMap<String, Object>();
-                    props.put("Status", "Failed");
-                    props.put("Label",mPaymentResponse.getMessage());
-                    Appsee.addEvent("MakePayment", props);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

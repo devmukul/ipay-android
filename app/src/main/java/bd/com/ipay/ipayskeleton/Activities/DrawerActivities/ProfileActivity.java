@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
+import com.google.android.gms.analytics.Tracker;
+
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessInformationFragment;
@@ -51,10 +53,13 @@ public class ProfileActivity extends BaseActivity {
 
 
     private final String STARTED_FROM_PROFILE_ACTIVITY = "started_from_profile_activity";
+    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mTracker = Utilities.getTracker(this);
 
         setContentView(R.layout.activity_profile);
 

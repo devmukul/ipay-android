@@ -149,14 +149,23 @@ public class EditAddressFragment extends Fragment implements HttpResponseListene
                     Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_LONG).show();
                     getActivity().onBackPressed();
 
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"UpdateAddress", "Succeed", mSetUserAddressResponse.getMessage());
+
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"UpdateAddress", "Failed", mSetUserAddressResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
+
+                //Google Analytic event
+                Utilities.sendEventTracker(mTracker,"UpdateAddress", "Failed", getString(R.string.profile_info_save_failed));
             }
 
             mSetUserAddressTask = null;

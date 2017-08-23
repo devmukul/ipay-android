@@ -16,8 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.appsee.Appsee;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
@@ -239,22 +237,12 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
 
                     //Google Analytic event
                     Utilities.sendEventTracker(mTracker,"WithdrawMoney", "Succeed", mWithdrawMoneyResponse.getMessage());
-                    //AppSee event
-                    Map<String, Object> props = new HashMap<String, Object>();
-                    props.put("Status", "Succeed");
-                    props.put("Label",mWithdrawMoneyResponse.getMessage());
-                    Appsee.addEvent("WithdrawMoney", props);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                     //Google Analytic event
                     Utilities.sendEventTracker(mTracker,"WithdrawMoney", "Failed", mWithdrawMoneyResponse.getMessage());
-                    //AppSee event
-                    Map<String, Object> props = new HashMap<String, Object>();
-                    props.put("Status", "Failed");
-                    props.put("Label",mWithdrawMoneyResponse.getMessage());
-                    Appsee.addEvent("WithdrawMoney", props);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

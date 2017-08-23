@@ -16,8 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.appsee.Appsee;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
@@ -239,23 +237,13 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
                     getActivity().finish();
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"AddMoney", "Success", "Add Money successful.");
-                    //AppSee event
-                    Map<String, Object> props = new HashMap<String, Object>();
-                    props.put("Status", "Success");
-                    props.put("Label","Add Money successful.");
-                    Appsee.addEvent("AddMoney", props);
+                    Utilities.sendEventTracker(mTracker,"AddMoney", "Success", "Money Added successful.");
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_LONG);
 
                     //Google Analytic event
                     Utilities.sendEventTracker(mTracker,"AddMoney", "Failed", mAddMoneyResponse.getMessage());
-                    //AppSee event
-                    Map<String, Object> props = new HashMap<String, Object>();
-                    props.put("Status", "Failed");
-                    props.put("Label",mAddMoneyResponse.getMessage());
-                    Appsee.addEvent("AddMoney", props);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

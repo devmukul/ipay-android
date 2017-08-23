@@ -156,14 +156,23 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
                         Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
                     ((SecuritySettingsActivity) getActivity()).switchToAccountSettingsFragment();
 
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"SetPin", "Succeed", mSetPinResponse.getMessage());
+
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"SetPin", "Failed", mSetPinResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.save_failed, Toast.LENGTH_LONG);
+
+                //Google Analytic event
+                Utilities.sendEventTracker(mTracker,"SetPin", "Failed", getString(R.string.save_failed));
             }
 
             mProgressDialog.dismiss();

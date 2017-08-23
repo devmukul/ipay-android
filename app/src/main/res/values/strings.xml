@@ -943,7 +943,4 @@
     <string name="screen_name_trusted_devices">Trusted devices</string>
     <string name="screen_name_trusted_network">Trusted network</string>
     <string name="screen_name_update_security_question">Update security question</string>
-
-
-    <string name="appsee_api_key">f49db925bd904a8ebecb86a7ef1b6602</string>
 </resources>

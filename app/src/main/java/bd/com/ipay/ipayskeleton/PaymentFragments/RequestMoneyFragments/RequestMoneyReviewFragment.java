@@ -12,8 +12,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.appsee.Appsee;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
@@ -207,22 +205,12 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
                     //Google Analytic event
                     Utilities.sendEventTracker(mTracker,"RequestMoney", "Sent", mRequestMoneyResponse.getMessage());
-                    //AppSee event
-                    Map<String, Object> props = new HashMap<String, Object>();
-                    props.put("Status", "Sent");
-                    props.put("Label",mRequestMoneyResponse.getMessage());
-                    Appsee.addEvent("RequestMoney", props);
                 } else {
                     if (getActivity() != null)
                          Toaster.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_SHORT);
 
                     //Google Analytic event
                     Utilities.sendEventTracker(mTracker,"RequestMoney", "Failed", mRequestMoneyResponse.getMessage());
-                    //AppSee event
-                    Map<String, Object> props = new HashMap<String, Object>();
-                    props.put("Status", "Failed");
-                    props.put("Label",mRequestMoneyResponse.getMessage());
-                    Appsee.addEvent("RequestMoney", props);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

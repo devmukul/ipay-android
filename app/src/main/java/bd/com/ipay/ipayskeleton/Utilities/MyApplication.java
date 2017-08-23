@@ -193,7 +193,12 @@ public class MyApplication extends Application implements HttpResponseListener {
      */
     synchronized public Tracker getDefaultTracker() {
         if (sTracker == null) {
-            sTracker = sAnalytics.newTracker(R.xml.global_tracker);
+            if (Constants.SERVER_TYPE == Constants.LIVE_SERVER) {
+                sTracker = sAnalytics.newTracker(R.xml.global_tracker_for_live);
+            } else {
+                sTracker = sAnalytics.newTracker(R.xml.global_tracker);
+            }
+
         }
         return sTracker;
     }

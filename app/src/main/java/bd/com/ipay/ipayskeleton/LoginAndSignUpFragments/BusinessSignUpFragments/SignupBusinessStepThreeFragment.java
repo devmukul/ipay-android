@@ -319,6 +319,9 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
                 SignupOrLoginActivity.otpDuration = mOtpResponseBusinessSignup.getOtpValidFor();
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
 
+                //Google Analytic event
+                Utilities.sendEventTracker(mTracker,"BusinessSignUp", "toOTP", "Signup complete for Business. Navigate to OTP for mobile verification");
+
             } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
@@ -338,6 +341,9 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
             } else {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+
+                //Google Analytic event
+                Utilities.sendEventTracker(mTracker,"BusinessSignUp", "Failed", message);
             }
 
             mProgressDialog.dismiss();

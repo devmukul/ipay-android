@@ -327,6 +327,8 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
 
                 SignupOrLoginActivity.otpDuration = mOtpResponsePersonalSignup.getOtpValidFor();
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
+                //Google Analytic event
+                Utilities.sendEventTracker(mTracker,"SignUp", "toOTP", "Signup complete for personal account. Navigate to OTP for mobile verification");
 
             } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
                 if (getActivity() != null)
@@ -339,6 +341,8 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             } else {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                //Google Analytic event
+                Utilities.sendEventTracker(mTracker,"SignUp", "Failed", message);
             }
 
             mProgressDialog.dismiss();

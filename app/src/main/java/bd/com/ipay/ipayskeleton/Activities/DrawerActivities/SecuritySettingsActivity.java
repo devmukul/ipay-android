@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.google.android.gms.analytics.Tracker;
+
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.AddTrustedPersonFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.ChangePasswordFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.FingerPrintAuthenticationSettingsFragment;
@@ -21,10 +23,13 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class SecuritySettingsActivity extends BaseActivity {
 
     public static long otpDuration;
+    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mTracker = Utilities.getTracker(this);
         setContentView(R.layout.activity_activity_log);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

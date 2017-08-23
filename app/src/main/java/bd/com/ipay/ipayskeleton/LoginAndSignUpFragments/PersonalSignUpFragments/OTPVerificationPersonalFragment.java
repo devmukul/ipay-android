@@ -274,6 +274,9 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         // TODO: For now, switch to login fragment after a successful sign up. Don't remove it either. Can be used later
 //                        ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
 
+                        //Google Analytic event
+                        Utilities.sendEventTracker(mTracker,"SignUp", "Succeed", "Signup complete for personal account.");
+
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
@@ -282,6 +285,9 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"BusinessSignUp", "Failed","Failed to verify no.");
                 }
 
                 mSignUpTask = null;

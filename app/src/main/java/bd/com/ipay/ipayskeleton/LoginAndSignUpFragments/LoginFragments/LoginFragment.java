@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.appsee.Appsee;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
@@ -364,11 +363,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                             }
                             //Google Analytic event
                             Utilities.sendEventTracker(mTracker,"Login", "ToHome", "Login successful. Navigate to home page.");
-                            //AppSee event
-                            props.put("From", "Login");
-                            props.put("To", "Home");
-                            props.put("Label","Login successful. Navigate to home page.");
-                            Appsee.addEvent("Login", props);
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_ACCEPTED:
                             hideProgressDialog();
@@ -382,11 +376,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
                             //Google Analytic event
                             Utilities.sendEventTracker(mTracker,"Login", "ToOTP", "Navigate to OTP page to verify mobile no.");
-                            //AppSee event
-                            props.put("From", "Login");
-                            props.put("To", "OTP");
-                            props.put("Label","Navigate to OTP page to verify mobile no.");
-                            Appsee.addEvent("Login", props);
 
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE:
@@ -401,11 +390,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                             ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
                             //Google Analytic event
                             Utilities.sendEventTracker(mTracker,"Login", "ToOTP", "Navigate to OTP page to verify mobile no. and add trusted device");
-                            //AppSee event
-                            props.put("From", "Login");
-                            props.put("To", "OTP");
-                            props.put("Label","Navigate to OTP page to verify mobile no. and add trusted device");
-                            Appsee.addEvent("Login", props);
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED:
                             hideProgressDialog();

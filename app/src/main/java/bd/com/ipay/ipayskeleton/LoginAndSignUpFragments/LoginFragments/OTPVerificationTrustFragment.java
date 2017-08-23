@@ -325,9 +325,16 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                     else
                         Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
 
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"Login", "ToHome", "Login successful. Navigate to home page.");
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
+
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"Login", "Failed", getString(R.string.failed_add_trusted_device));
                 }
 
                 mProgressDialog.dismiss();
