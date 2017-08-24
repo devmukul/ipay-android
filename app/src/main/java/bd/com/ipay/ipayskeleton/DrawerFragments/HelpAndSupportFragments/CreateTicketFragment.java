@@ -142,7 +142,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
-                if (DocumentPicker.ifNecessaryPermissionExists(getActivity()))
+                if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
                     selectDocument(mPickerActionId);
                 else
                     Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
@@ -154,7 +154,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         switch (requestCode) {
             case REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT:
                 if (resultCode == Activity.RESULT_OK) {
-                    String filePath = DocumentPicker.getFilePathForCameraOrPDFResult(getActivity(), resultCode, data);
+                    String filePath = DocumentPicker.getFilePathForCameraOrPDFResult(getActivity(), data);
 
                     if (filePath != null) {
                         Random r = new Random();
@@ -532,11 +532,11 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                             @Override
                             public void onResourceSelected(int mActionId, String action) {
                                 if (!Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action)) {
-                                    if (DocumentPicker.ifNecessaryPermissionExists(getActivity()))
+                                    if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
                                         selectDocument(mActionId);
                                     else {
                                         mPickerActionId = mActionId;
-                                        DocumentPicker.requestRequiredPermissions(CreateTicketFragment.this, REQUEST_CODE_PERMISSION);
+                                        Utilities.requestRequiredPermissions(CreateTicketFragment.this, REQUEST_CODE_PERMISSION, DocumentPicker.DOCUMENT_PICK_PERMISSIONS);
                                     }
                                 } else {
                                     setMultipleImagePicker();

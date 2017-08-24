@@ -557,6 +557,7 @@
     <string name="passport">Passport</string>
     <string name="upload">UPLOAD</string>
     <string name="upload_small">Upload</string>
+    <string name="upload_with_placeholder">Upload %s</string>
     <string name="driving_license">Driving License</string>
     <string name="business_tin">Business TIN</string>
     <string name="trade_license">Trade License</string>

@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class DocumentUploadFragment extends Fragment implements HttpResponseListener {
 
@@ -90,15 +91,15 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
         mDocumentType = bundle.getString(Constants.DOCUMENT_TYPE, "");
         mDocumentTypeName = bundle.getString(Constants.DOCUMENT_TYPE_NAME, "");
 
-        mDocumentTypeNameView.setText(getString(R.string.upload_small) + " " + mDocumentTypeName);
+        mDocumentTypeNameView.setText(getString(R.string.upload_with_placeholder, mDocumentTypeName));
 
         mSelectFileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
+                if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS)) {
                     selectDocument();
                 } else {
-                    DocumentPicker.requestRequiredPermissions(DocumentUploadFragment.this, REQUEST_CODE_PERMISSION);
+                    Utilities.requestRequiredPermissions(DocumentUploadFragment.this, REQUEST_CODE_PERMISSION, DocumentPicker.DOCUMENT_PICK_PERMISSIONS);
                 }
             }
         });
@@ -164,7 +165,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
         switch (requestCode) {
             case ACTION_UPLOAD_DOCUMENT:
                 if (resultCode == Activity.RESULT_OK) {
-                    String filePath = DocumentPicker.getFilePathFromResult(getActivity(), resultCode, intent);
+                    String filePath = DocumentPicker.getFilePathFromResult(getActivity(), intent);
                     mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent);
 
                     if (filePath != null) {
@@ -185,7 +186,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
-                if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
+                if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS)) {
                     selectDocument();
                 } else {
                     Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();

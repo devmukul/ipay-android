@@ -1,0 +1,14 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- larger circle at the back -->
+    <item android:gravity="center">
+        <ripple android:color="#66FFFFFF" />
+        <shape android:shape="oval">
+            <padding
+                android:bottom="20dip"
+                android:left="20dip"
+                android:right="20dip"
+                android:top="20dip" />
+            <solid android:color="#00FFFFFF" />
+        </shape>
+    </item>
+</layer-list>
