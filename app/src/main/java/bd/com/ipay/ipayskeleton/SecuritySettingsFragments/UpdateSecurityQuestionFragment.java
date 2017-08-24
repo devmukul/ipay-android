@@ -22,6 +22,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.PreviousSecurityQuestionClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.UpdateSecurityQuestionAnswerClass;
@@ -31,8 +32,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class UpdateSecurityQuestionFragment extends Fragment implements HttpResponseListener {
-
+public class UpdateSecurityQuestionFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPutAsyncTask mUpdateSecurityAnswerTask = null;
     private UpdateSecurityAnswerResponse mUpdateSecurityAnswerResponse;
@@ -54,13 +54,6 @@ public class UpdateSecurityQuestionFragment extends Fragment implements HttpResp
     private int mQuestionID;
     private String mAnswer;
     private String mPassword;
-    private Tracker mTracker;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
 
     @Override
     public void onResume() {

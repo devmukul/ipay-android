@@ -24,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
@@ -40,7 +41,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class OTPVerificationTrustFragment extends Fragment implements HttpResponseListener {
+public class OTPVerificationTrustFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mLoginTask = null;
     private LoginResponse mLoginResponseModel;
@@ -62,20 +63,6 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
     private ProgressDialog mProgressDialog;
 
     private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
-    private Tracker mTracker;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().setTitle(R.string.title_otp_verification_for_add_trusted_device);
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_otp_for_login) );
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -148,6 +135,13 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
             mActivateButton.callOnClick();
         }
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.title_otp_verification_for_add_trusted_device);
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_otp_for_login) );
     }
 
     @Override

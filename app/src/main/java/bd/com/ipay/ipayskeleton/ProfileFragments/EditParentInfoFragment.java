@@ -23,6 +23,7 @@ import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogA
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetParentInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetParentInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -31,7 +32,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EditParentInfoFragment extends Fragment implements HttpResponseListener {
+public class EditParentInfoFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSetParentInfoTask = null;
     private SetParentInfoResponse mSetParentInfoResponse;
@@ -57,25 +58,6 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
 
     private final int PICK_FATHERS_MOBILE_NUMBER_REQUEST = 100;
     private final int PICK_MOTHERS_MOBILE_NUMBER_REQUEST = 101;
-    private Tracker mTracker;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_permanent_info_edit));
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -131,6 +113,18 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_permanent_info_edit));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+
     }
 
     @Override

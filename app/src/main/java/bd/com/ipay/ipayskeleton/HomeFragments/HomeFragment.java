@@ -46,6 +46,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPinDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -63,7 +64,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class HomeFragment extends Fragment implements HttpResponseListener {
+public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
     private static boolean profileCompletionPromptShown = false;
 
@@ -97,13 +98,11 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
     private ImageButton mCloseButton;
 
     private ImageView mShowQRCodeButton;
-    private Tracker mTracker;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mTracker = Utilities.getTracker(getActivity());
     }
 
     @Override

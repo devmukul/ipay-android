@@ -14,11 +14,12 @@ import android.widget.TextView;
 
 import com.google.android.gms.analytics.Tracker;
 
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AboutContactsFragment extends Fragment {
+public class AboutContactsFragment extends BaseFragment {
 
     private ImageView mapView;
     private TextView mAddressView;
@@ -26,19 +27,6 @@ public class AboutContactsFragment extends Fragment {
     private TextView mEmailView;
     private TextView mWebView;
     private FloatingActionButton mFabFeedback;
-    private Tracker mTracker;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ipay_contacts) );
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,6 +65,12 @@ public class AboutContactsFragment extends Fragment {
         });
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ipay_contacts) );
     }
 
     private void openMapWithLocation() {

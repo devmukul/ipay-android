@@ -30,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
@@ -47,7 +48,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class MobileTopupFragment extends Fragment implements HttpResponseListener {
+public class MobileTopupFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
@@ -73,19 +74,6 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     private int mSelectedPackageTypeId = -1;
     private int mSelectedOperatorTypeId = 0;
     private String mUserMobileNumber;
-    private Tracker mTracker;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_mobile_topup) );
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -172,6 +160,12 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         attemptGetBusinessRule(Constants.SERVICE_ID_TOP_UP);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_mobile_topup) );
     }
 
     private void setMobileNumber() {

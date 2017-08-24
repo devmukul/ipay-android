@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.analytics.Tracker;
 
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -29,7 +30,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class BusinessContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+public class BusinessContactsFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor>,
         SearchView.OnQueryTextListener {
 
     private static final int CONTACTS_QUERY_LOADER = 0;
@@ -50,19 +51,6 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
     private int phoneNumberIndex;
     private int profilePictureUrlIndex;
     private int businessTypeIndex;
-    private Tracker mTracker;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_contact));
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -93,6 +81,12 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
         mRecyclerView.setAdapter(mAdapter);
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_contact));
     }
 
     private void resetSearchKeyword() {

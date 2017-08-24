@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAllBusinessListAsyncTask;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.BusinessContactsSearchView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
@@ -46,7 +47,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class MakePaymentFragment extends Fragment implements HttpResponseListener {
+public class MakePaymentFragment extends BaseFragment implements HttpResponseListener {
 
 
     private final int PICK_CONTACT_REQUEST = 100;
@@ -60,20 +61,6 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
     private EditText mAmountEditText;
     private EditText mRefNumberEditText;
     private View mRightSideIconViewHolder;
-    private Tracker mTracker;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_make_payment) );
-    }
-
     private static final int REQUEST_CODE_PERMISSION = 1001;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
@@ -137,6 +124,12 @@ public class MakePaymentFragment extends Fragment implements HttpResponseListene
         syncBusinessAccountList();
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_make_payment) );
     }
 
     @Override

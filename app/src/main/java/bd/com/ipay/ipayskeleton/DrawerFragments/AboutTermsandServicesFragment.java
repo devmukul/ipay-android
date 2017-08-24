@@ -12,26 +12,13 @@ import android.widget.TextView;
 
 import com.google.android.gms.analytics.Tracker;
 
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AboutTermsandServicesFragment extends Fragment {
+public class AboutTermsandServicesFragment extends BaseFragment {
 
     private TextView mTermsView;
-    private Tracker mTracker;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_terms_and_service) );
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -583,5 +570,11 @@ public class AboutTermsandServicesFragment extends Fragment {
 
 
         return v;
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_terms_and_service) );
     }
 }

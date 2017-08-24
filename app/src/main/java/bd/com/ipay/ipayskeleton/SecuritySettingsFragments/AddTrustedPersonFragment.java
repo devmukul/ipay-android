@@ -27,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.AddTrustedPersonRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.AddTrustedPersonResponse;
@@ -38,7 +39,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AddTrustedPersonFragment extends Fragment implements HttpResponseListener {
+public class AddTrustedPersonFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mAddTrustedPersonTask = null;
     private AddTrustedPersonResponse mAddTrustedPersonResponse = null;
@@ -58,19 +59,11 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
 
     private int mSelectedRelationId = -1;
     private final int PICK_CONTACT_REQUEST = 100;
-    private Tracker mTracker;
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_add_trusted_person) );
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mTracker = Utilities.getTracker(getActivity());
     }
 
     @Override
@@ -130,6 +123,12 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
         });
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_add_trusted_person) );
     }
 
     @Override

@@ -14,7 +14,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public abstract class BaseActivity extends AppCompatActivity {
 
     private final Context context;
-    private Tracker mTracker;
 
     public BaseActivity() {
         this.context = setContext();
