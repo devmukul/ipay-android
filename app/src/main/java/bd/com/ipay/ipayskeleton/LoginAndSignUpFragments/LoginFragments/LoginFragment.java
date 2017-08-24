@@ -397,6 +397,11 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                                     removeFingerprintAuthentication();
                             }
                             break;
+                        case Constants.HTTP_RESPONSE_STATUS_BLOCKED:
+                            hideProgressDialog();
+
+                            Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_LONG).show();
+                            break;
                         default:
                             hideProgressDialog();
 

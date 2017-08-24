@@ -19,15 +19,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.PreviousSecurityQuestionClass;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.UpdateSecurityQuestionAnswerClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.UpdateSecurityAnswerRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.UpdateSecurityAnswerResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.UpdateSecurityQuestionAnswerClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 
 public class UpdateSecurityQuestionFragment extends Fragment implements HttpResponseListener {
 
@@ -212,6 +213,9 @@ public class UpdateSecurityQuestionFragment extends Fragment implements HttpResp
                     Toast.makeText(getActivity(), mUpdateSecurityAnswerResponse.getMessage(), Toast.LENGTH_LONG).show();
                     getActivity().onBackPressed();
 
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    if (getActivity() != null)
+                        ((MyApplication) (getActivity().getApplication())).launchLoginPage(mUpdateSecurityAnswerResponse.getMessage());
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mUpdateSecurityAnswerResponse.getMessage(), Toast.LENGTH_SHORT).show();

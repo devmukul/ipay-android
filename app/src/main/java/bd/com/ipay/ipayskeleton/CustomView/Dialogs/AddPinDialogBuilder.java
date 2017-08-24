@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -13,13 +14,14 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -131,7 +133,7 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
         mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-					|| result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mSavePINTask = null;
             if (getContext() != null)
                 Toaster.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_LONG);
@@ -151,6 +153,10 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
                         Toaster.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG);
 
                     mAddPinListener.onPinAddSuccess();
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    if (getContext() != null) {
+                        ((MyApplication) ((Activity) getContext()).getApplication()).launchLoginPage(mSetPinResponse.getMessage());
+                    }
                 } else {
                     if (getContext() != null)
                         Toaster.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG);
