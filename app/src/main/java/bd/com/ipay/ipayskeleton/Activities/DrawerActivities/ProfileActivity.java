@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.Activities.DrawerActivities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -286,6 +287,12 @@ public class ProfileActivity extends BaseActivity {
         RecommendationReviewFragment recommendationReviewFragment = new RecommendationReviewFragment();
         recommendationReviewFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recommendationReviewFragment).addToBackStack(null).commit();
+    }
+
+    public void launchIntendedActivity(Activity activity, String intendedFragment) {
+        Intent intent = new Intent(this, activity.getClass());
+        intent.putExtra(Constants.INTENDED_FRAGMENT, intendedFragment);
+        startActivity(intent);
     }
 
     @Override
