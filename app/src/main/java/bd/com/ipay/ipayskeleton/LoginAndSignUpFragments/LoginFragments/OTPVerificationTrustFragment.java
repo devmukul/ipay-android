@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
@@ -23,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
@@ -40,7 +42,7 @@ import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class OTPVerificationTrustFragment extends Fragment implements HttpResponseListener {
+public class OTPVerificationTrustFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mLoginTask = null;
     private LoginResponse mLoginResponseModel;
@@ -62,13 +64,6 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
     private ProgressDialog mProgressDialog;
 
     private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().setTitle(R.string.title_otp_verification_for_add_trusted_device);
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -141,6 +136,13 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
             mActivateButton.callOnClick();
         }
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.title_otp_verification_for_add_trusted_device);
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_otp_for_login) );
     }
 
     @Override
@@ -321,9 +323,16 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                     else
                         Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
 
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"Login", "ToHome", "Login successful. Navigate to home page.");
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
+
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"Login", "Failed", getString(R.string.failed_add_trusted_device));
                 }
 
                 mProgressDialog.dismiss();

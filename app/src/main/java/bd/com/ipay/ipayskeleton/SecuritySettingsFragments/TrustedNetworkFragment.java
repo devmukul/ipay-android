@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
@@ -63,11 +64,13 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
 
     private TextView mEmptyListTextView;
     private ProgressDialog mProgressDialog;
+    private Tracker mTracker;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mTracker = Utilities.getTracker(getActivity());
     }
 
     @Override
@@ -127,6 +130,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
         if (Utilities.isConnectionAvailable(getActivity())) {
             getTrustedPersons();
         }
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_trusted_network) );
     }
 
     public void setTitle() {

@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.Date;
@@ -24,6 +26,7 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetProfileInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetProfileInfoResponse;
@@ -35,7 +38,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EditBasicInfoFragment extends Fragment implements HttpResponseListener {
+public class EditBasicInfoFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSetProfileInfoTask = null;
     private SetProfileInfoResponse mSetProfileInfoResponse;
@@ -63,12 +66,6 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
 
     private int mOccupation = -1;
     private List<Occupation> mOccupationList;
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -142,6 +139,18 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
         setOccupation();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_basic_info_edit) );
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+
     }
 
     private void setGenderCheckBoxTextColor(boolean maleCheckBoxChecked, boolean femaleCheckBoxChecked) {
@@ -274,15 +283,24 @@ public class EditBasicInfoFragment extends Fragment implements HttpResponseListe
                             Toast.makeText(getActivity(), mSetProfileInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                             getActivity().onBackPressed();
+
+                            //Google Analytic event
+                            Utilities.sendEventTracker(mTracker,"UpdateBasicInfo", "Succeed", mSetProfileInfoResponse.getMessage());
                         }
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
+
+                        //Google Analytic event
+                        Utilities.sendEventTracker(mTracker,"UpdateBasicInfo", "Failed", mSetProfileInfoResponse.getMessage());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"UpdateBasicInfo", "Failed", getString(R.string.profile_info_save_failed));
                 }
 
                 mSetProfileInfoTask = null;

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
@@ -40,7 +43,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class LinkBankFragment extends Fragment implements HttpResponseListener {
+public class LinkBankFragment extends BaseFragment implements HttpResponseListener {
 
     private final String STARTED_FROM_PROFILE_ACTIVITY = "started_from_profile_activity";
 
@@ -142,6 +145,7 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
         mDistrictNames = ((ManageBanksActivity) getActivity()).mDistrictNames;
         mBranches = ((ManageBanksActivity) getActivity()).mBranches;
         mBranchNames = ((ManageBanksActivity) getActivity()).mBranchNames;
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_link_bank) );
     }
 
     private void setBankAdapter(List<Bank> bankList) {

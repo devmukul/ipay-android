@@ -24,6 +24,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -98,6 +99,19 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     private static final int REQUEST_CODE_PERMISSION = 1001;
     private static final int REQUEST_CODE_PICK_MULTIPLE_IMAGE = 1000;
     private static final int REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT = 1002;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_create_ticket) );
+    }
 
     @Nullable
     @Override

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
@@ -29,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ProfilePictureHelperDialog;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -46,7 +49,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AccountFragment extends Fragment implements HttpResponseListener {
+public class AccountFragment extends BaseFragment implements HttpResponseListener {
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
     private final int ACTION_PICK_PROFILE_PICTURE = 100;
@@ -124,6 +127,13 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_user_account) );
+    }
+
 
     private void setVisibilityOfProfilePicUploadButton() {
         if (ProfileInfoCacheManager.isAccountVerified())
@@ -406,14 +416,23 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
                     intent.putExtra(Constants.PROFILE_PICTURE, mSelectedImagePath);
                     LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
 
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"ProfilePictureSet", "Succeed", mSetProfilePictureResponse.getMessage());
+
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"ProfilePictureSet", "Failed", mSetProfilePictureResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.profile_picture_set_failed, Toast.LENGTH_SHORT);
+
+                //Google Analytic event
+                Utilities.sendEventTracker(mTracker,"ProfilePictureSet", "Failed", getString( R.string.profile_picture_set_failed));
             }
 
             mUploadProfilePictureAsyncTask = null;

@@ -8,6 +8,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.analytics.Tracker;
+
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.InviteDialog;
 import bd.com.ipay.ipayskeleton.DrawerFragments.InviteListHolderFragment;
@@ -16,7 +18,6 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class InviteActivity extends BaseActivity {
-
     private FloatingActionButton mSendInviteButton;
 
     @Override

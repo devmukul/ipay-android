@@ -14,8 +14,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.Tracker;
+
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
@@ -27,7 +30,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class TransactionDetailsFragment extends Fragment {
+public class TransactionDetailsFragment extends BaseFragment {
 
     private TransactionHistory transactionHistory;
 
@@ -49,7 +52,6 @@ public class TransactionDetailsFragment extends Fragment {
     private TextView mMobileNumberView;
     private TextView mNameView;
     private Button mAddInContactsButton;
-
 
     @Nullable
     @Override
@@ -236,6 +238,12 @@ public class TransactionDetailsFragment extends Fragment {
         }
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_transaction_details) );
     }
 
     @ValidateAccess

@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -28,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadIdentifierDocumentAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -35,7 +37,7 @@ import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class DocumentUploadFragment extends Fragment implements HttpResponseListener {
+public class DocumentUploadFragment extends BaseFragment implements HttpResponseListener {
 
     private UploadIdentifierDocumentAsyncTask mUploadIdentifierDocumentAsyncTask;
     private UploadDocumentResponse mUploadDocumentResponse;
@@ -114,6 +116,12 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
         });
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_document_upload));
     }
 
     private void selectDocument() {
@@ -215,11 +223,17 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
                     if (getActivity() != null) {
                         Toaster.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG);
                         ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
+
+                        //Google Analytic event
+                        Utilities.sendEventTracker(mTracker,"IdentificationDocumentUpload", "Succeed", mUploadDocumentResponse.getMessage());
                     }
 
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG);
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"IdentificationDocumentUpload", "Failed", mUploadDocumentResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

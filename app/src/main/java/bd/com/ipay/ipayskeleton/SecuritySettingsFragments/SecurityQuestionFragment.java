@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -75,9 +76,12 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
 
     private String mPassword;
 
+    private Tracker mTracker;
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
     }
 
     @Override
@@ -117,6 +121,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
         super.onResume();
         if (!mPreviousQuestionClassList.isEmpty() || mPreviousQuestionClassList.size() != 0)
             getAllSecurityQuestions();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_security_question));
     }
 
     private void getAllSecurityQuestions() {

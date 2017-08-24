@@ -12,12 +12,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.AddBankRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.AddBankResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranch;
@@ -25,8 +27,9 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class ConsentAgreementForBankFragment extends Fragment implements HttpResponseListener {
+public class ConsentAgreementForBankFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mAddBankTask = null;
     private AddBankResponse mAddBankResponse;
@@ -49,11 +52,6 @@ public class ConsentAgreementForBankFragment extends Fragment implements HttpRes
 
     private boolean startedFromProfileCompletion = false;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -66,6 +64,12 @@ public class ConsentAgreementForBankFragment extends Fragment implements HttpRes
         setOnClickListeners();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_consent_agreement_for_bank) );
     }
 
     private void setOnClickListeners() {

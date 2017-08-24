@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +16,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -60,6 +63,19 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     private TextView mTotalView;
     private Button mWithdrawMoneyButton;
     private ImageView mBankIcon;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_withdraw_money_review) );
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -219,12 +235,18 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
                         Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
                     getActivity().setResult(Activity.RESULT_OK);
                     getActivity().finish();
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"WithdrawMoney", "Succeed", mWithdrawMoneyResponse.getMessage());
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mWithdrawMoneyResponse.getMessage());
+
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"WithdrawMoney", "Failed", mWithdrawMoneyResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +13,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
+import com.google.android.gms.analytics.Tracker;
+
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetBusinessTypesAsyncTask;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputSignUpView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
@@ -23,7 +27,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SignupBusinessStepTwoFragment extends Fragment {
+public class SignupBusinessStepTwoFragment extends BaseFragment {
 
     private EditText mBusinessType;
 
@@ -96,6 +100,7 @@ public class SignupBusinessStepTwoFragment extends Fragment {
         getActivity().setTitle(R.string.title_signup_business_page);
         mBusinessAddressView.mSelectedDistrictId = mSelectedDistrictId;
         mBusinessAddressView.mSelectedThanaId = mSelectedThanaId;
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_signup_step_2) );
     }
 
     private void attemptGoNextPage() {

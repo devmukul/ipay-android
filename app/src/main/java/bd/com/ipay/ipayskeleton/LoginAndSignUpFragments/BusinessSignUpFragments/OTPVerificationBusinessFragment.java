@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
@@ -22,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
@@ -40,7 +43,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class OTPVerificationBusinessFragment extends Fragment implements HttpResponseListener {
+public class OTPVerificationBusinessFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSignUpTask = null;
     private SignupResponseBusiness mSignupResponseBusiness;
@@ -65,12 +68,6 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
     private ProgressDialog mProgressDialog;
 
     private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().setTitle(R.string.title_otp_verification_for_business);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -134,6 +131,13 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
         }.start();
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.title_otp_verification_for_business);
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_otp_verifications) );
     }
 
     @Override
@@ -272,10 +276,15 @@ public class OTPVerificationBusinessFragment extends Fragment implements HttpRes
                         // TODO: For now, switch to login fragment after a successful sign up. Don't remove it either. Can be used later
 //                ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
 
+                        //Google Analytic event
+                        Utilities.sendEventTracker(mTracker,"BusinessSignUp", "Succeed", "Signup complete for Business.");
+
 
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        //Google Analytic event
+                        Utilities.sendEventTracker(mTracker,"BusinessSignUp", "Failed",message);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

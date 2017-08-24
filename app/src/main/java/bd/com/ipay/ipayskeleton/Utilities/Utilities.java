@@ -31,6 +31,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
@@ -747,5 +749,25 @@ public class Utilities {
         }
 
         ActivityCompat.requestPermissions(activity, requiredPermissions.toArray(new String[requiredPermissions.size()]), permissionCode);
+    }
+
+    public static Tracker getTracker(Activity activity){
+        Tracker mTracker;
+        MyApplication application = (MyApplication) activity.getApplication();
+        mTracker = application.getDefaultTracker();
+        return  mTracker;
+    }
+
+    public static void sendScreenTracker(Tracker mTracker, String screenName){
+        mTracker.setScreenName(screenName);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    public static void sendEventTracker(Tracker mTracker, String category, String action, String label){
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory(category)
+                .setAction(action)
+                .setLabel(label)
+                .build());
     }
 }

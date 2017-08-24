@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,13 +18,18 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
@@ -43,7 +49,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class LoginFragment extends Fragment implements HttpResponseListener {
+public class LoginFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mLoginTask = null;
     private LoginResponse mLoginResponseModel;
@@ -67,41 +73,6 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
     private String mDeviceID;
     private String mDeviceName;
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().setTitle(R.string.title_login_page);
-        Utilities.showKeyboard(getActivity());
-
-        /**
-         * If UUID exists, it means device was set as trusted before.
-         * Set the login username so that user can't change it.
-         */
-        if (SharedPrefManager.ifContainsUUID()) {
-            mPasswordEditText.setText("");
-            mPasswordEditText.requestFocus();
-            mUserNameEditText.setEnabled(false);
-            mInfoView.setVisibility(View.VISIBLE);
-            String mobileNumber = ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber());
-            mUserNameEditText.setText(mobileNumber);
-            mButtonJoinUs.setVisibility(View.GONE);
-
-            // Login with fingerprint
-            attemptLoginWithTouchID();
-        } else {
-            mPasswordEditText.setText("");
-            mUserNameEditText.setText("");
-            mButtonJoinUs.setVisibility(View.VISIBLE);
-        }
-
-        // Auto Login
-        if (SharedPrefManager.ifContainsUserID() && Constants.DEBUG && Constants.AUTO_LOGIN) {
-            mPasswordEditText.setText("qqqqqqq1");
-            //           mUserNameEditText.setText("+8801677258077");
-            attemptLogin();
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -195,6 +166,42 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         if (mFingerprintAuthenticationDialog != null) {
             mFingerprintAuthenticationDialog.stopFingerprintAuthenticationListener();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.title_login_page);
+        Utilities.showKeyboard(getActivity());
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_login) );
+
+        /**
+         * If UUID exists, it means device was set as trusted before.
+         * Set the login username so that user can't change it.
+         */
+        if (SharedPrefManager.ifContainsUUID()) {
+            mPasswordEditText.setText("");
+            mPasswordEditText.requestFocus();
+            mUserNameEditText.setEnabled(false);
+            mInfoView.setVisibility(View.VISIBLE);
+            String mobileNumber = ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber());
+            mUserNameEditText.setText(mobileNumber);
+            mButtonJoinUs.setVisibility(View.GONE);
+
+            // Login with fingerprint
+            attemptLoginWithTouchID();
+        } else {
+            mPasswordEditText.setText("");
+            mUserNameEditText.setText("");
+            mButtonJoinUs.setVisibility(View.VISIBLE);
+        }
+
+        // Auto Login
+        if (SharedPrefManager.ifContainsUserID() && Constants.DEBUG && Constants.AUTO_LOGIN) {
+            mPasswordEditText.setText("qqqqqqq1");
+            //           mUserNameEditText.setText("+8801677258077");
+            attemptLogin();
         }
     }
 
@@ -347,6 +354,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                                 hideProgressDialog();
                                 ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                             }
+                            //Google Analytic event
+                            Utilities.sendEventTracker(mTracker,"Login", "ToHome", "Login successful. Navigate to home page.");
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_ACCEPTED:
                             hideProgressDialog();
@@ -357,6 +366,10 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                             // First time login from this device. Verify OTP for secure login
                             SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
                             ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
+
+                            //Google Analytic event
+                            Utilities.sendEventTracker(mTracker,"Login", "ToOTP", "Navigate to OTP page to verify mobile no.");
+
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE:
                             hideProgressDialog();
@@ -368,6 +381,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                             // Enter previous OTP
                             SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
                             ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
+                            //Google Analytic event
+                            Utilities.sendEventTracker(mTracker,"Login", "ToOTP", "Navigate to OTP page to verify mobile no. and add trusted device");
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED:
                             hideProgressDialog();

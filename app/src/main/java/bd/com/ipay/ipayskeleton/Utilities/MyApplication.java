@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.Timer;
@@ -38,6 +40,9 @@ public class MyApplication extends Application implements HttpResponseListener {
     // Variables for token timer
     private static Timer mTokenTimer;
     private static TimerTask mTokenTimerTask;
+    //Google Anlytic
+    private static GoogleAnalytics sAnalytics;
+    private static Tracker sTracker;
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private HttpRequestPostAsyncTask mRefreshTokenAsyncTask = null;
@@ -59,6 +64,8 @@ public class MyApplication extends Application implements HttpResponseListener {
         ACLManager.initialize(this);
         Intercom.initialize(this, Constants.INTERCOM_ANDROID_SDK_KEY, Constants.INTERCOM_API_KEY);
         Utilities.resetIntercomInformation();
+
+        sAnalytics = GoogleAnalytics.getInstance(this);
 
     }
 
@@ -177,6 +184,23 @@ public class MyApplication extends Application implements HttpResponseListener {
         stopTokenTimer();
         TokenManager.invalidateToken();
     }
+
+    /**
+     * Gets the default {@link Tracker} for this {@link Application}.
+     * @return tracker
+     */
+    synchronized public Tracker getDefaultTracker() {
+        if (sTracker == null) {
+            if (Constants.SERVER_TYPE == Constants.LIVE_SERVER) {
+                sTracker = sAnalytics.newTracker(R.xml.global_tracker_for_live);
+            } else {
+                sTracker = sAnalytics.newTracker(R.xml.global_tracker);
+            }
+
+        }
+        return sTracker;
+    }
+
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {

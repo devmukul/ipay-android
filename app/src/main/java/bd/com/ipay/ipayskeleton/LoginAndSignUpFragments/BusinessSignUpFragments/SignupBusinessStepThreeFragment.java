@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.Calendar;
@@ -27,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputSignUpView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPRequestBusinessSignup;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPResponseBusinessSignup;
@@ -37,7 +40,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
-public class SignupBusinessStepThreeFragment extends Fragment implements HttpResponseListener {
+public class SignupBusinessStepThreeFragment extends BaseFragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mRequestOTPTask = null;
     private OTPResponseBusinessSignup mOtpResponseBusinessSignup;
 
@@ -154,6 +157,7 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
         super.onResume();
         getActivity().setTitle(R.string.title_signup_business_page);
         setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_signup_step_3) );
     }
 
     private void setGenderCheckBoxTextColor(boolean maleCheckBoxChecked, boolean femaleCheckBoxChecked) {
@@ -309,6 +313,9 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
                 SignupOrLoginActivity.otpDuration = mOtpResponseBusinessSignup.getOtpValidFor();
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
 
+                //Google Analytic event
+                Utilities.sendEventTracker(mTracker,"BusinessSignUp", "toOTP", "Signup complete for Business. Navigate to OTP for mobile verification");
+
             } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
@@ -328,6 +335,9 @@ public class SignupBusinessStepThreeFragment extends Fragment implements HttpRes
             } else {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+
+                //Google Analytic event
+                Utilities.sendEventTracker(mTracker,"BusinessSignUp", "Failed", message);
             }
 
             mProgressDialog.dismiss();

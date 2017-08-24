@@ -5,19 +5,24 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.Tracker;
+
 import java.util.Calendar;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AboutFragment extends Fragment {
+public class AboutFragment extends BaseFragment {
 
     private TextView mBuildNumberView;
     private IconifiedTextViewWithButton mContactView;
@@ -41,6 +46,12 @@ public class AboutFragment extends Fragment {
         setCopyRightFooterView();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ipay_about) );
     }
 
     private void setButtonActions() {

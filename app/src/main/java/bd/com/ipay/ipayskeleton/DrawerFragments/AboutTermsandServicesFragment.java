@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.DrawerFragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -9,12 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import bd.com.ipay.ipayskeleton.R;
+import com.google.android.gms.analytics.Tracker;
 
-public class AboutTermsandServicesFragment extends Fragment {
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+
+public class AboutTermsandServicesFragment extends BaseFragment {
 
     private TextView mTermsView;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -566,5 +570,11 @@ public class AboutTermsandServicesFragment extends Fragment {
 
 
         return v;
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_terms_and_service) );
     }
 }

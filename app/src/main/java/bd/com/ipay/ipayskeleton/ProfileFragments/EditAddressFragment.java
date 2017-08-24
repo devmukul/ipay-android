@@ -14,19 +14,22 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.SetUserAddressRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.SetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EditAddressFragment extends Fragment implements HttpResponseListener {
+public class EditAddressFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSetUserAddressTask = null;
     private SetUserAddressResponse mSetUserAddressResponse;
@@ -105,6 +108,13 @@ public class EditAddressFragment extends Fragment implements HttpResponseListene
         return v;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_address_edit) );
+    }
+
+
     private void setUserAddress() {
         mProgressDialog.setMessage(getString(R.string.progress_dialog_saving_address));
         mProgressDialog.show();
@@ -139,14 +149,23 @@ public class EditAddressFragment extends Fragment implements HttpResponseListene
                     Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_LONG).show();
                     getActivity().onBackPressed();
 
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"UpdateAddress", "Succeed", mSetUserAddressResponse.getMessage());
+
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"UpdateAddress", "Failed", mSetUserAddressResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
+
+                //Google Analytic event
+                Utilities.sendEventTracker(mTracker,"UpdateAddress", "Failed", getString(R.string.profile_info_save_failed));
             }
 
             mSetUserAddressTask = null;
