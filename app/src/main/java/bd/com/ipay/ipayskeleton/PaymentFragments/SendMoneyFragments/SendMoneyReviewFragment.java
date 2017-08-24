@@ -15,12 +15,11 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
@@ -81,7 +80,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_send_money_review) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_send_money_review));
     }
 
 
@@ -270,19 +269,16 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
                     getActivity().finish();
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"SendMoney", "Sent", mSendMoneyResponse.getMessage());
+                    Utilities.sendEventTracker(mTracker, "SendMoney", "Sent", mSendMoneyResponse.getMessage());
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mSendMoneyResponse.getMessage());
-                    //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"SendMoney", "Sent", mSendMoneyResponse.getMessage());
-
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"SendMoney", "Failed", mSendMoneyResponse.getMessage());
+                    Utilities.sendEventTracker(mTracker, "SendMoney", "Failed", mSendMoneyResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
