@@ -18,16 +18,11 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class InviteActivity extends BaseActivity {
-
-    private Tracker mTracker;
-
     private FloatingActionButton mSendInviteButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mTracker = Utilities.getTracker(this);
         setContentView(R.layout.activity_invite);
 
         if (!ProfileInfoCacheManager.isAccountVerified()) {

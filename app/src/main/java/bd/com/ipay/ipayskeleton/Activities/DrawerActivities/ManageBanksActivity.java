@@ -32,13 +32,10 @@ public class ManageBanksActivity extends BaseActivity {
     public int mSelectedBranchId = -1;
     public int mSelectedBankId = -1;
     public int mSelectedDistrictId = -1;
-    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mTracker = Utilities.getTracker(this);
         setContentView(R.layout.activity_manage_banks);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

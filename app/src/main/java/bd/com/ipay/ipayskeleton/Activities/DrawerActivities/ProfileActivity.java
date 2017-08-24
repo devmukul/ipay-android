@@ -53,14 +53,10 @@ public class ProfileActivity extends BaseActivity {
 
 
     private final String STARTED_FROM_PROFILE_ACTIVITY = "started_from_profile_activity";
-    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mTracker = Utilities.getTracker(this);
-
         setContentView(R.layout.activity_profile);
 
         String targetFragment = getIntent().getStringExtra(Constants.TARGET_FRAGMENT);

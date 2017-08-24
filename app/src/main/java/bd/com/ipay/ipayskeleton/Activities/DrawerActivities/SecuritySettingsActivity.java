@@ -23,13 +23,10 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class SecuritySettingsActivity extends BaseActivity {
 
     public static long otpDuration;
-    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mTracker = Utilities.getTracker(this);
         setContentView(R.layout.activity_activity_log);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
