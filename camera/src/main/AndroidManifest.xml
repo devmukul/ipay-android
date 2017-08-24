@@ -8,7 +8,7 @@
         android:supportsRtl="true">
         <activity
             android:name=".CameraActivity"
-
+            android:screenOrientation="portrait"
             android:theme="@style/CameraTheme" />
     </application>
 
