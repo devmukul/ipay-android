@@ -26,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
@@ -42,7 +43,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class LinkBankFragment extends Fragment implements HttpResponseListener {
+public class LinkBankFragment extends BaseFragment implements HttpResponseListener {
 
     private final String STARTED_FROM_PROFILE_ACTIVITY = "started_from_profile_activity";
 
@@ -78,13 +79,6 @@ public class LinkBankFragment extends Fragment implements HttpResponseListener {
     private int mSelectedDistrictId = -1;
 
     private boolean startedFromProfileCompletion = false;
-    private Tracker mTracker;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

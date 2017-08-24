@@ -29,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivi
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SingleInvoiceActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Pay.PayPropertyConstants;
 import bd.com.ipay.ipayskeleton.R;
@@ -40,7 +41,7 @@ import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class PayFragment extends Fragment {
+public class PayFragment extends BaseFragment {
     private static final int REQUEST_CODE_PERMISSION = 1001;
 
     private ListView mServiceActionListView;
@@ -49,12 +50,11 @@ public class PayFragment extends Fragment {
     private List<ServiceAction> mServiceActionList;
 
     private PinChecker pinChecker;
-    private Tracker mTracker;
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_pay) );
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -79,10 +79,9 @@ public class PayFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        mTracker = Utilities.getTracker(getActivity());
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_pay) );
     }
 
     @Override

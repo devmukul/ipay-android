@@ -30,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentRevie
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
@@ -42,7 +43,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class RequestPaymentFragment extends Fragment implements HttpResponseListener {
+public class RequestPaymentFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
@@ -61,19 +62,6 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
     private BigDecimal mAmount;
     private BigDecimal mVat = BigDecimal.ZERO;
     private BigDecimal mTotal = null;
-    private Tracker mTracker;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_request_payment) );
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -182,6 +170,12 @@ public class RequestPaymentFragment extends Fragment implements HttpResponseList
         attemptGetBusinessRule(Constants.SERVICE_ID_REQUEST_PAYMENT);
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_request_payment) );
     }
 
     private boolean verifyUserInputs() {

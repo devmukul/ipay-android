@@ -17,30 +17,18 @@ import com.google.android.gms.analytics.Tracker;
 import java.util.Calendar;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AboutFragment extends Fragment {
+public class AboutFragment extends BaseFragment {
 
     private TextView mBuildNumberView;
     private IconifiedTextViewWithButton mContactView;
     private IconifiedTextViewWithButton mTermView;
     private IconifiedTextViewWithButton mPrivacyView;
     private TextView mCopyRightTextView;
-    private Tracker mTracker;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ipay_about) );
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,6 +46,12 @@ public class AboutFragment extends Fragment {
         setCopyRightFooterView();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ipay_about) );
     }
 
     private void setButtonActions() {

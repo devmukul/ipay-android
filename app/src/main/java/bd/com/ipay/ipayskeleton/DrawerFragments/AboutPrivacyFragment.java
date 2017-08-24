@@ -11,25 +11,13 @@ import android.widget.TextView;
 
 import com.google.android.gms.analytics.Tracker;
 
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AboutPrivacyFragment extends Fragment {
+public class AboutPrivacyFragment extends BaseFragment {
 
     private TextView mTermsView;
-    private Tracker mTracker;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_privacy_policy) );
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -189,4 +177,11 @@ public class AboutPrivacyFragment extends Fragment {
 
         return v;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_privacy_policy) );
+    }
+
 }

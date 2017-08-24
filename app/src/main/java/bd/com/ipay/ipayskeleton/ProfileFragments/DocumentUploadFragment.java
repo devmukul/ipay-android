@@ -29,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadIdentifierDocumentAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -36,7 +37,7 @@ import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class DocumentUploadFragment extends Fragment implements HttpResponseListener {
+public class DocumentUploadFragment extends BaseFragment implements HttpResponseListener {
 
     private UploadIdentifierDocumentAsyncTask mUploadIdentifierDocumentAsyncTask;
     private UploadDocumentResponse mUploadDocumentResponse;
@@ -58,19 +59,11 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
     private static final int ACTION_UPLOAD_DOCUMENT = 100;
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
-    private Tracker mTracker;
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_document_upload));
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mTracker = Utilities.getTracker(getActivity());
     }
 
     @Override
@@ -123,6 +116,12 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
         });
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_document_upload));
     }
 
     private void selectDocument() {

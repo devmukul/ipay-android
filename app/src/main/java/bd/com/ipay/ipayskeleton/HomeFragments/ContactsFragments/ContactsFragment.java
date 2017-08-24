@@ -130,20 +130,12 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private int isMemberIndex;
 
     private ContactLoadFinishListener contactLoadFinishListener;
-    private Tracker mTracker;
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_contacts) );
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!isDialogFragment())
             setHasOptionsMenu(true);
-        mTracker = Utilities.getTracker(getActivity());
     }
 
     @Override

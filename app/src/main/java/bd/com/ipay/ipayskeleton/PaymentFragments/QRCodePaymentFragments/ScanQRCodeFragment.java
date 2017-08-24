@@ -26,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -35,7 +36,7 @@ import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class ScanQRCodeFragment extends Fragment implements HttpResponseListener {
+public class ScanQRCodeFragment extends BaseFragment implements HttpResponseListener {
 
     public static final int REQUEST_CODE_PERMISSION = 1001;
 
@@ -45,19 +46,6 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
     private ProgressDialog mProgressDialog;
 
     private String mobileNumber;
-    private Tracker mTracker;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_scan_qr_code) );
-    }
 
     @Nullable
     @Override
@@ -71,6 +59,12 @@ public class ScanQRCodeFragment extends Fragment implements HttpResponseListener
 
         Utilities.performQRCodeScan(this, REQUEST_CODE_PERMISSION);
         return mRootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_scan_qr_code) );
     }
 
     @Override

@@ -14,29 +14,17 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.analytics.Tracker;
 
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager.FingerprintAuthenticationDialog;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class FingerPrintAuthenticationSettingsFragment extends Fragment {
+public class FingerPrintAuthenticationSettingsFragment extends BaseFragment {
     private Button mFingerPrintActivateButton;
     private FingerprintAuthenticationDialog mFingerprintAuthenticationDialog;
 
     private boolean isFingerPrintAuthOn;
-    private Tracker mTracker;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_fingerprint_authentication) );
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,6 +46,12 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
         if (mFingerprintAuthenticationDialog != null) {
             mFingerprintAuthenticationDialog.stopFingerprintAuthenticationListener();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_fingerprint_authentication) );
     }
 
     public void setTitle() {

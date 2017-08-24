@@ -26,11 +26,10 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPin
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
-import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SetPinFragment extends Fragment implements HttpResponseListener {
+public class SetPinFragment extends BaseFragment implements HttpResponseListener {
     private HttpRequestPutAsyncTask mSavePINTask = null;
     private SetPinResponse mSetPinResponse;
 
@@ -40,19 +39,6 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
     private EditText mConfirmPINEditText;
     private EditText mEnterPasswordEditText;
     private Button mSetPINButton;
-    private Tracker mTracker;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_set_pin) );
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,6 +62,12 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
             }
         });
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_set_pin) );
     }
 
     private void attemptSavePIN() {

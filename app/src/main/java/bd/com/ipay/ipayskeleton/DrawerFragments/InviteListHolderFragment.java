@@ -6,11 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class InviteListHolderFragment extends Fragment {
+public class InviteListHolderFragment extends BaseFragment {
 
     private ContactsFragment miPayAllContactsFragment;
 

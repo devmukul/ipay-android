@@ -11,28 +11,17 @@ import com.google.android.gms.analytics.Tracker;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class PasswordRecoveryFragment extends Fragment {
+public class PasswordRecoveryFragment extends BaseFragment {
 
     private IconifiedTextViewWithButton securityQuestionHeader;
     private IconifiedTextViewWithButton trustedPersonHeader;
-    private Tracker mTracker;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_password_recovery) );
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,6 +48,12 @@ public class PasswordRecoveryFragment extends Fragment {
             }
         });
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_password_recovery) );
     }
 
     public void setTitle() {

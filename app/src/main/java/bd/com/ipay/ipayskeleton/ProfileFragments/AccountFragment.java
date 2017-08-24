@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ProfilePictureHelperDialog;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -48,7 +49,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AccountFragment extends Fragment implements HttpResponseListener {
+public class AccountFragment extends BaseFragment implements HttpResponseListener {
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
     private final int ACTION_PICK_PROFILE_PICTURE = 100;
@@ -87,19 +88,6 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
     private MaterialDialog.Builder mProfilePictureErrorDialogBuilder;
     private MaterialDialog mProfilePictureErrorDialog;
     private ProfilePictureHelperDialog profilePictureHelperDialog;
-    private Tracker mTracker;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_user_account) );
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -139,6 +127,13 @@ public class AccountFragment extends Fragment implements HttpResponseListener {
 
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_user_account) );
+    }
+
 
     private void setVisibilityOfProfilePicUploadButton() {
         if (ProfileInfoCacheManager.isAccountVerified())
