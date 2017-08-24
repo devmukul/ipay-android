@@ -252,10 +252,9 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
                         Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
                     getActivity().setResult(Activity.RESULT_OK);
                     getActivity().finish();
-                }else if(result.getStatus()==Constants.HTTP_RESPONSE_STATUS_BLOCKED){
-                    if(getActivity()!=null){
-                        ((MyApplication)getActivity().getApplication()).launchLoginPage(mSendMoneyResponse.getMessage());
-                    }
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    if (getActivity() != null)
+                        ((MyApplication) getActivity().getApplication()).launchLoginPage(mSendMoneyResponse.getMessage());
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);

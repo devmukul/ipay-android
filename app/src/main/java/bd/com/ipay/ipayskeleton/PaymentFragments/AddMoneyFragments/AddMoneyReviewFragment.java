@@ -220,10 +220,9 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
                     getActivity().setResult(Activity.RESULT_OK);
                     // Exit the Add money activity and return to HomeActivity
                     getActivity().finish();
-                }else if(result.getStatus()==Constants.HTTP_RESPONSE_STATUS_BLOCKED){
-                    if(getActivity()!=null){
-                        ((MyApplication)getActivity().getApplication()).launchLoginPage(mAddMoneyResponse.getMessage());
-                    }
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    if (getActivity() != null)
+                        ((MyApplication) getActivity().getApplication()).launchLoginPage(mAddMoneyResponse.getMessage());
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_LONG);

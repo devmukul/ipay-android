@@ -143,10 +143,8 @@ public class SetPinFragment extends Fragment implements HttpResponseListener {
                     ((SecuritySettingsActivity) getActivity()).switchToAccountSettingsFragment();
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
-                    if (getActivity() != null) {
+                    if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mSetPinResponse.getMessage());
-                    }
-
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();

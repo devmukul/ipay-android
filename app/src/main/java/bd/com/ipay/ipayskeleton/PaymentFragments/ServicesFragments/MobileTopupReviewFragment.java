@@ -259,7 +259,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
             case Constants.COMMAND_TOPUP_REQUEST:
 
                 try {
-                    mTopupResponse=gson.fromJson(result.getJsonString(), TopupResponse.class);
+                    mTopupResponse = gson.fromJson(result.getJsonString(), TopupResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
                         if (getActivity() != null) {
                             Toaster.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG);
@@ -272,10 +272,10 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                             getActivity().setResult(Activity.RESULT_OK);
                             getActivity().finish();
                         }
-                    }else if(result.getStatus()==Constants.HTTP_RESPONSE_STATUS_BLOCKED){
-                        if(getActivity()!=null){
-                            ((MyApplication)getActivity().getApplication()).launchLoginPage(mTopupResponse.getMessage());
-                        }
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                        if (getActivity() != null)
+                            ((MyApplication) getActivity().getApplication()).launchLoginPage(mTopupResponse.getMessage());
+
                     } else {
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG);

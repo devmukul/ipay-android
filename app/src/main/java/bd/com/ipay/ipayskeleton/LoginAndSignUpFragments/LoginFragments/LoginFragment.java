@@ -399,7 +399,8 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_BLOCKED:
                             hideProgressDialog();
-                            Toast.makeText(getActivity(),mLoginResponseModel.getMessage(),Toast.LENGTH_LONG).show();
+
+                            Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_LONG).show();
                             break;
                         default:
                             hideProgressDialog();

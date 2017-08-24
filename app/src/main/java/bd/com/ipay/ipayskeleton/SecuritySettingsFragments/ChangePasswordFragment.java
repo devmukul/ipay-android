@@ -191,10 +191,9 @@ public class ChangePasswordFragment extends Fragment implements HttpResponseList
                             launchOTPVerificationFragment();
                         }
                     }
-                }else if(result.getStatus()==Constants.HTTP_RESPONSE_STATUS_BLOCKED){
-                    if(getActivity()!=null){
-                        ((MyApplication)getActivity().getApplication()).launchLoginPage(mChangePasswordValidationResponse.getMessage());
-                    }
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    if (getActivity() != null)
+                        ((MyApplication) getActivity().getApplication()).launchLoginPage(mChangePasswordValidationResponse.getMessage());
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mChangePasswordValidationResponse.getMessage(), Toast.LENGTH_LONG).show();

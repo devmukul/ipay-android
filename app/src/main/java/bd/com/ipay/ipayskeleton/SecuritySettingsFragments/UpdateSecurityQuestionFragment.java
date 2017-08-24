@@ -213,10 +213,9 @@ public class UpdateSecurityQuestionFragment extends Fragment implements HttpResp
                     Toast.makeText(getActivity(), mUpdateSecurityAnswerResponse.getMessage(), Toast.LENGTH_LONG).show();
                     getActivity().onBackPressed();
 
-                }else if(result.getStatus()==Constants.HTTP_RESPONSE_STATUS_BLOCKED){
-                    if(getActivity()!=null){
-                        ((MyApplication)(getActivity().getApplication())).launchLoginPage(mUpdateSecurityAnswerResponse.getMessage());
-                    }
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    if (getActivity() != null)
+                        ((MyApplication) (getActivity().getApplication())).launchLoginPage(mUpdateSecurityAnswerResponse.getMessage());
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mUpdateSecurityAnswerResponse.getMessage(), Toast.LENGTH_SHORT).show();

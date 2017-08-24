@@ -261,7 +261,6 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
                         Utilities.hideKeyboard(context, view);
                         ((MyApplication) ((Activity) (getContext())).getApplication()).launchLoginPage(mChangePasswordWithOTPResponse.getMessage());
                     }
-
                 } else {
                     if (context != null)
                         Toast.makeText(context, mChangePasswordWithOTPResponse.getMessage(), Toast.LENGTH_LONG).show();

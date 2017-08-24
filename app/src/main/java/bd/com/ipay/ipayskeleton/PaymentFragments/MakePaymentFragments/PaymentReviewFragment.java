@@ -240,8 +240,8 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                         Toaster.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG);
                     getActivity().setResult(Activity.RESULT_OK);
                     getActivity().finish();
-                }else if(result.getStatus()==Constants.HTTP_RESPONSE_STATUS_BLOCKED){
-                    ((MyApplication)getActivity().getApplication()).launchLoginPage(mPaymentResponse.getMessage());
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    ((MyApplication) getActivity().getApplication()).launchLoginPage(mPaymentResponse.getMessage());
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG);

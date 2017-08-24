@@ -219,10 +219,9 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
                         Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
                     getActivity().setResult(Activity.RESULT_OK);
                     getActivity().finish();
-                }else if(result.getStatus()==Constants.HTTP_RESPONSE_STATUS_BLOCKED){
-                    if(getActivity()!=null){
-                        ((MyApplication)getActivity().getApplication()).launchLoginPage(mWithdrawMoneyResponse.getMessage());
-                    }
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    if (getActivity() != null)
+                        ((MyApplication) getActivity().getApplication()).launchLoginPage(mWithdrawMoneyResponse.getMessage());
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();

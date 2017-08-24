@@ -275,10 +275,9 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                     mProgressDialog.show();
 
                     getTrustedPersons();
-                }else if(result.getStatus()==Constants.HTTP_RESPONSE_STATUS_BLOCKED){
-                    if(getActivity()!=null){
-                        ((MyApplication)getActivity().getApplication()).launchLoginPage(mRemoveTrustedPersonResponse.getMessage());
-                    }
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    if (getActivity() != null)
+                        ((MyApplication) getActivity().getApplication()).launchLoginPage(mRemoveTrustedPersonResponse.getMessage());
                 } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mRemoveTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
