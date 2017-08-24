@@ -210,9 +210,9 @@ public class CameraActivity extends AppCompatActivity {
                             try {
                                 FileOutputStream fos = new FileOutputStream(pictureFile);
                                 fos.write(data);
-                                showConfirmImageLayoutAndHideCaptureLayout();
                                 fos.close();
                                 mCapturedImageView.setImageBitmap(rotateImageIfRequired(BitmapFactory.decodeFile(pictureFile.getAbsolutePath()), Uri.fromFile(pictureFile)));
+                                showConfirmImageLayoutAndHideCaptureLayout();
                             } catch (Exception e) {
                                 Log.e(TAG, e.getMessage(), e);
                             }
@@ -384,6 +384,7 @@ public class CameraActivity extends AppCompatActivity {
         mCaptureButton.setVisibility(View.VISIBLE);
         mCameraChangeButton.setVisibility(View.VISIBLE);
         mCapturedImageView.setVisibility(View.GONE);
+        mCameraPreview.setVisibility(View.VISIBLE);
         mCrossButton.setVisibility(View.GONE);
         mOkButton.setVisibility(View.GONE);
         if (mCameraSource.getCameraFacing() == com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK)
@@ -395,6 +396,7 @@ public class CameraActivity extends AppCompatActivity {
         mCameraChangeButton.setVisibility(View.GONE);
         mFlashChangeButton.setVisibility(View.GONE);
         mCapturedImageView.setVisibility(View.VISIBLE);
+        mCameraPreview.setVisibility(View.GONE);
         mCrossButton.setVisibility(View.VISIBLE);
         mOkButton.setVisibility(View.VISIBLE);
     }
