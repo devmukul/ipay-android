@@ -39,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -270,6 +271,12 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
                     //Google Analytic event
                     Utilities.sendEventTracker(mTracker,"SendMoney", "Sent", mSendMoneyResponse.getMessage());
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    if (getActivity() != null)
+                        ((MyApplication) getActivity().getApplication()).launchLoginPage(mSendMoneyResponse.getMessage());
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"SendMoney", "Sent", mSendMoneyResponse.getMessage());
+
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);

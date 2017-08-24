@@ -23,7 +23,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
-import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.GetUserAddressResponse;
@@ -39,10 +38,8 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.OccupationReque
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Thana;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.ThanaRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
@@ -190,23 +187,9 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             mBusinessInformationViewHolder.setVisibility(View.GONE);
             mPresentAddressHolder.setVisibility(View.GONE);
         } else {
+            getProfileInfo();
             getBusinessInformation();
 
-        }
-
-
-        if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE)
-                || PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE)) {
-            getProfileInfo();
-        } else {
-            DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE);
-
-            if (json == null)
-                getProfileInfo();
-            else {
-                processProfileInfoResponse(json);
-            }
         }
     }
 
@@ -289,6 +272,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                 mVerificationStatusView.setText(R.string.unverified);
             }
         }
+        ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
     }
 
     private void getProfileInfo() {
@@ -358,12 +342,11 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             }
         });
         mGetBusinessTypesAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        ProfileInfoCacheManager.updateBusinessInfoCache(mGetBusinessInformationResponse);
     }
 
-    private void processProfileInfoResponse(String json) {
+    private void processProfileInfoResponse() {
         try {
-            Gson gson = new Gson();
-            mGetProfileInfoResponse = gson.fromJson(json, GetProfileInfoResponse.class);
 
             if (mGetProfileInfoResponse.getName() != null)
                 mName = mGetProfileInfoResponse.getName();
@@ -463,14 +446,8 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        processProfileInfoResponse(result.getJsonString());
-
-                        DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                        dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
-
-                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
-                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
-
+                        mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
+                        processProfileInfoResponse();
                     } else {
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);

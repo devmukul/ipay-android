@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationTrustFragment extends Fragment implements HttpResponseListener {
@@ -257,7 +258,10 @@ public class OTPVerificationTrustFragment extends Fragment implements HttpRespon
                         }
 
                         attemptTrustedDeviceAdd();
-
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                        hideProgressDialog();
+                        if (getActivity() != null)
+                            ((MyApplication) getActivity().getApplication()).launchLoginPage(mLoginResponseModel.getMessage());
                     } else {
                         hideProgressDialog();
 

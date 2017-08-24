@@ -33,11 +33,13 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -45,6 +47,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
     private HttpRequestPostAsyncTask mTopupTask = null;
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
+    private TopupResponse mTopupResponse;
     private GetUserInfoResponse mGetUserInfoResponse;
 
     private ProgressDialog mProgressDialog;
@@ -272,7 +275,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
             case Constants.COMMAND_TOPUP_REQUEST:
 
                 try {
-
+                    mTopupResponse = gson.fromJson(result.getJsonString(), TopupResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
                         if (getActivity() != null) {
                             Toaster.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG);
@@ -291,6 +294,10 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                             //Google Analytic event
                             Utilities.sendEventTracker(mTracker,"TopUp", "Succeed", getString(R.string.progress_dialog_processing));
                         }
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                        if (getActivity() != null)
+                            ((MyApplication) getActivity().getApplication()).launchLoginPage(mTopupResponse.getMessage());
+
                     } else {
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG);

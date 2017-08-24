@@ -242,45 +242,6 @@ public class DataHelper {
         return 0;
     }
 
-    public void updatePushEvents(String tagName, String jsonString) {
-
-        try {
-            SQLiteDatabase db = dOpenHelper.getReadableDatabase();
-
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(DBConstants.KEY_TAG_NAME, tagName);
-            contentValues.put(DBConstants.KEY_JSON, jsonString);
-
-            db.replace(DBConstants.DB_TABLE_PUSH_EVENTS, null, contentValues);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String getPushEvent(String tag) {
-        Cursor cursor;
-
-        try {
-            SQLiteDatabase db = dOpenHelper.getReadableDatabase();
-
-            String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_PUSH_EVENTS
-                    + " WHERE " + DBConstants.KEY_TAG_NAME + " = '" + tag + "'";
-            cursor = db.rawQuery(queryString, null);
-
-            if (cursor != null && cursor.moveToFirst()) {
-                String pushEvent = cursor.getString(cursor.getColumnIndex(DBConstants.KEY_JSON));
-                cursor.close();
-                return pushEvent;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-
     private List<ContactNode> getContactList(String query, boolean memberOnly, boolean businessMemberOnly, boolean verifiedOnly) {
         Cursor cursor = searchContacts(query, memberOnly, businessMemberOnly, verifiedOnly);
         List<ContactNode> contacts = new ArrayList<>();
