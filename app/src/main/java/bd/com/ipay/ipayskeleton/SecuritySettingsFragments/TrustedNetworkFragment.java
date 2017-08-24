@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpDeleteWithBodyAsyncTask;
@@ -102,6 +103,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
             @ValidateAccess(ServiceIdConstants.MANAGE_TRUSTED_PERSON)
             public void onClick(View v) {
                 ((SecuritySettingsActivity) getActivity()).switchToAddTrustedPerson();
+                ((ProfileActivity) getActivity()).launchIntendedActivity(new SecuritySettingsActivity(), Constants.ADD_TRUSTED_PERSON);
             }
         });
 
