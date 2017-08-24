@@ -320,6 +320,7 @@ public class CameraActivity extends AppCompatActivity {
         return documentFile;
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     private void createCameraSource(boolean focusAuto, String flashMode, int cameraFace) {
         this.focusAuto = focusAuto;
         this.flashMode = flashMode;
@@ -334,12 +335,15 @@ public class CameraActivity extends AppCompatActivity {
         Point size = new Point();
         display.getSize(size);
 
+        int width = size.y;
+        int height = size.x;
+
         mFaceDetector.setProcessor(
                 new MultiProcessor.Builder<>(new CameraActivity.GraphicFaceTrackerFactory())
                         .build());
         CameraSource.Builder builder = new CameraSource.Builder(getApplicationContext(), mFaceDetector)
                 .setFacing(cameraFace)
-                .setRequestedPreviewSize(size.y, size.x)
+                .setRequestedPreviewSize(width, height)
                 .setRequestedFps(30.0f)
                 .setFocusMode(focusAuto ? Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE : null);
 
