@@ -1,21 +1,17 @@
 package bd.com.ipay.ipayskeleton.DrawerFragments;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.gms.analytics.Tracker;
-
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AboutPrivacyFragment extends BaseFragment {
+public class AboutPrivacyFragment extends BaseFragmentV4 {
 
     private TextView mTermsView;
 
