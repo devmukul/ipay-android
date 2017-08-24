@@ -1,21 +1,17 @@
 package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.android.gms.analytics.Tracker;
-
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SelectAccountTypeFragment extends BaseFragment {
+public class SelectAccountTypeFragment extends BaseFragmentV4 {
 
     private Button buttonAccountTypePersonal;
     private Button buttonAccountTypeBusiness;

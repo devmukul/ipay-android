@@ -2,8 +2,6 @@ package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +10,14 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.google.android.gms.analytics.Tracker;
 
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager.FingerprintAuthenticationDialog;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class FingerPrintAuthenticationSettingsFragment extends BaseFragment {
+public class FingerPrintAuthenticationSettingsFragment extends BaseFragmentV4 {
     private Button mFingerPrintActivateButton;
     private FingerprintAuthenticationDialog mFingerprintAuthenticationDialog;
 
