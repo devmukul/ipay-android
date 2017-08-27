@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
@@ -27,7 +27,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class TransactionDetailsFragment extends Fragment {
+public class TransactionDetailsFragment extends BaseFragmentV4 {
 
     private TransactionHistory transactionHistory;
 
@@ -49,7 +49,6 @@ public class TransactionDetailsFragment extends Fragment {
     private TextView mMobileNumberView;
     private TextView mNameView;
     private Button mAddInContactsButton;
-
 
     @Nullable
     @Override
@@ -236,6 +235,12 @@ public class TransactionDetailsFragment extends Fragment {
         }
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_transaction_details) );
     }
 
     @ValidateAccess

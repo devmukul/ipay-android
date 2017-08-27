@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -25,8 +25,9 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class BusinessContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+public class BusinessContactsFragment extends BaseFragmentV4 implements LoaderManager.LoaderCallbacks<Cursor>,
         SearchView.OnQueryTextListener {
 
     private static final int CONTACTS_QUERY_LOADER = 0;
@@ -47,11 +48,6 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
     private int phoneNumberIndex;
     private int profilePictureUrlIndex;
     private int businessTypeIndex;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -82,6 +78,12 @@ public class BusinessContactsFragment extends Fragment implements LoaderManager.
         mRecyclerView.setAdapter(mAdapter);
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_contact));
     }
 
     private void resetSearchKeyword() {

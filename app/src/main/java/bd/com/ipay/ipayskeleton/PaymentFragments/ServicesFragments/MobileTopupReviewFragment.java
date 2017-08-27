@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +14,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -30,11 +33,13 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -42,6 +47,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
     private HttpRequestPostAsyncTask mTopupTask = null;
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
+    private TopupResponse mTopupResponse;
     private GetUserInfoResponse mGetUserInfoResponse;
 
     private ProgressDialog mProgressDialog;
@@ -69,6 +75,19 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     private List<String> mArrayoperators;
 
     private View v;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_mobile_topup_review) );
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -256,22 +275,35 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
             case Constants.COMMAND_TOPUP_REQUEST:
 
                 try {
-
+                    mTopupResponse = gson.fromJson(result.getJsonString(), TopupResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
                         if (getActivity() != null) {
                             Toaster.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG);
                             getActivity().setResult(Activity.RESULT_OK);
                             getActivity().finish();
+
+                            //Google Analytic event
+                            Utilities.sendEventTracker(mTracker,"TopUp", "Processing", getString(R.string.progress_dialog_processing));
                         }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
                             Toaster.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG);
                             getActivity().setResult(Activity.RESULT_OK);
                             getActivity().finish();
+
+                            //Google Analytic event
+                            Utilities.sendEventTracker(mTracker,"TopUp", "Succeed", getString(R.string.progress_dialog_processing));
                         }
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                        if (getActivity() != null)
+                            ((MyApplication) getActivity().getApplication()).launchLoginPage(mTopupResponse.getMessage());
+
                     } else {
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG);
+
+                        //Google Analytic event
+                        Utilities.sendEventTracker(mTracker,"TopUp", "Failed", getString(R.string.recharge_failed));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

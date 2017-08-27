@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
@@ -41,7 +42,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
-import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.AddNewEmailRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.AddNewEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.DeleteEmailResponse;
@@ -51,9 +51,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.GetEmailRe
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.MakePrimaryEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.MakePrimaryRequest;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -93,6 +91,19 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     private ImageView mPrimaryVerificationStatus;
 
     private TextView mEmptyListTextView;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_user_email) );
+    }
 
     @Nullable
     @Override
@@ -141,20 +152,7 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setContentShown(false);
-
-        if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE))
-            getEmails();
-        else {
-            DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE);
-
-            if (json == null)
-                getEmails();
-            else {
-                processGetEmailListResponse(json);
-            }
-        }
-
+        getEmails();
     }
 
     private void showAddNewEmailDialog() {
@@ -307,11 +305,6 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                     mGetEmailResponse = gson.fromJson(result.getJsonString(), GetEmailResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         processGetEmailListResponse(result.getJsonString());
-
-                        DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                        dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
-
-                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
                     } else {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), mGetEmailResponse.getMessage(), Toast.LENGTH_LONG).show();

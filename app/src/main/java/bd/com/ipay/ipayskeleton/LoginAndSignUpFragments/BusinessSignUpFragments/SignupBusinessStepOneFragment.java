@@ -4,7 +4,6 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.BusinessSignUpFragments
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,7 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.CheckIfUserExistsRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.CheckIfUserExistsResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -28,7 +28,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
-public class SignupBusinessStepOneFragment extends Fragment implements HttpResponseListener {
+public class SignupBusinessStepOneFragment extends BaseFragmentV4 implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mCheckIfUserExistsTask = null;
     private CheckIfUserExistsResponse mCheckIfUserExistsResponse;
@@ -42,12 +42,6 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
     private ImageView mCrossButton;
 
     private ProgressDialog mProgressDialog;
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().setTitle(R.string.title_signup_business_page);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -92,6 +86,13 @@ public class SignupBusinessStepOneFragment extends Fragment implements HttpRespo
 
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.title_signup_business_page);
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_signup_step_1) );
     }
 
     private void verifyUserInputs() {

@@ -6,6 +6,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.analytics.Tracker;
+
 import java.util.ArrayList;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;

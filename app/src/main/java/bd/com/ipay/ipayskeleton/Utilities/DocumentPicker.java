@@ -1,29 +1,26 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Parcelable;
-import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
+import android.support.annotation.NonNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
-import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import bd.com.ipay.ipayskeleton.camera.CameraActivity;
 
 /**
  * Source: https://gist.github.com/Mariovc/f06e70ebe8ca52fbbbe2
@@ -33,47 +30,10 @@ public class DocumentPicker {
     private static final String TAG = "Picker";
     private static final String TEMP_DOCUMENT_NAME = "document.jpg";
 
-    private static final String[] NECESSARY_PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE};
+    public static final String[] DOCUMENT_PICK_PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE};
     private static final int OPTION_CAMERA = 0;
     private static final int OPTION_EXTERNAL_STORAGE = 1;
-
-    public static boolean ifNecessaryPermissionExists(Context context) {
-        for (String permission : NECESSARY_PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED)
-                return false;
-        }
-
-        return true;
-    }
-
-    public static void requestRequiredPermissions(Fragment fragment, int permissionCode) {
-        List<String> requiredPermissions = new ArrayList<>();
-        for (String permission : NECESSARY_PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(fragment.getActivity(), permission) != PackageManager.PERMISSION_GRANTED)
-                requiredPermissions.add(permission);
-        }
-
-        fragment.requestPermissions(requiredPermissions.toArray(new String[requiredPermissions.size()]), permissionCode);
-    }
-
-    public static Intent getPickImageIntent(Context context, String chooserTitle) {
-
-        Set<Intent> intentList = new LinkedHashSet<>();
-
-        Intent pickIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        File tempFile = getTempFile(context);
-
-        Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        takePhotoIntent.putExtra("return-data", true);
-        if (tempFile != null)
-            takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile));
-
-        intentList = addIntentsToList(context, intentList, takePhotoIntent);
-        intentList = addIntentsToList(context, intentList, pickIntent);
-
-        return getChooserIntent(intentList, chooserTitle);
-    }
+    private static final String TEMP_DOCUMENT_NAME_WITH_INDEX = "document_%d.jpg";
 
     public static Intent getPickImageOrPdfIntent(Context context, String chooserTitle) {
 
@@ -81,12 +41,8 @@ public class DocumentPicker {
 
         Intent pickIntent = new Intent(Intent.ACTION_GET_CONTENT);
         pickIntent.setType("image/*|application/pdf");
-        File tempFile = getTempFile(context);
 
-        Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        takePhotoIntent.putExtra("return-data", true);
-        if (tempFile != null)
-            takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile));
+        Intent takePhotoIntent = createCameraIntent(context, Constants.CAMERA_REAR, TEMP_DOCUMENT_NAME);
 
         intentList = addIntentsToList(context, intentList, takePhotoIntent);
         intentList = addIntentsToList(context, intentList, pickIntent);
@@ -95,28 +51,42 @@ public class DocumentPicker {
     }
 
     public static Intent getPickerIntentByID(Context context, String chooserTitle, int id) {
+        return getPickerIntentByID(context, chooserTitle, id, Constants.CAMERA_REAR);
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static Intent getPickerIntentByID(Context context, String chooserTitle, int id, int cameraFacing) {
+        return getPickerIntentByID(context, chooserTitle, id, cameraFacing, TEMP_DOCUMENT_NAME);
+    }
+
+    public static Intent getPickerIntentByID(Context context, String chooserTitle, int id, int CameraFacing, String fileName) {
 
         Set<Intent> intentList = new LinkedHashSet<>();
+        Intent returnIntent;
 
         if (id == OPTION_EXTERNAL_STORAGE) {
             Intent pickIntent = new Intent(Intent.ACTION_PICK,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
             intentList = addIntentsToList(context, intentList, pickIntent);
+            returnIntent = getChooserIntent(intentList, chooserTitle);
         } else {
-            Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File tempFile = getTempFile(context);
-
-            takePhotoIntent.putExtra("return-data", true);
-            takePhotoIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            if (tempFile != null)
-                takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, tempFile));
-
-            intentList = addIntentsToList(context, intentList, takePhotoIntent);
+            returnIntent = createCameraIntent(context, CameraFacing, fileName);
         }
-        return getChooserIntent(intentList, chooserTitle);
+        return returnIntent;
+
     }
 
+    @NonNull
+    private static Intent createCameraIntent(Context context, int CameraFacing, String fileName) {
+        Intent returnIntent;
+        returnIntent = new Intent(context, CameraActivity.class);
+        returnIntent.putExtra(CameraActivity.CAMERA_FACING_NAME, CameraFacing);
+        returnIntent.putExtra(CameraActivity.DOCUMENT_NAME, fileName);
+        return returnIntent;
+    }
+
+    @SuppressLint("InlinedApi")
     public static Intent getPickImageOrPDFIntentByID(Context context, String chooserTitle, int id) {
 
         Set<Intent> intentList = new LinkedHashSet<>();
@@ -126,9 +96,8 @@ public class DocumentPicker {
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             intentList = addIntentsToList(context, intentList, pickIntent);
         } else if (id == OPTION_CAMERA) {
-            Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            takePhotoIntent.putExtra("return-data", true);
-            takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, getTempFile(context)));
+            Intent takePhotoIntent = createCameraIntent(context, Constants.CAMERA_REAR, TEMP_DOCUMENT_NAME);
+
             intentList = addIntentsToList(context, intentList, takePhotoIntent);
         } else {
             Intent pdfIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -165,7 +134,7 @@ public class DocumentPicker {
         return list;
     }
 
-    public static String getFilePathFromResult(Context context, int resultCode, Intent returnedIntent) {
+    public static String getFilePathFromResult(Context context, Intent returnedIntent) {
         try {
             File documentFile = getTempFile(context);
 
@@ -173,11 +142,11 @@ public class DocumentPicker {
                     returnedIntent.getData() == null ||
                     returnedIntent.getData().toString().contains(documentFile.toString()));
 
-            if (isCamera) {     /** CAMERA **/
+            if (isCamera) {     // CAMERA
                 return getTempFile(context).getAbsolutePath();
             } else if (returnedIntent.getData().toString().startsWith("file://")) {
                 return returnedIntent.getData().toString();
-            } else {            /** ALBUM **/
+            } else {            // ALBUM
                 return FileUtilities.getDataColumn(context, returnedIntent.getData());
             }
         } catch (Exception e) {
@@ -186,7 +155,7 @@ public class DocumentPicker {
         }
     }
 
-    public static String getFilePathForCameraOrPDFResult(Context context, int resultCode, Intent returnedIntent) {
+    public static String getFilePathForCameraOrPDFResult(Context context, Intent returnedIntent) {
         try {
             File documentFile = getTempFile(context);
 
@@ -194,7 +163,7 @@ public class DocumentPicker {
                     returnedIntent.getData() == null ||
                     returnedIntent.getData().toString().contains(documentFile.toString()));
 
-            if (isCamera) {     /** CAMERA **/
+            if (isCamera) {    // CAMERA
                 return getTempFile(context).getAbsolutePath();
             } else {
                 return FileUtilities.getAbsolutePath(context, returnedIntent.getData());
@@ -206,9 +175,13 @@ public class DocumentPicker {
     }
 
     public static Uri getDocumentFromResult(Context context, int resultCode, Intent returnedIntent) {
+        return getDocumentFromResult(context, resultCode, returnedIntent, TEMP_DOCUMENT_NAME);
+    }
+
+    public static Uri getDocumentFromResult(Context context, int resultCode, Intent returnedIntent, String fileName) {
         Uri selectedImage = null;
         try {
-            File documentFile = getTempFile(context);
+            File documentFile = getTempFile(context, fileName);
             if (resultCode == Activity.RESULT_OK) {
                 boolean isCamera = (returnedIntent == null ||
                         returnedIntent.getData() == null ||
@@ -216,11 +189,11 @@ public class DocumentPicker {
 
                 if (returnedIntent != null)
                     Logger.logE(TAG, "Returned Intent: " + returnedIntent.getData());
-                if (isCamera) {     /** CAMERA **/
+                if (isCamera) {     // CAMERA
                     selectedImage = Uri.fromFile(documentFile);
                 } else if (returnedIntent.getData().toString().startsWith("file://")) {
                     selectedImage = Uri.parse(returnedIntent.getData().toString());
-                } else {            /** ALBUM **/
+                } else {            // ALBUM
                     selectedImage = Uri.parse(FileUtilities.getDataColumn(context, returnedIntent.getData()));
                 }
                 Logger.logE(TAG, "selectedImage: " + selectedImage.getPath());
@@ -230,11 +203,10 @@ public class DocumentPicker {
 
                     // Convert the image - handle auto rotate problem in some devices, scale down
                     // image if necessary (max 512*512)
-                    Bitmap convertedBitmap = CameraAndImageUtilities.handleSamplingAndRotationBitmap(context,
-                            isCamera ? selectedImage : returnedIntent.getData(), isCamera);
+                    Bitmap convertedBitmap = CameraAndImageUtilities.handleSamplingAndRotationBitmap(context, selectedImage, true);
 
                     // Save to file
-                    File tempFile = getTempFile(context);
+                    File tempFile = getTempFile(context, fileName);
                     CameraAndImageUtilities.saveBitmapToFile(convertedBitmap, tempFile);
                     selectedImage = Uri.fromFile(tempFile);
                 }
@@ -256,11 +228,11 @@ public class DocumentPicker {
 
                 if (returnedIntent != null)
                     Logger.logE(TAG, "Returned Intent: " + returnedIntent.getData());
-                if (isCamera) {     /** CAMERA **/
+                if (isCamera) {     // CAMERA
                     selectedImage = Uri.fromFile(documentFile);
                 } else if (returnedIntent.getData().toString().startsWith("file://")) {
                     selectedImage = Uri.parse(returnedIntent.getData().toString());
-                } else {            /** ALBUM **/
+                } else {            // ALBUM
                     selectedImage = Uri.parse(FileUtilities.getDataColumn(context, returnedIntent.getData()));
                 }
                 Logger.logE(TAG, "selectedImage: " + selectedImage.getPath());
@@ -270,8 +242,7 @@ public class DocumentPicker {
 
                     // Convert the image - handle auto rotate problem in some devices, scale down
                     // image if necessary (max 512*512)
-                    Bitmap convertedBitmap = CameraAndImageUtilities.handleSamplingAndRotationBitmap(context,
-                            isCamera ? selectedImage : returnedIntent.getData(), isCamera);
+                    Bitmap convertedBitmap = CameraAndImageUtilities.handleSamplingAndRotationBitmap(context, selectedImage, true);
 
                     // Save to file
                     File tempFile = getFileWithIndex(context, fileIndex);
@@ -286,19 +257,22 @@ public class DocumentPicker {
         return selectedImage;
     }
 
+
     private static File getTempFile(Context context) {
-        File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TEMP_DOCUMENT_NAME);
-        if (documentFile != null) {
-            documentFile.getParentFile().mkdirs();
-            return documentFile;
-        } else return null;
+        return getTempFile(context, TEMP_DOCUMENT_NAME);
     }
 
     private static File getFileWithIndex(Context context, int index) throws IOException {
-        File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TEMP_DOCUMENT_NAME);
-        if (documentFile != null) {
+        return getTempFile(context, String.format(Locale.US, TEMP_DOCUMENT_NAME_WITH_INDEX, index));
+    }
+
+    @NonNull
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private static File getTempFile(Context context, final String fileName) {
+        File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
+        if (!documentFile.getParentFile().exists()) {
             documentFile.getParentFile().mkdirs();
-            return documentFile;
-        } else return null;
+        }
+        return documentFile;
     }
 }

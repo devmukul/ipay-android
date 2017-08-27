@@ -24,6 +24,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -34,15 +35,14 @@ import java.util.Random;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.HelpAndSupportActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadTicketAttachmentAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadTicketAttachmentAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
-import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Email.GetEmailResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.TicketCategory;
@@ -53,8 +53,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategori
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.GetTicketCategoryResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.TicketWithCommentId;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomDrawable;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
@@ -101,6 +99,19 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     private static final int REQUEST_CODE_PERMISSION = 1001;
     private static final int REQUEST_CODE_PICK_MULTIPLE_IMAGE = 1000;
     private static final int REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT = 1002;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_create_ticket) );
+    }
 
     @Nullable
     @Override
@@ -138,26 +149,14 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE))
-            getEmails();
-        else {
-            DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE);
-
-            if (json == null)
-                getEmails();
-            else {
-                processGetEmailListResponse(json);
-            }
-        }
+        getEmails();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
-                if (DocumentPicker.ifNecessaryPermissionExists(getActivity()))
+                if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
                     selectDocument(mPickerActionId);
                 else
                     Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
@@ -169,7 +168,7 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
         switch (requestCode) {
             case REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT:
                 if (resultCode == Activity.RESULT_OK) {
-                    String filePath = DocumentPicker.getFilePathForCameraOrPDFResult(getActivity(), resultCode, data);
+                    String filePath = DocumentPicker.getFilePathForCameraOrPDFResult(getActivity(), data);
 
                     if (filePath != null) {
                         Random r = new Random();
@@ -449,11 +448,6 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                     mGetEmailResponse = gson.fromJson(result.getJsonString(), GetEmailResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         processGetEmailListResponse(result.getJsonString());
-
-                        DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                        dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, result.getJsonString());
-
-                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_EMAIL_UPDATE, false);
                     } else {
                         if (getActivity() != null) {
                             Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
@@ -552,11 +546,11 @@ public class CreateTicketFragment extends ProgressFragment implements HttpRespon
                             @Override
                             public void onResourceSelected(int mActionId, String action) {
                                 if (!Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action)) {
-                                    if (DocumentPicker.ifNecessaryPermissionExists(getActivity()))
+                                    if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
                                         selectDocument(mActionId);
                                     else {
                                         mPickerActionId = mActionId;
-                                        DocumentPicker.requestRequiredPermissions(CreateTicketFragment.this, REQUEST_CODE_PERMISSION);
+                                        Utilities.requestRequiredPermissions(CreateTicketFragment.this, REQUEST_CODE_PERMISSION, DocumentPicker.DOCUMENT_PICK_PERMISSIONS);
                                     }
                                 } else {
                                     setMultipleImagePicker();

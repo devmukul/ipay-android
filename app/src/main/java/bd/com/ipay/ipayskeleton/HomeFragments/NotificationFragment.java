@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
@@ -98,11 +99,13 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     private OnNotificationUpdateListener mOnNotificationUpdateListener;
     private NotificationBroadcastReceiver notificationBroadcastReceiver;
+    private Tracker mTracker;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mTracker = Utilities.getTracker(getActivity());
     }
 
     @Override
@@ -140,6 +143,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         if (Utilities.isConnectionAvailable(getActivity())) {
             refreshNotificationLists(getActivity());
         }
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_notifications) );
     }
 
     @Override

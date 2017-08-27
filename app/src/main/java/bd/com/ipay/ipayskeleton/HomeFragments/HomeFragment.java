@@ -10,7 +10,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,6 +43,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPinDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -61,7 +61,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class HomeFragment extends Fragment implements HttpResponseListener {
+public class HomeFragment extends BaseFragmentV4 implements HttpResponseListener {
 
     private static boolean profileCompletionPromptShown = false;
 
@@ -281,6 +281,7 @@ public class HomeFragment extends Fragment implements HttpResponseListener {
         // from the server every time someone navigates to the home activity. Once push is implemented
         // properly, move it to onCreate.
         refreshBalance();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_home) );
     }
 
     @Override

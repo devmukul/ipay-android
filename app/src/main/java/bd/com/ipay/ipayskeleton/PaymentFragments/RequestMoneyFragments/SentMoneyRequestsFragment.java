@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
@@ -77,6 +78,13 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
 
     private View mProgressContainer;
     private View mContentContainer;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -130,6 +138,7 @@ public class SentMoneyRequestsFragment extends ProgressFragment implements HttpR
     public void onResume() {
         super.onResume();
         getSentMoneyList(false);
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_request_money_sent) );
     }
 
     private void getPendingRequests() {

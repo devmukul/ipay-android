@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.text.ParseException;
@@ -105,12 +106,25 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
     private Menu menu;
+    private Tracker mTracker;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mTracker = Utilities.getTracker(getActivity());
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
+                new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_transaction_history_completed) );
+    }
+
 
     @Nullable
     @Override
@@ -215,13 +229,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         getTransactionHistory();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
-                new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
-    }
 
     @Override
     public void onPause() {
