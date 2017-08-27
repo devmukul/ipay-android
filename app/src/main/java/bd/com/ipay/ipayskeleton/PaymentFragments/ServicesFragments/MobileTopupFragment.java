@@ -28,7 +28,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
@@ -163,7 +162,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_mobile_topup) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_mobile_topup));
     }
 
     private void setMobileNumber() {
@@ -203,14 +202,15 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     }
 
     private void setOperator(String phoneNumber) {
-        phoneNumber = ContactEngine.trimPrefix(phoneNumber);
-
+        phoneNumber = phoneNumber.trim();
         final String[] OPERATOR_PREFIXES = getResources().getStringArray(R.array.operator_prefix);
         for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
-            if (phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
+            if (phoneNumber.startsWith("+880" + OPERATOR_PREFIXES[i]) || phoneNumber.startsWith("0" + OPERATOR_PREFIXES[i])) {
                 mOperatorEditText.setText(mOperatorList.get(i));
                 mSelectedOperatorTypeId = i;
                 break;
+            } else {
+                mOperatorEditText.setText(getString(R.string.invalid_operator));
             }
         }
     }
