@@ -6,8 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.gms.analytics.Tracker;
-
 import java.util.ArrayList;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
@@ -40,8 +38,6 @@ public class ManageBanksActivity extends BaseActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        switchedFromBankVerification = getIntent().getBooleanExtra(Constants.SWITCHED_FROM_BANK_VERIFICATION, false);
-
         mDistrictNames = new ArrayList<>();
         mBranches = new ArrayList<>();
         mBranchNames = new ArrayList<>();
@@ -53,11 +49,19 @@ public class ManageBanksActivity extends BaseActivity {
                 switchToAddNewBankFragment();
             }
         });
-
-        if (switchedFromBankVerification)
-            switchToAddNewBankFragment();
-        else
+        if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.BANK_ACCOUNT)) {
             switchToBankAccountsFragment();
+        }
+        else if(getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.LINK_BANK)){
+            switchToAddNewBankFragment();
+        }
+        else{
+            switchedFromBankVerification = getIntent().getBooleanExtra(Constants.SWITCHED_FROM_BANK_VERIFICATION, false);
+            if (switchedFromBankVerification)
+                switchToAddNewBankFragment();
+            else
+                switchToBankAccountsFragment();
+        }
     }
 
     @Override

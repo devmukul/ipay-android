@@ -8,14 +8,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
-import com.google.android.gms.analytics.Tracker;
-
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessInformationFragment;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EditBusinessInformationFragment;
-import bd.com.ipay.ipayskeleton.ManageBanksFragments.BankAccountsFragment;
-import bd.com.ipay.ipayskeleton.ManageBanksFragments.LinkBankFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.AccountFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.AddressFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.BasicInfoFragment;
@@ -28,7 +24,6 @@ import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationHolderFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.ProfileCompletionFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.RecommendationReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedNetworkFragment;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -113,7 +108,7 @@ public class ProfileActivity extends BaseActivity {
     public void switchToFragment(String targetFragment, Bundle bundle, boolean addToBackStack) {
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment fragment;
+        Fragment fragment = null;
 
         if (targetFragment.equals(LINK_AND_VERIFY_BANK)) {
             Intent intent = new Intent(ProfileActivity.this, ManageBanksActivity.class);
@@ -121,14 +116,14 @@ public class ProfileActivity extends BaseActivity {
         } else {
             switch (targetFragment) {
                 case Constants.VERIFY_BANK:
-                    fragment = new BankAccountsFragment();
+                    launchIntendedActivity(new ManageBanksActivity(), Constants.BANK_ACCOUNT);
                     break;
                 case Constants.LINK_BANK:
-                    fragment = new LinkBankFragment();
+                    launchIntendedActivity(new ManageBanksActivity(),Constants.LINK_BANK);
                     break;
                 case TRUSTED_NETWORK:
                 case TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE:
-                    fragment = new TrustedNetworkFragment();
+                    launchIntendedActivity(new SecuritySettingsActivity(),Constants.ADD_TRUSTED_PERSON);
                     break;
                 case BASIC_PROFILE:
                     if (ProfileInfoCacheManager.isBusinessAccount())
@@ -174,15 +169,16 @@ public class ProfileActivity extends BaseActivity {
                 default:
                     fragment = new AccountFragment();
             }
+            if (fragment != null) {
+                if (bundle != null)
+                    fragment.setArguments(bundle);
 
-            if (bundle != null)
-                fragment.setArguments(bundle);
+                ft.replace(R.id.fragment_container, fragment);
+                if (addToBackStack)
+                    ft.addToBackStack(null);
 
-            ft.replace(R.id.fragment_container, fragment);
-            if (addToBackStack)
-                ft.addToBackStack(null);
-
-            ft.commit();
+                ft.commit();
+            }
         }
     }
 

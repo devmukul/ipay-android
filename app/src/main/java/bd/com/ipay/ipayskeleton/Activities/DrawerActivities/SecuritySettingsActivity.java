@@ -1,12 +1,12 @@
 package bd.com.ipay.ipayskeleton.Activities.DrawerActivities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.google.android.gms.analytics.Tracker;
-
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.DrawerFragments.SecuritySettingsFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.AddTrustedPersonFragment;
@@ -16,10 +16,7 @@ import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.PasswordRecoveryFragme
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.SecurityQuestionFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.SetPinFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedDeviceFragment;
-import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.DrawerFragments.SecuritySettingsFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedNetworkFragment;
-import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.UpdateSecurityQuestionFragment;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -147,6 +144,10 @@ public class SecuritySettingsActivity extends BaseActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new FingerPrintAuthenticationSettingsFragment()).addToBackStack(null).commit();
+    }
+    public void launchHomeActivity(){
+        Intent intent=new Intent(this, HomeActivity.class);
+        startActivity(intent);
     }
 
     @Override

@@ -16,6 +16,7 @@ public class Constants {
     public static final String SIGN_IN = "SIGN_IN";
     public static final String SIGN_UP = "SIGN_UP";
     public static final String ADD_TRUSTED_PERSON="ADD_TRUSTED_PERSON";
+    public static final String BANK_ACCOUNT="BANK_ACCOUNT";
     public static final String SIGNED_IN = "SIGNED IN";
     public static final String DOCUMENT_URL = "DOCUMENT_URL";
     public static final String FILE_EXTENSION = "FILE_EXTENSION";
