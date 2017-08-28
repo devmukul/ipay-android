@@ -97,7 +97,7 @@ public class LoginFragment extends Fragment implements HttpResponseListener {
 
         // Auto Login
         if (SharedPrefManager.ifContainsUserID() && Constants.DEBUG && Constants.AUTO_LOGIN) {
-            mPasswordEditText.setText("Itisfortest1");
+            mPasswordEditText.setText("qqqqqqq1");
             //           mUserNameEditText.setText("+8801677258077");
             attemptLogin();
         }
