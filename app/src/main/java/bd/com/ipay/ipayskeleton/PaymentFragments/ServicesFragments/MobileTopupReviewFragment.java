@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,7 +86,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_mobile_topup_review) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_mobile_topup_review));
     }
 
     @Override
@@ -282,7 +283,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                             getActivity().finish();
 
                             //Google Analytic event
-                            Utilities.sendEventTracker(mTracker,"TopUp", "Processing", getString(R.string.progress_dialog_processing));
+                            Utilities.sendEventTracker(mTracker, "TopUp", "Processing", getString(R.string.progress_dialog_processing));
                         }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
@@ -291,18 +292,21 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                             getActivity().finish();
 
                             //Google Analytic event
-                            Utilities.sendEventTracker(mTracker,"TopUp", "Succeed", getString(R.string.progress_dialog_processing));
+                            Utilities.sendEventTracker(mTracker, "TopUp", "Succeed", getString(R.string.progress_dialog_processing));
                         }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         if (getActivity() != null)
                             ((MyApplication) getActivity().getApplication()).launchLoginPage(mTopupResponse.getMessage());
 
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
+                        if (getActivity() != null && !TextUtils.isEmpty(mTopupResponse.getMessage()))
+                            Toaster.makeText(getActivity(), mTopupResponse.getMessage(), Toast.LENGTH_LONG);
                     } else {
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG);
 
                         //Google Analytic event
-                        Utilities.sendEventTracker(mTracker,"TopUp", "Failed", getString(R.string.recharge_failed));
+                        Utilities.sendEventTracker(mTracker, "TopUp", "Failed", getString(R.string.recharge_failed));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
