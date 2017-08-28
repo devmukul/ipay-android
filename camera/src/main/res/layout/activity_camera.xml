@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    android:gravity="top"
+    android:gravity="center"
     tools:context="bd.com.ipay.ipayskeleton.camera.CameraActivity">
 
     <bd.com.ipay.ipayskeleton.camera.CameraSourcePreview
@@ -27,7 +27,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:contentDescription="@string/image"
-        android:scaleType="fitStart"
         android:visibility="gone" />
 
     <RelativeLayout
