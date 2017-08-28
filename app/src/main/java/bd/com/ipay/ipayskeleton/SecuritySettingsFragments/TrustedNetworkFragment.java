@@ -101,7 +101,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
             @Override
             @ValidateAccess(ServiceIdConstants.MANAGE_TRUSTED_PERSON)
             public void onClick(View v) {
-                ((SecuritySettingsActivity) getActivity()).switchToTrustedPersonFragment();
+                ((SecuritySettingsActivity) getActivity()).switchToAddTrustedPerson();
             }
         });
 
