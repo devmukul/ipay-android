@@ -560,6 +560,7 @@
     <string name="upload_small">Upload</string>
     <string name="upload_with_placeholder">Upload %s</string>
     <string name="driving_license">Driving License</string>
+    <string name="birth_certificate">Birth Cirtificate</string>
     <string name="business_tin">Business TIN</string>
     <string name="trade_license">Trade License</string>
     <string name="vat_registration_certificate">VAT Registration Certificate</string>
@@ -945,4 +946,5 @@
     <string name="screen_name_trusted_devices">Trusted devices</string>
     <string name="screen_name_trusted_network">Trusted network</string>
     <string name="screen_name_update_security_question">Update security question</string>
+    <string name="tin">Tin</string>
 </resources>

@@ -91,13 +91,17 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             R.string.national_id,
             R.string.passport,
             R.string.driving_license,
+            R.string.birth_certificate,
+            R.string.tin
     };
 
     private static final int[] BUSINESS_DOCUMENT_TYPE_NAMES = {
             R.string.national_id,
             R.string.business_tin,
             R.string.trade_license,
-            R.string.vat_registration_certificate
+            R.string.vat_registration_certificate,
+            R.string.driving_license,
+            R.string.passport
     };
 
     private static final int ACTION_UPLOAD_DOCUMENT = 100;
@@ -124,12 +128,16 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 Constants.DOCUMENT_TYPE_NATIONAL_ID,
                 Constants.DOCUMENT_TYPE_PASSPORT,
                 Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
+                Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
+                Constants.TIN
         };
         BUSINESS_DOCUMENT_TYPES = new String[]{
                 Constants.DOCUMENT_TYPE_NATIONAL_ID,
                 Constants.DOCUMENT_TYPE_BUSINESS_TIN,
                 Constants.DOCUMENT_TYPE_TRADE_LICENSE,
-                Constants.DOCUMENT_TYPE_VAT_REG_CERT
+                Constants.DOCUMENT_TYPE_VAT_REG_CERT,
+                Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
+                Constants.DOCUMENT_TYPE_PASSPORT
         };
         mTracker = Utilities.getTracker(getActivity());
     }

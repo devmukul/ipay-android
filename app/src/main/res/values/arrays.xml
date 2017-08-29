@@ -105,6 +105,8 @@
         <item>@string/national_id</item>
         <item>@string/passport_id</item>
         <item>@string/driving_license</item>
+        <item>@string/birth_certificate</item>
+        <item>@string/tin</item>
     </string-array>
 
     <string-array name="business_document_id">
@@ -112,5 +114,7 @@
         <item>@string/business_tin_id</item>
         <item>@string/trade_license_id</item>
         <item>@string/vat_registration_certificate_id</item>
+        <item>@string/driving_license</item>
+        <item>@string/passport_id</item>
     </string-array>
 </resources>
