@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,6 +95,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             R.string.birth_certificate,
             R.string.tin
     };
+
+    private static final int[] PERSONAL_DOCUMENT_ID_MAX_LENGTH={17,9,15,100,100};
+    private static final int[] BUSINESS_DOCUMENT_ID_MAX_LENGTH={17,12,8,11,15,9};
 
     private static final int[] BUSINESS_DOCUMENT_TYPE_NAMES = {
             R.string.national_id,
@@ -261,7 +265,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             }
         }
     }
-
     private void getIdentificationDocuments() {
         if (mGetIdentificationDocumentsTask != null) {
             return;
@@ -284,7 +287,16 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_DOCUMENTS, getActivity(), this);
         mGetIdentificationBusinessDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
-
+    private void setMaxLength(EditText editText,int pos){
+        int maxLength=0;
+        if(ProfileInfoCacheManager.isBusinessAccount())
+            maxLength=BUSINESS_DOCUMENT_ID_MAX_LENGTH[pos];
+        else
+            maxLength=PERSONAL_DOCUMENT_ID_MAX_LENGTH[pos];
+        InputFilter[] inputFilters=new InputFilter[1];
+        inputFilters[0]=new InputFilter.LengthFilter(maxLength);
+        editText.setFilters(inputFilters);
+    }
     private void getDocumentAccessToken() {
         if (mGetDocumentAccessTokenTask != null) {
             return;
@@ -534,6 +546,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 String documentHintType = DOCUMENT_HINT_TYPES[pos];
 
                 mDocumentIdTextInputLayoutView.setHint(documentHintType);
+                setMaxLength(mDocumentIdEditTextView,pos);
                 Utilities.setAppropriateKeyboard(getActivity(), documentPreviewDetailsList.get(pos).getDocumentType(), mDocumentIdEditTextView);
 
                 // Unverified, document not yet uploaded
