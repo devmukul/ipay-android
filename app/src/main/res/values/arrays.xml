@@ -104,8 +104,8 @@
     <string-array name="personal_document_id">
         <item>@string/national_id</item>
         <item>@string/passport_id</item>
-        <item>@string/driving_license</item>
-        <item>@string/birth_certificate</item>
+        <item>@string/driving_license_id</item>
+        <item>@string/birth_certificate_id</item>
         <item>@string/tin</item>
     </string-array>
 
@@ -114,7 +114,7 @@
         <item>@string/business_tin_id</item>
         <item>@string/trade_license_id</item>
         <item>@string/vat_registration_certificate_id</item>
-        <item>@string/driving_license</item>
+        <item>@string/driving_license_id</item>
         <item>@string/passport_id</item>
     </string-array>
 </resources>

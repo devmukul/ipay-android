@@ -156,6 +156,19 @@ public class InputValidator {
                     if (documentID.length() != Constants.VAT_REG_CERT_ID_LENGTH)
                         errorMessage = context.getString(R.string.invalid_vat_reg_cert_ID_wrong_length);
                     break;
+                case Constants.DOCUMENT_TYPE_PASSPORT:
+                    if (documentID.matches(INVALID_PASSPORT_ID_WITH_INSUFFICIENT_LENGTH_PATTERN))
+                        errorMessage = context.getString(R.string.invalid_passport_ID_insufficient_length);
+                    else if (!documentID.matches(VALID_PASSPORT_ID_PATTERN))
+                        errorMessage = context.getString(R.string.invalid_passport_ID);
+                    break;
+
+                case Constants.DOCUMENT_TYPE_DRIVING_LICENSE:
+                    if (documentID.matches(INVALID_DRIVING_LICENSE_ID_WITH_INSUFFICIENT_LENGTH_PATTERN))
+                        errorMessage = context.getString(R.string.invalid_driving_license_ID_insufficient_length);
+                    else if (!documentID.matches(VALID_DRIVING_LICENSE_ID_PATTERN))
+                        errorMessage = context.getString(R.string.invalid_driving_license_ID);
+                    break;
             }
         }
         return errorMessage;
