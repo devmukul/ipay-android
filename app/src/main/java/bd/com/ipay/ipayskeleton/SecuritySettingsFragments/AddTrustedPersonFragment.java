@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.AddTrustedPersonRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.AddTrustedPersonResponse;
@@ -36,7 +36,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AddTrustedPersonFragment extends Fragment implements HttpResponseListener {
+public class AddTrustedPersonFragment extends BaseFragmentV4 implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mAddTrustedPersonTask = null;
     private AddTrustedPersonResponse mAddTrustedPersonResponse = null;
@@ -123,6 +123,12 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_add_trusted_person) );
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data != null) {
@@ -204,14 +210,23 @@ public class AddTrustedPersonFragment extends Fragment implements HttpResponseLi
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
                     ((SecuritySettingsActivity) getActivity()).switchToTrustedPersonFragment();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"AddTrustedPerson", "Succeed", mAddTrustedPersonResponse.getMessage());
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"AddTrustedPerson", "Failed", mAddTrustedPersonResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.failed_adding_trusted_person, Toast.LENGTH_LONG);
+
+                //Google Analytic event
+                Utilities.sendEventTracker(mTracker,"AddTrustedPerson", "Succeed", getString(R.string.failed_adding_trusted_person));
             }
 
             mAddTrustedPersonTask = null;

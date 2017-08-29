@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -28,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
@@ -45,7 +45,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class MobileTopupFragment extends Fragment implements HttpResponseListener {
+public class MobileTopupFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
@@ -159,6 +159,12 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_mobile_topup));
+    }
+
     private void setMobileNumber() {
         mMobileNumberEditText.setCurrentFragmentTag(Constants.TOP_UP);
         mMobileNumberEditText.setCustomTextChangeListener(new ContactsSearchView.CustomTextChangeListener() {
@@ -196,14 +202,15 @@ public class MobileTopupFragment extends Fragment implements HttpResponseListene
     }
 
     private void setOperator(String phoneNumber) {
-        phoneNumber = ContactEngine.trimPrefix(phoneNumber);
-
+        phoneNumber = phoneNumber.trim();
         final String[] OPERATOR_PREFIXES = getResources().getStringArray(R.array.operator_prefix);
         for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
-            if (phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
+            if (phoneNumber.startsWith("+880" + OPERATOR_PREFIXES[i]) || phoneNumber.startsWith("0" + OPERATOR_PREFIXES[i])) {
                 mOperatorEditText.setText(mOperatorList.get(i));
                 mSelectedOperatorTypeId = i;
                 break;
+            } else {
+                mOperatorEditText.setText(getString(R.string.invalid_operator));
             }
         }
     }

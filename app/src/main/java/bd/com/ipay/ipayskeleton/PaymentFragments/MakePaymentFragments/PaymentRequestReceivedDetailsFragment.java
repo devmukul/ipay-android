@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
@@ -69,6 +70,19 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
     private ProgressDialog mProgressDialog;
 
     private final int HEADER_FOOTER_VIEW_COUNT = 2;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_payment_request_received_details) );
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

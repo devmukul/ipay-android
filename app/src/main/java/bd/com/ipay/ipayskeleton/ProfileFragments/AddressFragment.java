@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -33,6 +34,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
 public class AddressFragment extends ProgressFragment implements HttpResponseListener {
@@ -67,6 +69,19 @@ public class AddressFragment extends ProgressFragment implements HttpResponseLis
 
     private List<Thana> mThanaList;
     private List<District> mDistrictList;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_user_address) );
+    }
 
 
     @Nullable

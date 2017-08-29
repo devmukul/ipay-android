@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -22,17 +23,14 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
-import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetParentInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetOccupationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Occupation;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.OccupationRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -95,11 +93,19 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
 
     private TextView mUserInfoServiceNotAllowedTextView;
     private TextView mParentInfoServiceNotAllowedTextView;
+    private Tracker mTracker;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_user_basic_info) );
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mTracker = Utilities.getTracker(getActivity());
     }
 
     @Override
@@ -159,21 +165,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
         super.onActivityCreated(savedInstanceState);
 
         setContentShown(false);
-
-        if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE)
-                || PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE)) {
-            getProfileInfo();
-        } else {
-            DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE);
-
-            if (json == null)
-                getProfileInfo();
-            else {
-                processProfileInfoResponse(json);
-            }
-        }
-
+        getProfileInfo();
         getParentInfo();
     }
 
@@ -287,13 +279,6 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             try {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     processProfileInfoResponse(result.getJsonString());
-
-                    DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                    dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, result.getJsonString());
-
-                    PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_INFO_UPDATE, false);
-                    PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_PROFILE_PICTURE, false);
-
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), R.string.profile_info_fetch_failed, Toast.LENGTH_SHORT);

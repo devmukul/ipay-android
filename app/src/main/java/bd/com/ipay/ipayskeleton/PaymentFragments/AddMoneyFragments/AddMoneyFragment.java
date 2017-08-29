@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -33,6 +32,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.CustomView.BankListValidator;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialogWithIcon;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
@@ -51,7 +52,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AddMoneyFragment extends Fragment implements HttpResponseListener {
+public class AddMoneyFragment extends BaseFragment implements HttpResponseListener {
 
     private static final int ADD_MONEY_REVIEW_REQUEST = 101;
 
@@ -76,7 +77,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     private int selectedBankPosition = 0;
 
     private ProgressDialog mProgressDialog;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -157,6 +157,12 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         attemptGetBusinessRule(Constants.SERVICE_ID_ADD_MONEY);
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_add_money) );
     }
 
     private void showGetVerifiedDialog() {

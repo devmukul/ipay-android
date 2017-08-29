@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -21,6 +20,7 @@ public class LauncherActivity extends AppCompatActivity {
         startApplication();
 
         finish();
+
     }
 
     private void startApplication() {

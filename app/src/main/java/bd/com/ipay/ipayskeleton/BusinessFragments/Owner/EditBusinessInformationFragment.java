@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -51,6 +52,19 @@ public class EditBusinessInformationFragment extends Fragment implements HttpRes
     private SetBusinessInformationResponse mSetBusinessInformationResponse;
 
     private ProgressDialog mProgressDialog;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_information_edit) );
+    }
 
     @Nullable
     @Override

@@ -6,20 +6,23 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -30,6 +33,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -61,6 +65,19 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     private View mLinearLayoutRefNumberHolder;
     private View mRefNumberDivider;
     private Button mPaymentButton;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_make_payment_review) );
+    }
 
 
     @Override
@@ -238,10 +255,19 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG);
                     getActivity().setResult(Activity.RESULT_OK);
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"MakePayment", "Success", mPaymentResponse.getMessage());
+
                     getActivity().finish();
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    ((MyApplication) getActivity().getApplication()).launchLoginPage(mPaymentResponse.getMessage());
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG);
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"MakePayment", "Failed", mPaymentResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

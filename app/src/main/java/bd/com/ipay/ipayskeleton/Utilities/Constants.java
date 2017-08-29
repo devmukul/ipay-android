@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
+import com.google.android.gms.vision.CameraSource;
+
 import bd.com.ipay.ipayskeleton.BuildConfig;
 
 public class Constants {
@@ -55,6 +57,9 @@ public class Constants {
     public static final String REFRESH_TOKEN = "refresh-token";
     public static final String RESOURCE_TOKEN = "resource-token";
     public static final String OPERATING_ON_ACCOUNT_ID = "operatingOnAccountId";
+
+    public static final int CAMERA_REAR = CameraSource.CAMERA_FACING_BACK;
+    public static final int CAMERA_FRONT = CameraSource.CAMERA_FACING_FRONT;
 
     public static final String REQUEST_ID = "REQUEST_ID";
     public static final String QUESTION_ID = "QUESTION_ID";
@@ -125,7 +130,7 @@ public class Constants {
     public static final double OFFICE_LONGITUDE = 90.4169212;
     public static final String HOST_NAME = "www.ipay.com.bd";
 
-    public static final int MIN_AGE_LIMIT = 10;
+    public static final int MIN_AGE_LIMIT = 14;
     public static final int MIN_VALID_NAME_LENGTH = 5;
     public static final int MAX_FILE_ATTACHMENT_LIMIT = 5;
     public static final int MINIMUM_REQUIRED_NID_LENGTH = 10;
@@ -459,6 +464,7 @@ public class Constants {
     public static final int HTTP_RESPONSE_STATUS_BAD_REQUEST = 400;
     public static final int HTTP_RESPONSE_STATUS_ACCEPTED = 202;
     public static final int HTTP_RESPONSE_STATUS_INTERNAL_ERROR = 500;
+    public static final int HTTP_RESPONSE_STATUS_BLOCKED = 403;
 
     public static final int PERSONAL_ACCOUNT_TYPE = 1;
     public static final int BUSINESS_ACCOUNT_TYPE = 2;

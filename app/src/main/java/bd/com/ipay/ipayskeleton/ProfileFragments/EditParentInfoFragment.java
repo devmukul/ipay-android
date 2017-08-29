@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,8 +18,9 @@ import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetParentInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetParentInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -29,7 +29,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EditParentInfoFragment extends Fragment implements HttpResponseListener {
+public class EditParentInfoFragment extends BaseFragmentV4 implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSetParentInfoTask = null;
     private SetParentInfoResponse mSetParentInfoResponse;
@@ -55,12 +55,6 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
 
     private final int PICK_FATHERS_MOBILE_NUMBER_REQUEST = 100;
     private final int PICK_MOTHERS_MOBILE_NUMBER_REQUEST = 101;
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -116,6 +110,18 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_permanent_info_edit));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+
     }
 
     @Override
@@ -236,15 +242,24 @@ public class EditParentInfoFragment extends Fragment implements HttpResponseList
                             Toast.makeText(getActivity(), mSetParentInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                             getActivity().onBackPressed();
+
+                            //Google Analytic event
+                            Utilities.sendEventTracker(mTracker,"UpdateParentInfo", "Succeed", mSetParentInfoResponse.getMessage());
                         }
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.parent_info_save_failed, Toast.LENGTH_SHORT).show();
+
+                        //Google Analytic event
+                        Utilities.sendEventTracker(mTracker,"UpdateParentInfo", "Failed", mSetParentInfoResponse.getMessage());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.parent_info_save_failed, Toast.LENGTH_SHORT).show();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"UpdateParentInfo", "Failed", getString(R.string.parent_info_save_failed));
                 }
 
                 mSetParentInfoTask = null;

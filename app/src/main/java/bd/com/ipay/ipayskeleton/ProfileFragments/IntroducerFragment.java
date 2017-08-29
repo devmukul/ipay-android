@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -64,11 +65,18 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
     private IntroduceAdapter mIntroduceAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private Tracker mTracker;
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_introducer) );
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mTracker = Utilities.getTracker(getActivity());
     }
 
     @Nullable

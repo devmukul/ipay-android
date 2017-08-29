@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CustomCamera</string>
+    <string name="capture">capture</string>
+    <string name="change_camera">Change Camera</string>
+    <string name="flash">Flash</string>
+    <string name="image">Image</string>
+</resources>

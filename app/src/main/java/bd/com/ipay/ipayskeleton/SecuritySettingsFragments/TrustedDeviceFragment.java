@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -29,13 +30,10 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
-import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.GetTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.RemoveTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.TrustedDevice;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -58,11 +56,19 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
     private RecyclerView mTrustedDevicesRecyclerView;
 
     private ProgressDialog mProgressDialog;
+    private Tracker mTracker;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_trusted_devices));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mTracker = Utilities.getTracker(getActivity());
     }
 
     @Override
@@ -90,19 +96,7 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
                     getTrustedDeviceList();
             }
         });
-
-        if (PushNotificationStatusHolder.isUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE))
-            getTrustedDeviceList();
-        else {
-            DataHelper dataHelper = DataHelper.getInstance(getActivity());
-            String json = dataHelper.getPushEvent(SharedPrefConstants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE);
-
-            if (json == null)
-                getTrustedDeviceList();
-            else {
-                processTrustedDeviceList(json);
-            }
-        }
+        getTrustedDeviceList();
     }
 
     private void showTrustedDeviceRemoveConfirmationDialog(final long id) {
@@ -172,11 +166,6 @@ public class TrustedDeviceFragment extends ProgressFragment implements HttpRespo
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     processTrustedDeviceList(result.getJsonString());
-
-                    DataHelper dataHelper = DataHelper.getInstance(getActivity());
-                    dataHelper.updatePushEvents(SharedPrefConstants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, result.getJsonString());
-
-                    PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_DEVICE_UPDATE, false);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mGetTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:gravity="center"
+    tools:context="bd.com.ipay.ipayskeleton.camera.CameraActivity">
+
+    <bd.com.ipay.ipayskeleton.camera.CameraSourcePreview
+        android:id="@+id/camera_preview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+
+        <bd.com.ipay.ipayskeleton.camera.CameraOverlay
+            android:id="@+id/face_tracking_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+    </bd.com.ipay.ipayskeleton.camera.CameraSourcePreview>
+
+    <ImageView
+        android:id="@+id/captured_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/image"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/capture_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#22000000"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="20dip">
+
+        <ImageButton
+            android:id="@+id/capture_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_camera_white_60dp"
+            android:contentDescription="@string/capture" />
+
+        <ImageButton
+            android:id="@+id/flash_button"
+            android:layout_width="@dimen/value36"
+            android:layout_height="@dimen/value36"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dip"
+            android:layout_marginStart="20dip"
+            android:background="@drawable/transparent_background"
+            android:contentDescription="@string/flash"
+            android:padding="@dimen/value5"
+            android:src="@drawable/ic_flash_off_white_24dp"
+            android:visibility="visible" />
+
+        <ImageButton
+            android:id="@+id/camera_change_button"
+            android:layout_width="@dimen/value36"
+            android:layout_height="@dimen/value36"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dip"
+            android:layout_marginRight="20dip"
+            android:background="@drawable/transparent_background"
+            android:contentDescription="@string/change_camera"
+            android:src="@drawable/ic_camera_front_white_24dp" />
+
+        <ImageButton
+            android:id="@+id/ok_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="@dimen/value36"
+            android:layout_height="@dimen/value36"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dip"
+            android:layout_marginStart="20dip"
+            android:background="@drawable/transparent_background"
+            android:contentDescription="@android:string/ok"
+            android:src="@drawable/ic_done_white_24dp"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/cross_button"
+            android:layout_width="@dimen/value36"
+            android:layout_height="@dimen/value36"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dip"
+            android:layout_marginRight="20dip"
+            android:background="@drawable/transparent_background"
+            android:contentDescription="@android:string/cancel"
+            android:src="@drawable/ic_cancel_white_24dp"
+            android:visibility="gone" />
+    </RelativeLayout>
+</RelativeLayout>

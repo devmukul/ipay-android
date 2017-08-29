@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.SetSecurityAnsw
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.SetSecurityAnswerResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -74,9 +76,12 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
 
     private String mPassword;
 
+    private Tracker mTracker;
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
     }
 
     @Override
@@ -116,6 +121,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
         super.onResume();
         if (!mPreviousQuestionClassList.isEmpty() || mPreviousQuestionClassList.size() != 0)
             getAllSecurityQuestions();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_security_question));
     }
 
     private void getAllSecurityQuestions() {
@@ -279,6 +285,9 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
                     Toast.makeText(getActivity(), mSetSecurityAnswerResponse.getMessage(), Toast.LENGTH_LONG).show();
                     getPreviousSelectedSecurityQuestions();
 
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    if (getActivity() != null)
+                        ((MyApplication) (getActivity().getApplication())).launchLoginPage(mSetSecurityAnswerResponse.getMessage());
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetSecurityAnswerResponse.getMessage(), Toast.LENGTH_SHORT).show();
