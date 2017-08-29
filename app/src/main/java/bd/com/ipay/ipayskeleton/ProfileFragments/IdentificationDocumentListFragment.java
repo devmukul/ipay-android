@@ -267,6 +267,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             }
         }
     }
+
     private void getIdentificationDocuments() {
         if (mGetIdentificationDocumentsTask != null) {
             return;
@@ -289,7 +290,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_DOCUMENTS, getActivity(), this);
         mGetIdentificationBusinessDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
-    private void setMaxLength(EditText editText,int pos){
+
+    private void setEditTextMaxLength(EditText editText, int pos){
         int maxLength=Integer.parseInt(DOCUMENT_ID_MAX_LENGTH[pos]);
         InputFilter[] inputFilters=new InputFilter[1];
         inputFilters[0]=new InputFilter.LengthFilter(maxLength);
@@ -545,7 +547,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 String documentHintType = DOCUMENT_HINT_TYPES[pos];
 
                 mDocumentIdTextInputLayoutView.setHint(documentHintType);
-                setMaxLength(mDocumentIdEditTextView, pos);
+                setEditTextMaxLength(mDocumentIdEditTextView, pos);
                 Utilities.setAppropriateKeyboard(getActivity(), documentPreviewDetailsList.get(pos).getDocumentType(), mDocumentIdEditTextView);
 
                 // Unverified, document not yet uploaded
