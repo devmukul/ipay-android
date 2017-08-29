@@ -96,8 +96,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             R.string.tin
     };
 
-    private static final int[] PERSONAL_DOCUMENT_ID_MAX_LENGTH={17,9,15,100,100};
-    private static final int[] BUSINESS_DOCUMENT_ID_MAX_LENGTH={17,12,8,11,15,9};
+    private static String[] DOCUMENT_ID_MAX_LENGTH;
 
     private static final int[] BUSINESS_DOCUMENT_TYPE_NAMES = {
             R.string.national_id,
@@ -120,7 +119,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_identification_documents_list) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_identification_documents_list));
     }
 
     @Override
@@ -168,8 +167,11 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             DOCUMENT_HINT_TYPES = getResources().getStringArray(R.array.business_document_id);
-        } else
+            DOCUMENT_ID_MAX_LENGTH = getResources().getStringArray(R.array.business_document_id_max_length);
+        } else {
             DOCUMENT_HINT_TYPES = getResources().getStringArray(R.array.personal_document_id);
+            DOCUMENT_ID_MAX_LENGTH = getResources().getStringArray(R.array.personal_document_id_max_length);
+        }
     }
 
     @Override
@@ -288,15 +290,12 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mGetIdentificationBusinessDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
     private void setMaxLength(EditText editText,int pos){
-        int maxLength=0;
-        if(ProfileInfoCacheManager.isBusinessAccount())
-            maxLength=BUSINESS_DOCUMENT_ID_MAX_LENGTH[pos];
-        else
-            maxLength=PERSONAL_DOCUMENT_ID_MAX_LENGTH[pos];
+        int maxLength=Integer.parseInt(DOCUMENT_ID_MAX_LENGTH[pos]);
         InputFilter[] inputFilters=new InputFilter[1];
         inputFilters[0]=new InputFilter.LengthFilter(maxLength);
         editText.setFilters(inputFilters);
     }
+
     private void getDocumentAccessToken() {
         if (mGetDocumentAccessTokenTask != null) {
             return;
@@ -546,7 +545,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 String documentHintType = DOCUMENT_HINT_TYPES[pos];
 
                 mDocumentIdTextInputLayoutView.setHint(documentHintType);
-                setMaxLength(mDocumentIdEditTextView,pos);
+                setMaxLength(mDocumentIdEditTextView, pos);
                 Utilities.setAppropriateKeyboard(getActivity(), documentPreviewDetailsList.get(pos).getDocumentType(), mDocumentIdEditTextView);
 
                 // Unverified, document not yet uploaded
