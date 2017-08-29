@@ -86,6 +86,19 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (mCameraPreview != null && mCameraPreview.getVisibility() == View.INVISIBLE) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mCameraPreview.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+            }, 750);
+        }
         if (mCameraPreview != null && mCapturedImageView.getVisibility() == View.GONE) {
             try {
                 mCameraPreview.start(mCameraSource, mCameraOverlay);
@@ -266,7 +279,9 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     Bitmap rotateImageIfRequired(Bitmap img) throws IOException {
-        if (cameraFace == com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK)
+        if (img.getHeight() > img.getWidth())
+            return img;
+        else if (cameraFace == com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK)
             return rotateImage(img, 90);
         else
             return rotateImage(img, 270);
