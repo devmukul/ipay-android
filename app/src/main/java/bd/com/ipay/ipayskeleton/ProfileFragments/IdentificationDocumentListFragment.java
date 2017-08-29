@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,13 +92,19 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             R.string.national_id,
             R.string.passport,
             R.string.driving_license,
+            R.string.birth_certificate,
+            R.string.tin
     };
+
+    private static String[] DOCUMENT_ID_MAX_LENGTH;
 
     private static final int[] BUSINESS_DOCUMENT_TYPE_NAMES = {
             R.string.national_id,
             R.string.business_tin,
             R.string.trade_license,
-            R.string.vat_registration_certificate
+            R.string.vat_registration_certificate,
+            R.string.driving_license,
+            R.string.passport
     };
 
     private static final int ACTION_UPLOAD_DOCUMENT = 100;
@@ -112,7 +119,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_identification_documents_list) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_identification_documents_list));
     }
 
     @Override
@@ -124,12 +131,16 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 Constants.DOCUMENT_TYPE_NATIONAL_ID,
                 Constants.DOCUMENT_TYPE_PASSPORT,
                 Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
+                Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
+                Constants.TIN
         };
         BUSINESS_DOCUMENT_TYPES = new String[]{
                 Constants.DOCUMENT_TYPE_NATIONAL_ID,
                 Constants.DOCUMENT_TYPE_BUSINESS_TIN,
                 Constants.DOCUMENT_TYPE_TRADE_LICENSE,
-                Constants.DOCUMENT_TYPE_VAT_REG_CERT
+                Constants.DOCUMENT_TYPE_VAT_REG_CERT,
+                Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
+                Constants.DOCUMENT_TYPE_PASSPORT
         };
         mTracker = Utilities.getTracker(getActivity());
     }
@@ -156,8 +167,11 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             DOCUMENT_HINT_TYPES = getResources().getStringArray(R.array.business_document_id);
-        } else
+            DOCUMENT_ID_MAX_LENGTH = getResources().getStringArray(R.array.business_document_id_max_length);
+        } else {
             DOCUMENT_HINT_TYPES = getResources().getStringArray(R.array.personal_document_id);
+            DOCUMENT_ID_MAX_LENGTH = getResources().getStringArray(R.array.personal_document_id_max_length);
+        }
     }
 
     @Override
@@ -275,6 +289,13 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mGetIdentificationBusinessDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_BUSINESS_DOCUMENTS_REQUEST,
                 Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_DOCUMENTS, getActivity(), this);
         mGetIdentificationBusinessDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void setEditTextMaxLength(EditText editText, int pos){
+        int maxLength=Integer.parseInt(DOCUMENT_ID_MAX_LENGTH[pos]);
+        InputFilter[] inputFilters=new InputFilter[1];
+        inputFilters[0]=new InputFilter.LengthFilter(maxLength);
+        editText.setFilters(inputFilters);
     }
 
     private void getDocumentAccessToken() {
@@ -526,6 +547,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 String documentHintType = DOCUMENT_HINT_TYPES[pos];
 
                 mDocumentIdTextInputLayoutView.setHint(documentHintType);
+                setEditTextMaxLength(mDocumentIdEditTextView, pos);
                 Utilities.setAppropriateKeyboard(getActivity(), documentPreviewDetailsList.get(pos).getDocumentType(), mDocumentIdEditTextView);
 
                 // Unverified, document not yet uploaded
