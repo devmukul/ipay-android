@@ -21,6 +21,10 @@ android {
         }
     }
 
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
     defaultConfig {
         applicationId "bd.com.ipay.android"
         minSdkVersion 16
