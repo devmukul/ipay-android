@@ -90,9 +90,21 @@
             android:text="@string/logout_from_all_device"
             app:arrowVisibility="false" />
 
-        <View
-            style="@style/Divider"
-            android:visibility="invisible" />
+        <View style="@style/Divider" />
+
+        <bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton
+            android:id="@+id/implement_2fa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_logout23x"
+            android:paddingBottom="@dimen/value4"
+            android:paddingLeft="@dimen/activity_horizontal_margin_card"
+            android:paddingTop="@dimen/value4"
+            android:text="@string/fa_Setting"
+            app:arrowVisibility="true" />
+
+        <View style="@style/Divider"
+            android:visibility="invisible"/>
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

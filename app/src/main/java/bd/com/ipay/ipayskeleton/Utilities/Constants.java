@@ -351,7 +351,7 @@ public class Constants {
     public static final String URL_GET_SECURITY_QUESTIONS = "settings/security/questions";
     public static final String URL_SET_SECURITY_ANSWERS = "settings/security/answers";
     public static final String URL_FORGET_PASSWORD = "/forgot-password";
-
+    public static final String URL_TWO_FA_SETTINGS="/settings/2fa/preference";
     public static final String URL_GET_PIN_INFO = "settings/pin";
     public static final String URL_SET_PIN = "settings/pin";
 
@@ -595,6 +595,9 @@ public class Constants {
     public static final String COMMAND_GET_ENABLED_PAYABLES_LIST = "COMMAND_GET_ENABLED_PAYABLES_LIST";
     public static final String COMMAND_GET_STUDENT_INFO_BY_STUDENT_ID = "COMMAND_GET_STUDENT_INFO_BY_STUDENT_ID";
     public static final String COMMAND_MAKE_PAYMENT_EDUCATION = "COMMAND_MAKE_PAYMENT_EDUCATION";
+
+    //Two FA
+    public static final String COMMAND_GET_TWO_FA_SETTING="COMMAND_GET_TWO_FA_SETTING";
 
     public static final int ACTIVITY_LOG_COUNT = 10;
 

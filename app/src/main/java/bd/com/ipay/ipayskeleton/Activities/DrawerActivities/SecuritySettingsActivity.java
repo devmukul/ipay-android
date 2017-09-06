@@ -4,19 +4,18 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.google.android.gms.analytics.Tracker;
-
+import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.DrawerFragments.SecuritySettingsFragment;
+import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.AddTrustedPersonFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.ChangePasswordFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.FingerPrintAuthenticationSettingsFragment;
+import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.Implement2FASettingsFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.PasswordRecoveryFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.SecurityQuestionFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.SetPinFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedDeviceFragment;
-import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.DrawerFragments.SecuritySettingsFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.TrustedNetworkFragment;
-import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.UpdateSecurityQuestionFragment;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -140,6 +139,14 @@ public class SecuritySettingsActivity extends BaseActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new FingerPrintAuthenticationSettingsFragment()).addToBackStack(null).commit();
+    }
+
+    public void switchTo2FaSettingsFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
+            getSupportFragmentManager().popBackStackImmediate();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new Implement2FASettingsFragment()).addToBackStack(null).commit();
     }
 
     @Override

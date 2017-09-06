@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/value1"
+        style="@style/DividerOnly"></View>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/header_text_view"
+        android:layout_below="@+id/divider"
+        android:textSize="@dimen/text_size_small_medium_value18"
+        android:layout_centerHorizontal="true" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/value1"
+        android:layout_below="@id/header_text_view"
+        style="@style/DividerOnly"></View>
+</RelativeLayout>

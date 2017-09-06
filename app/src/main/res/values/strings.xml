@@ -902,6 +902,7 @@
     <string name="screen_name_activity_log">Activity log</string>
     <string name="screen_name_invite_list">Invite list</string>
     <string name="screen_name_security_settings">Security settings</string>
+    <string name="fa_Setting">2FA Settings</string>
     <string name="screen_name_business_contact">Business contact</string>
     <string name="screen_name_contacts">Contacts</string>
     <string name="screen_name_transaction_details">Transaction details</string>
