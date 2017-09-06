@@ -1,14 +1,12 @@
-package bd.com.ipay.ipayskeleton.Utilities;
+package bd.com.ipay.ipayskeleton.camera.utility;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.SparseArray;
 
 import com.google.android.gms.vision.Detector;
@@ -21,14 +19,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
-
 /**
  * Source:
  * http://stackoverflow.com/questions/14066038/why-image-captured-using-camera-intent-gets-rotated-on-some-devices-in-android
  * http://stackoverflow.com/questions/649154/save-bitmap-to-location
  */
 public class CameraAndImageUtilities {
+
+    public static final String NOT_AN_IMAGE = "NOT_AN_IMAGE";
+    public static final String MULTIPLE_FACES = "MULTIPLE_FACES";
+    public static final String NO_FACE_DETECTED = "NO_FACE_DETECTED";
+    public static final String VALID_PROFILE_PICTURE = "VALID_PROFILE_PICTURE";
 
     /**
      * This method is responsible for solving the rotation issue if exist. Also scale the images to
@@ -37,10 +38,10 @@ public class CameraAndImageUtilities {
      * @param context       The current context
      * @param selectedImage The Image URI
      * @return Bitmap image results
-     * @throws IOException
+     * @throws IOException,NullPointerException throws exception for error cases.
      */
-    public static Bitmap handleSamplingAndRotationBitmap(Context context, Uri selectedImage, boolean fromCamera)
-            throws IOException {
+    public static Bitmap handleSamplingAndRotationBitmap(Context context, Uri selectedImage)
+            throws IOException, NullPointerException {
         int MAX_HEIGHT = 512;
         int MAX_WIDTH = 512;
 
@@ -49,6 +50,10 @@ public class CameraAndImageUtilities {
         options.inJustDecodeBounds = true;
         InputStream imageStream = context.getContentResolver().openInputStream(selectedImage);
         BitmapFactory.decodeStream(imageStream, null, options);
+
+        if (imageStream == null) {
+            throw new NullPointerException("Can\'t open image");
+        }
         imageStream.close();
 
         // Calculate inSampleSize
@@ -57,11 +62,97 @@ public class CameraAndImageUtilities {
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
         imageStream = context.getContentResolver().openInputStream(selectedImage);
-        Bitmap img = BitmapFactory.decodeStream(imageStream, null, options);
-
-        img = rotateImageIfRequired(context, img, selectedImage, fromCamera);
-
+        if (imageStream == null) {
+            throw new NullPointerException("Can\'t open image");
+        }
+        Bitmap img = rotateImageIfRequired(BitmapFactory.decodeStream(imageStream, null, options), selectedImage);
+        imageStream.close();
         return img;
+    }
+
+    /**
+     * This method is responsible for solving the rotation issue if exist. Also scale the images to
+     * 512x512 resolution
+     *
+     * @param cameraFace    The Camera Face of the image
+     * @param selectedImage The Image URI
+     * @return Bitmap image results
+     */
+    public static Bitmap handleSamplingAndRotationBitmap(int cameraFace, byte[] imageData) {
+        int MAX_HEIGHT = 1024;
+        int MAX_WIDTH = 1024;
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(imageData, 0, imageData.length, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, MAX_WIDTH, MAX_HEIGHT);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+
+        return rotateImageIfRequired(cameraFace, BitmapFactory.decodeByteArray(imageData, 0, imageData.length, options));
+    }
+
+    /**
+     * Rotate an image if required.
+     *
+     * @param imageBitmap   The image bitmap
+     * @param selectedImage Image URI
+     * @return The resulted Bitmap after manipulation
+     * @throws IOException throws exception for error cases.
+     */
+    private static Bitmap rotateImageIfRequired(Bitmap imageBitmap, Uri selectedImage) throws IOException {
+
+        ExifInterface ei = new ExifInterface(selectedImage.getPath());
+
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return rotateImage(imageBitmap, 90);
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return rotateImage(imageBitmap, 180);
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return rotateImage(imageBitmap, 270);
+            default:
+                return imageBitmap;
+        }
+    }
+
+    /**
+     * Rotate an image if required.
+     *
+     * @param cameraFace    flag to detect which camera is used to capture
+     * @param selectedImage Image URI
+     * @return The resulted Bitmap after manipulation
+     */
+    public static Bitmap rotateImageIfRequired(int cameraFace, Bitmap imageBitmap) {
+        if (imageBitmap.getHeight() > imageBitmap.getWidth())
+            return imageBitmap;
+        else if (cameraFace == com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK)
+            return rotateImage(imageBitmap, 90);
+        else
+            return rotateImage(imageBitmap, 270);
+    }
+
+    /**
+     * Rotates the image using the degree parameter.
+     *
+     * @param imageBitmap bitmap data of the image.
+     * @param degree      angle to rotate.
+     * @return Rotated image bitmap.
+     */
+    public static Bitmap rotateImage(Bitmap imageBitmap, int degree) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        Bitmap rotatedImg = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), matrix, true);
+        if (rotatedImg != imageBitmap)      // Android might reuse the same bitmap again
+            imageBitmap.recycle();
+
+        return rotatedImg;
     }
 
     /**
@@ -111,76 +202,6 @@ public class CameraAndImageUtilities {
             }
         }
         return inSampleSize;
-    }
-
-    /**
-     * Rotate an image if required.
-     *
-     * @param img           The image bitmap
-     * @param selectedImage Image URI
-     * @return The resulted Bitmap after manipulation
-     */
-    private static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage, boolean fromCamera) throws IOException {
-
-        ExifInterface ei = new ExifInterface(selectedImage.getPath());
-
-        if (fromCamera) {
-            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
-            Logger.logW("Orientation - Camera", orientation + "");
-
-            switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    return rotateImage(img, 90);
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    return rotateImage(img, 180);
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    return rotateImage(img, 270);
-                default:
-                    return img;
-            }
-        } else {
-            String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
-            Cursor cur = context.getContentResolver().query(selectedImage, orientationColumn, null, null, null);
-            int orientation = 0;
-            if (cur != null && cur.moveToFirst()) {
-                orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
-            }
-            if (cur != null)
-                cur.close();
-
-            Logger.logW("Orientation - Gallery", orientation + "");
-
-            return rotateImage(img, orientation);
-        }
-    }
-
-    private static Bitmap rotateImage(Bitmap img, int degree) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degree);
-        Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
-        if (rotatedImg != img)      // Android might reuse the same bitmap again
-            img.recycle();
-
-        return rotatedImg;
-    }
-
-    public static void saveBitmapToFile(Bitmap bmp, File file) {
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 85, out);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     /**
@@ -237,13 +258,13 @@ public class CameraAndImageUtilities {
                     // Face detection is operational
                     switch (faces.size()) {
                         case 0:
-                            result = Constants.NO_FACE_DETECTED;
+                            result = NO_FACE_DETECTED;
                             break;
                         case 1:
-                            result = Constants.VALID_PROFILE_PICTURE; // This is the valid case
+                            result = VALID_PROFILE_PICTURE; // This is the valid case
                             break;
                         default:
-                            result = Constants.MULTIPLE_FACES;
+                            result = MULTIPLE_FACES;
                             break;
                     }
                 }
@@ -253,17 +274,34 @@ public class CameraAndImageUtilities {
 
             } else {
                 // This is not an image file
-                result = Constants.NOT_AN_IMAGE;
+                result = NOT_AN_IMAGE;
             }
-
-            return result;
         } catch (Exception e) {
             e.printStackTrace();
             result = null;
-            return result;
+        }
+        return result;
+    }
+
+    public static void saveBitmapToFile(Bitmap bmp, File file) {
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 85, out);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void saveImageBitmap(String fileName, Bitmap bitmap, Context context) {
         try {
             File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
