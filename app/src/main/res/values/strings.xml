@@ -63,6 +63,8 @@
     <string name="invalid_passport_ID">Invalid Passport ID</string>
     <string name="invalid_driving_license_ID">Invalid Driving License ID</string>
     <string name="invalid_driving_license_ID_insufficient_length">Driving License ID should be 15 characters long</string>
+    <string name="invalid_tin">Invalid Tin</string>
+    <string name="invalid_birth_certificate">Invalid Birth Certificate ID</string>
     <string name="invalid_nid_min_length">NID should be at least 10 digits long</string>
     <string name="invalid_nid_max_length">NID should be max 17 digits long</string>
     <string name="invalid_business_tin_wrong_length">Business TIN should be 12 digits long</string>
