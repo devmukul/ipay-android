@@ -291,10 +291,10 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mGetIdentificationBusinessDocumentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void setEditTextMaxLength(EditText editText, int pos){
-        int maxLength=Integer.parseInt(DOCUMENT_ID_MAX_LENGTH[pos]);
-        InputFilter[] inputFilters=new InputFilter[1];
-        inputFilters[0]=new InputFilter.LengthFilter(maxLength);
+    private void setEditTextMaxLength(EditText editText, int pos) {
+        int maxLength = Integer.parseInt(DOCUMENT_ID_MAX_LENGTH[pos]);
+        InputFilter[] inputFilters = new InputFilter[1];
+        inputFilters[0] = new InputFilter.LengthFilter(maxLength);
         editText.setFilters(inputFilters);
     }
 
