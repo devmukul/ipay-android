@@ -535,7 +535,7 @@ public class Utilities {
 
     public static String getExtension(String filePath) {
         if (filePath != null && filePath.lastIndexOf('.') >= 0)
-            return filePath.substring(0, filePath.lastIndexOf('.')).toLowerCase();
+            return filePath.substring(filePath.lastIndexOf('.') + 1, filePath.length()).toLowerCase();
         else
             return "";
     }
@@ -751,19 +751,19 @@ public class Utilities {
         ActivityCompat.requestPermissions(activity, requiredPermissions.toArray(new String[requiredPermissions.size()]), permissionCode);
     }
 
-    public static Tracker getTracker(Activity activity){
+    public static Tracker getTracker(Activity activity) {
         Tracker mTracker;
         MyApplication application = (MyApplication) activity.getApplication();
         mTracker = application.getDefaultTracker();
-        return  mTracker;
+        return mTracker;
     }
 
-    public static void sendScreenTracker(Tracker mTracker, String screenName){
+    public static void sendScreenTracker(Tracker mTracker, String screenName) {
         mTracker.setScreenName(screenName);
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
-    public static void sendEventTracker(Tracker mTracker, String category, String action, String label){
+    public static void sendEventTracker(Tracker mTracker, String category, String action, String label) {
         mTracker.send(new HitBuilders.EventBuilder()
                 .setCategory(category)
                 .setAction(action)

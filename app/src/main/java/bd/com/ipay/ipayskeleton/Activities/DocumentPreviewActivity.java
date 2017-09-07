@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ public class DocumentPreviewActivity extends AppCompatActivity {
     // File extension can be .pdf, .jpg etc. If you want to load a web page instead
     // of a file, pass null or empty string here.
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +35,8 @@ public class DocumentPreviewActivity extends AppCompatActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setPluginState(WebSettings.PluginState.ON);
         webView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setDisplayZoomControls(false);
 
         if (documentUrl.contains("pdf")) {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(documentUrl));
