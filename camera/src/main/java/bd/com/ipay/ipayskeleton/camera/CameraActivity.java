@@ -5,8 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -37,6 +35,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import bd.com.ipay.ipayskeleton.camera.utility.CameraAndImageUtilities;
 
 
 public class CameraActivity extends AppCompatActivity {
@@ -224,9 +224,8 @@ public class CameraActivity extends AppCompatActivity {
 
                             try {
                                 imageData = Arrays.copyOf(data, data.length);
-                                Bitmap bMap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                                mCapturedImageView.setImageBitmap(bMap);
-                                mCapturedImageView.setImageBitmap(rotateImageIfRequired(bMap));
+                                Bitmap convertedBitmap = CameraAndImageUtilities.handleSamplingAndRotationBitmap(cameraFace, data);
+                                mCapturedImageView.setImageBitmap(convertedBitmap);
                                 showConfirmImageLayoutAndHideCaptureLayout();
                             } catch (Exception e) {
                                 Log.e(TAG, e.getMessage(), e);
@@ -259,7 +258,7 @@ public class CameraActivity extends AppCompatActivity {
             public void onClick(View v) {
                 setResult(RESULT_CANCELED);
                 if (imageData != null) {
-                    File pictureFile = getTempFile(getApplicationContext());
+                    File pictureFile = getTempFile();
                     FileOutputStream fos;
                     try {
                         fos = new FileOutputStream(pictureFile);
@@ -276,25 +275,6 @@ public class CameraActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    Bitmap rotateImageIfRequired(Bitmap img) throws IOException {
-        if (img.getHeight() > img.getWidth())
-            return img;
-        else if (cameraFace == com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK)
-            return rotateImage(img, 90);
-        else
-            return rotateImage(img, 270);
-    }
-
-    Bitmap rotateImage(Bitmap img, int degree) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degree);
-        Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
-        if (rotatedImg != img)      // Android might reuse the same bitmap again
-            img.recycle();
-
-        return rotatedImg;
     }
 
     @Override
@@ -334,8 +314,8 @@ public class CameraActivity extends AppCompatActivity {
 
     @NonNull
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private File getTempFile(Context context) {
-        File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
+    private File getTempFile() {
+        File documentFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
         if (!documentFile.getParentFile().exists()) {
             documentFile.getParentFile().mkdirs();
         }
