@@ -193,7 +193,7 @@ public class Constants {
     public static final String SERVICE_ID_SET = "SERVICE_ID_SET";
     public static final String NAVIGATION_MENU_SERVICE_ACCESS_SET = "NAVIGATION_MENU_SERVICE_ACCESS_SET";
     public static final String FRAGMENT_SERVICE_ACCESS_SET = "FRAGMENT_SERVICE_ACCESS_SET";
-    public static final String MOBILE_NUMBER_REGEX = "^((\\+)?88)?((0)?1)[35-9][\\d]{8}$";
+    public static final String MOBILE_NUMBER_REGEX = "^(((\\+)?880)?|(0)?)(1[356789][\\d]{8})$";
 
     static {
         if (SERVER_TYPE == DEV_SERVER) {
@@ -654,6 +654,8 @@ public class Constants {
     public static final String DOCUMENT_TYPE_NATIONAL_ID = "national_id";
     public static final String DOCUMENT_TYPE_PASSPORT = "passport";
     public static final String DOCUMENT_TYPE_DRIVING_LICENSE = "driving_license";
+    public static final String DOCUMENT_TYPE_BIRTH_CERTIFICATE = "birth_certificate";
+    public static final String DOCUMENT_TYPE_TIN = "tin";
     public static final String DOCUMENT_TYPE_BUSINESS_TIN = "business_tin";
     public static final String DOCUMENT_TYPE_TRADE_LICENSE = "trade_license";
     public static final String DOCUMENT_TYPE_VAT_REG_CERT = "vat_reg_certificate";
@@ -744,12 +746,6 @@ public class Constants {
     public static final int REQUEST_TYPE_SENT_REQUEST = 2;
 
     public static final int INVALID_ACCOUNT_ID = -1;
-
-    // Face detector
-    public static final String NOT_AN_IMAGE = "NOT_AN_IMAGE";
-    public static final String MULTIPLE_FACES = "MULTIPLE_FACES";
-    public static final String NO_FACE_DETECTED = "NO_FACE_DETECTED";
-    public static final String VALID_PROFILE_PICTURE = "VALID_PROFILE_PICTURE";
 
     // API Version Checker
     public static boolean IS_API_VERSION_CHECKED = false;

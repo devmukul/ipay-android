@@ -104,7 +104,9 @@
     <string-array name="personal_document_id">
         <item>@string/national_id</item>
         <item>@string/passport_id</item>
-        <item>@string/driving_license</item>
+        <item>@string/driving_license_id</item>
+        <item>@string/birth_certificate_id</item>
+        <item>@string/tin</item>
     </string-array>
 
     <string-array name="business_document_id">
@@ -112,5 +114,22 @@
         <item>@string/business_tin_id</item>
         <item>@string/trade_license_id</item>
         <item>@string/vat_registration_certificate_id</item>
+        <item>@string/driving_license_id</item>
+        <item>@string/passport_id</item>
+    </string-array>
+    <string-array name="personal_document_id_max_length">
+        <item>17</item>
+        <item>9</item>
+        <item>15</item>
+        <item>100</item>
+        <item>100</item>
+    </string-array>
+    <string-array name="business_document_id_max_length">
+        <item>17</item>
+        <item>12</item>
+        <item>8</item>
+        <item>11</item>
+        <item>15</item>
+        <item>9</item>
     </string-array>
 </resources>
