@@ -41,6 +41,7 @@ public class SecuritySettingsFragment extends BaseFragmentV4 implements HttpResp
     private IconifiedTextViewWithButton mPasswordRecoveryHeader;
     private IconifiedTextViewWithButton mLogoutHeader;
     private IconifiedTextViewWithButton mFingerprintOptionHeader;
+    private IconifiedTextViewWithButton mTwoFAHeader;
     private View mFingerprintOptionHolder;
 
     private ProgressDialog mProgressDialog;
@@ -58,6 +59,7 @@ public class SecuritySettingsFragment extends BaseFragmentV4 implements HttpResp
         mPasswordRecoveryHeader = (IconifiedTextViewWithButton) view.findViewById(R.id.password_recovery);
         mLogoutHeader = (IconifiedTextViewWithButton) view.findViewById(R.id.logout_from_all_devices);
         mFingerprintOptionHeader = (IconifiedTextViewWithButton) view.findViewById(R.id.login_with_fingerprint);
+        mTwoFAHeader = (IconifiedTextViewWithButton) view.findViewById(R.id.implement_2fa);
         mFingerprintOptionHolder = view.findViewById(R.id.fingerprint_layout);
 
         mProgressDialog = new ProgressDialog(getActivity());
@@ -130,6 +132,12 @@ public class SecuritySettingsFragment extends BaseFragmentV4 implements HttpResp
             @Override
             public void onClick(View v) {
                 ((SecuritySettingsActivity) getActivity()).switchToFingerprintAuthenticationSettingsFragment();
+            }
+        });
+        mTwoFAHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((SecuritySettingsActivity) getActivity()).switchTo2FaSettingsFragment();
             }
         });
     }
