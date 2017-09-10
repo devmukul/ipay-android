@@ -33,7 +33,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -307,14 +306,14 @@ public class EmailFragment extends ProgressFragment implements HttpResponseListe
                     } else {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), mGetEmailResponse.getMessage(), Toast.LENGTH_LONG).show();
-                            ((HomeActivity) getActivity()).switchToDashBoard();
+                            getActivity().finish();
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), R.string.failed_loading_emails, Toast.LENGTH_LONG).show();
-                        ((HomeActivity) getActivity()).switchToDashBoard();
+                        getActivity().finish();
                     }
                 }
                 mSwipeRefreshLayout.setRefreshing(false);
