@@ -55,53 +55,14 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/transection_serch_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/transaction_history_header"
-            android:background="@color/colorWhite">
 
-            <SearchView
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="10dp"
-                android:id="@+id/simpleSearchView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:iconifiedByDefault="false"
-                android:queryHint="Search Transaction"
-                android:background="@color/colorTransparent"
-                android:submitBackground="@color/colorTransparent"
-                android:queryBackground="@color/colorTransparent"
-                android:layout_toLeftOf="@+id/more_menu"/>
-
-            <ImageView
-                android:id="@+id/more_menu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/transaction_more"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"/>
-
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#E0E0E0"
-                android:layout_below="@id/simpleSearchView">
-
-            </LinearLayout>
-        </RelativeLayout>
 
 
         <FrameLayout
             android:id="@+id/fragment_container_transaction_history"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/transection_serch_view" />
+            android:layout_below="@+id/transaction_history_header" />
 
     </RelativeLayout>
 </com.flipboard.bottomsheet.BottomSheetLayout>

@@ -33,20 +33,10 @@ public class AddMoneyActivity extends BaseActivity {
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_add_money_history, menu);
-        return true;
-    }
-
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             Utilities.hideKeyboard(this);
             onBackPressed();
-            return true;
-        }else if(item.getItemId() == R.id.action_history) {
-            switchToAddMoneyHistoryFragment();
             return true;
         }else {
             return super.onOptionsItemSelected(item);
@@ -59,7 +49,6 @@ public class AddMoneyActivity extends BaseActivity {
         Utilities.hideKeyboard(this);
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
-            switchToAddMoneyFragment();
         } else {
             finish();
         }
@@ -71,17 +60,8 @@ public class AddMoneyActivity extends BaseActivity {
         return AddMoneyActivity.this;
     }
 
-    public void switchToAddMoneyHistoryFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        AddMoneyHistoryFragment fragment = new AddMoneyHistoryFragment();
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
-
     public void switchToAddMoneyFragment() {
-        getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new AddMoneyFragment()).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new AddMoneyFragment()).commit();
     }
 }

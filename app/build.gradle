@@ -25,8 +25,8 @@ android {
         applicationId "bd.com.ipay.android"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 92
-        versionName "1.2.7"
+        versionCode 93
+        versionName "1.2.8"
         multiDexEnabled true
     }
 
@@ -43,7 +43,7 @@ android {
     // Server Type 3 -> stage server
     // Server Type 4 -> live server
     // Server Type 5 -> local server
-    def ServerType = java.lang.System.getProperty('ServerType') ?: "2"
+    def ServerType = java.lang.System.getProperty('ServerType') ?: "1"
     def AutoLogin = java.lang.System.getProperty('AutoLogin') ?: "false"
     def DebugOnOffStatus = java.lang.System.getProperty('DebugOnOffStatus') ?: "false"
 

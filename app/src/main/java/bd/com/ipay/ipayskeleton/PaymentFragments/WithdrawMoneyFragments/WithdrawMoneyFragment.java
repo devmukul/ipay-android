@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
@@ -34,7 +33,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.CustomView.BankListValidator;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialogWithIcon;
@@ -52,7 +50,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseListener {
+public class WithdrawMoneyFragment extends BaseFragmentV4 implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetBankTask = null;
     private GetBankListResponse mBankListResponse;
@@ -184,6 +182,7 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_history:
+                switchToWithdrawMoneyHistoryFragment();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -462,5 +461,10 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
             mGetBusinessRuleTask = null;
 
         }
+    }
+
+    public void switchToWithdrawMoneyHistoryFragment() {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new WithdrawMoneyHistoryFragment()).addToBackStack(null).commit();
     }
 }

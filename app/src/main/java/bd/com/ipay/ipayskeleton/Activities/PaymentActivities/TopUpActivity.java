@@ -6,6 +6,7 @@ import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
+import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.AddMoneyFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments.MobileTopupFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -19,8 +20,7 @@ public class TopUpActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top_up);
 
-        getFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, new MobileTopupFragment()).commit();
+        switchToTopupFragment();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -29,16 +29,32 @@ public class TopUpActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             Utilities.hideKeyboard(this);
-            finish();
+            onBackPressed();
             return true;
-        } else {
+        }else {
             return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        Utilities.hideKeyboard(this);
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            finish();
         }
     }
 
     @Override
     public Context setContext() {
         return TopUpActivity.this;
+    }
+
+    public void switchToTopupFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, new MobileTopupFragment()).commit();
     }
 }
 

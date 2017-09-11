@@ -33,9 +33,6 @@ public class WithdrawMoneyActivity extends BaseActivity {
             Utilities.hideKeyboard(this);
             onBackPressed();
             return true;
-        } else if(item.getItemId() == R.id.action_history) {
-            switchToWithdrawMoneyHistoryFragment();
-            return true;
         }else {
             return super.onOptionsItemSelected(item);
         }
@@ -46,7 +43,6 @@ public class WithdrawMoneyActivity extends BaseActivity {
         Utilities.hideKeyboard(this);
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
-            switchToWithdrawMoneyFragment();
         } else {
             finish();
         }
@@ -57,19 +53,9 @@ public class WithdrawMoneyActivity extends BaseActivity {
         return WithdrawMoneyActivity.this;
     }
 
-
-    public void switchToWithdrawMoneyHistoryFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        WithdrawMoneyHistoryFragment fragment = new WithdrawMoneyHistoryFragment();
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
-
     public void switchToWithdrawMoneyFragment() {
-        getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new WithdrawMoneyFragment()).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new WithdrawMoneyFragment()).commit();
     }
 }
 

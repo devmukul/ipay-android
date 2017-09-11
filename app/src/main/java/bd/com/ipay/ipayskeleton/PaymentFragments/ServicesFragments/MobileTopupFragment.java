@@ -31,7 +31,6 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
@@ -50,7 +49,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class MobileTopupFragment extends BaseFragment implements HttpResponseListener {
+public class MobileTopupFragment extends BaseFragmentV4 implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
@@ -198,11 +197,14 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_history:
+                switchToTopupHistoryFragment();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
 
     private void setMobileNumber() {
         mMobileNumberEditText.setCurrentFragmentTag(Constants.TOP_UP);
@@ -409,4 +411,10 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             mGetBusinessRuleTask = null;
         }
     }
+
+    public void switchToTopupHistoryFragment() {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new MobileTopupHistoryFragment()).addToBackStack(null).commit();
+    }
+
 }

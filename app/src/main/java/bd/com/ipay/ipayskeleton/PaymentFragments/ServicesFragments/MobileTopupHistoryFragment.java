@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments.ServicesFragments;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,7 +11,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -42,18 +41,17 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class WithdrawMoneyHistoryFragment extends ProgressFragment implements HttpResponseListener {
-    private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
+public class MobileTopupHistoryFragment extends ProgressFragment implements HttpResponseListener {
+    private HttpRequestPostAsyncTask mTopupHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
 
-    private RecyclerView mTransactionHistoryRecyclerView;
+    private RecyclerView mTopupHistoryRecyclerView;
     private TransactionHistoryAdapter mTransactionHistoryAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<TransactionHistory> userTransactionHistories;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
     private String mMobileNumber;
-
     private TextView mEmptyListTextView;
 
     private int historyPageCount = 0;
@@ -62,21 +60,18 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
 
+    private TopupHistoryBroadcastReceiver topupHistoryBroadcastReceiver;
 
-    private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
-
-    private Menu menu;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_withdraw_money_history, container, false);
-
+        View v = inflater.inflate(R.layout.fragment_topup_history, container, false);
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         initializeViews(v);
         setupViewsAndActions();
@@ -85,7 +80,7 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
             @Override
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity())) {
-                    refreshTransactionHistory();
+                    refreshTopupHistory();
                 }
             }
         });
@@ -97,7 +92,7 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
     private void initializeViews(View v) {
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
-        mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
+        mTopupHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_topup_history);
     }
 
     private void setupViewsAndActions() {
@@ -107,22 +102,22 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
     private void setupRecyclerView() {
         mTransactionHistoryAdapter = new TransactionHistoryAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
-        mTransactionHistoryRecyclerView.setLayoutManager(mLayoutManager);
-        mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAdapter);
+        mTopupHistoryRecyclerView.setLayoutManager(mLayoutManager);
+        mTopupHistoryRecyclerView.setAdapter(mTransactionHistoryAdapter);
     }
 
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getTransactionHistory();
+        getTopUpHistory();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
+        topupHistoryBroadcastReceiver = new TopupHistoryBroadcastReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(topupHistoryBroadcastReceiver,
                 new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
     }
 
@@ -142,38 +137,36 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
         super.setUserVisibleHint(isVisibleToUser);
         if (getView() != null) {
             if (isVisibleToUser) {
-                refreshTransactionHistory();
+                refreshTopupHistory();
             }
         }
     }
 
     @Override
     public void onDestroyView() {
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(topupHistoryBroadcastReceiver);
         super.onDestroyView();
     }
 
-
-
-    private void refreshTransactionHistory() {
+    private void refreshTopupHistory() {
         historyPageCount = 0;
         clearListAfterLoading = true;
-        getTransactionHistory();
+        getTopUpHistory();
     }
 
-    private void getTransactionHistory() {
-        if (mTransactionHistoryTask != null) {
+    private void getTopUpHistory() {
+        if (mTopupHistoryTask != null) {
             return;
         }
         TransactionHistoryRequest mTransactionHistoryRequest;
-        mTransactionHistoryRequest = new TransactionHistoryRequest(Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY, historyPageCount);
+        mTransactionHistoryRequest = new TransactionHistoryRequest(Constants.TRANSACTION_HISTORY_TOP_UP, historyPageCount);
 
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
-        mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
+        mTopupHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
                 Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY_COMPLETED, json, getActivity());
-        mTransactionHistoryTask.mHttpResponseListener = this;
-        mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mTopupHistoryTask.mHttpResponseListener = this;
+        mTopupHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void loadTransactionHistory(List<TransactionHistory> transactionHistories, boolean hasNext) {
@@ -203,7 +196,7 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mTransactionHistoryTask = null;
+            mTopupHistoryTask = null;
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
             return;
@@ -232,7 +225,7 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
             }
 
             mSwipeRefreshLayout.setRefreshing(false);
-            mTransactionHistoryTask = null;
+            mTopupHistoryTask = null;
             if (this.isAdded()) setContentShown(true);
         }
     }
@@ -304,14 +297,14 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
                 mNetAmountView.setText(netAmountWithSign);
                 mTimeView.setText(responseTime);
 
-                if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
-                        || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK
-                        || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT) {
-
+                if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP
+                        || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
-                    if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
-                    else mOtherImageView.setImageResource(R.drawable.ic_tran_withdraw);
+                    if (ContactEngine.isValidNumber(receiver)) {
+                        int mIcon = getOperatorIcon(receiver);
+                        mOtherImageView.setImageResource(mIcon);
+                    } else mOtherImageView.setImageResource(R.drawable.ic_top_up);
 
                 } else {
                     mOtherImageView.setVisibility(View.INVISIBLE);
@@ -354,7 +347,7 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
                             historyPageCount = historyPageCount + 1;
                             showLoadingInFooter();
                             notifyDataSetChanged();
-                            getTransactionHistory();
+                            getTopUpHistory();
                         }
                     }
                 });
@@ -437,15 +430,37 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
             return super.getItemViewType(position);
         }
 
+        private int getOperatorIcon(String phoneNumber) {
+            phoneNumber = ContactEngine.trimPrefix(phoneNumber);
+
+            final String[] OPERATOR_PREFIXES = getResources().getStringArray(R.array.operator_prefix);
+            int[] operator_array = new int[]{
+                    R.drawable.ic_gp2,
+                    R.drawable.ic_gp2,
+                    R.drawable.ic_robi2,
+                    R.drawable.ic_airtel2,
+                    R.drawable.ic_banglalink2,
+                    R.drawable.ic_teletalk2,
+            };
+
+            for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
+                if (phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
+                    return operator_array[i];
+                }
+            }
+            return 0;
+        }
+
     }
 
 
 
-    private class TransactionHistoryBroadcastReceiver extends BroadcastReceiver {
+    private class TopupHistoryBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            refreshTransactionHistory();
+            refreshTopupHistory();
         }
     }
+
 
 }

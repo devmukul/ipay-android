@@ -18,7 +18,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class PaymentActivity extends BaseActivity {
 
-    private FloatingActionButton mFabMakingPayment;
+    //private FloatingActionButton mFabMakingPayment;
     private boolean switchedToPendingList = true;
     public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
 
@@ -32,23 +32,25 @@ public class PaymentActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
-        mFabMakingPayment = (FloatingActionButton) findViewById(R.id.fab_payment_making);
+//        mFabMakingPayment = (FloatingActionButton) findViewById(R.id.fab_payment_making);
+//
+//        switchToReceivedPaymentRequestsFragment();
+//
+//        mFabMakingPayment.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            @ValidateAccess(ServiceIdConstants.MAKE_PAYMENT)
+//            public void onClick(View v) {
+//                switchToMakePaymentFragment();
+//            }
+//        });
+//
+//
+//        if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false))
+//            switchToMakePaymentFragment();
+//        else
+//            switchToReceivedPaymentRequestsFragment();
 
-        switchToReceivedPaymentRequestsFragment();
-
-        mFabMakingPayment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.MAKE_PAYMENT)
-            public void onClick(View v) {
-                switchToMakePaymentFragment();
-            }
-        });
-
-
-        if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false))
-            switchToMakePaymentFragment();
-        else
-            switchToReceivedPaymentRequestsFragment();
+        switchToMakePaymentFragment();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -84,14 +86,14 @@ public class PaymentActivity extends BaseActivity {
     public void switchToMakePaymentFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new MakePaymentFragment()).commit();
-        mFabMakingPayment.setVisibility(View.GONE);
+        //mFabMakingPayment.setVisibility(View.GONE);
         switchedToPendingList = false;
     }
 
     public void switchToReceivedPaymentRequestsFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new PaymentRequestsReceivedFragment()).commit();
-        mFabMakingPayment.setVisibility(View.VISIBLE);
+        //mFabMakingPayment.setVisibility(View.VISIBLE);
         switchedToPendingList = true;
     }
 
@@ -99,7 +101,7 @@ public class PaymentActivity extends BaseActivity {
         PaymentRequestReceivedDetailsFragment paymentRequestReceivedDetailsFragment = new PaymentRequestReceivedDetailsFragment();
         paymentRequestReceivedDetailsFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, paymentRequestReceivedDetailsFragment).commit();
-        mFabMakingPayment.setVisibility(View.GONE);
+        //mFabMakingPayment.setVisibility(View.GONE);
         switchedToPendingList = false;
     }
 

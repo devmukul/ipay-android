@@ -6,6 +6,7 @@ import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
+import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.AddMoneyFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -19,8 +20,7 @@ public class SendMoneyActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_money);
 
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, new SendMoneyFragment()).commit();
+        switchToSendMoneyFragment();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -38,8 +38,24 @@ public class SendMoneyActivity extends BaseActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        Utilities.hideKeyboard(this);
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            finish();
+        }
+    }
+
+    @Override
     public Context setContext() {
         return SendMoneyActivity.this;
+    }
+
+
+    public void switchToSendMoneyFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new SendMoneyFragment()).commit();
     }
 }
 

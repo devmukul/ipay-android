@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -154,6 +155,7 @@ public class SendMoneyFragment extends BaseFragmentV4 implements HttpResponseLis
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_history:
+                switchToSendMoneyHistoryFragment();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -344,5 +346,10 @@ public class SendMoneyFragment extends BaseFragmentV4 implements HttpResponseLis
 
             mGetBusinessRuleTask = null;
         }
+    }
+
+    public void switchToSendMoneyHistoryFragment() {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new SendMoneyHistoryFragment()).addToBackStack(null).commit();
     }
 }

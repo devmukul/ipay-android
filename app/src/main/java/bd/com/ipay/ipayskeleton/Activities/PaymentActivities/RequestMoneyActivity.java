@@ -23,27 +23,29 @@ public class RequestMoneyActivity extends BaseActivity {
      */
     public static final String LAUNCH_NEW_REQUEST = "LAUNCH_NEW_REQUEST";
     public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
-    private FloatingActionButton mFabRequestMoney;
+//    private FloatingActionButton mFabRequestMoney;
     private boolean switchedToPendingList = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_money);
-        mFabRequestMoney = (FloatingActionButton) findViewById(R.id.fab_request_money);
+//        mFabRequestMoney = (FloatingActionButton) findViewById(R.id.fab_request_money);
+//
+//        mFabRequestMoney.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            @ValidateAccess(ServiceIdConstants.REQUEST_MONEY)
+//            public void onClick(View v) {
+//                switchToRequestMoneyFragment();
+//            }
+//        });
 
-        mFabRequestMoney.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.REQUEST_MONEY)
-            public void onClick(View v) {
-                switchToRequestMoneyFragment();
-            }
-        });
+        switchToRequestMoneyFragment();
 
-        if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false))
-            switchToRequestMoneyFragment();
-        else
-            switchToMoneyRequestListFragment();
+//        if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false))
+//            switchToRequestMoneyFragment();
+//        else
+//            switchToMoneyRequestListFragment();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -61,12 +63,12 @@ public class RequestMoneyActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
+        if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, true)) {
             finish();
         } else if (switchedToPendingList) {
             super.onBackPressed();
         } else {
-            switchToMoneyRequestListFragment();
+            switchToRequestMoneyFragment();
         }
     }
 
@@ -85,7 +87,7 @@ public class RequestMoneyActivity extends BaseActivity {
                 .replace(R.id.fragment_container, moneyRequestListHolderFragment).commit();
 
         setTitle(R.string.request_money);
-        mFabRequestMoney.setVisibility(View.VISIBLE);
+        //mFabRequestMoney.setVisibility(View.VISIBLE);
         switchedToPendingList = true;
     }
 
@@ -94,7 +96,7 @@ public class RequestMoneyActivity extends BaseActivity {
                 .replace(R.id.fragment_container, new RequestMoneyFragment()).commit();
 
         setTitle(R.string.request_money);
-        mFabRequestMoney.setVisibility(View.GONE);
+        //mFabRequestMoney.setVisibility(View.GONE);
         switchedToPendingList = false;
     }
 

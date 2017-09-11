@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -151,6 +152,7 @@ public class RequestMoneyFragment extends BaseFragmentV4 implements HttpResponse
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_history:
+                ((RequestMoneyActivity) getActivity()).switchToMoneyRequestListFragment(true);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

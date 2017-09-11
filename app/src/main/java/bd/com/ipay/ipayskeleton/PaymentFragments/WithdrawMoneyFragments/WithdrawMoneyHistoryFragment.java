@@ -69,14 +69,13 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(false);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_withdraw_money_history, container, false);
-        getActivity().setTitle(R.string.withdraw_money_history);
 
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         initializeViews(v);
@@ -153,8 +152,6 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
         super.onDestroyView();
     }
-
-
 
     private void refreshTransactionHistory() {
         historyPageCount = 0;
@@ -305,14 +302,7 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
                 mNetAmountView.setText(netAmountWithSign);
                 mTimeView.setText(responseTime);
 
-                if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY
-                        || serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT) {
-                    mProfileImageView.setVisibility(View.INVISIBLE);
-                    mOtherImageView.setVisibility(View.VISIBLE);
-                    if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
-                    else mOtherImageView.setImageResource(R.drawable.ic_tran_add);
-
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
+                if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
                         || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK
                         || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT) {
 
@@ -320,24 +310,6 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
                     mOtherImageView.setVisibility(View.VISIBLE);
                     if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
                     else mOtherImageView.setImageResource(R.drawable.ic_tran_withdraw);
-
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
-                    mProfileImageView.setVisibility(View.INVISIBLE);
-                    mOtherImageView.setVisibility(View.VISIBLE);
-                    mOtherImageView.setImageResource(R.drawable.ic_transaction_ipaylogo);
-
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
-                    mProfileImageView.setVisibility(View.INVISIBLE);
-                    mOtherImageView.setVisibility(View.VISIBLE);
-                    if (ContactEngine.isValidNumber(receiver)) {
-                        int mIcon = getOperatorIcon(receiver);
-                        mOtherImageView.setImageResource(mIcon);
-                    } else mOtherImageView.setImageResource(R.drawable.ic_top_up);
-
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_EDUCATION) {
-                    mProfileImageView.setVisibility(View.INVISIBLE);
-                    mOtherImageView.setVisibility(View.VISIBLE);
-                    mOtherImageView.setImageResource(R.drawable.ic_transaction_education);
 
                 } else {
                     mOtherImageView.setVisibility(View.INVISIBLE);
@@ -463,30 +435,7 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
             return super.getItemViewType(position);
         }
 
-        private int getOperatorIcon(String phoneNumber) {
-            phoneNumber = ContactEngine.trimPrefix(phoneNumber);
-
-            final String[] OPERATOR_PREFIXES = getResources().getStringArray(R.array.operator_prefix);
-            int[] operator_array = new int[]{
-                    R.drawable.ic_gp2,
-                    R.drawable.ic_gp2,
-                    R.drawable.ic_robi2,
-                    R.drawable.ic_airtel2,
-                    R.drawable.ic_banglalink2,
-                    R.drawable.ic_teletalk2,
-            };
-
-            for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
-                if (phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
-                    return operator_array[i];
-                }
-            }
-            return 0;
-        }
-
     }
-
-
 
     private class TransactionHistoryBroadcastReceiver extends BroadcastReceiver {
         @Override

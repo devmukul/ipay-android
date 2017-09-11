@@ -46,10 +46,6 @@ public class TransactionHistoryHolderFragment extends Fragment {
         mPendingTransactionRadioButton = (RadioButton) v.findViewById(R.id.radio_button_pending);
         mCompletedTransactionRadioButton = (RadioButton) v.findViewById(R.id.radio_button_completed);
 
-
-
-//        mMenuButton = (ImageView) v.findViewById(R.id.more_menu);
-
         mTransactionHistoryTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             @ValidateAccess

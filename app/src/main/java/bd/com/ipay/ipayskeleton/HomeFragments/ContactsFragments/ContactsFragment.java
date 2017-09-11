@@ -841,6 +841,9 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 //                    inviteButton.setVisibility(View.GONE);
 //                }
 
+
+//                inviteButton.setOnClickListener();
+
                 profilePictureView.setProfilePicture(profilePictureUrlQualityMedium, false);
 
                 itemView.setOnClickListener(new View.OnClickListener() {

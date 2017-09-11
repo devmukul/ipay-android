@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments;
+package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,9 +22,7 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
-import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -40,12 +37,11 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Trans
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AddMoneyHistoryFragment extends ProgressFragment implements HttpResponseListener {
+public class PaymentHistoryFragment extends ProgressFragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
 

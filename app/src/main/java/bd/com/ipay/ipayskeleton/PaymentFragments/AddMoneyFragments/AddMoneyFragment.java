@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -9,8 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryCompletedFragment;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
@@ -40,7 +36,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.CustomView.BankListValidator;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialogWithIcon;
@@ -60,7 +55,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AddMoneyFragment extends BaseFragment implements HttpResponseListener {
+public class AddMoneyFragment extends BaseFragmentV4 implements HttpResponseListener {
 
     private static final int ADD_MONEY_REVIEW_REQUEST = 101;
 
@@ -97,7 +92,6 @@ public class AddMoneyFragment extends BaseFragment implements HttpResponseListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_add_money, container, false);
-        getActivity().setTitle(R.string.add_money);
         mBankNameTextView = (TextView) v.findViewById(R.id.bank_name);
         mBankBranchTextView = (TextView) v.findViewById(R.id.bank_branch);
         mBankAccountTextView = (TextView) v.findViewById(R.id.bank_account_number);
@@ -179,6 +173,35 @@ public class AddMoneyFragment extends BaseFragment implements HttpResponseListen
     public void onResume() {
         super.onResume();
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_add_money) );
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        MenuInflater menuInflater = getActivity().getMenuInflater();
+        menuInflater.inflate(R.menu.activity_add_money_history, menu);
+
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        // Remove search action of contacts
+        if (menu.findItem(R.id.action_search_contacts) != null)
+            menu.findItem(R.id.action_search_contacts).setVisible(false);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_history:
+                switchToAddMoneyHistoryFragment();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void showGetVerifiedDialog() {
@@ -464,5 +487,10 @@ public class AddMoneyFragment extends BaseFragment implements HttpResponseListen
 
             mGetBusinessRuleTask = null;
         }
+    }
+
+    public void switchToAddMoneyHistoryFragment() {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new AddMoneyHistoryFragment()).addToBackStack(null).commit();
     }
 }
