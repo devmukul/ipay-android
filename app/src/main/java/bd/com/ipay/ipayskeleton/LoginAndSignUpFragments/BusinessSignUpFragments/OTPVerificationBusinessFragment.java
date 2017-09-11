@@ -38,7 +38,6 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
-import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationBusinessFragment extends BaseFragmentV4 implements HttpResponseListener {
@@ -252,7 +251,6 @@ public class OTPVerificationBusinessFragment extends BaseFragmentV4 implements H
         switch (result.getApiCommand()) {
             case Constants.COMMAND_SIGN_UP_BUSINESS:
                 hideProgressDialog();
-
                 try {
                     mSignupResponseBusiness = gson.fromJson(result.getJsonString(), SignupResponseBusiness.class);
                     String message = mSignupResponseBusiness.getMessage();
@@ -279,8 +277,8 @@ public class OTPVerificationBusinessFragment extends BaseFragmentV4 implements H
 
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
-                        ((MyApplication) getActivity().getApplication()).launchLoginPage(message);
-
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        getActivity().finish();
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();

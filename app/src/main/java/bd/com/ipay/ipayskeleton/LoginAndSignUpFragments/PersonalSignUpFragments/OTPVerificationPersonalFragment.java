@@ -41,7 +41,6 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
-import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationPersonalFragment extends Fragment implements HttpResponseListener {
@@ -261,7 +260,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     String otp = mSignupResponseModel.getOtp();
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
                         ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumber);
                         ProfileInfoCacheManager.setName(SignupOrLoginActivity.mName);
                         ProfileInfoCacheManager.setBirthday(SignupOrLoginActivity.mBirthday);
@@ -279,9 +277,9 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         //Google Analytic event
                         Utilities.sendEventTracker(mTracker, "SignUp", "Succeed", "Signup complete for personal account.");
 
-                    } else if (result.getStatus()==Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
-                        ((MyApplication)getActivity().getApplication()).launchLoginPage(message);
-
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        getActivity().finish();
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
