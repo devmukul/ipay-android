@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,11 +32,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadTicketAttachmentAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadTicketAttachmentAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Ticket.AddCommentRequest;
@@ -89,6 +90,19 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     private static final int REQUEST_CODE_PERMISSION = 1001;
     private static final int REQUEST_CODE_PICK_MULTIPLE_IMAGE = 1000;
     private static final int REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT = 1002;
+    private Tracker mTracker;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ticket_details) );
+    }
 
     @Nullable
     @Override
@@ -175,7 +189,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
-                if (DocumentPicker.ifNecessaryPermissionExists(getActivity()))
+                if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
                     selectDocument(mPickerActionId);
                 else
                     Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
@@ -187,7 +201,7 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
         switch (requestCode) {
             case REQUEST_CODE_PICK_IMAGE_OR_DOCUMENT:
                 if (resultCode == Activity.RESULT_OK) {
-                    String filePath = DocumentPicker.getFilePathForCameraOrPDFResult(getActivity(), resultCode, data);
+                    String filePath = DocumentPicker.getFilePathForCameraOrPDFResult(getActivity(), data);
 
                     if (filePath != null) {
                         int fileIndex = Utilities.getRandomNumber();
@@ -254,11 +268,11 @@ public class TicketDetailsFragment extends ProgressFragment implements HttpRespo
             @Override
             public void onResourceSelected(int mActionId, String action) {
                 if (!Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action)) {
-                    if (DocumentPicker.ifNecessaryPermissionExists(getActivity()))
+                    if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
                         selectDocument(mActionId);
                     else {
                         mPickerActionId = mActionId;
-                        DocumentPicker.requestRequiredPermissions(TicketDetailsFragment.this, REQUEST_CODE_PERMISSION);
+                        Utilities.requestRequiredPermissions(TicketDetailsFragment.this, REQUEST_CODE_PERMISSION, DocumentPicker.DOCUMENT_PICK_PERMISSIONS);
                     }
                 } else {
                     setMultipleImagePicker();

@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,18 +24,18 @@ import com.google.gson.Gson;
 import java.io.File;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadIdentifierDocumentAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadIdentifierDocumentAsyncTask;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Service.FCM.PushNotificationStatusHolder;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class DocumentUploadFragment extends Fragment implements HttpResponseListener {
+public class DocumentUploadFragment extends BaseFragmentV4 implements HttpResponseListener {
 
     private UploadIdentifierDocumentAsyncTask mUploadIdentifierDocumentAsyncTask;
     private UploadDocumentResponse mUploadDocumentResponse;
@@ -92,15 +91,15 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
         mDocumentType = bundle.getString(Constants.DOCUMENT_TYPE, "");
         mDocumentTypeName = bundle.getString(Constants.DOCUMENT_TYPE_NAME, "");
 
-        mDocumentTypeNameView.setText(getString(R.string.upload_small) + " " + mDocumentTypeName);
+        mDocumentTypeNameView.setText(getString(R.string.upload_with_placeholder, mDocumentTypeName));
 
         mSelectFileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
+                if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS)) {
                     selectDocument();
                 } else {
-                    DocumentPicker.requestRequiredPermissions(DocumentUploadFragment.this, REQUEST_CODE_PERMISSION);
+                    Utilities.requestRequiredPermissions(DocumentUploadFragment.this, REQUEST_CODE_PERMISSION, DocumentPicker.DOCUMENT_PICK_PERMISSIONS);
                 }
             }
         });
@@ -115,6 +114,12 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
         });
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_document_upload));
     }
 
     private void selectDocument() {
@@ -166,7 +171,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
         switch (requestCode) {
             case ACTION_UPLOAD_DOCUMENT:
                 if (resultCode == Activity.RESULT_OK) {
-                    String filePath = DocumentPicker.getFilePathFromResult(getActivity(), resultCode, intent);
+                    String filePath = DocumentPicker.getFilePathFromResult(getActivity(), intent);
                     mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent);
 
                     if (filePath != null) {
@@ -187,7 +192,7 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION:
-                if (DocumentPicker.ifNecessaryPermissionExists(getActivity())) {
+                if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS)) {
                     selectDocument();
                 } else {
                     Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
@@ -214,18 +219,19 @@ public class DocumentUploadFragment extends Fragment implements HttpResponseList
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
-                        // If push is delayed, we would not see the updated document list when we back
-                        // to the document list fragment. Setting the update flag to true to force load
-                        // the list.
-                        PushNotificationStatusHolder.setUpdateNeeded(SharedPrefConstants.PUSH_NOTIFICATION_TAG_IDENTIFICATION_DOCUMENT_UPDATE, true);
-
                         Toaster.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG);
                         ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
+
+                        //Google Analytic event
+                        Utilities.sendEventTracker(mTracker,"IdentificationDocumentUpload", "Succeed", mUploadDocumentResponse.getMessage());
                     }
 
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG);
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"IdentificationDocumentUpload", "Failed", mUploadDocumentResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

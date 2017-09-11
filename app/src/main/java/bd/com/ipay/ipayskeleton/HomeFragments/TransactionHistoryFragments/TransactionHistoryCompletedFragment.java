@@ -9,10 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -32,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.text.ParseException;
@@ -108,11 +106,25 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
     private Menu menu;
+    private Tracker mTracker;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mTracker = Utilities.getTracker(getActivity());
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
+                new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_transaction_history_completed) );
+    }
+
 
     @Nullable
     @Override
@@ -133,8 +145,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 }
             }
         });
-
-
 
         return v;
     }
@@ -219,13 +229,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         getTransactionHistory();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
-                new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
-    }
 
     @Override
     public void onPause() {
@@ -264,7 +267,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         menuInflater.inflate(R.menu.clear_filter, menu);
         this.menu = menu;
         menu.findItem(R.id.action_clear_filter).setVisible(false);
-
     }
 
     @Override

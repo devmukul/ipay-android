@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +18,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.PreviousSecurityQuestionClass;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.UpdateSecurityQuestionAnswerClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.UpdateSecurityAnswerRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.UpdateSecurityAnswerResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.UpdateSecurityQuestionAnswerClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class UpdateSecurityQuestionFragment extends Fragment implements HttpResponseListener {
-
+public class UpdateSecurityQuestionFragment extends BaseFragmentV4 implements HttpResponseListener {
 
     private HttpRequestPutAsyncTask mUpdateSecurityAnswerTask = null;
     private UpdateSecurityAnswerResponse mUpdateSecurityAnswerResponse;
@@ -54,8 +55,9 @@ public class UpdateSecurityQuestionFragment extends Fragment implements HttpResp
     private String mPassword;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_update_security_question) );
     }
 
     @Override
@@ -212,6 +214,9 @@ public class UpdateSecurityQuestionFragment extends Fragment implements HttpResp
                     Toast.makeText(getActivity(), mUpdateSecurityAnswerResponse.getMessage(), Toast.LENGTH_LONG).show();
                     getActivity().onBackPressed();
 
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    if (getActivity() != null)
+                        ((MyApplication) (getActivity().getApplication())).launchLoginPage(mUpdateSecurityAnswerResponse.getMessage());
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mUpdateSecurityAnswerResponse.getMessage(), Toast.LENGTH_SHORT).show();

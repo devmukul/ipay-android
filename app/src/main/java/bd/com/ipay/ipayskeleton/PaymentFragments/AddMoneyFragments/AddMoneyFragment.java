@@ -40,6 +40,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.CustomView.BankListValidator;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialogWithIcon;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
@@ -58,7 +60,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AddMoneyFragment extends Fragment implements HttpResponseListener {
+public class AddMoneyFragment extends BaseFragment implements HttpResponseListener {
 
     private static final int ADD_MONEY_REVIEW_REQUEST = 101;
 
@@ -83,7 +85,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     private int selectedBankPosition = 0;
 
     private ProgressDialog mProgressDialog;
-
     private AddMoneyHistoryFragment mAddMoneyHistoryFragment;
 
     @Override
@@ -174,6 +175,11 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         return v;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_add_money) );
+    }
 
     private void showGetVerifiedDialog() {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
@@ -196,7 +202,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         dialog.show();
     }
 
-    //f8f8f8
     private void getBankInformation() {
         // It might be possible that we have failed to load the available bank list during
         // application startup. In that case first try to load the available bank list first, and
@@ -300,8 +305,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             return true;
         }
     }
-
-
 
     private void launchReviewPage() {
         final String amount = mAmountEditText.getText().toString().trim();
@@ -462,5 +465,4 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             mGetBusinessRuleTask = null;
         }
     }
-
 }

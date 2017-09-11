@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +11,13 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager.FingerprintAuthenticationDialog;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class FingerPrintAuthenticationSettingsFragment extends Fragment {
+public class FingerPrintAuthenticationSettingsFragment extends BaseFragmentV4 {
     private Button mFingerPrintActivateButton;
     private FingerprintAuthenticationDialog mFingerprintAuthenticationDialog;
 
@@ -42,6 +43,12 @@ public class FingerPrintAuthenticationSettingsFragment extends Fragment {
         if (mFingerprintAuthenticationDialog != null) {
             mFingerprintAuthenticationDialog.stopFingerprintAuthenticationListener();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_fingerprint_authentication) );
     }
 
     public void setTitle() {

@@ -3,7 +3,7 @@ package bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CountDownTimer;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
@@ -67,11 +68,18 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
     private ProgressDialog mProgressDialog;
 
     private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
+    private Tracker mTracker;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTracker = Utilities.getTracker(getActivity());
+    }
     @Override
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_otp_verification_for_personal);
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_personal_otp_verification) );
     }
 
     @Override
@@ -266,6 +274,9 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         // TODO: For now, switch to login fragment after a successful sign up. Don't remove it either. Can be used later
 //                        ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
 
+                        //Google Analytic event
+                        Utilities.sendEventTracker(mTracker,"SignUp", "Succeed", "Signup complete for personal account.");
+
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
@@ -274,6 +285,9 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
+
+                    //Google Analytic event
+                    Utilities.sendEventTracker(mTracker,"BusinessSignUp", "Failed","Failed to verify no.");
                 }
 
                 mSignUpTask = null;

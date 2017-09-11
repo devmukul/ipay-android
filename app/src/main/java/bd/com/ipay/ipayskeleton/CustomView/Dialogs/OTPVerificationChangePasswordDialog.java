@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
@@ -18,8 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
@@ -256,6 +255,11 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
                         mEnableDisableSMSBroadcastReceiver.disableBroadcastReceiver(context);
                         mOTPInputDialog.hide();
                         showChangePasswordSuccessDialog();
+                    }
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    if (context != null) {
+                        Utilities.hideKeyboard(context, view);
+                        ((MyApplication) ((Activity) (getContext())).getApplication()).launchLoginPage(mChangePasswordWithOTPResponse.getMessage());
                     }
                 } else {
                     if (context != null)
