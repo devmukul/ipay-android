@@ -41,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationPersonalFragment extends Fragment implements HttpResponseListener {
@@ -75,11 +76,12 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         super.onCreate(savedInstanceState);
         mTracker = Utilities.getTracker(getActivity());
     }
+
     @Override
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_otp_verification_for_personal);
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_personal_otp_verification) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_personal_otp_verification));
     }
 
     @Override
@@ -275,7 +277,10 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 //                        ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
 
                         //Google Analytic event
-                        Utilities.sendEventTracker(mTracker,"SignUp", "Succeed", "Signup complete for personal account.");
+                        Utilities.sendEventTracker(mTracker, "SignUp", "Succeed", "Signup complete for personal account.");
+
+                    } else if (result.getStatus()==Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                        ((MyApplication)getActivity().getApplication()).launchLoginPage(message);
 
                     } else {
                         if (getActivity() != null)
@@ -287,7 +292,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"BusinessSignUp", "Failed","Failed to verify no.");
+                    Utilities.sendEventTracker(mTracker, "BusinessSignUp", "Failed", "Failed to verify no.");
                 }
 
                 mSignUpTask = null;
