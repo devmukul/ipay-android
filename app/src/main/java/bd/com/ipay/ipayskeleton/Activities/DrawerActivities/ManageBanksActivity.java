@@ -49,13 +49,13 @@ public class ManageBanksActivity extends BaseActivity {
                 switchToAddNewBankFragment();
             }
         });
-        if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.BANK_ACCOUNT)) {
-            switchToBankAccountsFragment();
-        }
-        else if(getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.LINK_BANK)){
-            switchToAddNewBankFragment();
-        }
-        else{
+        if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT) != null) {
+            if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.BANK_ACCOUNT)) {
+                switchToBankAccountsFragment();
+            } else if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.LINK_BANK)) {
+                switchToAddNewBankFragment();
+            }
+        } else {
             switchedFromBankVerification = getIntent().getBooleanExtra(Constants.SWITCHED_FROM_BANK_VERIFICATION, false);
             if (switchedFromBankVerification)
                 switchToAddNewBankFragment();

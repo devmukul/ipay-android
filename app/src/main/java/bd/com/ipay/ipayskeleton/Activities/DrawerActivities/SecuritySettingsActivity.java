@@ -31,8 +31,12 @@ public class SecuritySettingsActivity extends BaseActivity {
         setContentView(R.layout.activity_activity_log);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.ADD_TRUSTED_PERSON)) {
-            switchToTrustedPersonFragment();
+        if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT) != null) {
+            if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.ADD_TRUSTED_PERSON)) {
+                switchToTrustedPersonFragment();
+            } else {
+                switchToAccountSettingsFragment();
+            }
         } else {
             switchToAccountSettingsFragment();
         }
@@ -145,8 +149,9 @@ public class SecuritySettingsActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new FingerPrintAuthenticationSettingsFragment()).addToBackStack(null).commit();
     }
-    public void launchHomeActivity(){
-        Intent intent=new Intent(this, HomeActivity.class);
+
+    public void launchHomeActivity() {
+        Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
     }
 
