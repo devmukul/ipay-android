@@ -82,8 +82,8 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
         twoFAServiceLists2.add(twoFAService2);
         twoFAServiceLists2.add(twoFAService3);
         mTwoFaServiceList = new ArrayList<>();
-        mTwoFaServiceList.add(new TwoFAServiceGroup("group 1", twoFAServiceLists));
-        mTwoFaServiceList.add(new TwoFAServiceGroup("group 2", twoFAServiceLists2));
+        mTwoFaServiceList.add(new TwoFAServiceGroup("Group 1", twoFAServiceLists));
+        mTwoFaServiceList.add(new TwoFAServiceGroup("Group 2", twoFAServiceLists2));
 
     }
 
@@ -101,6 +101,7 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
             private TextView mDescriptionTextView;
             private Switch mSwitch;
             private Button mButtonSave;
+            private View mMargin;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -108,9 +109,14 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
                 mDescriptionTextView = (TextView) itemView.findViewById(R.id.description_text_view);
                 mSwitch = (Switch) itemView.findViewById(R.id.switch_list_item);
                 mButtonSave = (Button) itemView.findViewById(R.id.button_footer_save);
+                mMargin = itemView.findViewById(R.id.divider_below);
             }
 
             public void bindViewListItem(int pos) {
+                if (pos == mTwoFaServiceList.get(0).getServices().size() + mTwoFaServiceList.get(1).getServices().size() + 1 ||
+                        pos == mTwoFaServiceList.get(0).getServices().size())
+                    mMargin.setVisibility(View.VISIBLE);
+
                 if (pos <= mTwoFaServiceList.get(0).getServices().size()) {
                     mDescriptionTextView.setText(mTwoFaServiceList.get(0).getServices().get(pos - 1).getServiceName());
                     if (mTwoFaServiceList.get(0).getServices().get(pos - 1).getIsEnabled().equals("true")) {
