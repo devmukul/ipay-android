@@ -1,30 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <View
-        android:id="@+id/divider"
-        style="@style/DividerOnly"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/value1"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"></View>
-
+    android:layout_height="wrap_content">
     <TextView
         android:id="@+id/header_text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/divider"
-        android:layout_centerHorizontal="true"
-        android:textSize="@dimen/text_size_small_medium_value18" />
-
-    <View
-        style="@style/DividerOnly"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/value1"
-        android:layout_below="@id/header_text_view"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"></View>
-</RelativeLayout>
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/value20"
+        android:gravity="center"
+        android:background="@color/colorLightGray"
+        android:textSize="@dimen/text_size_small_medium_value18" />
+</FrameLayout>
