@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpDeleteWithBodyAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -233,7 +232,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mGetTrustedPersonsResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    ((HomeActivity) getActivity()).switchToDashBoard();
+                    ((SecuritySettingsActivity) getActivity()).launchHomeActivity();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
