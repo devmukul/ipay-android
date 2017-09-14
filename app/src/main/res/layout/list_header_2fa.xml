@@ -6,11 +6,10 @@
         android:id="@+id/header_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/divider"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/value20"
-        android:gravity="center"
+        android:textStyle="bold"
+        android:paddingTop="@dimen/value15"
+        android:paddingBottom="@dimen/value15"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
         android:background="@color/colorLightGray"
         android:textSize="@dimen/text_size_small_medium_value18" />
 </FrameLayout>

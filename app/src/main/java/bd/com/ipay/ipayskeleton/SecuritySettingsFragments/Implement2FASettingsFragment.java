@@ -135,6 +135,7 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
             private TextView mDescriptionTextView;
             private Switch mSwitch;
             private Button mButtonSave;
+            private View mMargin;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -142,6 +143,7 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
                 mDescriptionTextView = (TextView) itemView.findViewById(R.id.description_text_view);
                 mSwitch = (Switch) itemView.findViewById(R.id.switch_list_item);
                 mButtonSave = (Button) itemView.findViewById(R.id.button_footer_save);
+                mMargin = itemView.findViewById(R.id.divider_below);
             }
 
             public void bindViewListItem(int position) {
