@@ -205,7 +205,10 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         phoneNumber = phoneNumber.trim();
         final String[] OPERATOR_PREFIXES = getResources().getStringArray(R.array.operator_prefix);
         for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
-            if (phoneNumber.startsWith("+880" + OPERATOR_PREFIXES[i]) || phoneNumber.startsWith("0" + OPERATOR_PREFIXES[i]) || phoneNumber.startsWith("880"+OPERATOR_PREFIXES[i])||phoneNumber.startsWith(OPERATOR_PREFIXES[i])){
+            if (phoneNumber.startsWith("+880" + OPERATOR_PREFIXES[i]) ||
+                    phoneNumber.startsWith("0" + OPERATOR_PREFIXES[i]) ||
+                    phoneNumber.startsWith("880"+OPERATOR_PREFIXES[i])||
+                    phoneNumber.startsWith(OPERATOR_PREFIXES[i])){
                 mOperatorEditText.setText(mOperatorList.get(i));
                 mSelectedOperatorTypeId = i;
                 break;
