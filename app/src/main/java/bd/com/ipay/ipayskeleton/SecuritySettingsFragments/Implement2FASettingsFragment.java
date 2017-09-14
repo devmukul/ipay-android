@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -40,9 +39,6 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
 
     List<TwoFAServiceGroup> mTwoFaServiceList;
 
-    private Uri mUri;
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,8 +47,8 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyler_2fa);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        Implement2FaAdapter adapter = new Implement2FaAdapter();
-        testDataSet();
+
+        Implement2FaAdapter adapter = new Implement2FaAdapter(mTwoFaServiceList);
         mRecyclerView.setAdapter(adapter);
         return view;
     }
@@ -70,20 +66,37 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
     }
 
     private void testDataSet() {
-        TwoFAService twoFAService = new TwoFAService("1", "send money", "true");
-        TwoFAService twoFAService2 = new TwoFAService("1", "send money", "false");
-        TwoFAService twoFAService3 = new TwoFAService("1", "send money", "true");
+        mTwoFaServiceList = new ArrayList<>();
         List<TwoFAService> twoFAServiceLists = new ArrayList<>();
+
+        TwoFAService twoFAService = new TwoFAService("1", "send money 1", true);
+        TwoFAService twoFAService2 = new TwoFAService("11", "send money 11", false);
+        TwoFAService twoFAService3 = new TwoFAService("111", "send money 111", true);
+        TwoFAService twoFAService4 = new TwoFAService("111", "send money 111", true);
         twoFAServiceLists.add(twoFAService);
         twoFAServiceLists.add(twoFAService2);
         twoFAServiceLists.add(twoFAService3);
-        List<TwoFAService> twoFAServiceLists2 = new ArrayList<>();
-        twoFAServiceLists2.add(twoFAService);
-        twoFAServiceLists2.add(twoFAService2);
-        twoFAServiceLists2.add(twoFAService3);
-        mTwoFaServiceList = new ArrayList<>();
         mTwoFaServiceList.add(new TwoFAServiceGroup("group 1", twoFAServiceLists));
-        mTwoFaServiceList.add(new TwoFAServiceGroup("group 2", twoFAServiceLists2));
+
+
+        twoFAService = new TwoFAService("2", "request money 2", false);
+        twoFAService2 = new TwoFAService("22", "request money 22", true);
+        twoFAServiceLists = new ArrayList<>();
+        twoFAServiceLists.add(twoFAService);
+        twoFAServiceLists.add(twoFAService2);
+        mTwoFaServiceList.add(new TwoFAServiceGroup("group 2", twoFAServiceLists));
+
+        twoFAService = new TwoFAService("3", "add money 2", false);
+        twoFAService2 = new TwoFAService("33", "add money 22", true);
+        twoFAService3 = new TwoFAService("333", "add money 333", true);
+        twoFAService4 = new TwoFAService("3333", "add money 3333", true);
+
+        twoFAServiceLists = new ArrayList<>();
+        twoFAServiceLists.add(twoFAService);
+        twoFAServiceLists.add(twoFAService2);
+        twoFAServiceLists.add(twoFAService3);
+        twoFAServiceLists.add(twoFAService4);
+        mTwoFaServiceList.add(new TwoFAServiceGroup("group 3", twoFAServiceLists));
 
     }
 
@@ -92,8 +105,29 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
         private static final int IMPLEMENT_2FA_ITEM_VIEW = 2;
         private static final int FOOTER_VIEW = 3;
 
-        public Implement2FaAdapter() {
+        private List<TwoFAServiceGroup> mTwoFAServiceGroupList;
+        private List<Integer> headerPositionList;
+        private int footerPosition;
+        private int itemCount;
 
+        public Implement2FaAdapter(List<TwoFAServiceGroup> twoFAServiceGroupList) {
+            this.mTwoFAServiceGroupList = twoFAServiceGroupList;
+            this.headerPositionList = new ArrayList<>();
+            footerPosition = 0;
+
+            itemCount = 0;
+            headerPositionList = new ArrayList<>();
+            if (this.mTwoFAServiceGroupList != null) {
+                for (TwoFAServiceGroup twoFAServiceGroup : this.mTwoFAServiceGroupList) {
+                    headerPositionList.add(itemCount);
+                    itemCount++;
+                    if (twoFAServiceGroup != null && twoFAServiceGroup.getServices() != null) {
+                        itemCount += twoFAServiceGroup.getServices().size();
+                    }
+                }
+            }
+            footerPosition = itemCount;
+            itemCount++;
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -110,31 +144,34 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
                 mButtonSave = (Button) itemView.findViewById(R.id.button_footer_save);
             }
 
-            public void bindViewListItem(int pos) {
-                if (pos <= mTwoFaServiceList.get(0).getServices().size()) {
-                    mDescriptionTextView.setText(mTwoFaServiceList.get(0).getServices().get(pos - 1).getServiceName());
-                    if (mTwoFaServiceList.get(0).getServices().get(pos - 1).getIsEnabled().equals("true")) {
-                        mSwitch.setChecked(true);
-                    }
-                } else if (pos > mTwoFaServiceList.get(0).getServices().size() && pos <= mTwoFaServiceList.get(0).getServices().size()
-                        + mTwoFaServiceList.get(1).getServices().size() + 1) {
-                    mDescriptionTextView.setText(mTwoFaServiceList.get(1).getServices().
-                            get(pos - mTwoFaServiceList.get(0).getServices().size() - 2).getServiceName());
-                    if (mTwoFaServiceList.get(1).getServices().get(pos - mTwoFaServiceList.get(0).getServices().size() - 2).getIsEnabled().equals("true")) {
-                        mSwitch.setChecked(true);
+            public void bindViewListItem(int position) {
+                int twoFaSettingsGroupIndex = 0;
+                int selectedHeaderPosition = 0;
+                for (int i = 0; i < headerPositionList.size(); i++) {
+                    if (position > headerPositionList.get(i)) {
+                        if (i < headerPositionList.size() - 1) {
+                            if (position < headerPositionList.get(i + 1)) {
+                                twoFaSettingsGroupIndex = i;
+                                selectedHeaderPosition = headerPositionList.get(i);
+                                break;
+                            }
+                        } else if (i == headerPositionList.size() - 1) {
+                            twoFaSettingsGroupIndex = i;
+                            selectedHeaderPosition = headerPositionList.get(i);
+                            break;
+                        }
                     }
                 }
+                TwoFAService twoFAService = mTwoFAServiceGroupList.get(twoFaSettingsGroupIndex).getServices().get(position - selectedHeaderPosition - 1);
+                mDescriptionTextView.setText(twoFAService.getServiceName());
+                mSwitch.setChecked(twoFAService.getIsEnabled());
             }
 
-            public void bindHeader(int pos) {
-                if (pos == 0) {
-                    mHeaderTextView.setText(mTwoFaServiceList.get(0).getGroupName());
-                } else {
-                    mHeaderTextView.setText(mTwoFaServiceList.get(1).getGroupName());
-                }
+            public void bindHeader(int position) {
+                mHeaderTextView.setText(mTwoFAServiceGroupList.get(headerPositionList.indexOf(position)).getGroupName());
             }
 
-            public void bindFooter(int pos) {
+            public void bindFooter() {
                 mButtonSave.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -165,17 +202,15 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v;
-
-            if (viewType == IMPLEMENT_2FA_HEADER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_header_2fa, parent, false);
-                return new ServiceHeaderViewHolder(v);
-            } else if (viewType == IMPLEMENT_2FA_ITEM_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_2fa, parent, false);
-                return new ServiceListViewHolder(v);
-            } else {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_button_two_fa_footer, parent, false);
-                return new ServiceFooterViewHolder(v);
+            switch (viewType) {
+                case IMPLEMENT_2FA_HEADER_VIEW:
+                    return new ServiceHeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_header_2fa, parent, false));
+                case IMPLEMENT_2FA_ITEM_VIEW:
+                    return new ServiceListViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_2fa, parent, false));
+                case FOOTER_VIEW:
+                    return new ServiceFooterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_button_two_fa_footer, parent, false));
+                default:
+                    return null;
             }
         }
 
@@ -189,24 +224,25 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
                 vh.bindViewListItem(position);
             } else if (holder instanceof ServiceFooterViewHolder) {
                 ServiceFooterViewHolder vh = (ServiceFooterViewHolder) holder;
-                vh.bindFooter(position);
+                vh.bindFooter();
             }
         }
 
         @Override
         public int getItemCount() {
-            return mTwoFaServiceList.get(0).getServices().size() + mTwoFaServiceList.get(1).getServices().size() + 3;
-
+            return itemCount;
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (position == 0 || position == mTwoFaServiceList.get(0).getServices().size() + 1)
+            int headerPositionIndex = headerPositionList.indexOf(position);
+            if (headerPositionIndex != -1) {
                 return IMPLEMENT_2FA_HEADER_VIEW;
-            else if (position == mTwoFaServiceList.get(0).getServices().size() + mTwoFaServiceList.get(1).getServices().size() + 2)
+            } else if (position == footerPosition) {
                 return FOOTER_VIEW;
-            else
+            } else {
                 return IMPLEMENT_2FA_ITEM_VIEW;
+            }
         }
     }
 

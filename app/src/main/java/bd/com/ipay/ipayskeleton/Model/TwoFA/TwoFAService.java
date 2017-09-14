@@ -8,12 +8,12 @@ public class TwoFAService {
 
     private String serviceId;
     private String serviceName;
-    private String isEnabled;
+    private boolean isEnabled;
 
     public TwoFAService() {
     }
 
-    public TwoFAService(String serviceId, String serviceName, String isEnabled) {
+    public TwoFAService(String serviceId, String serviceName, boolean isEnabled) {
 
         this.serviceId = serviceId;
         this.serviceName = serviceName;
@@ -37,11 +37,11 @@ public class TwoFAService {
         this.serviceName = serviceName;
     }
 
-    public String getIsEnabled() {
+    public boolean getIsEnabled() {
         return isEnabled;
     }
 
-    public void setIsEnabled(String isEnabled) {
+    public void setIsEnabled(boolean isEnabled) {
         this.isEnabled = isEnabled;
     }
 
