@@ -351,7 +351,7 @@ public class Constants {
     public static final String URL_GET_SECURITY_QUESTIONS = "settings/security/questions";
     public static final String URL_SET_SECURITY_ANSWERS = "settings/security/answers";
     public static final String URL_FORGET_PASSWORD = "/forgot-password";
-    public static final String URL_TWO_FA_SETTINGS="/settings/2fa/preference";
+    public static final String URL_TWO_FA_SETTINGS="settings/2fa/preference";
     public static final String URL_GET_PIN_INFO = "settings/pin";
     public static final String URL_SET_PIN = "settings/pin";
 
@@ -456,13 +456,14 @@ public class Constants {
     public static final String URL_REFRESH_FIREBASE_TOKEN = "firebase/login/";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
+    public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED=409;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
     public static final int HTTP_RESPONSE_STATUS_PAYMENT_REQUIRED = 402;
     public static final int HTTP_RESPONSE_STATUS_OK = 200;
     public static final int HTTP_RESPONSE_STATUS_PROCESSING = 102;
     public static final int HTTP_RESPONSE_STATUS_UNAUTHORIZED = 401;
     public static final int HTTP_RESPONSE_STATUS_BAD_REQUEST = 400;
-    public static final int HTTP_RESPONSE_STATUS_ACCEPTED = 202;
+    public static final int HTTP_RESPONSE_STATUS_ACCEPTED = 428;
     public static final int HTTP_RESPONSE_STATUS_INTERNAL_ERROR = 500;
     public static final int HTTP_RESPONSE_STATUS_BLOCKED = 403;
 
@@ -598,6 +599,7 @@ public class Constants {
 
     //Two FA
     public static final String COMMAND_GET_TWO_FA_SETTING="COMMAND_GET_TWO_FA_SETTING";
+    public static final String COMMAND_PUT_TWO_FA_SETTING="COMMAND_PUT_TWO_FA_SETTING";
 
     public static final int ACTIVITY_LOG_COUNT = 10;
 

@@ -365,7 +365,7 @@ public class LoginFragment extends BaseFragmentV4 implements HttpResponseListene
                             Utilities.sendEventTracker(mTracker,"Login", "ToOTP", "Navigate to OTP page to verify mobile no.");
 
                             break;
-                        case Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE:
+                        case Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED:
                             hideProgressDialog();
 
                             // OTP has not been expired yet

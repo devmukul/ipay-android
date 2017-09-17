@@ -17,12 +17,17 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFaServicesDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFAServiceListResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFaServiceListWithOTPRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFaSettingsSaveResponse;
 import bd.com.ipay.ipayskeleton.Model.TwoFA.TwoFAService;
 import bd.com.ipay.ipayskeleton.Model.TwoFA.TwoFAServiceGroup;
 import bd.com.ipay.ipayskeleton.R;
@@ -34,10 +39,25 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
 
+    private OTPVerificationForTwoFaServicesDialog mOTPVerificationForTwoFaServicesDialog;
+
     private HttpRequestGetAsyncTask mGetTwoFaSettingsAsynctask;
     private TwoFAServiceListResponse mTwoFaServiceResponse;
 
+    private HttpRequestPutAsyncTask mPutTwoFaSettingsAsyncTask;
+
+    private int mCurrentSettings = 0;
+    private int mChangedSettings = 0;
+    private int mTotalServices = 0;
+
     List<TwoFAServiceGroup> mTwoFaServiceList;
+    List<TwoFAService> mChangedList;
+
+    private String mUri;
+    private String mJsonString;
+
+
+    HashMap<Integer, TwoFAService> mPositionToServiceIDMap = new HashMap<Integer, TwoFAService>();
 
     @Nullable
     @Override
@@ -47,9 +67,8 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyler_2fa);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-
-        Implement2FaAdapter adapter = new Implement2FaAdapter(mTwoFaServiceList);
-        mRecyclerView.setAdapter(adapter);
+        mChangedList = new ArrayList<>();
+        getTwoFaSettings();
         return view;
     }
 
@@ -65,39 +84,63 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
         }
     }
 
-    private void testDataSet() {
-        mTwoFaServiceList = new ArrayList<>();
-        List<TwoFAService> twoFAServiceLists = new ArrayList<>();
+    int setBit(int N, int pos) {
+        return N = N | (1 << pos);
+    }
 
-        TwoFAService twoFAService = new TwoFAService("1", "send money 1", true);
-        TwoFAService twoFAService2 = new TwoFAService("11", "send money 11", false);
-        TwoFAService twoFAService3 = new TwoFAService("111", "send money 111", true);
-        TwoFAService twoFAService4 = new TwoFAService("111", "send money 111", true);
-        twoFAServiceLists.add(twoFAService);
-        twoFAServiceLists.add(twoFAService2);
-        twoFAServiceLists.add(twoFAService3);
-        mTwoFaServiceList.add(new TwoFAServiceGroup("group 1", twoFAServiceLists));
+    int resetBit(int N, int pos) {
+        return N = N & ~(1 << pos);
+    }
 
+    boolean check(int N, int pos) {
+        if ((N & (1 << pos)) != 0)
+            return true;
+        else
+            return false;
+    }
 
-        twoFAService = new TwoFAService("2", "request money 2", false);
-        twoFAService2 = new TwoFAService("22", "request money 22", true);
-        twoFAServiceLists = new ArrayList<>();
-        twoFAServiceLists.add(twoFAService);
-        twoFAServiceLists.add(twoFAService2);
-        mTwoFaServiceList.add(new TwoFAServiceGroup("group 2", twoFAServiceLists));
+    private void setCurrentSettings() {
+        int pos = 0;
+        for (int i = 0; i < mTwoFaServiceList.size(); i++) {
+            for (int j = 0; j < mTwoFaServiceList.get(i).getServices().size(); j++) {
+                if (mTwoFaServiceList.get(i).getServices().get(j).getIsEnabled()) {
+                    mPositionToServiceIDMap.put(pos, mTwoFaServiceList.get(i).getServices().get(j));
+                    mCurrentSettings = setBit(mCurrentSettings, pos);
+                    pos++;
+                } else {
+                    mPositionToServiceIDMap.put(pos, mTwoFaServiceList.get(i).getServices().get(j));
+                    mCurrentSettings = resetBit(mCurrentSettings, pos);
+                    pos++;
+                }
+                mTotalServices++;
+            }
+        }
+    }
 
-        twoFAService = new TwoFAService("3", "add money 2", false);
-        twoFAService2 = new TwoFAService("33", "add money 22", true);
-        twoFAService3 = new TwoFAService("333", "add money 333", true);
-        twoFAService4 = new TwoFAService("3333", "add money 3333", true);
+    private void getChangedSettings() {
+        int pos = 0;
+        for (int i = 0; i < mTwoFaServiceList.size(); i++) {
+            for (int j = 0; j < mTwoFaServiceList.get(i).getServices().size(); j++) {
+                if (mTwoFaServiceList.get(i).getServices().get(j).getIsEnabled()) {
+                    mChangedSettings = setBit(mChangedSettings, pos);
+                    pos++;
+                } else {
+                    mChangedSettings = resetBit(mChangedSettings, pos);
+                    pos++;
+                }
+            }
+        }
+    }
 
-        twoFAServiceLists = new ArrayList<>();
-        twoFAServiceLists.add(twoFAService);
-        twoFAServiceLists.add(twoFAService2);
-        twoFAServiceLists.add(twoFAService3);
-        twoFAServiceLists.add(twoFAService4);
-        mTwoFaServiceList.add(new TwoFAServiceGroup("group 3", twoFAServiceLists));
-
+    public void attemptSaveTwoFaSettings(List<TwoFAService> mChangedList) {
+        Gson gson = new Gson();
+        String API_COMMAND = Constants.COMMAND_PUT_TWO_FA_SETTING;
+        mUri = Constants.BASE_URL_MM + Constants.URL_TWO_FA_SETTINGS;
+        TwoFaServiceListWithOTPRequest twoFaServiceListWithOtpRequest = new TwoFaServiceListWithOTPRequest(null, mChangedList);
+        mJsonString = gson.toJson(twoFaServiceListWithOtpRequest);
+        mPutTwoFaSettingsAsyncTask = new HttpRequestPutAsyncTask(API_COMMAND, mUri, mJsonString, getActivity());
+        mPutTwoFaSettingsAsyncTask.mHttpResponseListener = this;
+        mPutTwoFaSettingsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public class Implement2FaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -136,6 +179,9 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
             private Switch mSwitch;
             private Button mButtonSave;
             private View mMargin;
+            private int twoFaSettingsGroupIndex = 0;
+            private int selectedHeaderPosition = 0;
+            private int desiredPositon = 0;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -147,8 +193,7 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
             }
 
             public void bindViewListItem(int position) {
-                int twoFaSettingsGroupIndex = 0;
-                int selectedHeaderPosition = 0;
+
                 for (int i = 0; i < headerPositionList.size(); i++) {
                     if (position > headerPositionList.get(i)) {
                         if (i < headerPositionList.size() - 1) {
@@ -164,9 +209,17 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
                         }
                     }
                 }
-                TwoFAService twoFAService = mTwoFAServiceGroupList.get(twoFaSettingsGroupIndex).getServices().get(position - selectedHeaderPosition - 1);
+                final TwoFAService twoFAService = mTwoFAServiceGroupList.get(twoFaSettingsGroupIndex).getServices().get(position - selectedHeaderPosition - 1);
+                desiredPositon = position - selectedHeaderPosition - 1;
                 mDescriptionTextView.setText(twoFAService.getServiceName());
                 mSwitch.setChecked(twoFAService.getIsEnabled());
+                mSwitch.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mTwoFAServiceGroupList.get(twoFaSettingsGroupIndex).getServices().get(desiredPositon).setIsEnabled(mSwitch.isChecked());
+
+                    }
+                });
             }
 
             public void bindHeader(int position) {
@@ -177,10 +230,19 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
                 mButtonSave.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toaster.makeText(getActivity(), "this is footer", Toast.LENGTH_SHORT);
+                        mChangedList.clear();
+                        getChangedSettings();
+                        Toast.makeText(getActivity(), Integer.toString(mChangedSettings) + " " + Integer.toString(mCurrentSettings), Toast.LENGTH_SHORT).show();
+                        if (mChangedSettings != mCurrentSettings) {
+                            for (int i = 0; i < mTotalServices; i++) {
+                                if ((check(mChangedSettings, i) && !check(mCurrentSettings, i)) || !check(mChangedSettings, i) && check(mCurrentSettings, i)) {
+                                    mChangedList.add(mPositionToServiceIDMap.get(i));
+                                }
+                            }
+                            attemptSaveTwoFaSettings(mChangedList);
+                        }
                     }
                 });
-
             }
         }
 
@@ -261,9 +323,15 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
             if (result.getApiCommand().equals(Constants.COMMAND_GET_TWO_FA_SETTING)) {
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mTwoFaServiceResponse = gson.fromJson(result.getJsonString(), TwoFAServiceListResponse.class);
+                        if (getActivity() != null) {
+                            mTwoFaServiceResponse = gson.fromJson(result.getJsonString(), TwoFAServiceListResponse.class);
+                            mTwoFaServiceList = mTwoFaServiceResponse.getResponse();
+                            Implement2FaAdapter adapter = new Implement2FaAdapter(mTwoFaServiceList);
+                            mRecyclerView.setAdapter(adapter);
+                            setCurrentSettings();
+                        }
                         if (mTwoFaServiceResponse != null) {
-                            Toaster.makeText(getActivity(), result.getJsonString(), Toast.LENGTH_LONG);
+                            //Toaster.makeText(getActivity(), Integer.toString(mTwoFaServiceList.size()), Toast.LENGTH_LONG);
                         } else {
 
                         }
@@ -272,6 +340,25 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
                     }
                 } catch (Exception e) {
                     Toaster.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+                }
+            } else if (result.getApiCommand().equals(Constants.COMMAND_PUT_TWO_FA_SETTING)) {
+                TwoFaSettingsSaveResponse twoFaSettingsSaveResponse = gson.fromJson(result.getJsonString(), TwoFaSettingsSaveResponse.class);
+                try {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                        if (getActivity() != null) {
+                            mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), mJsonString,
+                                    Constants.COMMAND_PUT_TWO_FA_SETTING, mUri);
+                        }
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                        if (getActivity() != null) {
+                            mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), mJsonString,
+                                    Constants.COMMAND_PUT_TWO_FA_SETTING, mUri);
+                        }
+                    } else {
+                        Toaster.makeText(getActivity(), twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_SHORT);
+                    }
+                } catch (Exception e) {
+                    Toaster.makeText(getActivity(), twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             }
         }

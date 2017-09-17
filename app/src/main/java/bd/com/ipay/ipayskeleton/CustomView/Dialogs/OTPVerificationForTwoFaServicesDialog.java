@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -16,11 +17,12 @@ import java.util.Date;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFaServiceListWithOTPRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
@@ -34,9 +36,11 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
     private static String mDesiredRequest;
 
     private HttpRequestPostAsyncTask mHttpPostAsyncTask;
+    private HttpRequestPutAsyncTask mHttpPutAsyncTask;
 
     private String json;
     private String mOTP;
+    private String mUri;
 
     private EditText mOTPEditText;
     private Button mActivateButton;
@@ -48,11 +52,12 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
 
     private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
 
-    public OTPVerificationForTwoFaServicesDialog(@NonNull Context context, String json, String desiredRequest) {
+    public OTPVerificationForTwoFaServicesDialog(@NonNull Context context, String json, String desiredRequest, String mUri) {
         super(context);
         this.mContext = context;
         this.mDesiredRequest = desiredRequest;
         this.json = json;
+        this.mUri = mUri;
         initializeView();
     }
 
@@ -70,8 +75,9 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
         mCancelButton = (Button) view.findViewById(R.id.buttonCancel);
 
         setSMSBroadcastReceiver();
-        setButtonActions();
         setCountDownTimer();
+        setButtonActions();
+
     }
 
     private void setButtonActions() {
@@ -150,19 +156,37 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
 
     private void attemptDesiredRequestWithOTP() {
         Gson gson = new Gson();
-        if (mDesiredRequest.equals(Constants.SEND_MONEY)) {
-            SendMoneyRequest sendMoneRequest = gson.fromJson(json, SendMoneyRequest.class);
-            sendMoneRequest.setOtp(mOTP);
-            json=gson.toJson(sendMoneRequest);
-            mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY,
-                    Constants.BASE_URL_MM + Constants.URL_LOGIN, json, context);
-            mHttpPostAsyncTask.mHttpResponseListener = this;
-            mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if (mDesiredRequest.equals(Constants.COMMAND_PUT_TWO_FA_SETTING)) {
+            TwoFaServiceListWithOTPRequest twoFaServiceListWithOTPRequest = gson.fromJson(json,
+                    TwoFaServiceListWithOTPRequest.class);
+            twoFaServiceListWithOTPRequest.setOtp(mOTP);
+            json = gson.toJson(twoFaServiceListWithOTPRequest);
+            mHttpPutAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_PUT_TWO_FA_SETTING, mUri, json, mContext);
+            mHttpPutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
+        Gson gson = new Gson();
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            Toast.makeText(mContext, result.getApiCommand(), Toast.LENGTH_LONG).show();
+            if (mContext != null)
+                return;
+        }
+        else{
+            if(result.getApiCommand().equals(Constants.COMMAND_PUT_TWO_FA_SETTING)){
+                try{
+                    if(result.getStatus()==Constants.HTTP_RESPONSE_STATUS_OK){
+                        this.autoDismiss(true);
+                        ((Activity)mContext).finish();
+                    }
+                }
+                catch(Exception e){
 
+                }
+            }
+        }
     }
 }

@@ -191,7 +191,7 @@ public class ChangePasswordFragment extends BaseFragmentV4 implements HttpRespon
                         Toast.makeText(getActivity(), mChangePasswordValidationResponse.getMessage(), Toast.LENGTH_LONG).show();
                         launchOTPVerificationFragment();
                     }
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mChangePasswordValidationResponse.getMessage(), Toast.LENGTH_LONG).show();
                         if (result.getJsonString().contains(getString(R.string.otp))) {
