@@ -213,13 +213,13 @@ public class SendMoneyFragment extends BaseFragmentV4 implements HttpResponseLis
             cancel = true;
         }
 
-        if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
+        else if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
             focusView = mDescriptionEditText;
             mDescriptionEditText.setError(getString(R.string.please_write_note));
             cancel = true;
         }
 
-        if (!ContactEngine.isValidNumber(mobileNumber)) {
+        else if (!ContactEngine.isValidNumber(mobileNumber)) {
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             cancel = true;
