@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -27,11 +26,12 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builder implements HttpResponseListener {
 
-    private Context mContext;
+    private Activity context;
 
     private static String mDesiredRequest;
 
@@ -52,9 +52,9 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
 
     private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
 
-    public OTPVerificationForTwoFaServicesDialog(@NonNull Context context, String json, String desiredRequest, String mUri) {
+    public OTPVerificationForTwoFaServicesDialog(@NonNull Activity context, String json, String desiredRequest, String mUri) {
         super(context);
-        this.mContext = context;
+        this.context = context;
         this.mDesiredRequest = desiredRequest;
         this.json = json;
         this.mUri = mUri;
@@ -86,6 +86,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             public void onClick(View v) {
                 // Hiding the keyboard after verifying OTP
                 Utilities.hideKeyboard(context, v);
+                mOTPInputDialog.dismiss();
                 if (Utilities.isConnectionAvailable(context)) verifyInput();
                 else if (context != null)
                     Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
@@ -94,6 +95,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mOTPInputDialog.dismiss();
 
             }
         });
@@ -161,7 +163,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                     TwoFaServiceListWithOTPRequest.class);
             twoFaServiceListWithOTPRequest.setOtp(mOTP);
             json = gson.toJson(twoFaServiceListWithOTPRequest);
-            mHttpPutAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_PUT_TWO_FA_SETTING, mUri, json, mContext);
+            mHttpPutAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_PUT_TWO_FA_SETTING, mUri, json, context);
             mHttpPutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -171,19 +173,18 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
         Gson gson = new Gson();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            Toast.makeText(mContext, result.getApiCommand(), Toast.LENGTH_LONG).show();
-            if (mContext != null)
+            Toast.makeText(context, result.getApiCommand(), Toast.LENGTH_LONG).show();
+            if (context != null)
                 return;
-        }
-        else{
-            if(result.getApiCommand().equals(Constants.COMMAND_PUT_TWO_FA_SETTING)){
-                try{
-                    if(result.getStatus()==Constants.HTTP_RESPONSE_STATUS_OK){
-                        this.autoDismiss(true);
-                        ((Activity)mContext).finish();
+        } else {
+            if (result.getApiCommand().equals(Constants.COMMAND_PUT_TWO_FA_SETTING)) {
+                try {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        Toaster.makeText(context, "es", Toast.LENGTH_SHORT);
+                        mOTPInputDialog.dismiss();
+                        ((SecuritySettingsActivity)(context)).switchTo2FaSettingsFragment();
                     }
-                }
-                catch(Exception e){
+                } catch (Exception e) {
 
                 }
             }

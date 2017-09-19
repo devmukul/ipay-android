@@ -1,9 +1,5 @@
 package bd.com.ipay.ipayskeleton.Model.TwoFA;
 
-/**
- * Created by sourav.saha on 9/6/17.
- */
-
 public class TwoFAService {
 
     private int serviceId;

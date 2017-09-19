@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -346,11 +347,15 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
                         if (getActivity() != null) {
+                            SecuritySettingsActivity.otpDuration=twoFaSettingsSaveResponse.getOtpValidFor();
+                            Toaster.makeText(getActivity(),mJsonString,Toast.LENGTH_SHORT);
                             mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), mJsonString,
                                     Constants.COMMAND_PUT_TWO_FA_SETTING, mUri);
                         }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         if (getActivity() != null) {
+                            Toaster.makeText(getActivity(),mJsonString,Toast.LENGTH_SHORT);
+                            SecuritySettingsActivity.otpDuration=twoFaSettingsSaveResponse.getOtpValidFor();
                             mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), mJsonString,
                                     Constants.COMMAND_PUT_TWO_FA_SETTING, mUri);
                         }
