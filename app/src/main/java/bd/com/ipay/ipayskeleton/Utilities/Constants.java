@@ -459,14 +459,14 @@ public class Constants {
     public static final String URL_REFRESH_FIREBASE_TOKEN = "firebase/login/";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
-    public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED=409;
+    public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED=406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
     public static final int HTTP_RESPONSE_STATUS_PAYMENT_REQUIRED = 402;
     public static final int HTTP_RESPONSE_STATUS_OK = 200;
     public static final int HTTP_RESPONSE_STATUS_PROCESSING = 102;
     public static final int HTTP_RESPONSE_STATUS_UNAUTHORIZED = 401;
     public static final int HTTP_RESPONSE_STATUS_BAD_REQUEST = 400;
-    public static final int HTTP_RESPONSE_STATUS_ACCEPTED = 428;
+    public static final int HTTP_RESPONSE_STATUS_ACCEPTED = 202;
     public static final int HTTP_RESPONSE_STATUS_INTERNAL_ERROR = 500;
     public static final int HTTP_RESPONSE_STATUS_BLOCKED = 403;
 

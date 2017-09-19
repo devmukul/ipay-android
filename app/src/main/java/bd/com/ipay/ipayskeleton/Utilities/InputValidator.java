@@ -67,7 +67,7 @@ public class InputValidator {
     public static String isValidAmount(Context context, BigDecimal amount, BigDecimal minAmount, BigDecimal maxAmount) {
         String errorMessage = null;
 
-        if (minAmount.compareTo(maxAmount) > 0) {
+        if (minAmount.compareTo(maxAmount) >= 0) {
             errorMessage = context.getResources().getString(R.string.insufficient_balance);
             return errorMessage;
         } else {

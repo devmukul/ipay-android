@@ -28,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFaServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyResponse;
@@ -46,6 +47,10 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
     private HttpRequestPostAsyncTask mSendMoneyTask = null;
     private SendMoneyResponse mSendMoneyResponse;
+
+    private OTPVerificationForTwoFaServicesDialog mOTPVerificationForTwoFaServicesDialog;
+
+    private SendMoneyRequest mSendMoneyRequest;
 
     private ProgressDialog mProgressDialog;
 
@@ -179,6 +184,11 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
             attemptSendMoney(null);
         }
     }
+    private void launchOTPVerification() {
+        String jsonString=new Gson().toJson(mSendMoneyRequest);
+        mOTPVerificationForTwoFaServicesDialog=new OTPVerificationForTwoFaServicesDialog(getActivity(),jsonString,Constants.COMMAND_SEND_INVITE,
+                Constants.BASE_URL_SM + Constants.URL_SEND_MONEY);
+    }
 
     @ValidateAccess
     private void addContact(String name, String phoneNumber, String relationship) {
@@ -198,7 +208,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        SendMoneyRequest mSendMoneyRequest = new SendMoneyRequest(
+        mSendMoneyRequest = new SendMoneyRequest(
                 mSenderMobileNumber, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber),
                 mAmount.toString(), mDescription, pin);
         Gson gson = new Gson();
@@ -270,6 +280,9 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
                     //Google Analytic event
                     Utilities.sendEventTracker(mTracker, "SendMoney", "Sent", mSendMoneyResponse.getMessage());
+                }else if(result.getStatus()==Constants.HTTP_RESPONSE_STATUS_ACCEPTED){
+                    launchOTPVerification();
+
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mSendMoneyResponse.getMessage());

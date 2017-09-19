@@ -75,7 +75,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         super.onCreate(savedInstanceState);
         mTracker = Utilities.getTracker(getActivity());
     }
-
     @Override
     public void onResume() {
         super.onResume();
