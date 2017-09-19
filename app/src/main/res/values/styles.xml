@@ -686,15 +686,7 @@
     </style>
 
     <style name="CustomEditTextLogInSignUp" parent="@android:style/Widget.Holo.TextView">
-        <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:textSize">@dimen/text_size_small_medium</item>
-        <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:paddingTop">@dimen/value5</item>
-        <item name="android:paddingBottom">@dimen/value10</item>
-        <item name="android:textColorHint">@color/colorGray</item>
-        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
-        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+
     </style>
 
     <style name="CustomEditText" parent="@android:style/Widget.Holo.TextView">
@@ -1013,6 +1005,16 @@
 
     <style name="ButtonStyleInvited" parent="@android:style/Widget.Button">
         <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">10.0sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/background_button_primary</item>
+    </style>
+
+    <style name="ButtonStyleSmallRect" parent="@android:style/Widget.Button">
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">24dp</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textSize">10.0sp</item>
