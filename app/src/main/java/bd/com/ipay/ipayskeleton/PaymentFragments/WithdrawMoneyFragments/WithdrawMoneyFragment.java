@@ -163,7 +163,7 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_withdraw_money) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_withdraw_money));
     }
 
     private void attemptGetBusinessRule(int serviceID) {
@@ -222,38 +222,42 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
         String balance = null;
         if (SharedPrefManager.ifContainsUserBalance()) {
             balance = SharedPrefManager.getUserBalance(null);
-        }
 
-        if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
-            focusView = mAmountEditText;
-            mAmountEditText.setError(getString(R.string.please_enter_amount));
-            cancel = true;
-        } else if ((mAmountEditText.getText().toString().trim().length() > 0)
-                && Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                && Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-
-            BigDecimal maxAmount = WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
-
-            String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                    WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
-
-            if (error_message != null) {
+            if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
                 focusView = mAmountEditText;
-                mAmountEditText.setError(error_message);
+                mAmountEditText.setError(getString(R.string.please_enter_amount));
+                cancel = true;
+            } else if ((mAmountEditText.getText().toString().trim().length() > 0)
+                    && Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                    && Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+
+                BigDecimal maxAmount = WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
+
+                String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+                        WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
+
+                if (error_message != null) {
+                    focusView = mAmountEditText;
+                    mAmountEditText.setError(error_message);
+                    cancel = true;
+                }
+            }
+
+            if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
+                focusView = mDescriptionEditText;
+                mDescriptionEditText.setError(getString(R.string.please_write_note));
+                cancel = true;
+
+            }
+
+            if (!(mBankNameTextView.getText().toString().trim().length() > 0)) {
+                focusView = mBankNameTextView;
+                mBankNameTextView.setError(getString(R.string.select_a_bank));
                 cancel = true;
             }
-        }
-
-        if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
-            focusView = mDescriptionEditText;
-            mDescriptionEditText.setError(getString(R.string.please_write_note));
-            cancel = true;
-
-        }
-
-        if (!(mBankNameTextView.getText().toString().trim().length() > 0)) {
-            focusView = mBankNameTextView;
-            mBankNameTextView.setError(getString(R.string.select_a_bank));
+        } else {
+            focusView = mAmountEditText;
+            mAmountEditText.setError(getString(R.string.balance_not_available));
             cancel = true;
         }
 
