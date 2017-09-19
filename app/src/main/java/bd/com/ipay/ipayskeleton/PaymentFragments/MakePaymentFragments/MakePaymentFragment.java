@@ -126,7 +126,7 @@ public class MakePaymentFragment extends BaseFragmentV4 implements HttpResponseL
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_make_payment) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_make_payment));
     }
 
     @Override
@@ -193,59 +193,65 @@ public class MakePaymentFragment extends BaseFragmentV4 implements HttpResponseL
         String balance = null;
         if (SharedPrefManager.ifContainsUserBalance()) {
             balance = SharedPrefManager.getUserBalance(null);
-        }
 
-        String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
-        if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
-            focusView = mDescriptionEditText;
-            mDescriptionEditText.setError(getString(R.string.please_write_note));
-            cancel = true;
-        }
+            String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
-        //validation check of amount
-        if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
-            focusView = mAmountEditText;
-            mAmountEditText.setError(getString(R.string.please_enter_amount));
-            cancel = true;
-
-        } else if ((mAmountEditText.getText().toString().trim().length() > 0)
-                && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-
-            String amount = mAmountEditText.getText().toString();
-
-            if (new BigDecimal(amount).compareTo(new BigDecimal(balance)) > 0)
-                error_message = getString(R.string.insufficient_balance);
-            else {
-                maxAmount = PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
-
-                error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                        PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
-            }
-
-            if (error_message != null) {
-                focusView = mAmountEditText;
-                mAmountEditText.setError(error_message);
+            if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
+                focusView = mDescriptionEditText;
+                mDescriptionEditText.setError(getString(R.string.please_write_note));
                 cancel = true;
             }
-        }
 
-        if (!ContactEngine.isValidNumber(mobileNumber)) {
-            focusView = mMobileNumberEditText;
-            mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
-            cancel = true;
-        } else if (ContactEngine.formatMobileNumberBD(mobileNumber).equals(ProfileInfoCacheManager.getMobileNumber())) {
-            focusView = mMobileNumberEditText;
-            mMobileNumberEditText.setError(getString(R.string.you_cannot_make_payment_to_your_number));
+            //validation check of amount
+            if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
+                focusView = mAmountEditText;
+                mAmountEditText.setError(getString(R.string.please_enter_amount));
+                cancel = true;
+
+            } else if ((mAmountEditText.getText().toString().trim().length() > 0)
+                    && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                    && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+
+                String amount = mAmountEditText.getText().toString();
+
+                if (new BigDecimal(amount).compareTo(new BigDecimal(balance)) > 0)
+                    error_message = getString(R.string.insufficient_balance);
+                else {
+                    maxAmount = PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
+
+                    error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+                            PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
+                }
+
+                if (error_message != null) {
+                    focusView = mAmountEditText;
+                    mAmountEditText.setError(error_message);
+                    cancel = true;
+                }
+            }
+
+            if (!ContactEngine.isValidNumber(mobileNumber)) {
+                focusView = mMobileNumberEditText;
+                mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
+                cancel = true;
+            } else if (ContactEngine.formatMobileNumberBD(mobileNumber).equals(ProfileInfoCacheManager.getMobileNumber())) {
+                focusView = mMobileNumberEditText;
+                mMobileNumberEditText.setError(getString(R.string.you_cannot_make_payment_to_your_number));
+                cancel = true;
+            }
+        } else {
+            focusView = mAmountEditText;
+            mAmountEditText.setError(getString(R.string.balance_not_available));
             cancel = true;
         }
 
         if (cancel) {
             focusView.requestFocus();
             return false;
-        } else
+        } else {
             return true;
+        }
     }
 
     private void launchReviewPage() {

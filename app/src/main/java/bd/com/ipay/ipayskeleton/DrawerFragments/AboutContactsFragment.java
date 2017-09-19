@@ -66,14 +66,17 @@ public class AboutContactsFragment extends BaseFragmentV4 {
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ipay_contacts) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ipay_contacts));
     }
 
     private void openMapWithLocation() {
-        String strUri = "http://maps.google.com/maps?q=loc:" + Constants.OFFICE_LATITUDE + "," + Constants.OFFICE_LONGITUDE + ")";
-        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(strUri));
-        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-
-        startActivity(intent);
+        Uri mapLocationUri = Uri.parse("geo:" + Constants.OFFICE_LATITUDE + "," + Constants.OFFICE_LONGITUDE);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapLocationUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        if (mapIntent.resolveActivity(getContext().getPackageManager()) == null) {
+            String mapLocationWebUri = "http://maps.google.com/maps?q=loc:" + Constants.OFFICE_LATITUDE + "," + Constants.OFFICE_LONGITUDE + ")";
+            mapIntent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(mapLocationWebUri));
+        }
+        startActivity(mapIntent);
     }
 }

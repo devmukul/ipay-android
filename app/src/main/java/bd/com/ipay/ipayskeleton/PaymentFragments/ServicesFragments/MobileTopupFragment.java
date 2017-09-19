@@ -205,7 +205,10 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         phoneNumber = phoneNumber.trim();
         final String[] OPERATOR_PREFIXES = getResources().getStringArray(R.array.operator_prefix);
         for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
-            if (phoneNumber.startsWith("+880" + OPERATOR_PREFIXES[i]) || phoneNumber.startsWith("0" + OPERATOR_PREFIXES[i])) {
+            if (phoneNumber.startsWith("+880" + OPERATOR_PREFIXES[i]) ||
+                    phoneNumber.startsWith("0" + OPERATOR_PREFIXES[i]) ||
+                    phoneNumber.startsWith("880" + OPERATOR_PREFIXES[i]) ||
+                    phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
                 mOperatorEditText.setText(mOperatorList.get(i));
                 mSelectedOperatorTypeId = i;
                 break;
@@ -220,40 +223,44 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         View focusView = null;
         BigDecimal maxAmount;
 
-        String balance = null;
+        String balance;
         if (SharedPrefManager.ifContainsUserBalance()) {
             balance = SharedPrefManager.getUserBalance(null);
-        }
 
-        if (mAmountEditText.getText().toString().trim().length() == 0) {
-            mAmountEditText.setError(getString(R.string.please_enter_amount));
-            focusView = mAmountEditText;
-            cancel = true;
-        } else if ((mAmountEditText.getText().toString().trim().length() > 0)
-                && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-
-            if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(new BigDecimal(balance)) > 0) {
-                maxAmount = TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
-            } else
-                maxAmount = TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().max((new BigDecimal(balance)));
-
-            String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                    TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                    maxAmount);
-
-            if (error_message != null) {
+            if (mAmountEditText.getText().toString().trim().length() == 0) {
+                mAmountEditText.setError(getString(R.string.please_enter_amount));
                 focusView = mAmountEditText;
-                mAmountEditText.setError(error_message);
+                cancel = true;
+            } else if ((mAmountEditText.getText().toString().trim().length() > 0)
+                    && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                    && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+
+                if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(new BigDecimal(balance)) > 0) {
+                    maxAmount = TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
+                } else
+                    maxAmount = TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().max((new BigDecimal(balance)));
+
+                String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+                        TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                        maxAmount);
+
+                if (error_message != null) {
+                    focusView = mAmountEditText;
+                    mAmountEditText.setError(error_message);
+                    cancel = true;
+                }
+            }
+
+            String mobileNumber = mMobileNumberEditText.getText().toString().trim();
+
+            if (!mobileNumber.matches(Constants.MOBILE_NUMBER_REGEX)) {
+                mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
+                focusView = mMobileNumberEditText;
                 cancel = true;
             }
-        }
-
-        String mobileNumber = mMobileNumberEditText.getText().toString().trim();
-
-        if (!mobileNumber.matches(Constants.MOBILE_NUMBER_REGEX)) {
-            mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
-            focusView = mMobileNumberEditText;
+        } else {
+            focusView = mAmountEditText;
+            mAmountEditText.setError(getString(R.string.balance_not_available));
             cancel = true;
         }
 

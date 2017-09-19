@@ -359,6 +359,7 @@
     <string name="please_write_title">Please write a title.</string>
     <string name="please_enter_minimum_amount">Please enter minimum amount of </string>
     <string name="insufficient_balance">Balance insufficient.</string>
+    <string name="balance_not_available">Balance not available</string>
     <string name="please_enter_not_more_than_max_amount">Maximum limit of amount is </string>
     <string name="please_enter_vat_amount">Please enter VAT amount.</string>
     <string name="please_select_relation">Please select a relation</string>
