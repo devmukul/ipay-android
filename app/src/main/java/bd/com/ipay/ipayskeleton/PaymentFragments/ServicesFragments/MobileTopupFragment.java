@@ -224,43 +224,51 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         BigDecimal maxAmount;
 
         String balance;
+        String error_message = null;
+
         if (SharedPrefManager.ifContainsUserBalance()) {
             balance = SharedPrefManager.getUserBalance(null);
 
             if (mAmountEditText.getText().toString().trim().length() == 0) {
-                mAmountEditText.setError(getString(R.string.please_enter_amount));
+                error_message = getString(R.string.please_enter_amount);
                 focusView = mAmountEditText;
                 cancel = true;
-            } else if ((mAmountEditText.getText().toString().trim().length() > 0)
-                    && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                    && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
-                if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(new BigDecimal(balance)) > 0) {
-                    maxAmount = TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
-                } else
-                    maxAmount = TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().max((new BigDecimal(balance)));
+            } else if (mAmountEditText.getText().toString().trim().length() > 0) {
+                if (Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                        && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
-                String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                        TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                        maxAmount);
+                    if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(new BigDecimal(balance)) > 0) {
+                        maxAmount = TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
+                    } else
+                        maxAmount = TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().max((new BigDecimal(balance)));
 
-                if (error_message != null) {
-                    focusView = mAmountEditText;
-                    mAmountEditText.setError(error_message);
-                    cancel = true;
+                    error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+                            TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                            maxAmount);
+                } else {
+                    if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(new BigDecimal(balance)) > 0) {
+                        error_message = getString(R.string.insufficient_balance);
+                    }
                 }
-            }
-
-            String mobileNumber = mMobileNumberEditText.getText().toString().trim();
-
-            if (!mobileNumber.matches(Constants.MOBILE_NUMBER_REGEX)) {
-                mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
-                focusView = mMobileNumberEditText;
-                cancel = true;
             }
         } else {
             focusView = mAmountEditText;
-            mAmountEditText.setError(getString(R.string.balance_not_available));
+            error_message = getString(R.string.balance_not_available);
+            cancel = true;
+        }
+
+        if (error_message != null) {
+            focusView = mAmountEditText;
+            mAmountEditText.setError(error_message);
+            cancel = true;
+        }
+
+        String mobileNumber = mMobileNumberEditText.getText().toString().trim();
+
+        if (!mobileNumber.matches(Constants.MOBILE_NUMBER_REGEX)) {
+            mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
+            focusView = mMobileNumberEditText;
             cancel = true;
         }
 
