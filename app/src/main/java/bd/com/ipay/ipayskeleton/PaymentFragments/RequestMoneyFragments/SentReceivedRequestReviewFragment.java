@@ -37,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -90,7 +91,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_request_money_sent_review) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_request_money_sent_review));
     }
 
 
@@ -354,6 +355,9 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                                 getActivity().onBackPressed();
                         }
 
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                        ((MyApplication) getActivity().getApplication()).launchLoginPage(mRequestMoneyAcceptRejectOrCancelResponse.getMessage());
+
                     } else {
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
@@ -383,6 +387,9 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                             } else
                                 getActivity().onBackPressed();
                         }
+
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                        ((MyApplication) getActivity().getApplication()).launchLoginPage(mRequestMoneyAcceptRejectOrCancelResponse.getMessage());
 
                     } else {
                         if (getActivity() != null)
