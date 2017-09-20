@@ -191,8 +191,7 @@ public class SendMoneyFragment extends BaseFragmentV4 implements HttpResponseLis
             } else if (mAmountEditText.getText().toString().trim().length() > 0) {
                 if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(new BigDecimal(balance)) > 0) {
                     error_message = getString(R.string.insufficient_balance);
-                }
-                if (Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                } else if (Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                         && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
                     maxAmount = SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
@@ -211,15 +210,11 @@ public class SendMoneyFragment extends BaseFragmentV4 implements HttpResponseLis
             focusView = mAmountEditText;
             mAmountEditText.setError(error_message);
             cancel = true;
-        }
-
-        else if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
+        } else if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
             focusView = mDescriptionEditText;
             mDescriptionEditText.setError(getString(R.string.please_write_note));
             cancel = true;
-        }
-
-        else if (!ContactEngine.isValidNumber(mobileNumber)) {
+        } else if (!ContactEngine.isValidNumber(mobileNumber)) {
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             cancel = true;
