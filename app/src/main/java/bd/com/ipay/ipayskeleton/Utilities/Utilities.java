@@ -340,12 +340,21 @@ public class Utilities {
         }
         return "";
     }
-
+    public static String splitCamelCase(String s) {
+        return s.replaceAll(
+                String.format("%s|%s|%s",
+                       "(?<=[A-Z])(?=[A-Z][a-z])",
+                       "(?<=[^A-Z])(?=[A-Z])",
+                       "(?<=[A-Za-z])(?=[^A-Za-z])"
+               ),
+               " "
+       );
+    }
     public static String getErrorMessageForInvalidInput(String[] errorFieldNames, String errorMessage) {
         String ret = errorMessage + " in ";
         for (int i = 0; i < errorFieldNames.length; i++) {
             if (i != errorFieldNames.length - 1)
-                ret += errorFieldNames[i] + " , ";
+                ret += splitCamelCase(errorFieldNames[i]) + " , ";
             else
                 ret += errorFieldNames[i];
         }

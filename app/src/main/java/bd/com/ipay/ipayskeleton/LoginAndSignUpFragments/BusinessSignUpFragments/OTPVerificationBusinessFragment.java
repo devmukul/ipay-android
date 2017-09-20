@@ -281,8 +281,12 @@ public class OTPVerificationBusinessFragment extends BaseFragmentV4 implements H
                         InvalidInputResponse invalidInputResponse = gson.fromJson(result.getJsonString(), InvalidInputResponse.class);
                         String[] errorFields = invalidInputResponse.getErrorFieldNames();
                         String errorMessage = invalidInputResponse.getMessage();
-                        Toast.makeText(getActivity(),
-                                Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), Toast.LENGTH_LONG).show();
+                        if (errorFields != null) {
+                            Toast.makeText(getActivity(),
+                                    Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), Toast.LENGTH_LONG).show();
+                        } else
+                            Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+                        
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                         getActivity().finish();
