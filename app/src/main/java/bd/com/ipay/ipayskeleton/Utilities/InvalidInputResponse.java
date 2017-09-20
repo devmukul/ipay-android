@@ -1,7 +1,7 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
 public class InvalidInputResponse {
-    private String[]errorFieldNames;
+    private String[] errorFieldNames;
     private String message;
 
     public String getMessage() {
@@ -18,7 +18,6 @@ public class InvalidInputResponse {
     }
 
     public String[] getErrorFieldNames() {
-
         return errorFieldNames;
     }
 
