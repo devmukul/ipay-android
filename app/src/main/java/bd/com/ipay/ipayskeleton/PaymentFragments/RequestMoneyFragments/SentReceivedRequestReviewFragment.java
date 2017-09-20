@@ -388,10 +388,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                                 getActivity().onBackPressed();
                         }
 
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
-                        ((MyApplication) getActivity().getApplication()).launchLoginPage(mRequestMoneyAcceptRejectOrCancelResponse.getMessage());
-
-                    } else {
+                    }else {
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
                     }
