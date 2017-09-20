@@ -286,7 +286,7 @@ public class OTPVerificationBusinessFragment extends BaseFragmentV4 implements H
                                     Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), Toast.LENGTH_LONG).show();
                         } else
                             Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-                        
+
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                         getActivity().finish();

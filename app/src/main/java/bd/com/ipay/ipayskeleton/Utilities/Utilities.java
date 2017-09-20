@@ -348,17 +348,18 @@ public class Utilities {
                        "(?<=[A-Za-z])(?=[^A-Za-z])"
                ),
                " "
-       );
+       ).toLowerCase();
     }
     public static String getErrorMessageForInvalidInput(String[] errorFieldNames, String errorMessage) {
-        String ret = errorMessage + " in ";
+
+        String errorMessageWithFieldNames = errorMessage + " in ";
         for (int i = 0; i < errorFieldNames.length; i++) {
             if (i != errorFieldNames.length - 1)
-                ret += splitCamelCase(errorFieldNames[i]) + " , ";
+                errorMessageWithFieldNames += splitCamelCase(errorFieldNames[i]) + " , ";
             else
-                ret += errorFieldNames[i];
+                errorMessageWithFieldNames += splitCamelCase(errorFieldNames[i]);
         }
-        return ret;
+        return errorMessageWithFieldNames;
     }
 
     public static long getTimeFromBase64Token(String base64) {
