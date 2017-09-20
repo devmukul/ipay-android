@@ -41,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
+import bd.com.ipay.ipayskeleton.Utilities.InvalidInputResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationPersonalFragment extends Fragment implements HttpResponseListener {
@@ -280,6 +281,16 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                         getActivity().finish();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
+                        InvalidInputResponse invalidInputResponse = gson.fromJson(result.getJsonString(), InvalidInputResponse.class);
+                        String[] errorFields = invalidInputResponse.getErrorFieldNames();
+                        String errorMessage = invalidInputResponse.getMessage();
+                        if (errorFields != null) {
+                            Toast.makeText(getActivity(),
+                                    Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), Toast.LENGTH_LONG).show();
+                        } else
+                            Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();

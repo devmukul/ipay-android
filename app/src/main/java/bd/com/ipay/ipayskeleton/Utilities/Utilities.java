@@ -341,6 +341,18 @@ public class Utilities {
         return "";
     }
 
+    public static String getErrorMessageForInvalidInput(String[] errorFieldNames, String errorMessage) {
+        String ret = errorMessage + " in ";
+        for (int i = 0; i < errorFieldNames.length; i++) {
+            if (i != errorFieldNames.length - 1)
+                ret += errorFieldNames[i] + " , ";
+            else
+                ret += errorFieldNames[i];
+        }
+
+        return ret;
+    }
+
     public static long getTimeFromBase64Token(String base64) {
 
         long timeForTokenExpiration = 0;
