@@ -349,7 +349,6 @@ public class Utilities {
             else
                 ret += errorFieldNames[i];
         }
-
         return ret;
     }
 
