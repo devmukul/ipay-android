@@ -341,7 +341,7 @@ public class Utilities {
         return "";
     }
     
-    public static String splitCamelCase(String camelCaseWord) {
+    private static String splitCamelCase(String camelCaseWord) {
         return camelCaseWord.replaceAll(
                 String.format("%s|%s|%s",
                        "(?<=[A-Z])(?=[A-Z][a-z])",
