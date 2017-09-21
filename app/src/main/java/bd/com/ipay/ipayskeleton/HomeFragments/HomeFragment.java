@@ -371,7 +371,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                     /*
                      * We want to show the prompt once in every five launch on average.
                      */
-                    if (true) {
+                    if (random.nextInt(5) == 0) {
                         int index = random.nextInt(incompleteOtherCompletionDetails.size());
                         final ProfileCompletionStatusResponse.PropertyDetails incompletePropertyDetails = incompleteOtherCompletionDetails.get(index);
 
