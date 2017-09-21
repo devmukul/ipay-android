@@ -18,8 +18,12 @@ public class SharedPrefManager {
         return pref.getBoolean(SharedPrefConstants.FIRST_LAUNCH, defaultValue);
     }
 
-    public static String getUserBalance(String defaultValue) {
-        return pref.getString(SharedPrefConstants.USER_BALANCE, defaultValue);
+    public static String getUserBalance() {
+        return pref.getString(SharedPrefConstants.USER_BALANCE, "0.0");
+    }
+
+    public static void setUserBalance(String value) {
+        pref.edit().putString(SharedPrefConstants.USER_BALANCE, value).apply();
     }
 
     public static boolean isPinAdded(boolean defaultValue) {
@@ -32,10 +36,6 @@ public class SharedPrefManager {
 
     public static void setFirstLaunch(boolean defaultValue) {
         pref.edit().putBoolean(SharedPrefConstants.FIRST_LAUNCH, defaultValue).apply();
-    }
-
-    public static void setUserBalance(String value) {
-        pref.edit().putString(SharedPrefConstants.USER_BALANCE, value).apply();
     }
 
     public static void setPinAdded(boolean value) {
