@@ -340,6 +340,29 @@ public class Utilities {
         }
         return "";
     }
+    
+    private static String splitCamelCase(String camelCaseWord) {
+        return camelCaseWord.replaceAll(
+                String.format("%s|%s|%s",
+                       "(?<=[A-Z])(?=[A-Z][a-z])",
+                       "(?<=[^A-Z])(?=[A-Z])",
+                       "(?<=[A-Za-z])(?=[^A-Za-z])"
+               ),
+               " "
+       ).toLowerCase();
+    }
+    
+    public static String getErrorMessageForInvalidInput(String[] errorFieldNames, String errorMessage) {
+
+        String errorMessageWithFieldNames = errorMessage + " in ";
+        for (int i = 0; i < errorFieldNames.length; i++) {
+            if (i != errorFieldNames.length - 1)
+                errorMessageWithFieldNames += splitCamelCase(errorFieldNames[i]) + " , ";
+            else
+                errorMessageWithFieldNames += splitCamelCase(errorFieldNames[i]);
+        }
+        return errorMessageWithFieldNames;
+    }
 
     public static long getTimeFromBase64Token(String base64) {
 

@@ -34,6 +34,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.InvalidInputResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
@@ -154,7 +155,7 @@ public class SignupBusinessStepThreeFragment extends BaseFragmentV4 implements H
         super.onResume();
         getActivity().setTitle(R.string.title_signup_business_page);
         setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_signup_step_3) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_signup_step_3));
     }
 
     private void setGenderCheckBoxTextColor(boolean maleCheckBoxChecked, boolean femaleCheckBoxChecked) {
@@ -311,16 +312,17 @@ public class SignupBusinessStepThreeFragment extends BaseFragmentV4 implements H
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
 
                 //Google Analytic event
-                Utilities.sendEventTracker(mTracker,"BusinessSignUp", "toOTP", "Signup complete for Business. Navigate to OTP for mobile verification");
+                Utilities.sendEventTracker(mTracker, "BusinessSignUp", "toOTP", "Signup complete for Business. Navigate to OTP for mobile verification");
 
             } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-
-                // Previous OTP has not expired yet.
-                SignupOrLoginActivity.otpDuration = mOtpResponseBusinessSignup.getOtpValidFor();
-                ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
-
+                InvalidInputResponse invalidInputResponse = gson.fromJson(result.getJsonString(), InvalidInputResponse.class);
+                String[] errorFields = invalidInputResponse.getErrorFieldNames();
+                String errorMessage = invalidInputResponse.getMessage();
+                if (errorFields != null) {
+                    Toast.makeText(getActivity(),
+                            Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), Toast.LENGTH_LONG).show();
+                } else
+                    Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
             } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
@@ -334,7 +336,7 @@ public class SignupBusinessStepThreeFragment extends BaseFragmentV4 implements H
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
                 //Google Analytic event
-                Utilities.sendEventTracker(mTracker,"BusinessSignUp", "Failed", message);
+                Utilities.sendEventTracker(mTracker, "BusinessSignUp", "Failed", message);
             }
 
             mProgressDialog.dismiss();

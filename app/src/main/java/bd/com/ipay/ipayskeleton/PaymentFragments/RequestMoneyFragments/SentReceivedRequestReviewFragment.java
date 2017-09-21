@@ -93,7 +93,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         super.onResume();
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_request_money_sent_review));
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_sent_received_request_review, container, false);
@@ -387,7 +387,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                                 getActivity().onBackPressed();
                         }
 
-                    }else {
+                    } else {
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
                     }
