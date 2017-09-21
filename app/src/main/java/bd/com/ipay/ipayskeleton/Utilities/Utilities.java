@@ -340,6 +340,7 @@ public class Utilities {
         }
         return "";
     }
+    
     public static String splitCamelCase(String camelCaseWord) {
         return camelCaseWord.replaceAll(
                 String.format("%s|%s|%s",
@@ -350,6 +351,7 @@ public class Utilities {
                " "
        ).toLowerCase();
     }
+    
     public static String getErrorMessageForInvalidInput(String[] errorFieldNames, String errorMessage) {
 
         String errorMessageWithFieldNames = errorMessage + " in ";
