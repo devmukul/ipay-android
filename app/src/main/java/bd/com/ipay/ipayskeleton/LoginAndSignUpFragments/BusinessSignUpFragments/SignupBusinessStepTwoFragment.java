@@ -76,6 +76,7 @@ public class SignupBusinessStepTwoFragment extends BaseFragmentV4 {
         GetBusinessTypesAsyncTask getBusinessTypesAsyncTask =
                 new GetBusinessTypesAsyncTask(getActivity(), businessTypeLoadListener);
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_fetching_business_types));
+        mProgressDialog.setCancelable(false);
         mProgressDialog.show();
         getBusinessTypesAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -95,7 +96,7 @@ public class SignupBusinessStepTwoFragment extends BaseFragmentV4 {
         getActivity().setTitle(R.string.title_signup_business_page);
         mBusinessAddressView.mSelectedDistrictId = mSelectedDistrictId;
         mBusinessAddressView.mSelectedThanaId = mSelectedThanaId;
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_signup_step_2) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_signup_step_2));
     }
 
     private void attemptGoNextPage() {
