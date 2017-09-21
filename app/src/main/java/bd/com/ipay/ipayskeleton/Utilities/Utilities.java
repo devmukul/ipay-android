@@ -61,6 +61,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -75,6 +76,11 @@ import io.intercom.android.sdk.Intercom;
 import io.intercom.android.sdk.identity.Registration;
 
 public class Utilities {
+
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    private static final SimpleDateFormat DATE_FORMAT_WITH_TIME = new SimpleDateFormat("MMM d, yyyy, h:mm a", Locale.getDefault());
+    private static final SimpleDateFormat DATE_FORMAT_WITHOUT_TIME = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
+    private static final SimpleDateFormat DATE_FORMAT_FROM_STRING = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
     public static boolean isConnectionAvailable(Context context) {
         if (context == null) return false;
@@ -340,18 +346,18 @@ public class Utilities {
         }
         return "";
     }
-    
+
     private static String splitCamelCase(String camelCaseWord) {
         return camelCaseWord.replaceAll(
                 String.format("%s|%s|%s",
-                       "(?<=[A-Z])(?=[A-Z][a-z])",
-                       "(?<=[^A-Z])(?=[A-Z])",
-                       "(?<=[A-Za-z])(?=[^A-Za-z])"
-               ),
-               " "
-       ).toLowerCase();
+                        "(?<=[A-Z])(?=[A-Z][a-z])",
+                        "(?<=[^A-Z])(?=[A-Z])",
+                        "(?<=[A-Za-z])(?=[^A-Za-z])"
+                ),
+                " "
+        ).toLowerCase();
     }
-    
+
     public static String getErrorMessageForInvalidInput(String[] errorFieldNames, String errorMessage) {
 
         String errorMessageWithFieldNames = errorMessage + " in ";
@@ -386,7 +392,6 @@ public class Utilities {
         }
         return timeForTokenExpiration;
     }
-
 
     public static String getFilePathFromData(Context context, Uri uri) {
         String[] projection = new String[]{"_data"};
@@ -506,7 +511,6 @@ public class Utilities {
         );
     }
 
-
     public static void showKeyboard(Context context) {
         final InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -530,18 +534,17 @@ public class Utilities {
     }
 
     public static String formatDateWithTime(long time) {
-        return new SimpleDateFormat("MMM d, yyyy, h:mm a").format(time);
+        return DATE_FORMAT_WITH_TIME.format(time);
     }
 
     public static String formatDateWithoutTime(long time) {
-        return new SimpleDateFormat("MMM d, yyyy").format(time);
+        return DATE_FORMAT_WITHOUT_TIME.format(time);
     }
 
     public static Date formatDateFromString(String dateString) {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Date newDate = null;
         try {
-            newDate = format.parse(dateString);
+            newDate = DATE_FORMAT_FROM_STRING.parse(dateString);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -658,7 +661,6 @@ public class Utilities {
         datePickerDialog.getDatePicker().setMaxDate(minDateInMilliSeconds);
         datePickerDialog.setTitle(null);
     }
-
 
     public static void setActionBarTitle(Activity activity, String title) {
         activity.getActionBar().setTitle(title);
@@ -786,11 +788,75 @@ public class Utilities {
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
-    public static void sendEventTracker(Tracker mTracker, String category, String action, String label) {
+    public static void sendSuccessEventTracker(Tracker tracker, String category, int accountId, long value) {
+        if (accountId == Constants.INVALID_ACCOUNT_ID) {
+            sendEventTracker(tracker,
+                    category,
+                    "Success",
+                    String.format(Locale.getDefault(), "At %s", formatDateWithoutTime(System.currentTimeMillis())),
+                    value);
+        } else {
+            sendEventTracker(tracker,
+                    category,
+                    "Success",
+                    String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s", accountId, formatDateWithoutTime(System.currentTimeMillis())),
+                    value);
+        }
+    }
+
+    public static void sendBlockedEventTracker(Tracker tracker, String category, int accountId, long value) {
+        if (accountId == Constants.INVALID_ACCOUNT_ID) {
+            sendEventTracker(tracker,
+                    category,
+                    "Blocked",
+                    String.format(Locale.getDefault(), "At %s", formatDateWithoutTime(System.currentTimeMillis())),
+                    value);
+        } else {
+            sendEventTracker(tracker,
+                    category,
+                    "Blocked",
+                    String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s", accountId, formatDateWithoutTime(System.currentTimeMillis())),
+                    value);
+        }
+
+    }
+
+    public static void sendFailedEventTracker(Tracker tracker, String category, int accountId, String serverErrorMessage, long value) {
+        if (accountId == Constants.INVALID_ACCOUNT_ID) {
+            sendEventTracker(tracker,
+                    category,
+                    "Failed",
+                    String.format(Locale.getDefault(), "At %s, SERVER_MESSAGE:%s", formatDateWithoutTime(System.currentTimeMillis()), serverErrorMessage),
+                    value);
+        } else {
+            sendEventTracker(tracker,
+                    category,
+                    "Failed",
+                    String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s, SERVER_MESSAGE:%s", accountId, formatDateWithoutTime(System.currentTimeMillis()), serverErrorMessage),
+                    value);
+        }
+    }
+
+    public static void sendExceptionTracker(Tracker tracker, int accountId, String exceptionMessage) {
+        if (accountId == Constants.INVALID_ACCOUNT_ID) {
+            tracker.send(new HitBuilders.ExceptionBuilder().
+                    setDescription(String.format(Locale.getDefault(), "EXCEPTION_MESSAGE:%s at %s, DEVICE_NAME:%s", exceptionMessage, formatDateWithoutTime(System.currentTimeMillis()), DeviceInfoFactory.getDeviceName()))
+                    .setFatal(true).build());
+        } else {
+            tracker.send(new HitBuilders.ExceptionBuilder().
+                    setDescription(String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s, EXCEPTION_MESSAGE:%s, DEVICE_NAME:%s", accountId, formatDateWithoutTime(System.currentTimeMillis()), exceptionMessage, DeviceInfoFactory.getDeviceName()))
+                    .setFatal(true).build());
+        }
+    }
+
+
+    public static void sendEventTracker(Tracker mTracker, String category, String action, String label, long value) {
         mTracker.send(new HitBuilders.EventBuilder()
                 .setCategory(category)
                 .setAction(action)
                 .setLabel(label)
+                .setValue(value)
                 .build());
     }
+
 }

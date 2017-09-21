@@ -43,7 +43,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.CircularProgressBar;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPinDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -61,7 +61,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class HomeFragment extends BaseFragmentV4 implements HttpResponseListener {
+public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
     private static boolean profileCompletionPromptShown = false;
 
@@ -371,7 +371,7 @@ public class HomeFragment extends BaseFragmentV4 implements HttpResponseListener
                     /*
                      * We want to show the prompt once in every five launch on average.
                      */
-                    if (random.nextInt(5) == 0) {
+                    if (true) {
                         int index = random.nextInt(incompleteOtherCompletionDetails.size());
                         final ProfileCompletionStatusResponse.PropertyDetails incompletePropertyDetails = incompleteOtherCompletionDetails.get(index);
 

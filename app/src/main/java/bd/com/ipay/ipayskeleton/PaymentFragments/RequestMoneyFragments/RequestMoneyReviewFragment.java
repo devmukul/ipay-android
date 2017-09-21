@@ -30,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMone
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -73,7 +74,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_request_money_review) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_request_money_review));
     }
 
 
@@ -122,7 +123,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
         mAmountView.setText(Utilities.formatTaka(mAmount));
 
-        if (!isInContacts){
+        if (!isInContacts) {
             mAddInContactsCheckBox.setVisibility(View.VISIBLE);
             mAddInContactsCheckBox.setChecked(true);
         }
@@ -182,7 +183,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
             mProgressDialog.dismiss();
             mRequestMoneyTask = null;
             if (getActivity() != null)
-                 Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
         }
 
@@ -200,21 +201,22 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
                     getActivity().finish();
 
                     if (getActivity() != null)
-                         Toaster.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_LONG);
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"RequestMoney", "Sent", mRequestMoneyResponse.getMessage());
+                    Utilities.sendSuccessEventTracker(mTracker, "Request Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
                 } else {
                     if (getActivity() != null)
-                         Toaster.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_SHORT);
+                        Toaster.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_SHORT);
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"RequestMoney", "Failed", mRequestMoneyResponse.getMessage());
+                    Utilities.sendFailedEventTracker(mTracker, "Request Money", ProfileInfoCacheManager.getAccountId(), mRequestMoneyResponse.getMessage(), mAmount.longValue());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                     Toaster.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT);
+                    Toaster.makeText(getActivity(), R.string.failed_request_money, Toast.LENGTH_SHORT);
+                Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }
 
             mProgressDialog.dismiss();
