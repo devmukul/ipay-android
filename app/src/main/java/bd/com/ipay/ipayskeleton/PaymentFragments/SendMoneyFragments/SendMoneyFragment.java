@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,8 +45,12 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyFragment extends BaseFragmentV4 implements HttpResponseListener {
 
+    public static final int REQUEST_CODE_PERMISSION = 1001;
+
     private final int PICK_CONTACT_REQUEST = 100;
     private final int SEND_MONEY_REVIEW_REQUEST = 101;
+
+    private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
     private Button buttonSend;
     private ImageView buttonSelectFromContacts;
@@ -54,9 +59,6 @@ public class SendMoneyFragment extends BaseFragmentV4 implements HttpResponseLis
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
 
-    public static final int REQUEST_CODE_PERMISSION = 1001;
-
-    private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -174,42 +176,41 @@ public class SendMoneyFragment extends BaseFragmentV4 implements HttpResponseLis
 
         boolean cancel = false;
         View focusView = null;
-        BigDecimal maxAmount;
-        String balance;
-        String error_message = null;
+        String errorMessage = null;
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
         if (SharedPrefManager.ifContainsUserBalance()) {
-            balance = SharedPrefManager.getUserBalance(null);
+            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
 
-            if (mAmountEditText.getText().toString().trim().length() == 0) {
-                error_message = getString(R.string.please_enter_amount);
+            if (TextUtils.isEmpty(mAmountEditText.getText())) {
+                errorMessage = getString(R.string.please_enter_amount);
                 focusView = mAmountEditText;
                 cancel = true;
 
-            } else if (mAmountEditText.getText().toString().trim().length() > 0) {
-                if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(new BigDecimal(balance)) > 0) {
-                    error_message = getString(R.string.insufficient_balance);
+            } else {
+                final BigDecimal sendMoneyAmount = new BigDecimal(mAmountEditText.getText().toString());
+                if (sendMoneyAmount.compareTo(balance) > 0) {
+                    errorMessage = getString(R.string.insufficient_balance);
                 }
                 if (Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                         && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
-                    maxAmount = SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
+                    final BigDecimal minimumSendMoneyAmount = SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
+                    final BigDecimal maximumSendMoneyAmount = SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
 
-                    error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                            SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
+                    errorMessage = InputValidator.isValidAmount(getActivity(), sendMoneyAmount, minimumSendMoneyAmount, maximumSendMoneyAmount);
                 }
             }
         } else {
             focusView = mAmountEditText;
-            error_message = getString(R.string.balance_not_available);
+            errorMessage = getString(R.string.balance_not_available);
             cancel = true;
         }
 
-        if (error_message != null) {
+        if (errorMessage != null) {
             focusView = mAmountEditText;
-            mAmountEditText.setError(error_message);
+            mAmountEditText.setError(errorMessage);
             cancel = true;
         } else if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
             focusView = mDescriptionEditText;

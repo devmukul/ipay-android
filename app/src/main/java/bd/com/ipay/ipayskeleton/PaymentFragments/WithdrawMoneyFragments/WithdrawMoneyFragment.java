@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,10 +49,10 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseListener {
 
+    private static final int WITHDRAW_MONEY_REVIEW_REQUEST = 101;
+
     private HttpRequestGetAsyncTask mGetBankTask = null;
     private GetBankListResponse mBankListResponse;
-
-    private static final int WITHDRAW_MONEY_REVIEW_REQUEST = 101;
 
     private Button buttonWithdrawMoney;
     private TextView mBankNameTextView;
@@ -62,6 +63,7 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
     private EditText mAmountEditText;
     private TextView mLinkABankNoteTextView;
     private ImageView mBankIcon;
+
     private List<UserBankClass> mListUserBankClasses;
     private ArrayList<String> mUserBankNameList;
     private ArrayList<String> mUserBankAccountNumberList;
@@ -216,42 +218,43 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
     }
 
     private boolean verifyUserInputs() {
+        mAmountEditText.setError(null);
+
         boolean cancel = false;
         View focusView = null;
-
-        String balance;
-        String error_message = null;
+        String errorMessage = null;
 
         if (SharedPrefManager.ifContainsUserBalance()) {
-            balance = SharedPrefManager.getUserBalance(null);
+            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
 
-            if (mAmountEditText.getText().toString().trim().length() == 0) {
-                error_message = getString(R.string.please_enter_amount);
+            if (TextUtils.isEmpty(mAmountEditText.getText())) {
+                errorMessage = getString(R.string.please_enter_amount);
                 focusView = mAmountEditText;
                 cancel = true;
 
-            } else if (mAmountEditText.getText().toString().trim().length() > 0) {
-                if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(new BigDecimal(balance)) > 0) {
-                    error_message = getString(R.string.insufficient_balance);
+            } else {
+                final BigDecimal withdrawMoneyAmount = new BigDecimal(mAmountEditText.getText().toString());
+                if (withdrawMoneyAmount.compareTo(balance) > 0) {
+                    errorMessage = getString(R.string.insufficient_balance);
                 }
                 if (Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                         && Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
-                    BigDecimal maxAmount = WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
+                    final BigDecimal minimumWithdrawAmount = WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
+                    final BigDecimal maximumWithdrawAmount = WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
 
-                    error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                            WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
+                    errorMessage = InputValidator.isValidAmount(getActivity(), withdrawMoneyAmount, minimumWithdrawAmount, maximumWithdrawAmount);
                 }
             }
         } else {
             focusView = mAmountEditText;
-            error_message = getString(R.string.balance_not_available);
+            errorMessage = getString(R.string.balance_not_available);
             cancel = true;
         }
 
-        if (error_message != null) {
+        if (errorMessage != null) {
             focusView = mAmountEditText;
-            mAmountEditText.setError(error_message);
+            mAmountEditText.setError(errorMessage);
             cancel = true;
         }
 
