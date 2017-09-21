@@ -315,7 +315,11 @@ public class CameraActivity extends AppCompatActivity {
     @NonNull
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private File getTempFile() {
-        File documentFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
+        File rootDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (rootDir == null) {
+            rootDir = getFilesDir();
+        }
+        File documentFile = new File(rootDir, fileName);
         if (!documentFile.getParentFile().exists()) {
             documentFile.getParentFile().mkdirs();
         }

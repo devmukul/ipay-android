@@ -270,7 +270,11 @@ public class DocumentPicker {
     @NonNull
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private static File getTempFile(Context context, final String fileName) {
-        File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
+        File rootDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (rootDir == null) {
+            rootDir = context.getFilesDir();
+        }
+        File documentFile = new File(rootDir, fileName);
         if (!documentFile.getParentFile().exists()) {
             documentFile.getParentFile().mkdirs();
         }
