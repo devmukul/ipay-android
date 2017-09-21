@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,8 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class MakePaymentFragment extends BaseFragmentV4 implements HttpResponseListener {
 
 
+    private static final int REQUEST_CODE_PERMISSION = 1001;
+
     private final int PICK_CONTACT_REQUEST = 100;
     private final int PAYMENT_REVIEW_REQUEST = 101;
 
@@ -58,7 +61,6 @@ public class MakePaymentFragment extends BaseFragmentV4 implements HttpResponseL
     private EditText mAmountEditText;
     private EditText mRefNumberEditText;
     private View mRightSideIconViewHolder;
-    private static final int REQUEST_CODE_PERMISSION = 1001;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
@@ -187,62 +189,57 @@ public class MakePaymentFragment extends BaseFragmentV4 implements HttpResponseL
 
         boolean cancel = false;
         View focusView = null;
-        BigDecimal maxAmount;
-        String error_message;
+        String errorMessage = null;
 
-        String balance = null;
         if (SharedPrefManager.ifContainsUserBalance()) {
-            balance = SharedPrefManager.getUserBalance(null);
-
-
-            String mobileNumber = mMobileNumberEditText.getText().toString().trim();
-
-            if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
-                focusView = mDescriptionEditText;
-                mDescriptionEditText.setError(getString(R.string.please_write_note));
-                cancel = true;
-            }
+            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
 
             //validation check of amount
-            if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
+            if (TextUtils.isEmpty(mAmountEditText.getText())) {
                 focusView = mAmountEditText;
                 mAmountEditText.setError(getString(R.string.please_enter_amount));
                 cancel = true;
 
-            } else if ((mAmountEditText.getText().toString().trim().length() > 0)
-                    && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                    && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-
-                String amount = mAmountEditText.getText().toString();
-
-                if (new BigDecimal(amount).compareTo(new BigDecimal(balance)) > 0)
-                    error_message = getString(R.string.insufficient_balance);
-                else {
-                    maxAmount = PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
-
-                    error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                            PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
+            } else {
+                final BigDecimal paymentAmount = new BigDecimal(mAmountEditText.getText().toString());
+                if (paymentAmount.compareTo(balance) > 0) {
+                    errorMessage = getString(R.string.insufficient_balance);
                 }
+                if (Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                        && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
-                if (error_message != null) {
-                    focusView = mAmountEditText;
-                    mAmountEditText.setError(error_message);
-                    cancel = true;
+                    final BigDecimal minimumPaymentAmount = PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
+                    final BigDecimal maximumPaymentAmount = PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
+
+                    errorMessage = InputValidator.isValidAmount(getActivity(), paymentAmount, minimumPaymentAmount, maximumPaymentAmount);
                 }
-            }
-
-            if (!ContactEngine.isValidNumber(mobileNumber)) {
-                focusView = mMobileNumberEditText;
-                mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
-                cancel = true;
-            } else if (ContactEngine.formatMobileNumberBD(mobileNumber).equals(ProfileInfoCacheManager.getMobileNumber())) {
-                focusView = mMobileNumberEditText;
-                mMobileNumberEditText.setError(getString(R.string.you_cannot_make_payment_to_your_number));
-                cancel = true;
             }
         } else {
             focusView = mAmountEditText;
-            mAmountEditText.setError(getString(R.string.balance_not_available));
+            errorMessage = getString(R.string.balance_not_available);
+            cancel = true;
+        }
+
+        if (errorMessage != null) {
+            focusView = mAmountEditText;
+            mAmountEditText.setError(errorMessage);
+            cancel = true;
+        }
+        String mobileNumber = mMobileNumberEditText.getText().toString().trim();
+
+        if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
+            focusView = mDescriptionEditText;
+            mDescriptionEditText.setError(getString(R.string.please_write_note));
+            cancel = true;
+        }
+
+        if (!ContactEngine.isValidNumber(mobileNumber)) {
+            focusView = mMobileNumberEditText;
+            mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
+            cancel = true;
+        } else if (ContactEngine.formatMobileNumberBD(mobileNumber).equals(ProfileInfoCacheManager.getMobileNumber())) {
+            focusView = mMobileNumberEditText;
+            mMobileNumberEditText.setError(getString(R.string.you_cannot_make_payment_to_your_number));
             cancel = true;
         }
 
