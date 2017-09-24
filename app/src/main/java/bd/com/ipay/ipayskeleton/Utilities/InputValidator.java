@@ -90,6 +90,8 @@ public class InputValidator {
             errorMessage = context.getString(R.string.error_invalid_otp);
         else if (otp.length() != 6)
             errorMessage = context.getString(R.string.error_invalid_otp_with_required_length);
+        else if(!otp.matches("^[0-9]*$"))
+            errorMessage=context.getString(R.string.invalid_otp_with_characters);
         return errorMessage;
     }
 

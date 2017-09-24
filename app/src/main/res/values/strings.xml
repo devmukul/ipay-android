@@ -951,4 +951,5 @@
     <string name="screen_name_trusted_devices">Trusted devices</string>
     <string name="screen_name_trusted_network">Trusted network</string>
     <string name="screen_name_update_security_question">Update security question</string>
+    <string name="invalid_otp_with_characters">OTP must contain only digits</string>
 </resources>

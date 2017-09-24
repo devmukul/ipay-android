@@ -37,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationTrustFragment extends BaseFragmentV4 implements HttpResponseListener {
@@ -177,24 +178,12 @@ public class OTPVerificationTrustFragment extends BaseFragmentV4 implements Http
         if (mLoginTask != null) {
             return;
         }
-
-        boolean cancel = false;
-        View focusView = null;
-
-        if (mOTPEditText.getText().toString().trim().length() == 0) {
-            mOTPEditText.setError(getString(R.string.error_invalid_otp));
-            focusView = mOTPEditText;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-
+        String otp = mOTPEditText.getText().toString().trim();
+        String errorMessage = InputValidator.isValidOTP(getActivity(), otp);
+        if (errorMessage!=null) {
+            mOTPEditText.requestFocus();
+            mOTPEditText.setError(errorMessage);
         } else {
-            String otp = mOTPEditText.getText().toString().trim();
-
             mProgressDialog.show();
 
             LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,

@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.InvalidInputResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -177,17 +178,10 @@ public class OTPVerificationBusinessFragment extends BaseFragmentV4 implements H
         View focusView = null;
 
         String otp = mOTPEditText.getText().toString().trim();
-
-        if (otp.length() == 0) {
-            mOTPEditText.setError(getActivity().getString(R.string.error_invalid_otp));
-            focusView = mOTPEditText;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
+        String errorMessage = InputValidator.isValidOTP(getActivity(), otp);
+        if (errorMessage!=null) {
+            mOTPEditText.requestFocus();
+            mOTPEditText.setError(errorMessage);
         } else {
             mProgressDialog.show();
 
