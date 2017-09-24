@@ -18,17 +18,18 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActi
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SetPinFragment extends BaseFragmentV4 implements HttpResponseListener {
+public class SetPinFragment extends BaseFragment implements HttpResponseListener {
     private HttpRequestPutAsyncTask mSavePINTask = null;
     private SetPinResponse mSetPinResponse;
 
@@ -148,18 +149,18 @@ public class SetPinFragment extends BaseFragmentV4 implements HttpResponseListen
                         Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
                     ((SecuritySettingsActivity) getActivity()).switchToAccountSettingsFragment();
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker, "SetPin", "Succeed", mSetPinResponse.getMessage());
+                    Utilities.sendSuccessEventTracker(mTracker, "Pin Set", ProfileInfoCacheManager.getAccountId(), 100);
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mSetPinResponse.getMessage());
-
+                    Utilities.sendBlockedEventTracker(mTracker, "Pin Set", ProfileInfoCacheManager.getAccountId(), 0);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker, "SetPin", "Failed", mSetPinResponse.getMessage());
+                    Utilities.sendFailedEventTracker(mTracker, "Pin Set", ProfileInfoCacheManager.getAccountId(), mSetPinResponse.getMessage(), 0);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -167,7 +168,7 @@ public class SetPinFragment extends BaseFragmentV4 implements HttpResponseListen
                     Toaster.makeText(getActivity(), R.string.save_failed, Toast.LENGTH_LONG);
 
                 //Google Analytic event
-                Utilities.sendEventTracker(mTracker, "SetPin", "Failed", getString(R.string.save_failed));
+                Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }
 
             mProgressDialog.dismiss();

@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMo
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -73,7 +74,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_add_money_review) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_add_money_review));
     }
 
     @Override
@@ -237,22 +238,23 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
                     getActivity().finish();
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker, "AddMoney", "Success", "Money Added successful.");
+                    Utilities.sendSuccessEventTracker(mTracker, "Add Money", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mAddMoneyResponse.getMessage());
-
+                    Utilities.sendBlockedEventTracker(mTracker, "Add Money", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_LONG);
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"AddMoney", "Failed", mAddMoneyResponse.getMessage());
+                    Utilities.sendFailedEventTracker(mTracker, "Add Money", ProfileInfoCacheManager.getAccountId(), mAddMoneyResponse.getMessage(), Double.valueOf(mAmount).longValue());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG);
+                Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }
 
 

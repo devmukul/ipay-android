@@ -24,11 +24,12 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.AddTrustedPersonRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.AddTrustedPersonResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
@@ -36,26 +37,22 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AddTrustedPersonFragment extends BaseFragmentV4 implements HttpResponseListener {
+public class AddTrustedPersonFragment extends BaseFragment implements HttpResponseListener {
 
+    private final int PICK_CONTACT_REQUEST = 100;
     private HttpRequestPostAsyncTask mAddTrustedPersonTask = null;
     private AddTrustedPersonResponse mAddTrustedPersonResponse = null;
-
     private EditText mEditTextName;
     private EditText mEditTextMobileNumber;
     private EditText mEditTextRelationship;
     private ImageView mSelectContactButton;
     private Button mAddButton;
-
     private ResourceSelectorDialog mResourceSelectorDialog;
     private ProgressDialog mProgressDialog;
-
     private String mName;
     private String mRelationship;
     private String mMobileNumber;
-
     private int mSelectedRelationId = -1;
-    private final int PICK_CONTACT_REQUEST = 100;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,7 +122,7 @@ public class AddTrustedPersonFragment extends BaseFragmentV4 implements HttpResp
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_add_trusted_person) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_add_trusted_person));
     }
 
     @Override
@@ -212,13 +209,13 @@ public class AddTrustedPersonFragment extends BaseFragmentV4 implements HttpResp
                     ((SecuritySettingsActivity) getActivity()).switchToTrustedPersonFragment();
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"AddTrustedPerson", "Succeed", mAddTrustedPersonResponse.getMessage());
+                    Utilities.sendSuccessEventTracker(mTracker, getString(R.string.screen_name_add_trusted_person), ProfileInfoCacheManager.getAccountId(), 100);
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"AddTrustedPerson", "Failed", mAddTrustedPersonResponse.getMessage());
+                    Utilities.sendFailedEventTracker(mTracker, getString(R.string.screen_name_add_trusted_person), ProfileInfoCacheManager.getAccountId(), mAddTrustedPersonResponse.getMessage(), 0);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -226,7 +223,7 @@ public class AddTrustedPersonFragment extends BaseFragmentV4 implements HttpResp
                     Toaster.makeText(getActivity(), R.string.failed_adding_trusted_person, Toast.LENGTH_LONG);
 
                 //Google Analytic event
-                Utilities.sendEventTracker(mTracker,"AddTrustedPerson", "Succeed", getString(R.string.failed_adding_trusted_person));
+                Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }
 
             mAddTrustedPersonTask = null;

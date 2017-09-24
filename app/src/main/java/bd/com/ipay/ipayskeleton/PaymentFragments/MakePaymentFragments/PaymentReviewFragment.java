@@ -29,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentReque
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -75,7 +76,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_make_payment_review) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_make_payment_review));
     }
 
 
@@ -256,20 +257,24 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                     getActivity().setResult(Activity.RESULT_OK);
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"MakePayment", "Success", mPaymentResponse.getMessage());
+                    Utilities.sendSuccessEventTracker(mTracker, "Make Payment", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
 
                     getActivity().finish();
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     ((MyApplication) getActivity().getApplication()).launchLoginPage(mPaymentResponse.getMessage());
+                    Utilities.sendBlockedEventTracker(mTracker, "Make Payment", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
+
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG);
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"MakePayment", "Failed", mPaymentResponse.getMessage());
+                    Utilities.sendFailedEventTracker(mTracker, "Make Payment", ProfileInfoCacheManager.getAccountId(), mPaymentResponse.getMessage(), mAmount.longValue());
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }
 
             mProgressDialog.dismiss();

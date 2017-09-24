@@ -23,11 +23,10 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.EditTextWithProgressBar;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Bank;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranch;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranchRequestBuilder;
@@ -40,29 +39,25 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class LinkBankFragment extends BaseFragmentV4 implements HttpResponseListener {
+public class LinkBankFragment extends BaseFragment implements HttpResponseListener {
 
-    private final String STARTED_FROM_PROFILE_ACTIVITY = "started_from_profile_activity";
+    private static final String STARTED_FROM_PROFILE_ACTIVITY = "started_from_profile_activity";
 
     private HttpRequestGetAsyncTask mGetBankBranchesTask = null;
-    private GetBankBranchesResponse mGetBankBranchesResponse;
 
     private ProgressDialog mProgressDialog;
-    private List<UserBankClass> mListUserBankClasses;
 
     // Contains a list of bank branch corresponding to each district
     private Map<String, ArrayList<BankBranch>> bankDistrictToBranchMap;
     private ArrayList<String> mDistrictNames;
     private ArrayList<BankBranch> mBranches;
     private ArrayList<String> mBranchNames;
-    private ArrayList<Bank> bankNames;
 
     private EditText mBankListSelection;
     private EditText mDistrictSelection;
     private EditText mBankBranchSelection;
     private EditText mAccountNameEditText;
     private EditText mAccountNumberEditText;
-    private Button addBank;
     private EditTextWithProgressBar mBankBranchEditTextProgressBar;
 
     private ResourceSelectorDialog<Bank> bankSelectorDialog;
@@ -70,7 +65,6 @@ public class LinkBankFragment extends BaseFragmentV4 implements HttpResponseList
     private CustomSelectorDialog bankBranchSelectorDialog;
 
     private String mSelectedBankName;
-    private String mBankAccountNumber;
     private int mSelectedBranchId = -1;
     private int mSelectedBankId = -1;
     private int mSelectedDistrictId = -1;
@@ -92,16 +86,16 @@ public class LinkBankFragment extends BaseFragmentV4 implements HttpResponseList
         mDistrictNames = new ArrayList<>();
         mBranches = new ArrayList<>();
         mBranchNames = new ArrayList<>();
-        bankNames = new ArrayList<>();
+        List<Bank> bankNames = new ArrayList<>();
         if (CommonData.getAvailableBanks() != null)
-            bankNames.addAll((ArrayList) CommonData.getAvailableBanks());
+            bankNames.addAll(CommonData.getAvailableBanks());
 
         mProgressDialog = new ProgressDialog(getActivity());
         mBankListSelection = (EditText) v.findViewById(R.id.default_bank_accounts);
         mDistrictSelection = (EditText) v.findViewById(R.id.branch_districts);
         mAccountNameEditText = (EditText) v.findViewById(R.id.bank_account_name);
         mAccountNumberEditText = (EditText) v.findViewById(R.id.bank_account_number);
-        addBank = (Button) v.findViewById(R.id.button_add_bank);
+        Button addBank = (Button) v.findViewById(R.id.button_add_bank);
         mBankBranchEditTextProgressBar = (EditTextWithProgressBar) v.findViewById(R.id.editText_with_progressBar_branch);
         mBankBranchSelection = mBankBranchEditTextProgressBar.getEditText();
 
@@ -142,7 +136,7 @@ public class LinkBankFragment extends BaseFragmentV4 implements HttpResponseList
         mDistrictNames = ((ManageBanksActivity) getActivity()).mDistrictNames;
         mBranches = ((ManageBanksActivity) getActivity()).mBranches;
         mBranchNames = ((ManageBanksActivity) getActivity()).mBranchNames;
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_link_bank) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_link_bank));
     }
 
     private void setBankAdapter(List<Bank> bankList) {
@@ -250,12 +244,12 @@ public class LinkBankFragment extends BaseFragmentV4 implements HttpResponseList
 
     private void launchAddBankAgreementPage() {
         BankBranch bankBranch = mBranches.get(mSelectedBranchId);
-        mBankAccountNumber = mAccountNumberEditText.getText().toString().trim();
+        String bankAccountNumber = mAccountNumberEditText.getText().toString().trim();
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.BANK_NAME, mSelectedBankName);
         bundle.putParcelable(Constants.BANK_BRANCH, bankBranch);
-        bundle.putString(Constants.BANK_ACCOUNT_NUMBER, mBankAccountNumber);
+        bundle.putString(Constants.BANK_ACCOUNT_NUMBER, bankAccountNumber);
         bundle.putBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION, startedFromProfileCompletion);
 
         ((ManageBanksActivity) getActivity()).switchToAddBankAgreementFragment(bundle);
@@ -292,13 +286,13 @@ public class LinkBankFragment extends BaseFragmentV4 implements HttpResponseList
             case Constants.COMMAND_GET_BANK_BRANCH_LIST:
 
                 try {
-                    mGetBankBranchesResponse = gson.fromJson(result.getJsonString(), GetBankBranchesResponse.class);
+                    GetBankBranchesResponse getBankBranchesResponse = gson.fromJson(result.getJsonString(), GetBankBranchesResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mDistrictNames.clear();
 
                         bankDistrictToBranchMap = new HashMap<>();
 
-                        for (BankBranch branch : mGetBankBranchesResponse.getAvailableBranches()) {
+                        for (BankBranch branch : getBankBranchesResponse.getAvailableBranches()) {
                             if (!bankDistrictToBranchMap.containsKey(branch.getDistrict())) {
                                 bankDistrictToBranchMap.put(branch.getDistrict(), new ArrayList<BankBranch>());
                                 mDistrictNames.add(branch.getDistrict());
@@ -311,7 +305,7 @@ public class LinkBankFragment extends BaseFragmentV4 implements HttpResponseList
 
                     } else {
                         if (getActivity() != null)
-                            Toaster.makeText(getActivity(), mGetBankBranchesResponse.getMessage(), Toast.LENGTH_LONG);
+                            Toaster.makeText(getActivity(), getBankBranchesResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

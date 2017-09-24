@@ -16,13 +16,14 @@ import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
@@ -40,7 +41,7 @@ import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class OTPVerificationTrustFragment extends BaseFragmentV4 implements HttpResponseListener {
+public class OTPVerificationTrustFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mLoginTask = null;
     private LoginResponse mLoginResponseModel;
@@ -119,7 +120,7 @@ public class OTPVerificationTrustFragment extends BaseFragmentV4 implements Http
         new CustomCountDownTimer(SignupOrLoginActivity.otpDuration, 500) {
 
             public void onTick(long millisUntilFinished) {
-                mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
+                mTimerTextView.setText(new SimpleDateFormat("mm:ss", Locale.getDefault()).format(new Date(millisUntilFinished)));
             }
 
             public void onFinish() {
@@ -241,6 +242,8 @@ public class OTPVerificationTrustFragment extends BaseFragmentV4 implements Http
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         hideProgressDialog();
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        Utilities.sendBlockedEventTracker(mTracker, "Trusted Device", ProfileInfoCacheManager.getAccountId(),0);
+
                         getActivity().finish();
                     } else {
                         hideProgressDialog();
@@ -275,7 +278,7 @@ public class OTPVerificationTrustFragment extends BaseFragmentV4 implements Http
                         new CustomCountDownTimer(SignupOrLoginActivity.otpDuration, 500) {
 
                             public void onTick(long millisUntilFinished) {
-                                mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
+                                mTimerTextView.setText(new SimpleDateFormat("mm:ss", Locale.getDefault()).format(new Date(millisUntilFinished)));
                             }
 
                             public void onFinish() {
@@ -302,23 +305,29 @@ public class OTPVerificationTrustFragment extends BaseFragmentV4 implements Http
                         String UUID = mAddToTrustedDeviceResponse.getUUID();
                         ProfileInfoCacheManager.setUUID(UUID);
 
+                        //Google Analytic event
+                        Utilities.sendSuccessEventTracker(mTracker, "Login to Home", ProfileInfoCacheManager.getAccountId(), 100);
                         // Launch HomeActivity from here on successful trusted device add
                         ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
                         ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
-                    else
+
+                        //Google Analytic event
+                        Utilities.sendSuccessEventTracker(mTracker, "Login to Add Trusted Device", ProfileInfoCacheManager.getAccountId(), 100);
+                    } else {
                         Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
 
-                    //Google Analytic event
-                    Utilities.sendEventTracker(mTracker, "Login", "ToHome", "Login successful. Navigate to home page.");
+                        //Google Analytic event
+                        Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), mAddToTrustedDeviceResponse.getMessage(), 0);
+                    }
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
 
-
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker, "Login", "Failed", getString(R.string.failed_add_trusted_device));
+                    Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), getString(R.string.failed_add_trusted_device), 0);
                 }
 
                 mProgressDialog.dismiss();

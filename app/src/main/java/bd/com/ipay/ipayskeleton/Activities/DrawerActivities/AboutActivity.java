@@ -7,8 +7,6 @@ import android.view.MenuItem;
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AboutContactsFragment;
 import bd.com.ipay.ipayskeleton.DrawerFragments.AboutFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.AboutPrivacyFragment;
-import bd.com.ipay.ipayskeleton.DrawerFragments.AboutTermsandServicesFragment;
 import bd.com.ipay.ipayskeleton.R;
 
 public class AboutActivity extends BaseActivity {
@@ -28,8 +26,7 @@ public class AboutActivity extends BaseActivity {
             if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                 getSupportFragmentManager().popBackStack();
                 setTitle(R.string.about);
-            }
-            else {
+            } else {
                 finish();
             }
             return true;
@@ -37,6 +34,7 @@ public class AboutActivity extends BaseActivity {
             return super.onOptionsItemSelected(item);
         }
     }
+
     private void switchToAboutFragment() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new AboutFragment()).commit();
@@ -47,25 +45,15 @@ public class AboutActivity extends BaseActivity {
                 new AboutContactsFragment()).addToBackStack(null).commit();
     }
 
-    public void switchToAboutTermsandServicesFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new AboutTermsandServicesFragment()).addToBackStack(null).commit();
-    }
-
-    public void switchToAboutPrivacyFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new AboutPrivacyFragment()).addToBackStack(null).commit();
-    }
-
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
             setTitle(R.string.about);
-        }
-        else
+        } else
             super.onBackPressed();
     }
+
     @Override
     public Context setContext() {
         return AboutActivity.this;

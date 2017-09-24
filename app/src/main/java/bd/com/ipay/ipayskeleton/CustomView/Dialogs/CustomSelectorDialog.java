@@ -90,11 +90,27 @@ public class CustomSelectorDialog extends AlertDialog {
         });
     }
 
+    public void setOnResourceSelectedListener(OnResourceSelectedListener onResourceSelectedListener) {
+        this.onResourceSelectedListener = onResourceSelectedListener;
+    }
+
+    public void setOnResourceSelectedListenerWithSelectedPosition(OnResourceSelectedListenerWithPosition mOnResourceSelectedListenerWithSelectedPosition) {
+        this.mOnResourceSelectedListenerWithSelectedPosition = mOnResourceSelectedListenerWithSelectedPosition;
+    }
+
+    public interface OnResourceSelectedListener {
+        void onResourceSelected(int id, String name);
+    }
+
+    public interface OnResourceSelectedListenerWithPosition {
+        void onResourceSelectedWithPosition(int id, String name, int selectedIndex);
+    }
+
     private class SelectorAdapter extends BaseAdapter {
 
-        private LayoutInflater inflater;
         @NonNull
         List<String> itemList = new ArrayList<>();
+        private LayoutInflater inflater;
 
         SelectorAdapter(Context context, @Nullable List<String> itemList) {
             if (itemList != null) {
@@ -134,8 +150,6 @@ public class CustomSelectorDialog extends AlertDialog {
             return view;
         }
 
-        @Nullable
-        @Override
         public CharSequence[] getAutofillOptions() {
             CharSequence[] autoFillOptions = new CharSequence[itemList.size()];
             for (int i = 0; i < itemList.size(); i++) {
@@ -143,22 +157,5 @@ public class CustomSelectorDialog extends AlertDialog {
             }
             return autoFillOptions;
         }
-    }
-
-
-    public void setOnResourceSelectedListener(OnResourceSelectedListener onResourceSelectedListener) {
-        this.onResourceSelectedListener = onResourceSelectedListener;
-    }
-
-    public void setOnResourceSelectedListenerWithSelectedPosition(OnResourceSelectedListenerWithPosition mOnResourceSelectedListenerWithSelectedPosition) {
-        this.mOnResourceSelectedListenerWithSelectedPosition = mOnResourceSelectedListenerWithSelectedPosition;
-    }
-
-    public interface OnResourceSelectedListener {
-        void onResourceSelected(int id, String name);
-    }
-
-    public interface OnResourceSelectedListenerWithPosition {
-        void onResourceSelectedWithPosition(int id, String name, int selectedIndex);
     }
 }
