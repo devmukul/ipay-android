@@ -18,7 +18,7 @@ public class InputValidator {
             INVALID_DRIVING_LICENSE_ID_WITH_INSUFFICIENT_LENGTH_PATTERN = "[A-Z]{2}[0-9]{0,7}|[A-Z]{1}|[A-Z]{2}[0-9]{7}[A-Z]{1,2}|" +
             "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{1,4}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{1,3}";
     private static final String VALID_DRIVING_LICENSE_ID_PATTERN = "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{5}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{4}";
-    private static final String ALPHA_NUMERIC_PATTERN="^[a-zA-Z0-9]*$";
+    private static final String ALPHA_NUMERIC_PATTERN = "^[a-zA-Z0-9]*$";
 
     public static String isPasswordValid(String password) {
         // Return empty string if the password is valid
@@ -90,6 +90,8 @@ public class InputValidator {
             errorMessage = context.getString(R.string.error_invalid_otp);
         else if (otp.length() != 6)
             errorMessage = context.getString(R.string.error_invalid_otp_with_required_length);
+        else if (!otp.matches("^[0-9]*$"))
+            errorMessage = context.getString(R.string.invalid_otp_with_characters);
         return errorMessage;
     }
 
@@ -123,12 +125,12 @@ public class InputValidator {
                         errorMessage = context.getString(R.string.invalid_driving_license_ID);
                     break;
                 case Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE:
-                    if(!documentID.matches(ALPHA_NUMERIC_PATTERN))
-                        errorMessage=context.getString(R.string.invalid_birth_certificate);
+                    if (!documentID.matches(ALPHA_NUMERIC_PATTERN))
+                        errorMessage = context.getString(R.string.invalid_birth_certificate);
                     break;
                 case Constants.DOCUMENT_TYPE_TIN:
-                    if(!documentID.matches(ALPHA_NUMERIC_PATTERN))
-                        errorMessage=context.getString(R.string.invalid_tin);
+                    if (!documentID.matches(ALPHA_NUMERIC_PATTERN))
+                        errorMessage = context.getString(R.string.invalid_tin);
                     break;
             }
         }

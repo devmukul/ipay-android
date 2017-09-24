@@ -13,6 +13,7 @@
     <string name="mobile_android">mobile-android-</string>
     <string name="no_iPay_account">The user doesn\'t have an iPay account</string>
     <string name="enter_OTP_sent_to_your_mobile">Enter OTP sent to your mobile</string>
+    <string name="invalid_otp_with_characters">OTP must contain only digits</string>
     <string name="enter">Please enter your</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
