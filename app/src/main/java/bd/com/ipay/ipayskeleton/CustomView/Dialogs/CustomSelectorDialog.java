@@ -158,21 +158,4 @@ public class CustomSelectorDialog extends AlertDialog {
             return autoFillOptions;
         }
     }
-
-
-    public void setOnResourceSelectedListener(OnResourceSelectedListener onResourceSelectedListener) {
-        this.onResourceSelectedListener = onResourceSelectedListener;
-    }
-
-    public void setOnResourceSelectedListenerWithSelectedPosition(OnResourceSelectedListenerWithPosition mOnResourceSelectedListenerWithSelectedPosition) {
-        this.mOnResourceSelectedListenerWithSelectedPosition = mOnResourceSelectedListenerWithSelectedPosition;
-    }
-
-    public interface OnResourceSelectedListener {
-        void onResourceSelected(int id, String name);
-    }
-
-    public interface OnResourceSelectedListenerWithPosition {
-        void onResourceSelectedWithPosition(int id, String name, int selectedIndex);
-    }
 }
