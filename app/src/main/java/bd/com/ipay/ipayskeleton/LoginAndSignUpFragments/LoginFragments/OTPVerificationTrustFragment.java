@@ -180,7 +180,7 @@ public class OTPVerificationTrustFragment extends BaseFragmentV4 implements Http
         }
         String otp = mOTPEditText.getText().toString().trim();
         String errorMessage = InputValidator.isValidOTP(getActivity(), otp);
-        if (errorMessage!=null) {
+        if (errorMessage != null) {
             mOTPEditText.requestFocus();
             mOTPEditText.setError(errorMessage);
         } else {

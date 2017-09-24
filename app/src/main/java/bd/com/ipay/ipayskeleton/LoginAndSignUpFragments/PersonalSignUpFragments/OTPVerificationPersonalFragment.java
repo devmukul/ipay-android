@@ -190,7 +190,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
         String otp = mOTPEditText.getText().toString().trim();
         String errorMessage = InputValidator.isValidOTP(getActivity(), otp);
-        if (errorMessage!=null) {
+        if (errorMessage != null) {
             mOTPEditText.requestFocus();
             mOTPEditText.setError(errorMessage);
         } else {
