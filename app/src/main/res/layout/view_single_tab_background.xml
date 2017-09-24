@@ -19,6 +19,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:ellipsize="marquee"
+        android:maxLines="1"
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_size_extra_smaller" />
 </LinearLayout>
