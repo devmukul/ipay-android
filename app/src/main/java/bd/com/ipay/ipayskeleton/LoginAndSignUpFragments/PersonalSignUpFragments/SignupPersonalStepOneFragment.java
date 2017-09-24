@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.InvalidInputResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SignupPersonalStepOneFragment extends Fragment implements HttpResponseListener {
@@ -84,7 +85,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
             mMaleCheckBox.setTextColor((Color.WHITE));
         if (mFemaleCheckBox.isChecked())
             mFemaleCheckBox.setTextColor((Color.WHITE));
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_personal_signup_step_1) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_personal_signup_step_1));
     }
 
     @Override
@@ -328,7 +329,7 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 SignupOrLoginActivity.otpDuration = mOtpResponsePersonalSignup.getOtpValidFor();
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
                 //Google Analytic event
-                Utilities.sendEventTracker(mTracker,"SignUp", "toOTP", "Signup complete for personal account. Navigate to OTP for mobile verification");
+                Utilities.sendEventTracker(mTracker, "SignUp", "toOTP", "Signup complete for personal account. Navigate to OTP for mobile verification");
 
             } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                 if (getActivity() != null)
@@ -338,11 +339,17 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 SignupOrLoginActivity.otpDuration = mOtpResponsePersonalSignup.getOtpValidFor();
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
 
+            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
+                InvalidInputResponse invalidInputResponse = gson.fromJson(result.getJsonString(), InvalidInputResponse.class);
+                String[] errorFields = invalidInputResponse.getErrorFieldNames();
+                String errorMessage = invalidInputResponse.getMessage();
+                Toast.makeText(getActivity(),
+                        Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), Toast.LENGTH_LONG).show();
             } else {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                 //Google Analytic event
-                Utilities.sendEventTracker(mTracker,"SignUp", "Failed", message);
+                Utilities.sendEventTracker(mTracker, "SignUp", "Failed", message);
             }
 
             mProgressDialog.dismiss();

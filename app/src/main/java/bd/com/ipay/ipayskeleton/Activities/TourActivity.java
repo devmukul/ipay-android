@@ -23,15 +23,14 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class TourActivity extends AppCompatActivity {
 
+    private final int[] tourBackgroundLayouts = {R.layout.tour_first_page, R.layout.tour_second_page,
+            R.layout.tour_third_page, R.layout.tour_fourth_page};
     private ViewPager tourPager;
     private TourPagerAdapter mAdapter;
     private ArrayList<Fragment> fragments;
     private Button buttonLogin;
     private Button buttonSignUp;
     private PagerIndicator mPagerIndicator;
-
-    private final int[] tourBackgroundLayouts = {R.layout.tour_first_page, R.layout.tour_second_page,
-            R.layout.tour_third_page, R.layout.tour_fourth_page};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,17 +115,11 @@ public class TourActivity extends AppCompatActivity {
 
     public static class TourFragment extends Fragment {
 
-        private boolean isLast = false;
         private int layout;
-
-        private void setIsLast(boolean last) {
-            this.isLast = last;
-        }
 
         public static TourFragment getInstance(int layout, boolean isLast) {
             TourFragment fragment = new TourFragment();
             fragment.setLayout(layout);
-            fragment.setIsLast(isLast);
             return fragment;
         }
 
@@ -139,7 +132,11 @@ public class TourActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            return inflater.inflate(layout, null);
+            try {
+                return inflater.inflate(layout, container, false);
+            } catch (Exception e) {
+                return container;
+            }
         }
     }
 
