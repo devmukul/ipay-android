@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.InputFilter;
@@ -56,10 +57,8 @@ public class AddMoneyFragment extends BaseFragment implements HttpResponseListen
     private static final int ADD_MONEY_REVIEW_REQUEST = 101;
 
     private HttpRequestGetAsyncTask mGetBankTask = null;
-    private GetBankListResponse mBankListResponse;
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
-    private Button buttonAddMoney;
     private TextView mBankNameTextView;
     private TextView mBankBranchTextView;
     private TextView mBankAccountTextView;
@@ -70,7 +69,7 @@ public class AddMoneyFragment extends BaseFragment implements HttpResponseListen
     private ImageView mBankIcon;
     private List<UserBankClass> mListUserBankClasses;
     private ArrayList<String> mUserBankNameList;
-    private ArrayList<String> mUserBankAccountNumberList;
+
     private ArrayList<String> mUserBankList;
     private int[] mBankIconArray;
     private int selectedBankPosition = 0;
@@ -87,7 +86,7 @@ public class AddMoneyFragment extends BaseFragment implements HttpResponseListen
         mBankAccountNumberHintTextView = (TextView) v.findViewById(R.id.bank_account_number_hint);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
-        buttonAddMoney = (Button) v.findViewById(R.id.button_cash_in);
+        Button buttonAddMoney = (Button) v.findViewById(R.id.button_cash_in);
         mLinkABankNoteTextView = (TextView) v.findViewById(R.id.link_a_bank_note);
         mBankIcon = (ImageView) v.findViewById(R.id.portrait);
 
@@ -97,7 +96,6 @@ public class AddMoneyFragment extends BaseFragment implements HttpResponseListen
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
         mUserBankNameList = new ArrayList<>();
-        mUserBankAccountNumberList = new ArrayList<>();
         mUserBankList = new ArrayList<>();
 
         // Block from adding bank if an user is not verified
@@ -161,7 +159,7 @@ public class AddMoneyFragment extends BaseFragment implements HttpResponseListen
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_add_money) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_add_money));
     }
 
     private void showGetVerifiedDialog() {
@@ -255,12 +253,12 @@ public class AddMoneyFragment extends BaseFragment implements HttpResponseListen
             mAmountEditText.setError(getString(R.string.please_enter_amount));
             cancel = true;
         } else if ((mAmountEditText.getText().toString().trim().length() > 0)
-                && Utilities.isValueAvailable(((AddMoneyActivity) getActivity()).mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                && Utilities.isValueAvailable(((AddMoneyActivity) getActivity()).mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+                && Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                && Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
 
             String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                    ((AddMoneyActivity) getActivity()).mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                    ((AddMoneyActivity) getActivity()).mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+                    AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                    AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
             if (error_message != null) {
                 focusView = mAmountEditText;
@@ -329,7 +327,13 @@ public class AddMoneyFragment extends BaseFragment implements HttpResponseListen
                 mBankAccountTextView.setVisibility(View.VISIBLE);
                 mBankAccountNumberHintTextView.setVisibility(View.VISIBLE);
                 mBankIcon.setVisibility(View.VISIBLE);
-                Drawable icon = getResources().getDrawable(mListUserBankClasses.get(selectedBankPosition).getBankIcon(getActivity()));
+                Drawable icon;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    icon = getResources().getDrawable(mListUserBankClasses.get(selectedBankPosition).getBankIcon(getActivity()), getActivity().getTheme());
+                } else {
+                    //noinspection deprecation
+                    icon = getResources().getDrawable(mListUserBankClasses.get(selectedBankPosition).getBankIcon(getActivity()));
+                }
                 mBankIcon.setImageDrawable(icon);
 
                 mBankNameTextView.setText(mListUserBankClasses.get(selectedBankPosition).getBankName());
@@ -360,7 +364,7 @@ public class AddMoneyFragment extends BaseFragment implements HttpResponseListen
         if (result.getApiCommand().equals(Constants.COMMAND_GET_BANK_LIST)) {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 try {
-                    mBankListResponse = gson.fromJson(result.getJsonString(), GetBankListResponse.class);
+                    GetBankListResponse mBankListResponse = gson.fromJson(result.getJsonString(), GetBankListResponse.class);
 
                     mListUserBankClasses = new ArrayList<>();
 
@@ -382,7 +386,6 @@ public class AddMoneyFragment extends BaseFragment implements HttpResponseListen
 
                         for (int i = 0; i < mListUserBankClasses.size(); i++) {
                             mUserBankNameList.add(mListUserBankClasses.get(i).getBankName());
-                            mUserBankAccountNumberList.add(mListUserBankClasses.get(i).getAccountNumber());
                             mUserBankList.add(mListUserBankClasses.get(i).getBankName() + "\n" + mListUserBankClasses.get(i).getBranchName() + "\n" + mListUserBankClasses.get(i).getAccountNumber());
                             int icon = mListUserBankClasses.get(i).getBankIcon(getActivity());
                             mBankIconArray[i] = icon;
@@ -394,7 +397,14 @@ public class AddMoneyFragment extends BaseFragment implements HttpResponseListen
                         mBankAccountTextView.setVisibility(View.VISIBLE);
                         mBankAccountNumberHintTextView.setVisibility(View.VISIBLE);
                         mBankIcon.setVisibility(View.VISIBLE);
-                        Drawable icon = getResources().getDrawable(mListUserBankClasses.get(selectedBankPosition).getBankIcon(getActivity()));
+                        Drawable icon;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            icon = getResources().getDrawable(mListUserBankClasses.get(selectedBankPosition).getBankIcon(getActivity()), getActivity().getTheme());
+                        } else {
+                            //noinspection deprecation
+                            icon = getResources().getDrawable(mListUserBankClasses.get(selectedBankPosition).getBankIcon(getActivity()));
+                        }
+
                         mBankIcon.setImageDrawable(icon);
 
                         mBankNameTextView.setText(mListUserBankClasses.get(selectedBankPosition).getBankName());
@@ -427,10 +437,10 @@ public class AddMoneyFragment extends BaseFragment implements HttpResponseListen
 
                     for (BusinessRule rule : businessRuleArray) {
                         if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                            ((AddMoneyActivity) getActivity()).mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            AddMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
 
                         } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                            ((AddMoneyActivity) getActivity()).mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            AddMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                         }
                     }
 

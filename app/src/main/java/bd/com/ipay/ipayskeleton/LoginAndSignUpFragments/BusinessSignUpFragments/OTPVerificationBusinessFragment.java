@@ -21,7 +21,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
@@ -41,7 +41,7 @@ import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InvalidInputResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class OTPVerificationBusinessFragment extends BaseFragmentV4 implements HttpResponseListener {
+public class OTPVerificationBusinessFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSignUpTask = null;
     private SignupResponseBusiness mSignupResponseBusiness;
@@ -274,7 +274,7 @@ public class OTPVerificationBusinessFragment extends BaseFragmentV4 implements H
 //                ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
 
                         //Google Analytic event
-                        Utilities.sendEventTracker(mTracker, "BusinessSignUp", "Succeed", "Signup complete for Business.");
+                        Utilities.sendSuccessEventTracker(mTracker, "Business Signup", ProfileInfoCacheManager.getAccountId(), 100);
 
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
@@ -284,17 +284,21 @@ public class OTPVerificationBusinessFragment extends BaseFragmentV4 implements H
                         if (errorFields != null) {
                             Toast.makeText(getActivity(),
                                     Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), Toast.LENGTH_LONG).show();
-                        } else
+                            Utilities.sendFailedEventTracker(mTracker, "Business Signup", ProfileInfoCacheManager.getAccountId(), Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), 0);
+                        } else {
                             Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-
+                            Utilities.sendFailedEventTracker(mTracker, "Business Signup", ProfileInfoCacheManager.getAccountId(), errorMessage, 0);
+                        }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        Utilities.sendBlockedEventTracker(mTracker, "OTP", ProfileInfoCacheManager.getAccountId(), 0);
+
                         getActivity().finish();
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                         //Google Analytic event
-                        Utilities.sendEventTracker(mTracker, "BusinessSignUp", "Failed", message);
+                        Utilities.sendFailedEventTracker(mTracker, "Business Signup", ProfileInfoCacheManager.getAccountId(), message, 0);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

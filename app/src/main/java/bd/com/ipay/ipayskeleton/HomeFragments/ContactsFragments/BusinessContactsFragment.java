@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
@@ -27,13 +27,12 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class BusinessContactsFragment extends BaseFragmentV4 implements LoaderManager.LoaderCallbacks<Cursor>,
+public class BusinessContactsFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor>,
         SearchView.OnQueryTextListener {
 
     private static final int CONTACTS_QUERY_LOADER = 0;
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
 
     private SearchView mSearchView;
 
@@ -70,9 +69,9 @@ public class BusinessContactsFragment extends BaseFragmentV4 implements LoaderMa
         getLoaderManager().initLoader(CONTACTS_QUERY_LOADER, null, this).forceLoad();
 
         mEmptyContactsTextView = (TextView) v.findViewById(R.id.contact_list_empty);
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        final RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView = (RecyclerView) v.findViewById(R.id.contact_list);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
 
         mAdapter = new ContactListAdapter();
         mRecyclerView.setAdapter(mAdapter);
@@ -162,21 +161,68 @@ public class BusinessContactsFragment extends BaseFragmentV4 implements LoaderMa
         }
     }
 
-    public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int EMPTY_VIEW = 10;
         private static final int CONTACT_VIEW = 100;
 
-        public class EmptyViewHolder extends RecyclerView.ViewHolder {
-            public final TextView mEmptyDescription;
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            public EmptyViewHolder(View itemView) {
+            View v;
+
+            if (viewType == EMPTY_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_description, parent, false);
+                return new EmptyViewHolder(v);
+            } else {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_business_contact, parent, false);
+                return new ViewHolder(v);
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+
+                if (holder instanceof ViewHolder) {
+                    ViewHolder vh = (ViewHolder) holder;
+                    vh.bindView(position);
+                } else if (holder instanceof EmptyViewHolder) {
+                    EmptyViewHolder vh = (EmptyViewHolder) holder;
+                    vh.mEmptyDescription.setText(getString(R.string.no_contacts));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mCursor == null || mCursor.isClosed())
+                return 0;
+            else
+                return mCursor.getCount();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (getItemCount() == 0)
+                return EMPTY_VIEW;
+            else
+                return CONTACT_VIEW;
+        }
+
+        class EmptyViewHolder extends RecyclerView.ViewHolder {
+            final TextView mEmptyDescription;
+
+            EmptyViewHolder(View itemView) {
                 super(itemView);
                 mEmptyDescription = (TextView) itemView.findViewById(R.id.empty_description);
             }
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder {
             private final View itemView;
 
             private final TextView businessNameView;
@@ -232,53 +278,6 @@ public class BusinessContactsFragment extends BaseFragmentV4 implements LoaderMa
                 });
             }
 
-        }
-
-        @SuppressWarnings("UnnecessaryLocalVariable")
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View v;
-
-            if (viewType == EMPTY_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_description, parent, false);
-                return new EmptyViewHolder(v);
-            } else {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_business_contact, parent, false);
-                return new ViewHolder(v);
-            }
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            try {
-
-                if (holder instanceof ViewHolder) {
-                    ViewHolder vh = (ViewHolder) holder;
-                    vh.bindView(position);
-                } else if (holder instanceof EmptyViewHolder) {
-                    EmptyViewHolder vh = (EmptyViewHolder) holder;
-                    vh.mEmptyDescription.setText(getString(R.string.no_contacts));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            if (mCursor == null || mCursor.isClosed())
-                return 0;
-            else
-                return mCursor.getCount();
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (getItemCount() == 0)
-                return EMPTY_VIEW;
-            else
-                return CONTACT_VIEW;
         }
     }
 
