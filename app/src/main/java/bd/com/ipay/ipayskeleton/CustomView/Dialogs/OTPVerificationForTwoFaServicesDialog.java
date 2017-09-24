@@ -22,6 +22,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFaServiceAccomplishWithOTPResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFaServiceListWithOTPRequest;
 import bd.com.ipay.ipayskeleton.R;
@@ -174,6 +175,15 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPutAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_PUT_TWO_FA_SETTING, mUri, json, context);
             mHttpPutAsyncTask.mHttpResponseListener = this;
             mHttpPutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else if (mDesiredRequest.equals(Constants.COMMAND_SEND_MONEY)) {
+            mProgressDialog.setMessage(context.getString(R.string.change_password_progress));
+            mProgressDialog.show();
+            SendMoneyRequest sendMoneyRequest = gson.fromJson(json, SendMoneyRequest.class);
+            sendMoneyRequest.setOtp(mOTP);
+            json = gson.toJson(sendMoneyRequest);
+            mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY, mUri, json, context);
+            mHttpPostAsyncTask.mHttpResponseListener = this;
+            mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -206,7 +216,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             }
 
         } catch (Exception e) {
-            Toaster.makeText(context,twoFaServiceAccomplishWithOTPResponse.getMessage(),Toast.LENGTH_LONG);
+            Toaster.makeText(context, twoFaServiceAccomplishWithOTPResponse.getMessage(), Toast.LENGTH_LONG);
         }
     }
 }
