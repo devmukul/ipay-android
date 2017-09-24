@@ -43,10 +43,8 @@ public class SignupBusinessStepTwoFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_signup_business_step_two, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
-
         mBusinessNameView = (EditText) v.findViewById(R.id.business_name);
         mBusinessType = (EditText) v.findViewById(R.id.business_type);
-
         mNextButton = (Button) v.findViewById(R.id.business_again_next_button);
 
         mBusinessAddressView = (AddressInputSignUpView) v.findViewById(R.id.business_address);
@@ -70,7 +68,6 @@ public class SignupBusinessStepTwoFragment extends BaseFragment {
                 businessTypeResourceSelectorDialog.show();
             }
         });
-
 
         // Asynchronously load business types into the spinner
         GetBusinessTypesAsyncTask getBusinessTypesAsyncTask =
