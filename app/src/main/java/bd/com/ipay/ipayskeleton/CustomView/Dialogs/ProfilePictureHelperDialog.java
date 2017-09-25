@@ -39,10 +39,10 @@ public class ProfilePictureHelperDialog extends AlertDialog {
         selectImageHeaderTitle = (TextView) selectImageHeaderView.findViewById(R.id.textviewTitle);
         selectImageHeaderTitle.setText(mTitle);
 
+        setAppropriateProfilePictureHelperPhoto();
+
         this.setCustomTitle(selectImageHeaderView);
         this.setView(v);
-
-        setAppropriateProfilePictureHelperPhoto();
 
         setItems(resources, v);
     }
@@ -50,9 +50,9 @@ public class ProfilePictureHelperDialog extends AlertDialog {
     private void setAppropriateProfilePictureHelperPhoto() {
         if (ProfileInfoCacheManager.getGender() != null) {
             if (ProfileInfoCacheManager.getGender().equals(context.getString(R.string.male)))
-                mProfilePictureHelperView.setImageDrawable(context.getResources().getDrawable(R.drawable.profile_photo_instruction_male));
+                mProfilePictureHelperView.setImageDrawable(context.getResources().getDrawable(R.drawable.profile_pic_helper_male));
             else
-                mProfilePictureHelperView.setImageDrawable(context.getResources().getDrawable(R.drawable.profile_photo_instruction_female));
+                mProfilePictureHelperView.setImageDrawable(context.getResources().getDrawable(R.drawable.profile_pic_helper_female));
         }
     }
 

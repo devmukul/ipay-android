@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/value200"
             android:layout_below="@id/pro_pic_help_text_view"
-            android:src="@drawable/profile_photo_instruction_female" />
+            android:src="@drawable/profile_pic_helper_female" />
 
     </RelativeLayout>
 
