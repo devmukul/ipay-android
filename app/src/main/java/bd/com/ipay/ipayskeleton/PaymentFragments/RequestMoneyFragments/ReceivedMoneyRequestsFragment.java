@@ -103,12 +103,7 @@ public class ReceivedMoneyRequestsFragment extends ProgressFragment implements H
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        getMoneyRequestList(true);
-                    }
-                });
+                getMoneyRequestList(true);
             }
         });
 

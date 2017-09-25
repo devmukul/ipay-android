@@ -18,7 +18,7 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.CheckIfUserExistsRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.CheckIfUserExistsResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -28,7 +28,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
-public class SignupBusinessStepOneFragment extends BaseFragmentV4 implements HttpResponseListener {
+public class SignupBusinessStepOneFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mCheckIfUserExistsTask = null;
     private CheckIfUserExistsResponse mCheckIfUserExistsResponse;

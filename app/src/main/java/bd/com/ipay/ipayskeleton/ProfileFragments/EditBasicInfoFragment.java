@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,11 +20,12 @@ import com.google.gson.Gson;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetProfileInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetProfileInfoResponse;
@@ -35,32 +37,32 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EditBasicInfoFragment extends BaseFragmentV4 implements HttpResponseListener {
+public class EditBasicInfoFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSetProfileInfoTask = null;
-    private SetProfileInfoResponse mSetProfileInfoResponse;
 
     private ResourceSelectorDialog<Occupation> mOccupationTypeResourceSelectorDialog;
 
     private EditText mNameEditText;
     private EditText mDateOfBirthEditText;
+    private final DatePickerDialog.OnDateSetListener mDateSetListener =
+            new DatePickerDialog.OnDateSetListener() {
+                public void onDateSet(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+                    mDateOfBirthEditText.setText(
+                            String.format(Locale.getDefault(), Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year));
+                }
+            };
     private EditText mOccupationEditText;
     private EditText mOrganizationNameEditText;
     private CheckBox mFemaleCheckBox;
     private CheckBox mMaleCheckBox;
-    private Button mInfoSaveButton;
-
     private ProgressDialog mProgressDialog;
-
     private String mName = "";
-
     private DatePickerDialog mDatePickerDialog;
     private String mDateOfBirth = "";
-    private Date mDate;
-
     private String mGender = null;
     private String mOrganizationName;
-
     private int mOccupation = -1;
     private List<Occupation> mOccupationList;
 
@@ -81,7 +83,7 @@ public class EditBasicInfoFragment extends BaseFragmentV4 implements HttpRespons
         mOccupationList = bundle.getParcelableArrayList(Constants.OCCUPATION_LIST);
         mOrganizationName = bundle.getString(Constants.ORGANIZATION_NAME);
 
-        mInfoSaveButton = (Button) view.findViewById(R.id.button_save);
+        Button infoSaveButton = (Button) view.findViewById(R.id.button_save);
         mNameEditText = (EditText) view.findViewById(R.id.name);
         mDateOfBirthEditText = (EditText) view.findViewById(R.id.birthdayEditText);
         mOccupationEditText = (EditText) view.findViewById(R.id.occupationEditText);
@@ -90,8 +92,8 @@ public class EditBasicInfoFragment extends BaseFragmentV4 implements HttpRespons
         mFemaleCheckBox = (CheckBox) view.findViewById(R.id.checkBoxFemale);
         mProgressDialog = new ProgressDialog(getActivity());
 
-        mDate = Utilities.formatDateFromString(mDateOfBirth);
-        mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), mDate, mDateSetListener);
+        Date date = Utilities.formatDateFromString(mDateOfBirth);
+        mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), date, mDateSetListener);
 
         mDateOfBirthEditText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +122,7 @@ public class EditBasicInfoFragment extends BaseFragmentV4 implements HttpRespons
             }
         });
 
-        mInfoSaveButton.setOnClickListener(new View.OnClickListener() {
+        infoSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (verifyUserInputs()) {
@@ -141,7 +143,7 @@ public class EditBasicInfoFragment extends BaseFragmentV4 implements HttpRespons
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_basic_info_edit) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_basic_info_edit));
     }
 
     @Override
@@ -153,13 +155,25 @@ public class EditBasicInfoFragment extends BaseFragmentV4 implements HttpRespons
     private void setGenderCheckBoxTextColor(boolean maleCheckBoxChecked, boolean femaleCheckBoxChecked) {
         if (maleCheckBoxChecked)
             mMaleCheckBox.setTextColor((Color.WHITE));
-        else
-            mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+        else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary, getActivity().getTheme()));
+            } else {
+                //noinspection deprecation
+                mMaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+            }
+        }
 
         if (femaleCheckBoxChecked)
             mFemaleCheckBox.setTextColor((Color.WHITE));
-        else
-            mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+        else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary, getActivity().getTheme()));
+            } else {
+                //noinspection deprecation
+                mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+            }
+        }
     }
 
     private boolean verifyUserInputs() {
@@ -249,15 +263,6 @@ public class EditBasicInfoFragment extends BaseFragmentV4 implements HttpRespons
         }
     }
 
-    private final DatePickerDialog.OnDateSetListener mDateSetListener =
-            new DatePickerDialog.OnDateSetListener() {
-                public void onDateSet(DatePicker view, int year,
-                                      int monthOfYear, int dayOfMonth) {
-                    mDateOfBirthEditText.setText(
-                            String.format(Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year));
-                }
-            };
-
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
@@ -274,7 +279,7 @@ public class EditBasicInfoFragment extends BaseFragmentV4 implements HttpRespons
             case Constants.COMMAND_SET_PROFILE_INFO_REQUEST:
 
                 try {
-                    mSetProfileInfoResponse = gson.fromJson(result.getJsonString(), SetProfileInfoResponse.class);
+                    SetProfileInfoResponse mSetProfileInfoResponse = gson.fromJson(result.getJsonString(), SetProfileInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), mSetProfileInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -282,14 +287,14 @@ public class EditBasicInfoFragment extends BaseFragmentV4 implements HttpRespons
                             getActivity().onBackPressed();
 
                             //Google Analytic event
-                            Utilities.sendEventTracker(mTracker,"UpdateBasicInfo", "Succeed", mSetProfileInfoResponse.getMessage());
+                            Utilities.sendSuccessEventTracker(mTracker, "Basic Info Update", ProfileInfoCacheManager.getAccountId(), 100);
                         }
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
 
                         //Google Analytic event
-                        Utilities.sendEventTracker(mTracker,"UpdateBasicInfo", "Failed", mSetProfileInfoResponse.getMessage());
+                        Utilities.sendFailedEventTracker(mTracker, "Basic Info Update", ProfileInfoCacheManager.getAccountId(), mSetProfileInfoResponse.getMessage(), 0);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -297,7 +302,7 @@ public class EditBasicInfoFragment extends BaseFragmentV4 implements HttpRespons
                         Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"UpdateBasicInfo", "Failed", getString(R.string.profile_info_save_failed));
+                    Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
                 }
 
                 mSetProfileInfoTask = null;

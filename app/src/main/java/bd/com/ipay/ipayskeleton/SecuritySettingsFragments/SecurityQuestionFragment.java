@@ -40,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.SecurityQuestio
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.SetSecurityAnswerRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Security.SetSecurityAnswerResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -288,6 +289,8 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null)
                         ((MyApplication) (getActivity().getApplication())).launchLoginPage(mSetSecurityAnswerResponse.getMessage());
+                    Utilities.sendBlockedEventTracker(mTracker, "Updating Security Question", ProfileInfoCacheManager.getAccountId(), 0);
+
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetSecurityAnswerResponse.getMessage(), Toast.LENGTH_SHORT).show();
@@ -315,6 +318,75 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
         private EditText mPasswordView;
         private Button mSaveButton;
 
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            View v;
+
+            if (viewType == SECURITY_QUESTION_ONLY_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_security_question_only, parent, false);
+                return new SecurityQuestionListHolder(v);
+            } else if (viewType == FOOTER_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_security_question_footer, parent, false);
+                return new SecurityQuestionAdapter.FooterViewHolder(v);
+            } else if (viewType == PASSWORD_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_security_question_password, parent, false);
+                return new SecurityQuestionAdapter.HeaderViewHolder(v);
+            } else {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_security_question, parent, false);
+                SecurityQuestionAnswerListHolder vh = new SecurityQuestionAnswerListHolder(v, new CustomWatcher());
+                return vh;
+            }
+
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+            try {
+                if (holder instanceof SecurityQuestionAnswerListHolder) {
+                    SecurityQuestionAnswerListHolder vh = (SecurityQuestionAnswerListHolder) holder;
+                    // So that it knows what item in data set to update
+                    vh.customWatcher.updatePosition(holder.getAdapterPosition());
+                    vh.bindSecurityQuestionAnswerView(position);
+                } else if (holder instanceof SecurityQuestionAdapter.FooterViewHolder) {
+                    SecurityQuestionAdapter.FooterViewHolder vh = (SecurityQuestionAdapter.FooterViewHolder) holder;
+                    vh.bindView();
+                } else if (holder instanceof SecurityQuestionListHolder) {
+                    SecurityQuestionListHolder vh = (SecurityQuestionListHolder) holder;
+                    vh.bindSecurityQuestionView(position);
+                } else if (holder instanceof SecurityQuestionAdapter.HeaderViewHolder) {
+                    SecurityQuestionAdapter.HeaderViewHolder vh = (SecurityQuestionAdapter.HeaderViewHolder) holder;
+                    vh.bindView();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mPreviousQuestionClassList.isEmpty() || mPreviousQuestionClassList.size() == 0) {
+                if (mSecurityQuestionAnswerValidationClassList.size() == 0)
+                    return 0;
+                else
+                    return mSecurityQuestionAnswerValidationClassList.size() + 2;
+            } else return mRequiredQuestions;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+
+            if (mPreviousQuestionClassList.isEmpty() || mPreviousQuestionClassList.size() == 0) {
+                if (position == getItemCount() - 1) {
+                    return FOOTER_VIEW;
+                } else if (position == getItemCount() - 2) {
+                    return PASSWORD_VIEW;
+                } else {
+                    return SECURITY_QUESTION_ANSWER_LIST_ITEM_VIEW;
+                }
+            } else
+                return SECURITY_QUESTION_ONLY_VIEW;
+        }
 
         public class SecurityQuestionAnswerListHolder extends RecyclerView.ViewHolder {
             private final EditText mQuestionEditText;
@@ -444,77 +516,6 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
 
             }
         }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View v;
-
-            if (viewType == SECURITY_QUESTION_ONLY_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_security_question_only, parent, false);
-                return new SecurityQuestionListHolder(v);
-            } else if (viewType == FOOTER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_security_question_footer, parent, false);
-                return new SecurityQuestionAdapter.FooterViewHolder(v);
-            } else if (viewType == PASSWORD_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_security_question_password, parent, false);
-                return new SecurityQuestionAdapter.HeaderViewHolder(v);
-            } else {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_security_question, parent, false);
-                SecurityQuestionAnswerListHolder vh = new SecurityQuestionAnswerListHolder(v, new CustomWatcher());
-                return vh;
-            }
-
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-            try {
-                if (holder instanceof SecurityQuestionAnswerListHolder) {
-                    SecurityQuestionAnswerListHolder vh = (SecurityQuestionAnswerListHolder) holder;
-                    // So that it knows what item in data set to update
-                    vh.customWatcher.updatePosition(holder.getAdapterPosition());
-                    vh.bindSecurityQuestionAnswerView(position);
-                } else if (holder instanceof SecurityQuestionAdapter.FooterViewHolder) {
-                    SecurityQuestionAdapter.FooterViewHolder vh = (SecurityQuestionAdapter.FooterViewHolder) holder;
-                    vh.bindView();
-                } else if (holder instanceof SecurityQuestionListHolder) {
-                    SecurityQuestionListHolder vh = (SecurityQuestionListHolder) holder;
-                    vh.bindSecurityQuestionView(position);
-                } else if (holder instanceof SecurityQuestionAdapter.HeaderViewHolder) {
-                    SecurityQuestionAdapter.HeaderViewHolder vh = (SecurityQuestionAdapter.HeaderViewHolder) holder;
-                    vh.bindView();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            if (mPreviousQuestionClassList.isEmpty() || mPreviousQuestionClassList.size() == 0) {
-                if (mSecurityQuestionAnswerValidationClassList.size() == 0)
-                    return 0;
-                else
-                    return mSecurityQuestionAnswerValidationClassList.size() + 2;
-            } else return mRequiredQuestions;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-
-            if (mPreviousQuestionClassList.isEmpty() || mPreviousQuestionClassList.size() == 0) {
-                if (position == getItemCount() - 1) {
-                    return FOOTER_VIEW;
-                } else if (position == getItemCount() - 2) {
-                    return PASSWORD_VIEW;
-                } else {
-                    return SECURITY_QUESTION_ANSWER_LIST_ITEM_VIEW;
-                }
-            } else
-                return SECURITY_QUESTION_ONLY_VIEW;
-        }
-
 
         public class CustomWatcher implements TextWatcher {
 

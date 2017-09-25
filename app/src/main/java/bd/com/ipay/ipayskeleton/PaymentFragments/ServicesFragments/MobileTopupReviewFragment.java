@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -283,7 +284,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                             getActivity().finish();
 
                             //Google Analytic event
-                            Utilities.sendEventTracker(mTracker, "TopUp", "Processing", getString(R.string.progress_dialog_processing));
+                            Utilities.sendSuccessEventTracker(mTracker, "TopUp Processing", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
                         }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
@@ -292,11 +293,13 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                             getActivity().finish();
 
                             //Google Analytic event
-                            Utilities.sendEventTracker(mTracker, "TopUp", "Succeed", getString(R.string.progress_dialog_processing));
+                            Utilities.sendSuccessEventTracker(mTracker, "TopUp", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
                         }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         if (getActivity() != null)
                             ((MyApplication) getActivity().getApplication()).launchLoginPage(mTopupResponse.getMessage());
+                        Utilities.sendBlockedEventTracker(mTracker, "Topup", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
+
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                         if (getActivity() != null && !TextUtils.isEmpty(mTopupResponse.getMessage()))
@@ -306,12 +309,13 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                             Toaster.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG);
 
                         //Google Analytic event
-                        Utilities.sendEventTracker(mTracker, "TopUp", "Failed", getString(R.string.recharge_failed));
+                        Utilities.sendFailedEventTracker(mTracker, "TopUp", ProfileInfoCacheManager.getAccountId(), getString(R.string.recharge_failed), Double.valueOf(mAmount).longValue());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG);
+                    Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
                 }
 
                 mTopupTask = null;

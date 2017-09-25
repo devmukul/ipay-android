@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,19 +19,19 @@ import com.google.gson.Gson;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.SetUserAddressRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.SetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EditAddressFragment extends BaseFragmentV4 implements HttpResponseListener {
+public class EditAddressFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSetUserAddressTask = null;
-    private SetUserAddressResponse mSetUserAddressResponse;
 
     private AddressClass mAddress;
     private AddressClass mPresentAddress;
@@ -38,10 +39,8 @@ public class EditAddressFragment extends BaseFragmentV4 implements HttpResponseL
 
     private AddressInputView mAddressInputView;
 
-    private View mSameasPresentAddressCheckboxHolder;
-    private CheckBox mSameasPresentAddressCheckbox;
+    private CheckBox mSameAsPresentAddressCheckbox;
 
-    private Button mSaveButton;
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -67,25 +66,25 @@ public class EditAddressFragment extends BaseFragmentV4 implements HttpResponseL
 
         mProgressDialog = new ProgressDialog(getActivity());
         mAddressInputView = (AddressInputView) v.findViewById(R.id.input_address);
-        mSameasPresentAddressCheckboxHolder = v.findViewById(R.id.holder_same_as_present_address);
-        mSameasPresentAddressCheckbox = (CheckBox) v.findViewById(R.id.checkbox_same_as_present_address);
-        mSaveButton = (Button) v.findViewById(R.id.button_save);
+        View mSameAsPresentAddressCheckboxHolder = v.findViewById(R.id.holder_same_as_present_address);
+        mSameAsPresentAddressCheckbox = (CheckBox) v.findViewById(R.id.checkbox_same_as_present_address);
+        Button mSaveButton = (Button) v.findViewById(R.id.button_save);
 
         mAddress = (AddressClass) getArguments().getSerializable(Constants.ADDRESS);
         mAddressType = getArguments().getString(Constants.ADDRESS_TYPE);
 
-        if (mAddressType.equals(Constants.ADDRESS_TYPE_PERMANENT)) {
-            mSameasPresentAddressCheckboxHolder.setVisibility(View.VISIBLE);
+        if (!TextUtils.isEmpty(mAddressType) && mAddressType.equals(Constants.ADDRESS_TYPE_PERMANENT)) {
+            mSameAsPresentAddressCheckboxHolder.setVisibility(View.VISIBLE);
             mPresentAddress = (AddressClass) getArguments().getSerializable(Constants.PRESENT_ADDRESS);
         }
 
         if (mAddress != null)
             mAddressInputView.setInformation(mAddress);
 
-        mSameasPresentAddressCheckbox.setOnClickListener(new View.OnClickListener() {
+        mSameAsPresentAddressCheckbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mSameasPresentAddressCheckbox.isChecked()) {
+                if (mSameAsPresentAddressCheckbox.isChecked()) {
                     if (mPresentAddress != null)
                         mAddressInputView.setInformation(mPresentAddress);
                 }
@@ -109,7 +108,7 @@ public class EditAddressFragment extends BaseFragmentV4 implements HttpResponseL
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_address_edit) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_address_edit));
     }
 
 
@@ -142,20 +141,20 @@ public class EditAddressFragment extends BaseFragmentV4 implements HttpResponseL
         if (result.getApiCommand().equals(Constants.COMMAND_SET_USER_ADDRESS_REQUEST)) {
 
             try {
-                mSetUserAddressResponse = gson.fromJson(result.getJsonString(), SetUserAddressResponse.class);
+                SetUserAddressResponse mSetUserAddressResponse = gson.fromJson(result.getJsonString(), SetUserAddressResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_LONG).show();
                     getActivity().onBackPressed();
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"UpdateAddress", "Succeed", mSetUserAddressResponse.getMessage());
+                    Utilities.sendSuccessEventTracker(mTracker, "Address Edit", ProfileInfoCacheManager.getAccountId(), 100);
 
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_SHORT).show();
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"UpdateAddress", "Failed", mSetUserAddressResponse.getMessage());
+                    Utilities.sendFailedEventTracker(mTracker, "Address Edit", ProfileInfoCacheManager.getAccountId(), mSetUserAddressResponse.getMessage(), 0);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -163,7 +162,7 @@ public class EditAddressFragment extends BaseFragmentV4 implements HttpResponseL
                     Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
 
                 //Google Analytic event
-                Utilities.sendEventTracker(mTracker,"UpdateAddress", "Failed", getString(R.string.profile_info_save_failed));
+                Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }
 
             mSetUserAddressTask = null;

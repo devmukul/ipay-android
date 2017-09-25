@@ -13,12 +13,12 @@ import android.widget.TextView;
 import java.util.Calendar;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AboutFragment extends BaseFragmentV4 {
+public class AboutFragment extends BaseFragment {
 
     private TextView mBuildNumberView;
     private IconifiedTextViewWithButton mContactView;

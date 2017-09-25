@@ -1,15 +1,15 @@
 package bd.com.ipay.ipayskeleton.BaseFragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 
 import com.google.android.gms.analytics.Tracker;
 
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
-public class BaseFragment extends Fragment{
+public class BaseFragment extends Fragment {
 
     protected Tracker mTracker;
 
@@ -18,5 +18,4 @@ public class BaseFragment extends Fragment{
         super.onCreate(savedInstanceState);
         mTracker = Utilities.getTracker(getActivity());
     }
-
 }

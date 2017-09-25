@@ -20,41 +20,34 @@ import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogA
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetParentInfoRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetParentInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EditParentInfoFragment extends BaseFragmentV4 implements HttpResponseListener {
-
-    private HttpRequestPostAsyncTask mSetParentInfoTask = null;
-    private SetParentInfoResponse mSetParentInfoResponse;
-
-    private EditText mFathersNameEditText;
-    private EditText mMothersNameEditText;
-
-    private EditText mFathersMobileEditText;
-    private EditText mMothersMobileEditText;
-
-    private ImageView mSelectFatherMobileContactButton;
-    private ImageView mSelectMotherMobileContactButton;
-
-    private ProgressDialog mProgressDialog;
-
-    private String mFathersName = "";
-    private String mMothersName = "";
-
-    private String mFathersMobile = "";
-    private String mMothersMobile = "";
-
-    private Button mInfoSaveButton;
+public class EditParentInfoFragment extends BaseFragment implements HttpResponseListener {
 
     private final int PICK_FATHERS_MOBILE_NUMBER_REQUEST = 100;
     private final int PICK_MOTHERS_MOBILE_NUMBER_REQUEST = 101;
+    private HttpRequestPostAsyncTask mSetParentInfoTask = null;
+    private SetParentInfoResponse mSetParentInfoResponse;
+    private EditText mFathersNameEditText;
+    private EditText mMothersNameEditText;
+    private EditText mFathersMobileEditText;
+    private EditText mMothersMobileEditText;
+    private ImageView mSelectFatherMobileContactButton;
+    private ImageView mSelectMotherMobileContactButton;
+    private ProgressDialog mProgressDialog;
+    private String mFathersName = "";
+    private String mMothersName = "";
+    private String mFathersMobile = "";
+    private String mMothersMobile = "";
+    private Button mInfoSaveButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -115,7 +108,7 @@ public class EditParentInfoFragment extends BaseFragmentV4 implements HttpRespon
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_permanent_info_edit));
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_parent_info_edit));
     }
 
     @Override
@@ -244,14 +237,14 @@ public class EditParentInfoFragment extends BaseFragmentV4 implements HttpRespon
                             getActivity().onBackPressed();
 
                             //Google Analytic event
-                            Utilities.sendEventTracker(mTracker,"UpdateParentInfo", "Succeed", mSetParentInfoResponse.getMessage());
+                            Utilities.sendSuccessEventTracker(mTracker,"Parent Info Update", ProfileInfoCacheManager.getAccountId(), 100);
                         }
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.parent_info_save_failed, Toast.LENGTH_SHORT).show();
 
                         //Google Analytic event
-                        Utilities.sendEventTracker(mTracker,"UpdateParentInfo", "Failed", mSetParentInfoResponse.getMessage());
+                        Utilities.sendFailedEventTracker(mTracker, "Parent Info Update", ProfileInfoCacheManager.getAccountId(), mSetParentInfoResponse.getMessage(), 0);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -259,7 +252,7 @@ public class EditParentInfoFragment extends BaseFragmentV4 implements HttpRespon
                         Toast.makeText(getActivity(), R.string.parent_info_save_failed, Toast.LENGTH_SHORT).show();
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"UpdateParentInfo", "Failed", getString(R.string.parent_info_save_failed));
+                    Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
                 }
 
                 mSetParentInfoTask = null;

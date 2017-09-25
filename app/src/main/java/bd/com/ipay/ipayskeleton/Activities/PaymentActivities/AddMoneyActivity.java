@@ -19,7 +19,7 @@ public class AddMoneyActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cash_in);
 
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, new AddMoneyFragment()).commit();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

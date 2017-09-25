@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SelectAccountTypeFragment extends BaseFragmentV4 {
+public class SelectAccountTypeFragment extends BaseFragment {
 
     private Button buttonAccountTypePersonal;
     private Button buttonAccountTypeBusiness;

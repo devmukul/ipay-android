@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -27,16 +29,13 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpResponseListener {
 
+    private final AddPinListener mAddPinListener;
     private HttpRequestPutAsyncTask mSavePINTask = null;
     private SetPinResponse mSetPinResponse;
-
     private ProgressDialog mProgressDialog;
-
     private EditText mPinField;
     private EditText mConfirmPinField;
     private EditText mPasswordField;
-
-    private final AddPinListener mAddPinListener;
 
     public AddPinDialogBuilder(Context context, AddPinListener addPinListener) {
         super(context);
@@ -157,6 +156,9 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
                     if (getContext() != null) {
                         ((MyApplication) ((Activity) getContext()).getApplication()).launchLoginPage(mSetPinResponse.getMessage());
                     }
+                    if (getContext() instanceof AppCompatActivity)
+                        Utilities.sendBlockedEventTracker(Utilities.getTracker(((AppCompatActivity) getContext())), "Add Pin", ProfileInfoCacheManager.getAccountId(), 0);
+
                 } else {
                     if (getContext() != null)
                         Toaster.makeText(getContext(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG);
