@@ -147,14 +147,14 @@ public class EditAddressFragment extends BaseFragment implements HttpResponseLis
                     getActivity().onBackPressed();
 
                     //Google Analytic event
-                    Utilities.sendSuccessEventTracker(mTracker, getString(R.string.screen_name_address_edit), ProfileInfoCacheManager.getAccountId(), 100);
+                    Utilities.sendSuccessEventTracker(mTracker, "Address Edit", ProfileInfoCacheManager.getAccountId(), 100);
 
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_SHORT).show();
 
                     //Google Analytic event
-                    Utilities.sendFailedEventTracker(mTracker, getString(R.string.screen_name_address_edit), ProfileInfoCacheManager.getAccountId(), mSetUserAddressResponse.getMessage(), 0);
+                    Utilities.sendFailedEventTracker(mTracker, "Address Edit", ProfileInfoCacheManager.getAccountId(), mSetUserAddressResponse.getMessage(), 0);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
