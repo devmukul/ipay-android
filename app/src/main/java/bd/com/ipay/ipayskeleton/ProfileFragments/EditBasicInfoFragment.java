@@ -286,6 +286,8 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
 
                             getActivity().onBackPressed();
 
+                            ProfileInfoCacheManager.setGender(mGender);
+
                             //Google Analytic event
                             Utilities.sendSuccessEventTracker(mTracker, "Basic Info Update", ProfileInfoCacheManager.getAccountId(), 100);
                         }

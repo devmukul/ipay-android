@@ -145,6 +145,10 @@ public class ProfileInfoCacheManager {
         pref.edit().putString(SharedPrefConstants.GENDER, value).apply();
     }
 
+    public static String getGender() {
+        return pref.getString(SharedPrefConstants.GENDER, null);
+    }
+
     public static void removeUUID() {
         pref.edit().remove(SharedPrefConstants.UUID).apply();
     }

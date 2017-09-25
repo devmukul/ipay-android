@@ -7,12 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 
 public class ProfilePictureHelperDialog extends AlertDialog {
     private Context context;
@@ -22,6 +24,7 @@ public class ProfilePictureHelperDialog extends AlertDialog {
     private LayoutInflater inflater;
 
     private View selectImageHeaderView;
+    private ImageView mProfilePictureHelperView;
     private TextView selectImageHeaderTitle;
     private ListView imageSelectorOptionsListView;
 
@@ -31,6 +34,7 @@ public class ProfilePictureHelperDialog extends AlertDialog {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View v = inflater.inflate(R.layout.dialog_profile_picture_helper, null);
+        mProfilePictureHelperView = (ImageView) v.findViewById(R.id.pro_pic_helper_view);
         selectImageHeaderView = inflater.inflate(R.layout.dialog_selector_header, null);
         selectImageHeaderTitle = (TextView) selectImageHeaderView.findViewById(R.id.textviewTitle);
         selectImageHeaderTitle.setText(mTitle);
@@ -38,7 +42,18 @@ public class ProfilePictureHelperDialog extends AlertDialog {
         this.setCustomTitle(selectImageHeaderView);
         this.setView(v);
 
+        setAppropriateProfilePictureHelperPhoto();
+
         setItems(resources, v);
+    }
+
+    private void setAppropriateProfilePictureHelperPhoto() {
+        if (ProfileInfoCacheManager.getGender() != null) {
+            if (ProfileInfoCacheManager.getGender().equals(context.getString(R.string.male)))
+                mProfilePictureHelperView.setImageDrawable(context.getResources().getDrawable(R.drawable.profile_photo_instruction_male));
+            else
+                mProfilePictureHelperView.setImageDrawable(context.getResources().getDrawable(R.drawable.profile_photo_instruction_female));
+        }
     }
 
     public void setItems(final List<String> resources, final View view) {

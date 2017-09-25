@@ -22,9 +22,9 @@
         <ImageView
             android:id="@+id/pro_pic_helper_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/value200"
             android:layout_below="@id/pro_pic_help_text_view"
-            android:src="@drawable/profile_photo_guide" />
+            android:src="@drawable/profile_photo_instruction_female" />
 
     </RelativeLayout>
 
