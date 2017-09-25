@@ -287,14 +287,14 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
                             getActivity().onBackPressed();
 
                             //Google Analytic event
-                            Utilities.sendSuccessEventTracker(mTracker, getString(R.string.screen_name_basic_info_edit), ProfileInfoCacheManager.getAccountId(), 100);
+                            Utilities.sendSuccessEventTracker(mTracker, "Basic Info Update", ProfileInfoCacheManager.getAccountId(), 100);
                         }
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
 
                         //Google Analytic event
-                        Utilities.sendFailedEventTracker(mTracker, getString(R.string.screen_name_basic_info_edit), ProfileInfoCacheManager.getAccountId(), mSetProfileInfoResponse.getMessage(), 0);
+                        Utilities.sendFailedEventTracker(mTracker, "Basic Info Update", ProfileInfoCacheManager.getAccountId(), mSetProfileInfoResponse.getMessage(), 0);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

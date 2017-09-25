@@ -40,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.R
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.TrustedPerson;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -102,7 +103,11 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
             @Override
             @ValidateAccess(ServiceIdConstants.MANAGE_TRUSTED_PERSON)
             public void onClick(View v) {
-                ((SecuritySettingsActivity) getActivity()).switchToAddTrustedPerson();
+                if (CommonData.getRelationshipList() != null) {
+                    ((SecuritySettingsActivity) getActivity()).switchToAddTrustedPerson();
+                } else {
+                    Toast.makeText(getContext(), "Please try again later.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
