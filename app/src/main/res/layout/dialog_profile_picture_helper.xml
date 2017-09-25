@@ -7,8 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/divider_gray"
-        android:paddingBottom="@dimen/value10">
+        android:background="@color/divider_gray">
 
         <TextView
             android:id="@+id/pro_pic_help_text_view"
