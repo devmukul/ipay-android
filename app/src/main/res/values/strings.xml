@@ -642,7 +642,6 @@
     <string name="failed_make_primary">Failed to make this primary email</string>
     <string name="confirmation_remove_email_address">Remove this email address?</string>
     <string name="confirmation_add_to_contacts">Add this number to contacts?</string>
-    <string name="link_bank">Link Bank</string>
     <string name="bank_consent_agreement">Bank consent agreement</string>
     <string name="progress_dialog_if_pin_exists">Preparing. Please wait…</string>
     <string name="failed_loading_pin">Failed loading PIN</string>
@@ -897,7 +896,7 @@
     <string name="screen_name_identification_documents_list">Document</string>
     <string name="screen_name_document_upload">Document</string>
     <string name="screen_name_user_basic_info">Personal Basic Info</string>
-    <string name="screen_name_link_bank">Add New Bank</string>
+    <string name="screen_name_add_bank">Add New Bank</string>
     <string name="screen_name_set_pin">Change PIN</string>
     <string name="screen_name_security_question">Security Question</string>
     <string name="screen_name_fingerprint_authentication">Touch ID</string>

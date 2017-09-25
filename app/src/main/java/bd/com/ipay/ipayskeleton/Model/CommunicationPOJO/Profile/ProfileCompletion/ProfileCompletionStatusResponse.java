@@ -19,17 +19,17 @@ public class ProfileCompletionStatusResponse {
     private int basicInfoItemCount = 0;
     private int addressItemCount = 0;
     private int identificationItemCount = 0;
-    private int linkBankItemCount = 0;
+    private int addBankItemCount = 0;
 
     private double basicInfoCompletionSum = 0;
     private double addressCompletionSum = 0;
     private double identificationCompletionSum = 0;
-    private double linkBankCompletionSum = 0;
+    private double addBankCompletionSum = 0;
 
     private final List<PropertyDetails> basicInfoCompletionDetails = new ArrayList<>();
     private final List<PropertyDetails> addressCompletionDetails = new ArrayList<>();
     private final List<PropertyDetails> identificationCompletionDetails = new ArrayList<>();
-    private final List<PropertyDetails> linkBankCompletionDetails = new ArrayList<>();
+    private final List<PropertyDetails> addBankCompletionDetails = new ArrayList<>();
     private final List<PropertyDetails> otherCompletionDetails = new ArrayList<>();
 
     public String getMessage() {
@@ -48,8 +48,8 @@ public class ProfileCompletionStatusResponse {
         return identificationCompletionDetails;
     }
 
-    public List<PropertyDetails> getLinkBankCompletionDetails() {
-        return linkBankCompletionDetails;
+    public List<PropertyDetails> getAddBankCompletionDetails() {
+        return addBankCompletionDetails;
     }
 
     public List<PropertyDetails> getOtherCompletionDetails() {
@@ -61,8 +61,8 @@ public class ProfileCompletionStatusResponse {
     }
 
     public int getCompletionPercentage() {
-//        double totalCompletionSum = basicInfoCompletionSum + addressCompletionSum + identificationCompletionSum + linkBankCompletionSum;
-//        double totalItemCount = basicInfoItemCount + addressItemCount + identificationItemCount + linkBankItemCount;
+//        double totalCompletionSum = basicInfoCompletionSum + addressCompletionSum + identificationCompletionSum + addBankCompletionSum;
+//        double totalItemCount = basicInfoItemCount + addressItemCount + identificationItemCount + addBankItemCount;
 //        return (int) Math.round(totalCompletionSum / totalItemCount);
         return completionPercentage;
     }
@@ -79,8 +79,8 @@ public class ProfileCompletionStatusResponse {
         return (int) Math.round(identificationCompletionSum / identificationItemCount);
     }
 
-    public int getLinkBankCompletionPercentage() {
-        return (int) Math.round(linkBankCompletionSum / linkBankItemCount);
+    public int getAddBankCompletionPercentage() {
+        return (int) Math.round(addBankCompletionSum / addBankItemCount);
     }
 
     private double getPropertyCompletionPercentage(int threshold, int value) {
@@ -152,13 +152,13 @@ public class ProfileCompletionStatusResponse {
                 if (propertyDetails.getPropertyTitle() != null)
                     identificationCompletionDetails.add(propertyDetails);
 
-            } else if (mCompletionStatus.getTag() == TAG_POSITION_LINK_BANK) {
+            } else if (mCompletionStatus.getTag() == TAG_POSITION_ADD_BANK) {
 
-                linkBankItemCount++;
-                linkBankCompletionSum = linkBankCompletionSum + propertyCompletionPercentage;
+                addBankItemCount++;
+                addBankCompletionSum = addBankCompletionSum + propertyCompletionPercentage;
 
                 if (propertyDetails.getPropertyTitle() != null)
-                    linkBankCompletionDetails.add(propertyDetails);
+                    addBankCompletionDetails.add(propertyDetails);
             }  else {
                 if (propertyDetails.getPropertyTitle() != null)
                     otherCompletionDetails.add(propertyDetails);

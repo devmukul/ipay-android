@@ -137,7 +137,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
         private static final int VIEW_TYPE_BASIC_INFO = 0;
         private static final int VIEW_TYPE_ADDRESS = 1;
         private static final int VIEW_TYPE_IDENTIFICATION = 2;
-        private static final int VIEW_TYPE_LINK_BANK = 3;
+        private static final int VIEW_TYPE_ADD_BANK = 3;
         private static final int VIEW_TYPE_HEADER = 100;
 
         public abstract class ProfileCompletionViewHolder extends RecyclerView.ViewHolder {
@@ -225,15 +225,15 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             }
         }
 
-        public class LinkBankViewHolder extends ProfileCompletionViewHolder {
+        public class AddBankViewHolder extends ProfileCompletionViewHolder {
 
-            public LinkBankViewHolder(View itemView) {
+            public AddBankViewHolder(View itemView) {
                 super(itemView);
             }
 
             @Override
             public void bindViewProfileCompletion(int position) {
-                bindViewProfileCompletion(mProfileCompletionStatusResponse.getLinkBankCompletionDetails().get(position));
+                bindViewProfileCompletion(mProfileCompletionStatusResponse.getAddBankCompletionDetails().get(position));
             }
         }
 
@@ -291,16 +291,16 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
                 return VIEW_TYPE_IDENTIFICATION;
             }
 
-            // Link Bank Header
+            // Add Bank Header
             tempPosition += 1;
             if (position < tempPosition) {
                 return VIEW_TYPE_HEADER;
             }
 
-            // Link Bank list items
-            tempPosition += mProfileCompletionStatusResponse.getLinkBankCompletionDetails().size();
+            // Add Bank list items
+            tempPosition += mProfileCompletionStatusResponse.getAddBankCompletionDetails().size();
             if (position < tempPosition) {
-                return VIEW_TYPE_LINK_BANK;
+                return VIEW_TYPE_ADD_BANK;
             }
 
             return super.getItemViewType(position);
@@ -324,7 +324,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
                 } else if (viewType == VIEW_TYPE_IDENTIFICATION) {
                     vh = new IdentificationViewHolder(v);
                 } else {
-                    vh = new LinkBankViewHolder(v);
+                    vh = new AddBankViewHolder(v);
                 }
 
                 return vh;
@@ -380,18 +380,18 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
                 return;
             }
 
-            // Link Bank Header
+            // Add Bank Header
             tempPosition += 1;
             if (position < tempPosition) {
-                ((HeaderViewHolder) holder).bindViewHeader(getString(R.string.link_bank));
+                ((HeaderViewHolder) holder).bindViewHeader(getString(R.string.add_bank));
                 return;
             }
 
-            // Link Bank list items
-            tempPosition += mProfileCompletionStatusResponse.getLinkBankCompletionDetails().size();
+            // Add Bank list items
+            tempPosition += mProfileCompletionStatusResponse.getAddBankCompletionDetails().size();
             if (position < tempPosition) {
-                ((LinkBankViewHolder) holder).bindViewProfileCompletion(
-                        (position - (tempPosition - mProfileCompletionStatusResponse.getLinkBankCompletionDetails().size())));
+                ((AddBankViewHolder) holder).bindViewProfileCompletion(
+                        (position - (tempPosition - mProfileCompletionStatusResponse.getAddBankCompletionDetails().size())));
             }
 
         }
@@ -401,7 +401,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             return 1 + mProfileCompletionStatusResponse.getBasicInfoCompletionDetails().size() +
                     1 + mProfileCompletionStatusResponse.getAddressCompletionDetails().size() +
                     1 + mProfileCompletionStatusResponse.getIdentificationCompletionDetails().size() +
-                    1 + mProfileCompletionStatusResponse.getLinkBankCompletionDetails().size();
+                    1 + mProfileCompletionStatusResponse.getAddBankCompletionDetails().size();
         }
     }
 }

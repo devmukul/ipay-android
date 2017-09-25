@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.ConsentAgreementForBankFragment;
-import bd.com.ipay.ipayskeleton.ManageBanksFragments.LinkBankFragment;
+import bd.com.ipay.ipayskeleton.ManageBanksFragments.AddBankFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranch;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -52,7 +52,7 @@ public class ManageBanksActivity extends BaseActivity {
         if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT) != null) {
             if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.BANK_ACCOUNT)) {
                 switchToBankAccountsFragment();
-            } else if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.LINK_BANK)) {
+            } else if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.ADD_BANK)) {
                 switchToAddNewBankFragment();
             }
         } else {
@@ -106,10 +106,10 @@ public class ManageBanksActivity extends BaseActivity {
             while (getSupportFragmentManager().getBackStackEntryCount() > 1)
                 getSupportFragmentManager().popBackStackImmediate();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new LinkBankFragment()).addToBackStack(null).commit();
+                    .replace(R.id.fragment_container, new AddBankFragment()).addToBackStack(null).commit();
         } else {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new LinkBankFragment()).commit();
+                    .replace(R.id.fragment_container, new AddBankFragment()).commit();
         }
 
         mFabAddNewBank.setVisibility(View.GONE);

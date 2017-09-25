@@ -26,15 +26,10 @@ public class ProfileCompletionPropertyConstants {
     public static final String BUSINESS_INFO = "BUSINESS_INFO";
     public static final String BUSINESS_DOCUMENTS = "BUSINESS_DOCUMENTS";
 
-    public static final String TAG_BASIC_INFO = "Basic Info";
-    public static final String TAG_ADDRESS = "Address";
-    public static final String TAG_IDENTIFICATION = "Identification";
-    public static final String TAG_LINK_BANK = "Link Bank";
-
     public static final int TAG_POSITION_BASIC_INFO = 0;
     public static final int TAG_POSITION_PERSONAL_ADDRESS = 1;
     public static final int TAG_POSITION_IDENTIFICATION = 2;
-    public static final int TAG_POSITION_LINK_BANK = 3;
+    public static final int TAG_POSITION_ADD_BANK = 3;
 
     public static final int TAG_POSITION_BUSINESS_INFO = 0;
     public static final int TAG_POSITION_BUSINESS_ADDRESS = 1;
