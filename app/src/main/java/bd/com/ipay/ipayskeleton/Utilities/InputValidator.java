@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import java.math.BigDecimal;
 import java.util.regex.Matcher;
@@ -64,22 +65,19 @@ public class InputValidator {
         return true;
     }
 
+    @Nullable
     public static String isValidAmount(Context context, BigDecimal amount, BigDecimal minAmount, BigDecimal maxAmount) {
-        String errorMessage = null;
+        final String errorMessage;
 
-        if (minAmount.compareTo(maxAmount) > 0) {
+        if (amount.compareTo(minAmount) == -1) {
+            errorMessage = context.getResources().getString(R.string.please_enter_minimum_amount) + " " + Utilities.formatTaka(minAmount);
+        } else if (amount.compareTo(maxAmount) == 1) {
+            errorMessage = context.getResources().getString(R.string.please_enter_not_more_than_max_amount) + " " + Utilities.formatTaka(maxAmount);
+        } else if (minAmount.compareTo(maxAmount) > 0) {
             errorMessage = context.getResources().getString(R.string.insufficient_balance);
-            return errorMessage;
         } else {
-            if (amount.compareTo(minAmount) == -1) {
-                errorMessage = context.getResources().getString(R.string.please_enter_minimum_amount) + " " + Utilities.formatTaka(minAmount);
-                return errorMessage;
-            } else if (amount.compareTo(maxAmount) == 1) {
-                errorMessage = context.getResources().getString(R.string.please_enter_not_more_than_max_amount) + " " + Utilities.formatTaka(maxAmount);
-                return errorMessage;
-            }
+            errorMessage = null;
         }
-
         return errorMessage;
     }
 
