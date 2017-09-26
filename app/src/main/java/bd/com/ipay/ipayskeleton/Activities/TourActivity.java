@@ -23,6 +23,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TourActivity extends AppCompatActivity {
 
+    private static final int TOTAL_TOUR_PAGE_COUNT = 4;
     private PagerIndicator mPagerIndicator;
 
     @Override
@@ -61,7 +62,7 @@ public class TourActivity extends AppCompatActivity {
 
         mPagerIndicator = (PagerIndicator) findViewById(R.id.pager_indicator);
         mPagerIndicator.setup(R.drawable.pager_indicator_selected,
-                R.drawable.pager_indicator_unselected, 4);
+                R.drawable.pager_indicator_unselected, TOTAL_TOUR_PAGE_COUNT);
 
         tourPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -143,7 +144,7 @@ public class TourActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 4;
+            return TOTAL_TOUR_PAGE_COUNT;
         }
     }
 }
