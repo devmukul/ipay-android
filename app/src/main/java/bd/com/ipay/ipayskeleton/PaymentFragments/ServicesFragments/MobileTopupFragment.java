@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +33,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
@@ -51,6 +53,9 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class MobileTopupFragment extends BaseFragmentV4 implements HttpResponseListener {
 
+    private static final int MOBILE_TOPUP_REVIEW_REQUEST = 101;
+    private final int PICK_CONTACT_REQUEST = 100;
+
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
     private CustomContactsSearchView mMobileNumberEditText;
@@ -60,18 +65,12 @@ public class MobileTopupFragment extends BaseFragmentV4 implements HttpResponseL
     private ImageView mSelectReceiverButton;
     private Button mRechargeButton;
     private TextView mMobileTopUpInfoTextView;
-
     private ProgressDialog mProgressDialog;
 
     private List<String> mPackageList;
     private List<String> mOperatorList;
-
     private CustomSelectorDialog mPackageSelectorDialog;
     private CustomSelectorDialogWithIcon mOperatorSelectorDialog;
-
-    private final int PICK_CONTACT_REQUEST = 100;
-    private static final int MOBILE_TOPUP_REVIEW_REQUEST = 101;
-
     private int mSelectedPackageTypeId = -1;
     private int mSelectedOperatorTypeId = 0;
     private String mUserMobileNumber;
@@ -172,7 +171,7 @@ public class MobileTopupFragment extends BaseFragmentV4 implements HttpResponseL
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_mobile_topup) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_mobile_topup));
     }
 
     @Override
@@ -243,50 +242,62 @@ public class MobileTopupFragment extends BaseFragmentV4 implements HttpResponseL
     }
 
     private void setOperator(String phoneNumber) {
-        phoneNumber = ContactEngine.trimPrefix(phoneNumber);
-
+        phoneNumber = phoneNumber.trim();
         final String[] OPERATOR_PREFIXES = getResources().getStringArray(R.array.operator_prefix);
         for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
-            if (phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
+            if (phoneNumber.startsWith("+880" + OPERATOR_PREFIXES[i]) ||
+                    phoneNumber.startsWith("0" + OPERATOR_PREFIXES[i]) ||
+                    phoneNumber.startsWith("880" + OPERATOR_PREFIXES[i]) ||
+                    phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
                 mOperatorEditText.setText(mOperatorList.get(i));
                 mSelectedOperatorTypeId = i;
                 break;
+            } else {
+                mOperatorEditText.setText(getString(R.string.invalid_operator));
             }
         }
     }
 
     private boolean verifyUserInputs() {
+        mAmountEditText.setError(null);
+        mMobileNumberEditText.setError(null);
+
         boolean cancel = false;
         View focusView = null;
-        BigDecimal maxAmount;
+        String errorMessage = null;
 
-        String balance = null;
         if (SharedPrefManager.ifContainsUserBalance()) {
-            balance = SharedPrefManager.getUserBalance(null);
+            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
+
+            //validation check of amount
+            if (TextUtils.isEmpty(mAmountEditText.getText())) {
+                errorMessage = getString(R.string.please_enter_amount);
+                focusView = mAmountEditText;
+                cancel = true;
+            } else {
+                final BigDecimal topUpAmount = new BigDecimal(mAmountEditText.getText().toString());
+                if (topUpAmount.compareTo(balance) > 0) {
+                    errorMessage = getString(R.string.insufficient_balance);
+                }
+                if (Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                        && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+
+                    final BigDecimal minimumTopupAmount = TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
+                    final BigDecimal maximumTopupAmount = TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
+
+                    errorMessage = InputValidator.isValidAmount(getActivity(), topUpAmount, minimumTopupAmount, maximumTopupAmount);
+                }
+            }
+        } else {
+            focusView = mAmountEditText;
+            errorMessage = getString(R.string.balance_not_available);
+            cancel = true;
         }
 
-        if (mAmountEditText.getText().toString().trim().length() == 0) {
-            mAmountEditText.setError(getString(R.string.please_enter_amount));
+        if (errorMessage != null) {
             focusView = mAmountEditText;
+            mAmountEditText.setError(errorMessage);
             cancel = true;
-        } else if ((mAmountEditText.getText().toString().trim().length() > 0)
-                && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                && Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-
-            if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(new BigDecimal(balance)) > 0) {
-                maxAmount = TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
-            } else
-                maxAmount = TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().max((new BigDecimal(balance)));
-
-            String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                    TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                    maxAmount);
-
-            if (error_message != null) {
-                focusView = mAmountEditText;
-                mAmountEditText.setError(error_message);
-                cancel = true;
-            }
         }
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();

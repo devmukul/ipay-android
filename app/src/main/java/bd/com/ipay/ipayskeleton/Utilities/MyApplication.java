@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.Utilities;
 import android.app.Application;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -26,7 +27,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import io.intercom.android.sdk.Intercom;
 
-public class MyApplication extends Application implements HttpResponseListener {
+public class MyApplication extends MultiDexApplication implements HttpResponseListener {
 
     // 5 Minutes inactive time
     private final long AUTO_LOGOUT_TIMEOUT = 5 * 60 * 1000;

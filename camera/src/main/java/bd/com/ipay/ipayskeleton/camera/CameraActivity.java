@@ -5,12 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.graphics.Point;
 import android.hardware.Camera;
-import android.media.ExifInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -34,9 +30,13 @@ import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+
+import bd.com.ipay.ipayskeleton.camera.utility.CameraAndImageUtilities;
 
 
 public class CameraActivity extends AppCompatActivity {
@@ -63,6 +63,8 @@ public class CameraActivity extends AppCompatActivity {
 
     private String fileName;
 
+    private byte[] imageData;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +86,19 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (mCameraPreview != null && mCameraPreview.getVisibility() == View.INVISIBLE) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mCameraPreview.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+            }, 750);
+        }
         if (mCameraPreview != null && mCapturedImageView.getVisibility() == View.GONE) {
             try {
                 mCameraPreview.start(mCameraSource, mCameraOverlay);
@@ -206,13 +221,12 @@ public class CameraActivity extends AppCompatActivity {
                         @Override
                         public void onPictureTaken(byte[] data) {
                             mCameraPreview.stop();
-                            File pictureFile = getTempFile(getApplicationContext());
+
                             try {
-                                FileOutputStream fos = new FileOutputStream(pictureFile);
-                                fos.write(data);
+                                imageData = Arrays.copyOf(data, data.length);
+                                Bitmap convertedBitmap = CameraAndImageUtilities.handleSamplingAndRotationBitmap(cameraFace, data);
+                                mCapturedImageView.setImageBitmap(convertedBitmap);
                                 showConfirmImageLayoutAndHideCaptureLayout();
-                                fos.close();
-                                mCapturedImageView.setImageBitmap(rotateImageIfRequired(BitmapFactory.decodeFile(pictureFile.getAbsolutePath()), Uri.fromFile(pictureFile)));
                             } catch (Exception e) {
                                 Log.e(TAG, e.getMessage(), e);
                             }
@@ -229,6 +243,7 @@ public class CameraActivity extends AppCompatActivity {
             public void onClick(View v) {
                 showCaptureLayoutAndHideConfirmImageLayout();
                 try {
+                    imageData = null;
                     mCameraPreview.start(mCameraSource, mCameraOverlay);
 
                 } catch (SecurityException e) {
@@ -241,38 +256,25 @@ public class CameraActivity extends AppCompatActivity {
         mOkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setResult(RESULT_OK);
+                setResult(RESULT_CANCELED);
+                if (imageData != null) {
+                    File pictureFile = getTempFile();
+                    FileOutputStream fos;
+                    try {
+                        fos = new FileOutputStream(pictureFile);
+                        fos.write(imageData);
+                        fos.close();
+                        setResult(RESULT_OK);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
                 finish();
             }
         });
-    }
-
-    Bitmap rotateImageIfRequired(Bitmap img, Uri selectedImage) throws IOException {
-
-        ExifInterface ei = new ExifInterface(selectedImage.getPath());
-
-        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
-        switch (orientation) {
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                return rotateImage(img, 90);
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                return rotateImage(img, 180);
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                return rotateImage(img, 270);
-            default:
-                return img;
-        }
-    }
-
-    Bitmap rotateImage(Bitmap img, int degree) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degree);
-        Bitmap rotatedImg = Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
-        if (rotatedImg != img)      // Android might reuse the same bitmap again
-            img.recycle();
-
-        return rotatedImg;
     }
 
     @Override
@@ -312,8 +314,8 @@ public class CameraActivity extends AppCompatActivity {
 
     @NonNull
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private File getTempFile(Context context) {
-        File documentFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
+    private File getTempFile() {
+        File documentFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
         if (!documentFile.getParentFile().exists()) {
             documentFile.getParentFile().mkdirs();
         }
@@ -384,6 +386,7 @@ public class CameraActivity extends AppCompatActivity {
         mCaptureButton.setVisibility(View.VISIBLE);
         mCameraChangeButton.setVisibility(View.VISIBLE);
         mCapturedImageView.setVisibility(View.GONE);
+        mCameraPreview.setVisibility(View.VISIBLE);
         mCrossButton.setVisibility(View.GONE);
         mOkButton.setVisibility(View.GONE);
         if (mCameraSource.getCameraFacing() == com.google.android.gms.vision.CameraSource.CAMERA_FACING_BACK)
@@ -395,6 +398,7 @@ public class CameraActivity extends AppCompatActivity {
         mCameraChangeButton.setVisibility(View.GONE);
         mFlashChangeButton.setVisibility(View.GONE);
         mCapturedImageView.setVisibility(View.VISIBLE);
+        mCameraPreview.setVisibility(View.GONE);
         mCrossButton.setVisibility(View.VISIBLE);
         mOkButton.setVisibility(View.VISIBLE);
     }

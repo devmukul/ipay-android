@@ -37,7 +37,6 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
-import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationTrustFragment extends BaseFragmentV4 implements HttpResponseListener {
@@ -140,7 +139,7 @@ public class OTPVerificationTrustFragment extends BaseFragmentV4 implements Http
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_otp_verification_for_add_trusted_device);
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_otp_for_login) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_otp_for_login));
     }
 
     @Override
@@ -252,8 +251,8 @@ public class OTPVerificationTrustFragment extends BaseFragmentV4 implements Http
                         attemptTrustedDeviceAdd();
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         hideProgressDialog();
-                        if (getActivity() != null)
-                            ((MyApplication) getActivity().getApplication()).launchLoginPage(mLoginResponseModel.getMessage());
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        getActivity().finish();
                     } else {
                         hideProgressDialog();
 
@@ -322,7 +321,7 @@ public class OTPVerificationTrustFragment extends BaseFragmentV4 implements Http
                         Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"Login", "ToHome", "Login successful. Navigate to home page.");
+                    Utilities.sendEventTracker(mTracker, "Login", "ToHome", "Login successful. Navigate to home page.");
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -330,7 +329,7 @@ public class OTPVerificationTrustFragment extends BaseFragmentV4 implements Http
 
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"Login", "Failed", getString(R.string.failed_add_trusted_device));
+                    Utilities.sendEventTracker(mTracker, "Login", "Failed", getString(R.string.failed_add_trusted_device));
                 }
 
                 mProgressDialog.dismiss();

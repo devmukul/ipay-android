@@ -21,6 +21,7 @@ import java.util.Set;
 
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.camera.CameraActivity;
+import bd.com.ipay.ipayskeleton.camera.utility.CameraAndImageUtilities;
 
 /**
  * Source: https://gist.github.com/Mariovc/f06e70ebe8ca52fbbbe2
@@ -203,7 +204,7 @@ public class DocumentPicker {
 
                     // Convert the image - handle auto rotate problem in some devices, scale down
                     // image if necessary (max 512*512)
-                    Bitmap convertedBitmap = CameraAndImageUtilities.handleSamplingAndRotationBitmap(context, selectedImage, true);
+                    Bitmap convertedBitmap = CameraAndImageUtilities.handleSamplingAndRotationBitmap(context, selectedImage);
 
                     // Save to file
                     File tempFile = getTempFile(context, fileName);
@@ -242,7 +243,7 @@ public class DocumentPicker {
 
                     // Convert the image - handle auto rotate problem in some devices, scale down
                     // image if necessary (max 512*512)
-                    Bitmap convertedBitmap = CameraAndImageUtilities.handleSamplingAndRotationBitmap(context, selectedImage, true);
+                    Bitmap convertedBitmap = CameraAndImageUtilities.handleSamplingAndRotationBitmap(context, selectedImage);
 
                     // Save to file
                     File tempFile = getFileWithIndex(context, fileIndex);

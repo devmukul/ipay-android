@@ -13,12 +13,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;

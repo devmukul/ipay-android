@@ -37,7 +37,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletio
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CameraAndImageUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
@@ -45,6 +44,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import bd.com.ipay.ipayskeleton.camera.utility.CameraAndImageUtilities;
 
 public class AccountFragment extends BaseFragmentV4 implements HttpResponseListener {
 
@@ -128,7 +128,7 @@ public class AccountFragment extends BaseFragmentV4 implements HttpResponseListe
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_user_account) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_user_account));
     }
 
 
@@ -268,15 +268,15 @@ public class AccountFragment extends BaseFragmentV4 implements HttpResponseListe
         } else {
             String errorMessage;
             switch (result) {
-                case Constants.NO_FACE_DETECTED:
+                case CameraAndImageUtilities.NO_FACE_DETECTED:
                     errorMessage = getString(R.string.no_face_detected);
                     break;
-                case Constants.VALID_PROFILE_PICTURE:
+                case CameraAndImageUtilities.VALID_PROFILE_PICTURE:
                     return true;
-                case Constants.MULTIPLE_FACES:
+                case CameraAndImageUtilities.MULTIPLE_FACES:
                     errorMessage = getString(R.string.multiple_face_detected);
                     break;
-                case Constants.NOT_AN_IMAGE:
+                case CameraAndImageUtilities.NOT_AN_IMAGE:
                     errorMessage = getString(R.string.not_an_image);
                     break;
                 default:
@@ -414,14 +414,14 @@ public class AccountFragment extends BaseFragmentV4 implements HttpResponseListe
                     LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"ProfilePictureSet", "Succeed", mSetProfilePictureResponse.getMessage());
+                    Utilities.sendEventTracker(mTracker, "ProfilePictureSet", "Succeed", mSetProfilePictureResponse.getMessage());
 
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_SHORT).show();
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"ProfilePictureSet", "Failed", mSetProfilePictureResponse.getMessage());
+                    Utilities.sendEventTracker(mTracker, "ProfilePictureSet", "Failed", mSetProfilePictureResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -429,7 +429,7 @@ public class AccountFragment extends BaseFragmentV4 implements HttpResponseListe
                     Toaster.makeText(getActivity(), R.string.profile_picture_set_failed, Toast.LENGTH_SHORT);
 
                 //Google Analytic event
-                Utilities.sendEventTracker(mTracker,"ProfilePictureSet", "Failed", getString( R.string.profile_picture_set_failed));
+                Utilities.sendEventTracker(mTracker, "ProfilePictureSet", "Failed", getString(R.string.profile_picture_set_failed));
             }
 
             mUploadProfilePictureAsyncTask = null;

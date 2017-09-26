@@ -35,7 +35,6 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.flipboard.bottomsheet.BottomSheetLayout;
-import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -76,6 +75,8 @@ import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonColorList.PROFILE_
 public class ContactsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
         SearchView.OnQueryTextListener,
         HttpResponseListener {
+
+    private static final String TAG = ContactsFragment.class.getSimpleName();
 
     private static final int CONTACTS_QUERY_LOADER = 0;
 
@@ -553,20 +554,26 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void sendInvite(String phoneNumber, boolean wantToIntroduce) {
-        int numberOfInvitees = ContactsHolderFragment.mGetInviteInfoResponse.invitees.size();
-        if (numberOfInvitees >= ContactsHolderFragment.mGetInviteInfoResponse.totalLimit) {
-            Toast.makeText(getActivity(), R.string.invitaiton_limit_exceeded,
-                    Toast.LENGTH_LONG).show();
-        } else {
-            mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_sending_invite));
-            mProgressDialog.show();
+        try {
+            if (ContactsHolderFragment.mGetInviteInfoResponse != null && ContactsHolderFragment.mGetInviteInfoResponse.invitees != null) {
+                int numberOfInvitees = ContactsHolderFragment.mGetInviteInfoResponse.invitees.size();
+                if (numberOfInvitees >= ContactsHolderFragment.mGetInviteInfoResponse.totalLimit) {
+                    Toast.makeText(getActivity(), R.string.invitaiton_limit_exceeded,
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_sending_invite));
+                    mProgressDialog.show();
 
-            InviteContactNode inviteContactNode = new InviteContactNode(phoneNumber, wantToIntroduce);
-            Gson gson = new Gson();
-            String json = gson.toJson(inviteContactNode, InviteContactNode.class);
-            mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
-                    Constants.BASE_URL_MM + Constants.URL_SEND_INVITE, json, getActivity(), this);
-            mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    InviteContactNode inviteContactNode = new InviteContactNode(phoneNumber, wantToIntroduce);
+                    Gson gson = new Gson();
+                    String json = gson.toJson(inviteContactNode, InviteContactNode.class);
+                    mSendInviteTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_INVITE,
+                            Constants.BASE_URL_MM + Constants.URL_SEND_INVITE, json, getActivity(), this);
+                    mSendInviteTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
+            }
+        } catch (Exception e) {
+            Logger.logD(TAG, e.getMessage());
         }
     }
 
@@ -734,19 +741,14 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         this.mSelectedNumber = contactNumber;
     }
 
+    public interface ContactLoadFinishListener {
+        void onContactLoadFinish(int contactCount);
+    }
+
     public class ContactListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int EMPTY_VIEW = 10;
         private static final int CONTACT_VIEW = 100;
-
-        public class EmptyViewHolder extends RecyclerView.ViewHolder {
-            public final TextView mEmptyDescription;
-
-            public EmptyViewHolder(View itemView) {
-                super(itemView);
-                mEmptyDescription = (TextView) itemView.findViewById(R.id.empty_description);
-            }
-        }
 
         public boolean isInvited(String phoneNumber) {
             if (ContactsHolderFragment.mGetInviteInfoResponse == null ||
@@ -755,6 +757,62 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             else if (ContactsHolderFragment.mGetInviteInfoResponse.getInvitees().contains(phoneNumber))
                 return true;
             return false;
+        }
+
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            View v;
+
+            if (viewType == EMPTY_VIEW) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_description, parent, false);
+                return new EmptyViewHolder(v);
+            } else {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_contact, parent, false);
+                return new ViewHolder(v);
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            try {
+
+                if (holder instanceof ViewHolder) {
+                    ViewHolder vh = (ViewHolder) holder;
+                    vh.bindView(position);
+                } else if (holder instanceof EmptyViewHolder) {
+                    EmptyViewHolder vh = (EmptyViewHolder) holder;
+                    vh.mEmptyDescription.setText(getString(R.string.no_contacts));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mCursor == null || mCursor.isClosed())
+                return 0;
+            else
+                return mCursor.getCount();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (getItemCount() == 0)
+                return EMPTY_VIEW;
+            else
+                return CONTACT_VIEW;
+        }
+
+        public class EmptyViewHolder extends RecyclerView.ViewHolder {
+            public final TextView mEmptyDescription;
+
+            public EmptyViewHolder(View itemView) {
+                super(itemView);
+                mEmptyDescription = (TextView) itemView.findViewById(R.id.empty_description);
+            }
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -911,56 +969,5 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 });
             }
         }
-
-        @SuppressWarnings("UnnecessaryLocalVariable")
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View v;
-
-            if (viewType == EMPTY_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_empty_description, parent, false);
-                return new EmptyViewHolder(v);
-            } else {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_contact, parent, false);
-                return new ViewHolder(v);
-            }
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            try {
-
-                if (holder instanceof ViewHolder) {
-                    ViewHolder vh = (ViewHolder) holder;
-                    vh.bindView(position);
-                } else if (holder instanceof EmptyViewHolder) {
-                    EmptyViewHolder vh = (EmptyViewHolder) holder;
-                    vh.mEmptyDescription.setText(getString(R.string.no_contacts));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            if (mCursor == null || mCursor.isClosed())
-                return 0;
-            else
-                return mCursor.getCount();
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (getItemCount() == 0)
-                return EMPTY_VIEW;
-            else
-                return CONTACT_VIEW;
-        }
-    }
-
-    public interface ContactLoadFinishListener {
-        void onContactLoadFinish(int contactCount);
     }
 }

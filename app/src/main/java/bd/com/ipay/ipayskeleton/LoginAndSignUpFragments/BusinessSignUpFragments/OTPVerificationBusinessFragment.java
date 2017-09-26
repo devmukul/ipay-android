@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
+import bd.com.ipay.ipayskeleton.Utilities.InvalidInputResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationBusinessFragment extends BaseFragmentV4 implements HttpResponseListener {
@@ -134,7 +135,7 @@ public class OTPVerificationBusinessFragment extends BaseFragmentV4 implements H
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.title_otp_verification_for_business);
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_otp_verifications) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_otp_verifications));
     }
 
     @Override
@@ -251,7 +252,6 @@ public class OTPVerificationBusinessFragment extends BaseFragmentV4 implements H
         switch (result.getApiCommand()) {
             case Constants.COMMAND_SIGN_UP_BUSINESS:
                 hideProgressDialog();
-
                 try {
                     mSignupResponseBusiness = gson.fromJson(result.getJsonString(), SignupResponseBusiness.class);
                     String message = mSignupResponseBusiness.getMessage();
@@ -274,14 +274,27 @@ public class OTPVerificationBusinessFragment extends BaseFragmentV4 implements H
 //                ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
 
                         //Google Analytic event
-                        Utilities.sendEventTracker(mTracker,"BusinessSignUp", "Succeed", "Signup complete for Business.");
+                        Utilities.sendEventTracker(mTracker, "BusinessSignUp", "Succeed", "Signup complete for Business.");
 
 
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
+                        InvalidInputResponse invalidInputResponse = gson.fromJson(result.getJsonString(), InvalidInputResponse.class);
+                        String[] errorFields = invalidInputResponse.getErrorFieldNames();
+                        String errorMessage = invalidInputResponse.getMessage();
+                        if (errorFields != null) {
+                            Toast.makeText(getActivity(),
+                                    Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), Toast.LENGTH_LONG).show();
+                        } else
+                            Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        getActivity().finish();
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                         //Google Analytic event
-                        Utilities.sendEventTracker(mTracker,"BusinessSignUp", "Failed",message);
+                        Utilities.sendEventTracker(mTracker, "BusinessSignUp", "Failed", message);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

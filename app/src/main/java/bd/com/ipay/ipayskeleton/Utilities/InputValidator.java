@@ -18,6 +18,7 @@ public class InputValidator {
             INVALID_DRIVING_LICENSE_ID_WITH_INSUFFICIENT_LENGTH_PATTERN = "[A-Z]{2}[0-9]{0,7}|[A-Z]{1}|[A-Z]{2}[0-9]{7}[A-Z]{1,2}|" +
             "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{1,4}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{1,3}";
     private static final String VALID_DRIVING_LICENSE_ID_PATTERN = "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{5}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{4}";
+    private static final String ALPHA_NUMERIC_PATTERN="^[a-zA-Z0-9]*$";
 
     public static String isPasswordValid(String password) {
         // Return empty string if the password is valid
@@ -66,7 +67,7 @@ public class InputValidator {
     public static String isValidAmount(Context context, BigDecimal amount, BigDecimal minAmount, BigDecimal maxAmount) {
         String errorMessage = null;
 
-        if (minAmount.compareTo(maxAmount) >= 0) {
+        if (minAmount.compareTo(maxAmount) > 0) {
             errorMessage = context.getResources().getString(R.string.insufficient_balance);
             return errorMessage;
         } else {
@@ -121,6 +122,14 @@ public class InputValidator {
                     else if (!documentID.matches(VALID_DRIVING_LICENSE_ID_PATTERN))
                         errorMessage = context.getString(R.string.invalid_driving_license_ID);
                     break;
+                case Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE:
+                    if(!documentID.matches(ALPHA_NUMERIC_PATTERN))
+                        errorMessage=context.getString(R.string.invalid_birth_certificate);
+                    break;
+                case Constants.DOCUMENT_TYPE_TIN:
+                    if(!documentID.matches(ALPHA_NUMERIC_PATTERN))
+                        errorMessage=context.getString(R.string.invalid_tin);
+                    break;
             }
         }
         return errorMessage;
@@ -155,6 +164,19 @@ public class InputValidator {
                 case Constants.DOCUMENT_TYPE_VAT_REG_CERT:
                     if (documentID.length() != Constants.VAT_REG_CERT_ID_LENGTH)
                         errorMessage = context.getString(R.string.invalid_vat_reg_cert_ID_wrong_length);
+                    break;
+                case Constants.DOCUMENT_TYPE_PASSPORT:
+                    if (documentID.matches(INVALID_PASSPORT_ID_WITH_INSUFFICIENT_LENGTH_PATTERN))
+                        errorMessage = context.getString(R.string.invalid_passport_ID_insufficient_length);
+                    else if (!documentID.matches(VALID_PASSPORT_ID_PATTERN))
+                        errorMessage = context.getString(R.string.invalid_passport_ID);
+                    break;
+
+                case Constants.DOCUMENT_TYPE_DRIVING_LICENSE:
+                    if (documentID.matches(INVALID_DRIVING_LICENSE_ID_WITH_INSUFFICIENT_LENGTH_PATTERN))
+                        errorMessage = context.getString(R.string.invalid_driving_license_ID_insufficient_length);
+                    else if (!documentID.matches(VALID_DRIVING_LICENSE_ID_PATTERN))
+                        errorMessage = context.getString(R.string.invalid_driving_license_ID);
                     break;
             }
         }

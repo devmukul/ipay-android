@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,8 +49,12 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyFragment extends BaseFragmentV4 implements HttpResponseListener {
 
+    public static final int REQUEST_CODE_PERMISSION = 1001;
+
     private final int PICK_CONTACT_REQUEST = 100;
     private final int SEND_MONEY_REVIEW_REQUEST = 101;
+
+    private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
     private Button buttonSend;
     private ImageView buttonSelectFromContacts;
@@ -58,9 +63,6 @@ public class SendMoneyFragment extends BaseFragmentV4 implements HttpResponseLis
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
 
-    public static final int REQUEST_CODE_PERMISSION = 1001;
-
-    private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -129,7 +131,7 @@ public class SendMoneyFragment extends BaseFragmentV4 implements HttpResponseLis
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_send_money) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_send_money));
     }
 
 
@@ -215,52 +217,47 @@ public class SendMoneyFragment extends BaseFragmentV4 implements HttpResponseLis
 
         boolean cancel = false;
         View focusView = null;
-        BigDecimal maxAmount;
-        String error_message;
+        String errorMessage = null;
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
-        String balance = null;
         if (SharedPrefManager.ifContainsUserBalance()) {
-            balance = SharedPrefManager.getUserBalance(null);
-        }
+            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
 
-        // validation check of amount
-        if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
-            focusView = mAmountEditText;
-            mAmountEditText.setError(getString(R.string.please_enter_amount));
-            cancel = true;
-
-        } else if ((mAmountEditText.getText().toString().trim().length() > 0)
-                && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-
-            String amount = mAmountEditText.getText().toString();
-
-            if (new BigDecimal(amount).compareTo(new BigDecimal(balance)) > 0) {
-                error_message = getString(R.string.insufficient_balance);
-            } else {
-                maxAmount = SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min((new BigDecimal(balance)));
-
-                error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
-                        SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
-            }
-
-            if (error_message != null) {
+            if (TextUtils.isEmpty(mAmountEditText.getText())) {
+                errorMessage = getString(R.string.please_enter_amount);
                 focusView = mAmountEditText;
-                mAmountEditText.setError(error_message);
                 cancel = true;
+
+            } else {
+                final BigDecimal sendMoneyAmount = new BigDecimal(mAmountEditText.getText().toString());
+                if (sendMoneyAmount.compareTo(balance) > 0) {
+                    errorMessage = getString(R.string.insufficient_balance);
+                }
+                if (Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                        && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+
+                    final BigDecimal minimumSendMoneyAmount = SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
+                    final BigDecimal maximumSendMoneyAmount = SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
+
+                    errorMessage = InputValidator.isValidAmount(getActivity(), sendMoneyAmount, minimumSendMoneyAmount, maximumSendMoneyAmount);
+                }
             }
+        } else {
+            focusView = mAmountEditText;
+            errorMessage = getString(R.string.balance_not_available);
+            cancel = true;
         }
 
-        if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
+        if (errorMessage != null) {
+            focusView = mAmountEditText;
+            mAmountEditText.setError(errorMessage);
+            cancel = true;
+        } else if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
             focusView = mDescriptionEditText;
             mDescriptionEditText.setError(getString(R.string.please_write_note));
             cancel = true;
-
-        }
-
-        if (!ContactEngine.isValidNumber(mobileNumber)) {
+        } else if (!ContactEngine.isValidNumber(mobileNumber)) {
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             cancel = true;

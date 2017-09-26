@@ -340,6 +340,29 @@ public class Utilities {
         }
         return "";
     }
+    
+    private static String splitCamelCase(String camelCaseWord) {
+        return camelCaseWord.replaceAll(
+                String.format("%s|%s|%s",
+                       "(?<=[A-Z])(?=[A-Z][a-z])",
+                       "(?<=[^A-Z])(?=[A-Z])",
+                       "(?<=[A-Za-z])(?=[^A-Za-z])"
+               ),
+               " "
+       ).toLowerCase();
+    }
+    
+    public static String getErrorMessageForInvalidInput(String[] errorFieldNames, String errorMessage) {
+
+        String errorMessageWithFieldNames = errorMessage + " in ";
+        for (int i = 0; i < errorFieldNames.length; i++) {
+            if (i != errorFieldNames.length - 1)
+                errorMessageWithFieldNames += splitCamelCase(errorFieldNames[i]) + " , ";
+            else
+                errorMessageWithFieldNames += splitCamelCase(errorFieldNames[i]);
+        }
+        return errorMessageWithFieldNames;
+    }
 
     public static long getTimeFromBase64Token(String base64) {
 
@@ -535,7 +558,7 @@ public class Utilities {
 
     public static String getExtension(String filePath) {
         if (filePath != null && filePath.lastIndexOf('.') >= 0)
-            return filePath.substring(0, filePath.lastIndexOf('.')).toLowerCase();
+            return filePath.substring(filePath.lastIndexOf('.') + 1, filePath.length()).toLowerCase();
         else
             return "";
     }
@@ -751,19 +774,19 @@ public class Utilities {
         ActivityCompat.requestPermissions(activity, requiredPermissions.toArray(new String[requiredPermissions.size()]), permissionCode);
     }
 
-    public static Tracker getTracker(Activity activity){
+    public static Tracker getTracker(Activity activity) {
         Tracker mTracker;
         MyApplication application = (MyApplication) activity.getApplication();
         mTracker = application.getDefaultTracker();
-        return  mTracker;
+        return mTracker;
     }
 
-    public static void sendScreenTracker(Tracker mTracker, String screenName){
+    public static void sendScreenTracker(Tracker mTracker, String screenName) {
         mTracker.setScreenName(screenName);
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
-    public static void sendEventTracker(Tracker mTracker, String category, String action, String label){
+    public static void sendEventTracker(Tracker mTracker, String category, String action, String label) {
         mTracker.send(new HitBuilders.EventBuilder()
                 .setCategory(category)
                 .setAction(action)
