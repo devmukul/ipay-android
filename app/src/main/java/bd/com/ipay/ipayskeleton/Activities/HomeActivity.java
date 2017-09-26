@@ -593,6 +593,7 @@ public class HomeActivity extends BaseActivity
 
                         //saving user info in shared preference
                         ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
+                        ProfileInfoCacheManager.setGender(mGetProfileInfoResponse.getGender());
 
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
