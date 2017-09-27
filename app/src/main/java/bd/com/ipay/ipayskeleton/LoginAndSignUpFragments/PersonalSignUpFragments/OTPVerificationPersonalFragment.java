@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -270,11 +271,11 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 //                        ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
 
                         //Google Analytic event
-                        Utilities.sendSuccessEventTracker(mTracker, "Signup", ProfileInfoCacheManager.getAccountId(), 100);
+                        Utilities.sendSuccessEventTracker(mTracker, "Signup", ProfileInfoCacheManager.getAccountId());
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        Utilities.sendBlockedEventTracker(mTracker, "Signup", ProfileInfoCacheManager.getAccountId(), 0);
+                        Utilities.sendBlockedEventTracker(mTracker, "Signup", ProfileInfoCacheManager.getAccountId());
                         getActivity().finish();
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                         InvalidInputResponse invalidInputResponse = gson.fromJson(result.getJsonString(), InvalidInputResponse.class);
@@ -283,11 +284,11 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         if (errorFields != null) {
                             Toast.makeText(getActivity(),
                                     Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), Toast.LENGTH_LONG).show();
-                            Utilities.sendFailedEventTracker(mTracker, "Signup", ProfileInfoCacheManager.getAccountId(), Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), 0);
+                            Utilities.sendFailedEventTracker(mTracker, "Signup", ProfileInfoCacheManager.getAccountId(), Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage));
 
                         } else {
                             Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-                            Utilities.sendFailedEventTracker(mTracker, "Signup", ProfileInfoCacheManager.getAccountId(), errorMessage, 0);
+                            Utilities.sendFailedEventTracker(mTracker, "Signup", ProfileInfoCacheManager.getAccountId(), errorMessage);
                         }
                     } else {
                         if (getActivity() != null)
@@ -299,7 +300,10 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
 
                     //Google Analytic event
-                    Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
+                    if (!TextUtils.isEmpty(result.getJsonString()))
+                        Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage() + " " + result.getJsonString());
+                    else
+                        Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
                 }
 
                 mSignUpTask = null;

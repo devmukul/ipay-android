@@ -315,7 +315,7 @@ public class SignupBusinessStepThreeFragment extends BaseFragment implements Htt
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
 
                 //Google Analytic event
-                Utilities.sendSuccessEventTracker(mTracker, "Business Signup to OTP", ProfileInfoCacheManager.getAccountId(), 100);
+                Utilities.sendSuccessEventTracker(mTracker, "Business Signup to OTP", ProfileInfoCacheManager.getAccountId());
 
             } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                 InvalidInputResponse invalidInputResponse = gson.fromJson(result.getJsonString(), InvalidInputResponse.class);
@@ -324,10 +324,10 @@ public class SignupBusinessStepThreeFragment extends BaseFragment implements Htt
                 if (errorFields != null) {
                     Toast.makeText(getActivity(),
                             Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), Toast.LENGTH_LONG).show();
-                    Utilities.sendFailedEventTracker(mTracker, "Business Signup to OTP", ProfileInfoCacheManager.getAccountId(), Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), 0);
+                    Utilities.sendFailedEventTracker(mTracker, "Business Signup to OTP", ProfileInfoCacheManager.getAccountId(), Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage));
                 } else {
                     Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-                    Utilities.sendFailedEventTracker(mTracker, "Business Signup to OTP", ProfileInfoCacheManager.getAccountId(), errorMessage, 0);
+                    Utilities.sendFailedEventTracker(mTracker, "Business Signup to OTP", ProfileInfoCacheManager.getAccountId(), errorMessage);
                 }
             } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
                 if (getActivity() != null)
@@ -336,13 +336,13 @@ public class SignupBusinessStepThreeFragment extends BaseFragment implements Htt
                 // Previous OTP has not been expired yet
                 SignupOrLoginActivity.otpDuration = mOtpResponseBusinessSignup.getOtpValidFor();
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
-                Utilities.sendSuccessEventTracker(mTracker, "Business Signup to OTP(Retry)", ProfileInfoCacheManager.getAccountId(), 100);
+                Utilities.sendSuccessEventTracker(mTracker, "Business Signup to OTP(Retry)", ProfileInfoCacheManager.getAccountId());
             } else {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
                 //Google Analytic event
-                Utilities.sendFailedEventTracker(mTracker, "Business Signup to OTP", ProfileInfoCacheManager.getAccountId(), message, 0);
+                Utilities.sendFailedEventTracker(mTracker, "Business Signup to OTP", ProfileInfoCacheManager.getAccountId(), message);
 
             }
 

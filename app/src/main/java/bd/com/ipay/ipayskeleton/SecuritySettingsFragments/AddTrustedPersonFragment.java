@@ -210,13 +210,13 @@ public class AddTrustedPersonFragment extends BaseFragment implements HttpRespon
                     ((SecuritySettingsActivity) getActivity()).switchToTrustedPersonFragment();
 
                     //Google Analytic event
-                    Utilities.sendSuccessEventTracker(mTracker, "Add Trusted Person", ProfileInfoCacheManager.getAccountId(), 100);
+                    Utilities.sendSuccessEventTracker(mTracker, "Add Trusted Person", ProfileInfoCacheManager.getAccountId());
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mAddTrustedPersonResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                     //Google Analytic event
-                    Utilities.sendFailedEventTracker(mTracker, "Trusted Person Update", ProfileInfoCacheManager.getAccountId(), mAddTrustedPersonResponse.getMessage(), 0);
+                    Utilities.sendFailedEventTracker(mTracker, "Trusted Person Update", ProfileInfoCacheManager.getAccountId(), mAddTrustedPersonResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

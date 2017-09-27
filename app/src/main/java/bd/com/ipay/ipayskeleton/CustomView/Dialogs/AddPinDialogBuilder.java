@@ -157,7 +157,7 @@ public class AddPinDialogBuilder extends MaterialDialog.Builder implements HttpR
                         ((MyApplication) ((Activity) getContext()).getApplication()).launchLoginPage(mSetPinResponse.getMessage());
                     }
                     if (getContext() instanceof AppCompatActivity)
-                        Utilities.sendBlockedEventTracker(Utilities.getTracker(((AppCompatActivity) getContext())), "Add Pin", ProfileInfoCacheManager.getAccountId(), 0);
+                        Utilities.sendBlockedEventTracker(Utilities.getTracker(((AppCompatActivity) getContext())), "Add Pin", ProfileInfoCacheManager.getAccountId());
 
                 } else {
                     if (getContext() != null)

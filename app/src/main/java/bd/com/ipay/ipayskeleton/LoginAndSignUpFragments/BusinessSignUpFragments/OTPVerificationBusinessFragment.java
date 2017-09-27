@@ -268,7 +268,7 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
 //                ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
 
                         //Google Analytic event
-                        Utilities.sendSuccessEventTracker(mTracker, "Business Signup", ProfileInfoCacheManager.getAccountId(), 100);
+                        Utilities.sendSuccessEventTracker(mTracker, "Business Signup", ProfileInfoCacheManager.getAccountId());
 
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
@@ -278,21 +278,21 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
                         if (errorFields != null) {
                             Toast.makeText(getActivity(),
                                     Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), Toast.LENGTH_LONG).show();
-                            Utilities.sendFailedEventTracker(mTracker, "Business Signup", ProfileInfoCacheManager.getAccountId(), Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), 0);
+                            Utilities.sendFailedEventTracker(mTracker, "Business Signup", ProfileInfoCacheManager.getAccountId(), Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage));
                         } else {
                             Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-                            Utilities.sendFailedEventTracker(mTracker, "Business Signup", ProfileInfoCacheManager.getAccountId(), errorMessage, 0);
+                            Utilities.sendFailedEventTracker(mTracker, "Business Signup", ProfileInfoCacheManager.getAccountId(), errorMessage);
                         }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        Utilities.sendBlockedEventTracker(mTracker, "OTP", ProfileInfoCacheManager.getAccountId(), 0);
+                        Utilities.sendBlockedEventTracker(mTracker, "OTP", ProfileInfoCacheManager.getAccountId());
 
                         getActivity().finish();
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                         //Google Analytic event
-                        Utilities.sendFailedEventTracker(mTracker, "Business Signup", ProfileInfoCacheManager.getAccountId(), message, 0);
+                        Utilities.sendFailedEventTracker(mTracker, "Business Signup", ProfileInfoCacheManager.getAccountId(), message);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

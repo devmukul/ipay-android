@@ -267,7 +267,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mRemoveTrustedPersonResponse.getMessage());
-                    Utilities.sendBlockedEventTracker(mTracker, "Trusted Network", ProfileInfoCacheManager.getAccountId(), 0);
+                    Utilities.sendBlockedEventTracker(mTracker, "Trusted Network", ProfileInfoCacheManager.getAccountId());
 
                 } else {
                     if (getActivity() != null) {
