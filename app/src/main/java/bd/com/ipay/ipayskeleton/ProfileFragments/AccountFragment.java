@@ -416,9 +416,9 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
 
                     //Google Analytic event
                     if (!TextUtils.isEmpty(ProfileInfoCacheManager.getProfileImageUrl())) {
-                        Utilities.sendSuccessEventTracker(mTracker, "Profile Picture", ProfileInfoCacheManager.getAccountId(), 1);
+                        Utilities.sendSuccessEventTracker(mTracker, "Profile Picture", ProfileInfoCacheManager.getAccountId());
                     } else {
-                        Utilities.sendSuccessEventTracker(mTracker, "Profile Picture", ProfileInfoCacheManager.getAccountId(), 2);
+                        Utilities.sendSuccessEventTracker(mTracker, "Profile Picture", ProfileInfoCacheManager.getAccountId());
                     }
 
                 } else {
@@ -427,9 +427,9 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
 
                     //Google Analytic event
                     if (!TextUtils.isEmpty(ProfileInfoCacheManager.getProfileImageUrl())) {
-                        Utilities.sendFailedEventTracker(mTracker, "Profile Picture", ProfileInfoCacheManager.getAccountId(), mSetProfilePictureResponse.getMessage(), -1);
+                        Utilities.sendFailedEventTracker(mTracker, "Profile Picture", ProfileInfoCacheManager.getAccountId(), mSetProfilePictureResponse.getMessage());
                     } else {
-                        Utilities.sendFailedEventTracker(mTracker, "Profile Picture", ProfileInfoCacheManager.getAccountId(), mSetProfilePictureResponse.getMessage(), -2);
+                        Utilities.sendFailedEventTracker(mTracker, "Profile Picture", ProfileInfoCacheManager.getAccountId(), mSetProfilePictureResponse.getMessage());
                     }
 
                 }

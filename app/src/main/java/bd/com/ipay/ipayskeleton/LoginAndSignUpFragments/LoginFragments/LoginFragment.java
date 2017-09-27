@@ -228,7 +228,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         tryLogInWithTouchID = false;
         ProfileInfoCacheManager.clearEncryptedPassword();
         showLogInFailedWithFingerPrintAuthDialog();
-        Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), "Password Changed Removing FingerPrintAuth", 100);
+        Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), "Password Changed Removing FingerPrintAuth");
     }
 
     private void showLogInFailedWithFingerPrintAuthDialog() {
@@ -349,7 +349,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                                 ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                             }
                             //Google Analytic event
-                            Utilities.sendSuccessEventTracker(mTracker, "Login to Home", ProfileInfoCacheManager.getAccountId(), 100);
+                            Utilities.sendSuccessEventTracker(mTracker, "Login to Home", ProfileInfoCacheManager.getAccountId());
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_ACCEPTED:
                             hideProgressDialog();
@@ -362,7 +362,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                             ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
 
                             //Google Analytic event
-                            Utilities.sendSuccessEventTracker(mTracker, "Login to OTP", ProfileInfoCacheManager.getAccountId(), 100);
+                            Utilities.sendSuccessEventTracker(mTracker, "Login to OTP", ProfileInfoCacheManager.getAccountId());
 
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE:
@@ -376,7 +376,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                             SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
                             ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
                             //Google Analytic event
-                            Utilities.sendSuccessEventTracker(mTracker, "Login to OTP", ProfileInfoCacheManager.getAccountId(), 100);
+                            Utilities.sendSuccessEventTracker(mTracker, "Login to OTP", ProfileInfoCacheManager.getAccountId());
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED:
                             hideProgressDialog();
@@ -402,7 +402,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                                 if (!tryLogInWithTouchID) {
                                     if (getActivity() != null)
                                         Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
-                                    Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), mLoginResponseModel.getMessage(), 0);
+                                    Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), mLoginResponseModel.getMessage());
                                 } else
                                     removeFingerprintAuthentication();
                             }
@@ -410,7 +410,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                         case Constants.HTTP_RESPONSE_STATUS_BLOCKED:
                             hideProgressDialog();
                             Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_LONG).show();
-                            Utilities.sendBlockedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), 0);
+                            Utilities.sendBlockedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId());
                             break;
                         default:
                             hideProgressDialog();
@@ -418,7 +418,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                             if (!tryLogInWithTouchID) {
                                 if (getActivity() != null)
                                     Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
-                                Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), mLoginResponseModel.getMessage(), 0);
+                                Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), mLoginResponseModel.getMessage());
                             } else
                                 removeFingerprintAuthentication();
                             break;

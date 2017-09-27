@@ -40,6 +40,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.R
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.TrustedNetwork.TrustedPerson;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -102,7 +103,11 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
             @Override
             @ValidateAccess(ServiceIdConstants.MANAGE_TRUSTED_PERSON)
             public void onClick(View v) {
-                ((SecuritySettingsActivity) getActivity()).switchToAddTrustedPerson();
+                if (CommonData.getRelationshipList() != null) {
+                    ((SecuritySettingsActivity) getActivity()).switchToAddTrustedPerson();
+                } else {
+                    Toast.makeText(getContext(), "Please try again later.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -262,7 +267,7 @@ public class TrustedNetworkFragment extends ProgressFragment implements HttpResp
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mRemoveTrustedPersonResponse.getMessage());
-                    Utilities.sendBlockedEventTracker(mTracker, "Trusted Network", ProfileInfoCacheManager.getAccountId(), 0);
+                    Utilities.sendBlockedEventTracker(mTracker, "Trusted Network", ProfileInfoCacheManager.getAccountId());
 
                 } else {
                     if (getActivity() != null) {

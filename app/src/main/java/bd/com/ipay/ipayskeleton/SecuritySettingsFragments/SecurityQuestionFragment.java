@@ -289,7 +289,7 @@ public class SecurityQuestionFragment extends ProgressFragment implements HttpRe
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null)
                         ((MyApplication) (getActivity().getApplication())).launchLoginPage(mSetSecurityAnswerResponse.getMessage());
-                    Utilities.sendBlockedEventTracker(mTracker, "Updating Security Question", ProfileInfoCacheManager.getAccountId(), 0);
+                    Utilities.sendBlockedEventTracker(mTracker, "Updating Security Question", ProfileInfoCacheManager.getAccountId());
 
                 } else {
                     if (getActivity() != null)

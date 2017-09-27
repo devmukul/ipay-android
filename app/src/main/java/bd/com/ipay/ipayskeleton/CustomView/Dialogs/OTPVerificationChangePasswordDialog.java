@@ -262,7 +262,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
                         Utilities.hideKeyboard(context, view);
                         ((MyApplication) ((Activity) (getContext())).getApplication()).launchLoginPage(mChangePasswordWithOTPResponse.getMessage());
                         if (getContext() instanceof AppCompatActivity) {
-                            Utilities.sendBlockedEventTracker(Utilities.getTracker(((AppCompatActivity) getContext())), "Add Money", ProfileInfoCacheManager.getAccountId(), 0);
+                            Utilities.sendBlockedEventTracker(Utilities.getTracker(((AppCompatActivity) getContext())), "Add Money", ProfileInfoCacheManager.getAccountId());
 
                         }
 

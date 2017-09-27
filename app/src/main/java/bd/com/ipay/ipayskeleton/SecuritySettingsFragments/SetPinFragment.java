@@ -149,18 +149,18 @@ public class SetPinFragment extends BaseFragment implements HttpResponseListener
                         Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
                     ((SecuritySettingsActivity) getActivity()).switchToAccountSettingsFragment();
                     //Google Analytic event
-                    Utilities.sendSuccessEventTracker(mTracker, "Pin Set", ProfileInfoCacheManager.getAccountId(), 100);
+                    Utilities.sendSuccessEventTracker(mTracker, "Pin Set", ProfileInfoCacheManager.getAccountId());
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mSetPinResponse.getMessage());
-                    Utilities.sendBlockedEventTracker(mTracker, "Pin Set", ProfileInfoCacheManager.getAccountId(), 0);
+                    Utilities.sendBlockedEventTracker(mTracker, "Pin Set", ProfileInfoCacheManager.getAccountId());
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                     //Google Analytic event
-                    Utilities.sendFailedEventTracker(mTracker, "Pin Set", ProfileInfoCacheManager.getAccountId(), mSetPinResponse.getMessage(), 0);
+                    Utilities.sendFailedEventTracker(mTracker, "Pin Set", ProfileInfoCacheManager.getAccountId(), mSetPinResponse.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

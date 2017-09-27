@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,8 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import java.util.ArrayList;
-
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.PagerIndicator;
 import bd.com.ipay.ipayskeleton.R;
@@ -24,10 +23,8 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TourActivity extends AppCompatActivity {
 
-    private final int[] TOUR_BACKGROUND_LAYOUTS = {R.layout.tour_first_page, R.layout.tour_second_page,
-            R.layout.tour_third_page, R.layout.tour_fourth_page};
+    private static final int TOTAL_TOUR_PAGE_COUNT = 4;
     private PagerIndicator mPagerIndicator;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +38,7 @@ public class TourActivity extends AppCompatActivity {
         final Button buttonSignUp = (Button) findViewById(R.id.button_join_now);
 
         final ViewPager tourPager = (ViewPager) findViewById(R.id.tour_pager);
-        final TourPagerAdapter tourPageAdapter = new TourPagerAdapter(getSupportFragmentManager(), initFragments());
+        final TourPagerAdapter tourPageAdapter = new TourPagerAdapter(getSupportFragmentManager());
         tourPager.setAdapter(tourPageAdapter);
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
@@ -62,12 +59,10 @@ public class TourActivity extends AppCompatActivity {
             }
         });
 
-        initFragments();
 
         mPagerIndicator = (PagerIndicator) findViewById(R.id.pager_indicator);
         mPagerIndicator.setup(R.drawable.pager_indicator_selected,
-                R.drawable.pager_indicator_unselected,
-                TOUR_BACKGROUND_LAYOUTS.length);
+                R.drawable.pager_indicator_unselected, TOTAL_TOUR_PAGE_COUNT);
 
         tourPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -95,69 +90,61 @@ public class TourActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    private ArrayList<Fragment> initFragments() {
-        ArrayList<Fragment> fragments = new ArrayList<>();
-        for (int tourBackgroundLayout : TOUR_BACKGROUND_LAYOUTS) {
-            fragments.add(TourFragment.getInstance(tourBackgroundLayout));
-        }
-        return fragments;
-    }
-
     public static class TourFragment extends BaseFragment {
 
-        private int layout;
+        public static final String RES_ID = "RES_ID";
 
-        public static TourFragment getInstance(int layout) {
-            TourFragment fragment = new TourFragment();
-            fragment.setLayout(layout);
-            return fragment;
-        }
-
-        public void setLayout(int layout) {
-            this.layout = layout;
+        public static Fragment newInstance(@LayoutRes int layoutResId) {
+            TourFragment tourFragment = new TourFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt(RES_ID, layoutResId);
+            tourFragment.setArguments(bundle);
+            return tourFragment;
         }
 
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-
             try {
-                return inflater.inflate(layout, container, false);
+                if (getArguments() != null) {
+                    final int layoutResId = getArguments().getInt(RES_ID);
+                    if (layoutResId != 0)
+                        return inflater.inflate(layoutResId, container, false);
+                    else return new View(getContext());
+                } else return new View(getContext());
             } catch (Exception e) {
-                if (layout == R.layout.tour_first_page) {
-                    Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage() + " on First Page");
-                } else if (layout == R.layout.tour_second_page) {
-                    Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage() + " on Second Page");
-                } else if (layout == R.layout.tour_third_page) {
-                    Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage() + " on Third Page");
-                } else if (layout == R.layout.tour_fourth_page) {
-                    Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage() + " on Fourth Page");
-                } else {
-                    Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage() + " for wrong layout");
-                }
-                return container;
+                Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
+                return new View(getContext());
             }
         }
     }
 
     private class TourPagerAdapter extends FragmentPagerAdapter {
 
-        final ArrayList<Fragment> fragments;
-
-        TourPagerAdapter(FragmentManager fm, ArrayList<Fragment> fragments) {
+        TourPagerAdapter(FragmentManager fm) {
             super(fm);
-            this.fragments = fragments;
         }
 
         @Override
         public Fragment getItem(int position) {
-            return fragments.get(position);
+            switch (position) {
+                case 0:
+                    return TourFragment.newInstance(R.layout.tour_first_page);
+                case 1:
+                    return TourFragment.newInstance(R.layout.tour_second_page);
+                case 2:
+                    return TourFragment.newInstance(R.layout.tour_third_page);
+                case 3:
+                    return TourFragment.newInstance(R.layout.tour_fourth_page);
+                default:
+                    return new TourFragment();
+            }
         }
 
         @Override
         public int getCount() {
-            return fragments.size();
+            return TOTAL_TOUR_PAGE_COUNT;
         }
     }
 }

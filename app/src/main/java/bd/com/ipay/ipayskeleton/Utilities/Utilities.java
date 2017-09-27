@@ -77,10 +77,10 @@ import io.intercom.android.sdk.identity.Registration;
 
 public class Utilities {
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-    private static final SimpleDateFormat DATE_FORMAT_WITH_TIME = new SimpleDateFormat("MMM d, yyyy, h:mm a", Locale.getDefault());
-    private static final SimpleDateFormat DATE_FORMAT_WITHOUT_TIME = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
-    private static final SimpleDateFormat DATE_FORMAT_FROM_STRING = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+    private static final SimpleDateFormat DATE_FORMAT_WITH_TIME = new SimpleDateFormat("MMM d, yyyy, h:mm a", Locale.US);
+    private static final SimpleDateFormat DATE_FORMAT_WITHOUT_TIME = new SimpleDateFormat("MMM d, yyyy", Locale.US);
+    private static final SimpleDateFormat DATE_FORMAT_FROM_STRING = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
     public static boolean isConnectionAvailable(Context context) {
         if (context == null) return false;
@@ -788,20 +788,28 @@ public class Utilities {
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
+    public static void sendSuccessEventTracker(Tracker tracker, String category, int accountId) {
+        sendSuccessEventTracker(tracker, category, accountId, 0);
+    }
+
     public static void sendSuccessEventTracker(Tracker tracker, String category, int accountId, long value) {
         if (accountId == Constants.INVALID_ACCOUNT_ID) {
             sendEventTracker(tracker,
                     category,
                     "Success",
-                    String.format(Locale.getDefault(), "At %s", formatDateWithoutTime(System.currentTimeMillis())),
+                    String.format(Locale.US, "At %s", formatDateWithoutTime(System.currentTimeMillis())),
                     value);
         } else {
             sendEventTracker(tracker,
                     category,
                     "Success",
-                    String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s", accountId, formatDateWithoutTime(System.currentTimeMillis())),
+                    String.format(Locale.US, "ACCOUNT_ID:%d at %s", accountId, formatDateWithoutTime(System.currentTimeMillis())),
                     value);
         }
+    }
+
+    public static void sendBlockedEventTracker(Tracker tracker, String category, int accountId) {
+        sendBlockedEventTracker(tracker, category, accountId, 0);
     }
 
     public static void sendBlockedEventTracker(Tracker tracker, String category, int accountId, long value) {
@@ -809,16 +817,20 @@ public class Utilities {
             sendEventTracker(tracker,
                     category,
                     "Blocked",
-                    String.format(Locale.getDefault(), "At %s", formatDateWithoutTime(System.currentTimeMillis())),
+                    String.format(Locale.US, "At %s", formatDateWithoutTime(System.currentTimeMillis())),
                     value);
         } else {
             sendEventTracker(tracker,
                     category,
                     "Blocked",
-                    String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s", accountId, formatDateWithoutTime(System.currentTimeMillis())),
+                    String.format(Locale.US, "ACCOUNT_ID:%d at %s", accountId, formatDateWithoutTime(System.currentTimeMillis())),
                     value);
         }
 
+    }
+
+    public static void sendFailedEventTracker(Tracker tracker, String category, int accountId, String serverErrorMessage) {
+        sendFailedEventTracker(tracker, category, accountId, serverErrorMessage, 0);
     }
 
     public static void sendFailedEventTracker(Tracker tracker, String category, int accountId, String serverErrorMessage, long value) {
@@ -826,13 +838,13 @@ public class Utilities {
             sendEventTracker(tracker,
                     category,
                     "Failed",
-                    String.format(Locale.getDefault(), "At %s, SERVER_MESSAGE:%s", formatDateWithoutTime(System.currentTimeMillis()), serverErrorMessage),
+                    String.format(Locale.US, "At %s, SERVER_MESSAGE:%s", formatDateWithoutTime(System.currentTimeMillis()), serverErrorMessage),
                     value);
         } else {
             sendEventTracker(tracker,
                     category,
                     "Failed",
-                    String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s, SERVER_MESSAGE:%s", accountId, formatDateWithoutTime(System.currentTimeMillis()), serverErrorMessage),
+                    String.format(Locale.US, "ACCOUNT_ID:%d at %s, SERVER_MESSAGE:%s", accountId, formatDateWithoutTime(System.currentTimeMillis()), serverErrorMessage),
                     value);
         }
     }
@@ -840,11 +852,11 @@ public class Utilities {
     public static void sendExceptionTracker(Tracker tracker, int accountId, String exceptionMessage) {
         if (accountId == Constants.INVALID_ACCOUNT_ID) {
             tracker.send(new HitBuilders.ExceptionBuilder().
-                    setDescription(String.format(Locale.getDefault(), "EXCEPTION_MESSAGE:%s at %s, DEVICE_NAME:%s", exceptionMessage, formatDateWithoutTime(System.currentTimeMillis()), DeviceInfoFactory.getDeviceName()))
+                    setDescription(String.format(Locale.US, "EXCEPTION_MESSAGE:%s at %s, DEVICE_NAME:%s", exceptionMessage, formatDateWithoutTime(System.currentTimeMillis()), DeviceInfoFactory.getDeviceName()))
                     .setFatal(true).build());
         } else {
             tracker.send(new HitBuilders.ExceptionBuilder().
-                    setDescription(String.format(Locale.getDefault(), "ACCOUNT_ID:%d at %s, EXCEPTION_MESSAGE:%s, DEVICE_NAME:%s", accountId, formatDateWithoutTime(System.currentTimeMillis()), exceptionMessage, DeviceInfoFactory.getDeviceName()))
+                    setDescription(String.format(Locale.US, "ACCOUNT_ID:%d at %s, EXCEPTION_MESSAGE:%s, DEVICE_NAME:%s", accountId, formatDateWithoutTime(System.currentTimeMillis()), exceptionMessage, DeviceInfoFactory.getDeviceName()))
                     .setFatal(true).build());
         }
     }

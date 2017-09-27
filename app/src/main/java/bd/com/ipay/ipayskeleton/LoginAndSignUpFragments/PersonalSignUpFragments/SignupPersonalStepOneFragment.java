@@ -328,7 +328,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
 
                 //Google Analytic event
-                Utilities.sendSuccessEventTracker(mTracker, "Signup to OTP", ProfileInfoCacheManager.getAccountId(), 100);
+                Utilities.sendSuccessEventTracker(mTracker, "Signup to OTP", ProfileInfoCacheManager.getAccountId());
 
             } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
                 if (getActivity() != null)
@@ -344,13 +344,13 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
                 String errorMessage = invalidInputResponse.getMessage();
                 Toast.makeText(getActivity(),
                         Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), Toast.LENGTH_LONG).show();
-                Utilities.sendFailedEventTracker(mTracker, "Signup to OTP", ProfileInfoCacheManager.getAccountId(), Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), 100);
+                Utilities.sendFailedEventTracker(mTracker, "Signup to OTP", ProfileInfoCacheManager.getAccountId(), Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage));
 
             } else {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                 //Google Analytic event
-                Utilities.sendFailedEventTracker(mTracker, "Signup to OTP", ProfileInfoCacheManager.getAccountId(), "Failed", 100);
+                Utilities.sendFailedEventTracker(mTracker, "Signup to OTP", ProfileInfoCacheManager.getAccountId(), "Failed");
             }
 
             mProgressDialog.dismiss();
