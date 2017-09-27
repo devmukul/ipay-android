@@ -242,7 +242,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         hideProgressDialog();
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                        Utilities.sendBlockedEventTracker(mTracker, "Trusted Device", ProfileInfoCacheManager.getAccountId(),0);
+                        Utilities.sendBlockedEventTracker(mTracker, "Trusted Device", ProfileInfoCacheManager.getAccountId());
 
                         getActivity().finish();
                     } else {
@@ -306,19 +306,19 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                         ProfileInfoCacheManager.setUUID(UUID);
 
                         //Google Analytic event
-                        Utilities.sendSuccessEventTracker(mTracker, "Login to Home", ProfileInfoCacheManager.getAccountId(), 100);
+                        Utilities.sendSuccessEventTracker(mTracker, "Login to Home", ProfileInfoCacheManager.getAccountId());
                         // Launch HomeActivity from here on successful trusted device add
                         ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
                         ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
 
                         //Google Analytic event
-                        Utilities.sendSuccessEventTracker(mTracker, "Login to Add Trusted Device", ProfileInfoCacheManager.getAccountId(), 100);
+                        Utilities.sendSuccessEventTracker(mTracker, "Login to Add Trusted Device", ProfileInfoCacheManager.getAccountId());
                     } else {
                         Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                         //Google Analytic event
-                        Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), mAddToTrustedDeviceResponse.getMessage(), 0);
+                        Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), mAddToTrustedDeviceResponse.getMessage());
                     }
 
 
@@ -327,7 +327,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                     Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
 
                     //Google Analytic event
-                    Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), getString(R.string.failed_add_trusted_device), 0);
+                    Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), getString(R.string.failed_add_trusted_device));
                 }
 
                 mProgressDialog.dismiss();

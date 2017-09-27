@@ -218,7 +218,7 @@ public class UpdateSecurityQuestionFragment extends BaseFragment implements Http
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null)
                         ((MyApplication) (getActivity().getApplication())).launchLoginPage(mUpdateSecurityAnswerResponse.getMessage());
-                    Utilities.sendBlockedEventTracker(mTracker, "Security Question", ProfileInfoCacheManager.getAccountId(), 0);
+                    Utilities.sendBlockedEventTracker(mTracker, "Security Question", ProfileInfoCacheManager.getAccountId());
 
                 } else {
                     if (getActivity() != null)

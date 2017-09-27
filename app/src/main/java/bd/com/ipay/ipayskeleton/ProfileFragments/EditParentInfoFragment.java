@@ -237,14 +237,14 @@ public class EditParentInfoFragment extends BaseFragment implements HttpResponse
                             getActivity().onBackPressed();
 
                             //Google Analytic event
-                            Utilities.sendSuccessEventTracker(mTracker,"Parent Info Update", ProfileInfoCacheManager.getAccountId(), 100);
+                            Utilities.sendSuccessEventTracker(mTracker, "Parent Info Update", ProfileInfoCacheManager.getAccountId());
                         }
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.parent_info_save_failed, Toast.LENGTH_SHORT).show();
 
                         //Google Analytic event
-                        Utilities.sendFailedEventTracker(mTracker, "Parent Info Update", ProfileInfoCacheManager.getAccountId(), mSetParentInfoResponse.getMessage(), 0);
+                        Utilities.sendFailedEventTracker(mTracker, "Parent Info Update", ProfileInfoCacheManager.getAccountId(), mSetParentInfoResponse.getMessage());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

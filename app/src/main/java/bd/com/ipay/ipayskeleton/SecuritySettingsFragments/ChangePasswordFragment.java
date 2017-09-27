@@ -183,7 +183,7 @@ public class ChangePasswordFragment extends BaseFragment implements HttpResponse
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mChangePasswordValidationResponse.getMessage());
-                    Utilities.sendBlockedEventTracker(mTracker, "Change Password", ProfileInfoCacheManager.getAccountId(), 0);
+                    Utilities.sendBlockedEventTracker(mTracker, "Change Password", ProfileInfoCacheManager.getAccountId());
 
                 } else {
                     if (getActivity() != null)

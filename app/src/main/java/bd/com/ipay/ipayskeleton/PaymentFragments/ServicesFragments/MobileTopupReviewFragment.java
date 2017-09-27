@@ -302,8 +302,15 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
-                        if (getActivity() != null && !TextUtils.isEmpty(mTopupResponse.getMessage()))
-                            Toaster.makeText(getActivity(), mTopupResponse.getMessage(), Toast.LENGTH_LONG);
+                        final String errorMessage;
+                        if (!TextUtils.isEmpty(mTopupResponse.getMessage())) {
+                            errorMessage = mTopupResponse.getMessage();
+                        } else {
+                            errorMessage = getString(R.string.recharge_failed);
+                        }
+                        Toaster.makeText(getActivity(), mTopupResponse.getMessage(), Toast.LENGTH_LONG);
+                        //Google Analytic event
+                        Utilities.sendFailedEventTracker(mTracker, "TopUp", ProfileInfoCacheManager.getAccountId(), errorMessage, Double.valueOf(mAmount).longValue());
                     } else {
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG);
