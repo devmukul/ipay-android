@@ -53,7 +53,7 @@ public class ProfileCompletionPropertyConstants {
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFIED_EMAIL, "Add a verified email");
         PROPERTY_NAME_TO_TITLE_MAP.put(PHOTOID, "Submit Document");
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFICATION_DOCUMENT, "Submit Verification Document");
-        PROPERTY_NAME_TO_TITLE_MAP.put(LINK_AND_VERIFY_BANK, "Link and Verify Bank Account");
+        PROPERTY_NAME_TO_TITLE_MAP.put(LINK_AND_VERIFY_BANK, "Add and Verify Bank Account");
         PROPERTY_NAME_TO_TITLE_MAP.put(PARENT, "Add Parent's Information");
     }
 
