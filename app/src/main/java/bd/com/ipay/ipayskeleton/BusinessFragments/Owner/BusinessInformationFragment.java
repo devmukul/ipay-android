@@ -117,7 +117,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_information) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_business_information));
     }
 
     @Nullable
