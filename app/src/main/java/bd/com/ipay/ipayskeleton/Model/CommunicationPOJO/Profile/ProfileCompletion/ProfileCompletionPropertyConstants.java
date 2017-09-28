@@ -26,15 +26,10 @@ public class ProfileCompletionPropertyConstants {
     public static final String BUSINESS_INFO = "BUSINESS_INFO";
     public static final String BUSINESS_DOCUMENTS = "BUSINESS_DOCUMENTS";
 
-    public static final String TAG_BASIC_INFO = "Basic Info";
-    public static final String TAG_ADDRESS = "Address";
-    public static final String TAG_IDENTIFICATION = "Identification";
-    public static final String TAG_LINK_BANK = "Link Bank";
-
     public static final int TAG_POSITION_BASIC_INFO = 0;
     public static final int TAG_POSITION_PERSONAL_ADDRESS = 1;
     public static final int TAG_POSITION_IDENTIFICATION = 2;
-    public static final int TAG_POSITION_LINK_BANK = 3;
+    public static final int TAG_POSITION_ADD_BANK = 3;
 
     public static final int TAG_POSITION_BUSINESS_INFO = 0;
     public static final int TAG_POSITION_BUSINESS_ADDRESS = 1;
@@ -58,7 +53,7 @@ public class ProfileCompletionPropertyConstants {
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFIED_EMAIL, "Add a verified email");
         PROPERTY_NAME_TO_TITLE_MAP.put(PHOTOID, "Submit Document");
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFICATION_DOCUMENT, "Submit Verification Document");
-        PROPERTY_NAME_TO_TITLE_MAP.put(LINK_AND_VERIFY_BANK, "Link and Verify Bank Account");
+        PROPERTY_NAME_TO_TITLE_MAP.put(LINK_AND_VERIFY_BANK, "Add and Verify Bank Account");
         PROPERTY_NAME_TO_TITLE_MAP.put(PARENT, "Add Parent's Information");
     }
 

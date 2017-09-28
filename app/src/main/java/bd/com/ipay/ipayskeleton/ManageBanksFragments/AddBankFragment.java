@@ -39,7 +39,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class LinkBankFragment extends BaseFragment implements HttpResponseListener {
+public class AddBankFragment extends BaseFragment implements HttpResponseListener {
 
     private static final String STARTED_FROM_PROFILE_ACTIVITY = "started_from_profile_activity";
 
@@ -74,8 +74,8 @@ public class LinkBankFragment extends BaseFragment implements HttpResponseListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_link_bank, container, false);
-        getActivity().setTitle(R.string.link_bank);
+        View v = inflater.inflate(R.layout.fragment_add_bank, container, false);
+        getActivity().setTitle(R.string.add_bank);
         getActivity().setTitleColor(Color.WHITE);
 
         Bundle args = getArguments();
@@ -136,7 +136,7 @@ public class LinkBankFragment extends BaseFragment implements HttpResponseListen
         mDistrictNames = ((ManageBanksActivity) getActivity()).mDistrictNames;
         mBranches = ((ManageBanksActivity) getActivity()).mBranches;
         mBranchNames = ((ManageBanksActivity) getActivity()).mBranchNames;
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_link_bank));
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_add_bank));
     }
 
     private void setBankAdapter(List<Bank> bankList) {

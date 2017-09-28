@@ -642,7 +642,6 @@
     <string name="failed_make_primary">Failed to make this primary email</string>
     <string name="confirmation_remove_email_address">Remove this email address?</string>
     <string name="confirmation_add_to_contacts">Add this number to contacts?</string>
-    <string name="link_bank">Link Bank</string>
     <string name="bank_consent_agreement">Bank consent agreement</string>
     <string name="progress_dialog_if_pin_exists">Preparing. Please wait…</string>
     <string name="failed_loading_pin">Failed loading PIN</string>
@@ -810,8 +809,7 @@
     <string name="select_category">Select a category</string>
     <string name="no_email_added">No Email Added</string>
     <string name="can_not_add_money_if_not_verified">You can not add money until your iPay account gets verified by our system. After submitting your documents and other information it might take a while for verification.</string>
-    <string name="can_not_withdraw_money_if_not_verified">You can not withdraw money until your iPay account gets verified by our system. After submitting your documents and other information it might take a while for verification.</string>
-    <string name="can_not_add_bank_if_not_verified">You can not link your bank until your iPay account gets verified by our system. After submitting your documents and other information it might take a while for verification.</string>
+    <string name="bank_list_empty_text">You don’t have any active bank account. Tap + to add one.</string>
     <string name="dialog_add_new_email">You need to set up your primary email to use the support system. Add an email now?</string>
     <string name="ticket_created_dialog_text">Request to create a ticket for your issue has been placed successfully. It may take a little while to show up in your ticket list.</string>
     <string name="dialog_verify_email">You need to set up your primary email to use the support system. Verify your email now?</string>
@@ -897,7 +895,7 @@
     <string name="screen_name_identification_documents_list">Document Page</string>
     <string name="screen_name_document_upload">Document Page</string>
     <string name="screen_name_user_basic_info">Personal Basic Info Page</string>
-    <string name="screen_name_link_bank">Add New Bank Page</string>
+    <string name="screen_name_add_bank">Add New Bank Page</string>
     <string name="screen_name_set_pin">Change PIN Page</string>
     <string name="screen_name_security_question">Security Question Page</string>
     <string name="screen_name_fingerprint_authentication">Touch ID Page</string>

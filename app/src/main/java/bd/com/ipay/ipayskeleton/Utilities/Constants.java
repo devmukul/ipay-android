@@ -611,7 +611,7 @@ public class Constants {
     public static final String EMAIL_VERIFICATION_STATUS_VERIFIED = "VERIFIED";
     public static final String EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS = "IN_PROGRESS";
 
-    public static final String LINK_BANK = "LINK_BANK";
+    public static final String ADD_BANK = "ADD_BANK";
     public static final String VERIFY_BANK = "VERIFY_BANK";
 
     public static final String INTRODUCTION_REQUEST_STATUS_PENDING = "PENDING";
