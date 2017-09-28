@@ -156,9 +156,7 @@ public class ProfileInfoCacheManager {
     }
 
     public static boolean ifPasswordEncrypted() {
-        if (pref.getString(SharedPrefConstants.KEY_PASSWORD, "").equals(""))
-            return true;
-        return false;
+        return !pref.getString(SharedPrefConstants.KEY_PASSWORD, "").equals("");
     }
 
     public static void setLoggedInStatus(boolean loggedIn) {
