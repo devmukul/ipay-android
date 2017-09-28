@@ -17,12 +17,11 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 
 public class ProfilePictureHelperDialog extends AlertDialog {
+    private static final String MALE_GENDER = "M";
+    private static final String FEMALE_GENDER = "F";
     private Context context;
-
     private OnResourceSelectedListener onResourceSelectedListener;
-
     private LayoutInflater inflater;
-
     private View selectImageHeaderView;
     private ImageView mProfilePictureHelperView;
     private TextView selectImageHeaderTitle;
@@ -49,9 +48,9 @@ public class ProfilePictureHelperDialog extends AlertDialog {
 
     private void setAppropriateProfilePictureHelperPhoto() {
         if (ProfileInfoCacheManager.getGender() != null) {
-            if (ProfileInfoCacheManager.getGender().equals(context.getString(R.string.male)))
+            if (ProfileInfoCacheManager.getGender().equalsIgnoreCase(MALE_GENDER))
                 mProfilePictureHelperView.setImageDrawable(context.getResources().getDrawable(R.drawable.profile_pic_helper_male));
-            else
+            else if (ProfileInfoCacheManager.getGender().equalsIgnoreCase(FEMALE_GENDER))
                 mProfilePictureHelperView.setImageDrawable(context.getResources().getDrawable(R.drawable.profile_pic_helper_female));
         }
     }
