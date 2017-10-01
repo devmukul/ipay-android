@@ -202,7 +202,7 @@ public class ContactsSearchView extends FrameLayout {
         private TextView mobileNumberView;
         //private ImageView memberStatusView;
         private ImageView verificationStatusView;
-        private TextView inviteStatusTextView;
+        private Button inviteStatusTextView;
         private Button inviteButton;
 
         public ContactListAdapter(Context context, List<DBContactNode> objects) {
@@ -222,7 +222,7 @@ public class ContactsSearchView extends FrameLayout {
             profilePictureView = (ProfileImageView) view.findViewById(R.id.profile_picture);
             //memberStatusView = (ImageView) view.findViewById(R.id.is_member);
             verificationStatusView = (ImageView) view.findViewById(R.id.verification_status);
-            inviteStatusTextView = (TextView) view.findViewById(R.id.invite_status);
+            inviteStatusTextView = (Button) view.findViewById(R.id.button_invite);
             inviteButton = (Button) view.findViewById(R.id.button_invite);
 
             return bindView(view, position);

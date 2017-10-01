@@ -134,8 +134,6 @@ public class CustomSelectorDialog extends AlertDialog {
             return view;
         }
 
-        @Nullable
-        @Override
         public CharSequence[] getAutofillOptions() {
             CharSequence[] autoFillOptions = new CharSequence[itemList.size()];
             for (int i = 0; i < itemList.size(); i++) {

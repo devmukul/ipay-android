@@ -206,65 +206,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
         super.onDestroyView();
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//
-//        if (!isDialogFragment()) {
-//            inflater.inflate(R.menu.contact, menu);
-//
-//            mSearchMenuItem = menu.findItem(R.id.action_search_contacts);
-//            mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
-//
-//            mSearchView.setOnQueryTextListener(this);
-//            mSearchView.setOnSearchClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    setItemsVisibility(menu, mSearchMenuItem, false);
-//                    mSearchView.requestFocus();
-//                    if (mBottomSheetLayout != null && mBottomSheetLayout.isSheetShowing())
-//                        mBottomSheetLayout.dismissSheet();
-//                }
-//            });
-//            mSearchView.setQueryHint(getString(R.string.search));
-//
-//            mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
-//                @Override
-//                public boolean onClose() {
-//                    mSearchView.setQuery("", true);
-//                    setItemsVisibility(menu, mSearchMenuItem, true);
-//                    return false;
-//                }
-//            });
-//        }
-//    }
-
-//    @Override
-//    public void onPrepareOptionsMenu(Menu menu) {
-//        MenuItem searchViewMenuItem = menu.findItem(R.id.action_search_contacts);
-//        mSearchView = (SearchView) searchViewMenuItem.getActionView();
-//        int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
-//        ImageView searchIconImageView = (ImageView) mSearchView.findViewById(searchImgId);
-//        searchIconImageView.setImageResource(R.drawable.ic_search);
-//        resetSearchKeyword();
-//
-//    }
-
-    private void setItemsVisibility(Menu menu, MenuItem exception, boolean visible) {
-        for (int i = 0; i < menu.size(); ++i) {
-            MenuItem item = menu.getItem(i);
-            if (item != null && item != exception) item.setVisible(visible);
-        }
-
-        if (menu.findItem(R.id.action_filter_by_service) != null)
-            menu.findItem(R.id.action_filter_by_service).setVisible(false);
-        if (menu.findItem(R.id.action_filter_by_date) != null)
-            menu.findItem(R.id.action_filter_by_date).setVisible(false);
-        if (menu.findItem(R.id.action_clear_filter) != null)
-            menu.findItem(R.id.action_clear_filter).setVisible(false);
-
-    }
-
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
@@ -824,8 +765,10 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             private final TextView mobileNumberView;
             //private final ImageView isSubscriber;
             private final ImageView verificationStatus;
-            private final TextView inviteStatusTextView;
+            private final Button invitedButton;
             private final Button inviteButton;
+            private final Button button_asked;
+            private final Button button_ask;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -838,8 +781,10 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 profilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
 //                isSubscriber = (ImageView) itemView.findViewById(R.id.is_member);
                 verificationStatus = (ImageView) itemView.findViewById(R.id.verification_status);
-                inviteStatusTextView = (TextView) itemView.findViewById(R.id.invite_status);
+                invitedButton = (Button) itemView.findViewById(R.id.button_invited);
                 inviteButton = (Button) itemView.findViewById(R.id.button_invite);
+                button_asked = (Button) itemView.findViewById(R.id.button_asked);
+                button_ask = (Button) itemView.findViewById(R.id.button_ask);
             }
 
             public void bindView(int pos) {
@@ -870,10 +815,55 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 mobileNumberView.setText(mobileNumber);
 
-                if (!isDialogFragment() && !isMember && !mShowInvitedOnly && isInvited)
-                    inviteStatusTextView.setVisibility(View.VISIBLE);
-                else
-                    inviteStatusTextView.setVisibility(View.GONE);
+                if(!isDialogFragment()) {
+
+                    if (isMember) {
+                        if (!isVerified) {
+//                        if (askForConfirmationButton != null)
+                            button_ask.setVisibility(View.GONE);
+                            button_asked.setVisibility(View.GONE);
+                            verificationStatus.setVisibility(View.GONE);
+                            inviteButton.setVisibility(View.GONE);
+                            invitedButton.setVisibility(View.GONE);
+
+                        } else {
+//                        if (askForConfirmationButton != null)
+                            button_ask.setVisibility(View.VISIBLE);
+                            verificationStatus.setVisibility(View.VISIBLE);
+                            inviteButton.setVisibility(View.GONE);
+                            invitedButton.setVisibility(View.GONE);
+                            button_asked.setVisibility(View.GONE);
+                        }
+                    } else {
+                        if (!mShowInvitedOnly && isInvited) {
+                            invitedButton.setVisibility(View.VISIBLE);
+                            inviteButton.setVisibility(View.GONE);
+                        } else {
+                            inviteButton.setVisibility(View.VISIBLE);
+                            invitedButton.setVisibility(View.GONE);
+                        }
+//                        if (askForConfirmationButton != null)
+                        button_ask.setVisibility(View.GONE);
+                        verificationStatus.setVisibility(View.GONE);
+                    }
+
+                    inviteButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showInviteDialog(name, mobileNumber);
+                        }
+                    });
+
+                    button_ask.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            sendRecommendationRequest(mobileNumber);
+                        }
+                    });
+                }
+
+
+
 
 
 //                if (isMember) {
@@ -882,16 +872,16 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 //                    isSubscriber.setVisibility(View.GONE);
 //                }
 
-                if (isVerified) {
-                    verificationStatus.setVisibility(View.VISIBLE);
-                } else {
-                    verificationStatus.setVisibility(View.GONE);
-                }
+//                if (isVerified) {
+//
+//                } else {
+//
+//                }
 
-                if (!isDialogFragment() && !isMember && !mShowInvitedOnly && !isInvited)
-                    inviteButton.setVisibility(View.VISIBLE);
-                else
-                    inviteButton.setVisibility(View.GONE);
+//                if (!isDialogFragment() && !isMember && !mShowInvitedOnly && !isInvited)
+//                    inviteButton.setVisibility(View.VISIBLE);
+//                else
+//                    inviteButton.setVisibility(View.GONE);
 
 //                if (mShowNonInvitedNonMembersOnly) {
 //                    inviteButton.setVisibility(View.VISIBLE);

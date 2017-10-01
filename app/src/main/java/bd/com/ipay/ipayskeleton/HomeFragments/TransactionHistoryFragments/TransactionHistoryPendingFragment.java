@@ -91,11 +91,11 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private Button filterByDateButton;
     private TextView mEmptyListTextView;
 
-
     private ImageView mMoreButton;
     private ImageView mCancelButton;
     private Button mClearFilterButton;
     private TextView mFilterTitle;
+    private PopupMenu popupMenu;
 
     private int historyPageCount = 0;
     private Integer type = null;
@@ -115,12 +115,10 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
 
-    private Menu menu;
+    //private Menu menu;
 
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
     private Tracker mTracker;
-
-    private PopupMenu popupMenu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -165,10 +163,8 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             @Override
             public void onClick(View v) {
                 popupMenu = new PopupMenu(getContext(), mMoreButton);
-                menu= popupMenu.getMenu();
                 popupMenu.getMenuInflater().inflate(R.menu.activity_transaction_history,popupMenu.getMenu());
                 popupMenu.getMenuInflater().inflate(R.menu.clear_filter, popupMenu.getMenu());
-                popupMenu.getMenu().findItem(R.id.action_clear_filter).setVisible(false);
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -181,7 +177,8 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                                 mMoreButton.setVisibility(View.INVISIBLE);
                                 mCancelButton.setVisibility(View.VISIBLE);
                                 mFilterTitle.setVisibility(View.VISIBLE);
-                                mFilterTitle.setText("Filter by Service");
+                                mClearFilterButton.setVisibility(View.INVISIBLE);
+                                mFilterTitle.setText("Filter by Date");
                                 return true;
                             case R.id.action_filter_by_service:
                                 if (dateFilterLayout.getVisibility() == View.VISIBLE)
@@ -189,19 +186,15 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                                 serviceFilterLayout.setVisibility(View.VISIBLE);
                                 mMoreButton.setVisibility(View.INVISIBLE);
                                 mCancelButton.setVisibility(View.VISIBLE);
+                                mClearFilterButton.setVisibility(View.INVISIBLE);
                                 mFilterTitle.setVisibility(View.VISIBLE);
                                 mFilterTitle.setText("Filter by Service");
                                 return true;
-//                            case R.id.action_clear_filter:
-//                                clearDateFilters();
-//                                clearServiceFilters();
-//                                setContentShown(false);
-//                                refreshTransactionHistory();
-//                                menu.findItem(R.id.action_clear_filter).setVisible(false);
-//                                return true;
                             default:
                                 mCancelButton.setVisibility(View.INVISIBLE);
                                 mFilterTitle.setVisibility(View.INVISIBLE);
+
+                                mClearFilterButton.setVisibility(View.INVISIBLE);
                                 return false;
                         }
                     }
@@ -219,9 +212,25 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
                 if (dateFilterLayout.getVisibility() == View.VISIBLE)
                     dateFilterLayout.setVisibility(View.GONE);
-
+                mFilterTitle.setVisibility(View.INVISIBLE);
                 mCancelButton.setVisibility(View.INVISIBLE);
                 mMoreButton.setVisibility(View.VISIBLE);
+            }
+        });
+
+        mClearFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                clearDateFilters();
+                clearServiceFilters();
+                setContentShown(false);
+                refreshTransactionHistory();
+
+                mMoreButton.setVisibility(View.VISIBLE);
+                mCancelButton.setVisibility(View.INVISIBLE);
+                mFilterTitle.setVisibility(View.INVISIBLE);
+                mClearFilterButton.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -406,7 +415,9 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             public void onClick(View v) {
 
                 if (verifyDateFilter()) {
-                    menu.findItem(R.id.action_clear_filter).setVisible(true);
+                    mMoreButton.setVisibility(View.INVISIBLE);
+                    mCancelButton.setVisibility(View.INVISIBLE);
+                    mClearFilterButton.setVisibility(View.VISIBLE);
                     clearServiceFilters();
                     dateFilterLayout.setVisibility(View.GONE);
                     setContentShown(false);
@@ -486,7 +497,11 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             serviceFilter.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    menu.findItem(R.id.action_clear_filter).setVisible(true);
+                    //menu.findItem(R.id.action_clear_filter).setVisible(true);
+
+                    mMoreButton.setVisibility(View.INVISIBLE);
+                    mCancelButton.setVisibility(View.INVISIBLE);
+                    mClearFilterButton.setVisibility(View.VISIBLE);
 
                     clearDateFilters();
                     if (serviceFilter.isChecked()) {
@@ -911,7 +926,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
                 if (phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
                     return operator_array[i];
-                }
+                 }
             }
             return 0;
         }

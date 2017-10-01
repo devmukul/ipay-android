@@ -686,7 +686,15 @@
     </style>
 
     <style name="CustomEditTextLogInSignUp" parent="@android:style/Widget.Holo.TextView">
-
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">@dimen/text_size_small_medium</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:paddingTop">@dimen/value5</item>
+        <item name="android:paddingBottom">@dimen/value10</item>
+        <item name="android:textColorHint">@color/colorGray</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
     </style>
 
     <style name="CustomEditText" parent="@android:style/Widget.Holo.TextView">

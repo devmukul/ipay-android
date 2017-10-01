@@ -64,5 +64,7 @@
     <color name="background_iconified_button_icon">#26A69A</color>
     <color name="background_iconified_button_disabled">#009688</color>
 
+    <color name="warning">#f4d03f</color>
+    <color name="error">#e7505a</color>
     //e0e0e0
 </resources>

@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -43,24 +44,25 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class MobileTopupHistoryFragment extends ProgressFragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mTopupHistoryTask = null;
-    private TransactionHistoryResponse mTransactionHistoryResponse;
+    private TransactionHistoryResponse mTopupHistoryResponse;
+    private TopupHistoryAdapter mTopupHistoryAdapter;
+    private LinearLayoutManager mLayoutManager;
+    private List<TransactionHistory> mTopupHistories;
+    private TopupHistoryBroadcastReceiver topupHistoryBroadcastReceiver;
 
+    private TextView mEmptyListTextView;
     private RecyclerView mTopupHistoryRecyclerView;
-    private TransactionHistoryAdapter mTransactionHistoryAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private List<TransactionHistory> userTransactionHistories;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
-    private String mMobileNumber;
-    private TextView mEmptyListTextView;
-
     private int historyPageCount = 0;
-
+    private int mTotalItemCount =0;
+    private int mPastVisiblesItems;
+    private int mVisibleItem;
     private boolean hasNext = false;
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
-
-    private TopupHistoryBroadcastReceiver topupHistoryBroadcastReceiver;
+    private boolean mIsScrolled = false;
+    private String mMobileNumber;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,15 +99,15 @@ public class MobileTopupHistoryFragment extends ProgressFragment implements Http
 
     private void setupViewsAndActions() {
         setupRecyclerView();
+        implementScrollListener();
     }
 
     private void setupRecyclerView() {
-        mTransactionHistoryAdapter = new TransactionHistoryAdapter();
+        mTopupHistoryAdapter = new TopupHistoryAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
         mTopupHistoryRecyclerView.setLayoutManager(mLayoutManager);
-        mTopupHistoryRecyclerView.setAdapter(mTransactionHistoryAdapter);
+        mTopupHistoryRecyclerView.setAdapter(mTopupHistoryAdapter);
     }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -118,13 +120,12 @@ public class MobileTopupHistoryFragment extends ProgressFragment implements Http
         super.onResume();
         topupHistoryBroadcastReceiver = new TopupHistoryBroadcastReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(topupHistoryBroadcastReceiver,
-                new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
+                new IntentFilter(Constants.TOPUP_HISTORY_UPDATE_BROADCAST));
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setRefreshing(false);
             mSwipeRefreshLayout.destroyDrawingCache();
@@ -170,24 +171,24 @@ public class MobileTopupHistoryFragment extends ProgressFragment implements Http
     }
 
     private void loadTransactionHistory(List<TransactionHistory> transactionHistories, boolean hasNext) {
-        if (clearListAfterLoading || userTransactionHistories == null || userTransactionHistories.size() == 0) {
-            userTransactionHistories = transactionHistories;
+        if (clearListAfterLoading || mTopupHistories == null || mTopupHistories.size() == 0) {
+            mTopupHistories = transactionHistories;
             clearListAfterLoading = false;
         } else {
             List<TransactionHistory> tempTransactionHistories;
             tempTransactionHistories = transactionHistories;
-            userTransactionHistories.addAll(tempTransactionHistories);
+            mTopupHistories.addAll(tempTransactionHistories);
         }
 
         this.hasNext = hasNext;
-        if (userTransactionHistories != null && userTransactionHistories.size() > 0)
+        if (mTopupHistories != null && mTopupHistories.size() > 0)
             mEmptyListTextView.setVisibility(View.GONE);
         else
             mEmptyListTextView.setVisibility(View.VISIBLE);
 
         if (isLoading)
             isLoading = false;
-        mTransactionHistoryAdapter.notifyDataSetChanged();
+        mTopupHistoryAdapter.notifyDataSetChanged();
         setContentShown(true);
     }
 
@@ -197,40 +198,40 @@ public class MobileTopupHistoryFragment extends ProgressFragment implements Http
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mTopupHistoryTask = null;
-            if (getActivity() != null)
+            if (getActivity() != null) {
                 Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
+            }
             return;
         }
 
         Gson gson = new Gson();
-
         if (result.getApiCommand().equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
                 try {
-                    mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
-
-                    loadTransactionHistory(mTransactionHistoryResponse.getTransactions(), mTransactionHistoryResponse.isHasNext());
-
+                    mTopupHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
+                    loadTransactionHistory(mTopupHistoryResponse.getTransactions(), mTopupHistoryResponse.isHasNext());
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+                    }
                 }
-
             } else {
-                if (getActivity() != null)
+                if (getActivity() != null) {
                     Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+                }
             }
 
             mSwipeRefreshLayout.setRefreshing(false);
             mTopupHistoryTask = null;
-            if (this.isAdded()) setContentShown(true);
+            if (this.isAdded()){
+                setContentShown(true);
+            }
         }
     }
 
-    private class TransactionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class TopupHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int FOOTER_VIEW = 1;
 
@@ -260,8 +261,7 @@ public class MobileTopupHistoryFragment extends ProgressFragment implements Http
             }
 
             public void bindView(int pos) {
-                final TransactionHistory transactionHistory = userTransactionHistories.get(pos);
-
+                final TransactionHistory transactionHistory = mTopupHistories.get(pos);
                 final String description = transactionHistory.getShortDescription(mMobileNumber);
                 final String receiver = transactionHistory.getReceiver();
                 final String responseTime = Utilities.formatDateWithTime(transactionHistory.getResponseTime());
@@ -269,8 +269,6 @@ public class MobileTopupHistoryFragment extends ProgressFragment implements Http
                 final Integer statusCode = transactionHistory.getStatusCode();
                 final Double balance = transactionHistory.getBalance();
                 final String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();
-                final int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
-                final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
                 final int serviceId = transactionHistory.getServiceID();
                 final String status = transactionHistory.getStatus();
 
@@ -332,7 +330,6 @@ public class MobileTopupHistoryFragment extends ProgressFragment implements Http
 
             public FooterViewHolder(View itemView) {
                 super(itemView);
-
                 mLoadMoreTextView = (TextView) itemView.findViewById(R.id.load_more);
                 mLoadMoreProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
             }
@@ -378,7 +375,6 @@ public class MobileTopupHistoryFragment extends ProgressFragment implements Http
         public class NormalViewHolder extends ViewHolder {
             public NormalViewHolder(View itemView) {
                 super(itemView);
-
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -416,14 +412,14 @@ public class MobileTopupHistoryFragment extends ProgressFragment implements Http
         @Override
         public int getItemCount() {
             // Return +1 as there's an extra footer (Load more...)
-            if (userTransactionHistories != null && !userTransactionHistories.isEmpty())
-                return userTransactionHistories.size() + 1;
+            if (mTopupHistories != null && !mTopupHistories.isEmpty())
+                return mTopupHistories.size() + 1;
             else return 0;
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (position == userTransactionHistories.size()) {
+            if (position == mTopupHistories.size()) {
                 return FOOTER_VIEW;
             }
 
@@ -453,7 +449,38 @@ public class MobileTopupHistoryFragment extends ProgressFragment implements Http
 
     }
 
+    private void implementScrollListener() {
+        mTopupHistoryRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    mIsScrolled = true;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                mVisibleItem = recyclerView.getChildCount();
+                mTotalItemCount =mLayoutManager.getItemCount();
+                mPastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                if (mIsScrolled
+                        && (mVisibleItem + mPastVisiblesItems) == mTotalItemCount && hasNext) {
+                    isLoading = true;
+                    mIsScrolled = false;
+                    historyPageCount = historyPageCount + 1;
+                    mTopupHistoryAdapter.notifyDataSetChanged();
+                    getTopUpHistory();
+                }
+
+            }
+
+        });
+
+    }
 
     private class TopupHistoryBroadcastReceiver extends BroadcastReceiver {
         @Override

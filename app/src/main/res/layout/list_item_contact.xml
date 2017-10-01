@@ -90,8 +90,8 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:layout_alignBottom="@+id/info_holder">
-        <TextView
-            android:id="@+id/invite_status"
+        <Button
+            android:id="@+id/button_invited"
             style="@style/ButtonStyleInvited"
             android:text="@string/invited"
             android:textAllCaps="false"
@@ -102,7 +102,24 @@
             style="@style/ButtonStyleInvite"
             android:text="@string/invite"
             android:textAllCaps="false"
-            android:textSize="10sp"/>
+            android:textSize="10sp"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/button_asked"
+            style="@style/ButtonStyleInvited"
+            android:text="@string/asked_introduction"
+            android:textAllCaps="false"
+            android:textSize="10sp"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/button_ask"
+            style="@style/ButtonStyleInvite"
+            android:text="@string/ask_introduction"
+            android:textAllCaps="false"
+            android:textSize="10sp"
+            android:visibility="gone"/>
     </LinearLayout>
 
 </RelativeLayout>
