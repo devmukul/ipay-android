@@ -285,6 +285,8 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
                             Toast.makeText(getActivity(), mSetProfileInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                             getActivity().onBackPressed();
+                            if (mGender != null)
+                                ProfileInfoCacheManager.setGender(GenderList.genderCodeToNameMap.get(mGender));
 
                             //Google Analytic event
                             Utilities.sendSuccessEventTracker(mTracker, "Basic Info Update", ProfileInfoCacheManager.getAccountId());

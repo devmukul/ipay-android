@@ -120,7 +120,7 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
 
         // Block from adding bank if an user is not verified
         if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED)) {
-            mEmptyListTextView.setText(R.string.can_not_add_bank_if_not_verified);
+            mEmptyListTextView.setText(R.string.bank_list_empty_text);
             mEmptyListTextView.setVisibility(View.VISIBLE);
             return;
         }

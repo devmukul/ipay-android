@@ -125,7 +125,8 @@ public class Constants {
     public static final String VAT = "vat";
 
     public static final String OFFICE_LAND_LINE_NUMBER_PRIMARY = "+88-02-9852507";
-    public static final String OFFICE_LAND_LINE_NUMBER_SECONDARY = "+88-02-9852510";
+    public static final String OFFICE_LAND_LINE_NUMBER_SECONDARY = "+88-02-9852508";
+    public static final String OFFICE_LAND_LINE_NUMBER_OTHER = "+880-9638 900800";
     public static final String OFFICE_EMAIL = "support@ipay.com.bd";
     public static final String FEEDBACK = "feedback@ipay.com.bd";
     public static final String OFFICE_ADDRESS = "Silver Tower (12th Floor)\n52 Gulshan Avenue, Circle-1\nDhaka-1212\nBangladesh\n";
@@ -611,7 +612,7 @@ public class Constants {
     public static final String EMAIL_VERIFICATION_STATUS_VERIFIED = "VERIFIED";
     public static final String EMAIL_VERIFICATION_STATUS_VERIFICATION_IN_PROGRESS = "IN_PROGRESS";
 
-    public static final String LINK_BANK = "LINK_BANK";
+    public static final String ADD_BANK = "ADD_BANK";
     public static final String VERIFY_BANK = "VERIFY_BANK";
 
     public static final String INTRODUCTION_REQUEST_STATUS_PENDING = "PENDING";
