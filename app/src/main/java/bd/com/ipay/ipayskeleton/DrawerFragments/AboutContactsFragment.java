@@ -40,7 +40,8 @@ public class AboutContactsFragment extends BaseFragment {
 
         mAddressView.setText(Constants.OFFICE_ADDRESS);
         mPhoneView.setText(": " + Constants.OFFICE_LAND_LINE_NUMBER_PRIMARY + "; "
-                + Constants.OFFICE_LAND_LINE_NUMBER_SECONDARY);
+                + Constants.OFFICE_LAND_LINE_NUMBER_SECONDARY + ";"
+                + "\n  " + Constants.OFFICE_LAND_LINE_NUMBER_OTHER);
         mEmailView.setText(": " + Constants.OFFICE_EMAIL);
         mWebView.setText(": " + Constants.HOST_NAME);
 
