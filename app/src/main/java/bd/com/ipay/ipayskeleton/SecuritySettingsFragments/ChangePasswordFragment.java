@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
@@ -77,7 +80,7 @@ public class ChangePasswordFragment extends BaseFragmentV4 implements HttpRespon
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_change_password) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_change_password));
     }
 
 
@@ -138,6 +141,22 @@ public class ChangePasswordFragment extends BaseFragmentV4 implements HttpRespon
         }
     }
 
+    private void showChangePasswordSuccessDialog() {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
+        dialog
+                .title(R.string.change_password_success)
+                .content(R.string.change_password_success_message)
+                .cancelable(false)
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        ((MyApplication) (((SecuritySettingsActivity) getActivity()).getApplication())).launchLoginPage(null);
+                    }
+                })
+                .show();
+    }
+
     private void saveNewPasswordWithTouchID() {
         FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getContext(),
                 FingerprintAuthenticationDialog.Stage.FINGERPRINT_ENCRYPT);
@@ -183,8 +202,10 @@ public class ChangePasswordFragment extends BaseFragmentV4 implements HttpRespon
                 mChangePasswordValidationResponse = gson.fromJson(result.getJsonString(), ChangePasswordValidationResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toast.makeText(getActivity(), mChangePasswordValidationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        showChangePasswordSuccessDialog();
+                    }
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
                     if (getActivity() != null) {

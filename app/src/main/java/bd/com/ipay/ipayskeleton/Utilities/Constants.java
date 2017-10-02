@@ -331,7 +331,7 @@ public class Constants {
 
 
     // Mobile Topup Request REST
-    public static final String URL_TOPUP_REQUEST = "topup/dotopup";
+    public static final String URL_TOPUP_REQUEST = "topup/dotopup/v2";
 
     // Money Request REST
     public static final String URL_REQUEST_MONEY = "requestmoney";
@@ -349,7 +349,7 @@ public class Constants {
     public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/reject";
 
     // Settings REST
-    public static final String URL_CHANGE_PASSWORD = "settings/password";
+    public static final String URL_CHANGE_PASSWORD = "settings/password/v2";
     public static final String URL_GET_SECURITY_ALL_QUESTIONS = "settings/security/allquestions/";
     public static final String URL_GET_SECURITY_QUESTIONS = "settings/security/questions";
     public static final String URL_SET_SECURITY_ANSWERS = "settings/security/answers";
@@ -360,7 +360,7 @@ public class Constants {
 
     // Sign in Rest
     public static final String URL_GET_REFRESH_TOKEN = "signin/refreshToken";
-    public static final String URL_LOGIN = "signin";
+    public static final String URL_LOGIN = "signin/v2";
 
     // Sign out Rest
     public static final String URL_LOG_OUT = "signout";
@@ -393,7 +393,7 @@ public class Constants {
     public static final String URL_RESOURCE = "resource";
 
     // Transaction REST
-    public static final String URL_SEND_MONEY = "transaction/send";
+    public static final String URL_SEND_MONEY = "transaction/send/v2";
 
     // Trusted Network REST
     public static final String URL_GET_TRUSTED_PERSONS = "trustednetwork/trustedpersons/";
@@ -459,7 +459,7 @@ public class Constants {
     public static final String URL_REFRESH_FIREBASE_TOKEN = "firebase/login/";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
-    public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED=452;
+    public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED=406;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
     public static final int HTTP_RESPONSE_STATUS_PAYMENT_REQUIRED = 402;
     public static final int HTTP_RESPONSE_STATUS_OK = 200;
