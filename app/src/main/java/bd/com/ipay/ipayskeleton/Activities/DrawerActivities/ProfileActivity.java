@@ -177,7 +177,7 @@ public class ProfileActivity extends BaseActivity {
                 if (addToBackStack)
                     ft.addToBackStack(null);
 
-                ft.commit();
+                ft.commitAllowingStateLoss();
             }
         }
     }
