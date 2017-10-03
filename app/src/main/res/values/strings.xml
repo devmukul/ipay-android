@@ -954,4 +954,7 @@
     <string name="screen_name_received_money_request_history">Received Money History PAge Page</string>
     <string name="screen_name_received_money_request">Received Money Page</string>
 
+    <string name="no_browser_found_error_message">No default browser found to open. Please install or enable your browser.</string>
+    <string name="no_browser_map_app_found_error_message">No default browser or google maps app found to open. Please install Google Maps/Browser or enable your browser.</string>
+
 </resources>
