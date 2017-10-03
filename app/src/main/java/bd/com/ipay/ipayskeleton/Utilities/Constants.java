@@ -460,7 +460,7 @@ public class Constants {
     public static final String URL_REFRESH_FIREBASE_TOKEN = "firebase/login/";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
-    public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED=406;
+    public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED=428;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
     public static final int HTTP_RESPONSE_STATUS_PAYMENT_REQUIRED = 402;
     public static final int HTTP_RESPONSE_STATUS_OK = 200;

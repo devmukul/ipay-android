@@ -1,3 +1,4 @@
+
 package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 
 import android.content.Context;
@@ -7,21 +8,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 
 public class ProfilePictureHelperDialog extends AlertDialog {
+    private static final String MALE_GENDER = "M";
+    private static final String FEMALE_GENDER = "F";
     private Context context;
-
     private OnResourceSelectedListener onResourceSelectedListener;
-
     private LayoutInflater inflater;
-
     private View selectImageHeaderView;
+    private ImageView mProfilePictureHelperView;
     private TextView selectImageHeaderTitle;
     private ListView imageSelectorOptionsListView;
 
@@ -31,14 +34,26 @@ public class ProfilePictureHelperDialog extends AlertDialog {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View v = inflater.inflate(R.layout.dialog_profile_picture_helper, null);
+        mProfilePictureHelperView = (ImageView) v.findViewById(R.id.pro_pic_helper_view);
         selectImageHeaderView = inflater.inflate(R.layout.dialog_selector_header, null);
         selectImageHeaderTitle = (TextView) selectImageHeaderView.findViewById(R.id.textviewTitle);
         selectImageHeaderTitle.setText(mTitle);
+
+        setAppropriateProfilePictureHelperPhoto();
 
         this.setCustomTitle(selectImageHeaderView);
         this.setView(v);
 
         setItems(resources, v);
+    }
+
+    private void setAppropriateProfilePictureHelperPhoto() {
+        if (ProfileInfoCacheManager.getGender() != null) {
+            if (ProfileInfoCacheManager.getGender().equalsIgnoreCase(MALE_GENDER))
+                mProfilePictureHelperView.setImageDrawable(context.getResources().getDrawable(R.drawable.profile_pic_helper_male));
+            else if (ProfileInfoCacheManager.getGender().equalsIgnoreCase(FEMALE_GENDER))
+                mProfilePictureHelperView.setImageDrawable(context.getResources().getDrawable(R.drawable.profile_pic_helper_female));
+        }
     }
 
     public void setItems(final List<String> resources, final View view) {
