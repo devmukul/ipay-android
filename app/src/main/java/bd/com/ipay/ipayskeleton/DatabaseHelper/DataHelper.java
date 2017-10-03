@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.DataCollectors.Model.UserLocation;
 import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
@@ -111,14 +112,6 @@ public class DataHelper {
         }
     }
 
-    public Cursor searchContacts(String query) {
-        return searchContacts(query, false, false, false);
-    }
-
-    public Cursor searchContacts(String query, boolean memberOnly, boolean businessMemberOnly, boolean verifiedOnly) {
-        return searchContacts(query, memberOnly, businessMemberOnly, false, verifiedOnly, false, false, null);
-    }
-
     public Cursor searchContacts(String query, boolean memberOnly, boolean businessMemberOnly, boolean nonMemberOnly,
                                  boolean verifiedOnly, boolean invitedOnly, boolean nonInvitedOnly, List<String> invitees) {
         Cursor cursor = null;
@@ -218,7 +211,7 @@ public class DataHelper {
     }
 
     public int getLastAddedBusinessId() {
-        Cursor cursor = null;
+        Cursor cursor;
         int columnIndexForMaxBusinessId = 0;
 
         try {
@@ -242,47 +235,69 @@ public class DataHelper {
         return 0;
     }
 
-    private List<ContactNode> getContactList(String query, boolean memberOnly, boolean businessMemberOnly, boolean verifiedOnly) {
-        Cursor cursor = searchContacts(query, memberOnly, businessMemberOnly, verifiedOnly);
-        List<ContactNode> contacts = new ArrayList<>();
+    public void saveLocation(UserLocation userLocation) {
+        SQLiteDatabase sqLiteDatabase = dOpenHelper.getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(DBConstants.KEY_LOCATION_LATITUDE, userLocation.getLatitude());
+            values.put(DBConstants.KEY_LOCATION_LONGITUDE, userLocation.getLongitude());
+            values.put(DBConstants.KEY_LOCATION_CREATED_TIME, userLocation.getCreatedAt());
 
-        if (cursor.moveToFirst()) {
-            int nameIndex = cursor.getColumnIndex(DBConstants.KEY_NAME);
-            int originalNameIndex = cursor.getColumnIndex(DBConstants.KEY_ORIGINAL_NAME);
-            int mobileNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
-            int profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
-            int profilePictureUrlQualityMediumIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM);
-            int profilePictureUrlQualityHighIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH);
-            int verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
-            int relationshipIndex = cursor.getColumnIndex(DBConstants.KEY_RELATIONSHIP);
-            int accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
-            int updateTimeIndex = cursor.getColumnIndex(DBConstants.KEY_UPDATE_TIME);
-            int isMemberIndex = cursor.getColumnIndex(DBConstants.KEY_IS_MEMBER);
+            sqLiteDatabase.insertWithOnConflict(DBConstants.DB_TABLE_LOCATIONS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sqLiteDatabase.setTransactionSuccessful();
+        sqLiteDatabase.endTransaction();
 
-            do {
-                String name = cursor.getString(nameIndex);
-                String originalName = cursor.getString(originalNameIndex);
-                String mobileNumber = cursor.getString(mobileNumberIndex);
-                int verificationStatus = cursor.getInt(verificationStatusIndex);
-                int accountType = cursor.getInt(accountTypeIndex);
-                String profilePictureUrl = cursor.getString(profilePictureUrlIndex);
-                String profilePictureUrlQualityMedium = cursor.getString(profilePictureUrlQualityMediumIndex);
-                String profilePictureUrlQualityHigh = cursor.getString(profilePictureUrlQualityHighIndex);
-                String relationship = cursor.getString(relationshipIndex);
-                long updateTime = cursor.getLong(updateTimeIndex);
-                int isMember = cursor.getInt(isMemberIndex);
+        Logger.logI("Locations", "Inserted into the database");
+    }
 
-                ContactNode contactNode = new ContactNode(accountType, isMember,
-                        verificationStatus, name, originalName, mobileNumber, profilePictureUrl, profilePictureUrlQualityMedium, profilePictureUrlQualityHigh, relationship, updateTime);
-                contacts.add(contactNode);
-            } while (cursor.moveToNext());
+    public void deleteLocations(List<UserLocation> userLocationList) {
+        SQLiteDatabase sqLiteDatabase = dOpenHelper.getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        int count = 0;
+        try {
+
+            for (UserLocation userLocation : userLocationList) {
+                if (userLocation.getId() != -1)
+                    count += sqLiteDatabase.delete(DBConstants.DB_TABLE_LOCATIONS, "_id = " + userLocation.getId(), null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        return contacts;
+        sqLiteDatabase.setTransactionSuccessful();
+        sqLiteDatabase.endTransaction();
+
+        Logger.logI("Locations", "Removed " + count + "location/s from the database.");
     }
 
-    public List<ContactNode> getContactList() {
-        return getContactList("", false, false, false);
-    }
+    public List<UserLocation> getAllSavedLocation() {
+        final Cursor cursor;
+        final List<UserLocation> userLocations = new ArrayList<>();
+        final String queryString = "SELECT * FROM" + DBConstants.DB_TABLE_LOCATIONS;
+        try {
+            SQLiteDatabase db = dOpenHelper.getReadableDatabase();
+            cursor = db.rawQuery(queryString, null);
+            cursor.moveToFirst();
+            if (cursor.getCount() > 0) {
+                while (!cursor.isAfterLast()) {
+                    UserLocation userLocation = new UserLocation();
+                    userLocation.setId(cursor.getInt(cursor.getColumnIndex("_id")));
+                    userLocation.setLatitude(cursor.getDouble(cursor.getColumnIndex(DBConstants.KEY_LOCATION_LATITUDE)));
+                    userLocation.setLongitude(cursor.getDouble(cursor.getColumnIndex(DBConstants.KEY_LOCATION_LONGITUDE)));
+                    userLocation.setCreatedAt(cursor.getLong(cursor.getColumnIndex(DBConstants.KEY_LOCATION_CREATED_TIME)));
+                    userLocations.add(userLocation);
+                    cursor.moveToNext();
+                }
+            }
+            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+        return userLocations;
+    }
 }

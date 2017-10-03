@@ -11,6 +11,7 @@ public class DBConstants {
     public static final String DB_IPAY = "iPayDatabase";
     public static final String DB_TABLE_CONTACTS = "contacts";
     public static final String DB_TABLE_BUSINESS_ACCOUNTS = "business";
+    public static final String DB_TABLE_LOCATIONS = "locations";
     public static final String DB_TABLE_PUSH_EVENTS = "push_events";
     public static final Uri DB_TABLE_CONTACTS_URI = Uri
             .parse("sqlite://" + Constants.ApplicationPackage + "/" + DB_TABLE_CONTACTS);
@@ -40,6 +41,11 @@ public class DBConstants {
     public static final String KEY_BUSINESS_PROFILE_PICTURE = "profile_picture";
     public static final String KEY_BUSINESS_PROFILE_PICTURE_QUALITY_MEDIUM = "profile_picture_quality_medium";
     public static final String KEY_BUSINESS_PROFILE_PICTURE_QUALITY_HIGH = "profile_picture_quality_high";
+
+    public static final String KEY_LOCATION_LATITUDE = "lat";
+    public static final String KEY_LOCATION_LONGITUDE = "_long";
+    public static final String KEY_LOCATION_CREATED_TIME = "created_at";
+
 
     // Push events table
     public static final String KEY_TAG_NAME = "tag_name";
