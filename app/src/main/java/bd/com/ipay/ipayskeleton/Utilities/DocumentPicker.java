@@ -259,7 +259,7 @@ public class DocumentPicker {
     }
 
 
-    private static File getTempFile(Context context) {
+    public static File getTempFile(Context context) {
         return getTempFile(context, TEMP_DOCUMENT_NAME);
     }
 

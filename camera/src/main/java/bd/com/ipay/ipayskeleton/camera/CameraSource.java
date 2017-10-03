@@ -18,6 +18,7 @@ package bd.com.ipay.ipayskeleton.camera;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
@@ -345,8 +346,12 @@ public class CameraSource {
             if (mCamera != null) {
                 return this;
             }
-
-            mCamera = createCamera();
+            try {
+                mCamera = createCamera();
+            } catch (Exception e) {
+                ((Activity) mContext).setResult(CameraActivity.CAMERA_ACTIVITY_CRASHED);
+                ((Activity) mContext).finish();
+            }
 
             // SurfaceTexture was introduced in Honeycomb (11), so if we are running and
             // old version of Android. fall back to use SurfaceView.
@@ -798,7 +803,7 @@ public class CameraSource {
         if (requestedCameraId == -1) {
             // if a device doesnt have front or more than one camera,
             // we will select the only camera it has. Default back camera ID is 0
-            requestedCameraId=0;
+            requestedCameraId = 0;
         }
         Camera camera = Camera.open(requestedCameraId);
         SizePair sizePair = selectSizePair(camera, mRequestedPreviewWidth, mRequestedPreviewHeight);
