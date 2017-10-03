@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.InvalidInputResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -187,17 +189,10 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         View focusView = null;
 
         String otp = mOTPEditText.getText().toString().trim();
-
-        if (otp.length() == 0) {
-            mOTPEditText.setError(getActivity().getString(R.string.error_invalid_otp));
-            focusView = mOTPEditText;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
+        String errorMessage = InputValidator.isValidOTP(getActivity(), otp);
+        if (errorMessage != null) {
+            mOTPEditText.requestFocus();
+            mOTPEditText.setError(errorMessage);
         } else {
             mProgressDialog.show();
             SignupRequestPersonal mSignupModel = new SignupRequestPersonal(SignupOrLoginActivity.mMobileNumber,
@@ -275,10 +270,11 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 //                        ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
 
                         //Google Analytic event
-                        Utilities.sendEventTracker(mTracker, "SignUp", "Succeed", "Signup complete for personal account.");
+                        Utilities.sendSuccessEventTracker(mTracker, "Signup", ProfileInfoCacheManager.getAccountId());
 
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        Utilities.sendBlockedEventTracker(mTracker, "Signup", ProfileInfoCacheManager.getAccountId());
                         getActivity().finish();
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                         InvalidInputResponse invalidInputResponse = gson.fromJson(result.getJsonString(), InvalidInputResponse.class);
@@ -287,9 +283,12 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         if (errorFields != null) {
                             Toast.makeText(getActivity(),
                                     Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), Toast.LENGTH_LONG).show();
-                        } else
-                            Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+                            Utilities.sendFailedEventTracker(mTracker, "Signup", ProfileInfoCacheManager.getAccountId(), Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage));
 
+                        } else {
+                            Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+                            Utilities.sendFailedEventTracker(mTracker, "Signup", ProfileInfoCacheManager.getAccountId(), errorMessage);
+                        }
                     } else {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
@@ -300,7 +299,10 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_LONG).show();
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker, "BusinessSignUp", "Failed", "Failed to verify no.");
+                    if (!TextUtils.isEmpty(result.getJsonString()))
+                        Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage() + " " + result.getJsonString());
+                    else
+                        Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
                 }
 
                 mSignUpTask = null;

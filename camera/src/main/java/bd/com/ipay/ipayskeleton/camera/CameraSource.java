@@ -796,7 +796,9 @@ public class CameraSource {
     private Camera createCamera() {
         int requestedCameraId = getIdForRequestedCamera(mFacing);
         if (requestedCameraId == -1) {
-            throw new RuntimeException("Could not find requested camera.");
+            // if a device doesnt have front or more than one camera,
+            // we will select the only camera it has. Default back camera ID is 0
+            requestedCameraId=0;
         }
         Camera camera = Camera.open(requestedCameraId);
         SizePair sizePair = selectSizePair(camera, mRequestedPreviewWidth, mRequestedPreviewHeight);

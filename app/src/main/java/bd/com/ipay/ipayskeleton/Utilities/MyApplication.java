@@ -29,27 +29,22 @@ import io.intercom.android.sdk.Intercom;
 
 public class MyApplication extends MultiDexApplication implements HttpResponseListener {
 
-    // 5 Minutes inactive time
-    private final long AUTO_LOGOUT_TIMEOUT = 5 * 60 * 1000;
-
-    // Variables for user inactivity
-    private Timer mUserInactiveTimer;
-    private TimerTask mUserInactiveTimerTask;
-
-    public boolean isAppInBackground = false;
-
     // Variables for token timer
     private static Timer mTokenTimer;
     private static TimerTask mTokenTimerTask;
-    //Google Anlytic
+    //Google Analytic
     private static GoogleAnalytics sAnalytics;
     private static Tracker sTracker;
-
+    private static MyApplication myApplicationInstance;
+    // 5 Minutes inactive time
+    private final long AUTO_LOGOUT_TIMEOUT = 5 * 60 * 1000;
+    public boolean isAppInBackground = false;
+    // Variables for user inactivity
+    private Timer mUserInactiveTimer;
+    private TimerTask mUserInactiveTimerTask;
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private HttpRequestPostAsyncTask mRefreshTokenAsyncTask = null;
     private LogoutResponse mLogOutResponse;
-
-    private static MyApplication myApplicationInstance;
 
     public static MyApplication getMyApplicationInstance() {
         return myApplicationInstance;
@@ -188,6 +183,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
 
     /**
      * Gets the default {@link Tracker} for this {@link Application}.
+     *
      * @return tracker
      */
     synchronized public Tracker getDefaultTracker() {
@@ -197,7 +193,6 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
             } else {
                 sTracker = sAnalytics.newTracker(R.xml.global_tracker);
             }
-
         }
         return sTracker;
     }

@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ProfilePictureHelperDialog;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -46,7 +47,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import bd.com.ipay.ipayskeleton.camera.utility.CameraAndImageUtilities;
 
-public class AccountFragment extends BaseFragmentV4 implements HttpResponseListener {
+public class AccountFragment extends BaseFragment implements HttpResponseListener {
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
     private final int ACTION_PICK_PROFILE_PICTURE = 100;
@@ -414,14 +415,23 @@ public class AccountFragment extends BaseFragmentV4 implements HttpResponseListe
                     LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker, "ProfilePictureSet", "Succeed", mSetProfilePictureResponse.getMessage());
+                    if (!TextUtils.isEmpty(ProfileInfoCacheManager.getProfileImageUrl())) {
+                        Utilities.sendSuccessEventTracker(mTracker, "Profile Picture", ProfileInfoCacheManager.getAccountId());
+                    } else {
+                        Utilities.sendSuccessEventTracker(mTracker, "Profile Picture", ProfileInfoCacheManager.getAccountId());
+                    }
 
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_SHORT).show();
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker, "ProfilePictureSet", "Failed", mSetProfilePictureResponse.getMessage());
+                    if (!TextUtils.isEmpty(ProfileInfoCacheManager.getProfileImageUrl())) {
+                        Utilities.sendFailedEventTracker(mTracker, "Profile Picture", ProfileInfoCacheManager.getAccountId(), mSetProfilePictureResponse.getMessage());
+                    } else {
+                        Utilities.sendFailedEventTracker(mTracker, "Profile Picture", ProfileInfoCacheManager.getAccountId(), mSetProfilePictureResponse.getMessage());
+                    }
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -429,7 +439,7 @@ public class AccountFragment extends BaseFragmentV4 implements HttpResponseListe
                     Toaster.makeText(getActivity(), R.string.profile_picture_set_failed, Toast.LENGTH_SHORT);
 
                 //Google Analytic event
-                Utilities.sendEventTracker(mTracker, "ProfilePictureSet", "Failed", getString(R.string.profile_picture_set_failed));
+                Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }
 
             mUploadProfilePictureAsyncTask = null;

@@ -41,6 +41,7 @@ public class ProfileInfoCacheManager {
      * @return For Account Type {@link Constants.PERSONAL_ACCOUNT_TYPE} Returns the User Full Name,
      * For {@link Constants.BUSINESS_ACCOUNT_TYPE} Returns the Name of the Business.
      */
+    @SuppressWarnings("JavadocReference")
     public static String getUserName() {
         return pref.getString(SharedPrefConstants.USER_NAME, "");
     }
@@ -49,6 +50,7 @@ public class ProfileInfoCacheManager {
      * @param value For Account Type {@link Constants.PERSONAL_ACCOUNT_TYPE} value have to be the User Full Name,
      *              For {@link Constants.BUSINESS_ACCOUNT_TYPE} value have to be the Name of the Business.
      */
+    @SuppressWarnings("JavadocReference")
     public static void setUserName(String value) {
         pref.edit().putString(SharedPrefConstants.USER_NAME, value).apply();
     }
@@ -125,20 +127,24 @@ public class ProfileInfoCacheManager {
         return pref.getString(SharedPrefConstants.UUID, null);
     }
 
+    public static void setUUID(String value) {
+        pref.edit().putString(SharedPrefConstants.UUID, value).apply();
+    }
+
     public static String getBirthday() {
         return pref.getString(SharedPrefConstants.BIRTHDAY, "");
+    }
+
+    public static void setBirthday(String value) {
+        pref.edit().putString(SharedPrefConstants.BIRTHDAY, value).apply();
     }
 
     public static void setName(String value) {
         pref.edit().putString(SharedPrefConstants.NAME, value).apply();
     }
 
-    public static void setUUID(String value) {
-        pref.edit().putString(SharedPrefConstants.UUID, value).apply();
-    }
-
-    public static void setBirthday(String value) {
-        pref.edit().putString(SharedPrefConstants.BIRTHDAY, value).apply();
+    public static String getGender() {
+        return pref.getString(SharedPrefConstants.GENDER, null);
     }
 
     public static void setGender(String value) {
@@ -150,9 +156,7 @@ public class ProfileInfoCacheManager {
     }
 
     public static boolean ifPasswordEncrypted() {
-        if (pref.getString(SharedPrefConstants.KEY_PASSWORD, "") != "")
-            return true;
-        return false;
+        return !pref.getString(SharedPrefConstants.KEY_PASSWORD, "").equals("");
     }
 
     public static void setLoggedInStatus(boolean loggedIn) {
@@ -191,6 +195,7 @@ public class ProfileInfoCacheManager {
         setPrimaryEmail(profileInfo.getPrimaryEmail());
         setAccountId(profileInfo.getAccountId());
         setSignupTime(profileInfo.getSignupTime());
+        setGender(profileInfo.getGender());
 
         BroadcastServiceIntent.sendBroadcast(context, Constants.PROFILE_INFO_UPDATE_BROADCAST);
     }

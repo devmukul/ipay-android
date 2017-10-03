@@ -258,7 +258,13 @@ public class CameraActivity extends AppCompatActivity {
             public void onClick(View v) {
                 setResult(RESULT_CANCELED);
                 if (imageData != null) {
-                    File pictureFile = getTempFile();
+                    File pictureFile;
+                    try {
+                        pictureFile = getTempFile();
+                    } catch (Exception e) {
+                        Toast.makeText(CameraActivity.this, "Not enough memory to save the image", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     FileOutputStream fos;
                     try {
                         fos = new FileOutputStream(pictureFile);
@@ -315,7 +321,11 @@ public class CameraActivity extends AppCompatActivity {
     @NonNull
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private File getTempFile() {
-        File documentFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
+        File rootDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (rootDir == null) {
+            rootDir = getFilesDir();
+        }
+        File documentFile = new File(rootDir, fileName);
         if (!documentFile.getParentFile().exists()) {
             documentFile.getParentFile().mkdirs();
         }

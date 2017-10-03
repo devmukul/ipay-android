@@ -25,16 +25,13 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class ContactsSearchView extends FrameLayout {
 
-    private CustomAutoCompleteView mCustomAutoCompleteView;
-    private TextView mMobileNumberHintView;
-
-    private List<DBContactNode> mContactList;
-    private ContactListAdapter mContactsAdapter;
-
     public boolean mFilterByVerifiedUsersOnly;
     public boolean mFilterByiPayMembersOnly;
     public boolean mFilterByBusinessMembersOnly;
-
+    private CustomAutoCompleteView mCustomAutoCompleteView;
+    private TextView mMobileNumberHintView;
+    private List<DBContactNode> mContactList;
+    private ContactListAdapter mContactsAdapter;
     private String mQuery = "";
     private Context mContext;
 
@@ -71,39 +68,16 @@ public class ContactsSearchView extends FrameLayout {
         setBusinessContactAdapter(mContactList);
     }
 
-    public class CustomAutoCompleteTextChangedListener implements TextWatcher {
-
-        public CustomAutoCompleteTextChangedListener() {
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count,
-                                      int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence userInput, int start, int before, int count) {
-            if (userInput.length() > 0) {
-                mMobileNumberHintView.setVisibility(VISIBLE);
-
-                if (CurrentFragmentTag() != null && CurrentFragmentTag().equals(Constants.TOP_UP))
-                    customTextChangeListener.onTextChange(userInput.toString());
-
-            } else mMobileNumberHintView.setVisibility(INVISIBLE);
-
-            mQuery = userInput.toString();
-
-            // Query in database based on the user input
-            readContactsFromDB();
-        }
-    }
-
     public Editable getText() {
         return mCustomAutoCompleteView.getText();
+    }
+
+    public void setText(String text) {
+        mCustomAutoCompleteView.setText(text);
+        mCustomAutoCompleteView.setSelection(text.length());
+        mCustomAutoCompleteView.setError(null);
+
+        hideSuggestionList();
     }
 
     public void setError(String error) {
@@ -116,14 +90,6 @@ public class ContactsSearchView extends FrameLayout {
 
     public void setFocusableStatus(boolean status) {
         mCustomAutoCompleteView.setFocusable(status);
-    }
-
-    public void setText(String text) {
-        mCustomAutoCompleteView.setText(text);
-        mCustomAutoCompleteView.setSelection(text.length());
-        mCustomAutoCompleteView.setError(null);
-
-        hideSuggestionList();
     }
 
     public void hideSuggestionList() {
@@ -191,6 +157,53 @@ public class ContactsSearchView extends FrameLayout {
     private void setBusinessContactAdapter(List<DBContactNode> contactList) {
         mContactsAdapter = new ContactListAdapter(mContext, contactList);
         mCustomAutoCompleteView.setAdapter(mContactsAdapter);
+    }
+
+    String CurrentFragmentTag() {
+        return null;
+    }
+
+    public void setCustomTextChangeListener(CustomTextChangeListener customTextChangeListener) {
+        this.customTextChangeListener = customTextChangeListener;
+    }
+
+    public interface CustomTextChangeListener {
+        void onTextChange(String inputText);
+    }
+
+    public class CustomAutoCompleteTextChangedListener implements TextWatcher {
+
+        public CustomAutoCompleteTextChangedListener() {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count,
+                                      int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence userInput, int start, int before, int count) {
+            if (userInput.length() > 0) {
+                mMobileNumberHintView.setVisibility(VISIBLE);
+
+                if (CurrentFragmentTag() != null && CurrentFragmentTag().equals(Constants.TOP_UP))
+                    customTextChangeListener.onTextChange(userInput.toString());
+
+            } else mMobileNumberHintView.setVisibility(INVISIBLE);
+
+            mQuery = userInput.toString();
+
+            try {
+                // Query in database based on the user input
+                readContactsFromDB();
+            } finally {
+
+            }
+        }
     }
 
     public class ContactListAdapter extends ArrayAdapter<DBContactNode> {
@@ -270,18 +283,6 @@ public class ContactsSearchView extends FrameLayout {
 
             return view;
         }
-    }
-
-    String CurrentFragmentTag() {
-        return null;
-    }
-
-    public interface CustomTextChangeListener {
-        void onTextChange(String inputText);
-    }
-
-    public void setCustomTextChangeListener(CustomTextChangeListener customTextChangeListener) {
-        this.customTextChangeListener = customTextChangeListener;
     }
 }
 

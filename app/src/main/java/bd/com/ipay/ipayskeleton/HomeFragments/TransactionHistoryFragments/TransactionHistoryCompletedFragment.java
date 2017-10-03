@@ -58,7 +58,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class TransactionHistoryCompletedFragment extends ProgressFragment implements HttpResponseListener{
+public class TransactionHistoryCompletedFragment extends ProgressFragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
 
@@ -99,9 +99,9 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
     private boolean mIsScrolled = false;
-    private int mTotalItemCount =0;
-    private  int mPastVisiblesItems;
-    private  int mVisibleItem;
+    private int mTotalItemCount = 0;
+    private int mPastVisiblesItems;
+    private int mVisibleItem;
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
@@ -122,7 +122,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
                 new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_transaction_history_completed) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_transaction_history_completed));
     }
 
 
@@ -140,8 +140,10 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity())) {
+                if (Utilities.isConnectionAvailable(getActivity()) && mTransactionHistoryTask == null) {
                     refreshTransactionHistory();
+                } else {
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
         });
@@ -554,10 +556,10 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 super.onScrolled(recyclerView, dx, dy);
 
                 mVisibleItem = recyclerView.getChildCount();
-                mTotalItemCount =mLayoutManager.getItemCount();
+                mTotalItemCount = mLayoutManager.getItemCount();
                 mPastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
                 if (mIsScrolled
-                        && (mVisibleItem + mPastVisiblesItems) == mTotalItemCount && hasNext) {
+                        && (mVisibleItem + mPastVisiblesItems) == mTotalItemCount && hasNext && mTransactionHistoryTask == null) {
                     isLoading = true;
                     mIsScrolled = false;
                     historyPageCount = historyPageCount + 1;

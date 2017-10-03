@@ -118,8 +118,8 @@ public class ProfileActivity extends BaseActivity {
                 case Constants.VERIFY_BANK:
                     launchIntendedActivity(new ManageBanksActivity(), Constants.BANK_ACCOUNT);
                     break;
-                case Constants.LINK_BANK:
-                    launchIntendedActivity(new ManageBanksActivity(),Constants.LINK_BANK);
+                case Constants.ADD_BANK:
+                    launchIntendedActivity(new ManageBanksActivity(),Constants.ADD_BANK);
                     break;
                 case TRUSTED_NETWORK:
                 case TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE:

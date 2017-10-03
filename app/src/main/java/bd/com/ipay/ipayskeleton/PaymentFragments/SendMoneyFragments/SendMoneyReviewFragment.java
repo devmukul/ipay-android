@@ -279,22 +279,22 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
                     getActivity().finish();
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker, "SendMoney", "Sent", mSendMoneyResponse.getMessage());
-                }else if(result.getStatus()==Constants.HTTP_RESPONSE_STATUS_ACCEPTED){
-                    launchOTPVerification();
-
+                    Utilities.sendSuccessEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mSendMoneyResponse.getMessage());
+                    Utilities.sendBlockedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
+
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker, "SendMoney", "Failed", mSendMoneyResponse.getMessage());
+                    Utilities.sendFailedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mSendMoneyResponse.getMessage(), mAmount.longValue());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }
 
             mProgressDialog.dismiss();

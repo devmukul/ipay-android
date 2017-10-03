@@ -26,11 +26,12 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputSignUpView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPRequestBusinessSignup;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPResponseBusinessSignup;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -38,7 +39,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InvalidInputResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
-public class SignupBusinessStepThreeFragment extends BaseFragmentV4 implements HttpResponseListener {
+public class SignupBusinessStepThreeFragment extends BaseFragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mRequestOTPTask = null;
     private OTPResponseBusinessSignup mOtpResponseBusinessSignup;
 
@@ -65,7 +66,35 @@ public class SignupBusinessStepThreeFragment extends BaseFragmentV4 implements H
 
     private DatePickerDialog mDatePickerDialog;
     private String mDOB;
+    private final DatePickerDialog.OnDateSetListener mDateSetListener =
+            new DatePickerDialog.OnDateSetListener() {
+                public void onDateSet(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+                    String[] mWeekArray, mMonthArray;
+                    String birthDate, birthMonth, birthYear;
+                    int dayofweek;
 
+                    mYear = year;
+                    mMonth = monthOfYear + 1;
+                    mDay = dayOfMonth;
+                    mWeekArray = getResources().getStringArray(R.array.day_of_week);
+                    mMonthArray = getResources().getStringArray(R.array.month_name);
+
+                    if (mDay < 10) birthDate = "0" + mDay;
+                    else birthDate = mDay + "";
+                    if (mMonth < 10) birthMonth = "0" + mMonth;
+                    else birthMonth = mMonth + "";
+                    birthYear = mYear + "";
+
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(new Date(mYear, mMonth - 1, mDay));
+                    dayofweek = c.get(Calendar.DAY_OF_WEEK);
+
+                    mDOB = birthDate + "/" + birthMonth + "/" + birthYear;
+                    mBirthdayEditText.setError(null);
+                    mBirthdayEditText.setText(mWeekArray[dayofweek - 1] + " , " + mDay + " " + mMonthArray[mMonth - 1] + " , " + mYear);
+                }
+            };
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -247,36 +276,6 @@ public class SignupBusinessStepThreeFragment extends BaseFragmentV4 implements H
         mPersonalAddressView.resetInformation();
     }
 
-    private final DatePickerDialog.OnDateSetListener mDateSetListener =
-            new DatePickerDialog.OnDateSetListener() {
-                public void onDateSet(DatePicker view, int year,
-                                      int monthOfYear, int dayOfMonth) {
-                    String[] mWeekArray, mMonthArray;
-                    String birthDate, birthMonth, birthYear;
-                    int dayofweek;
-
-                    mYear = year;
-                    mMonth = monthOfYear + 1;
-                    mDay = dayOfMonth;
-                    mWeekArray = getResources().getStringArray(R.array.day_of_week);
-                    mMonthArray = getResources().getStringArray(R.array.month_name);
-
-                    if (mDay < 10) birthDate = "0" + mDay;
-                    else birthDate = mDay + "";
-                    if (mMonth < 10) birthMonth = "0" + mMonth;
-                    else birthMonth = mMonth + "";
-                    birthYear = mYear + "";
-
-                    Calendar c = Calendar.getInstance();
-                    c.setTime(new Date(mYear, mMonth - 1, mDay));
-                    dayofweek = c.get(Calendar.DAY_OF_WEEK);
-
-                    mDOB = birthDate + "/" + birthMonth + "/" + birthYear;
-                    mBirthdayEditText.setError(null);
-                    mBirthdayEditText.setText(mWeekArray[dayofweek - 1] + " , " + mDay + " " + mMonthArray[mMonth - 1] + " , " + mYear);
-                }
-            };
-
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
@@ -300,7 +299,11 @@ public class SignupBusinessStepThreeFragment extends BaseFragmentV4 implements H
                 message = mOtpResponseBusinessSignup.getMessage();
             } catch (Exception e) {
                 e.printStackTrace();
-                message = getString(R.string.server_down);
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.server_down, Toast.LENGTH_LONG).show();
+                //Google Analytic event
+                Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
+                return;
             }
 
 
@@ -312,7 +315,7 @@ public class SignupBusinessStepThreeFragment extends BaseFragmentV4 implements H
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
 
                 //Google Analytic event
-                Utilities.sendEventTracker(mTracker, "BusinessSignUp", "toOTP", "Signup complete for Business. Navigate to OTP for mobile verification");
+                Utilities.sendSuccessEventTracker(mTracker, "Business Signup to OTP", ProfileInfoCacheManager.getAccountId());
 
             } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                 InvalidInputResponse invalidInputResponse = gson.fromJson(result.getJsonString(), InvalidInputResponse.class);
@@ -321,8 +324,11 @@ public class SignupBusinessStepThreeFragment extends BaseFragmentV4 implements H
                 if (errorFields != null) {
                     Toast.makeText(getActivity(),
                             Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), Toast.LENGTH_LONG).show();
-                } else
+                    Utilities.sendFailedEventTracker(mTracker, "Business Signup to OTP", ProfileInfoCacheManager.getAccountId(), Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage));
+                } else {
                     Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+                    Utilities.sendFailedEventTracker(mTracker, "Business Signup to OTP", ProfileInfoCacheManager.getAccountId(), errorMessage);
+                }
             } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
@@ -330,13 +336,14 @@ public class SignupBusinessStepThreeFragment extends BaseFragmentV4 implements H
                 // Previous OTP has not been expired yet
                 SignupOrLoginActivity.otpDuration = mOtpResponseBusinessSignup.getOtpValidFor();
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationBusinessFragment();
-
+                Utilities.sendSuccessEventTracker(mTracker, "Business Signup to OTP(Retry)", ProfileInfoCacheManager.getAccountId());
             } else {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
                 //Google Analytic event
-                Utilities.sendEventTracker(mTracker,"BusinessSignUp", "Failed", message);
+                Utilities.sendFailedEventTracker(mTracker, "Business Signup to OTP", ProfileInfoCacheManager.getAccountId(), message);
+
             }
 
             mProgressDialog.dismiss();

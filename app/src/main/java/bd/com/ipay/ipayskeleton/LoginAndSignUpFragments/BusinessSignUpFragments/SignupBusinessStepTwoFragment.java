@@ -14,7 +14,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetBusinessTypesAsyncTask;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputSignUpView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
@@ -22,7 +22,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SignupBusinessStepTwoFragment extends BaseFragmentV4 {
+public class SignupBusinessStepTwoFragment extends BaseFragment {
 
     private EditText mBusinessType;
 
@@ -43,10 +43,8 @@ public class SignupBusinessStepTwoFragment extends BaseFragmentV4 {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_signup_business_step_two, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
-
         mBusinessNameView = (EditText) v.findViewById(R.id.business_name);
         mBusinessType = (EditText) v.findViewById(R.id.business_type);
-
         mNextButton = (Button) v.findViewById(R.id.business_again_next_button);
 
         mBusinessAddressView = (AddressInputSignUpView) v.findViewById(R.id.business_address);
@@ -70,7 +68,6 @@ public class SignupBusinessStepTwoFragment extends BaseFragmentV4 {
                 businessTypeResourceSelectorDialog.show();
             }
         });
-
 
         // Asynchronously load business types into the spinner
         GetBusinessTypesAsyncTask getBusinessTypesAsyncTask =

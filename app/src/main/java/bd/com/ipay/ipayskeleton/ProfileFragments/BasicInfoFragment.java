@@ -98,7 +98,7 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_user_basic_info) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_user_basic_info));
     }
 
     @Override
@@ -145,7 +145,11 @@ public class BasicInfoFragment extends ProgressFragment implements HttpResponseL
             @Override
             @ValidateAccess(ServiceIdConstants.MANAGE_PROFILE)
             public void onClick(View v) {
-                launchEditFragment();
+                if (mOccupationList != null) {
+                    launchEditFragment();
+                } else {
+                    Toast.makeText(getContext(), "Please try again later.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

@@ -19,7 +19,7 @@ public class TopUpActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top_up);
 
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, new MobileTopupFragment()).commit();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

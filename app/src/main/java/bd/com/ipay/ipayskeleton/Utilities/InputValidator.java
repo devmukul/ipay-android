@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import java.math.BigDecimal;
 import java.util.regex.Matcher;
@@ -18,7 +19,7 @@ public class InputValidator {
             INVALID_DRIVING_LICENSE_ID_WITH_INSUFFICIENT_LENGTH_PATTERN = "[A-Z]{2}[0-9]{0,7}|[A-Z]{1}|[A-Z]{2}[0-9]{7}[A-Z]{1,2}|" +
             "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{1,4}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{1,3}";
     private static final String VALID_DRIVING_LICENSE_ID_PATTERN = "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{5}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{4}";
-    private static final String ALPHA_NUMERIC_PATTERN="^[a-zA-Z0-9]*$";
+    private static final String ALPHA_NUMERIC_PATTERN = "^[a-zA-Z0-9]*$";
 
     public static String isPasswordValid(String password) {
         // Return empty string if the password is valid
@@ -64,22 +65,19 @@ public class InputValidator {
         return true;
     }
 
+    @Nullable
     public static String isValidAmount(Context context, BigDecimal amount, BigDecimal minAmount, BigDecimal maxAmount) {
-        String errorMessage = null;
+        final String errorMessage;
 
-        if (minAmount.compareTo(maxAmount) >= 0) {
+        if (amount.compareTo(minAmount) == -1) {
+            errorMessage = context.getResources().getString(R.string.please_enter_minimum_amount) + " " + Utilities.formatTaka(minAmount);
+        } else if (minAmount.compareTo(maxAmount) > 0) {
             errorMessage = context.getResources().getString(R.string.insufficient_balance);
-            return errorMessage;
+        } else if (amount.compareTo(maxAmount) == 1) {
+            errorMessage = context.getResources().getString(R.string.please_enter_not_more_than_max_amount) + " " + Utilities.formatTaka(maxAmount);
         } else {
-            if (amount.compareTo(minAmount) == -1) {
-                errorMessage = context.getResources().getString(R.string.please_enter_minimum_amount) + " " + Utilities.formatTaka(minAmount);
-                return errorMessage;
-            } else if (amount.compareTo(maxAmount) == 1) {
-                errorMessage = context.getResources().getString(R.string.please_enter_not_more_than_max_amount) + " " + Utilities.formatTaka(maxAmount);
-                return errorMessage;
-            }
+            errorMessage = null;
         }
-
         return errorMessage;
     }
 
@@ -90,6 +88,8 @@ public class InputValidator {
             errorMessage = context.getString(R.string.error_invalid_otp);
         else if (otp.length() != 6)
             errorMessage = context.getString(R.string.error_invalid_otp_with_required_length);
+        else if (!otp.matches("^[0-9]*$"))
+            errorMessage = context.getString(R.string.invalid_otp_with_characters);
         return errorMessage;
     }
 
@@ -123,12 +123,12 @@ public class InputValidator {
                         errorMessage = context.getString(R.string.invalid_driving_license_ID);
                     break;
                 case Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE:
-                    if(!documentID.matches(ALPHA_NUMERIC_PATTERN))
-                        errorMessage=context.getString(R.string.invalid_birth_certificate);
+                    if (!documentID.matches(ALPHA_NUMERIC_PATTERN))
+                        errorMessage = context.getString(R.string.invalid_birth_certificate);
                     break;
                 case Constants.DOCUMENT_TYPE_TIN:
-                    if(!documentID.matches(ALPHA_NUMERIC_PATTERN))
-                        errorMessage=context.getString(R.string.invalid_tin);
+                    if (!documentID.matches(ALPHA_NUMERIC_PATTERN))
+                        errorMessage = context.getString(R.string.invalid_tin);
                     break;
             }
         }

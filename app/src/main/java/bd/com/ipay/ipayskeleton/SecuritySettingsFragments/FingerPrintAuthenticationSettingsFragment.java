@@ -11,13 +11,13 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager.FingerprintAuthenticationDialog;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class FingerPrintAuthenticationSettingsFragment extends BaseFragmentV4 {
+public class FingerPrintAuthenticationSettingsFragment extends BaseFragment {
     private Button mFingerPrintActivateButton;
     private FingerprintAuthenticationDialog mFingerprintAuthenticationDialog;
 
