@@ -198,7 +198,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     }
                 } else if (resultCode == CameraActivity.CAMERA_ACTIVITY_CRASHED) {
                     Intent systemCameraOpenIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    systemCameraOpenIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID, DocumentPicker.getTempFile(getActivity())));
+                    systemCameraOpenIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID, DocumentPicker.getTempFile(getActivity(),"document.jpg")));
                     startActivityForResult(systemCameraOpenIntent, ACTION_UPLOAD_DOCUMENT);
                 } else
                     mSelectedItemId = -1;
