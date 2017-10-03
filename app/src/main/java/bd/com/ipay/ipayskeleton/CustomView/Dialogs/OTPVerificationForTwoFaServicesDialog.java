@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.CustomView.Dialogs;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -16,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -23,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFaServiceAccomplishWithOTPResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFaServiceListWithOTPRequest;
 import bd.com.ipay.ipayskeleton.R;
@@ -163,6 +166,13 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
         }
     }
 
+    private void launchHomeActivity() {
+        Intent intent = new Intent(((Activity) context), HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+        context.finish();
+    }
+
     private void attemptDesiredRequestWithOTP() {
         Gson gson = new Gson();
         if (mDesiredRequest.equals(Constants.COMMAND_PUT_TWO_FA_SETTING)) {
@@ -176,7 +186,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPutAsyncTask.mHttpResponseListener = this;
             mHttpPutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else if (mDesiredRequest.equals(Constants.COMMAND_SEND_MONEY)) {
-            mProgressDialog.setMessage(context.getString(R.string.change_password_progress));
+            mProgressDialog.setMessage(context.getString(R.string.progress_dialog_text_sending_money));
             mProgressDialog.show();
             SendMoneyRequest sendMoneyRequest = gson.fromJson(json, SendMoneyRequest.class);
             sendMoneyRequest.setOtp(mOTP);
@@ -213,6 +223,18 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                     Toaster.makeText(context, twoFaServiceAccomplishWithOTPResponse.getMessage(), Toast.LENGTH_LONG);
                 }
 
+            } else if (result.getApiCommand().equals(Constants.COMMAND_SEND_MONEY)) {
+                SendMoneyResponse sendMoneyResponse = gson.fromJson(result.getJsonString(), SendMoneyResponse.class);
+                String message = sendMoneyResponse.getMessage();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mProgressDialog.dismiss();
+                    Toaster.makeText(context, message, Toast.LENGTH_SHORT);
+                    mOTPInputDialog.dismiss();
+                    launchHomeActivity();
+                } else {
+                    mProgressDialog.dismiss();
+                    Toaster.makeText(context, message, Toast.LENGTH_SHORT);
+                }
             }
 
         } catch (Exception e) {

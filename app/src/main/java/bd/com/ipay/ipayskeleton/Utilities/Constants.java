@@ -360,7 +360,7 @@ public class Constants {
 
     // Sign in Rest
     public static final String URL_GET_REFRESH_TOKEN = "signin/refreshToken";
-    public static final String URL_LOGIN = "signin/v2";
+    public static final String URL_LOGIN = "signin";
 
     // Sign out Rest
     public static final String URL_LOG_OUT = "signout";

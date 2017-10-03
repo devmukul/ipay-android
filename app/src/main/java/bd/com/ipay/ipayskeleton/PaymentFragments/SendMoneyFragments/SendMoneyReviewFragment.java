@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -184,9 +185,10 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
             attemptSendMoney(null);
         }
     }
+
     private void launchOTPVerification() {
-        String jsonString=new Gson().toJson(mSendMoneyRequest);
-        mOTPVerificationForTwoFaServicesDialog=new OTPVerificationForTwoFaServicesDialog(getActivity(),jsonString,Constants.COMMAND_SEND_INVITE,
+        String jsonString = new Gson().toJson(mSendMoneyRequest);
+        mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), jsonString, Constants.COMMAND_SEND_MONEY,
                 Constants.BASE_URL_SM + Constants.URL_SEND_MONEY);
     }
 
@@ -210,7 +212,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         mProgressDialog.setCancelable(false);
         mSendMoneyRequest = new SendMoneyRequest(
                 mSenderMobileNumber, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber),
-                mAmount.toString(), mDescription, pin);
+                mAmount.toString(), mDescription, pin,getServiceID());
         Gson gson = new Gson();
         String json = gson.toJson(mSendMoneyRequest);
         mSendMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY,
@@ -284,7 +286,13 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mSendMoneyResponse.getMessage());
                     Utilities.sendBlockedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
-
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                    Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    SecuritySettingsActivity.otpDuration=mSendMoneyResponse.getOtpValidFor();
+                    launchOTPVerification();
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    launchOTPVerification();
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);

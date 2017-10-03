@@ -100,7 +100,7 @@
             android:paddingBottom="@dimen/value4"
             android:paddingLeft="@dimen/activity_horizontal_margin_card"
             android:paddingTop="@dimen/value4"
-            android:text="@string/fa_Setting"
+            android:text="@string/fa_setting"
             app:arrowVisibility="true" />
 
         <View style="@style/Divider"
