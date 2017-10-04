@@ -9,9 +9,11 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
@@ -40,6 +42,7 @@ import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadIdentifierDocumentAs
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.DocumentPreviewDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.DocumentPreviewRequestBuilder;
@@ -54,6 +57,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import bd.com.ipay.ipayskeleton.camera.CameraActivity;
 
 public class IdentificationDocumentListFragment extends ProgressFragment implements HttpResponseListener {
 
@@ -192,6 +196,10 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         mDocumentListAdapter.notifyDataSetChanged();
                         mSelectedItemId = -1;
                     }
+                } else if (resultCode == CameraActivity.CAMERA_ACTIVITY_CRASHED) {
+                    Intent systemCameraOpenIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    systemCameraOpenIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID, DocumentPicker.getTempFile(getActivity(),"document.jpg")));
+                    startActivityForResult(systemCameraOpenIntent, ACTION_UPLOAD_DOCUMENT);
                 } else
                     mSelectedItemId = -1;
 
