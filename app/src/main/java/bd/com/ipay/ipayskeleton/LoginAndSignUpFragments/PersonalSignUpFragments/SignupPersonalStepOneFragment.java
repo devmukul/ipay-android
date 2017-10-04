@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.Calendar;
@@ -29,9 +27,11 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPRequestPersonalSignup;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPResponsePersonalSignup;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
@@ -39,7 +39,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.InvalidInputResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SignupPersonalStepOneFragment extends Fragment implements HttpResponseListener {
+public class SignupPersonalStepOneFragment extends BaseFragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mRequestOTPTask = null;
     private OTPResponsePersonalSignup mOtpResponsePersonalSignup;
 
@@ -69,7 +69,35 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
     private int mYear;
     private int mMonth;
     private int mDay;
-    private Tracker mTracker;
+    private final DatePickerDialog.OnDateSetListener mDateSetListener =
+            new DatePickerDialog.OnDateSetListener() {
+                public void onDateSet(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+                    String[] mWeekArray, mMonthArray;
+                    String birthDate, birthMonth, birthYear;
+                    int dayofweek;
+
+                    mYear = year;
+                    mMonth = monthOfYear + 1;
+                    mDay = dayOfMonth;
+                    mWeekArray = getResources().getStringArray(R.array.day_of_week);
+                    mMonthArray = getResources().getStringArray(R.array.month_name);
+
+                    if (mDay < 10) birthDate = "0" + mDay;
+                    else birthDate = mDay + "";
+                    if (mMonth < 10) birthMonth = "0" + mMonth;
+                    else birthMonth = mMonth + "";
+                    birthYear = mYear + "";
+
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(new Date(mYear, mMonth - 1, mDay));
+                    dayofweek = c.get(Calendar.DAY_OF_WEEK);
+
+                    mDOB = birthDate + "/" + birthMonth + "/" + birthYear;
+                    mBirthdayEditText.setError(null);
+                    mBirthdayEditText.setText(mWeekArray[dayofweek - 1] + " , " + mDay + " " + mMonthArray[mMonth - 1] + " , " + mYear);
+                }
+            };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -175,36 +203,6 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
 
         return v;
     }
-
-    private final DatePickerDialog.OnDateSetListener mDateSetListener =
-            new DatePickerDialog.OnDateSetListener() {
-                public void onDateSet(DatePicker view, int year,
-                                      int monthOfYear, int dayOfMonth) {
-                    String[] mWeekArray, mMonthArray;
-                    String birthDate, birthMonth, birthYear;
-                    int dayofweek;
-
-                    mYear = year;
-                    mMonth = monthOfYear + 1;
-                    mDay = dayOfMonth;
-                    mWeekArray = getResources().getStringArray(R.array.day_of_week);
-                    mMonthArray = getResources().getStringArray(R.array.month_name);
-
-                    if (mDay < 10) birthDate = "0" + mDay;
-                    else birthDate = mDay + "";
-                    if (mMonth < 10) birthMonth = "0" + mMonth;
-                    else birthMonth = mMonth + "";
-                    birthYear = mYear + "";
-
-                    Calendar c = Calendar.getInstance();
-                    c.setTime(new Date(mYear, mMonth - 1, mDay));
-                    dayofweek = c.get(Calendar.DAY_OF_WEEK);
-
-                    mDOB = birthDate + "/" + birthMonth + "/" + birthYear;
-                    mBirthdayEditText.setError(null);
-                    mBirthdayEditText.setText(mWeekArray[dayofweek - 1] + " , " + mDay + " " + mMonthArray[mMonth - 1] + " , " + mYear);
-                }
-            };
 
     private void setGenderCheckBoxTextColor(boolean maleCheckBoxChecked, boolean femaleCheckBoxChecked) {
         if (maleCheckBoxChecked)
@@ -328,8 +326,9 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
 
                 SignupOrLoginActivity.otpDuration = mOtpResponsePersonalSignup.getOtpValidFor();
                 ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
+
                 //Google Analytic event
-                Utilities.sendEventTracker(mTracker, "SignUp", "toOTP", "Signup complete for personal account. Navigate to OTP for mobile verification");
+                Utilities.sendSuccessEventTracker(mTracker, "Signup to OTP", ProfileInfoCacheManager.getAccountId());
 
             } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
                 if (getActivity() != null)
@@ -345,11 +344,13 @@ public class SignupPersonalStepOneFragment extends Fragment implements HttpRespo
                 String errorMessage = invalidInputResponse.getMessage();
                 Toast.makeText(getActivity(),
                         Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage), Toast.LENGTH_LONG).show();
+                Utilities.sendFailedEventTracker(mTracker, "Signup to OTP", ProfileInfoCacheManager.getAccountId(), Utilities.getErrorMessageForInvalidInput(errorFields, errorMessage));
+
             } else {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                 //Google Analytic event
-                Utilities.sendEventTracker(mTracker, "SignUp", "Failed", message);
+                Utilities.sendFailedEventTracker(mTracker, "Signup to OTP", ProfileInfoCacheManager.getAccountId(), "Failed");
             }
 
             mProgressDialog.dismiss();

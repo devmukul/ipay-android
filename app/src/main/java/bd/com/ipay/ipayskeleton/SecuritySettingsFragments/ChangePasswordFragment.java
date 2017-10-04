@@ -16,19 +16,18 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActi
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationChangePasswordDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordValidationRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordValidationResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager.FingerprintAuthenticationDialog;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class ChangePasswordFragment extends BaseFragmentV4 implements HttpResponseListener {
+public class ChangePasswordFragment extends BaseFragment implements HttpResponseListener {
     private HttpRequestPutAsyncTask mChangePasswordValidationTask = null;
     private ChangePasswordValidationResponse mChangePasswordValidationResponse;
 
@@ -37,7 +36,6 @@ public class ChangePasswordFragment extends BaseFragmentV4 implements HttpRespon
     private EditText mEnterCurrentPasswordEditText;
     private EditText mEnterNewPasswordEditText;
     private EditText mEnterConfirmNewPasswordEditText;
-    private Button mChangePasswordButton;
 
     private String mPassword;
     private String mNewPassword;
@@ -58,13 +56,13 @@ public class ChangePasswordFragment extends BaseFragmentV4 implements HttpRespon
         mEnterNewPasswordEditText = (EditText) v.findViewById(R.id.new_password);
         mEnterConfirmNewPasswordEditText = (EditText) v.findViewById(R.id.confirm_new_password);
 
-        mChangePasswordButton = (Button) v.findViewById(R.id.save_pass);
+        Button changePasswordButton = (Button) v.findViewById(R.id.save_pass);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
         mEnterCurrentPasswordEditText.requestFocus();
 
-        mChangePasswordButton.setOnClickListener(new View.OnClickListener() {
+        changePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 attemptChangePasswordValidation();
@@ -77,7 +75,7 @@ public class ChangePasswordFragment extends BaseFragmentV4 implements HttpRespon
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_change_password) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_change_password));
     }
 
 
@@ -138,22 +136,6 @@ public class ChangePasswordFragment extends BaseFragmentV4 implements HttpRespon
         }
     }
 
-    private void saveNewPasswordWithTouchID() {
-        FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getContext(),
-                FingerprintAuthenticationDialog.Stage.FINGERPRINT_ENCRYPT);
-        fingerprintAuthenticationDialog.setFinishEncryptionCheckerListener(new FingerprintAuthenticationDialog.FinishEncryptionCheckerListener() {
-            @Override
-            public void ifEncryptionFinished() {
-                if (ProfileInfoCacheManager.ifPasswordEncrypted()) {
-                    ProfileInfoCacheManager.setFingerprintAuthenticationStatus(true);
-                } else
-                    ProfileInfoCacheManager.setFingerprintAuthenticationStatus(false);
-
-                ((SecuritySettingsActivity) getActivity()).switchToAccountSettingsFragment();
-            }
-        });
-    }
-
     public void setTitle() {
         getActivity().setTitle(R.string.change_password);
     }
@@ -201,6 +183,8 @@ public class ChangePasswordFragment extends BaseFragmentV4 implements HttpRespon
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mChangePasswordValidationResponse.getMessage());
+                    Utilities.sendBlockedEventTracker(mTracker, "Change Password", ProfileInfoCacheManager.getAccountId());
+
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mChangePasswordValidationResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -209,6 +193,8 @@ public class ChangePasswordFragment extends BaseFragmentV4 implements HttpRespon
                 e.printStackTrace();
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.change_pass_failed, Toast.LENGTH_LONG).show();
+                Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
+
             }
 
             mProgressDialog.dismiss();

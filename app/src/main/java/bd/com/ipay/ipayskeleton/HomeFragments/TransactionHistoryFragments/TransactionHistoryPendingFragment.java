@@ -106,9 +106,9 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
     private boolean mIsScrolled = false;
-    private int mTotalItemCount =0;
-    private  int mPastVisiblesItems;
-    private  int mVisibleItem;
+    private int mTotalItemCount = 0;
+    private int mPastVisiblesItems;
+    private int mVisibleItem;
 
     private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
     private final int REQUEST_PAYMENT_REVIEW_REQUEST = 102;
@@ -134,7 +134,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
                 new IntentFilter(Constants.PENDING_TRANSACTION_HISTORY_UPDATE_BROADCAST));
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_transaction_history_pending) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_transaction_history_pending));
     }
 
 
@@ -152,8 +152,10 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (Utilities.isConnectionAvailable(getActivity())) {
+                if (Utilities.isConnectionAvailable(getActivity()) && mTransactionHistoryTask == null) {
                     refreshTransactionHistory();
+                } else {
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
         });
@@ -310,7 +312,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         super.onActivityCreated(savedInstanceState);
         getPendingTransactionHistory();
     }
-
 
 
     @Override
@@ -646,10 +647,10 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 super.onScrolled(recyclerView, dx, dy);
 
                 mVisibleItem = recyclerView.getChildCount();
-                mTotalItemCount =mLayoutManager.getItemCount();
+                mTotalItemCount = mLayoutManager.getItemCount();
                 mPastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
                 if (mIsScrolled
-                        && (mVisibleItem + mPastVisiblesItems) == mTotalItemCount && hasNext) {
+                        && (mVisibleItem + mPastVisiblesItems) == mTotalItemCount && hasNext && mTransactionHistoryTask == null) {
                     isLoading = true;
                     mIsScrolled = false;
                     historyPageCount = historyPageCount + 1;

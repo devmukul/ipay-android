@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -260,6 +261,11 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
                     if (context != null) {
                         Utilities.hideKeyboard(context, view);
                         ((MyApplication) ((Activity) (getContext())).getApplication()).launchLoginPage(mChangePasswordWithOTPResponse.getMessage());
+                        if (getContext() instanceof AppCompatActivity) {
+                            Utilities.sendBlockedEventTracker(Utilities.getTracker(((AppCompatActivity) getContext())), "Add Money", ProfileInfoCacheManager.getAccountId());
+
+                        }
+
                     }
                 } else {
                     if (context != null)

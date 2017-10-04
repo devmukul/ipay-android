@@ -23,7 +23,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
-import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragmentV4;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
@@ -43,7 +43,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class LoginFragment extends BaseFragmentV4 implements HttpResponseListener {
+public class LoginFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mLoginTask = null;
     private LoginResponse mLoginResponseModel;
@@ -168,7 +168,7 @@ public class LoginFragment extends BaseFragmentV4 implements HttpResponseListene
         super.onResume();
         getActivity().setTitle(R.string.title_login_page);
         Utilities.showKeyboard(getActivity());
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_login) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_login));
 
         /**
          * If UUID exists, it means device was set as trusted before.
@@ -228,7 +228,7 @@ public class LoginFragment extends BaseFragmentV4 implements HttpResponseListene
         tryLogInWithTouchID = false;
         ProfileInfoCacheManager.clearEncryptedPassword();
         showLogInFailedWithFingerPrintAuthDialog();
-
+        Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), "Password Changed Removing FingerPrintAuth");
     }
 
     private void showLogInFailedWithFingerPrintAuthDialog() {
@@ -349,7 +349,7 @@ public class LoginFragment extends BaseFragmentV4 implements HttpResponseListene
                                 ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                             }
                             //Google Analytic event
-                            Utilities.sendEventTracker(mTracker,"Login", "ToHome", "Login successful. Navigate to home page.");
+                            Utilities.sendSuccessEventTracker(mTracker, "Login to Home", ProfileInfoCacheManager.getAccountId());
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_ACCEPTED:
                             hideProgressDialog();
@@ -362,7 +362,7 @@ public class LoginFragment extends BaseFragmentV4 implements HttpResponseListene
                             ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
 
                             //Google Analytic event
-                            Utilities.sendEventTracker(mTracker,"Login", "ToOTP", "Navigate to OTP page to verify mobile no.");
+                            Utilities.sendSuccessEventTracker(mTracker, "Login to OTP", ProfileInfoCacheManager.getAccountId());
 
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE:
@@ -376,18 +376,18 @@ public class LoginFragment extends BaseFragmentV4 implements HttpResponseListene
                             SignupOrLoginActivity.otpDuration = mLoginResponseModel.getOtpValidFor();
                             ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationTrustedFragment();
                             //Google Analytic event
-                            Utilities.sendEventTracker(mTracker,"Login", "ToOTP", "Navigate to OTP page to verify mobile no. and add trusted device");
+                            Utilities.sendSuccessEventTracker(mTracker, "Login to OTP", ProfileInfoCacheManager.getAccountId());
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_UNAUTHORIZED:
                             hideProgressDialog();
 
-                            /**
+                            /*
                              * Two situation might arise here. Wrong user name or password throws 401
                              * Login request from an untrusted device with invalid UUID throws 401 too.
                              * We need to handle both case. In case of wrong username or password just showing the response message is enough.
                              */
                             if (mLoginResponseModel.getMessage().contains(Constants.DEVICE_IS_NOT_TRUSTED)) {
-                                /**
+                                /*
                                  *  Logged in from an untrusted device with invalid UUID.
                                  *  Remove the saved UUID and send the login request again.
                                  */
@@ -402,6 +402,7 @@ public class LoginFragment extends BaseFragmentV4 implements HttpResponseListene
                                 if (!tryLogInWithTouchID) {
                                     if (getActivity() != null)
                                         Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), mLoginResponseModel.getMessage());
                                 } else
                                     removeFingerprintAuthentication();
                             }
@@ -409,6 +410,7 @@ public class LoginFragment extends BaseFragmentV4 implements HttpResponseListene
                         case Constants.HTTP_RESPONSE_STATUS_BLOCKED:
                             hideProgressDialog();
                             Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_LONG).show();
+                            Utilities.sendBlockedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId());
                             break;
                         default:
                             hideProgressDialog();
@@ -416,6 +418,7 @@ public class LoginFragment extends BaseFragmentV4 implements HttpResponseListene
                             if (!tryLogInWithTouchID) {
                                 if (getActivity() != null)
                                     Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), mLoginResponseModel.getMessage());
                             } else
                                 removeFingerprintAuthentication();
                             break;
@@ -426,6 +429,7 @@ public class LoginFragment extends BaseFragmentV4 implements HttpResponseListene
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_SHORT).show();
+                    Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
                 }
 
                 mLoginTask = null;
@@ -449,6 +453,7 @@ public class LoginFragment extends BaseFragmentV4 implements HttpResponseListene
 
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), getString(R.string.failed_add_trusted_device));
                     Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
                 }
 
@@ -456,7 +461,7 @@ public class LoginFragment extends BaseFragmentV4 implements HttpResponseListene
                 break;
             default:
                 hideProgressDialog();
-
+                Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), "Internal Error(Client Side)");
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                 break;

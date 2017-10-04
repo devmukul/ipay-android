@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.Withd
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -73,7 +74,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_withdraw_money_review) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_withdraw_money_review));
     }
 
     @Override
@@ -234,21 +235,25 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
                         Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
                     getActivity().setResult(Activity.RESULT_OK);
                     getActivity().finish();
+
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"WithdrawMoney", "Succeed", mWithdrawMoneyResponse.getMessage());
+                    Utilities.sendSuccessEventTracker(mTracker, "Withdraw Money", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mWithdrawMoneyResponse.getMessage());
+                    Utilities.sendBlockedEventTracker(mTracker, "Withdraw Money", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
+
 
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                     //Google Analytic event
-                    Utilities.sendEventTracker(mTracker,"WithdrawMoney", "Failed", mWithdrawMoneyResponse.getMessage());
+                    Utilities.sendFailedEventTracker(mTracker, "Withdraw Money", ProfileInfoCacheManager.getAccountId(), mWithdrawMoneyResponse.getMessage(), Double.valueOf(mAmount).longValue());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }
 
             mProgressDialog.dismiss();
