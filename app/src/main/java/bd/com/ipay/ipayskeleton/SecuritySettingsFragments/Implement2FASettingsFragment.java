@@ -69,7 +69,6 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mChangedList = new ArrayList<>();
-        getTwoFaSettings();
         return view;
     }
 

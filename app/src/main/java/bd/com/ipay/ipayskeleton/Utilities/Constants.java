@@ -361,7 +361,7 @@ public class Constants {
 
     // Sign in Rest
     public static final String URL_GET_REFRESH_TOKEN = "signin/refreshToken";
-    public static final String URL_LOGIN = "signin";
+    public static final String URL_LOGIN = "signin/v2";
 
     // Sign out Rest
     public static final String URL_LOG_OUT = "signout";
@@ -460,7 +460,7 @@ public class Constants {
     public static final String URL_REFRESH_FIREBASE_TOKEN = "firebase/login/";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
-    public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED=428;
+    public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED=452;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
     public static final int HTTP_RESPONSE_STATUS_PAYMENT_REQUIRED = 402;
     public static final int HTTP_RESPONSE_STATUS_OK = 200;

@@ -353,6 +353,10 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                         if (photoUri != null)
                             mProfileImageView.setProfilePicture(photoUri, false);
                     }
+                    else if(result.getStatus()==Constants.HTTP_RESPONSE_STATUS_ACCEPTED){
+                        
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);

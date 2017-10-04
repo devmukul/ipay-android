@@ -218,7 +218,6 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                     mProgressDialog.dismiss();
                     Toaster.makeText(context, twoFaServiceAccomplishWithOTPResponse.getMessage(), Toast.LENGTH_SHORT);
                     mOTPInputDialog.dismiss();
-                    ((SecuritySettingsActivity) (context)).switchTo2FaSettingsFragment();
                 } else {
                     Toaster.makeText(context, twoFaServiceAccomplishWithOTPResponse.getMessage(), Toast.LENGTH_LONG);
                 }
