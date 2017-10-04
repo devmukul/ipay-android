@@ -198,6 +198,7 @@ public class Constants {
     public static final String NAVIGATION_MENU_SERVICE_ACCESS_SET = "NAVIGATION_MENU_SERVICE_ACCESS_SET";
     public static final String FRAGMENT_SERVICE_ACCESS_SET = "FRAGMENT_SERVICE_ACCESS_SET";
     public static final String MOBILE_NUMBER_REGEX = "^(((\\+)?880)?|(0)?)(1[356789][\\d]{8})$";
+    public static final String TWO_FA_SETTINGS = "TWO_FA_SETTINGS";
 
     static {
         if (SERVER_TYPE == DEV_SERVER) {
@@ -286,7 +287,7 @@ public class Constants {
     public static final String URL_REMOVE_A_BANK = "bank/";
     public static final String URL_VERIFY_WITH_AMOUNT_A_BANK = "bank/";
     // Bank Transaction REST
-    public static final String URL_ADD_MONEY = "banktransaction/cashin";
+    public static final String URL_ADD_MONEY = "banktransaction/cashin/v2";
 
     public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout";
     // Bank Verify Rest
@@ -335,7 +336,7 @@ public class Constants {
     public static final String URL_TOPUP_REQUEST = "topup/dotopup/v2";
 
     // Money Request REST
-    public static final String URL_REQUEST_MONEY = "requestmoney";
+    public static final String URL_REQUEST_MONEY = "requestmoney/v2";
 
     // News Feed REST
     public static final String URL_GET_NEWS_FEED = "resource/news";
@@ -357,7 +358,7 @@ public class Constants {
     public static final String URL_FORGET_PASSWORD = "/forgot-password";
     public static final String URL_TWO_FA_SETTINGS="settings/2fa/preference";
     public static final String URL_GET_PIN_INFO = "settings/pin";
-    public static final String URL_SET_PIN = "settings/pin";
+    public static final String URL_SET_PIN = "settings/pin/v2";
 
     // Sign in Rest
     public static final String URL_GET_REFRESH_TOKEN = "signin/refreshToken";

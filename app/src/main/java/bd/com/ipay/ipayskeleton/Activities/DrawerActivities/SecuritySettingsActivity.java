@@ -35,6 +35,8 @@ public class SecuritySettingsActivity extends BaseActivity {
         if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT) != null) {
             if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.ADD_TRUSTED_PERSON)) {
                 switchToTrustedPersonFragment();
+            } else if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.TWO_FA_SETTINGS)) {
+                switchTo2FaSettingsFragment();
             } else {
                 switchToAccountSettingsFragment();
             }

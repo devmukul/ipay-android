@@ -35,7 +35,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
-public class Implement2FASettingsFragment extends Fragment implements HttpResponseListener {
+public class Implement2FASettingsFragment extends Fragment implements HttpResponseListener,OTPVerificationForTwoFaServicesDialog.dismissListener {
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
@@ -56,6 +56,7 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
 
     private String mUri;
     private String mJsonString;
+
 
 
     HashMap<Integer, TwoFAService> mPositionToServiceIDMap = new HashMap<Integer, TwoFAService>();
@@ -232,7 +233,6 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
                     public void onClick(View v) {
                         mChangedList.clear();
                         getChangedSettings();
-                        Toast.makeText(getActivity(), Integer.toString(mChangedSettings) + " " + Integer.toString(mCurrentSettings), Toast.LENGTH_SHORT).show();
                         if (mChangedSettings != mCurrentSettings) {
                             for (int i = 0; i < mTotalServices; i++) {
                                 if ((check(mChangedSettings, i) && !check(mCurrentSettings, i)) || !check(mChangedSettings, i) && check(mCurrentSettings, i)) {
@@ -315,7 +315,6 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
         Gson gson = new Gson();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            Toast.makeText(getActivity(), result.getApiCommand(), Toast.LENGTH_LONG).show();
             mGetTwoFaSettingsAsynctask = null;
             if (getActivity() != null)
                 return;
@@ -330,13 +329,6 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
                             mRecyclerView.setAdapter(adapter);
                             setCurrentSettings();
                         }
-                        if (mTwoFaServiceResponse != null) {
-                            //Toaster.makeText(getActivity(), Integer.toString(mTwoFaServiceList.size()), Toast.LENGTH_LONG);
-                        } else {
-
-                        }
-                        //mTwoFaServiceList = mTwoFaServiceResponse.getResponse();
-                        //Toaster.makeText(getActivity(),Integer.toString(mTwoFaServiceList.size()),Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     Toaster.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
@@ -347,13 +339,12 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
                         if (getActivity() != null) {
                             SecuritySettingsActivity.otpDuration=twoFaSettingsSaveResponse.getOtpValidFor();
-                            Toaster.makeText(getActivity(),mJsonString,Toast.LENGTH_SHORT);
                             mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), mJsonString,
                                     Constants.COMMAND_PUT_TWO_FA_SETTING, mUri);
+                            mOTPVerificationForTwoFaServicesDialog.mDismissListener=this;
                         }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         if (getActivity() != null) {
-                            Toaster.makeText(getActivity(),mJsonString,Toast.LENGTH_SHORT);
                             SecuritySettingsActivity.otpDuration=twoFaSettingsSaveResponse.getOtpValidFor();
                             mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), mJsonString,
                                     Constants.COMMAND_PUT_TWO_FA_SETTING, mUri);
@@ -368,4 +359,8 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
         }
     }
 
+    @Override
+    public void onDismissDialog() {
+        getTwoFaSettings();
+    }
 }

@@ -61,13 +61,13 @@ public class ChangePasswordFragment extends BaseFragment implements HttpResponse
         mEnterNewPasswordEditText = (EditText) v.findViewById(R.id.new_password);
         mEnterConfirmNewPasswordEditText = (EditText) v.findViewById(R.id.confirm_new_password);
 
-        Button changePasswordButton = (Button) v.findViewById(R.id.save_pass);
+        mChangePasswordButton = (Button) v.findViewById(R.id.save_pass);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
         mEnterCurrentPasswordEditText.requestFocus();
 
-        changePasswordButton.setOnClickListener(new View.OnClickListener() {
+        mChangePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 attemptChangePasswordValidation();

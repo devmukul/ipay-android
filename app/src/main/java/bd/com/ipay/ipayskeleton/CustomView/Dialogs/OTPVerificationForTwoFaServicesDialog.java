@@ -24,8 +24,14 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFaServiceAccomplishWithOTPResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFaServiceListWithOTPRequest;
 import bd.com.ipay.ipayskeleton.R;
@@ -58,6 +64,8 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
     private MaterialDialog mOTPInputDialog;
     private ProgressDialog mProgressDialog;
 
+    public dismissListener mDismissListener;
+
     private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
 
     public OTPVerificationForTwoFaServicesDialog(@NonNull Activity context, String json, String desiredRequest, String mUri) {
@@ -67,6 +75,11 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
         this.json = json;
         this.mUri = mUri;
         initializeView();
+    }
+
+    public OTPVerificationForTwoFaServicesDialog(Activity context){
+        super(context);
+
     }
 
     private void initializeView() {
@@ -185,13 +198,48 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPutAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_PUT_TWO_FA_SETTING, mUri, json, context);
             mHttpPutAsyncTask.mHttpResponseListener = this;
             mHttpPutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else if (mDesiredRequest.equals(Constants.COMMAND_SEND_MONEY)) {
+        }
+
+        else if (mDesiredRequest.equals(Constants.COMMAND_SEND_MONEY)) {
             mProgressDialog.setMessage(context.getString(R.string.progress_dialog_text_sending_money));
             mProgressDialog.show();
             SendMoneyRequest sendMoneyRequest = gson.fromJson(json, SendMoneyRequest.class);
             sendMoneyRequest.setOtp(mOTP);
             json = gson.toJson(sendMoneyRequest);
             mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY, mUri, json, context);
+            mHttpPostAsyncTask.mHttpResponseListener = this;
+            mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+
+        else if (mDesiredRequest.equals(Constants.COMMAND_TOPUP_REQUEST)) {
+            mProgressDialog.setMessage(context.getString(R.string.dialog_requesting_top_up));
+            mProgressDialog.show();
+            TopupRequest topupRequest = gson.fromJson(json, TopupRequest.class);
+            topupRequest.setOtp(mOTP);
+            json = gson.toJson(topupRequest);
+            mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST, mUri, json, context);
+            mHttpPostAsyncTask.mHttpResponseListener = this;
+            mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+
+        else if (mDesiredRequest.equals(Constants.COMMAND_REQUEST_MONEY)) {
+            mProgressDialog.setMessage(context.getString(R.string.requesting_money));
+            mProgressDialog.show();
+            RequestMoneyRequest requestMoneyRequest = gson.fromJson(json, RequestMoneyRequest.class);
+            requestMoneyRequest.setOtp(mOTP);
+            json = gson.toJson(requestMoneyRequest);
+            mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REQUEST_MONEY, mUri, json, context);
+            mHttpPostAsyncTask.mHttpResponseListener = this;
+            mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+
+        else if (mDesiredRequest.equals(Constants.COMMAND_ADD_MONEY)) {
+            mProgressDialog.setMessage(context.getString(R.string.progress_dialog_add_money_in_progress));
+            mProgressDialog.show();
+            AddMoneyRequest addMoneyRequest = gson.fromJson(json, AddMoneyRequest.class);
+            addMoneyRequest.setOtp(mOTP);
+            json = gson.toJson(addMoneyRequest);
+            mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_MONEY, mUri, json, context);
             mHttpPostAsyncTask.mHttpResponseListener = this;
             mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -217,7 +265,9 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mProgressDialog.dismiss();
                     Toaster.makeText(context, twoFaServiceAccomplishWithOTPResponse.getMessage(), Toast.LENGTH_SHORT);
+                    mDismissListener.onDismissDialog();
                     mOTPInputDialog.dismiss();
+
                 } else {
                     Toaster.makeText(context, twoFaServiceAccomplishWithOTPResponse.getMessage(), Toast.LENGTH_LONG);
                 }
@@ -234,10 +284,51 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                     mProgressDialog.dismiss();
                     Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                 }
+            } else if (result.getApiCommand().equals(Constants.COMMAND_TOPUP_REQUEST)) {
+                TopupResponse topupResponse = gson.fromJson(result.getJsonString(), TopupResponse.class);
+                String message = topupResponse.getMessage();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mProgressDialog.dismiss();
+                    Toaster.makeText(context, message, Toast.LENGTH_SHORT);
+                    mOTPInputDialog.dismiss();
+                    launchHomeActivity();
+                } else {
+                    mProgressDialog.dismiss();
+                    Toaster.makeText(context, message, Toast.LENGTH_SHORT);
+                }
+            }
+            else if (result.getApiCommand().equals(Constants.COMMAND_REQUEST_MONEY)) {
+                RequestMoneyResponse requestMoneyResponse = gson.fromJson(result.getJsonString(), RequestMoneyResponse.class);
+                String message = requestMoneyResponse.getMessage();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mProgressDialog.dismiss();
+                    Toaster.makeText(context, message, Toast.LENGTH_SHORT);
+                    mOTPInputDialog.dismiss();
+                    launchHomeActivity();
+                } else {
+                    mProgressDialog.dismiss();
+                    Toaster.makeText(context, message, Toast.LENGTH_SHORT);
+                }
+            }
+            else if(result.getApiCommand().equals(Constants.COMMAND_ADD_MONEY)){
+                AddMoneyResponse addMoneyResponse = gson.fromJson(result.getJsonString(), AddMoneyResponse.class);
+                String message = addMoneyResponse.getMessage();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mProgressDialog.dismiss();
+                    Toaster.makeText(context, message, Toast.LENGTH_SHORT);
+                    mOTPInputDialog.dismiss();
+                    launchHomeActivity();
+                } else {
+                    mProgressDialog.dismiss();
+                    Toaster.makeText(context, message, Toast.LENGTH_SHORT);
+                }
             }
 
         } catch (Exception e) {
             Toaster.makeText(context, twoFaServiceAccomplishWithOTPResponse.getMessage(), Toast.LENGTH_LONG);
         }
+    }
+    public interface dismissListener{
+        public void onDismissDialog();
     }
 }

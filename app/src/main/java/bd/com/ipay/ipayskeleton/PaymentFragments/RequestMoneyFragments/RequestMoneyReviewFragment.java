@@ -18,12 +18,14 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFaServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyResponse;
@@ -64,6 +66,10 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
     private Button mRequestMoneyButton;
     private CheckBox mAddInContactsCheckBox;
     private Tracker mTracker;
+
+    private RequestMoneyRequest mRequestMoneyRequest;
+
+    private OTPVerificationForTwoFaServicesDialog mOTPVerificationForTwoFaServicesDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -154,7 +160,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mProgressDialog.setMessage(getString(R.string.requesting_money));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        RequestMoneyRequest mRequestMoneyRequest = new RequestMoneyRequest(mReceiverMobileNumber,
+        mRequestMoneyRequest = new RequestMoneyRequest(mReceiverMobileNumber,
                 mAmount.doubleValue(), mDescription);
         Gson gson = new Gson();
         String json = gson.toJson(mRequestMoneyRequest);
@@ -172,6 +178,12 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         new AddContactAsyncTask(Constants.COMMAND_ADD_CONTACTS,
                 addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(),
                 getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mRequestMoneyRequest);
+        mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), jsonString, Constants.COMMAND_REQUEST_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_REQUEST_MONEY);
     }
 
     @Override
@@ -205,6 +217,14 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
                     //Google Analytic event
                     Utilities.sendSuccessEventTracker(mTracker, "Request Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                    Toast.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    SecuritySettingsActivity.otpDuration = mRequestMoneyResponse.getOtpValidFor();
+                    launchOTPVerification();
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    Toast.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    SecuritySettingsActivity.otpDuration = mRequestMoneyResponse.getOtpValidFor();
+                    launchOTPVerification();
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mRequestMoneyResponse.getMessage(), Toast.LENGTH_SHORT);
