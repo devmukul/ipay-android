@@ -141,76 +141,78 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
     }
 
     private void setButtonActions() {
-        mProfilePictureHolderView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.MANAGE_PROFILE_PICTURE)
-            public void onClick(View v) {
-                if (!ProfileInfoCacheManager.isAccountVerified()) {
-                    profilePictureHelperDialog.show();
-                } else
-                    showProfilePictureUpdateRestrictionDialog();
-            }
-        });
-
-        mBasicInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.SEE_PROFILE)
-            public void onClick(View view) {
-                if (ProfileInfoCacheManager.isBusinessAccount())
-                    ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
-                else ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
-            }
-        });
-
-        mEmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.SEE_EMAILS)
-            public void onClick(View view) {
-                ((ProfileActivity) getActivity()).switchToEmailFragment();
-            }
-        });
-
-        mAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.SEE_ADDRESSES)
-            public void onClick(View view) {
-                ((ProfileActivity) getActivity()).switchToAddressFragment();
-            }
-        });
-
-        mIntroducer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.SEE_INTRODUCERS)
-            public void onClick(View v) {
-                ((ProfileActivity) getActivity()).switchToIntroducerFragment();
-            }
-        });
-
-        mDocuments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ProfileInfoCacheManager.isBusinessAccount()) {
-                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_DOCS)) {
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
-                        return;
-                    }
-                } else {
-                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_IDENTIFICATION_DOCS)) {
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
-                        return;
-                    }
+        if (this.isAdded()) {
+            mProfilePictureHolderView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                @ValidateAccess(ServiceIdConstants.MANAGE_PROFILE_PICTURE)
+                public void onClick(View v) {
+                    if (!ProfileInfoCacheManager.isAccountVerified()) {
+                        profilePictureHelperDialog.show();
+                    } else
+                        showProfilePictureUpdateRestrictionDialog();
                 }
-                ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
-            }
-        });
+            });
 
-        mProfileCompleteness.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.SEE_PROFILE_COMPLETION)
-            public void onClick(View view) {
-                ((ProfileActivity) getActivity()).switchToProfileCompletionFragment();
-            }
-        });
+            mBasicInfo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                @ValidateAccess(ServiceIdConstants.SEE_PROFILE)
+                public void onClick(View view) {
+                    if (ProfileInfoCacheManager.isBusinessAccount())
+                        ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
+                    else ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
+                }
+            });
+
+            mEmail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                @ValidateAccess(ServiceIdConstants.SEE_EMAILS)
+                public void onClick(View view) {
+                    ((ProfileActivity) getActivity()).switchToEmailFragment();
+                }
+            });
+
+            mAddress.setOnClickListener(new View.OnClickListener() {
+                @Override
+                @ValidateAccess(ServiceIdConstants.SEE_ADDRESSES)
+                public void onClick(View view) {
+                    ((ProfileActivity) getActivity()).switchToAddressFragment();
+                }
+            });
+
+            mIntroducer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                @ValidateAccess(ServiceIdConstants.SEE_INTRODUCERS)
+                public void onClick(View v) {
+                    ((ProfileActivity) getActivity()).switchToIntroducerFragment();
+                }
+            });
+
+            mDocuments.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (ProfileInfoCacheManager.isBusinessAccount()) {
+                        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_DOCS)) {
+                            DialogUtils.showServiceNotAllowedDialog(getContext());
+                            return;
+                        }
+                    } else {
+                        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_IDENTIFICATION_DOCS)) {
+                            DialogUtils.showServiceNotAllowedDialog(getContext());
+                            return;
+                        }
+                    }
+                    ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
+                }
+            });
+
+            mProfileCompleteness.setOnClickListener(new View.OnClickListener() {
+                @Override
+                @ValidateAccess(ServiceIdConstants.SEE_PROFILE_COMPLETION)
+                public void onClick(View view) {
+                    ((ProfileActivity) getActivity()).switchToProfileCompletionFragment();
+                }
+            });
+        }
     }
 
     private void showProfilePictureUpdateRestrictionDialog() {
