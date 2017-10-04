@@ -231,7 +231,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
         mPayByQRCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess({ServiceIdConstants.MAKE_PAYMENT})
             public void onClick(View v) {
                 Intent intent;
                 intent = new Intent(getActivity(), QRCodePaymentActivity.class);

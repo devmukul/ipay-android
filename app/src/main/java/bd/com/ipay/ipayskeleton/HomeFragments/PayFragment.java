@@ -79,7 +79,7 @@ public class PayFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_pay) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_pay));
     }
 
     @Override
@@ -227,13 +227,10 @@ public class PayFragment extends BaseFragment {
                                 pinChecker.execute();
                                 break;*/
                             case Constants.SERVICE_ACTION_PAY_BY_QR_CODE:
-                                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
-                                    DialogUtils.showServiceNotAllowedDialog(getContext());
-                                } else {
-                                    Intent intent;
-                                    intent = new Intent(getActivity(), QRCodePaymentActivity.class);
-                                    startActivity(intent);
-                                }
+                                Intent intent;
+                                intent = new Intent(getActivity(), QRCodePaymentActivity.class);
+                                startActivity(intent);
+
                                 break;
                         }
                     }
