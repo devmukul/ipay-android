@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -42,29 +43,27 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyHistoryFragment extends ProgressFragment implements HttpResponseListener {
-    private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
-    private TransactionHistoryResponse mTransactionHistoryResponse;
-
-    private RecyclerView mTransactionHistoryRecyclerView;
-    private TransactionHistoryAdapter mTransactionHistoryAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private HttpRequestPostAsyncTask mSendMoneyHistoryTask = null;
+    private TransactionHistoryResponse mSendMoneyHistoryResponse;
+    private SendMoneyHistoryAdapter mSendMoneyHistoryAdapter;
+    private LinearLayoutManager mLayoutManager;
     private List<TransactionHistory> userTransactionHistories;
-    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
-
-    private String mMobileNumber;
+    private SendMoneyHistoryBroadcastReceiver sendMoneyHistoryBroadcastReceiver;
 
     private TextView mEmptyListTextView;
+    private RecyclerView mSendMoneyHistoryRecyclerView;
+    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
     private int historyPageCount = 0;
-
+    private int mTotalItemCount =0;
+    private int mPastVisiblesItems;
+    private int mVisibleItem;
     private boolean hasNext = false;
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
+    private boolean mIsScrolled = false;
+    private String mMobileNumber;
 
-
-    private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
-
-    private Menu menu;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,12 +77,11 @@ public class SendMoneyHistoryFragment extends ProgressFragment implements HttpRe
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         initializeViews(v);
         setupViewsAndActions();
-
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity())) {
-                    refreshTransactionHistory();
+                    refreshSendMoneyHistory();
                 }
             }
         });
@@ -95,7 +93,7 @@ public class SendMoneyHistoryFragment extends ProgressFragment implements HttpRe
     private void initializeViews(View v) {
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
-        mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
+        mSendMoneyHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
     }
 
     private void setupViewsAndActions() {
@@ -103,31 +101,30 @@ public class SendMoneyHistoryFragment extends ProgressFragment implements HttpRe
     }
 
     private void setupRecyclerView() {
-        mTransactionHistoryAdapter = new TransactionHistoryAdapter();
+        mSendMoneyHistoryAdapter = new SendMoneyHistoryAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
-        mTransactionHistoryRecyclerView.setLayoutManager(mLayoutManager);
-        mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAdapter);
+        mSendMoneyHistoryRecyclerView.setLayoutManager(mLayoutManager);
+        mSendMoneyHistoryRecyclerView.setAdapter(mSendMoneyHistoryAdapter);
     }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getTransactionHistory();
+        getSendMoneyHistory();
+        implementScrollListener();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
+        sendMoneyHistoryBroadcastReceiver = new SendMoneyHistoryBroadcastReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(sendMoneyHistoryBroadcastReceiver,
                 new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setRefreshing(false);
             mSwipeRefreshLayout.destroyDrawingCache();
@@ -140,41 +137,39 @@ public class SendMoneyHistoryFragment extends ProgressFragment implements HttpRe
         super.setUserVisibleHint(isVisibleToUser);
         if (getView() != null) {
             if (isVisibleToUser) {
-                refreshTransactionHistory();
+                refreshSendMoneyHistory();
             }
         }
     }
 
     @Override
     public void onDestroyView() {
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(sendMoneyHistoryBroadcastReceiver);
         super.onDestroyView();
     }
 
-
-
-    private void refreshTransactionHistory() {
+    private void refreshSendMoneyHistory() {
         historyPageCount = 0;
         clearListAfterLoading = true;
-        getTransactionHistory();
+        getSendMoneyHistory();
     }
 
-    private void getTransactionHistory() {
-        if (mTransactionHistoryTask != null) {
+    private void getSendMoneyHistory() {
+        if (mSendMoneyHistoryTask != null) {
             return;
         }
-        TransactionHistoryRequest mTransactionHistoryRequest;
-        mTransactionHistoryRequest = new TransactionHistoryRequest(Constants.TRANSACTION_HISTORY_SEND_MONEY, historyPageCount);
+        TransactionHistoryRequest mSendMoneyHistoryRequest;
+        mSendMoneyHistoryRequest = new TransactionHistoryRequest(Constants.TRANSACTION_HISTORY_SEND_MONEY, historyPageCount);
 
         Gson gson = new Gson();
-        String json = gson.toJson(mTransactionHistoryRequest);
-        mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
+        String json = gson.toJson(mSendMoneyHistoryRequest);
+        mSendMoneyHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
                 Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY_COMPLETED, json, getActivity());
-        mTransactionHistoryTask.mHttpResponseListener = this;
-        mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mSendMoneyHistoryTask.mHttpResponseListener = this;
+        mSendMoneyHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void loadTransactionHistory(List<TransactionHistory> transactionHistories, boolean hasNext) {
+    private void loadSendMoneyHistory(List<TransactionHistory> transactionHistories, boolean hasNext) {
         if (clearListAfterLoading || userTransactionHistories == null || userTransactionHistories.size() == 0) {
             userTransactionHistories = transactionHistories;
             clearListAfterLoading = false;
@@ -192,7 +187,7 @@ public class SendMoneyHistoryFragment extends ProgressFragment implements HttpRe
 
         if (isLoading)
             isLoading = false;
-        mTransactionHistoryAdapter.notifyDataSetChanged();
+        mSendMoneyHistoryAdapter.notifyDataSetChanged();
         setContentShown(true);
     }
 
@@ -201,7 +196,7 @@ public class SendMoneyHistoryFragment extends ProgressFragment implements HttpRe
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mTransactionHistoryTask = null;
+            mSendMoneyHistoryTask = null;
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
             return;
@@ -214,9 +209,9 @@ public class SendMoneyHistoryFragment extends ProgressFragment implements HttpRe
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
-                    mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
+                    mSendMoneyHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
 
-                    loadTransactionHistory(mTransactionHistoryResponse.getTransactions(), mTransactionHistoryResponse.isHasNext());
+                    loadSendMoneyHistory(mSendMoneyHistoryResponse.getTransactions(), mSendMoneyHistoryResponse.isHasNext());
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -230,12 +225,12 @@ public class SendMoneyHistoryFragment extends ProgressFragment implements HttpRe
             }
 
             mSwipeRefreshLayout.setRefreshing(false);
-            mTransactionHistoryTask = null;
+            mSendMoneyHistoryTask = null;
             if (this.isAdded()) setContentShown(true);
         }
     }
 
-    private class TransactionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class SendMoneyHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int FOOTER_VIEW = 1;
 
@@ -303,12 +298,6 @@ public class SendMoneyHistoryFragment extends ProgressFragment implements HttpRe
                 mTimeView.setText(responseTime);
 
                 if (serviceId == Constants.TRANSACTION_HISTORY_SEND_MONEY) {
-                    mProfileImageView.setVisibility(View.INVISIBLE);
-                    mOtherImageView.setVisibility(View.VISIBLE);
-                    if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
-                    else mOtherImageView.setImageResource(R.drawable.ic_tran_add);
-
-                } else {
                     mOtherImageView.setVisibility(View.INVISIBLE);
                     mProfileImageView.setVisibility(View.VISIBLE);
                     mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
@@ -349,7 +338,7 @@ public class SendMoneyHistoryFragment extends ProgressFragment implements HttpRe
                             historyPageCount = historyPageCount + 1;
                             showLoadingInFooter();
                             notifyDataSetChanged();
-                            getTransactionHistory();
+                            getSendMoneyHistory();
                         }
                     }
                 });
@@ -434,12 +423,43 @@ public class SendMoneyHistoryFragment extends ProgressFragment implements HttpRe
 
     }
 
+    private void implementScrollListener() {
+        mSendMoneyHistoryRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    mIsScrolled = true;
+                }
+            }
 
-    private class TransactionHistoryBroadcastReceiver extends BroadcastReceiver {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                mVisibleItem = recyclerView.getChildCount();
+                mTotalItemCount =mLayoutManager.getItemCount();
+                mPastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                if (mIsScrolled
+                        && (mVisibleItem + mPastVisiblesItems) == mTotalItemCount && hasNext) {
+                    isLoading = true;
+                    mIsScrolled = false;
+                    historyPageCount = historyPageCount + 1;
+                    mSendMoneyHistoryAdapter.notifyDataSetChanged();
+                    getSendMoneyHistory();
+                }
+
+            }
+
+        });
+
+    }
+
+    private class SendMoneyHistoryBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            refreshTransactionHistory();
+            refreshSendMoneyHistory();
         }
     }
 

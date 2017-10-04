@@ -11,9 +11,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -37,35 +37,32 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Trans
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class WithdrawMoneyHistoryFragment extends ProgressFragment implements HttpResponseListener {
-    private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
-    private TransactionHistoryResponse mTransactionHistoryResponse;
+    private HttpRequestPostAsyncTask mWithdrawMoneyHistoryTask = null;
+    private TransactionHistoryResponse mWithdrawMoneyHistoryResponse;
+    private WithdrawMoneyHistoryAdapter mWithdrawMoneyHistoryAdapter;
+    private LinearLayoutManager mLayoutManager;
+    private List<TransactionHistory> userWithdrawMoneyHistories;
+    private WithdrawMoneyHistoryBroadcastReceiver withdrawMoneyHistoryBroadcastReceiver;
 
-    private RecyclerView mTransactionHistoryRecyclerView;
-    private TransactionHistoryAdapter mTransactionHistoryAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private List<TransactionHistory> userTransactionHistories;
+    private RecyclerView mWithdrawMoneyHistoryRecyclerView;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
-
-    private String mMobileNumber;
-
     private TextView mEmptyListTextView;
 
     private int historyPageCount = 0;
-
+    private int mTotalItemCount =0;
+    private int mPastVisiblesItems;
+    private int mVisibleItem;
     private boolean hasNext = false;
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
+    private boolean mIsScrolled = false;
+    private String mMobileNumber;
 
-
-    private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
-
-    private Menu menu;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,20 +73,17 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_withdraw_money_history, container, false);
-
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         initializeViews(v);
         setupViewsAndActions();
-
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (Utilities.isConnectionAvailable(getActivity())) {
-                    refreshTransactionHistory();
+                    refreshWithdrawMoneyHistory();
                 }
             }
         });
-
 
         return v;
     }
@@ -97,7 +91,7 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
     private void initializeViews(View v) {
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
-        mTransactionHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
+        mWithdrawMoneyHistoryRecyclerView = (RecyclerView) v.findViewById(R.id.list_transaction_history);
     }
 
     private void setupViewsAndActions() {
@@ -105,24 +99,24 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
     }
 
     private void setupRecyclerView() {
-        mTransactionHistoryAdapter = new TransactionHistoryAdapter();
+        mWithdrawMoneyHistoryAdapter = new WithdrawMoneyHistoryAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
-        mTransactionHistoryRecyclerView.setLayoutManager(mLayoutManager);
-        mTransactionHistoryRecyclerView.setAdapter(mTransactionHistoryAdapter);
+        mWithdrawMoneyHistoryRecyclerView.setLayoutManager(mLayoutManager);
+        mWithdrawMoneyHistoryRecyclerView.setAdapter(mWithdrawMoneyHistoryAdapter);
     }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getTransactionHistory();
+        getWithdrawMoneyHistory();
+        implementScrollListener();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        transactionHistoryBroadcastReceiver = new TransactionHistoryBroadcastReceiver();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(transactionHistoryBroadcastReceiver,
+        withdrawMoneyHistoryBroadcastReceiver = new WithdrawMoneyHistoryBroadcastReceiver();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(withdrawMoneyHistoryBroadcastReceiver,
                 new IntentFilter(Constants.COMPLETED_TRANSACTION_HISTORY_UPDATE_BROADCAST));
     }
 
@@ -142,25 +136,25 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
         super.setUserVisibleHint(isVisibleToUser);
         if (getView() != null) {
             if (isVisibleToUser) {
-                refreshTransactionHistory();
+                refreshWithdrawMoneyHistory();
             }
         }
     }
 
     @Override
     public void onDestroyView() {
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(withdrawMoneyHistoryBroadcastReceiver);
         super.onDestroyView();
     }
 
-    private void refreshTransactionHistory() {
+    private void refreshWithdrawMoneyHistory() {
         historyPageCount = 0;
         clearListAfterLoading = true;
-        getTransactionHistory();
+        getWithdrawMoneyHistory();
     }
 
-    private void getTransactionHistory() {
-        if (mTransactionHistoryTask != null) {
+    private void getWithdrawMoneyHistory() {
+        if (mWithdrawMoneyHistoryTask != null) {
             return;
         }
         TransactionHistoryRequest mTransactionHistoryRequest;
@@ -168,31 +162,31 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
 
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
-        mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
+        mWithdrawMoneyHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
                 Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY_COMPLETED, json, getActivity());
-        mTransactionHistoryTask.mHttpResponseListener = this;
-        mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mWithdrawMoneyHistoryTask.mHttpResponseListener = this;
+        mWithdrawMoneyHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void loadTransactionHistory(List<TransactionHistory> transactionHistories, boolean hasNext) {
-        if (clearListAfterLoading || userTransactionHistories == null || userTransactionHistories.size() == 0) {
-            userTransactionHistories = transactionHistories;
+    private void loadWithdrawMoneyHistory(List<TransactionHistory> transactionHistories, boolean hasNext) {
+        if (clearListAfterLoading || userWithdrawMoneyHistories == null || userWithdrawMoneyHistories.size() == 0) {
+            userWithdrawMoneyHistories = transactionHistories;
             clearListAfterLoading = false;
         } else {
             List<TransactionHistory> tempTransactionHistories;
             tempTransactionHistories = transactionHistories;
-            userTransactionHistories.addAll(tempTransactionHistories);
+            userWithdrawMoneyHistories.addAll(tempTransactionHistories);
         }
 
         this.hasNext = hasNext;
-        if (userTransactionHistories != null && userTransactionHistories.size() > 0)
+        if (userWithdrawMoneyHistories != null && userWithdrawMoneyHistories.size() > 0)
             mEmptyListTextView.setVisibility(View.GONE);
         else
             mEmptyListTextView.setVisibility(View.VISIBLE);
 
         if (isLoading)
             isLoading = false;
-        mTransactionHistoryAdapter.notifyDataSetChanged();
+        mWithdrawMoneyHistoryAdapter.notifyDataSetChanged();
         setContentShown(true);
     }
 
@@ -201,7 +195,7 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mTransactionHistoryTask = null;
+            mWithdrawMoneyHistoryTask = null;
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
             return;
@@ -214,28 +208,24 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
-                    mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
-
-                    loadTransactionHistory(mTransactionHistoryResponse.getTransactions(), mTransactionHistoryResponse.isHasNext());
-
+                    mWithdrawMoneyHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
+                    loadWithdrawMoneyHistory(mWithdrawMoneyHistoryResponse.getTransactions(), mWithdrawMoneyHistoryResponse.isHasNext());
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
                 }
-
             } else {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
             }
-
             mSwipeRefreshLayout.setRefreshing(false);
-            mTransactionHistoryTask = null;
+            mWithdrawMoneyHistoryTask = null;
             if (this.isAdded()) setContentShown(true);
         }
     }
 
-    private class TransactionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class WithdrawMoneyHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int FOOTER_VIEW = 1;
 
@@ -265,7 +255,7 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
             }
 
             public void bindView(int pos) {
-                final TransactionHistory transactionHistory = userTransactionHistories.get(pos);
+                final TransactionHistory transactionHistory = userWithdrawMoneyHistories.get(pos);
 
                 final String description = transactionHistory.getShortDescription(mMobileNumber);
                 final String receiver = transactionHistory.getReceiver();
@@ -352,7 +342,7 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
                             historyPageCount = historyPageCount + 1;
                             showLoadingInFooter();
                             notifyDataSetChanged();
-                            getTransactionHistory();
+                            getWithdrawMoneyHistory();
                         }
                     }
                 });
@@ -421,14 +411,14 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
         @Override
         public int getItemCount() {
             // Return +1 as there's an extra footer (Load more...)
-            if (userTransactionHistories != null && !userTransactionHistories.isEmpty())
-                return userTransactionHistories.size() + 1;
+            if (userWithdrawMoneyHistories != null && !userWithdrawMoneyHistories.isEmpty())
+                return userWithdrawMoneyHistories.size() + 1;
             else return 0;
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (position == userTransactionHistories.size()) {
+            if (position == userWithdrawMoneyHistories.size()) {
                 return FOOTER_VIEW;
             }
 
@@ -437,10 +427,43 @@ public class WithdrawMoneyHistoryFragment extends ProgressFragment implements Ht
 
     }
 
-    private class TransactionHistoryBroadcastReceiver extends BroadcastReceiver {
+    private void implementScrollListener() {
+        mWithdrawMoneyHistoryRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    mIsScrolled = true;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                mVisibleItem = recyclerView.getChildCount();
+                mTotalItemCount =mLayoutManager.getItemCount();
+                mPastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                if (mIsScrolled
+                        && (mVisibleItem + mPastVisiblesItems) == mTotalItemCount && hasNext) {
+                    isLoading = true;
+                    mIsScrolled = false;
+                    historyPageCount = historyPageCount + 1;
+                    mWithdrawMoneyHistoryAdapter.notifyDataSetChanged();
+                    getWithdrawMoneyHistory();
+                }
+
+            }
+
+        });
+
+    }
+
+    private class WithdrawMoneyHistoryBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            refreshTransactionHistory();
+            refreshWithdrawMoneyHistory();
         }
     }
 
