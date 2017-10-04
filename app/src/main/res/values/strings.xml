@@ -323,7 +323,7 @@
     <string name="privacy_policy_url"><a href="https://www.ipay.com.bd/legal/privacy-policy">Privacy Policy</a></string>
     <string name="please_select_a_gender">Please select a gender</string>
     <string name="otp_request_failed">Could not send OTP. Please try again</string>
-    <string name="try_again_later">Could not connect to iPay. Please try again later.</string>
+    <string name="try_again_later">Please try again later.</string>
     <string name="later">Later</string>
     <string name="update_now">Update Now</string>
     <string name="enter_rate">Enter rate per item in BDT</string>

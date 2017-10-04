@@ -631,28 +631,34 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mPicker.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        customUploadPickerDialog = new CustomUploadPickerDialog(getActivity(), getString(R.string.select_a_document), mPickerList);
-                        customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
-                            @Override
-                            public void onResourceSelected(int mActionId, String action) {
-                                mSelectedItemId = pos;
-                                documentPreviewDetailsList.get(pos).setDocumentId(mDocumentIdEditTextView.getText().toString());
-                                documentPreviewDetailsList.get(pos).setSelectedFilePath(mSelectFile.getText().toString());
-                                if (Constants.ACTION_TYPE_TAKE_PICTURE.equals(action) || Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action))
-                                    if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
-                                        selectDocument(mActionId);
+                        try {
+                            customUploadPickerDialog = new CustomUploadPickerDialog(getActivity(), getActivity().getString(R.string.select_a_document), mPickerList);
+                            customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
+                                @Override
+                                public void onResourceSelected(int mActionId, String action) {
+                                    mSelectedItemId = pos;
+                                    documentPreviewDetailsList.get(pos).setDocumentId(mDocumentIdEditTextView.getText().toString());
+                                    documentPreviewDetailsList.get(pos).setSelectedFilePath(mSelectFile.getText().toString());
+                                    if (Constants.ACTION_TYPE_TAKE_PICTURE.equals(action) || Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action))
+                                        if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
+                                            selectDocument(mActionId);
+                                        else {
+                                            mPickerActionId = mActionId;
+                                            Utilities.requestRequiredPermissions(IdentificationDocumentListFragment.this, REQUEST_CODE_PERMISSION, DocumentPicker.DOCUMENT_PICK_PERMISSIONS);
+                                        }
                                     else {
-                                        mPickerActionId = mActionId;
-                                        Utilities.requestRequiredPermissions(IdentificationDocumentListFragment.this, REQUEST_CODE_PERMISSION, DocumentPicker.DOCUMENT_PICK_PERMISSIONS);
+                                        getDocumentAccessToken();
+                                        mSelectedDocumentDetails = documentPreviewDetailsList.get(pos);
                                     }
-                                else {
-                                    getDocumentAccessToken();
-                                    mSelectedDocumentDetails = documentPreviewDetailsList.get(pos);
                                 }
-                            }
-                        });
-                        customUploadPickerDialog.show();
-                        Utilities.hideKeyboard(getActivity());
+                            });
+                            customUploadPickerDialog.show();
+                            Utilities.hideKeyboard(getActivity());
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toaster.makeText(getActivity(), R.string.try_again_later, Toast.LENGTH_SHORT);
+                        }
                     }
                 });
 
