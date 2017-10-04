@@ -227,10 +227,15 @@ public class PayFragment extends BaseFragment {
                                 pinChecker.execute();
                                 break;*/
                             case Constants.SERVICE_ACTION_PAY_BY_QR_CODE:
-                                Intent intent;
-                                intent = new Intent(getActivity(), QRCodePaymentActivity.class);
-                                startActivity(intent);
-
+                                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                                    @Override
+                                    public void ifPinAdded() {
+                                        Intent intent;
+                                        intent = new Intent(getActivity(), QRCodePaymentActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
+                                pinChecker.execute();
                                 break;
                         }
                     }

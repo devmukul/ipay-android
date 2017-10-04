@@ -232,9 +232,15 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         mPayByQRCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent;
-                intent = new Intent(getActivity(), QRCodePaymentActivity.class);
-                startActivity(intent);
+                PinChecker payByQCPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent;
+                        intent = new Intent(getActivity(), QRCodePaymentActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                payByQCPinChecker.execute();
             }
         });
 
