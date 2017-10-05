@@ -32,7 +32,7 @@ public class LocationCollectorService extends Service implements HttpResponseLis
 
     public static final String[] LOCATION_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
-    private static final long LOCATION_UPDATE_MIN_TIME_INTERVAL = 1000 * 60 * 10;
+    private static final long LOCATION_UPDATE_MIN_TIME_INTERVAL = 1000 * 60 * 2;
     private static final long LOCATION_UPDATE_MIN_DISTANCE = 1000;
 
     private DataHelper dataHelper;
@@ -69,6 +69,7 @@ public class LocationCollectorService extends Service implements HttpResponseLis
                 case Constants.HTTP_RESPONSE_STATUS_OK:
                     if (userLocationList != null && dataHelper != null) {
                         dataHelper.deleteLocations(userLocationList);
+                        locationUpdateRequestAsyncTask = null;
                     }
                     break;
             }

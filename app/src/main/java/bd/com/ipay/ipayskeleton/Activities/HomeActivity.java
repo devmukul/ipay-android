@@ -54,6 +54,7 @@ import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetRelationshipListAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.DataCollectors.Service.LocationCollectorService;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
@@ -211,6 +212,10 @@ public class HomeActivity extends BaseActivity
         // request user for permission.
         attemptRequestForPermission();
 
+        if (Utilities.isNecessaryPermissionExists(this, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            startService(new Intent(this, LocationCollectorService.class));
+        }
+
         getAllBusinessAccountsList();
 
         // If profile picture gets updated, we need to refresh the profile picture in the drawer.
@@ -278,7 +283,7 @@ public class HomeActivity extends BaseActivity
     }
 
     private void attemptRequestForPermission() {
-        String[] requiredPermissions = {Manifest.permission.READ_CONTACTS};
+        String[] requiredPermissions = {Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
         List<String> permissionsToRequest = new ArrayList<>();
         for (String permission : requiredPermissions) {
@@ -312,6 +317,8 @@ public class HomeActivity extends BaseActivity
                             if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS))
                                 new GetContactsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
+                    } else if (permissions[i].equals(Manifest.permission.ACCESS_COARSE_LOCATION) || permissions[i].equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        startService(new Intent(this, LocationCollectorService.class));
                     }
                 }
 

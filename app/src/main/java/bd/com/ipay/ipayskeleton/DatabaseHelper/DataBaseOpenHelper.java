@@ -78,6 +78,8 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
             case 10:
                 dropTable(db, DBConstants.DB_TABLE_CONTACTS);
                 createContactsTable(db);
+            case 11:
+                createLocationTable(db);
                 break;
         }
     }

@@ -16,7 +16,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
 
     private final Context context;
     private static DataHelper instance = null;
@@ -277,7 +277,7 @@ public class DataHelper {
     public List<UserLocation> getAllSavedLocation() {
         final Cursor cursor;
         final List<UserLocation> userLocations = new ArrayList<>();
-        final String queryString = "SELECT * FROM" + DBConstants.DB_TABLE_LOCATIONS;
+        final String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_LOCATIONS;
         try {
             SQLiteDatabase db = dOpenHelper.getReadableDatabase();
             cursor = db.rawQuery(queryString, null);
