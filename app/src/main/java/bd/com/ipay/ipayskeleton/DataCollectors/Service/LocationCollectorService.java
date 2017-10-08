@@ -44,6 +44,12 @@ public class LocationCollectorService extends Service implements HttpResponseLis
     public void onCreate() {
         super.onCreate();
         dataHelper = DataHelper.getInstance(this);
+        userLocationList = dataHelper.getAllSavedLocation();
+        if (userLocationList.size() > 0) {
+            sendUserLocation();
+        } else {
+            userLocationList = null;
+        }
         final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (Utilities.isNecessaryPermissionExists(this, LOCATION_PERMISSIONS) && locationManager != null) {
             final String locationProvider;
@@ -85,14 +91,7 @@ public class LocationCollectorService extends Service implements HttpResponseLis
                     try {
                         userLocationList = dataHelper.getAllSavedLocation();
                         userLocationList.add(userLocation);
-                        LocationCollector locationCollector = new LocationCollector();
-                        locationCollector.setDeviceId(DeviceInfoFactory.getDeviceId(this));
-                        locationCollector.setUuid(ProfileInfoCacheManager.getUUID());
-                        locationCollector.setMobileNumber(ProfileInfoCacheManager.getMobileNumber());
-                        locationCollector.setLocationList(userLocationList);
-                        String body = new GsonBuilder().create().toJson(locationCollector);
-                        locationUpdateRequestAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_POST_USER_LOCATION, Constants.BASE_URL_DATA_COLLECTOR + Constants.URL_ENDPOINT_LOCATION_COLLECTOR, body, this, this);
-                        locationUpdateRequestAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        sendUserLocation();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -103,6 +102,17 @@ public class LocationCollectorService extends Service implements HttpResponseLis
                 dataHelper.saveLocation(userLocation);
             }
         }
+    }
+
+    private void sendUserLocation() {
+        LocationCollector locationCollector = new LocationCollector();
+        locationCollector.setDeviceId(DeviceInfoFactory.getDeviceId(this));
+        locationCollector.setUuid(ProfileInfoCacheManager.getUUID());
+        locationCollector.setMobileNumber(ProfileInfoCacheManager.getMobileNumber());
+        locationCollector.setLocationList(userLocationList);
+        String body = new GsonBuilder().create().toJson(locationCollector);
+        locationUpdateRequestAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_POST_USER_LOCATION, Constants.BASE_URL_DATA_COLLECTOR + Constants.URL_ENDPOINT_LOCATION_COLLECTOR, body, this, this);
+        locationUpdateRequestAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
