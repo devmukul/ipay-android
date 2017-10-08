@@ -9,9 +9,11 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
@@ -40,6 +42,7 @@ import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadIdentifierDocumentAs
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.DocumentPreviewDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.DocumentPreviewRequestBuilder;
@@ -54,6 +57,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import bd.com.ipay.ipayskeleton.camera.CameraActivity;
 
 public class IdentificationDocumentListFragment extends ProgressFragment implements HttpResponseListener {
 
@@ -192,6 +196,10 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         mDocumentListAdapter.notifyDataSetChanged();
                         mSelectedItemId = -1;
                     }
+                } else if (resultCode == CameraActivity.CAMERA_ACTIVITY_CRASHED) {
+                    Intent systemCameraOpenIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    systemCameraOpenIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID, DocumentPicker.getTempFile(getActivity(),"document.jpg")));
+                    startActivityForResult(systemCameraOpenIntent, ACTION_UPLOAD_DOCUMENT);
                 } else
                     mSelectedItemId = -1;
 
@@ -631,28 +639,34 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mPicker.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        customUploadPickerDialog = new CustomUploadPickerDialog(getActivity(), getString(R.string.select_a_document), mPickerList);
-                        customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
-                            @Override
-                            public void onResourceSelected(int mActionId, String action) {
-                                mSelectedItemId = pos;
-                                documentPreviewDetailsList.get(pos).setDocumentId(mDocumentIdEditTextView.getText().toString());
-                                documentPreviewDetailsList.get(pos).setSelectedFilePath(mSelectFile.getText().toString());
-                                if (Constants.ACTION_TYPE_TAKE_PICTURE.equals(action) || Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action))
-                                    if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
-                                        selectDocument(mActionId);
+                        try {
+                            customUploadPickerDialog = new CustomUploadPickerDialog(getActivity(), getActivity().getString(R.string.select_a_document), mPickerList);
+                            customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
+                                @Override
+                                public void onResourceSelected(int mActionId, String action) {
+                                    mSelectedItemId = pos;
+                                    documentPreviewDetailsList.get(pos).setDocumentId(mDocumentIdEditTextView.getText().toString());
+                                    documentPreviewDetailsList.get(pos).setSelectedFilePath(mSelectFile.getText().toString());
+                                    if (Constants.ACTION_TYPE_TAKE_PICTURE.equals(action) || Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action))
+                                        if (Utilities.isNecessaryPermissionExists(getActivity(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS))
+                                            selectDocument(mActionId);
+                                        else {
+                                            mPickerActionId = mActionId;
+                                            Utilities.requestRequiredPermissions(IdentificationDocumentListFragment.this, REQUEST_CODE_PERMISSION, DocumentPicker.DOCUMENT_PICK_PERMISSIONS);
+                                        }
                                     else {
-                                        mPickerActionId = mActionId;
-                                        Utilities.requestRequiredPermissions(IdentificationDocumentListFragment.this, REQUEST_CODE_PERMISSION, DocumentPicker.DOCUMENT_PICK_PERMISSIONS);
+                                        getDocumentAccessToken();
+                                        mSelectedDocumentDetails = documentPreviewDetailsList.get(pos);
                                     }
-                                else {
-                                    getDocumentAccessToken();
-                                    mSelectedDocumentDetails = documentPreviewDetailsList.get(pos);
                                 }
-                            }
-                        });
-                        customUploadPickerDialog.show();
-                        Utilities.hideKeyboard(getActivity());
+                            });
+                            customUploadPickerDialog.show();
+                            Utilities.hideKeyboard(getActivity());
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toaster.makeText(getActivity(), R.string.try_again_later, Toast.LENGTH_SHORT);
+                        }
                     }
                 });
 

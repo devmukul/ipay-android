@@ -295,7 +295,8 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mContactCount.setText(getString(R.string.contacts) + " (" + contactCount + ")");
+                if (isAdded())
+                    mContactCount.setText(getString(R.string.contacts) + " (" + contactCount + ")");
             }
         });
     }
