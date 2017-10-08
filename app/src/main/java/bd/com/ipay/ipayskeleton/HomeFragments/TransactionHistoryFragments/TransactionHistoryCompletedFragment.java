@@ -160,7 +160,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             public void onClick(View v) {
                 popupMenu = new PopupMenu(getContext(), mMoreButton);
                 popupMenu.getMenuInflater().inflate(R.menu.activity_transaction_history,popupMenu.getMenu());
-                popupMenu.getMenuInflater().inflate(R.menu.clear_filter, popupMenu.getMenu());
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -225,8 +224,9 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
                 mMoreButton.setVisibility(View.VISIBLE);
                 mCancelButton.setVisibility(View.INVISIBLE);
-                mFilterTitle.setVisibility(View.INVISIBLE);
                 mClearFilterButton.setVisibility(View.INVISIBLE);
+
+                mFilterTitle.setText("Complete Transaction List");
             }
         });
 

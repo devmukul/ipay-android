@@ -166,7 +166,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             public void onClick(View v) {
                 popupMenu = new PopupMenu(getContext(), mMoreButton);
                 popupMenu.getMenuInflater().inflate(R.menu.activity_transaction_history,popupMenu.getMenu());
-                popupMenu.getMenuInflater().inflate(R.menu.clear_filter, popupMenu.getMenu());
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override

@@ -7,8 +7,10 @@
         android:id="@+id/transection_serch_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/transaction_history_header"
-        android:background="@color/colorWhite">
+        android:background="@color/colorWhite"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <SearchView
             android:layout_marginTop="5dp"
@@ -33,7 +35,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_toLeftOf="@+id/filter_clear"/>
+            android:layout_toLeftOf="@+id/filter_clear"
+            android:text="Pending Transaction List"/>
 
         <Button
             android:id="@+id/filter_clear"

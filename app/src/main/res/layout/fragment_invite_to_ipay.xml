@@ -48,7 +48,7 @@
 
             <Button
                 android:id="@+id/button_invite_to_ipay"
-                style="@style/ButtonStyleMain"
+                style="@style/ButtonPrimaryWithNote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/invite_now" />

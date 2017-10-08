@@ -38,34 +38,34 @@
         <item name="android:orientation">horizontal</item>
     </style>
 
-    <style name="HomeImageButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">left|center_vertical</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:background">@drawable/background_home_image_button</item>
-        <item name="android:drawablePadding">@dimen/activity_horizontal_margin</item>
-        <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:paddingLeft">@dimen/activity_horizontal_margin_semi_double</item>
-    </style>
+    <!--<style name="HomeImageButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">-->
+        <!--<item name="android:layout_width">match_parent</item>-->
+        <!--<item name="android:layout_height">wrap_content</item>-->
+        <!--<item name="android:gravity">left|center_vertical</item>-->
+        <!--<item name="android:textAllCaps">false</item>-->
+        <!--<item name="android:textColor">@android:color/black</item>-->
+        <!--<item name="android:background">@drawable/background_home_image_button</item>-->
+        <!--<item name="android:drawablePadding">@dimen/activity_horizontal_margin</item>-->
+        <!--<item name="android:fontFamily">sans-serif-light</item>-->
+        <!--<item name="android:textSize">16sp</item>-->
+        <!--<item name="android:paddingLeft">@dimen/activity_horizontal_margin_semi_double</item>-->
+    <!--</style>-->
 
-    <style name="HomeImageButtonStyleHorizontal" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textColor">@color/colorPrimary</item>
-        <item name="android:background">@drawable/background_home_image_button</item>
-        <item name="android:drawablePadding">@dimen/activity_horizontal_margin_card</item>
-        <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:paddingLeft">@dimen/activity_horizontal_margin_semi_double</item>
-        <item name="android:paddingRight">@dimen/activity_horizontal_margin_semi_double</item>
-        <item name="android:paddingTop">@dimen/value20</item>
-        <item name="android:paddingBottom">@dimen/value20</item>
-    </style>
+    <!--<style name="HomeImageButtonStyleHorizontal" parent="@style/Widget.AppCompat.Button.Borderless">-->
+        <!--<item name="android:layout_width">0dp</item>-->
+        <!--<item name="android:layout_height">wrap_content</item>-->
+        <!--<item name="android:layout_gravity">center_horizontal</item>-->
+        <!--<item name="android:textAllCaps">false</item>-->
+        <!--<item name="android:textColor">@color/colorPrimary</item>-->
+        <!--<item name="android:background">@drawable/background_home_image_button</item>-->
+        <!--<item name="android:drawablePadding">@dimen/activity_horizontal_margin_card</item>-->
+        <!--<item name="android:fontFamily">sans-serif-light</item>-->
+        <!--<item name="android:textSize">16sp</item>-->
+        <!--<item name="android:paddingLeft">@dimen/activity_horizontal_margin_semi_double</item>-->
+        <!--<item name="android:paddingRight">@dimen/activity_horizontal_margin_semi_double</item>-->
+        <!--<item name="android:paddingTop">@dimen/value20</item>-->
+        <!--<item name="android:paddingBottom">@dimen/value20</item>-->
+    <!--</style>-->
 
     <style name="HomeImageLinearLayoutStyleHorizontal">
         <item name="android:layout_width">0dp</item>
@@ -111,14 +111,14 @@
     </style>
 
     <!-- Tab -->
-    <style name="TabStyle" parent="Widget.Design.TabLayout">
-        <item name="tabSelectedTextColor">@android:color/white</item>
-        <item name="tabBackground">@drawable/tab_color_selector</item>
-        <item name="android:background">@color/colorPrimary</item>
-        <item name="tabMode">fixed</item>
-        <item name="tabTextAppearance">@style/TabTextStyle</item>
-        <item name="tabIndicatorHeight">3dp</item>
-    </style>
+    <!--<style name="TabStyle" parent="Widget.Design.TabLayout">-->
+        <!--<item name="tabSelectedTextColor">@android:color/white</item>-->
+        <!--<item name="tabBackground">@drawable/tab_color_selector</item>-->
+        <!--<item name="android:background">@color/colorPrimary</item>-->
+        <!--<item name="tabMode">fixed</item>-->
+        <!--<item name="tabTextAppearance">@style/TabTextStyle</item>-->
+        <!--<item name="tabIndicatorHeight">3dp</item>-->
+    <!--</style>-->
 
     <style name="TabStyleDashBoard" parent="Widget.Design.TabLayout">
         <item name="tabSelectedTextColor">@android:color/white</item>
@@ -138,11 +138,11 @@
         <item name="tabIndicatorHeight">0dp</item>
     </style>
 
-    <style name="TabTextStyle" parent="TextAppearance.AppCompat.Button">
-        <item name="android:textColor">@color/colorLightGray</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">12sp</item>
-    </style>
+    <!--<style name="TabTextStyle" parent="TextAppearance.AppCompat.Button">-->
+        <!--<item name="android:textColor">@color/colorLightGray</item>-->
+        <!--<item name="android:textStyle">bold</item>-->
+        <!--<item name="android:textSize">12sp</item>-->
+    <!--</style>-->
 
     <style name="TextAppearanceForDashBoard" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
@@ -171,20 +171,20 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="AddressSpinnerLabelStyle" parent="@android:style/Widget.TextView">
-        <item name="android:textSize">16.0sp</item>
-        <item name="android:textColor">@color/colorTextSecondary</item>
-        <item name="android:gravity">left</item>
-        <item name="android:layout_marginLeft">5dp</item>
-    </style>
+    <!--<style name="AddressSpinnerLabelStyle" parent="@android:style/Widget.TextView">-->
+        <!--<item name="android:textSize">16.0sp</item>-->
+        <!--<item name="android:textColor">@color/colorTextSecondary</item>-->
+        <!--<item name="android:gravity">left</item>-->
+        <!--<item name="android:layout_marginLeft">5dp</item>-->
+    <!--</style>-->
 
-    <style name="AddressCheckboxLabelStyle" parent="@android:style/Widget.TextView">
-        <item name="android:textSize">14.0sp</item>
-        <item name="android:textColor">@color/colorTextSecondary</item>
-        <item name="android:gravity">left</item>
-        <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_marginLeft">4dp</item>
-    </style>
+    <!--<style name="AddressCheckboxLabelStyle" parent="@android:style/Widget.TextView">-->
+        <!--<item name="android:textSize">14.0sp</item>-->
+        <!--<item name="android:textColor">@color/colorTextSecondary</item>-->
+        <!--<item name="android:gravity">left</item>-->
+        <!--<item name="android:layout_centerVertical">true</item>-->
+        <!--<item name="android:layout_marginLeft">4dp</item>-->
+    <!--</style>-->
 
     <style name="CheckboxRightStyle" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:textSize">@dimen/text_size_small</item>
@@ -214,16 +214,16 @@
         <item name="android:gravity">left</item>
     </style>
 
-    <style name="TextViewInfoLabelWithNoMargin" parent="@android:style/Widget.TextView">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingTop">@dimen/value5</item>
-        <item name="android:paddingBottom">@dimen/value5</item>
-        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
-        <item name="android:textSize">@dimen/text_size_small_medium</item>
-        <item name="android:layout_weight">0.5</item>
-        <item name="android:gravity">left</item>
-    </style>
+    <!--<style name="TextViewInfoLabelWithNoMargin" parent="@android:style/Widget.TextView">-->
+        <!--<item name="android:layout_height">wrap_content</item>-->
+        <!--<item name="android:layout_width">match_parent</item>-->
+        <!--<item name="android:paddingTop">@dimen/value5</item>-->
+        <!--<item name="android:paddingBottom">@dimen/value5</item>-->
+        <!--<item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>-->
+        <!--<item name="android:textSize">@dimen/text_size_small_medium</item>-->
+        <!--<item name="android:layout_weight">0.5</item>-->
+        <!--<item name="android:gravity">left</item>-->
+    <!--</style>-->
 
     <style name="TextViewInfoLabelReview" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
@@ -247,17 +247,17 @@
         <item name="android:gravity">left</item>
     </style>
 
-    <style name="TextViewInfoLabelBold" parent="@android:style/Widget.TextView">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingTop">@dimen/value10</item>
-        <item name="android:paddingBottom">@dimen/value10</item>
-        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
-        <item name="android:textSize">@dimen/text_size_small_medium_value18</item>
-        <item name="android:layout_weight">0.5</item>
-        <item name="android:gravity">left</item>
-        <item name="android:textStyle">bold</item>
-    </style>
+    <!--<style name="TextViewInfoLabelBold" parent="@android:style/Widget.TextView">-->
+        <!--<item name="android:layout_height">wrap_content</item>-->
+        <!--<item name="android:layout_width">match_parent</item>-->
+        <!--<item name="android:paddingTop">@dimen/value10</item>-->
+        <!--<item name="android:paddingBottom">@dimen/value10</item>-->
+        <!--<item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>-->
+        <!--<item name="android:textSize">@dimen/text_size_small_medium_value18</item>-->
+        <!--<item name="android:layout_weight">0.5</item>-->
+        <!--<item name="android:gravity">left</item>-->
+        <!--<item name="android:textStyle">bold</item>-->
+    <!--</style>-->
 
     <style name="TextViewInfo" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
@@ -281,17 +281,17 @@
         <item name="android:gravity">right</item>
     </style>
 
-    <style name="TextViewInfoColorPrimaryWithNoMargin" parent="@android:style/Widget.TextView">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingTop">@dimen/value5</item>
-        <item name="android:paddingBottom">@dimen/value5</item>
-        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
-        <item name="android:textSize">@dimen/text_size_small_medium</item>
-        <item name="android:textColor">@color/colorPrimary</item>
-        <item name="android:layout_weight">0.5</item>
-        <item name="android:gravity">right</item>
-    </style>
+    <!--<style name="TextViewInfoColorPrimaryWithNoMargin" parent="@android:style/Widget.TextView">-->
+        <!--<item name="android:layout_height">wrap_content</item>-->
+        <!--<item name="android:layout_width">match_parent</item>-->
+        <!--<item name="android:paddingTop">@dimen/value5</item>-->
+        <!--<item name="android:paddingBottom">@dimen/value5</item>-->
+        <!--<item name="android:paddingRight">@dimen/activity_horizontal_margin</item>-->
+        <!--<item name="android:textSize">@dimen/text_size_small_medium</item>-->
+        <!--<item name="android:textColor">@color/colorPrimary</item>-->
+        <!--<item name="android:layout_weight">0.5</item>-->
+        <!--<item name="android:gravity">right</item>-->
+    <!--</style>-->
 
     <style name="TextViewInfoColorPrimaryReview" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
@@ -340,15 +340,15 @@
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
     </style>
 
-    <style name="EditTextInfo" parent="@android:style/Widget.EditText">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingTop">@dimen/value15</item>
-        <item name="android:paddingBottom">@dimen/value15</item>
-        <item name="android:paddingRight">@dimen/value15</item>
-        <item name="android:paddingLeft">@dimen/value15</item>
-        <item name="android:textSize">@dimen/text_size_small_medium</item>
-    </style>
+    <!--<style name="EditTextInfo" parent="@android:style/Widget.EditText">-->
+        <!--<item name="android:layout_height">wrap_content</item>-->
+        <!--<item name="android:layout_width">match_parent</item>-->
+        <!--<item name="android:paddingTop">@dimen/value15</item>-->
+        <!--<item name="android:paddingBottom">@dimen/value15</item>-->
+        <!--<item name="android:paddingRight">@dimen/value15</item>-->
+        <!--<item name="android:paddingLeft">@dimen/value15</item>-->
+        <!--<item name="android:textSize">@dimen/text_size_small_medium</item>-->
+    <!--</style>-->
 
     <style name="TextViewUserInfoPrimary" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
@@ -394,15 +394,15 @@
         <item name="android:paddingRight">@dimen/value12</item>
     </style>
 
-    <style name="CustomSpinnerStyle" parent="@android:style/Widget.Spinner.DropDown">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_centerVertical">true</item>
-        <item name="android:paddingTop">@dimen/value6</item>
-        <item name="android:paddingBottom">@dimen/value6</item>
-        <item name="android:paddingLeft">@dimen/value12</item>
-        <item name="android:paddingRight">@dimen/value12</item>
-    </style>
+    <!--<style name="CustomSpinnerStyle" parent="@android:style/Widget.Spinner.DropDown">-->
+        <!--<item name="android:layout_width">wrap_content</item>-->
+        <!--<item name="android:layout_height">wrap_content</item>-->
+        <!--<item name="android:layout_centerVertical">true</item>-->
+        <!--<item name="android:paddingTop">@dimen/value6</item>-->
+        <!--<item name="android:paddingBottom">@dimen/value6</item>-->
+        <!--<item name="android:paddingLeft">@dimen/value12</item>-->
+        <!--<item name="android:paddingRight">@dimen/value12</item>-->
+    <!--</style>-->
 
     <!-- Document Upload -->
 
@@ -414,7 +414,6 @@
         <item name="android:gravity">left</item>
         <item name="android:textSize">@dimen/text_size_small_medium</item>
     </style>
-
 
     <style name="ListHeaderStyleWithTopMargin">
         <item name="android:layout_marginTop">@dimen/activity_vertical_margin_card</item>
@@ -434,24 +433,24 @@
         <!--<item name="android:paddingRight">@dimen/activity_horizontal_margin</item>-->
     <!--</style>-->
 
-    <style name="ButtonStyleMedium" parent="@android:style/Widget.Button">
-        <item name="android:textSize">18.0sp</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/background_button_primary</item>
-        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
-        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
-    </style>
-
-    <style name="ButtonStyleMain" parent="ButtonStyleMedium">
-        <item name="android:layout_marginTop">@dimen/activity_horizontal_margin_double</item>
+    <!--<style name="ButtonStyleMedium" parent="@android:style/Widget.Button">-->
         <!--<item name="android:textSize">18.0sp</item>-->
         <!--<item name="android:textColor">@android:color/white</item>-->
         <!--<item name="android:gravity">center</item>-->
-        <!--<item name="android:background">@drawable/background_button_bottom</item>-->
+        <!--<item name="android:background">@drawable/background_button_primary</item>-->
         <!--<item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>-->
         <!--<item name="android:paddingRight">@dimen/activity_horizontal_margin</item>-->
-    </style>
+    <!--</style>-->
+
+    <!--<style name="ButtonStyleMain" parent="ButtonStyleMedium">-->
+        <!--<item name="android:layout_marginTop">@dimen/activity_horizontal_margin_double</item>-->
+        <!--&lt;!&ndash;<item name="android:textSize">18.0sp</item>&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="android:textColor">@android:color/white</item>&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="android:gravity">center</item>&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="android:background">@drawable/background_button_bottom</item>&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="android:paddingRight">@dimen/activity_horizontal_margin</item>&ndash;&gt;-->
+    <!--</style>-->
 
     <!--<style name="ButtonStyleLarge" parent="@android:style/Widget.Button">-->
         <!--<item name="android:textSize">@dimen/text_size_medium</item>-->
@@ -475,11 +474,11 @@
         <item name="android:gravity">left</item>
     </style>
 
-    <style name="TextStyleWhiteSmallBold" parent="@android:style/Widget.TextView">
-        <item name="android:textSize">12.0sp</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textStyle">bold</item>
-    </style>
+    <!--<style name="TextStyleWhiteSmallBold" parent="@android:style/Widget.TextView">-->
+        <!--<item name="android:textSize">12.0sp</item>-->
+        <!--<item name="android:textColor">@android:color/white</item>-->
+        <!--<item name="android:textStyle">bold</item>-->
+    <!--</style>-->
 
     <style name="TextStylePrimaryMedium" parent="@android:style/Widget.TextView">
         <item name="android:textSize">18.0sp</item>
@@ -635,44 +634,44 @@
         <item name="android:textColor">#484848</item>
     </style>
 
-    <style name="RowButton" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:minHeight">0dp</item>
-        <item name="android:padding">@dimen/value5</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:layout_gravity">center</item>
-    </style>
+    <!--<style name="RowButton" parent="@style/Widget.AppCompat.Button.Borderless">-->
+        <!--<item name="android:layout_height">wrap_content</item>-->
+        <!--<item name="android:layout_width">0dp</item>-->
+        <!--<item name="android:layout_weight">1</item>-->
+        <!--<item name="android:textSize">12sp</item>-->
+        <!--<item name="android:minHeight">0dp</item>-->
+        <!--<item name="android:padding">@dimen/value5</item>-->
+        <!--<item name="android:background">@android:color/transparent</item>-->
+        <!--<item name="android:layout_gravity">center</item>-->
+    <!--</style>-->
 
-    <style name="DialogButtonStyle" parent="@android:style/Widget.Holo.Button.Borderless">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@android:color/white</item>
-        <item name="android:textColor">@color/colorPrimary</item>
-        <item name="android:minHeight">0dp</item>
-        <item name="android:padding">10dp</item>
-    </style>
+    <!--<style name="DialogButtonStyle" parent="@android:style/Widget.Holo.Button.Borderless">-->
+        <!--<item name="android:layout_width">wrap_content</item>-->
+        <!--<item name="android:layout_height">wrap_content</item>-->
+        <!--<item name="android:background">@android:color/white</item>-->
+        <!--<item name="android:textColor">@color/colorPrimary</item>-->
+        <!--<item name="android:minHeight">0dp</item>-->
+        <!--<item name="android:padding">10dp</item>-->
+    <!--</style>-->
 
-    <style name="LoginEditTextStyle" parent="@android:style/Widget.Holo.EditText">
-        <item name="android:drawablePadding">@dimen/value5</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">26sp</item>
-        <item name="android:singleLine">true</item>
-    </style>
+    <!--<style name="LoginEditTextStyle" parent="@android:style/Widget.Holo.EditText">-->
+        <!--<item name="android:drawablePadding">@dimen/value5</item>-->
+        <!--<item name="android:maxLines">1</item>-->
+        <!--<item name="android:textColor">@android:color/white</item>-->
+        <!--<item name="android:textSize">26sp</item>-->
+        <!--<item name="android:singleLine">true</item>-->
+    <!--</style>-->
 
 
-    <style name="SignUpButton" parent="@android:style/Widget.Holo.Button">
-        <item name="android:background">@color/colorAmber</item>
-        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:paddingLeft">@dimen/activity_horizontal_margin_double</item>
-        <item name="android:paddingRight">@dimen/activity_horizontal_margin_double</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textColor">@android:color/black</item>
-    </style>
+    <!--<style name="SignUpButton" parent="@android:style/Widget.Holo.Button">-->
+        <!--<item name="android:background">@color/colorAmber</item>-->
+        <!--<item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>-->
+        <!--<item name="android:fontFamily">sans-serif</item>-->
+        <!--<item name="android:paddingLeft">@dimen/activity_horizontal_margin_double</item>-->
+        <!--<item name="android:paddingRight">@dimen/activity_horizontal_margin_double</item>-->
+        <!--<item name="android:textAllCaps">false</item>-->
+        <!--<item name="android:textColor">@android:color/black</item>-->
+    <!--</style>-->
 
 
 
