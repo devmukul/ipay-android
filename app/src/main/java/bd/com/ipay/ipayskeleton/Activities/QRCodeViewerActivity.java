@@ -27,6 +27,7 @@ import java.io.File;
 
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Contents;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
@@ -86,6 +87,9 @@ public class QRCodeViewerActivity extends BaseActivity {
 
     private void shareQrCode() {
         String imageName = "Qr payment.png";
+        String share_qr_code_message = getString(R.string.scan_this_qr_code_prompt) + " " +
+                ProfileInfoCacheManager.getUserName() + " " + getString(R.string.scan_this_qr_code_prompt_continue);
+
         CameraAndImageUtilities.saveImageBitmap(imageName, bitmap, QRCodeViewerActivity.this);
         if (!TextUtils.isEmpty(imageName)) {
 
@@ -97,8 +101,8 @@ public class QRCodeViewerActivity extends BaseActivity {
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // temp permission for receiving app to read this file
                 shareIntent.setType(getContentResolver().getType(contentUri));
-                shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "iPay pay by QR code");
-                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Please Scan this QR Code and Pay using iPay.");
+                shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.ipay_qr_code_title));
+                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, share_qr_code_message);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
                 startActivity(Intent.createChooser(shareIntent, "Choose an app to share"));
             } else {
