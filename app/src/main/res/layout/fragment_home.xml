@@ -357,16 +357,16 @@
                 android:background="@android:color/white">
 
                 <LinearLayout
-                    android:id="@+id/button_mobile_topup"
+                    android:id="@+id/button_pay_by_qr_code"
                     style="@style/HomeImageLinearLayoutStyleHorizontal"
                     android:layout_weight="1">
 
                     <TextView
                         style="@style/HomeImageLinearLayoutTextStyleHorizontal"
-                        android:drawableTop="@drawable/background_icon_topup"
+                        android:drawableTop="@drawable/background_icon_pay_by_qc"
                         android:ellipsize="marquee"
                         android:maxLines="1"
-                        android:text="@string/mobile_topup" />
+                        android:text="@string/pay_by_QR_code" />
 
                 </LinearLayout>
 

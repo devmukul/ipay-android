@@ -33,7 +33,7 @@ import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCo
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_DOCUMENTS;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_INFO;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.INTRODUCER;
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.LINK_AND_VERIFY_BANK;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.ADD_AND_VERIFY_BANK;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PARENT;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PERSONAL_ADDRESS;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PHOTOID;
@@ -93,7 +93,7 @@ public class ProfileActivity extends BaseActivity {
     private Bundle setBundle(String targetFragment) {
         Bundle args = new Bundle();
         switch (targetFragment) {
-            case LINK_AND_VERIFY_BANK:
+            case ADD_AND_VERIFY_BANK:
                 args.putBoolean(STARTED_FROM_PROFILE_ACTIVITY, true);
                 break;
             default:
@@ -110,7 +110,7 @@ public class ProfileActivity extends BaseActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment fragment = null;
 
-        if (targetFragment.equals(LINK_AND_VERIFY_BANK)) {
+        if (targetFragment.equals(ADD_AND_VERIFY_BANK)) {
             Intent intent = new Intent(ProfileActivity.this, ManageBanksActivity.class);
             startActivity(intent);
         } else {
@@ -177,7 +177,7 @@ public class ProfileActivity extends BaseActivity {
                 if (addToBackStack)
                     ft.addToBackStack(null);
 
-                ft.commit();
+                ft.commitAllowingStateLoss();
             }
         }
     }

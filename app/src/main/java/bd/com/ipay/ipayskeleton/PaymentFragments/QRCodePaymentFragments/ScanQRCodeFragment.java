@@ -28,9 +28,11 @@ import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -62,7 +64,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_scan_qr_code) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_scan_qr_code));
     }
 
     @Override
@@ -143,10 +145,18 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                     // For Personal Account we have to launch the SendMoneyActivity
                     // For Business Account we have to launch the PaymentActivity with a account status verification check
                     if (getUserInfoResponse.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
-                        switchActivity(SendMoneyActivity.class);
+                        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEND_MONEY)) {
+                            DialogUtils.showServiceNotAllowedDialog(getContext());
+                        } else {
+                            switchActivity(SendMoneyActivity.class);
+                        }
                     } else if (getUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
                         if (getUserInfoResponse.getAccountStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
-                            switchActivity(PaymentActivity.class);
+                            if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
+                                DialogUtils.showServiceNotAllowedDialog(getContext());
+                            } else {
+                                switchActivity(PaymentActivity.class);
+                            }
                         } else {
                             DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.business_account_not_verified));
                         }

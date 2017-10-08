@@ -325,7 +325,7 @@
     <string name="privacy_policy_url"><a href="https://www.ipay.com.bd/legal/privacy-policy">Privacy Policy</a></string>
     <string name="please_select_a_gender">Please select a gender</string>
     <string name="otp_request_failed">Could not send OTP. Please try again</string>
-    <string name="try_again_later">Could not connect to iPay. Please try again later.</string>
+    <string name="try_again_later">Please try again later.</string>
     <string name="later">Later</string>
     <string name="update_now">Update Now</string>
     <string name="enter_rate">Enter rate per item in BDT</string>
@@ -970,5 +970,8 @@
     <string name="screen_name_request_money">Request Money List Page</string>
     <string name="screen_name_received_money_request_history">Received Money History PAge Page</string>
     <string name="screen_name_received_money_request">Received Money Page</string>
+
+    <string name="no_browser_found_error_message">No default browser found to open. Please install or enable your browser.</string>
+    <string name="no_browser_map_app_found_error_message">No default browser or google maps app found to open. Please install Google Maps/Browser or enable your browser.</string>
 
 </resources>

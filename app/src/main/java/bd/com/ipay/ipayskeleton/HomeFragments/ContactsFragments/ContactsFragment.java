@@ -933,15 +933,16 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                                     } else {
                                         showNonMemberSheet(mobileNumber);
                                     }
-
-                                    if (originalName != null && !originalName.isEmpty()) {
-                                        setContactInformationInSheet(originalName,
-                                                profilePictureUrlQualityHigh, randomProfileBackgroundColor,
-                                                isMember, isVerified, accountType);
-                                    } else {
-                                        setContactInformationInSheet(name,
-                                                profilePictureUrlQualityHigh, randomProfileBackgroundColor,
-                                                isMember, isVerified, accountType);
+                                    if (isAdded()) {
+                                        if (originalName != null && !originalName.isEmpty()) {
+                                            setContactInformationInSheet(originalName,
+                                                    profilePictureUrlQualityHigh, randomProfileBackgroundColor,
+                                                    isMember, isVerified, accountType);
+                                        } else {
+                                            setContactInformationInSheet(name,
+                                                    profilePictureUrlQualityHigh, randomProfileBackgroundColor,
+                                                    isMember, isVerified, accountType);
+                                        }
                                     }
                                 }
                             }, 100);

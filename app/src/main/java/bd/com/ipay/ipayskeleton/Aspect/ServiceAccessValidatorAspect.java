@@ -161,7 +161,7 @@ public class ServiceAccessValidatorAspect {
             case Constants.ADD_BANK:
                 canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS);
                 break;
-            case ProfileCompletionPropertyConstants.LINK_AND_VERIFY_BANK:
+            case ProfileCompletionPropertyConstants.ADD_AND_VERIFY_BANK:
                 canSwitchFragment = ACLManager.hasServicesAccessibility(ServiceIdConstants.MANAGE_BANK_ACCOUNTS);
                 break;
             case ProfileCompletionPropertyConstants.PARENT:

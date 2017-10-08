@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -40,7 +41,8 @@ public class AboutContactsFragment extends BaseFragment {
 
         mAddressView.setText(Constants.OFFICE_ADDRESS);
         mPhoneView.setText(": " + Constants.OFFICE_LAND_LINE_NUMBER_PRIMARY + "; "
-                + Constants.OFFICE_LAND_LINE_NUMBER_SECONDARY);
+                + Constants.OFFICE_LAND_LINE_NUMBER_SECONDARY + ";"
+                + "\n  " + Constants.OFFICE_LAND_LINE_NUMBER_OTHER);
         mEmailView.setText(": " + Constants.OFFICE_EMAIL);
         mWebView.setText(": " + Constants.HOST_NAME);
 
@@ -70,13 +72,17 @@ public class AboutContactsFragment extends BaseFragment {
     }
 
     private void openMapWithLocation() {
-        Uri mapLocationUri = Uri.parse("geo:" + Constants.OFFICE_LATITUDE + "," + Constants.OFFICE_LONGITUDE);
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapLocationUri);
-        mapIntent.setPackage("com.google.android.apps.maps");
-        if (mapIntent.resolveActivity(getContext().getPackageManager()) == null) {
-            String mapLocationWebUri = "http://maps.google.com/maps?q=loc:" + Constants.OFFICE_LATITUDE + "," + Constants.OFFICE_LONGITUDE + ")";
-            mapIntent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(mapLocationWebUri));
+        try {
+            Uri mapLocationUri = Uri.parse("geo:" + Constants.OFFICE_LATITUDE + "," + Constants.OFFICE_LONGITUDE);
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapLocationUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            if (mapIntent.resolveActivity(getContext().getPackageManager()) == null) {
+                String mapLocationWebUri = "http://maps.google.com/maps?q=loc:" + Constants.OFFICE_LATITUDE + "," + Constants.OFFICE_LONGITUDE + ")";
+                mapIntent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(mapLocationWebUri));
+            }
+            startActivity(mapIntent);
+        } catch (Exception e) {
+            Toast.makeText(getContext(), R.string.no_browser_map_app_found_error_message, Toast.LENGTH_SHORT).show();
         }
-        startActivity(mapIntent);
     }
 }
