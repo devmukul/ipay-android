@@ -211,8 +211,7 @@ public class HomeActivity extends BaseActivity
         // Check if important permissions (e.g. Contacts permission) is given. If not,
         // request user for permission.
         attemptRequestForPermission();
-
-        if (Utilities.isNecessaryPermissionExists(this, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+        if (Utilities.isNecessaryPermissionExists(this, Constants.LOCATION_PERMISSIONS)) {
             startService(new Intent(this, LocationCollectorService.class));
         }
 

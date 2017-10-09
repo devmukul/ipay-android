@@ -4,9 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.DataCollectors.Model.UserLocation;
@@ -274,9 +276,10 @@ public class DataHelper {
         Logger.logI("Locations", "Removed " + count + "location/s from the database.");
     }
 
+    @NonNull
     public List<UserLocation> getAllSavedLocation() {
         final Cursor cursor;
-        final List<UserLocation> userLocations = new ArrayList<>();
+        List<UserLocation> userLocations = new ArrayList<>();
         final String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_LOCATIONS;
         try {
             SQLiteDatabase db = dOpenHelper.getReadableDatabase();
@@ -296,6 +299,7 @@ public class DataHelper {
             cursor.close();
         } catch (Exception e) {
             e.printStackTrace();
+            userLocations = Collections.emptyList();
         }
 
         return userLocations;
