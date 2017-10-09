@@ -55,36 +55,4 @@ public class UserLocation {
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
-
-    @Override
-    public boolean equals(Object o) {
-
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UserLocation userLocation = (UserLocation) o;
-
-        return Double.compare(userLocation.latitude, latitude) == 0 && Double.compare(userLocation.longitude, longitude) == 0 && createdAt == userLocation.createdAt;
-    }
-
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        temp = Double.doubleToLongBits(latitude);
-        result = (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(longitude);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (int) (createdAt ^ (createdAt >>> 32));
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "UserLocation{" +
-                "latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", createdAt=" + createdAt +
-                '}';
-    }
 }

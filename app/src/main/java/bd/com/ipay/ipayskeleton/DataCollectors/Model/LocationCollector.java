@@ -66,38 +66,4 @@ public class LocationCollector {
     public void setLocationList(@NonNull List<UserLocation> locationList) {
         this.locationList = locationList;
     }
-
-
-    @Override
-    @SuppressWarnings("SimplifiableIfStatement")
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        LocationCollector that = (LocationCollector) o;
-
-        if (!mobileNumber.equals(that.mobileNumber)) return false;
-        if (!deviceId.equals(that.deviceId)) return false;
-        if (!uuid.equals(that.uuid)) return false;
-        return locationList.equals(that.locationList);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = mobileNumber.hashCode();
-        result = 31 * result + deviceId.hashCode();
-        result = 31 * result + uuid.hashCode();
-        result = 31 * result + locationList.hashCode();
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "LocationCollector{" +
-                "mobileNumber='" + mobileNumber + '\'' +
-                ", deviceId='" + deviceId + '\'' +
-                ", uuid='" + uuid + '\'' +
-                ", locationList=" + locationList +
-                '}';
-    }
 }
