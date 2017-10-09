@@ -3,11 +3,14 @@ package bd.com.ipay.ipayskeleton.DataCollectors.Service;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -32,11 +35,40 @@ public class LocationCollectorService extends Service implements HttpResponseLis
 
     public static final String[] LOCATION_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
-    private static final long LOCATION_UPDATE_MIN_TIME_INTERVAL = 1000 * 60 * 2;
-    private static final long LOCATION_UPDATE_MIN_DISTANCE = 1000;
+    /**
+     * Constant for getting min location update time.
+     */
+    private static final long LOCATION_UPDATE_MIN_TIME_INTERVAL = 2 * 60 * 1000;
+    /**
+     * Constant for getting min distance change.
+     */
+    private static final long LOCATION_UPDATE_MIN_DISTANCE = 500;
+
+    /**
+     * The network may be not available always. This broadcast will receive the network connection notification as
+     * this receiver will be registered with {@link ConnectivityManager.CONNECTIVITY_ACTION} action.
+     */
+    private final BroadcastReceiver networkBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                if (Utilities.isConnectionAvailable(LocationCollectorService.this)) {
+                    if (locationUpdateRequestAsyncTask == null) {
+                        if (dataHelper == null) {
+                            dataHelper = DataHelper.getInstance(LocationCollectorService.this);
+                        }
+                        userLocationList = dataHelper.getAllSavedLocation();
+                        sendUserLocation();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     private DataHelper dataHelper;
-    List<UserLocation> userLocationList;
+    private List<UserLocation> userLocationList;
     private HttpRequestPostAsyncTask locationUpdateRequestAsyncTask;
 
     @SuppressLint("MissingPermission")
@@ -44,12 +76,6 @@ public class LocationCollectorService extends Service implements HttpResponseLis
     public void onCreate() {
         super.onCreate();
         dataHelper = DataHelper.getInstance(this);
-        userLocationList = dataHelper.getAllSavedLocation();
-        if (userLocationList.size() > 0) {
-            sendUserLocation();
-        } else {
-            userLocationList = null;
-        }
         final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (Utilities.isNecessaryPermissionExists(this, LOCATION_PERMISSIONS) && locationManager != null) {
             final String locationProvider;
@@ -60,6 +86,13 @@ public class LocationCollectorService extends Service implements HttpResponseLis
             }
             locationManager.requestLocationUpdates(locationProvider, LOCATION_UPDATE_MIN_TIME_INTERVAL, LOCATION_UPDATE_MIN_DISTANCE, this);
         }
+        registerReceiver(networkBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(networkBroadcastReceiver);
     }
 
     @Nullable
@@ -89,6 +122,9 @@ public class LocationCollectorService extends Service implements HttpResponseLis
             if (Utilities.isConnectionAvailable(this)) {
                 if (locationUpdateRequestAsyncTask == null) {
                     try {
+                        // Before sending the users current location we will fetch any previously saved location on our
+                        // SQLite database and add the current location with the list. So if there isn't any data from
+                        // database we will add one userLocation to out empty list.
                         userLocationList = dataHelper.getAllSavedLocation();
                         userLocationList.add(userLocation);
                         sendUserLocation();
