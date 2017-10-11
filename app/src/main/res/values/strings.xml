@@ -868,6 +868,9 @@
     <string name="getting_started_description">Whether you are paying bills, sending money or making purchase, iPay is here to keep your financial information secure.</string>
 
     <string name="qr_code_prompt">Please scan a QR code</string>
+    <string name="scan_this_qr_code_prompt">Please scan this QR code to pay</string>
+    <string name="scan_this_qr_code_prompt_continue">using iPay app</string>
+    <string name="ipay_qr_code_title">iPay pay by QR code</string>
 
     <string name="select_from_gallery_message">Select from gallery</string>
     <string name="take_a_picture_message">Take a picture</string>

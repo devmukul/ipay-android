@@ -352,23 +352,26 @@ public class CameraSource {
                 ((Activity) mContext).setResult(CameraActivity.CAMERA_ACTIVITY_CRASHED);
                 ((Activity) mContext).finish();
             }
+            if (mCamera != null) {
 
-            // SurfaceTexture was introduced in Honeycomb (11), so if we are running and
-            // old version of Android. fall back to use SurfaceView.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                mDummySurfaceTexture = new SurfaceTexture(DUMMY_TEXTURE_NAME);
-                mCamera.setPreviewTexture(mDummySurfaceTexture);
-            } else {
-                mDummySurfaceView = new SurfaceView(mContext);
-                mCamera.setPreviewDisplay(mDummySurfaceView.getHolder());
-            }
-            mCamera.startPreview();
+                // SurfaceTexture was introduced in Honeycomb (11), so if we are running and
+                // old version of Android. fall back to use SurfaceView.
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    mDummySurfaceTexture = new SurfaceTexture(DUMMY_TEXTURE_NAME);
+                    mCamera.setPreviewTexture(mDummySurfaceTexture);
+                } else {
+                    mDummySurfaceView = new SurfaceView(mContext);
+                    mCamera.setPreviewDisplay(mDummySurfaceView.getHolder());
+                }
+                mCamera.startPreview();
 
-            mProcessingThread = new Thread(mFrameProcessor);
-            mFrameProcessor.setActive(true);
-            mProcessingThread.start();
+                mProcessingThread = new Thread(mFrameProcessor);
+                mFrameProcessor.setActive(true);
+                mProcessingThread.start();
+                return this;
+            } else
+                return null;
         }
-        return this;
     }
 
     /**
@@ -387,14 +390,17 @@ public class CameraSource {
             }
 
             mCamera = createCamera();
-            mCamera.setPreviewDisplay(surfaceHolder);
-            mCamera.startPreview();
+            if (mCamera != null) {
+                mCamera.setPreviewDisplay(surfaceHolder);
+                mCamera.startPreview();
 
-            mProcessingThread = new Thread(mFrameProcessor);
-            mFrameProcessor.setActive(true);
-            mProcessingThread.start();
+                mProcessingThread = new Thread(mFrameProcessor);
+                mFrameProcessor.setActive(true);
+                mProcessingThread.start();
+                return this;
+            } else
+                return null;
         }
-        return this;
     }
 
     /**
@@ -799,79 +805,88 @@ public class CameraSource {
      */
     @SuppressLint("InlinedApi")
     private Camera createCamera() {
+        Camera camera = null;
         int requestedCameraId = getIdForRequestedCamera(mFacing);
         if (requestedCameraId == -1) {
             // if a device doesnt have front or more than one camera,
             // we will select the only camera it has. Default back camera ID is 0
             requestedCameraId = 0;
         }
-        Camera camera = Camera.open(requestedCameraId);
-        SizePair sizePair = selectSizePair(camera, mRequestedPreviewWidth, mRequestedPreviewHeight);
-        if (sizePair == null) {
-            throw new RuntimeException("Could not find suitable preview size.");
+        try {
+            camera = Camera.open(requestedCameraId);
+        } catch (Exception e) {
+            ((Activity) mContext).setResult(CameraActivity.CAMERA_ACTIVITY_CRASHED);
+            ((Activity) mContext).finish();
         }
-        Size pictureSize = sizePair.pictureSize();
-        mPreviewSize = sizePair.previewSize();
-
-        int[] previewFpsRange = selectPreviewFpsRange(camera, mRequestedFps);
-        if (previewFpsRange == null) {
-            throw new RuntimeException("Could not find suitable preview frames per second range.");
-        }
-
-        Camera.Parameters parameters = camera.getParameters();
-
-        if (pictureSize != null) {
-            parameters.setPictureSize(pictureSize.getWidth(), pictureSize.getHeight());
-        }
-
-        parameters.setPreviewSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-        parameters.setPreviewFpsRange(
-                previewFpsRange[Camera.Parameters.PREVIEW_FPS_MIN_INDEX],
-                previewFpsRange[Camera.Parameters.PREVIEW_FPS_MAX_INDEX]);
-        parameters.setPreviewFormat(ImageFormat.NV21);
-
-        setRotation(camera, parameters, requestedCameraId);
-
-        if (mFocusMode != null) {
-            if (parameters.getSupportedFocusModes().contains(
-                    mFocusMode)) {
-                parameters.setFocusMode(mFocusMode);
-            } else {
-                Log.i(TAG, "Camera focus mode: " + mFocusMode + " is not supported on this device.");
+        if (camera != null) {
+            SizePair sizePair = selectSizePair(camera, mRequestedPreviewWidth, mRequestedPreviewHeight);
+            if (sizePair == null) {
+                throw new RuntimeException("Could not find suitable preview size.");
             }
-        }
+            Size pictureSize = sizePair.pictureSize();
+            mPreviewSize = sizePair.previewSize();
 
-        // setting mFocusMode to the one set in the params
-        mFocusMode = parameters.getFocusMode();
+            int[] previewFpsRange = selectPreviewFpsRange(camera, mRequestedFps);
+            if (previewFpsRange == null) {
+                throw new RuntimeException("Could not find suitable preview frames per second range.");
+            }
 
-        if (mFlashMode != null) {
-            if (parameters.getSupportedFlashModes() != null) {
-                if (parameters.getSupportedFlashModes().contains(
-                        mFlashMode)) {
-                    parameters.setFlashMode(mFlashMode);
+            Camera.Parameters parameters = camera.getParameters();
+
+            if (pictureSize != null) {
+                parameters.setPictureSize(pictureSize.getWidth(), pictureSize.getHeight());
+            }
+
+            parameters.setPreviewSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
+            parameters.setPreviewFpsRange(
+                    previewFpsRange[Camera.Parameters.PREVIEW_FPS_MIN_INDEX],
+                    previewFpsRange[Camera.Parameters.PREVIEW_FPS_MAX_INDEX]);
+            parameters.setPreviewFormat(ImageFormat.NV21);
+
+            setRotation(camera, parameters, requestedCameraId);
+
+            if (mFocusMode != null) {
+                if (parameters.getSupportedFocusModes().contains(
+                        mFocusMode)) {
+                    parameters.setFocusMode(mFocusMode);
                 } else {
-                    Log.i(TAG, "Camera flash mode: " + mFlashMode + " is not supported on this device.");
+                    Log.i(TAG, "Camera focus mode: " + mFocusMode + " is not supported on this device.");
                 }
             }
-        }
 
-        // setting mFlashMode to the one set in the params
-        mFlashMode = parameters.getFlashMode();
+            // setting mFocusMode to the one set in the params
+            mFocusMode = parameters.getFocusMode();
 
-        camera.setParameters(parameters);
+            if (mFlashMode != null) {
+                if (parameters.getSupportedFlashModes() != null) {
+                    if (parameters.getSupportedFlashModes().contains(
+                            mFlashMode)) {
+                        parameters.setFlashMode(mFlashMode);
+                    } else {
+                        Log.i(TAG, "Camera flash mode: " + mFlashMode + " is not supported on this device.");
+                    }
+                }
+            }
 
-        // Four frame buffers are needed for working with the camera:
-        //
-        //   one for the frame that is currently being executed upon in doing detection
-        //   one for the next pending frame to process immediately upon completing detection
-        //   two for the frames that the camera uses to populate future preview images
-        camera.setPreviewCallbackWithBuffer(new CameraPreviewCallback());
-        camera.addCallbackBuffer(createPreviewBuffer(mPreviewSize));
-        camera.addCallbackBuffer(createPreviewBuffer(mPreviewSize));
-        camera.addCallbackBuffer(createPreviewBuffer(mPreviewSize));
-        camera.addCallbackBuffer(createPreviewBuffer(mPreviewSize));
+            // setting mFlashMode to the one set in the params
+            mFlashMode = parameters.getFlashMode();
 
-        return camera;
+            camera.setParameters(parameters);
+
+            // Four frame buffers are needed for working with the camera:
+            //
+            //   one for the frame that is currently being executed upon in doing detection
+            //   one for the next pending frame to process immediately upon completing detection
+            //   two for the frames that the camera uses to populate future preview images
+            camera.setPreviewCallbackWithBuffer(new CameraPreviewCallback());
+            camera.addCallbackBuffer(createPreviewBuffer(mPreviewSize));
+            camera.addCallbackBuffer(createPreviewBuffer(mPreviewSize));
+            camera.addCallbackBuffer(createPreviewBuffer(mPreviewSize));
+            camera.addCallbackBuffer(createPreviewBuffer(mPreviewSize));
+
+            return camera;
+        } else
+            return null;
     }
 
     /**

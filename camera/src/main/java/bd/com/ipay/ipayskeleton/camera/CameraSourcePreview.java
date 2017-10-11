@@ -16,6 +16,7 @@
 package bd.com.ipay.ipayskeleton.camera;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.support.annotation.RequiresPermission;
@@ -83,20 +84,30 @@ public class CameraSourcePreview extends ViewGroup {
 
     @RequiresPermission(Manifest.permission.CAMERA)
     private void startIfReady() throws IOException, SecurityException {
+        CameraSource cameraSource = null;
         if (mStartRequested && mSurfaceAvailable) {
-            mCameraSource.start(mSurfaceView.getHolder());
-            if (mOverlay != null) {
-                Size size = mCameraSource.getPreviewSize();
-                int min = Math.min(size.getWidth(), size.getHeight());
-                int max = Math.max(size.getWidth(), size.getHeight());
-                if (isPortraitMode()) {
-                    mOverlay.setCameraInfo(min, max, mCameraSource.getCameraFacing());
-                } else {
-                    mOverlay.setCameraInfo(max, min, mCameraSource.getCameraFacing());
-                }
-                mOverlay.clear();
+            try {
+                cameraSource = mCameraSource.start(mSurfaceView.getHolder());
+            } catch (Exception e) {
             }
-            mStartRequested = false;
+            if (cameraSource == null) {
+                ((Activity) mContext).setResult(CameraActivity.CAMERA_ACTIVITY_CRASHED);
+                ((Activity) mContext).finish();
+                return;
+            } else {
+                if (mOverlay != null) {
+                    Size size = mCameraSource.getPreviewSize();
+                    int min = Math.min(size.getWidth(), size.getHeight());
+                    int max = Math.max(size.getWidth(), size.getHeight());
+                    if (isPortraitMode()) {
+                        mOverlay.setCameraInfo(min, max, mCameraSource.getCameraFacing());
+                    } else {
+                        mOverlay.setCameraInfo(max, min, mCameraSource.getCameraFacing());
+                    }
+                    mOverlay.clear();
+                }
+                mStartRequested = false;
+            }
         }
     }
 
