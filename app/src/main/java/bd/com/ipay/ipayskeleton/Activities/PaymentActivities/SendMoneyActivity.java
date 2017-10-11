@@ -20,7 +20,8 @@ public class SendMoneyActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_money);
 
-        switchToSendMoneyFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, new SendMoneyFragment()).commit();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -38,24 +39,7 @@ public class SendMoneyActivity extends BaseActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        Utilities.hideKeyboard(this);
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStack();
-        } else {
-            finish();
-        }
-    }
-
-    @Override
     public Context setContext() {
         return SendMoneyActivity.this;
     }
-
-
-    public void switchToSendMoneyFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SendMoneyFragment()).commit();
-    }
 }
-

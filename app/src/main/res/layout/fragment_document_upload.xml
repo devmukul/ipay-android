@@ -78,5 +78,6 @@
         style="@style/ButtonPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/upload_small" />
+        android:text="@string/upload_small"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"/>
 </LinearLayout>

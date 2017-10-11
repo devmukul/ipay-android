@@ -75,12 +75,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     private String mUserMobileNumber;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_mobile_topup, container, false);
@@ -172,37 +166,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         super.onResume();
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_mobile_topup));
     }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        MenuInflater menuInflater = getActivity().getMenuInflater();
-        menuInflater.inflate(R.menu.activity_topup_money_history, menu);
-
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        // Remove search action of contacts
-        if (menu.findItem(R.id.action_search_contacts) != null)
-            menu.findItem(R.id.action_search_contacts).setVisible(false);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_history:
-                switchToTopupHistoryFragment();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-
 
     private void setMobileNumber() {
         mMobileNumberEditText.setCurrentFragmentTag(Constants.TOP_UP);
@@ -421,10 +384,4 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             mGetBusinessRuleTask = null;
         }
     }
-
-    public void switchToTopupHistoryFragment() {
-        getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new MobileTopupHistoryFragment()).addToBackStack(null).commit();
-    }
-
 }

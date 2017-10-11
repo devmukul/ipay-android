@@ -20,7 +20,8 @@ public class TopUpActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top_up);
 
-        switchToTopupFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, new MobileTopupFragment()).commit();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -29,21 +30,10 @@ public class TopUpActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             Utilities.hideKeyboard(this);
-            onBackPressed();
-            return true;
-        }else {
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        Utilities.hideKeyboard(this);
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStack();
-        } else {
             finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -51,12 +41,4 @@ public class TopUpActivity extends BaseActivity {
     public Context setContext() {
         return TopUpActivity.this;
     }
-
-    public void switchToTopupFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, new MobileTopupFragment()).commit();
-    }
 }
-
-
-

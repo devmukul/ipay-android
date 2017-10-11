@@ -80,16 +80,9 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_withdraw_money, container, false);
-        getActivity().setTitle(R.string.withdraw_money);
         mBankNameTextView = (TextView) v.findViewById(R.id.bank_name);
         mBankBranchTextView = (TextView) v.findViewById(R.id.bank_branch);
         mBankAccountTextView = (TextView) v.findViewById(R.id.bank_account_number);
@@ -161,37 +154,6 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
 
         return v;
     }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        MenuInflater menuInflater = getActivity().getMenuInflater();
-        menuInflater.inflate(R.menu.activity_withdraw_money_history, menu);
-
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        // Remove search action of contacts
-        if (menu.findItem(R.id.action_search_contacts) != null)
-            menu.findItem(R.id.action_search_contacts).setVisible(false);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_history:
-                switchToWithdrawMoneyHistoryFragment();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-
 
     private void getBankInformation() {
         // It might be possible that we have failed to load the available bank list during
@@ -475,10 +437,5 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
             mGetBusinessRuleTask = null;
 
         }
-    }
-
-    public void switchToWithdrawMoneyHistoryFragment() {
-        getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new WithdrawMoneyHistoryFragment()).addToBackStack(null).commit();
     }
 }

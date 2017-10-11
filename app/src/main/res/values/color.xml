@@ -42,9 +42,9 @@
     <color name="colorDarkKGray">#484848</color>
     <color name="colorBlackTransparent">#70000000</color>
     <color name="bottle_green">#009688</color>
-    <color name="colorDarkOrange">#f39431</color>
-    <color name="colorRed">#ff0000</color>
-    <color name="colorYellow">#ffc000</color>
+    <color name="colorDarkOrange">#F39431</color>
+    <color name="colorRed">#FF0000</color>
+    <color name="colorYellow">#FFC000</color>
     <!-- zxinglib colors -->
     <color name="zxinglib_status_text">#ffffffff</color>
 
@@ -59,12 +59,12 @@
     <color name="background_violet">#C15562</color>
     <color name="background_magenta">#AE7575</color>
     <color name="background_default">#547bca</color>
-    <color name="background_red">#ef5350</color>
+    <color name="background_red">#EF5350</color>
     <color name="verified_background">#009688</color>
     <color name="background_iconified_button_icon">#26A69A</color>
     <color name="background_iconified_button_disabled">#009688</color>
 
-    <color name="warning">#f4d03f</color>
-    <color name="error">#e7505a</color>
-    //e0e0e0
+    <color name="colorWarningButton">#F4D03F</color>
+    <color name="colorErrorButton">#E7505A</color>
+    <color name="colorGrayDevider">#E0E0E0</color>
 </resources>

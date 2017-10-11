@@ -83,30 +83,23 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
     private BottomSheetLayout mBottomSheetLayout;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-
-    private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
-
     private TextView mEmptyContactsTextView;
+    private View mSheetViewNonIpayMember;
+    private View mSheetViewIpayMember;
+    private View selectedBottomSheetView;
 
     private String mQuery = "";
-
     // When a contact item is clicked, we need to access its name and number from the sheet view.
     // So saving these in these two variables.
     private String mSelectedName;
     private String mSelectedNumber;
     private String mInviteMessage;
 
-    private View mSheetViewNonIpayMember;
-    private View mSheetViewIpayMember;
-    private View selectedBottomSheetView;
-
     private HttpRequestPostAsyncTask mSendInviteTask = null;
     private SendInviteResponse mSendInviteResponse;
-
     private HttpRequestPostAsyncTask mAskForRecommendationTask = null;
     private AskForIntroductionResponse mAskForIntroductionResponse;
-
     private ProgressDialog mProgressDialog;
 
     private ContactListAdapter mAdapter;
@@ -213,7 +206,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             @Override
             public Cursor loadInBackground() {
                 DataHelper dataHelper = DataHelper.getInstance(getActivity());
-
 
                 // TODO hack
                 /**
@@ -819,7 +811,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                     if (isMember) {
                         if (!isVerified) {
-//                        if (askForConfirmationButton != null)
                             button_ask.setVisibility(View.GONE);
                             button_asked.setVisibility(View.GONE);
                             verificationStatus.setVisibility(View.GONE);
@@ -827,7 +818,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                             invitedButton.setVisibility(View.GONE);
 
                         } else {
-//                        if (askForConfirmationButton != null)
                             button_ask.setVisibility(View.VISIBLE);
                             verificationStatus.setVisibility(View.VISIBLE);
                             inviteButton.setVisibility(View.GONE);
@@ -842,7 +832,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                             inviteButton.setVisibility(View.VISIBLE);
                             invitedButton.setVisibility(View.GONE);
                         }
-//                        if (askForConfirmationButton != null)
                         button_ask.setVisibility(View.GONE);
                         verificationStatus.setVisibility(View.GONE);
                     }
@@ -861,36 +850,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                         }
                     });
                 }
-
-
-
-
-
-//                if (isMember) {
-//                    isSubscriber.setVisibility(View.VISIBLE);
-//                } else {
-//                    isSubscriber.setVisibility(View.GONE);
-//                }
-
-//                if (isVerified) {
-//
-//                } else {
-//
-//                }
-
-//                if (!isDialogFragment() && !isMember && !mShowInvitedOnly && !isInvited)
-//                    inviteButton.setVisibility(View.VISIBLE);
-//                else
-//                    inviteButton.setVisibility(View.GONE);
-
-//                if (mShowNonInvitedNonMembersOnly) {
-//                    inviteButton.setVisibility(View.VISIBLE);
-//                } else {
-//                    inviteButton.setVisibility(View.GONE);
-//                }
-
-
-//                inviteButton.setOnClickListener();
 
                 profilePictureView.setProfilePicture(profilePictureUrlQualityMedium, false);
 

@@ -11,19 +11,11 @@
         android:background="@color/colorWhite">
 
         <SearchView
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="10dp"
             android:id="@+id/simpleSearchView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:iconifiedByDefault="false"
-            android:queryHint="Search Transaction"
-            android:background="@color/colorTransparent"
-            android:submitBackground="@color/colorTransparent"
-            android:queryBackground="@color/colorTransparent"
+            style="@style/SearchViewStyle"
             android:layout_toLeftOf="@+id/filter_menu"
-            android:visibility="invisible"/>
+            android:queryHint="@string/search_transaction"
+            android:visibility="invisible" />
 
 
         <TextView
@@ -34,17 +26,16 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_toLeftOf="@+id/filter_clear"
-            android:text="Complete Transaction List"/>
+            android:text="@string/complete_transaction_list"/>
 
         <Button
             android:id="@+id/filter_clear"
             style="@style/ButtonStyleSmallRect"
-            android:textAllCaps="false"
-            android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:text="clear filter"
+            android:text="@string/clear_filter"
             android:layout_alignParentRight="true"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:layout_centerVertical="true"/>
 
         <ImageView
             android:id="@+id/filter_menu"
@@ -70,7 +61,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#E0E0E0"
+            android:background="@color/colorGrayDevider"
             android:layout_below="@id/simpleSearchView">
 
         </LinearLayout>

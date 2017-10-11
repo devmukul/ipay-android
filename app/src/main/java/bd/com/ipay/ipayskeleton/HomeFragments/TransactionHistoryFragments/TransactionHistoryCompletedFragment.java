@@ -14,8 +14,6 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +57,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class TransactionHistoryCompletedFragment extends ProgressFragment implements HttpResponseListener {
+public class TransactionHistoryCompletedFragment extends ProgressFragment implements HttpResponseListener, PopupMenu.OnMenuItemClickListener, View.OnClickListener {
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
 
@@ -68,8 +66,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private LinearLayoutManager mLayoutManager;
     private List<TransactionHistory> userTransactionHistories;
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
-
-    private String mMobileNumber;
 
     private LinearLayout serviceFilterLayout;
     private LinearLayout dateFilterLayout;
@@ -83,19 +79,18 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private CheckBox mFilterPayment;
     private CheckBox mFilterRequestPayment;
     private CheckBox mFilterEducation;
+    private CheckBox mFilterOffer;
     private Button mClearServiceFilterButton;
     private Button mFromDateButton;
     private Button mToDateButton;
     private Button clearDateFilterButton;
     private Button filterByDateButton;
-    private TextView mEmptyListTextView;
-    private CheckBox mFilterOffer;
-
-    private int historyPageCount = 0;
-    private Integer type = null;
-    private Calendar fromDate = null;
-    private Calendar toDate = null;
+    private Button mClearFilterButton;
+    private ImageView mMoreButton;
+    private ImageView mCancelButton;
     private PopupMenu popupMenu;
+    private TextView mFilterTitle;
+    private TextView mEmptyListTextView;
 
     private boolean hasNext = false;
     private boolean isLoading = false;
@@ -103,23 +98,19 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private boolean mIsScrolled = false;
     private int mTotalItemCount = 0;
     private int mPastVisiblesItems;
-    private int mVisibleItem;
+    private int mVisibleItem;private int historyPageCount = 0;
+    private Integer type = null;
+    private Calendar fromDate = null;
+    private Calendar toDate = null;
+    private String mMobileNumber;
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
-    //private Menu menu;
     private Tracker mTracker;
-
-    private ImageView mMoreButton;
-    private ImageView mCancelButton;
-    private Button mClearFilterButton;
-    private TextView mFilterTitle;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setHasOptionsMenu(true);
         mTracker = Utilities.getTracker(getActivity());
     }
 
@@ -132,7 +123,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_transaction_history_completed));
     }
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -144,6 +134,10 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         setupViewsAndActions();
         handleBackPressWhenFilterIsOn(v);
 
+        mMoreButton.setOnClickListener(this);
+        mCancelButton.setOnClickListener(this);
+        mClearFilterButton.setOnClickListener(this);
+
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -154,54 +148,87 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 }
             }
         });
+        return v;
+    }
 
-        mMoreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getTransactionHistory();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            mSwipeRefreshLayout.destroyDrawingCache();
+            mSwipeRefreshLayout.clearAnimation();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (getView() != null) {
+            if (isVisibleToUser) {
+                clearDateFilters();
+                clearServiceFilters();
+                refreshTransactionHistory();
+            }
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
+        super.onDestroyView();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+
+        // TODO Auto-generated method stub
+        switch (item.getItemId()) {
+            case R.id.action_filter_by_date:
+                if (serviceFilterLayout.getVisibility() == View.VISIBLE)
+                    serviceFilterLayout.setVisibility(View.GONE);
+                dateFilterLayout.setVisibility(View.VISIBLE);
+                mMoreButton.setVisibility(View.INVISIBLE);
+                mCancelButton.setVisibility(View.VISIBLE);
+                mFilterTitle.setVisibility(View.VISIBLE);
+                mClearFilterButton.setVisibility(View.INVISIBLE);
+                mFilterTitle.setText(getString(R.string.filter_by_date));
+                return true;
+            case R.id.action_filter_by_service:
+                if (dateFilterLayout.getVisibility() == View.VISIBLE)
+                    dateFilterLayout.setVisibility(View.GONE);
+                serviceFilterLayout.setVisibility(View.VISIBLE);
+                mMoreButton.setVisibility(View.INVISIBLE);
+                mCancelButton.setVisibility(View.VISIBLE);
+                mClearFilterButton.setVisibility(View.INVISIBLE);
+                mFilterTitle.setVisibility(View.VISIBLE);
+                mFilterTitle.setText(getString(R.string.filter_by_service));
+                return true;
+            default:
+                mCancelButton.setVisibility(View.INVISIBLE);
+                mFilterTitle.setVisibility(View.INVISIBLE);
+                mClearFilterButton.setVisibility(View.INVISIBLE);
+                return false;
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId())
+        {
+            case R.id.filter_menu:
                 popupMenu = new PopupMenu(getContext(), mMoreButton);
                 popupMenu.getMenuInflater().inflate(R.menu.activity_transaction_history,popupMenu.getMenu());
-
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.action_filter_by_date:
-                                if (serviceFilterLayout.getVisibility() == View.VISIBLE)
-                                    serviceFilterLayout.setVisibility(View.GONE);
-                                dateFilterLayout.setVisibility(View.VISIBLE);
-                                mMoreButton.setVisibility(View.INVISIBLE);
-                                mCancelButton.setVisibility(View.VISIBLE);
-                                mFilterTitle.setVisibility(View.VISIBLE);
-                                mClearFilterButton.setVisibility(View.INVISIBLE);
-                                mFilterTitle.setText("Filter by Date");
-                                return true;
-                            case R.id.action_filter_by_service:
-                                if (dateFilterLayout.getVisibility() == View.VISIBLE)
-                                    dateFilterLayout.setVisibility(View.GONE);
-                                serviceFilterLayout.setVisibility(View.VISIBLE);
-                                mMoreButton.setVisibility(View.INVISIBLE);
-                                mCancelButton.setVisibility(View.VISIBLE);
-                                mClearFilterButton.setVisibility(View.INVISIBLE);
-                                mFilterTitle.setVisibility(View.VISIBLE);
-                                mFilterTitle.setText("Filter by Service");
-                                return true;
-                            default:
-                                mCancelButton.setVisibility(View.INVISIBLE);
-                                mFilterTitle.setVisibility(View.INVISIBLE);
-
-                                mClearFilterButton.setVisibility(View.INVISIBLE);
-                                return false;
-                        }
-                    }
-                });
-
+                popupMenu.setOnMenuItemClickListener(TransactionHistoryCompletedFragment.this);
                 popupMenu.show();
-            }
-        });
-
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                break;
+            case R.id.cancel_filter:
                 if (serviceFilterLayout.getVisibility() == View.VISIBLE)
                     serviceFilterLayout.setVisibility(View.GONE);
 
@@ -210,27 +237,50 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 mFilterTitle.setVisibility(View.INVISIBLE);
                 mCancelButton.setVisibility(View.INVISIBLE);
                 mMoreButton.setVisibility(View.VISIBLE);
-            }
-        });
-
-        mClearFilterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
+                break;
+            case R.id.filter_clear:
                 clearDateFilters();
                 clearServiceFilters();
                 setContentShown(false);
                 refreshTransactionHistory();
-
                 mMoreButton.setVisibility(View.VISIBLE);
                 mCancelButton.setVisibility(View.INVISIBLE);
                 mClearFilterButton.setVisibility(View.INVISIBLE);
+                mFilterTitle.setText(getString(R.string.complete_transaction_list));
+                break;
+        }
+    }
 
-                mFilterTitle.setText("Complete Transaction List");
+    @Override
+    public void httpResponseReceiver(GenericHttpResponse result) {
+
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            mTransactionHistoryTask = null;
+            if (getActivity() != null)
+                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
+            return;
+        }
+
+        Gson gson = new Gson();
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                try {
+                    mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
+                    loadTransactionHistory(mTransactionHistoryResponse.getTransactions(), mTransactionHistoryResponse.isHasNext());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
+                }
+            } else {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
             }
-        });
-
-        return v;
+            mSwipeRefreshLayout.setRefreshing(false);
+            mTransactionHistoryTask = null;
+            if (this.isAdded()) setContentShown(true);
+        }
     }
 
     private void initializeViews(View v) {
@@ -294,7 +344,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     }
 
     private void handleBackPressWhenFilterIsOn(View v) {
-        // Handle back press action when action mode is on.
         v.setFocusableInTouchMode(true);
         v.requestFocus();
         v.setOnKeyListener(new View.OnKeyListener() {
@@ -311,86 +360,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             }
         });
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getTransactionHistory();
-    }
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            mSwipeRefreshLayout.destroyDrawingCache();
-            mSwipeRefreshLayout.clearAnimation();
-        }
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (getView() != null) {
-            if (isVisibleToUser) {
-                clearDateFilters();
-                clearServiceFilters();
-                refreshTransactionHistory();
-            }
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
-        super.onDestroyView();
-    }
-
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//        MenuInflater menuInflater = getActivity().getMenuInflater();
-//        menuInflater.inflate(R.menu.activity_transaction_history, menu);
-//        menuInflater.inflate(R.menu.clear_filter, menu);
-//        this.menu = menu;
-//        menu.findItem(R.id.action_clear_filter).setVisible(false);
-//    }
-//
-//    @Override
-//    public void onPrepareOptionsMenu(Menu menu) {
-//        super.onPrepareOptionsMenu(menu);
-//
-//        // Remove search action of contacts
-//        if (menu.findItem(R.id.action_search_contacts) != null)
-//            menu.findItem(R.id.action_search_contacts).setVisible(false);
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.action_filter_by_date:
-//                if (serviceFilterLayout.getVisibility() == View.VISIBLE)
-//                    serviceFilterLayout.setVisibility(View.GONE);
-//                dateFilterLayout.setVisibility(View.VISIBLE);
-//                return true;
-//            case R.id.action_filter_by_service:
-//                if (dateFilterLayout.getVisibility() == View.VISIBLE)
-//                    dateFilterLayout.setVisibility(View.GONE);
-//                serviceFilterLayout.setVisibility(View.VISIBLE);
-//                return true;
-//            case R.id.action_clear_filter:
-//                clearDateFilters();
-//                clearServiceFilters();
-//                setContentShown(false);
-//                refreshTransactionHistory();
-//                menu.findItem(R.id.action_clear_filter).setVisible(false);
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
 
     private void refreshTransactionHistory() {
         historyPageCount = 0;
@@ -534,7 +503,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         for (CheckBox serviceFilter : mCheckBoxTypeMap.keySet()) {
             serviceFilter.setChecked(false);
         }
-
         serviceFilterLayout.setVisibility(View.GONE);
     }
 
@@ -543,7 +511,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         toDate = null;
         mFromDateButton.setText("");
         mToDateButton.setText("");
-
         dateFilterLayout.setVisibility(View.GONE);
     }
 
@@ -663,45 +630,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
         });
 
-    }
-
-    @Override
-    public void httpResponseReceiver(GenericHttpResponse result) {
-
-        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
-                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mTransactionHistoryTask = null;
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
-            return;
-        }
-
-        Gson gson = new Gson();
-
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
-
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
-                try {
-                    mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
-
-                    loadTransactionHistory(mTransactionHistoryResponse.getTransactions(), mTransactionHistoryResponse.isHasNext());
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
-                }
-
-            } else {
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.transaction_history_get_failed, Toast.LENGTH_LONG).show();
-            }
-
-            mSwipeRefreshLayout.setRefreshing(false);
-            mTransactionHistoryTask = null;
-            if (this.isAdded()) setContentShown(true);
-        }
     }
 
     private class TransactionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -857,11 +785,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                         mLoadMoreTextView.setText(R.string.no_more_results);
                 }
             }
-
-            private void showLoadingInFooter() {
-                isLoading = true;
-                notifyDataSetChanged();
-            }
         }
 
         // Now define the view holder for Normal list item
@@ -949,45 +872,4 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             refreshTransactionHistory();
         }
     }
-
-    private class OnDismissListener implements PopupMenu.OnDismissListener {
-
-        @Override
-        public void onDismiss(PopupMenu menu) {
-            // TODO Auto-generated method stub
-            Toast.makeText(getContext(), "Popup Menu is dismissed",
-                    Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-//    private class OnMenuItemClickListener implements
-//            PopupMenu.OnMenuItemClickListener {
-//
-//        @Override
-//        public boolean onMenuItemClick(MenuItem item) {
-//            // TODO Auto-generated method stub
-//            switch (item.getItemId()) {
-//
-//                case R.id.action_filter_by_date:
-//                    if (serviceFilterLayout.getVisibility() == View.VISIBLE)
-//                        serviceFilterLayout.setVisibility(View.GONE);
-//                    dateFilterLayout.setVisibility(View.VISIBLE);
-//                    return true;
-//                case R.id.action_filter_by_service:
-//                    if (dateFilterLayout.getVisibility() == View.VISIBLE)
-//                        dateFilterLayout.setVisibility(View.GONE);
-//                    serviceFilterLayout.setVisibility(View.VISIBLE);
-//                    return true;
-//                case R.id.action_clear_filter:
-//                    clearDateFilters();
-//                    clearServiceFilters();
-//                    setContentShown(false);
-//                    refreshTransactionHistory();
-//                    menu.findItem(R.id.action_clear_filter).setVisible(false);
-//                    return true;
-//            }
-//            return false;
-//        }
-//    }
 }

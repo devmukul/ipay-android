@@ -79,13 +79,6 @@ public class AddMoneyFragment extends BaseFragment implements HttpResponseListen
     private int selectedBankPosition = 0;
 
     private ProgressDialog mProgressDialog;
-    private AddMoneyHistoryFragment mAddMoneyHistoryFragment;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -171,35 +164,6 @@ public class AddMoneyFragment extends BaseFragment implements HttpResponseListen
     public void onResume() {
         super.onResume();
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_add_money));
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        MenuInflater menuInflater = getActivity().getMenuInflater();
-        menuInflater.inflate(R.menu.activity_add_money_history, menu);
-
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        // Remove search action of contacts
-        if (menu.findItem(R.id.action_search_contacts) != null)
-            menu.findItem(R.id.action_search_contacts).setVisible(false);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_history:
-                switchToAddMoneyHistoryFragment();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     private void showGetVerifiedDialog() {
@@ -497,10 +461,5 @@ public class AddMoneyFragment extends BaseFragment implements HttpResponseListen
 
             mGetBusinessRuleTask = null;
         }
-    }
-
-    public void switchToAddMoneyHistoryFragment() {
-        getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new AddMoneyHistoryFragment()).addToBackStack(null).commit();
     }
 }

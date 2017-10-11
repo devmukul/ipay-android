@@ -71,12 +71,10 @@
 
         <Button
             android:id="@+id/button_next"
-            style="@style/ButtonPrimary"
+            style="@style/ButtonPrimaryWithNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/next"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+            android:text="@string/next"/>
     </LinearLayout>
 
 </LinearLayout>

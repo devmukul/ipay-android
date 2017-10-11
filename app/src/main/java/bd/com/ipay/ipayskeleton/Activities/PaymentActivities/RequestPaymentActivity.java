@@ -274,8 +274,3 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
         return RequestPaymentActivity.this;
     }
 }
-
-
-
-
-

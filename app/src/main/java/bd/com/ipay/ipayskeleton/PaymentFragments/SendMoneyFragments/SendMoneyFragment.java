@@ -65,12 +65,6 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
 
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_send_money, container, false);
@@ -133,37 +127,6 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         super.onResume();
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_send_money));
     }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        MenuInflater menuInflater = getActivity().getMenuInflater();
-        menuInflater.inflate(R.menu.activity_send_money_history, menu);
-
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        // Remove search action of contacts
-        if (menu.findItem(R.id.action_search_contacts) != null)
-            menu.findItem(R.id.action_search_contacts).setVisible(false);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_history:
-                switchToSendMoneyHistoryFragment();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -343,10 +306,5 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
 
             mGetBusinessRuleTask = null;
         }
-    }
-
-    public void switchToSendMoneyHistoryFragment() {
-        getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SendMoneyHistoryFragment()).addToBackStack(null).commit();
     }
 }
