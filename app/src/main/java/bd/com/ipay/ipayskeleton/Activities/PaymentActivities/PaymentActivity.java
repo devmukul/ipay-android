@@ -44,7 +44,6 @@ public class PaymentActivity extends BaseActivity {
             }
         });
 
-
         if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false))
             switchToMakePaymentFragment();
         else
@@ -52,7 +51,6 @@ public class PaymentActivity extends BaseActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

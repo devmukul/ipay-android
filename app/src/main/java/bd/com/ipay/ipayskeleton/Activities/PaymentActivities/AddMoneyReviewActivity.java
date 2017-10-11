@@ -19,7 +19,6 @@ public class AddMoneyReviewActivity extends BaseActivity {
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, new AddMoneyReviewFragment()).commit();
-
     }
 
     @Override

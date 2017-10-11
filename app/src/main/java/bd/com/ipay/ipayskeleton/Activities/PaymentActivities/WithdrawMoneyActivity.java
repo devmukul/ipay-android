@@ -22,7 +22,6 @@ public class WithdrawMoneyActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, new WithdrawMoneyFragment()).commit();
 
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

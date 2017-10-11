@@ -22,7 +22,6 @@ public class AddMoneyActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -34,7 +33,6 @@ public class AddMoneyActivity extends BaseActivity {
         }
     }
 
-
     @Override
     public void onBackPressed() {
         Utilities.hideKeyboard(this);
@@ -44,7 +42,6 @@ public class AddMoneyActivity extends BaseActivity {
             finish();
         }
     }
-
 
     @Override
     public Context setContext() {

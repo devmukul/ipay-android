@@ -108,7 +108,6 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
             return;
         }
 
-
         Gson gson = new Gson();
         if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
             try {
@@ -128,7 +127,6 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
                     Toaster.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                     finish();
                 }
-
 
             } catch (Exception e) {
                 e.printStackTrace();
