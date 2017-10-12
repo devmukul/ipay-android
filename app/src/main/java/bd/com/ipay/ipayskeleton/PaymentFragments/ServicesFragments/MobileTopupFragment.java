@@ -5,12 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -144,6 +140,8 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             mMobileTopUpInfoTextView.setVisibility(View.VISIBLE);
 
         } else {
+            mMobileNumberEditText.setEnabledStatus(true);
+            mMobileNumberEditText.setFocusableStatus(true);
             mSelectReceiverButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 @ValidateAccess(ServiceIdConstants.GET_CONTACTS)

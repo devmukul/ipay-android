@@ -12,8 +12,8 @@ import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteToiPayFragment;
@@ -25,7 +25,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyReviewActivity extends BaseActivity implements HttpResponseListener {
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
-    private GetUserInfoResponse mGetUserInfoResponse;
 
     private ProgressBar mProgressBar;
 
@@ -38,7 +37,8 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mReceiverMobileNumber = getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
 
@@ -111,7 +111,7 @@ public class SendMoneyReviewActivity extends BaseActivity implements HttpRespons
         Gson gson = new Gson();
         if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
             try {
-                mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
+                GetUserInfoResponse mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String name = mGetUserInfoResponse.getName();

@@ -37,6 +37,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
@@ -59,7 +60,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TransactionHistoryCompletedFragment extends ProgressFragment implements HttpResponseListener, PopupMenu.OnMenuItemClickListener, View.OnClickListener {
     private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
-    private TransactionHistoryResponse mTransactionHistoryResponse;
 
     private RecyclerView mTransactionHistoryRecyclerView;
     private TransactionHistoryAdapter mTransactionHistoryAdapter;
@@ -88,7 +88,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private Button mClearFilterButton;
     private ImageView mMoreButton;
     private ImageView mCancelButton;
-    private PopupMenu popupMenu;
+
     private TextView mFilterTitle;
     private TextView mEmptyListTextView;
 
@@ -97,8 +97,9 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private boolean clearListAfterLoading;
     private boolean mIsScrolled = false;
     private int mTotalItemCount = 0;
-    private int mPastVisiblesItems;
-    private int mVisibleItem;private int historyPageCount = 0;
+    private int mPastVisibleItems;
+    private int mVisibleItem;
+    private int historyPageCount = 0;
     private Integer type = null;
     private Calendar fromDate = null;
     private Calendar toDate = null;
@@ -188,7 +189,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     @Override
     public boolean onMenuItemClick(MenuItem item) {
 
-        // TODO Auto-generated method stub
         switch (item.getItemId()) {
             case R.id.action_filter_by_date:
                 if (serviceFilterLayout.getVisibility() == View.VISIBLE)
@@ -220,11 +220,10 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
     @Override
     public void onClick(View view) {
-        switch (view.getId())
-        {
+        switch (view.getId()) {
             case R.id.filter_menu:
-                popupMenu = new PopupMenu(getContext(), mMoreButton);
-                popupMenu.getMenuInflater().inflate(R.menu.activity_transaction_history,popupMenu.getMenu());
+                PopupMenu popupMenu = new PopupMenu(getContext(), mMoreButton);
+                popupMenu.getMenuInflater().inflate(R.menu.activity_transaction_history, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(TransactionHistoryCompletedFragment.this);
                 popupMenu.show();
                 break;
@@ -266,7 +265,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         if (result.getApiCommand().equals(Constants.COMMAND_GET_TRANSACTION_HISTORY)) {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 try {
-                    mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
+                    TransactionHistoryResponse mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), TransactionHistoryResponse.class);
                     loadTransactionHistory(mTransactionHistoryResponse.getTransactions(), mTransactionHistoryResponse.isHasNext());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -368,8 +367,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     }
 
     private boolean verifyDateFilter() {
-        if (mFromDateButton.getText().toString().equals("")) return false;
-        else return true;
+        return !mFromDateButton.getText().toString().equals("");
     }
 
     private void setActionsForDateFilter() {
@@ -407,7 +405,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
                 Calendar calendar = Calendar.getInstance();
                 if (!mFromDateButton.getText().toString().equals("")) {
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
                     final Date fromDate;
                     try {
                         fromDate = sdf.parse(mFromDateButton.getText().toString().trim());
@@ -432,7 +430,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             @Override
             public void onClick(View v) {
 
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
                 final Date fromDate;
                 try {
                     fromDate = sdf.parse(mFromDateButton.getText().toString().trim());
@@ -462,7 +460,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             }
         });
 
-        /**
+        /*
          * Add OnClickListener for all checkboxes
          */
         for (final CheckBox serviceFilter : mCheckBoxTypeMap.keySet()) {
@@ -481,7 +479,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                         type = null;
                     }
 
-                    /**
+                    /*
                      * Un-check all checkboxes other than this one
                      */
                     for (final CheckBox otherServiceFilter : mCheckBoxTypeMap.keySet()) {
@@ -528,7 +526,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     toDate.setTime(fromDate.getTime());
                     toDate.add(Calendar.DATE, 1);
 
-                    String fromDateStr = String.format(Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year);
+                    String fromDateStr = String.format(Locale.US, Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year);
 
                     mFromDateButton.setText(fromDateStr);
                     mToDateButton.setText(fromDateStr);
@@ -551,7 +549,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                     // Simplest way to do this is to just show all transactions until 12:00 am in the next day.
                     toDate.add(Calendar.DATE, 1);
 
-                    String toDateStr = String.format(Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year);
+                    String toDateStr = String.format(Locale.US, Constants.DATE_FORMAT, dayOfMonth, monthOfYear + 1, year);
 
                     mToDateButton.setText(toDateStr);
                 }
@@ -616,9 +614,9 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
                 mVisibleItem = recyclerView.getChildCount();
                 mTotalItemCount = mLayoutManager.getItemCount();
-                mPastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                mPastVisibleItems = mLayoutManager.findFirstVisibleItemPosition();
                 if (mIsScrolled
-                        && (mVisibleItem + mPastVisiblesItems) == mTotalItemCount && hasNext && mTransactionHistoryTask == null) {
+                        && (mVisibleItem + mPastVisibleItems) == mTotalItemCount && hasNext && mTransactionHistoryTask == null) {
                     isLoading = true;
                     mIsScrolled = false;
                     historyPageCount = historyPageCount + 1;
@@ -767,7 +765,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 mLoadMoreProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
             }
 
-            public void bindViewFooter() {
+            void bindViewFooter() {
                 setItemVisibilityOfFooterView();
             }
 
@@ -788,8 +786,8 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         }
 
         // Now define the view holder for Normal list item
-        public class NormalViewHolder extends ViewHolder {
-            public NormalViewHolder(View itemView) {
+        class NormalViewHolder extends ViewHolder {
+            NormalViewHolder(View itemView) {
                 super(itemView);
 
                 itemView.setOnClickListener(new View.OnClickListener() {

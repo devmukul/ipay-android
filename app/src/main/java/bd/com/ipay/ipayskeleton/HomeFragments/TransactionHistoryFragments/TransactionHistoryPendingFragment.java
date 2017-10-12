@@ -193,6 +193,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(transactionHistoryBroadcastReceiver);
         super.onDestroyView();
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_MONEY_REVIEW_REQUEST || requestCode == REQUEST_PAYMENT_REVIEW_REQUEST) {
@@ -272,12 +273,11 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
     @Override
     public void onClick(View view) {
-        switch (view.getId())
-        {
+        switch (view.getId()) {
 
             case R.id.filter_menu:
                 popupMenu = new PopupMenu(getContext(), mMoreButton);
-                popupMenu.getMenuInflater().inflate(R.menu.activity_transaction_history,popupMenu.getMenu());
+                popupMenu.getMenuInflater().inflate(R.menu.activity_transaction_history, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(TransactionHistoryPendingFragment.this);
                 popupMenu.show();
                 break;
@@ -856,7 +856,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
                 if (phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
                     return operator_array[i];
-                 }
+                }
             }
             return 0;
         }
