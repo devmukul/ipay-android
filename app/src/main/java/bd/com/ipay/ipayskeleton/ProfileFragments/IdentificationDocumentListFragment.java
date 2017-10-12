@@ -91,6 +91,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
     private Uri mSelectedDocumentUri;
     private String mFileName;
+    private String mOtherTypeName;
 
     private static final int[] DOCUMENT_TYPE_NAMES = {
             R.string.national_id,
@@ -374,7 +375,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         } else {
             mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
                     Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
-                    mDocumentID, "otherDocument",documentType,OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT);
+                    mDocumentID, "other", documentType, OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT);
         }
 
         mUploadIdentifierDocumentAsyncTask.mHttpResponseListener = this;
@@ -588,7 +589,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mSelectFile.setText("");
                 mPickerList = new ArrayList<>();
                 mBitmap = null;
-
                 documentTypeName = documentPreviewDetailsList.get(pos).getDocumentTypeName();
                 String documentID = documentPreviewDetailsList.get(pos).getDocumentId();
                 String verificationStatus = documentPreviewDetailsList.get(pos).getVerificationStatus();
@@ -604,6 +604,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 if (pos == documentPreviewDetailsList.size() - 1) {
                     mDocumentTypeForOtherTypeLayoutView.setVisibility(View.VISIBLE);
                     mDividerDocumentType.setVisibility(View.VISIBLE);
+                    if (!mOtherTypeName.equals("")) {
+                        mDocumentTypeOtherEditText.setText(mOtherTypeName);
+                    }
                 } else {
                     mDocumentTypeForOtherTypeLayoutView.setVisibility(View.GONE);
                     mDividerDocumentType.setVisibility(View.GONE);
@@ -695,6 +698,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                             customUploadPickerDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
                                 @Override
                                 public void onResourceSelected(int mActionId, String action) {
+                                    if (!mDocumentTypeOtherEditText.getText().toString().equals("")) {
+                                        mOtherTypeName = mDocumentTypeOtherEditText.getText().toString();
+                                    }
                                     mSelectedItemId = pos;
                                     documentPreviewDetailsList.get(pos).setDocumentId(mDocumentIdEditTextView.getText().toString());
                                     documentPreviewDetailsList.get(pos).setSelectedFilePath(mSelectFile.getText().toString());
@@ -712,7 +718,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                                 }
                             });
                             customUploadPickerDialog.show();
-                            Utilities.hideKeyboard(getActivity());
+                            Utilities.hideKeyboard(
+
+                                    getActivity());
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -721,7 +729,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     }
                 });
 
-                mUploadButton.setOnClickListener(new View.OnClickListener() {
+                mUploadButton.setOnClickListener(new View.OnClickListener()
+
+                {
                     @Override
                     public void onClick(View v) {
                         attemptUploadDocument(pos);
