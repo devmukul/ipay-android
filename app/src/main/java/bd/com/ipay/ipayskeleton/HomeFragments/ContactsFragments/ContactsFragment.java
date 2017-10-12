@@ -755,7 +755,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
             private final TextView name2View;
             private final ProfileImageView profilePictureView;
             private final TextView mobileNumberView;
-            //private final ImageView isSubscriber;
             private final ImageView verificationStatus;
             private final Button invitedButton;
             private final Button inviteButton;
@@ -771,7 +770,6 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 name2View = (TextView) itemView.findViewById(R.id.name2);
                 mobileNumberView = (TextView) itemView.findViewById(R.id.mobile_number);
                 profilePictureView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
-//                isSubscriber = (ImageView) itemView.findViewById(R.id.is_member);
                 verificationStatus = (ImageView) itemView.findViewById(R.id.verification_status);
                 invitedButton = (Button) itemView.findViewById(R.id.button_invited);
                 inviteButton = (Button) itemView.findViewById(R.id.button_invite);

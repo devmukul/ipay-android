@@ -213,7 +213,6 @@ public class ContactsSearchView extends FrameLayout {
         private TextView secondaryNameView;
         private ProfileImageView profilePictureView;
         private TextView mobileNumberView;
-        //private ImageView memberStatusView;
         private ImageView verificationStatusView;
         private Button inviteStatusTextView;
         private Button inviteButton;
@@ -233,7 +232,6 @@ public class ContactsSearchView extends FrameLayout {
             secondaryNameView = (TextView) view.findViewById(R.id.name2);
             mobileNumberView = (TextView) view.findViewById(R.id.mobile_number);
             profilePictureView = (ProfileImageView) view.findViewById(R.id.profile_picture);
-            //memberStatusView = (ImageView) view.findViewById(R.id.is_member);
             verificationStatusView = (ImageView) view.findViewById(R.id.verification_status);
             inviteStatusTextView = (Button) view.findViewById(R.id.button_invite);
             inviteButton = (Button) view.findViewById(R.id.button_invite);
@@ -267,9 +265,6 @@ public class ContactsSearchView extends FrameLayout {
             profilePictureView.setProfilePicture(profilePictureUrlQualityMedium, false);
             inviteStatusTextView.setVisibility(View.GONE);
             inviteButton.setVisibility(View.GONE);
-
-//            if (isMember) memberStatusView.setVisibility(View.VISIBLE);
-//            else memberStatusView.setVisibility(View.GONE);
 
             if (isVerified) verificationStatusView.setVisibility(View.VISIBLE);
             else verificationStatusView.setVisibility(View.GONE);
