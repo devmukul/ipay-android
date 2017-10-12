@@ -97,7 +97,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             R.string.passport,
             R.string.driving_license,
             R.string.birth_certificate,
-            R.string.tin
+            R.string.tin,
+            R.string.other
     };
 
     private static String[] DOCUMENT_ID_MAX_LENGTH;
@@ -108,7 +109,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             R.string.trade_license,
             R.string.vat_registration_certificate,
             R.string.driving_license,
-            R.string.passport
+            R.string.passport,
+            R.string.other
     };
 
     private static final int ACTION_UPLOAD_DOCUMENT = 100;
@@ -136,7 +138,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 Constants.DOCUMENT_TYPE_PASSPORT,
                 Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
                 Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
-                Constants.DOCUMENT_TYPE_TIN
+                Constants.DOCUMENT_TYPE_TIN,
+                Constants.OTHER
         };
         BUSINESS_DOCUMENT_TYPES = new String[]{
                 Constants.DOCUMENT_TYPE_NATIONAL_ID,
@@ -144,7 +147,8 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 Constants.DOCUMENT_TYPE_TRADE_LICENSE,
                 Constants.DOCUMENT_TYPE_VAT_REG_CERT,
                 Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
-                Constants.DOCUMENT_TYPE_PASSPORT
+                Constants.DOCUMENT_TYPE_PASSPORT,
+                Constants.OTHER
         };
         mTracker = Utilities.getTracker(getActivity());
     }
@@ -198,7 +202,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     }
                 } else if (resultCode == CameraActivity.CAMERA_ACTIVITY_CRASHED) {
                     Intent systemCameraOpenIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    systemCameraOpenIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID, DocumentPicker.getTempFile(getActivity(),"document.jpg")));
+                    systemCameraOpenIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID, DocumentPicker.getTempFile(getActivity(), "document.jpg")));
                     startActivityForResult(systemCameraOpenIntent, ACTION_UPLOAD_DOCUMENT);
                 } else
                     mSelectedItemId = -1;
@@ -516,11 +520,15 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             private final RelativeLayout mInfoLayout;
             private final LinearLayout mOptionsLayout;
             private TextInputLayout mDocumentIdTextInputLayoutView;
+            private TextInputLayout mDocumentTypeForOtherTypeLayoutView;
+            private EditText mDocumentTypeOther;
             private EditText mDocumentIdEditTextView;
             private final EditText mSelectFile;
             private final Button mUploadButton;
             private final ImageView mPicker;
             private String documentTypeName;
+
+            private View mDividerDocumentType;
 
             private CustomUploadPickerDialog customUploadPickerDialog;
             private List<String> mPickerList;
@@ -540,6 +548,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mSelectFile = (EditText) itemView.findViewById(R.id.select_file);
                 mUploadButton = (Button) itemView.findViewById(R.id.button_upload);
                 mPicker = (ImageView) itemView.findViewById(R.id.button_select_file);
+                mDocumentTypeForOtherTypeLayoutView = (TextInputLayout) itemView.findViewById(R.id.text_inputlayout_document_type);
+                mDocumentTypeOther = (EditText) itemView.findViewById(R.id.edit_text_document_type);
+                mDividerDocumentType = itemView.findViewById(R.id.divider_document_type);
             }
 
             public void bindView(final int pos) {
@@ -557,6 +568,13 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mDocumentIdTextInputLayoutView.setHint(documentHintType);
                 setEditTextMaxLength(mDocumentIdEditTextView, pos);
                 Utilities.setAppropriateKeyboard(getActivity(), documentPreviewDetailsList.get(pos).getDocumentType(), mDocumentIdEditTextView);
+                if (pos == documentPreviewDetailsList.size() - 1) {
+                    mDocumentTypeForOtherTypeLayoutView.setVisibility(View.VISIBLE);
+                    mDividerDocumentType.setVisibility(View.VISIBLE);
+                } else {
+                    mDocumentTypeForOtherTypeLayoutView.setVisibility(View.GONE);
+                    mDividerDocumentType.setVisibility(View.GONE);
+                }
 
                 // Unverified, document not yet uploaded
                 if (verificationStatus == null) {

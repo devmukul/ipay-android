@@ -15,8 +15,8 @@ public class Constants {
     public static final String TARGET_FRAGMENT = "TARGET_FRAGMENT";
     public static final String SIGN_IN = "SIGN_IN";
     public static final String SIGN_UP = "SIGN_UP";
-    public static final String ADD_TRUSTED_PERSON="ADD_TRUSTED_PERSON";
-    public static final String BANK_ACCOUNT="BANK_ACCOUNT";
+    public static final String ADD_TRUSTED_PERSON = "ADD_TRUSTED_PERSON";
+    public static final String BANK_ACCOUNT = "BANK_ACCOUNT";
     public static final String SIGNED_IN = "SIGNED IN";
     public static final String DOCUMENT_URL = "DOCUMENT_URL";
     public static final String FILE_EXTENSION = "FILE_EXTENSION";
@@ -24,7 +24,7 @@ public class Constants {
     public static final String STRING_TO_ENCODE = "STRING_TO_ENCODE";
     public static final String ACTIVITY_TITLE = "ACTIVITY_TITLE";
     public static final String TITLE = "TITLE";
-    public static final String INTENDED_FRAGMENT="INTENDED_FRAGMENT";
+    public static final String INTENDED_FRAGMENT = "INTENDED_FRAGMENT";
     public static final String DESCRIPTION = "DESCRIPTION";
     public static final String TIME = "TIME";
     public static final String STATUS = "STATUS";
@@ -198,6 +198,7 @@ public class Constants {
     public static final String NAVIGATION_MENU_SERVICE_ACCESS_SET = "NAVIGATION_MENU_SERVICE_ACCESS_SET";
     public static final String FRAGMENT_SERVICE_ACCESS_SET = "FRAGMENT_SERVICE_ACCESS_SET";
     public static final String MOBILE_NUMBER_REGEX = "^(((\\+)?880)?|(0)?)(1[356789][\\d]{8})$";
+    public static String OTHER = "Other";
 
     static {
         if (SERVER_TYPE == DEV_SERVER) {

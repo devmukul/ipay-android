@@ -107,6 +107,7 @@
         <item>@string/driving_license_id</item>
         <item>@string/birth_certificate_id</item>
         <item>@string/tin</item>
+        <item>@string/other_id</item>
     </string-array>
 
     <string-array name="business_document_id">
@@ -116,11 +117,13 @@
         <item>@string/vat_registration_certificate_id</item>
         <item>@string/driving_license_id</item>
         <item>@string/passport_id</item>
+        <item>@string/other_id</item>
     </string-array>
     <string-array name="personal_document_id_max_length">
         <item>17</item>
         <item>9</item>
         <item>15</item>
+        <item>100</item>
         <item>100</item>
         <item>100</item>
     </string-array>
@@ -131,5 +134,6 @@
         <item>11</item>
         <item>15</item>
         <item>9</item>
+        <item>100</item>
     </string-array>
 </resources>

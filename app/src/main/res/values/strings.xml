@@ -621,6 +621,9 @@
     <string name="date_of_birth">Date of Birth</string>
     <string name="fathers_name">Father\'s Name</string>
     <string name="mothers_name">Mother\'s Name</string>
+    <string name="other">Other</string>
+    <string name="other_id">ID number</string>
+    <string name="document_type">Document Type</string>
     <string name="mobile">Mobile No.</string>
     <string name="history">History</string>
     <string name="this_device">This device</string>
