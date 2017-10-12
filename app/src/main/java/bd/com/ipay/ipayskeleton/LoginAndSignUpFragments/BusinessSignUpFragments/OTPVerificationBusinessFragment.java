@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -45,15 +46,11 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class OTPVerificationBusinessFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSignUpTask = null;
-    private SignupResponseBusiness mSignupResponseBusiness;
 
     private HttpRequestPostAsyncTask mRequestOTPTask = null;
-    private OTPResponseBusinessSignup mOtpResponseBusinessSignup;
 
     private HttpRequestPostAsyncTask mLoginTask = null;
-    private LoginResponse mLoginResponseModel;
 
-    private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
     private HttpRequestPostAsyncTask mAddTrustedDeviceTask = null;
 
     private Button mActivateButton;
@@ -120,7 +117,7 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
         new CustomCountDownTimer(SignupOrLoginActivity.otpDuration, 500) {
 
             public void onTick(long millisUntilFinished) {
-                mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
+                mTimerTextView.setText(new SimpleDateFormat("mm:ss", Locale.US).format(new Date(millisUntilFinished)));
             }
 
             public void onFinish() {
@@ -173,9 +170,6 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
         if (mSignUpTask != null) {
             return;
         }
-
-        boolean cancel = false;
-        View focusView = null;
 
         String otp = mOTPEditText.getText().toString().trim();
         String errorMessage = InputValidator.isValidOTP(getActivity(), otp);
@@ -247,7 +241,7 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
             case Constants.COMMAND_SIGN_UP_BUSINESS:
                 hideProgressDialog();
                 try {
-                    mSignupResponseBusiness = gson.fromJson(result.getJsonString(), SignupResponseBusiness.class);
+                    SignupResponseBusiness mSignupResponseBusiness = gson.fromJson(result.getJsonString(), SignupResponseBusiness.class);
                     String message = mSignupResponseBusiness.getMessage();
                     String otp = mSignupResponseBusiness.getOtp();
 
@@ -307,7 +301,7 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
                 hideProgressDialog();
 
                 try {
-                    mOtpResponseBusinessSignup = gson.fromJson(result.getJsonString(), OTPResponseBusinessSignup.class);
+                    OTPResponseBusinessSignup mOtpResponseBusinessSignup = gson.fromJson(result.getJsonString(), OTPResponseBusinessSignup.class);
                     String message = mOtpResponseBusinessSignup.getMessage();
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -320,7 +314,7 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
                         new CustomCountDownTimer(SignupOrLoginActivity.otpDuration, 500) {
 
                             public void onTick(long millisUntilFinished) {
-                                mTimerTextView.setText(new SimpleDateFormat("mm:ss").format(new Date(millisUntilFinished)));
+                                mTimerTextView.setText(new SimpleDateFormat("mm:ss", Locale.US).format(new Date(millisUntilFinished)));
                             }
 
                             public void onFinish() {
@@ -341,7 +335,7 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
 
             case Constants.COMMAND_LOG_IN:
                 try {
-                    mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
+                    LoginResponse mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
                     String message = mLoginResponseModel.getMessage();
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -376,7 +370,7 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
                 hideProgressDialog();
 
                 try {
-                    mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
+                    AddToTrustedDeviceResponse mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         String UUID = mAddToTrustedDeviceResponse.getUUID();

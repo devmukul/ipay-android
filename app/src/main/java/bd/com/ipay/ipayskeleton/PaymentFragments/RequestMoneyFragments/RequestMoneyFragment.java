@@ -127,7 +127,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_request_money) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_request_money));
     }
 
     @Override
