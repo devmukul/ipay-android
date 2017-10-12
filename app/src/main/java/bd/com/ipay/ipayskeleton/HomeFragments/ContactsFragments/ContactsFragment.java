@@ -12,13 +12,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -807,7 +803,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
 
                 mobileNumberView.setText(mobileNumber);
 
-                if(!isDialogFragment()) {
+                if (!isDialogFragment()) {
 
                     if (isMember) {
                         if (!isVerified) {

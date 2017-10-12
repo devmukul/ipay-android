@@ -19,7 +19,8 @@ public class AddMoneyActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cash_in);
         switchToAddMoneyFragment();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -28,7 +29,7 @@ public class AddMoneyActivity extends BaseActivity {
             Utilities.hideKeyboard(this);
             onBackPressed();
             return true;
-        }else {
+        } else {
             return super.onOptionsItemSelected(item);
         }
     }

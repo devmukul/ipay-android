@@ -2,11 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/white"
     android:clickable="true"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     android:orientation="horizontal"
-    android:background="@android:color/white">
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin">
 
     <RelativeLayout
         android:id="@+id/profile_picture_holder"
@@ -15,30 +15,30 @@
         android:layout_centerVertical="true">
 
         <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-        android:id="@+id/profile_picture"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+            android:id="@+id/profile_picture"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="@dimen/activity_horizontal_margin" />
 
         <ImageView
             android:id="@+id/verification_status"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:src="@drawable/ic_contactverified"
+            android:layout_alignBottom="@+id/profile_picture"
             android:layout_alignRight="@+id/profile_picture"
-            android:layout_alignBottom="@+id/profile_picture" />
+            android:src="@drawable/ic_contactverified" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/info_holder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/status_holder"
-        android:layout_toRightOf="@+id/profile_picture_holder"
+        android:layout_marginBottom="12dp"
         android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp">
-    
+        android:layout_toLeftOf="@+id/status_holder"
+        android:layout_toRightOf="@+id/profile_picture_holder">
+
         <TextView
             android:id="@+id/name1"
             style="@style/TextStylePrimaryMedium"
@@ -47,8 +47,8 @@
             android:layout_alignParentTop="true"
             android:paddingBottom="2dp"
             android:singleLine="true"
-            android:textSize="16sp"
             android:textColor="@color/colorTextPrimary"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -86,16 +86,17 @@
         android:id="@+id/status_holder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/info_holder"
         android:layout_alignParentRight="true"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_alignBottom="@+id/info_holder">
+        android:orientation="horizontal">
+
         <Button
             android:id="@+id/button_invited"
             style="@style/ButtonStyleInvited"
             android:text="@string/invited"
             android:textAllCaps="false"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/button_invite"
@@ -103,7 +104,7 @@
             android:text="@string/invite"
             android:textAllCaps="false"
             android:textSize="10sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/button_asked"
@@ -111,7 +112,7 @@
             android:text="@string/asked_introduction"
             android:textAllCaps="false"
             android:textSize="10sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/button_ask"
@@ -119,7 +120,7 @@
             android:text="@string/ask_introduction"
             android:textAllCaps="false"
             android:textSize="10sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </LinearLayout>
 
 </RelativeLayout>
