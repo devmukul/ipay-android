@@ -22,7 +22,8 @@ public class TopUpActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, new MobileTopupFragment()).commit();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -41,6 +42,3 @@ public class TopUpActivity extends BaseActivity {
         return TopUpActivity.this;
     }
 }
-
-
-

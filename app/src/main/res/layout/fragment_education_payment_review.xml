@@ -160,9 +160,10 @@
 
         <Button
             android:id="@+id/button_payment"
-            style="@style/PrimaryMediumButton"
+            style="@style/ButtonPrimaryWithNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/make_payment" />
+            android:text="@string/make_payment"
+            />
     </LinearLayout>
 </ScrollView>

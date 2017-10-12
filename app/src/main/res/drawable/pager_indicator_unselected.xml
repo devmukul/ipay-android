@@ -5,6 +5,6 @@
     <size android:width="@dimen/pager_indicator_size"
         android:height="@dimen/pager_indicator_size"/>
 
-    <solid android:color="@color/colorPrimaryLight"/>
+    <solid android:color="@color/colorPageSelectorUnselected"/>
 
 </shape>

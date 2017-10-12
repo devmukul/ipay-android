@@ -153,9 +153,9 @@
 
         <Button
             android:id="@+id/button_create_payment_request"
-            style="@style/PrimaryMediumButton"
+            style="@style/ButtonPrimaryWithNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/confirm" />
+            android:text="@string/confirm"/>
     </LinearLayout>
 </ScrollView>
