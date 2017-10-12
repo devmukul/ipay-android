@@ -32,6 +32,7 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Gen
     private final String API_COMMAND;
     private final String documentIdNumber;
     private final String documentType;
+    private final String documentName;
     private int uploadType;
 
     public HttpResponseListener mHttpResponseListener;
@@ -40,12 +41,14 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Gen
     private static final int OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT = 2;
 
     public UploadIdentifierDocumentAsyncTask(String API_COMMAND, String imagePath, Context mContext,
-                                             String documentIdNumber, String documentType) {
+                                             String documentIdNumber, String documentType, String documentName, int uploadType) {
         this.mContext = mContext;
         this.imagePath = imagePath;
         this.API_COMMAND = API_COMMAND;
         this.documentIdNumber = documentIdNumber;
         this.documentType = documentType;
+        this.documentName = documentName;
+        this.uploadType = uploadType;
     }
 
     public UploadIdentifierDocumentAsyncTask(String API_COMMAND, String imagePath, Context mContext,
@@ -56,6 +59,7 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Gen
         this.documentIdNumber = documentIdNumber;
         this.documentType = documentType;
         this.uploadType = uploadType;
+        this.documentName = null;
     }
 
     @Override
@@ -115,6 +119,7 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Gen
             entity.addPart(Constants.MULTIPART_FORM_DATA_NAME, new FileBody(file));
             entity.addPart(Constants.DOCUMENT_ID_NUMBER, new StringBody(documentIdNumber));
             entity.addPart(Constants.DOCUMENT_TYPE, new StringBody(documentType));
+            entity.addPart(Constants.DOCUMENT_NAME, new StringBody(documentName));
             post.setEntity(entity);
 
             post.setHeader("Accept", "application/json");

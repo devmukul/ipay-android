@@ -352,6 +352,35 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mUploadIdentifierDocumentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void uploadDocument(int mID, String documentType) {
+
+        if (mUploadIdentifierDocumentAsyncTask != null)
+            return;
+
+        String mDocumentTypeName = documentPreviewDetailsList.get(mID).getDocumentTypeName();
+        String mDocumentID = documentPreviewDetailsList.get(mID).getDocumentId();
+        String mDocumentType = documentPreviewDetailsList.get(mID).getDocumentType();
+        mProgressDialog.setMessage(getString(R.string.uploading) + " " + mDocumentTypeName);
+        mProgressDialog.show();
+
+        String selectedOImagePath = documentPreviewDetailsList.get(mID).getSelectedDocumentUri().getPath();
+
+        Logger.logW("Loading document", mDocumentID + " " + mID + " " + selectedOImagePath + " " + mDocumentType);
+
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
+            mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
+                    Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
+                    mDocumentID, mDocumentType, OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT);
+        } else {
+            mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
+                    Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
+                    mDocumentID, "otherDocument",documentType,OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT);
+        }
+
+        mUploadIdentifierDocumentAsyncTask.mHttpResponseListener = this;
+        mUploadIdentifierDocumentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
@@ -521,7 +550,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             private final LinearLayout mOptionsLayout;
             private TextInputLayout mDocumentIdTextInputLayoutView;
             private TextInputLayout mDocumentTypeForOtherTypeLayoutView;
-            private EditText mDocumentTypeOther;
+            private EditText mDocumentTypeOtherEditText;
             private EditText mDocumentIdEditTextView;
             private final EditText mSelectFile;
             private final Button mUploadButton;
@@ -549,7 +578,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mUploadButton = (Button) itemView.findViewById(R.id.button_upload);
                 mPicker = (ImageView) itemView.findViewById(R.id.button_select_file);
                 mDocumentTypeForOtherTypeLayoutView = (TextInputLayout) itemView.findViewById(R.id.text_inputlayout_document_type);
-                mDocumentTypeOther = (EditText) itemView.findViewById(R.id.edit_text_document_type);
+                mDocumentTypeOtherEditText = (EditText) itemView.findViewById(R.id.edit_text_document_type);
                 mDividerDocumentType = itemView.findViewById(R.id.divider_document_type);
             }
 
@@ -563,7 +592,11 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 documentTypeName = documentPreviewDetailsList.get(pos).getDocumentTypeName();
                 String documentID = documentPreviewDetailsList.get(pos).getDocumentId();
                 String verificationStatus = documentPreviewDetailsList.get(pos).getVerificationStatus();
-                String documentHintType = DOCUMENT_HINT_TYPES[pos];
+                String documentHintType;
+                if (pos != documentPreviewDetailsList.size() - 1)
+                    documentHintType = DOCUMENT_HINT_TYPES[pos];
+                else
+                    documentHintType = DOCUMENT_HINT_TYPES[pos] + " " + getString(R.string.number_capital);
 
                 mDocumentIdTextInputLayoutView.setHint(documentHintType);
                 setEditTextMaxLength(mDocumentIdEditTextView, pos);
@@ -713,9 +746,18 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     else {
                         Utilities.hideKeyboard(getActivity());
                         documentPreviewDetailsList.get(pos).setDocumentId(documentID);
-                        if (Utilities.isConnectionAvailable(getActivity()))
-                            uploadDocument(pos);
-                        else
+                        if (Utilities.isConnectionAvailable(getActivity())) {
+                            if (pos != documentPreviewDetailsList.size() - 1)
+                                uploadDocument(pos);
+                            else {
+                                if (mDocumentTypeOtherEditText.getText().toString().equals("")) {
+                                    mDocumentTypeOtherEditText.requestFocus();
+                                    mDocumentTypeOtherEditText.setError(getString(R.string.please_enter_a_type));
+                                } else
+                                    uploadDocument(pos, mDocumentTypeOtherEditText.getText().toString());
+                            }
+
+                        } else
                             Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
                     }
                 }

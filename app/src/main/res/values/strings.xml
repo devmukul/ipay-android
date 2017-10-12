@@ -76,6 +76,7 @@
     <string name="mobile_number">Mobile Number</string>
     <string name="phone_number">Phone Number</string>
     <string name="number">number</string>
+    <string name="number_capital">Number</string>
     <string name="inception_date">Inception Date</string>
     <string name="contact_us">Contact Us</string>
     <string name="terms_of_service">Terms of Service</string>
@@ -622,7 +623,7 @@
     <string name="fathers_name">Father\'s Name</string>
     <string name="mothers_name">Mother\'s Name</string>
     <string name="other">Other</string>
-    <string name="other_id">ID number</string>
+    <string name="other_id">ID</string>
     <string name="document_type">Document Type</string>
     <string name="mobile">Mobile No.</string>
     <string name="history">History</string>
@@ -962,5 +963,6 @@
 
     <string name="no_browser_found_error_message">No default browser found to open. Please install or enable your browser.</string>
     <string name="no_browser_map_app_found_error_message">No default browser or google maps app found to open. Please install Google Maps/Browser or enable your browser.</string>
+    <string name="please_enter_a_type">Please Enter a Document Type</string>
 
 </resources>
