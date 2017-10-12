@@ -30,7 +30,6 @@ public class ContactsSearchView extends FrameLayout {
     public boolean mFilterByiPayMembersOnly;
     public boolean mFilterByBusinessMembersOnly;
     private CustomAutoCompleteView mCustomAutoCompleteView;
-    private TextView mMobileNumberHintView;
     private List<DBContactNode> mContactList;
     private String mQuery = "";
     private Context mContext;
@@ -59,7 +58,6 @@ public class ContactsSearchView extends FrameLayout {
         View view = inflater.inflate(R.layout.view_contacts_search_view, this, true);
 
         mCustomAutoCompleteView = (CustomAutoCompleteView) view.findViewById(R.id.auto_complete_view);
-        mMobileNumberHintView = (TextView) view.findViewById(R.id.mobile_number_hint);
 
         mCustomAutoCompleteView.addTextChangedListener(new CustomAutoCompleteTextChangedListener());
 
@@ -186,12 +184,9 @@ public class ContactsSearchView extends FrameLayout {
         @Override
         public void onTextChanged(CharSequence userInput, int start, int before, int count) {
             if (userInput.length() > 0) {
-                mMobileNumberHintView.setVisibility(VISIBLE);
-
                 if (CurrentFragmentTag() != null && CurrentFragmentTag().equals(Constants.TOP_UP))
                     customTextChangeListener.onTextChange(userInput.toString());
-
-            } else mMobileNumberHintView.setVisibility(INVISIBLE);
+            }
 
             mQuery = userInput.toString();
 
