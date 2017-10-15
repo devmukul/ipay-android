@@ -246,7 +246,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         documentId = identificationDocument.getDocumentIdNumber();
                         verificationStatus = identificationDocument.getDocumentVerificationStatus();
                         documentUrl = identificationDocument.getDocumentUrl();
-
+                        mDocumentName = identificationDocument.getDocumentName();
                         documentPreviewDetailsList.get(i).setDocumentId(documentId);
                         documentPreviewDetailsList.get(i).setVerificationStatus(verificationStatus);
                         documentPreviewDetailsList.get(i).setDocumentUrl(documentUrl);
@@ -269,7 +269,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         documentId = identificationDocument.getDocumentIdNumber();
                         verificationStatus = identificationDocument.getDocumentVerificationStatus();
                         documentUrl = identificationDocument.getDocumentUrl();
-
+                        mDocumentName = identificationDocument.getDocumentName();
                         documentPreviewDetailsList.get(i).setDocumentId(documentId);
                         documentPreviewDetailsList.get(i).setVerificationStatus(verificationStatus);
                         documentPreviewDetailsList.get(i).setDocumentUrl(documentUrl);

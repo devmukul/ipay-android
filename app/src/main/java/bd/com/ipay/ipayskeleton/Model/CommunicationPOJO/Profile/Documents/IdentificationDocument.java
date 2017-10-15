@@ -5,6 +5,15 @@ public class IdentificationDocument {
     private String documentIdNumber;
     private String documentVerificationStatus;
     private String documentUrl;
+    private String documentName;
+
+    public String getDocumentName() {
+        return documentName;
+    }
+
+    public void setDocumentName(String documentName) {
+        this.documentName = documentName;
+    }
 
     public String getDocumentUrl() {
         return documentUrl;
