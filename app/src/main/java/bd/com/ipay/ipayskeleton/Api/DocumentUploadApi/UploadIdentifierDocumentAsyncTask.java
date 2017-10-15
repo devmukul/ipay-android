@@ -119,7 +119,8 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Gen
             entity.addPart(Constants.MULTIPART_FORM_DATA_NAME, new FileBody(file));
             entity.addPart(Constants.DOCUMENT_ID_NUMBER, new StringBody(documentIdNumber));
             entity.addPart(Constants.DOCUMENT_TYPE, new StringBody(documentType));
-            entity.addPart(Constants.DOCUMENT_NAME, new StringBody(documentName));
+            if (documentName != null)
+                entity.addPart(Constants.DOCUMENT_NAME, new StringBody(documentName));
             post.setEntity(entity);
 
             post.setHeader("Accept", "application/json");

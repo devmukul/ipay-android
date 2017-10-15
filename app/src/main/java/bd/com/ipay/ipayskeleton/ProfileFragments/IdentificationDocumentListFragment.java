@@ -265,7 +265,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 documentPreviewDetailsList.add(new DocumentPreviewDetails());
 
                 for (IdentificationDocument identificationDocument : mIdentificationDocuments) {
-                    if (identificationDocument.getDocumentType().equals(DOCUMENT_TYPES[i])) {
+                    if (identificationDocument.getDocumentType().equals(DOCUMENT_TYPES[i].toLowerCase())) {
                         documentId = identificationDocument.getDocumentIdNumber();
                         verificationStatus = identificationDocument.getDocumentVerificationStatus();
                         documentUrl = identificationDocument.getDocumentUrl();
@@ -589,7 +589,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 if (pos == documentPreviewDetailsList.size() - 1) {
                     mDocumentTypeForOtherTypeLayoutView.setVisibility(View.VISIBLE);
                     mDividerDocumentType.setVisibility(View.VISIBLE);
-                    mDocumentTypeOtherEditText.setText(mOtherTypeName);
+                    mDocumentTypeOtherEditText.setText(mDocumentName);
                 } else {
                     mDocumentTypeForOtherTypeLayoutView.setVisibility(View.GONE);
                     mDividerDocumentType.setVisibility(View.GONE);
@@ -682,7 +682,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                                 @Override
                                 public void onResourceSelected(int mActionId, String action) {
                                     mSelectedItemId = pos;
-                                    mOtherTypeName = mDocumentTypeOtherEditText.getText().toString();
+                                    mDocumentName = mDocumentTypeOtherEditText.getText().toString();
                                     documentPreviewDetailsList.get(pos).setDocumentId(mDocumentIdEditTextView.getText().toString());
                                     documentPreviewDetailsList.get(pos).setSelectedFilePath(mSelectFile.getText().toString());
                                     if (Constants.ACTION_TYPE_TAKE_PICTURE.equals(action) || Constants.ACTION_TYPE_SELECT_FROM_GALLERY.equals(action))
