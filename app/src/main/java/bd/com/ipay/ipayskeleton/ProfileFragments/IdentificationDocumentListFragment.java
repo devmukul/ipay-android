@@ -92,6 +92,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     private Uri mSelectedDocumentUri;
     private String mFileName;
     private String mOtherTypeName;
+    private String mDocumentName;
 
     private static final int[] DOCUMENT_TYPE_NAMES = {
             R.string.national_id,
@@ -339,43 +340,26 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
         Logger.logW("Loading document", mDocumentID + " " + mID + " " + selectedOImagePath + " " + mDocumentType);
 
-        if (ProfileInfoCacheManager.isBusinessAccount()) {
-            mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
-                    Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
-                    mDocumentID, mDocumentType, OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT);
+        if (mID != documentPreviewDetailsList.size() - 1) {
+            if (ProfileInfoCacheManager.isBusinessAccount()) {
+                mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
+                        Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
+                        mDocumentID, mDocumentType, OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT);
+            } else {
+                mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
+                        Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
+                        mDocumentID, mDocumentType, OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT);
+            }
         } else {
-            mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
-                    Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
-                    mDocumentID, mDocumentType, OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT);
-        }
-
-        mUploadIdentifierDocumentAsyncTask.mHttpResponseListener = this;
-        mUploadIdentifierDocumentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void uploadDocument(int mID, String documentType) {
-
-        if (mUploadIdentifierDocumentAsyncTask != null)
-            return;
-
-        String mDocumentTypeName = documentPreviewDetailsList.get(mID).getDocumentTypeName();
-        String mDocumentID = documentPreviewDetailsList.get(mID).getDocumentId();
-        String mDocumentType = documentPreviewDetailsList.get(mID).getDocumentType();
-        mProgressDialog.setMessage(getString(R.string.uploading) + " " + mDocumentTypeName);
-        mProgressDialog.show();
-
-        String selectedOImagePath = documentPreviewDetailsList.get(mID).getSelectedDocumentUri().getPath();
-
-        Logger.logW("Loading document", mDocumentID + " " + mID + " " + selectedOImagePath + " " + mDocumentType);
-
-        if (ProfileInfoCacheManager.isBusinessAccount()) {
-            mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
-                    Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
-                    mDocumentID, mDocumentType, OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT);
-        } else {
-            mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
-                    Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
-                    mDocumentID, "other", documentType, OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT);
+            if (ProfileInfoCacheManager.isBusinessAccount()) {
+                mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
+                        Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
+                        mDocumentID, Constants.OTHER.toLowerCase(), mDocumentName, OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT);
+            } else {
+                mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
+                        Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
+                        mDocumentID, Constants.OTHER.toLowerCase(), mDocumentName, OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT);
+            }
         }
 
         mUploadIdentifierDocumentAsyncTask.mHttpResponseListener = this;
@@ -756,8 +740,10 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                                 if (mDocumentTypeOtherEditText.getText().toString().equals("")) {
                                     mDocumentTypeOtherEditText.requestFocus();
                                     mDocumentTypeOtherEditText.setError(getString(R.string.please_enter_a_type));
-                                } else
-                                    uploadDocument(pos, mDocumentTypeOtherEditText.getText().toString());
+                                } else {
+                                    mDocumentName = mDocumentTypeOtherEditText.getText().toString();
+                                    uploadDocument(pos);
+                                }
                             }
 
                         } else
