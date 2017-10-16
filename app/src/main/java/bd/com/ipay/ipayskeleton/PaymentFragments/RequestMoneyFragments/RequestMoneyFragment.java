@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
@@ -19,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.math.BigDecimal;
 
@@ -44,6 +47,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestMoneyFragment extends BaseFragment implements HttpResponseListener {
+    public static final int REQUEST_CODE_PERMISSION = 1001;
 
     private final int PICK_CONTACT_REQUEST = 100;
     private final int REQUEST_MONEY_REVIEW_REQUEST = 101;
@@ -52,7 +56,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
 
     private Button buttonRequest;
     private ImageView buttonSelectFromContacts;
-    private ImageView buttonShowQRCode;
+    private ImageView buttonScanQRCode;
     private CustomContactsSearchView mMobileNumberEditText;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
@@ -69,7 +73,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_request_money, container, false);
         mMobileNumberEditText = (CustomContactsSearchView) v.findViewById(R.id.mobile_number);
-        buttonShowQRCode = (ImageView) v.findViewById(R.id.button_show_qr_code);
+        buttonScanQRCode = (ImageView) v.findViewById(R.id.button_show_qr_code);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_sender_from_contacts);
         buttonRequest = (Button) v.findViewById(R.id.button_request_money);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
@@ -96,14 +100,11 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
             }
         });
 
-        buttonShowQRCode.setOnClickListener(new View.OnClickListener() {
+        buttonScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), QRCodeViewerActivity.class);
-                String userID = ProfileInfoCacheManager.getMobileNumber().replaceAll("\\D", "");
-                intent.putExtra(Constants.STRING_TO_ENCODE, userID);
-                intent.putExtra(Constants.ACTIVITY_TITLE, getString(R.string.request_money));
-                startActivity(intent);
+                Utilities.performQRCodeScan(RequestMoneyFragment.this, REQUEST_CODE_PERMISSION);
+
             }
         });
 
@@ -238,6 +239,41 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
             }
         } else if (requestCode == REQUEST_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             ((RequestMoneyActivity) getActivity()).switchToMoneyRequestListFragment(true);
+        } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
+            IntentResult scanResult = IntentIntegrator.parseActivityResult(
+                    requestCode, resultCode, data);
+            if (scanResult == null) {
+                return;
+            }
+            final String result = scanResult.getContents();
+            final String[] resultElements = result.split(" ");
+
+            if (result != null) {
+                Handler mHandler = new Handler();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (ContactEngine.isValidNumber(resultElements[0])) {
+                            mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(resultElements[0]));
+                            if (resultElements.length > 1) {
+                                switch (resultElements.length) {
+                                    case 2: {
+                                        mAmountEditText.setText(resultElements[1]);
+                                        break;
+                                    }
+                                    case 3: {
+                                        mAmountEditText.setText(resultElements[1]);
+                                        mDescriptionEditText.setText(resultElements[2]);
+                                        break;
+                                    }
+                                }
+                            }
+                        } else if (getActivity() != null)
+                            Toaster.makeText(getActivity(), getResources().getString(
+                                    R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT);
+                    }
+                });
+            }
         }
     }
 
