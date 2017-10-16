@@ -67,7 +67,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private static boolean profileCompletionPromptShown = false;
 
     private HttpRequestPostAsyncTask mRefreshBalanceTask = null;
-    private RefreshBalanceResponse mRefreshBalanceResponse;
 
     private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
     private final BroadcastReceiver mProfileCompletionInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
@@ -488,7 +487,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
-                    mRefreshBalanceResponse = gson.fromJson(result.getJsonString(), RefreshBalanceResponse.class);
+                    RefreshBalanceResponse mRefreshBalanceResponse = gson.fromJson(result.getJsonString(), RefreshBalanceResponse.class);
                     String balance = mRefreshBalanceResponse.getBalance() + "";
                     if (balance != null) {
                         if (isAdded())

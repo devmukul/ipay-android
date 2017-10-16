@@ -56,6 +56,9 @@ public class Constants {
     public static final String PROFILE_COMPLETION_UPDATE_BROADCAST = "PROFILE_COMPLETION_UPDATE_BROADCAST";
     public static final String NOTIFICATION_UPDATE_BROADCAST = "NOTIFICATION_UPDATE_BROADCAST";
 
+    public static final String TOPUP_HISTORY_UPDATE_BROADCAST = "TOPUP_HISTORY_UPDATE_BROADCAST ";
+
+
     public static final String TOKEN = "token";
     public static final String REFRESH_TOKEN = "refresh-token";
     public static final String RESOURCE_TOKEN = "resource-token";

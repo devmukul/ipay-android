@@ -276,10 +276,12 @@
     <string name="requesting_money">Money request processing…</string>
     <string name="progress_dialog_requesting">Processing request …</string>
     <string name="add_money">Add Money</string>
+    <string name="add_money_history">Add Money History</string>
     <string name="title">Title</string>
     <string name="note">Note</string>
     <string name="additional_info">Additional Information</string>
     <string name="withdraw_money">Withdraw Money</string>
+    <string name="withdraw_money_history">Withdraw Money History</string>
     <string name="events">Events</string>
     <string name="education">Education</string>
     <string name="education_payment">Education Payment</string>
@@ -576,7 +578,7 @@
     <string name="upload_again">Upload again</string>
     <string name="verified">Verified</string>
     <string name="unverified">Not Verified</string>
-    <string name="invited">Invited</string>
+    <string name="invited">Invited to iPay</string>
     <string name="trusted_devices">Trusted Devices</string>
     <string name="trust_this_device">Trusted this device?</string>
     <string name="logout_from_all_device">Log Out from All Devices</string>
@@ -732,7 +734,9 @@
     <string name="verified_user_can_send_invitation">Only verified users can send invitations</string>
     <string name="failed_loading_business_type">Loading failed</string>
     <string name="failed_loading_business_information">Failed loading business information</string>
-    <string name="invite">Invite</string>
+    <string name="invite">Invite to iPay</string>
+    <string name="ask_introduction">Ask Introduction</string>
+    <string name="asked_introduction">Asked Introduction</string>
     <string name="please_wait_until_information_loading">Please wait until all information are loaded</string>
     <string name="saving_business_information">Saving business information…</string>
     <string name="business_information_saving_failed">Business information saving failed</string>
@@ -854,6 +858,19 @@
     <string name="qr_code_unavailable">Unable to Generate your QR Code. Please Try again later.</string>
     <string name="file_save_failed">Unable to save file.</string>
     <string name="add_contact_dialog_not_available">Can\'t add a contact now. Please try again later.</string>
+    <string name="get_started">Sign up to get started now!</string>
+
+    <string name="welcome_to_ipay">Welcome to iPay</string>
+    <string name="Welcome_Back">Welcome Back</string>
+    <string name="on_board_tour_description">A secure payment system that you may choose for your daily transactions.</string>
+    <string name="instant_money">Instant Money</string>
+    <string name="iPay_money_is_fast">iPay money is fast and you can send and receive money instantly.</string>
+    <string name="out_of_money">Out of  money! No problem. Request money when you are in need.</string>
+    <string name="we_love_to_see_you_happy">We love to see you happy in shopping and we are here to make payments for your purchases.</string>
+
+    <string name="ready_to_get_started">Ready to get started?</string>
+    <string name="getting_started_description">Whether you are paying bills, sending money or making purchase, iPay is here to keep your financial information secure.</string>
+
     <string name="qr_code_prompt">Please scan a QR code</string>
     <string name="scan_this_qr_code_prompt">Please scan this QR code to pay</string>
     <string name="scan_this_qr_code_prompt_continue">using iPay app</string>
@@ -964,5 +981,8 @@
     <string name="no_browser_found_error_message">No default browser found to open. Please install or enable your browser.</string>
     <string name="no_browser_map_app_found_error_message">No default browser or google maps app found to open. Please install Google Maps/Browser or enable your browser.</string>
     <string name="please_enter_a_type">Please Enter a Document Type</string>
+    <string name="search_transaction">Search transaction</string>
+    <string name="complete_transaction_list">Complete transaction list</string>
+    <string name="pending_transaction_list">Pending transaction list</string>
 
 </resources>

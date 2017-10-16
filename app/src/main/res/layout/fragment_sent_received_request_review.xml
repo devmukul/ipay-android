@@ -144,34 +144,34 @@
 
             <Button
                 android:id="@+id/button_cancel"
-                style="@style/PrimaryMediumButtonReject"
+                style="@style/ButtonCancel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/cancel"
-                android:visibility="gone" />
-
-            <Button
-                android:id="@+id/button_reject"
-                style="@style/PrimaryMediumButtonRejectNoMargin"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/value4"
-                android:layout_weight="1"
-                android:text="@string/reject"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/button_accept"
-                style="@style/ButtonStyleMedium"
+                style="@style/ButtonPrimary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/value4"
+                android:layout_weight="1"
+                android:text="@string/accept"/>
+
+            <Button
+                android:id="@+id/button_reject"
+                style="@style/ButtonReject"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/value4"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_weight="1"
-                android:text="@string/accept"
-                android:visibility="gone" />
+                android:text="@string/reject" />
+
+
         </LinearLayout>
 
     </LinearLayout>

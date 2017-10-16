@@ -140,6 +140,8 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             mMobileTopUpInfoTextView.setVisibility(View.VISIBLE);
 
         } else {
+            mMobileNumberEditText.setEnabledStatus(true);
+            mMobileNumberEditText.setFocusableStatus(true);
             mSelectReceiverButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 @ValidateAccess(ServiceIdConstants.GET_CONTACTS)

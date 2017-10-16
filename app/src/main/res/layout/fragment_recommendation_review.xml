@@ -137,19 +137,21 @@
                     android:paddingBottom="@dimen/activity_horizontal_margin"
                     android:paddingTop="@dimen/activity_horizontal_margin">
 
+
                     <Button
-                        android:id="@+id/button_spam"
-                        style="@style/PrimaryMediumButtonSpamNoMargin"
+                        android:id="@+id/button_accept"
+                        style="@style/ButtonPrimary"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin"
                         android:layout_marginRight="@dimen/value4"
                         android:layout_weight="1"
-                        android:text="@string/mark_as_spam" />
+                        android:text="@string/accept" />
 
                     <Button
                         android:id="@+id/button_reject"
-                        style="@style/PrimaryMediumButtonRejectNoMargin"
+                        style="@style/ButtonReject"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/value4"
@@ -158,15 +160,14 @@
                         android:text="@string/reject" />
 
                     <Button
-                        android:id="@+id/button_accept"
-                        style="@style/ButtonStyleMedium"
+                        android:id="@+id/button_spam"
+                        style="@style/ButtonSpam"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
                         android:layout_marginLeft="@dimen/value4"
                         android:layout_marginRight="@dimen/activity_horizontal_margin"
                         android:layout_weight="1"
-                        android:text="@string/accept" />
+                        android:text="@string/mark_as_spam" />
                 </LinearLayout>
 
             </LinearLayout>
