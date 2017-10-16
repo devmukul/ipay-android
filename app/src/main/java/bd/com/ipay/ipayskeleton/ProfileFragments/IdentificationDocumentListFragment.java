@@ -141,7 +141,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
                 Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
                 Constants.DOCUMENT_TYPE_TIN,
-                Constants.OTHER
+                Constants.DOCUMENT_TYPE_OTHER
         };
         BUSINESS_DOCUMENT_TYPES = new String[]{
                 Constants.DOCUMENT_TYPE_NATIONAL_ID,
@@ -150,7 +150,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 Constants.DOCUMENT_TYPE_VAT_REG_CERT,
                 Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
                 Constants.DOCUMENT_TYPE_PASSPORT,
-                Constants.OTHER
+                Constants.DOCUMENT_TYPE_OTHER
         };
         mTracker = Utilities.getTracker(getActivity());
     }

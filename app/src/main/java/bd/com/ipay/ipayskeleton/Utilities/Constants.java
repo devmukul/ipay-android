@@ -201,7 +201,6 @@ public class Constants {
     public static final String NAVIGATION_MENU_SERVICE_ACCESS_SET = "NAVIGATION_MENU_SERVICE_ACCESS_SET";
     public static final String FRAGMENT_SERVICE_ACCESS_SET = "FRAGMENT_SERVICE_ACCESS_SET";
     public static final String MOBILE_NUMBER_REGEX = "^(((\\+)?880)?|(0)?)(1[356789][\\d]{8})$";
-    public static String OTHER = "Other";
 
     static {
         if (SERVER_TYPE == DEV_SERVER) {
@@ -661,6 +660,7 @@ public class Constants {
 
     public static final String DOCUMENT_TYPE_NATIONAL_ID = "national_id";
     public static final String DOCUMENT_TYPE_PASSPORT = "passport";
+    public static String DOCUMENT_TYPE_OTHER = "Other";
     public static final String DOCUMENT_TYPE_DRIVING_LICENSE = "driving_license";
     public static final String DOCUMENT_TYPE_BIRTH_CERTIFICATE = "birth_certificate";
     public static final String DOCUMENT_TYPE_TIN = "tin";
@@ -670,7 +670,7 @@ public class Constants {
 
     public static final String DOCUMENT_ID_NUMBER = "documentIdNumber";
     public static final String DOCUMENT_TYPE = "documentType";
-    public static final String DOCUMENT_NAME="documentName";
+    public static final String DOCUMENT_NAME = "documentName";
 
     public static final String ACCOUNT_VERIFICATION_STATUS_VERIFIED = "VERIFIED";
     public static final String ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED = "NOT_VERIFIED";
