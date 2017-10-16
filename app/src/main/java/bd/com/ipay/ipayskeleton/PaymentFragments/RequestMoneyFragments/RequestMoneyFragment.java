@@ -28,7 +28,6 @@ import java.math.BigDecimal;
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyReviewActivity;
-import bd.com.ipay.ipayskeleton.Activities.QRCodeViewerActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -73,7 +72,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_request_money, container, false);
         mMobileNumberEditText = (CustomContactsSearchView) v.findViewById(R.id.mobile_number);
-        buttonScanQRCode = (ImageView) v.findViewById(R.id.button_show_qr_code);
+        buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_sender_from_contacts);
         buttonRequest = (Button) v.findViewById(R.id.button_request_money);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
