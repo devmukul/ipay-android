@@ -529,7 +529,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             private final Button mUploadButton;
             private final ImageView mPicker;
             private String documentTypeName;
-            private boolean cancel;
 
             private View mDividerDocumentType;
 
@@ -709,7 +708,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 mDocumentListRecyclerView.scrollToPosition(pos);
                 String documentID = mDocumentIdEditTextView.getText().toString();
                 String errorMessage;
-                cancel = false;
+                boolean cancel = false;
                 if (ProfileInfoCacheManager.isBusinessAccount())
                     errorMessage = InputValidator.isValidBusinessDocumentID(getActivity(), documentID, BUSINESS_DOCUMENT_TYPES[pos], pos);
                 else

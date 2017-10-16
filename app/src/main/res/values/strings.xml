@@ -626,7 +626,7 @@
     <string name="mothers_name">Mother\'s Name</string>
     <string name="other">Other</string>
     <string name="other_id">ID</string>
-    <string name="document_type">Document Type</string>
+    <string name="document_name">Document Name</string>
     <string name="mobile">Mobile No.</string>
     <string name="history">History</string>
     <string name="this_device">This device</string>
