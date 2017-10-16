@@ -86,7 +86,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
     private String mMobileNumber;
     private String mRelationship;
 
-    private boolean isAddContactDialogOpen = true;
+    private boolean isAddContactDialogOpen = false;
 
     private View v;
 
