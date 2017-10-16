@@ -340,7 +340,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
         Logger.logW("Loading document", mDocumentID + " " + mID + " " + selectedOImagePath + " " + mDocumentType);
 
-
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
                     Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
@@ -530,6 +529,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             private final Button mUploadButton;
             private final ImageView mPicker;
             private String documentTypeName;
+            private boolean cancel = false;
 
             private View mDividerDocumentType;
 
@@ -718,7 +718,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     mDocumentIdEditTextView.requestFocus();
                     mDocumentIdEditTextView.setError(errorMessage);
                 } else {
-                    boolean cancel = false;
                     if (mDocumentTypeForOtherTypeLayoutView.getVisibility() == View.VISIBLE) {
                         if (mDocumentTypeOtherEditText.getText().toString().equals("")) {
                             mDocumentTypeOtherEditText.requestFocus();

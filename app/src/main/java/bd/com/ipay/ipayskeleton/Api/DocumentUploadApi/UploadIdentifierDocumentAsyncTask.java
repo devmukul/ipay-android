@@ -51,17 +51,6 @@ public class UploadIdentifierDocumentAsyncTask extends AsyncTask<Void, Void, Gen
         this.uploadType = uploadType;
     }
 
-    public UploadIdentifierDocumentAsyncTask(String API_COMMAND, String imagePath, Context mContext,
-                                             String documentIdNumber, String documentType, int uploadType) {
-        this.mContext = mContext;
-        this.imagePath = imagePath;
-        this.API_COMMAND = API_COMMAND;
-        this.documentIdNumber = documentIdNumber;
-        this.documentType = documentType;
-        this.uploadType = uploadType;
-        this.documentName = null;
-    }
-
     @Override
     protected GenericHttpResponse doInBackground(Void... params) {
         Logger.logW("Document Upload", "Started");
