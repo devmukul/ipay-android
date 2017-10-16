@@ -340,26 +340,15 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
         Logger.logW("Loading document", mDocumentID + " " + mID + " " + selectedOImagePath + " " + mDocumentType);
 
-        if (mID != documentPreviewDetailsList.size() - 1) {
-            if (ProfileInfoCacheManager.isBusinessAccount()) {
-                mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
-                        Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
-                        mDocumentID, mDocumentType, OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT);
-            } else {
-                mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
-                        Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
-                        mDocumentID, mDocumentType, OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT);
-            }
+
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
+            mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
+                    Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
+                    mDocumentID, mDocumentType.toLowerCase(), mDocumentName, OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT);
         } else {
-            if (ProfileInfoCacheManager.isBusinessAccount()) {
-                mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
-                        Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
-                        mDocumentID, Constants.OTHER.toLowerCase(), mDocumentName, OPTION_UPLOAD_TYPE_BUSINESS_DOCUMENT);
-            } else {
-                mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
-                        Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
-                        mDocumentID, Constants.OTHER.toLowerCase(), mDocumentName, OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT);
-            }
+            mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
+                    Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
+                    mDocumentID, mDocumentType.toLowerCase(), mDocumentName, OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT);
         }
 
         mUploadIdentifierDocumentAsyncTask.mHttpResponseListener = this;
@@ -717,6 +706,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             }
 
             private void attemptUploadDocument(int pos) {
+                mDocumentListRecyclerView.scrollToPosition(pos);
                 String documentID = mDocumentIdEditTextView.getText().toString();
                 String errorMessage;
                 if (ProfileInfoCacheManager.isBusinessAccount())
@@ -728,27 +718,30 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     mDocumentIdEditTextView.requestFocus();
                     mDocumentIdEditTextView.setError(errorMessage);
                 } else {
-                    if (documentPreviewDetailsList.get(pos).getSelectedDocumentUri() == null)
-                        mSelectFile.setError(getString(R.string.please_select_a_file_to_upload));
-                    else {
+                    boolean cancel = false;
+                    if (mDocumentTypeForOtherTypeLayoutView.getVisibility() == View.VISIBLE) {
+                        if (mDocumentTypeOtherEditText.getText().toString().equals("")) {
+                            mDocumentTypeOtherEditText.requestFocus();
+                            mDocumentTypeOtherEditText.setError(getString(R.string.please_enter_a_type));
+                            cancel = true;
+                        } else
+                            mDocumentName = mDocumentTypeOtherEditText.getText().toString();
+                    }
+                    if (!cancel) {
+                        if (documentPreviewDetailsList.get(pos).getSelectedDocumentUri() == null) {
+                            mSelectFile.setError(getString(R.string.please_select_a_file_to_upload));
+                            cancel = true;
+                        }
+                    }
+                    if (!cancel) {
                         Utilities.hideKeyboard(getActivity());
                         documentPreviewDetailsList.get(pos).setDocumentId(documentID);
                         if (Utilities.isConnectionAvailable(getActivity())) {
-                            if (pos != documentPreviewDetailsList.size() - 1)
-                                uploadDocument(pos);
-                            else {
-                                if (mDocumentTypeOtherEditText.getText().toString().equals("")) {
-                                    mDocumentTypeOtherEditText.requestFocus();
-                                    mDocumentTypeOtherEditText.setError(getString(R.string.please_enter_a_type));
-                                } else {
-                                    mDocumentName = mDocumentTypeOtherEditText.getText().toString();
-                                    uploadDocument(pos);
-                                }
-                            }
-
+                            uploadDocument(pos);
                         } else
                             Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT);
                     }
+
                 }
             }
         }
