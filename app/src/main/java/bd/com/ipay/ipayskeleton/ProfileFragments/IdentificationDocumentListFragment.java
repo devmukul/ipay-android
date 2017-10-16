@@ -721,7 +721,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     if (mDocumentTypeForOtherTypeLayoutView.getVisibility() == View.VISIBLE) {
                         if (mDocumentTypeOtherEditText.getText().toString().equals("")) {
                             mDocumentTypeOtherEditText.requestFocus();
-                            mDocumentTypeOtherEditText.setError(getString(R.string.please_enter_a_document_type));
+                            mDocumentTypeOtherEditText.setError(getString(R.string.please_enter_a_document_name));
                             cancel = true;
                         } else
                             mDocumentName = mDocumentTypeOtherEditText.getText().toString();
