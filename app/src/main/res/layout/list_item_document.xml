@@ -98,7 +98,7 @@
                 <View
                     android:id="@+id/divider_document_type"
                     style="@style/Divider"
-                    android:visibility="gone"></View>
+                    android:visibility="gone" />
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/text_inputlayout_document_id"

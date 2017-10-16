@@ -569,7 +569,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                 if (pos != documentPreviewDetailsList.size() - 1)
                     documentHintType = DOCUMENT_HINT_TYPES[pos];
                 else
-                    documentHintType = DOCUMENT_HINT_TYPES[pos] + " " + getString(R.string.number_capital);
+                    documentHintType = DOCUMENT_HINT_TYPES[pos] + " " + getString(R.string.number_uppercase);
 
                 mDocumentIdTextInputLayoutView.setHint(documentHintType);
                 setEditTextMaxLength(mDocumentIdEditTextView, pos);
@@ -721,7 +721,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     if (mDocumentTypeForOtherTypeLayoutView.getVisibility() == View.VISIBLE) {
                         if (mDocumentTypeOtherEditText.getText().toString().equals("")) {
                             mDocumentTypeOtherEditText.requestFocus();
-                            mDocumentTypeOtherEditText.setError(getString(R.string.please_enter_a_type));
+                            mDocumentTypeOtherEditText.setError(getString(R.string.please_enter_a_document_type));
                             cancel = true;
                         } else
                             mDocumentName = mDocumentTypeOtherEditText.getText().toString();
