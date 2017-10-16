@@ -7,23 +7,22 @@ import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
-import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.AddMoneyFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.AddMoneyByCreditOrDebitCardStatusFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AddMoneyActivity extends BaseActivity {
-
-    public static final int ADD_MONEY_REVIEW_REQUEST = 101;
-
-    public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
-
+public class AddMoneyByCreditOrDebitCardStatusActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cash_in);
+        setContentView(R.layout.activity_add_money_by_credit_or_debit_card_satus);
 
-        changeFragment(new AddMoneyFragment());
+        AddMoneyByCreditOrDebitCardStatusFragment addMoneyByCreditOrDebitCardStatusFragment = new AddMoneyByCreditOrDebitCardStatusFragment();
+        if (getIntent().hasExtra(Constants.CARD_TRANSACTION_DATA)) {
+            addMoneyByCreditOrDebitCardStatusFragment.setArguments(getIntent().getBundleExtra(Constants.CARD_TRANSACTION_DATA));
+        }
+        changeFragment(addMoneyByCreditOrDebitCardStatusFragment);
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -42,7 +41,7 @@ public class AddMoneyActivity extends BaseActivity {
 
     @Override
     public Context setContext() {
-        return AddMoneyActivity.this;
+        return AddMoneyByCreditOrDebitCardStatusActivity.this;
     }
 
     public void changeFragment(Fragment fragment) {

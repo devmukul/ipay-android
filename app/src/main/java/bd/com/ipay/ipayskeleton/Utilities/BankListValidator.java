@@ -1,19 +1,18 @@
-package bd.com.ipay.ipayskeleton.CustomView;
+package bd.com.ipay.ipayskeleton.Utilities;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 /**
  * Validate if the user has added any verified banks or added any banks at all.
@@ -27,9 +26,7 @@ public class BankListValidator {
     }
 
     public boolean isBankAdded() {
-        if (mListUserBankClasses == null)
-            return false;
-        else return !mListUserBankClasses.isEmpty();
+        return mListUserBankClasses != null && !mListUserBankClasses.isEmpty();
     }
 
     public boolean isVerifiedBankAdded() {
@@ -45,38 +42,28 @@ public class BankListValidator {
     }
 
     public void showAddBankDialog(final Activity activity) {
-        MaterialDialog.Builder dialog = new MaterialDialog.Builder(activity);
-        dialog
-                .content(R.string.add_bank_prompt)
-                .cancelable(false)
-                .positiveText(R.string.add_bank)
-                .negativeText(R.string.cancel)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        activity.onBackPressed();
-                        Intent intent = new Intent(activity, ManageBanksActivity.class);
-                        intent.putExtra(Constants.SWITCHED_FROM_BANK_VERIFICATION, true);
-                        activity.startActivity(intent);
-                    }
-                })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        activity.onBackPressed();
-                    }
-                });
+        showAddBankDialog(activity, true);
+    }
 
-        dialog.show();
+    public void showAddBankDialog(final Activity activity, final boolean shouldDestroyActivityOnCancel) {
+        showDialog(activity, R.string.add_bank_prompt, R.string.add_bank, R.string.cancel, shouldDestroyActivityOnCancel);
     }
 
     public void showVerifyBankDialog(final Activity activity) {
+        showVerifyBankDialog(activity, true);
+    }
+
+    public void showVerifyBankDialog(final Activity activity, final boolean shouldDestroyActivityOnCancel) {
+        showDialog(activity, R.string.verify_bank_prompt, R.string.verify_bank, R.string.cancel, shouldDestroyActivityOnCancel);
+    }
+
+    private void showDialog(final Activity activity, @StringRes int contentRes, @StringRes int positiveRes, @StringRes int negativeRes, final boolean shouldDestroyActivityOnCancel) {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(activity);
         dialog
-                .content(R.string.verify_bank_prompt)
+                .content(contentRes)
                 .cancelable(false)
-                .positiveText(R.string.verify_bank)
-                .negativeText(R.string.cancel)
+                .positiveText(positiveRes)
+                .negativeText(negativeRes)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -89,7 +76,7 @@ public class BankListValidator {
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        activity.onBackPressed();
+                        if (shouldDestroyActivityOnCancel) activity.onBackPressed();
                     }
                 });
 

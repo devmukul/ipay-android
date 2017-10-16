@@ -7,10 +7,43 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_horizontal_margin">
 
         <LinearLayout
-            android:id="@+id/profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                android:id="@+id/receiver_profile_image_view"
+                style="@style/ReviewImageStyle" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/receiver_name_text_view"
+                    style="@style/TextViewUserInfoPrimary"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+
+                <TextView
+                    android:id="@+id/receiver_mobile_number_text_view"
+                    style="@style/TextViewUserInfoSecondary"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <View style="@style/Divider" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -18,75 +51,34 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal">
-
-                <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-                    android:id="@+id/profile_picture"
-                    style="@style/ReviewImageStyle">
-
-                </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textview_name"
-                        style="@style/TextViewUserInfoPrimary"
-                        android:ellipsize="end"
-                        android:singleLine="true" />
-
-                    <TextView
-                        android:id="@+id/textview_mobile_number"
-                        style="@style/TextViewUserInfoSecondary" />
-
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout style="@style/LinearLayoutHolder">
 
                 <TextView
                     style="@style/TextViewInfoLabelReview"
-                    android:text="@string/AMOUNT" />
+                    android:text="@string/amount_in_tk" />
 
                 <TextView
-                    android:id="@+id/textview_amount"
-                    style="@style/TextViewInfoColorPrimaryReview" />
+                    android:id="@+id/amount_text_view"
+                    style="@style/TextViewInfoReview" />
+
             </LinearLayout>
 
             <View style="@style/Divider" />
 
-            <LinearLayout style="@style/LinearLayoutHolder">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <TextView
                     style="@style/TextViewInfoLabelReview"
                     android:text="@string/vat" />
 
                 <TextView
-                    android:id="@+id/textview_vat"
-                    style="@style/TextViewInfoColorPrimaryReview" />
-
-            </LinearLayout>
-
-            <View style="@style/Divider" />
-
-            <LinearLayout style="@style/LinearLayoutHolder">
-
-                <TextView
-                    style="@style/TextViewInfoLabelReview"
-                    android:text="@string/TOTAL" />
-
-                <TextView
-                    android:id="@+id/textview_total"
-                    style="@style/TextViewInfoColorPrimaryReview" />
+                    android:id="@+id/vat_text_view"
+                    style="@style/TextViewInfoReview" />
 
             </LinearLayout>
 
@@ -95,6 +87,25 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReview"
+                    android:text="@string/TOTAL" />
+
+                <TextView
+                    android:id="@+id/total_text_view"
+                    style="@style/TextViewInfoBoldReview" />
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
@@ -102,8 +113,8 @@
                     android:text="@string/service_charge" />
 
                 <TextView
-                    android:id="@+id/textview_service_charge"
-                    style="@style/TextViewInfoColorPrimaryReview" />
+                    android:id="@+id/service_charge_text_view"
+                    style="@style/TextViewInfoColorRedReview" />
 
             </LinearLayout>
 
@@ -112,6 +123,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
@@ -119,43 +131,40 @@
                     android:text="@string/net_amount" />
 
                 <TextView
-                    android:id="@+id/textview_net_amount"
-                    style="@style/TextViewInfoColorPrimaryReview" />
+                    android:id="@+id/net_amount_text_view"
+                    style="@style/TextViewInfoColorPrimaryReview"
+                    android:textStyle="bold" />
+
             </LinearLayout>
 
+            <View style="@style/Divider" />
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/value4"
-            android:background="@color/colorDividerGapGray" />
-
         <LinearLayout
-            android:id="@+id/layout_description_holder"
+            android:id="@+id/description_view_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
-                style="@style/ListHeaderStyle"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:layout_weight="0.5"
-                android:text="@string/description" />
+                style="@style/TextViewInfoLabelReview"
+                android:text="@string/note" />
 
             <TextView
-                android:id="@+id/textview_description"
-                style="@style/TextViewDescription" />
+                android:id="@+id/description_text_view"
+                style="@style/TextViewInfoNoteReview" />
+
+            <View style="@style/Divider" />
         </LinearLayout>
 
         <Button
-            android:id="@+id/button_create_payment_request"
+            android:id="@+id/payment_request_button"
             style="@style/ButtonPrimaryWithNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/confirm"/>
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:text="@string/confirm" />
     </LinearLayout>
 </ScrollView>

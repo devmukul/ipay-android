@@ -155,6 +155,6 @@
             style="@style/CustomNoteTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_money_info" />
+            android:text="@string/withdraw_money_to_bank_info" />
     </LinearLayout>
 </ScrollView>

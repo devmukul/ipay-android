@@ -223,9 +223,19 @@
                             android:background="@color/colorDivider" />
 
                         <CheckBox
-                            android:id="@+id/filter_add_money"
+                            android:id="@+id/filter_add_money_by_bank"
                             style="@style/TransactionHistoryFilterCheckboxStyle"
-                            android:text="@string/filter_add_money" />
+                            android:text="@string/filter_add_money_by_bank" />
+
+                        <View
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/divider_space"
+                            android:background="@color/colorDivider" />
+
+                        <CheckBox
+                            android:id="@+id/filter_add_money_by_credit_or_debit_card"
+                            style="@style/TransactionHistoryFilterCheckboxStyle"
+                            android:text="@string/filter_add_money_by_credit_or_debit_card" />
 
                         <View
                             android:layout_width="wrap_content"

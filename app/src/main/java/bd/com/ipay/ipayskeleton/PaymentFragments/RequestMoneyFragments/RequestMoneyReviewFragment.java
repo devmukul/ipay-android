@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +40,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class RequestMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mRequestMoneyTask = null;
-    private RequestMoneyResponse mRequestMoneyResponse;
 
     private ProgressDialog mProgressDialog;
 
@@ -47,28 +48,30 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
     private String mReceiverMobileNumber;
     private String mPhotoUri;
     private String mDescription;
-    private boolean mIsInContacts;
-    private String mTitle;
-
     private boolean isInContacts;
 
-    private ProfileImageView mProfileImageView;
-    private TextView mNameView;
-    private TextView mMobileNumberView;
-    private TextView mDescriptionView;
-    private TextView mTitleView;
-    private View mDescriptionHolder;
-    private TextView mAmountView;
-    private TextView mServiceChargeView;
-    private TextView mNetAmountView;
-    private Button mRequestMoneyButton;
-    private CheckBox mAddInContactsCheckBox;
+    private TextView mServiceChargeTextView;
+    private TextView mNetAmountTextView;
+
     private Tracker mTracker;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
+        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
+        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
+        isInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
+
+        if (getArguments() != null) {
+            mReceiverName = getArguments().getString(Constants.NAME);
+            mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
+        }
+
         mTracker = Utilities.getTracker(getActivity());
+
+        mProgressDialog = new ProgressDialog(getActivity());
     }
 
     @Override
@@ -80,59 +83,57 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_request_money_review, container, false);
+        return inflater.inflate(R.layout.fragment_request_money_review, container, false);
+    }
 
-        mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
-        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
-        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        final ProfileImageView receiverProfileImageView = findViewById(R.id.receiver_profile_image_view);
+        final TextView receiverNameTextView = findViewById(R.id.receiver_name_text_view);
+        final TextView receiverMobileNumberTextView = findViewById(R.id.receiver_mobile_number_text_view);
 
-        mReceiverName = getArguments().getString(Constants.NAME);
-        mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
-
-        isInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
-
-        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
-        mNameView = (TextView) v.findViewById(R.id.textview_name);
-        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
-        mTitleView = (TextView) v.findViewById(R.id.textview_title);
-        mDescriptionHolder = v.findViewById(R.id.layout_description_holder);
-        mAmountView = (TextView) v.findViewById(R.id.textview_amount);
-        mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
-        mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
-        mRequestMoneyButton = (Button) v.findViewById(R.id.button_request_money);
-        mAddInContactsCheckBox = (CheckBox) v.findViewById(R.id.add_in_contacts);
-
-        mProgressDialog = new ProgressDialog(getActivity());
-
-        mProfileImageView.setProfilePicture(mPhotoUri, false);
-
-        if (mReceiverName == null || mReceiverName.isEmpty()) {
-            mNameView.setVisibility(View.GONE);
-        } else {
-            mNameView.setText(mReceiverName);
+        if (!TextUtils.isEmpty(mPhotoUri)) {
+            receiverProfileImageView.setProfilePicture(mPhotoUri, false);
         }
-
-        mMobileNumberView.setText(mReceiverMobileNumber);
-
-        if ((mDescription == null || mDescription.isEmpty())) {
-            mDescriptionHolder.setVisibility(View.GONE);
+        if (TextUtils.isEmpty(mReceiverName)) {
+            receiverNameTextView.setVisibility(View.GONE);
         } else {
-            mDescriptionView.setText(mDescription);
+            receiverNameTextView.setVisibility(View.VISIBLE);
+            receiverNameTextView.setText(mReceiverName);
         }
+        receiverMobileNumberTextView.setText(mReceiverMobileNumber);
 
-        mAmountView.setText(Utilities.formatTaka(mAmount));
+        final TextView amountTextView = findViewById(R.id.amount_text_view);
+        mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
+        mNetAmountTextView = findViewById(R.id.net_amount_text_view);
 
+        amountTextView.setText(Utilities.formatTaka(mAmount));
+        mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
+        mServiceChargeTextView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
+
+        TextView descriptionTextView = findViewById(R.id.description_text_view);
+        View descriptionViewHolder = findViewById(R.id.description_view_holder);
+        final CheckBox addToContactCheckBox = findViewById(R.id.add_to_contact_check_box);
+
+        if (TextUtils.isEmpty(mDescription)) {
+            descriptionViewHolder.setVisibility(View.GONE);
+        } else {
+            descriptionViewHolder.setVisibility(View.VISIBLE);
+            descriptionTextView.setText(mDescription);
+        }
         if (!isInContacts) {
-            mAddInContactsCheckBox.setVisibility(View.VISIBLE);
-            mAddInContactsCheckBox.setChecked(true);
+            addToContactCheckBox.setVisibility(View.VISIBLE);
+            addToContactCheckBox.setChecked(true);
         }
 
-        mRequestMoneyButton.setOnClickListener(new View.OnClickListener() {
+        Button requestMoneyButton = findViewById(R.id.request_money_button);
+
+        requestMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 attemptRequestMoney();
-                if (mAddInContactsCheckBox.isChecked()) {
+                if (addToContactCheckBox.isChecked()) {
                     addContact(mReceiverName, mReceiverMobileNumber, null);
                 }
             }
@@ -143,7 +144,11 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
             attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_REQUEST_MONEY);
         else
             attemptGetServiceCharge();
-        return v;
+    }
+
+    public <T extends View> T findViewById(@IdRes int id) {
+        //noinspection ConstantConditions, unchecked
+        return (T) getView().findViewById(id);
     }
 
     private void attemptRequestMoney() {
@@ -193,7 +198,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         if (result.getApiCommand().equals(Constants.COMMAND_REQUEST_MONEY)) {
 
             try {
-                mRequestMoneyResponse = gson.fromJson(result.getJsonString(), RequestMoneyResponse.class);
+                RequestMoneyResponse mRequestMoneyResponse = gson.fromJson(result.getJsonString(), RequestMoneyResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
@@ -237,8 +242,8 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
+        mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
     }
 
     @Override

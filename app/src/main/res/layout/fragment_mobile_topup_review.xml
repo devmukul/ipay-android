@@ -44,6 +44,8 @@
 
         </LinearLayout>
 
+        <View style="@style/Divider" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,7 +58,7 @@
 
                 <TextView
                     style="@style/TextViewInfoLabelReview"
-                    android:text="@string/total_amount" />
+                    android:text="@string/total_amount_in_tk" />
 
                 <TextView
                     android:id="@+id/textview_amount"
@@ -164,7 +166,7 @@
             style="@style/ButtonPrimaryWithNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/confirm"/>
+            android:text="@string/confirm" />
 
     </LinearLayout>
 </ScrollView>
