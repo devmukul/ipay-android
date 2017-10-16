@@ -15,8 +15,8 @@ public class Constants {
     public static final String TARGET_FRAGMENT = "TARGET_FRAGMENT";
     public static final String SIGN_IN = "SIGN_IN";
     public static final String SIGN_UP = "SIGN_UP";
-    public static final String ADD_TRUSTED_PERSON="ADD_TRUSTED_PERSON";
-    public static final String BANK_ACCOUNT="BANK_ACCOUNT";
+    public static final String ADD_TRUSTED_PERSON = "ADD_TRUSTED_PERSON";
+    public static final String BANK_ACCOUNT = "BANK_ACCOUNT";
     public static final String SIGNED_IN = "SIGNED IN";
     public static final String DOCUMENT_URL = "DOCUMENT_URL";
     public static final String FILE_EXTENSION = "FILE_EXTENSION";
@@ -24,7 +24,7 @@ public class Constants {
     public static final String STRING_TO_ENCODE = "STRING_TO_ENCODE";
     public static final String ACTIVITY_TITLE = "ACTIVITY_TITLE";
     public static final String TITLE = "TITLE";
-    public static final String INTENDED_FRAGMENT="INTENDED_FRAGMENT";
+    public static final String INTENDED_FRAGMENT = "INTENDED_FRAGMENT";
     public static final String DESCRIPTION = "DESCRIPTION";
     public static final String TIME = "TIME";
     public static final String STATUS = "STATUS";
@@ -193,7 +193,8 @@ public class Constants {
     public static final int TEST_SERVER = 2;
     public static final int STAGE_SERVER = 3;
     public static final int LIVE_SERVER = 4;
-    public static final int LOCAL_SERVER = 5;
+    public static final int DEMO_SERVER = 5;
+    public static final int LOCAL_SERVER = 6;
 
     public static final String PERSONAL_ACCOUNT = "Personal Account";
     public static final String BUSINESS_ACCOUNT = "Business Account";
@@ -251,6 +252,18 @@ public class Constants {
             BASE_URL_PUSH_NOTIFICATION = "https://www.ipay.com.bd/api/v1/notification/";
             BASE_URL_WEB = "https://www.ipay.com.bd";
             SERVER_NAME = "live";
+
+        } else if (SERVER_TYPE == DEMO_SERVER) {
+
+            BASE_URL_MM = "https://demo.ipay.com.bd/api/v1/";
+            BASE_URL_SM = "https://demo.ipay.com.bd/api/v1/money/";
+            BASE_URL_EDU = "https://demo.ipay.com.bd/api/v1/em/";
+            BASE_URL_FTP_SERVER = "https://demo.ipay.com.bd";
+            BASE_URL_CONTACT = "https://demo.ipay.com.bd/external/v1/";
+            BASE_URL_ADMIN = "https://demo.ipay.com.bd/api/v1/support/";
+            BASE_URL_PUSH_NOTIFICATION = "https://demo.ipay.com.bd/api/v1/notification/";
+            BASE_URL_WEB = "https://demo.ipay.com.bd";
+            SERVER_NAME = "demo";
 
         } else {
 

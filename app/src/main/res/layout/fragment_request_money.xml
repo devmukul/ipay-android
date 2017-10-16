@@ -23,13 +23,12 @@
                 android:maxLines="1" />
 
             <ImageView
-                android:id="@+id/button_show_qr_code"
+                android:id="@+id/button_scan_qr_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/select_sender_from_contacts"
-                android:src="@drawable/ic_qrc3x"
-                android:visibility="gone" />
+                android:src="@drawable/ic_qrc3x" />
 
             <ImageView
                 android:id="@+id/select_sender_from_contacts"
