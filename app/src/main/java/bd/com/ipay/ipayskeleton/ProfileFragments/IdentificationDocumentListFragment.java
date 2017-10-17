@@ -163,6 +163,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         mProgressDialog = new ProgressDialog(getActivity());
 
         mDocumentListRecyclerView = (RecyclerView) v.findViewById(R.id.list_documents);
+        mDocumentListRecyclerView.setNestedScrollingEnabled(false);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mDocumentListRecyclerView.setLayoutManager(mLayoutManager);
 
