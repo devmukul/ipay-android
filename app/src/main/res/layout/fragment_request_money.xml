@@ -28,7 +28,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/select_sender_from_contacts"
-                android:src="@drawable/ic_qrc3x" />
+                android:padding="@dimen/value4"
+                android:src="@drawable/ic_qr_input" />
 
             <ImageView
                 android:id="@+id/select_sender_from_contacts"
