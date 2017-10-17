@@ -283,7 +283,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
                                 mobileNumberView.setText(ContactEngine.formatMobileNumberBD(result));
                         } else if (getActivity() != null)
                             Toaster.makeText(getActivity(), getResources().getString(
-                                    R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT);
+                                    R.string.scan_valid_qr_code), Toast.LENGTH_SHORT);
                     }
                 });
             }
