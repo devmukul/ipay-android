@@ -89,15 +89,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class HomeActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, LocationListener, HttpResponseListener {
 
-    /**
-     * Constant for getting min location update time.
-     */
-    private static final long LOCATION_UPDATE_MIN_TIME_INTERVAL = 0;
-    /**
-     * Constant for getting min distance change.
-     */
-    private static final long LOCATION_UPDATE_MIN_DISTANCE = 500;
-
     private static final int REQUEST_CODE_PERMISSION = 1001;
 
     private HttpRequestPostAsyncTask mLocationUpdateRequestAsyncTask;
@@ -131,6 +122,7 @@ public class HomeActivity extends BaseActivity
     private static boolean switchedToHomeFragment = true;
     private boolean exitFromApplication = false;
 
+    private LocationManager mLocationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -244,15 +236,15 @@ public class HomeActivity extends BaseActivity
 
     @SuppressWarnings("MissingPermission")
     private void startLocationCollection() {
-        final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (Utilities.isNecessaryPermissionExists(this, Constants.LOCATION_PERMISSIONS) && locationManager != null) {
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (Utilities.isNecessaryPermissionExists(this, Constants.LOCATION_PERMISSIONS) && mLocationManager != null) {
             final String locationProvider;
-            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 locationProvider = LocationManager.GPS_PROVIDER;
             } else {
                 locationProvider = LocationManager.NETWORK_PROVIDER;
             }
-            locationManager.requestLocationUpdates(locationProvider, LOCATION_UPDATE_MIN_TIME_INTERVAL, LOCATION_UPDATE_MIN_DISTANCE, this);
+            mLocationManager.requestSingleUpdate(locationProvider, this, null);
         }
     }
 
@@ -713,6 +705,7 @@ public class HomeActivity extends BaseActivity
         String body = new GsonBuilder().create().toJson(locationCollector);
         mLocationUpdateRequestAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_POST_USER_LOCATION, Constants.BASE_URL_DATA_COLLECTOR + Constants.URL_ENDPOINT_LOCATION_COLLECTOR, body, this, this);
         mLocationUpdateRequestAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mLocationManager.removeUpdates(this);
     }
 
     @Override
