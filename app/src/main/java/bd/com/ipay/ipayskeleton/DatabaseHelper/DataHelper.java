@@ -111,14 +111,6 @@ public class DataHelper {
         }
     }
 
-    public Cursor searchContacts(String query) {
-        return searchContacts(query, false, false, false);
-    }
-
-    public Cursor searchContacts(String query, boolean memberOnly, boolean businessMemberOnly, boolean verifiedOnly) {
-        return searchContacts(query, memberOnly, businessMemberOnly, false, verifiedOnly, false, false, null);
-    }
-
     public Cursor searchContacts(String query, boolean memberOnly, boolean businessMemberOnly, boolean nonMemberOnly,
                                  boolean verifiedOnly, boolean invitedOnly, boolean nonInvitedOnly, List<String> invitees) {
         Cursor cursor = null;
@@ -218,7 +210,7 @@ public class DataHelper {
     }
 
     public int getLastAddedBusinessId() {
-        Cursor cursor = null;
+        Cursor cursor;
         int columnIndexForMaxBusinessId = 0;
 
         try {
@@ -241,48 +233,4 @@ public class DataHelper {
 
         return 0;
     }
-
-    private List<ContactNode> getContactList(String query, boolean memberOnly, boolean businessMemberOnly, boolean verifiedOnly) {
-        Cursor cursor = searchContacts(query, memberOnly, businessMemberOnly, verifiedOnly);
-        List<ContactNode> contacts = new ArrayList<>();
-
-        if (cursor.moveToFirst()) {
-            int nameIndex = cursor.getColumnIndex(DBConstants.KEY_NAME);
-            int originalNameIndex = cursor.getColumnIndex(DBConstants.KEY_ORIGINAL_NAME);
-            int mobileNumberIndex = cursor.getColumnIndex(DBConstants.KEY_MOBILE_NUMBER);
-            int profilePictureUrlIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE);
-            int profilePictureUrlQualityMediumIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM);
-            int profilePictureUrlQualityHighIndex = cursor.getColumnIndex(DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH);
-            int verificationStatusIndex = cursor.getColumnIndex(DBConstants.KEY_VERIFICATION_STATUS);
-            int relationshipIndex = cursor.getColumnIndex(DBConstants.KEY_RELATIONSHIP);
-            int accountTypeIndex = cursor.getColumnIndex(DBConstants.KEY_ACCOUNT_TYPE);
-            int updateTimeIndex = cursor.getColumnIndex(DBConstants.KEY_UPDATE_TIME);
-            int isMemberIndex = cursor.getColumnIndex(DBConstants.KEY_IS_MEMBER);
-
-            do {
-                String name = cursor.getString(nameIndex);
-                String originalName = cursor.getString(originalNameIndex);
-                String mobileNumber = cursor.getString(mobileNumberIndex);
-                int verificationStatus = cursor.getInt(verificationStatusIndex);
-                int accountType = cursor.getInt(accountTypeIndex);
-                String profilePictureUrl = cursor.getString(profilePictureUrlIndex);
-                String profilePictureUrlQualityMedium = cursor.getString(profilePictureUrlQualityMediumIndex);
-                String profilePictureUrlQualityHigh = cursor.getString(profilePictureUrlQualityHighIndex);
-                String relationship = cursor.getString(relationshipIndex);
-                long updateTime = cursor.getLong(updateTimeIndex);
-                int isMember = cursor.getInt(isMemberIndex);
-
-                ContactNode contactNode = new ContactNode(accountType, isMember,
-                        verificationStatus, name, originalName, mobileNumber, profilePictureUrl, profilePictureUrlQualityMedium, profilePictureUrlQualityHigh, relationship, updateTime);
-                contacts.add(contactNode);
-            } while (cursor.moveToNext());
-        }
-
-        return contacts;
-    }
-
-    public List<ContactNode> getContactList() {
-        return getContactList("", false, false, false);
-    }
-
 }
