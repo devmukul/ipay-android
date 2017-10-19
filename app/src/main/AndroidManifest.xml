@@ -300,6 +300,5 @@
             </intent-filter>
         </service>
 
-        <service android:name=".DataCollectors.Service.LocationCollectorService" />
     </application>
 </manifest>
