@@ -217,7 +217,7 @@ public class Constants {
             BASE_URL_ADMIN = "http://10.10.10.199:8085/api/v1/support/";
             BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
-            BASE_URL_DATA_COLLECTOR = "";
+            BASE_URL_DATA_COLLECTOR = "http://10.10.10.10:8800/data-collector/v1/";
             SERVER_NAME = "dev";
 
         } else if (SERVER_TYPE == TEST_SERVER) {
@@ -230,7 +230,7 @@ public class Constants {
             BASE_URL_ADMIN = "http://10.15.40.15:8085/api/v1/support/";
             BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.162:7778/api/v1/notification/";
             BASE_URL_WEB = "http://test.ipay.com.bd";
-            BASE_URL_DATA_COLLECTOR = "";
+            BASE_URL_DATA_COLLECTOR = "http://10.15.40.10:8800/data-collector/v1/";
             SERVER_NAME = "test";
 
         } else if (SERVER_TYPE == STAGE_SERVER) {
@@ -243,7 +243,7 @@ public class Constants {
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
             BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "http://stage.ipay.com.bd";
-            BASE_URL_DATA_COLLECTOR = "";
+            BASE_URL_DATA_COLLECTOR = "http://10.10.40.10:8800/data-collector/v1/";
             SERVER_NAME = "stage";
 
         } else if (SERVER_TYPE == LIVE_SERVER) {
@@ -268,6 +268,7 @@ public class Constants {
             BASE_URL_CONTACT = "https://demo.ipay.com.bd/external/v1/";
             BASE_URL_ADMIN = "https://demo.ipay.com.bd/api/v1/support/";
             BASE_URL_PUSH_NOTIFICATION = "https://demo.ipay.com.bd/api/v1/notification/";
+            BASE_URL_DATA_COLLECTOR = "https://demo.ipay.com.bd/data-collector/v1/";
             BASE_URL_WEB = "https://demo.ipay.com.bd";
             SERVER_NAME = "demo";
 
@@ -281,7 +282,7 @@ public class Constants {
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
             BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
-            BASE_URL_DATA_COLLECTOR = "";
+            BASE_URL_DATA_COLLECTOR = "http://192.168.1.105:8800/data-collector/v1/";
             SERVER_NAME = "local";
         }
     }

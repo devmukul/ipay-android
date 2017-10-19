@@ -19,7 +19,6 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         createContactsTable(db);
         createBusinessAccountsTable(db);
-        createLocationTable(db);
     }
 
     private void createContactsTable(SQLiteDatabase db) {
@@ -54,15 +53,6 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
                 DBConstants.KEY_BUSINESS_ACCOUNT_ID + " integer default 0)");
     }
 
-    private void createLocationTable(SQLiteDatabase db) {
-        db.execSQL("create table if not exists " +
-                DBConstants.DB_TABLE_LOCATIONS +
-                "(_id integer primary key autoincrement," +
-                DBConstants.KEY_LOCATION_LATITUDE + " real," +
-                DBConstants.KEY_LOCATION_LONGITUDE + " real," +
-                DBConstants.KEY_LOCATION_CREATED_TIME + " long" + ")");
-    }
-
     private void dropTable(SQLiteDatabase db, String tableName) {
         db.execSQL("drop table if exists " + tableName);
     }
@@ -78,8 +68,6 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
             case 10:
                 dropTable(db, DBConstants.DB_TABLE_CONTACTS);
                 createContactsTable(db);
-            case 11:
-                createLocationTable(db);
                 break;
         }
     }

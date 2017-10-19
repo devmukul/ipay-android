@@ -8,6 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,9 +33,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
@@ -54,7 +59,8 @@ import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetRelationshipListAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.DataCollectors.Service.LocationCollectorService;
+import bd.com.ipay.ipayskeleton.DataCollectors.Model.LocationCollector;
+import bd.com.ipay.ipayskeleton.DataCollectors.Model.UserLocation;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
@@ -81,9 +87,20 @@ import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HomeActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HttpResponseListener {
+        implements NavigationView.OnNavigationItemSelectedListener, LocationListener, HttpResponseListener {
+
+    /**
+     * Constant for getting min location update time.
+     */
+    private static final long LOCATION_UPDATE_MIN_TIME_INTERVAL = 0;
+    /**
+     * Constant for getting min distance change.
+     */
+    private static final long LOCATION_UPDATE_MIN_DISTANCE = 500;
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
+
+    private HttpRequestPostAsyncTask mLocationUpdateRequestAsyncTask;
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
@@ -212,7 +229,7 @@ public class HomeActivity extends BaseActivity
         // request user for permission.
         attemptRequestForPermission();
         if (Utilities.isNecessaryPermissionExists(this, Constants.LOCATION_PERMISSIONS)) {
-            startService(new Intent(this, LocationCollectorService.class));
+            startLocationCollection();
         }
 
         getAllBusinessAccountsList();
@@ -223,6 +240,20 @@ public class HomeActivity extends BaseActivity
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_INFO_UPDATE_BROADCAST));
+    }
+
+    @SuppressWarnings("MissingPermission")
+    private void startLocationCollection() {
+        final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (Utilities.isNecessaryPermissionExists(this, Constants.LOCATION_PERMISSIONS) && locationManager != null) {
+            final String locationProvider;
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                locationProvider = LocationManager.GPS_PROVIDER;
+            } else {
+                locationProvider = LocationManager.NETWORK_PROVIDER;
+            }
+            locationManager.requestLocationUpdates(locationProvider, LOCATION_UPDATE_MIN_TIME_INTERVAL, LOCATION_UPDATE_MIN_DISTANCE, this);
+        }
     }
 
     /**
@@ -317,7 +348,7 @@ public class HomeActivity extends BaseActivity
                                 new GetContactsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     } else if (permissions[i].equals(Manifest.permission.ACCESS_COARSE_LOCATION) || permissions[i].equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                        startService(new Intent(this, LocationCollectorService.class));
+                        startLocationCollection();
                     }
                 }
 
@@ -551,6 +582,7 @@ public class HomeActivity extends BaseActivity
             mLogoutTask = null;
             mGetProfileInfoTask = null;
             mGetBusinessInformationAsyncTask = null;
+            mLocationUpdateRequestAsyncTask = null;
             Toast.makeText(HomeActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
@@ -637,7 +669,50 @@ public class HomeActivity extends BaseActivity
 
                 mGetBusinessInformationAsyncTask = null;
                 break;
+            case Constants.COMMAND_POST_USER_LOCATION:
+                mLocationUpdateRequestAsyncTask = null;
+                break;
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            UserLocation userLocation = new UserLocation(location.getLatitude(), location.getLongitude());
+            if (mLocationUpdateRequestAsyncTask == null) {
+                try {
+                    sendUserLocation(Collections.singletonList(userLocation));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    private void sendUserLocation(List<UserLocation> userLocationList) {
+        LocationCollector locationCollector = new LocationCollector();
+        locationCollector.setDeviceId(DeviceInfoFactory.getDeviceId(this));
+        locationCollector.setUuid(ProfileInfoCacheManager.getUUID());
+        locationCollector.setMobileNumber(ProfileInfoCacheManager.getMobileNumber());
+        locationCollector.setLocationList(userLocationList);
+        String body = new GsonBuilder().create().toJson(locationCollector);
+        mLocationUpdateRequestAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_POST_USER_LOCATION, Constants.BASE_URL_DATA_COLLECTOR + Constants.URL_ENDPOINT_LOCATION_COLLECTOR, body, this, this);
+        mLocationUpdateRequestAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

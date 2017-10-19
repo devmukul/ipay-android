@@ -4,21 +4,18 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.DataCollectors.Model.UserLocation;
 import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class DataHelper {
 
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 11;
 
     private final Context context;
     private static DataHelper instance = null;
@@ -235,73 +232,5 @@ public class DataHelper {
         }
 
         return 0;
-    }
-
-    public void saveLocation(UserLocation userLocation) {
-        SQLiteDatabase sqLiteDatabase = dOpenHelper.getWritableDatabase();
-        sqLiteDatabase.beginTransaction();
-        try {
-            ContentValues values = new ContentValues();
-            values.put(DBConstants.KEY_LOCATION_LATITUDE, userLocation.getLatitude());
-            values.put(DBConstants.KEY_LOCATION_LONGITUDE, userLocation.getLongitude());
-            values.put(DBConstants.KEY_LOCATION_CREATED_TIME, userLocation.getCreatedAt());
-
-            sqLiteDatabase.insertWithOnConflict(DBConstants.DB_TABLE_LOCATIONS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        sqLiteDatabase.setTransactionSuccessful();
-        sqLiteDatabase.endTransaction();
-
-        Logger.logI("Locations", "Inserted into the database");
-    }
-
-    public void deleteLocations(List<UserLocation> userLocationList) {
-        SQLiteDatabase sqLiteDatabase = dOpenHelper.getWritableDatabase();
-        sqLiteDatabase.beginTransaction();
-        int count = 0;
-        try {
-
-            for (UserLocation userLocation : userLocationList) {
-                if (userLocation.getId() != -1)
-                    count += sqLiteDatabase.delete(DBConstants.DB_TABLE_LOCATIONS, "_id = " + userLocation.getId(), null);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        sqLiteDatabase.setTransactionSuccessful();
-        sqLiteDatabase.endTransaction();
-
-        Logger.logI("Locations", "Removed " + count + "location/s from the database.");
-    }
-
-    @NonNull
-    public List<UserLocation> getAllSavedLocation() {
-        final Cursor cursor;
-        List<UserLocation> userLocations = new ArrayList<>();
-        final String queryString = "SELECT * FROM " + DBConstants.DB_TABLE_LOCATIONS;
-        try {
-            SQLiteDatabase db = dOpenHelper.getReadableDatabase();
-            cursor = db.rawQuery(queryString, null);
-            cursor.moveToFirst();
-            if (cursor.getCount() > 0) {
-                while (!cursor.isAfterLast()) {
-                    UserLocation userLocation = new UserLocation();
-                    userLocation.setId(cursor.getInt(cursor.getColumnIndex("_id")));
-                    userLocation.setLatitude(cursor.getDouble(cursor.getColumnIndex(DBConstants.KEY_LOCATION_LATITUDE)));
-                    userLocation.setLongitude(cursor.getDouble(cursor.getColumnIndex(DBConstants.KEY_LOCATION_LONGITUDE)));
-                    userLocation.setCreatedAt(cursor.getLong(cursor.getColumnIndex(DBConstants.KEY_LOCATION_CREATED_TIME)));
-                    userLocations.add(userLocation);
-                    cursor.moveToNext();
-                }
-            }
-            cursor.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            userLocations = Collections.emptyList();
-        }
-
-        return userLocations;
     }
 }
