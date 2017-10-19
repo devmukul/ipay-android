@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.CustomView;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -26,38 +27,34 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 public class BusinessContactsSearchView extends FrameLayout {
 
     private CustomAutoCompleteView mCustomAutoCompleteView;
-    private TextView mMobileNumberHintView;
 
     private List<BusinessContact> mBusinessContactList;
-    private BusinessContactListAdapter mBusinessContactsAdapter;
     private String mQuery = "";
 
     private Context mContext;
 
     public BusinessContactsSearchView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        initView(context, attrs);
+        initView(context);
     }
 
     public BusinessContactsSearchView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initView(context, attrs);
+        initView(context);
     }
 
     public BusinessContactsSearchView(Context context) {
         super(context);
-        initView(context, null);
+        initView(context);
     }
 
-    private void initView(Context context, AttributeSet attrs) {
+    private void initView(Context context) {
         this.mContext = context;
 
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.view_contacts_search_view, this, true);
 
         mCustomAutoCompleteView = (CustomAutoCompleteView) view.findViewById(R.id.auto_complete_view);
-        mMobileNumberHintView = (TextView) view.findViewById(R.id.mobile_number_hint);
 
         mCustomAutoCompleteView.addTextChangedListener(new CustomAutoCompleteTextChangedListener());
 
@@ -67,7 +64,7 @@ public class BusinessContactsSearchView extends FrameLayout {
 
     public class CustomAutoCompleteTextChangedListener implements TextWatcher {
 
-        public CustomAutoCompleteTextChangedListener() {
+        CustomAutoCompleteTextChangedListener() {
         }
 
         @Override
@@ -82,17 +79,16 @@ public class BusinessContactsSearchView extends FrameLayout {
         @Override
         public void onTextChanged(CharSequence userInput, int start, int before, int count) {
             if (userInput.length() > 0) {
-                mMobileNumberHintView.setVisibility(VISIBLE);
 
                 mQuery = userInput.toString();
 
-                // Query the database based on the user input
-                readBusinessContactsFromDB();
-            } else {
-
-                mMobileNumberHintView.setVisibility(INVISIBLE);
+                try {
+                    // Query the database based on the user input
+                    readBusinessContactsFromDB();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-
         }
     }
 
@@ -172,12 +168,14 @@ public class BusinessContactsSearchView extends FrameLayout {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            mCursor.close();
+            if (mCursor != null) {
+                mCursor.close();
+            }
         }
     }
 
     private void setBusinessContactAdapter(List<BusinessContact> businessContactList) {
-        mBusinessContactsAdapter = new BusinessContactListAdapter(mContext, businessContactList);
+        BusinessContactListAdapter mBusinessContactsAdapter = new BusinessContactListAdapter(mContext, businessContactList);
         mCustomAutoCompleteView.setAdapter(mBusinessContactsAdapter);
     }
 
@@ -189,16 +187,18 @@ public class BusinessContactsSearchView extends FrameLayout {
         private TextView mobileNumberView;
         private ProfileImageView profilePictureView;
 
-        public BusinessContactListAdapter(Context context, List<BusinessContact> objects) {
+        BusinessContactListAdapter(Context context, List<BusinessContact> objects) {
             super(context, 0, objects);
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        @NonNull
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             View view = convertView;
 
-            if (view == null) view = inflater.inflate(R.layout.list_item_business_contact, null);
+            if (view == null)
+                view = inflater.inflate(R.layout.list_item_business_contact, parent, false);
 
             businessNameView = (TextView) view.findViewById(R.id.business_name);
             businessTypeView = (TextView) view.findViewById(R.id.business_type);
@@ -210,6 +210,10 @@ public class BusinessContactsSearchView extends FrameLayout {
 
         public View bindView(View view, int position) {
             BusinessContact businessContact = getItem(position);
+
+            if (businessContact == null) {
+                return view;
+            }
 
             final String businessName = businessContact.getBusinessName();
             final String mobileNumber = businessContact.getMobileNumber();

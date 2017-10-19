@@ -66,11 +66,10 @@
 
             <Button
                 android:id="@+id/button_save"
-                style="@style/PrimaryMediumButton"
+                style="@style/ButtonPrimaryWithNote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin_semi_double"
-                android:text="@string/save" />
+                android:text="@string/save"/>
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/layout_button"
-            android:background="@drawable/background_final_home"
+            android:background="@drawable/background_all_layout"
             android:orientation="vertical"
             android:weightSum="5">
 
