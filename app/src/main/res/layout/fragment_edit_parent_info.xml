@@ -120,10 +120,10 @@
 
             <Button
                 android:id="@+id/button_save"
-                style="@style/PrimaryMediumButton"
+                style="@style/ButtonPrimaryWithNote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/save" />
+                android:text="@string/save"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

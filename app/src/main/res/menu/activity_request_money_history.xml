@@ -5,7 +5,14 @@
     <item
         android:id="@+id/action_history"
         android:icon="@drawable/ic_history"
-        android:title="@string/notification"
-        app:showAsAction="always"
+        android:title="@string/history"
+        app:showAsAction="never"
         android:visible="true"/>
+
+    <!--<item-->
+        <!--android:id="@+id/action_history"-->
+        <!--android:icon="@drawable/ic_history"-->
+        <!--android:title="@string/history"-->
+        <!--app:showAsAction="never"-->
+        <!--android:visible="true"/>-->
 </menu>

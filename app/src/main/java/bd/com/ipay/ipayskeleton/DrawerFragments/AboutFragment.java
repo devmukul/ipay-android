@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -47,7 +48,7 @@ public class AboutFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ipay_about) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_ipay_about));
     }
 
     private void setButtonActions() {
@@ -59,21 +60,29 @@ public class AboutFragment extends BaseFragment {
 
         mTermView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse(getContext().getString(R.string.term_link)));
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    intent.setData(Uri.parse(getContext().getString(R.string.term_link)));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), R.string.no_browser_found_error_message, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         mPrivacyView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse(getContext().getString(R.string.privacy_link)));
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    intent.setData(Uri.parse(getContext().getString(R.string.privacy_link)));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), R.string.no_browser_found_error_message, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

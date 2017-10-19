@@ -58,6 +58,9 @@ public class Constants {
     public static final String PROFILE_COMPLETION_UPDATE_BROADCAST = "PROFILE_COMPLETION_UPDATE_BROADCAST";
     public static final String NOTIFICATION_UPDATE_BROADCAST = "NOTIFICATION_UPDATE_BROADCAST";
 
+    public static final String TOPUP_HISTORY_UPDATE_BROADCAST = "TOPUP_HISTORY_UPDATE_BROADCAST ";
+
+
     public static final String TOKEN = "token";
     public static final String REFRESH_TOKEN = "refresh-token";
     public static final String RESOURCE_TOKEN = "resource-token";
@@ -127,7 +130,8 @@ public class Constants {
     public static final String VAT = "vat";
 
     public static final String OFFICE_LAND_LINE_NUMBER_PRIMARY = "+88-02-9852507";
-    public static final String OFFICE_LAND_LINE_NUMBER_SECONDARY = "+88-02-9852510";
+    public static final String OFFICE_LAND_LINE_NUMBER_SECONDARY = "+88-02-9852508";
+    public static final String OFFICE_LAND_LINE_NUMBER_OTHER = "+880-9638 900800";
     public static final String OFFICE_EMAIL = "support@ipay.com.bd";
     public static final String FEEDBACK = "feedback@ipay.com.bd";
     public static final String OFFICE_ADDRESS = "Silver Tower (12th Floor)\n52 Gulshan Avenue, Circle-1\nDhaka-1212\nBangladesh\n";
@@ -192,7 +196,8 @@ public class Constants {
     public static final int TEST_SERVER = 2;
     public static final int STAGE_SERVER = 3;
     public static final int LIVE_SERVER = 4;
-    public static final int LOCAL_SERVER = 5;
+    public static final int DEMO_SERVER = 5;
+    public static final int LOCAL_SERVER = 6;
 
     public static final String PERSONAL_ACCOUNT = "Personal Account";
     public static final String BUSINESS_ACCOUNT = "Business Account";
@@ -253,6 +258,18 @@ public class Constants {
             BASE_URL_WEB = "https://www.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "https://www.ipay.com.bd/data-collector/v1/";
             SERVER_NAME = "live";
+
+        } else if (SERVER_TYPE == DEMO_SERVER) {
+
+            BASE_URL_MM = "https://demo.ipay.com.bd/api/v1/";
+            BASE_URL_SM = "https://demo.ipay.com.bd/api/v1/money/";
+            BASE_URL_EDU = "https://demo.ipay.com.bd/api/v1/em/";
+            BASE_URL_FTP_SERVER = "https://demo.ipay.com.bd";
+            BASE_URL_CONTACT = "https://demo.ipay.com.bd/external/v1/";
+            BASE_URL_ADMIN = "https://demo.ipay.com.bd/api/v1/support/";
+            BASE_URL_PUSH_NOTIFICATION = "https://demo.ipay.com.bd/api/v1/notification/";
+            BASE_URL_WEB = "https://demo.ipay.com.bd";
+            SERVER_NAME = "demo";
 
         } else {
 
@@ -669,6 +686,7 @@ public class Constants {
 
     public static final String DOCUMENT_TYPE_NATIONAL_ID = "national_id";
     public static final String DOCUMENT_TYPE_PASSPORT = "passport";
+    public static String DOCUMENT_TYPE_OTHER = "Other";
     public static final String DOCUMENT_TYPE_DRIVING_LICENSE = "driving_license";
     public static final String DOCUMENT_TYPE_BIRTH_CERTIFICATE = "birth_certificate";
     public static final String DOCUMENT_TYPE_TIN = "tin";
@@ -678,6 +696,7 @@ public class Constants {
 
     public static final String DOCUMENT_ID_NUMBER = "documentIdNumber";
     public static final String DOCUMENT_TYPE = "documentType";
+    public static final String DOCUMENT_NAME = "documentName";
 
     public static final String ACCOUNT_VERIFICATION_STATUS_VERIFIED = "VERIFIED";
     public static final String ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED = "NOT_VERIFIED";

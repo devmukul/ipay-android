@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -30,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ProfilePictureHelperDialog;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -45,6 +48,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import bd.com.ipay.ipayskeleton.camera.CameraActivity;
 import bd.com.ipay.ipayskeleton.camera.utility.CameraAndImageUtilities;
 
 public class AccountFragment extends BaseFragment implements HttpResponseListener {
@@ -141,76 +145,78 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
     }
 
     private void setButtonActions() {
-        mProfilePictureHolderView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.MANAGE_PROFILE_PICTURE)
-            public void onClick(View v) {
-                if (!ProfileInfoCacheManager.isAccountVerified()) {
-                    profilePictureHelperDialog.show();
-                } else
-                    showProfilePictureUpdateRestrictionDialog();
-            }
-        });
-
-        mBasicInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.SEE_PROFILE)
-            public void onClick(View view) {
-                if (ProfileInfoCacheManager.isBusinessAccount())
-                    ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
-                else ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
-            }
-        });
-
-        mEmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.SEE_EMAILS)
-            public void onClick(View view) {
-                ((ProfileActivity) getActivity()).switchToEmailFragment();
-            }
-        });
-
-        mAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.SEE_ADDRESSES)
-            public void onClick(View view) {
-                ((ProfileActivity) getActivity()).switchToAddressFragment();
-            }
-        });
-
-        mIntroducer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.SEE_INTRODUCERS)
-            public void onClick(View v) {
-                ((ProfileActivity) getActivity()).switchToIntroducerFragment();
-            }
-        });
-
-        mDocuments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ProfileInfoCacheManager.isBusinessAccount()) {
-                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_DOCS)) {
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
-                        return;
-                    }
-                } else {
-                    if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_IDENTIFICATION_DOCS)) {
-                        DialogUtils.showServiceNotAllowedDialog(getContext());
-                        return;
-                    }
+        if (this.isAdded()) {
+            mProfilePictureHolderView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                @ValidateAccess(ServiceIdConstants.MANAGE_PROFILE_PICTURE)
+                public void onClick(View v) {
+                    if (!ProfileInfoCacheManager.isAccountVerified()) {
+                        profilePictureHelperDialog.show();
+                    } else
+                        showProfilePictureUpdateRestrictionDialog();
                 }
-                ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
-            }
-        });
+            });
 
-        mProfileCompleteness.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.SEE_PROFILE_COMPLETION)
-            public void onClick(View view) {
-                ((ProfileActivity) getActivity()).switchToProfileCompletionFragment();
-            }
-        });
+            mBasicInfo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                @ValidateAccess(ServiceIdConstants.SEE_PROFILE)
+                public void onClick(View view) {
+                    if (ProfileInfoCacheManager.isBusinessAccount())
+                        ((ProfileActivity) getActivity()).switchToBusinessInfoFragment();
+                    else ((ProfileActivity) getActivity()).switchToBasicInfoFragment();
+                }
+            });
+
+            mEmail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                @ValidateAccess(ServiceIdConstants.SEE_EMAILS)
+                public void onClick(View view) {
+                    ((ProfileActivity) getActivity()).switchToEmailFragment();
+                }
+            });
+
+            mAddress.setOnClickListener(new View.OnClickListener() {
+                @Override
+                @ValidateAccess(ServiceIdConstants.SEE_ADDRESSES)
+                public void onClick(View view) {
+                    ((ProfileActivity) getActivity()).switchToAddressFragment();
+                }
+            });
+
+            mIntroducer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                @ValidateAccess(ServiceIdConstants.SEE_INTRODUCERS)
+                public void onClick(View v) {
+                    ((ProfileActivity) getActivity()).switchToIntroducerFragment();
+                }
+            });
+
+            mDocuments.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (ProfileInfoCacheManager.isBusinessAccount()) {
+                        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_DOCS)) {
+                            DialogUtils.showServiceNotAllowedDialog(getContext());
+                            return;
+                        }
+                    } else {
+                        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_IDENTIFICATION_DOCS)) {
+                            DialogUtils.showServiceNotAllowedDialog(getContext());
+                            return;
+                        }
+                    }
+                    ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
+                }
+            });
+
+            mProfileCompleteness.setOnClickListener(new View.OnClickListener() {
+                @Override
+                @ValidateAccess(ServiceIdConstants.SEE_PROFILE_COMPLETION)
+                public void onClick(View view) {
+                    ((ProfileActivity) getActivity()).switchToProfileCompletionFragment();
+                }
+            });
+        }
     }
 
     private void showProfilePictureUpdateRestrictionDialog() {
@@ -336,6 +342,10 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
                             updateProfilePicture(uri);
                         }
                     }
+                } else if (resultCode == CameraActivity.CAMERA_ACTIVITY_CRASHED) {
+                    Intent systemCameraOpenIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    systemCameraOpenIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID, DocumentPicker.getTempFile(getActivity(),"profile_picture.jpg")));
+                    startActivityForResult(systemCameraOpenIntent, ACTION_PICK_PROFILE_PICTURE);
                 }
                 break;
             default:

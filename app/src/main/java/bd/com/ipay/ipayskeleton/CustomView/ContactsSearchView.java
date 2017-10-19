@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.CustomView;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -29,9 +30,7 @@ public class ContactsSearchView extends FrameLayout {
     public boolean mFilterByiPayMembersOnly;
     public boolean mFilterByBusinessMembersOnly;
     private CustomAutoCompleteView mCustomAutoCompleteView;
-    private TextView mMobileNumberHintView;
     private List<DBContactNode> mContactList;
-    private ContactListAdapter mContactsAdapter;
     private String mQuery = "";
     private Context mContext;
 
@@ -39,28 +38,26 @@ public class ContactsSearchView extends FrameLayout {
 
     public ContactsSearchView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        initView(context, attrs);
+        initView(context);
     }
 
     public ContactsSearchView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initView(context, attrs);
+        initView(context);
     }
 
     public ContactsSearchView(Context context) {
         super(context);
-        initView(context, null);
+        initView(context);
     }
 
-    private void initView(Context context, AttributeSet attrs) {
+    private void initView(Context context) {
         this.mContext = context;
 
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.view_contacts_search_view, this, true);
 
         mCustomAutoCompleteView = (CustomAutoCompleteView) view.findViewById(R.id.auto_complete_view);
-        mMobileNumberHintView = (TextView) view.findViewById(R.id.mobile_number_hint);
 
         mCustomAutoCompleteView.addTextChangedListener(new CustomAutoCompleteTextChangedListener());
 
@@ -150,12 +147,14 @@ public class ContactsSearchView extends FrameLayout {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            mCursor.close();
+            if (mCursor != null) {
+                mCursor.close();
+            }
         }
     }
 
     private void setBusinessContactAdapter(List<DBContactNode> contactList) {
-        mContactsAdapter = new ContactListAdapter(mContext, contactList);
+        ContactListAdapter mContactsAdapter = new ContactListAdapter(mContext, contactList);
         mCustomAutoCompleteView.setAdapter(mContactsAdapter);
     }
 
@@ -173,9 +172,6 @@ public class ContactsSearchView extends FrameLayout {
 
     public class CustomAutoCompleteTextChangedListener implements TextWatcher {
 
-        public CustomAutoCompleteTextChangedListener() {
-        }
-
         @Override
         public void afterTextChanged(Editable s) {
         }
@@ -188,20 +184,17 @@ public class ContactsSearchView extends FrameLayout {
         @Override
         public void onTextChanged(CharSequence userInput, int start, int before, int count) {
             if (userInput.length() > 0) {
-                mMobileNumberHintView.setVisibility(VISIBLE);
-
                 if (CurrentFragmentTag() != null && CurrentFragmentTag().equals(Constants.TOP_UP))
                     customTextChangeListener.onTextChange(userInput.toString());
-
-            } else mMobileNumberHintView.setVisibility(INVISIBLE);
+            }
 
             mQuery = userInput.toString();
 
             try {
                 // Query in database based on the user input
                 readContactsFromDB();
-            } finally {
-
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -213,29 +206,28 @@ public class ContactsSearchView extends FrameLayout {
         private TextView secondaryNameView;
         private ProfileImageView profilePictureView;
         private TextView mobileNumberView;
-        private ImageView memberStatusView;
         private ImageView verificationStatusView;
-        private TextView inviteStatusTextView;
+        private Button inviteStatusTextView;
         private Button inviteButton;
 
-        public ContactListAdapter(Context context, List<DBContactNode> objects) {
+        ContactListAdapter(Context context, List<DBContactNode> objects) {
             super(context, 0, objects);
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             View view = convertView;
 
-            if (view == null) view = inflater.inflate(R.layout.list_item_contact, null);
+            if (view == null) view = inflater.inflate(R.layout.list_item_contact, parent, false);
 
             primaryNameView = (TextView) view.findViewById(R.id.name1);
             secondaryNameView = (TextView) view.findViewById(R.id.name2);
             mobileNumberView = (TextView) view.findViewById(R.id.mobile_number);
             profilePictureView = (ProfileImageView) view.findViewById(R.id.profile_picture);
-            memberStatusView = (ImageView) view.findViewById(R.id.is_member);
             verificationStatusView = (ImageView) view.findViewById(R.id.verification_status);
-            inviteStatusTextView = (TextView) view.findViewById(R.id.invite_status);
+            inviteStatusTextView = (Button) view.findViewById(R.id.button_invited);
             inviteButton = (Button) view.findViewById(R.id.button_invite);
 
             return bindView(view, position);
@@ -244,16 +236,17 @@ public class ContactsSearchView extends FrameLayout {
         public View bindView(View view, int position) {
             DBContactNode contact = getItem(position);
 
+            if (contact == null) {
+                return view;
+            }
+
             final String name = contact.getName();
             final String originalName = contact.getOriginalName();
             final String mobileNumber = contact.getMobileNumber();
             final String profilePictureUrlQualityMedium = Constants.BASE_URL_FTP_SERVER + contact.getProfilePictureUrlQualityMedium();
             final boolean isVerified = contact.getVerificationStatus() == DBConstants.VERIFIED_USER;
-            final boolean isMember = contact.getMemberStatus() == DBConstants.IPAY_MEMBER;
 
-            /**
-             * We need to show original name on the top if exists
-             */
+            // We need to show original name on the top if exists
             if (originalName != null && !originalName.isEmpty()) {
                 primaryNameView.setText(originalName);
                 secondaryNameView.setVisibility(View.VISIBLE);
@@ -267,9 +260,6 @@ public class ContactsSearchView extends FrameLayout {
             profilePictureView.setProfilePicture(profilePictureUrlQualityMedium, false);
             inviteStatusTextView.setVisibility(View.GONE);
             inviteButton.setVisibility(View.GONE);
-
-            if (isMember) memberStatusView.setVisibility(View.VISIBLE);
-            else memberStatusView.setVisibility(View.GONE);
 
             if (isVerified) verificationStatusView.setVisibility(View.VISIBLE);
             else verificationStatusView.setVisibility(View.GONE);

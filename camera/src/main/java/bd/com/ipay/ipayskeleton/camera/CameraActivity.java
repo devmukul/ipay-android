@@ -48,6 +48,8 @@ public class CameraActivity extends AppCompatActivity {
     private CameraSourcePreview mCameraPreview;
     private CameraOverlay mCameraOverlay;
 
+    public static final int CAMERA_ACTIVITY_CRASHED = -100;
+
     private ImageButton mCameraChangeButton;
     private ImageButton mCrossButton;
     private ImageButton mOkButton;
