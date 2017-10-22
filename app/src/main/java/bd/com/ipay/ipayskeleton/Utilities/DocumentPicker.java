@@ -269,7 +269,7 @@ public class DocumentPicker {
 
     @NonNull
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static File getTempFile(Context context, final String fileName) {
+    public static File getTempFile(Context context, final String fileName) {
         File rootDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         if (rootDir == null) {
             rootDir = context.getFilesDir();

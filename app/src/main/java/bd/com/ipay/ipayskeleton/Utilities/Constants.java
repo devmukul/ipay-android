@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
+import android.Manifest;
+
 import com.google.android.gms.vision.CameraSource;
 
 import bd.com.ipay.ipayskeleton.BuildConfig;
@@ -15,8 +17,8 @@ public class Constants {
     public static final String TARGET_FRAGMENT = "TARGET_FRAGMENT";
     public static final String SIGN_IN = "SIGN_IN";
     public static final String SIGN_UP = "SIGN_UP";
-    public static final String ADD_TRUSTED_PERSON="ADD_TRUSTED_PERSON";
-    public static final String BANK_ACCOUNT="BANK_ACCOUNT";
+    public static final String ADD_TRUSTED_PERSON = "ADD_TRUSTED_PERSON";
+    public static final String BANK_ACCOUNT = "BANK_ACCOUNT";
     public static final String SIGNED_IN = "SIGNED IN";
     public static final String DOCUMENT_URL = "DOCUMENT_URL";
     public static final String FILE_EXTENSION = "FILE_EXTENSION";
@@ -24,7 +26,7 @@ public class Constants {
     public static final String STRING_TO_ENCODE = "STRING_TO_ENCODE";
     public static final String ACTIVITY_TITLE = "ACTIVITY_TITLE";
     public static final String TITLE = "TITLE";
-    public static final String INTENDED_FRAGMENT="INTENDED_FRAGMENT";
+    public static final String INTENDED_FRAGMENT = "INTENDED_FRAGMENT";
     public static final String DESCRIPTION = "DESCRIPTION";
     public static final String TIME = "TIME";
     public static final String STATUS = "STATUS";
@@ -55,6 +57,9 @@ public class Constants {
     public static final String BALANCE_UPDATE_BROADCAST = "BALANCE_UPDATE_BROADCAST";
     public static final String PROFILE_COMPLETION_UPDATE_BROADCAST = "PROFILE_COMPLETION_UPDATE_BROADCAST";
     public static final String NOTIFICATION_UPDATE_BROADCAST = "NOTIFICATION_UPDATE_BROADCAST";
+
+    public static final String TOPUP_HISTORY_UPDATE_BROADCAST = "TOPUP_HISTORY_UPDATE_BROADCAST ";
+
 
     public static final String TOKEN = "token";
     public static final String REFRESH_TOKEN = "refresh-token";
@@ -184,13 +189,15 @@ public class Constants {
     public static final String BASE_URL_PUSH_NOTIFICATION;
     public static final String BASE_URL_FTP_SERVER;
     public static final String BASE_URL_WEB;
+    public static final String BASE_URL_DATA_COLLECTOR;
     private static final String SERVER_NAME;
 
     public static final int DEV_SERVER = 1;
     public static final int TEST_SERVER = 2;
     public static final int STAGE_SERVER = 3;
     public static final int LIVE_SERVER = 4;
-    public static final int LOCAL_SERVER = 5;
+    public static final int DEMO_SERVER = 5;
+    public static final int LOCAL_SERVER = 6;
 
     public static final String PERSONAL_ACCOUNT = "Personal Account";
     public static final String BUSINESS_ACCOUNT = "Business Account";
@@ -212,6 +219,7 @@ public class Constants {
             BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
 //            BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
+            BASE_URL_DATA_COLLECTOR = "http://10.10.10.10:8800/data-collector/v1/";
             SERVER_NAME = "dev";
 
         } else if (SERVER_TYPE == TEST_SERVER) {
@@ -224,6 +232,7 @@ public class Constants {
             BASE_URL_ADMIN = "http://10.15.40.15:8085/api/v1/support/";
             BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.162:7778/api/v1/notification/";
             BASE_URL_WEB = "http://test.ipay.com.bd";
+            BASE_URL_DATA_COLLECTOR = "http://10.15.40.10:8800/data-collector/v1/";
             SERVER_NAME = "test";
 
         } else if (SERVER_TYPE == STAGE_SERVER) {
@@ -236,6 +245,7 @@ public class Constants {
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
             BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "http://stage.ipay.com.bd";
+            BASE_URL_DATA_COLLECTOR = "http://10.10.40.10:8800/data-collector/v1/";
             SERVER_NAME = "stage";
 
         } else if (SERVER_TYPE == LIVE_SERVER) {
@@ -248,18 +258,33 @@ public class Constants {
             BASE_URL_ADMIN = "https://www.ipay.com.bd/api/v1/support/";
             BASE_URL_PUSH_NOTIFICATION = "https://www.ipay.com.bd/api/v1/notification/";
             BASE_URL_WEB = "https://www.ipay.com.bd";
+            BASE_URL_DATA_COLLECTOR = "https://www.ipay.com.bd/data-collector/v1/";
             SERVER_NAME = "live";
+
+        } else if (SERVER_TYPE == DEMO_SERVER) {
+
+            BASE_URL_MM = "https://demo.ipay.com.bd/api/v1/";
+            BASE_URL_SM = "https://demo.ipay.com.bd/api/v1/money/";
+            BASE_URL_EDU = "https://demo.ipay.com.bd/api/v1/em/";
+            BASE_URL_FTP_SERVER = "https://demo.ipay.com.bd";
+            BASE_URL_CONTACT = "https://demo.ipay.com.bd/external/v1/";
+            BASE_URL_ADMIN = "https://demo.ipay.com.bd/api/v1/support/";
+            BASE_URL_PUSH_NOTIFICATION = "https://demo.ipay.com.bd/api/v1/notification/";
+            BASE_URL_DATA_COLLECTOR = "https://demo.ipay.com.bd/data-collector/v1/";
+            BASE_URL_WEB = "https://demo.ipay.com.bd";
+            SERVER_NAME = "demo";
 
         } else {
 
             BASE_URL_MM = "http://192.168.1.105:8085/api/v1/";
-            BASE_URL_SM = "http://192.168.1.105:8085/api/v1/money/";
+            BASE_URL_SM = "http://192.168.1.106:8085/api/v1/money/";
             BASE_URL_EDU = "http://192.168.1.105:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
             BASE_URL_ADMIN = "http://192.168.1.147:8085/api/v1/support/";
             BASE_URL_PUSH_NOTIFICATION = "http://10.10.10.10:7778/api/v1/notification/";
             BASE_URL_WEB = "http://dev.ipay.com.bd";
+            BASE_URL_DATA_COLLECTOR = "http://192.168.1.105:8800/data-collector/v1/";
             SERVER_NAME = "local";
         }
     }
@@ -460,6 +485,9 @@ public class Constants {
     // FCM notification
     public static final String URL_REFRESH_FIREBASE_TOKEN = "firebase/login/";
 
+    // User Data collector
+    public static final String URL_ENDPOINT_LOCATION_COLLECTOR = "location";
+
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
     public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED=452;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
@@ -606,6 +634,9 @@ public class Constants {
     public static final String COMMAND_GET_TWO_FA_SETTING="COMMAND_GET_TWO_FA_SETTING";
     public static final String COMMAND_PUT_TWO_FA_SETTING="COMMAND_PUT_TWO_FA_SETTING";
 
+    //Data Collector
+    public static final String COMMAND_POST_USER_LOCATION = "COMMAND_POST_USER_LOCATION";
+
     public static final int ACTIVITY_LOG_COUNT = 10;
 
     public static final int ACTIVITY_TYPE_CHANGE_PROFILE = 0;
@@ -663,6 +694,7 @@ public class Constants {
 
     public static final String DOCUMENT_TYPE_NATIONAL_ID = "national_id";
     public static final String DOCUMENT_TYPE_PASSPORT = "passport";
+    public static String DOCUMENT_TYPE_OTHER = "Other";
     public static final String DOCUMENT_TYPE_DRIVING_LICENSE = "driving_license";
     public static final String DOCUMENT_TYPE_BIRTH_CERTIFICATE = "birth_certificate";
     public static final String DOCUMENT_TYPE_TIN = "tin";
@@ -672,6 +704,7 @@ public class Constants {
 
     public static final String DOCUMENT_ID_NUMBER = "documentIdNumber";
     public static final String DOCUMENT_TYPE = "documentType";
+    public static final String DOCUMENT_NAME = "documentName";
 
     public static final String ACCOUNT_VERIFICATION_STATUS_VERIFIED = "VERIFIED";
     public static final String ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED = "NOT_VERIFIED";
@@ -762,4 +795,7 @@ public class Constants {
 
     // Format
     public static final String DATE_FORMAT = "%02d/%02d/%4d";
+
+    public static final String[] LOCATION_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+
 }

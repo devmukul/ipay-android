@@ -23,13 +23,13 @@
                 android:maxLines="1" />
 
             <ImageView
-                android:id="@+id/button_show_qr_code"
+                android:id="@+id/button_scan_qr_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/select_sender_from_contacts"
-                android:src="@drawable/ic_qrc3x"
-                android:visibility="gone" />
+                android:padding="@dimen/value4"
+                android:src="@drawable/ic_qr_input" />
 
             <ImageView
                 android:id="@+id/select_sender_from_contacts"
@@ -82,7 +82,7 @@
 
         <Button
             android:id="@+id/button_request_money"
-            style="@style/PrimaryMediumButtonWithNote"
+            style="@style/ButtonPrimaryWithNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_horizontal_margin"

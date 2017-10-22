@@ -22,8 +22,8 @@ public class WithdrawMoneyActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, new WithdrawMoneyFragment()).commit();
 
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -42,4 +42,3 @@ public class WithdrawMoneyActivity extends BaseActivity {
         return WithdrawMoneyActivity.this;
     }
 }
-

@@ -44,8 +44,8 @@ public class RequestMoneyActivity extends BaseActivity {
             switchToRequestMoneyFragment();
         else
             switchToMoneyRequestListFragment();
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -103,5 +103,4 @@ public class RequestMoneyActivity extends BaseActivity {
         return RequestMoneyActivity.this;
     }
 }
-
 

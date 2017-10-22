@@ -5,14 +5,14 @@
         <shape>
             <solid android:color="@color/colorPrimaryDark" />
 
-            <corners android:radius="@dimen/iconified_button_radius" />
+            <corners android:radius="@dimen/oval_button_radius" />
         </shape>
     </item>
     <item android:state_enabled="false">
         <shape>
             <solid android:color="@color/colorMediumGray" />
 
-            <corners android:radius="@dimen/iconified_button_radius" />
+            <corners android:radius="@dimen/oval_button_radius" />
         </shape>
     </item>
 

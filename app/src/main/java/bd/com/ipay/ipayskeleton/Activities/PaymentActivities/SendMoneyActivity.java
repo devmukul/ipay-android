@@ -22,7 +22,8 @@ public class SendMoneyActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, new SendMoneyFragment()).commit();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -42,4 +43,3 @@ public class SendMoneyActivity extends BaseActivity {
         return SendMoneyActivity.this;
     }
 }
-

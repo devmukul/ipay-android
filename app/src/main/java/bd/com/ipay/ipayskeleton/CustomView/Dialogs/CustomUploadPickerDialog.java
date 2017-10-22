@@ -55,11 +55,15 @@ public class CustomUploadPickerDialog extends AlertDialog {
         popUpList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String name = resources.get(i);
+                try {
+                    String name = resources.get(i);
 
-                if (onResourceSelectedListener != null)
-                    onResourceSelectedListener.onResourceSelected(i, name);
-                dismiss();
+                    if (onResourceSelectedListener != null)
+                        onResourceSelectedListener.onResourceSelected(i, name);
+                    dismiss();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

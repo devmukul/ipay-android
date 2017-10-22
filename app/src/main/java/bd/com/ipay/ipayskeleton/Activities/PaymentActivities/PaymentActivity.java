@@ -44,15 +44,14 @@ public class PaymentActivity extends BaseActivity {
             }
         });
 
-
         if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false))
             switchToMakePaymentFragment();
         else
             switchToReceivedPaymentRequestsFragment();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -108,6 +107,3 @@ public class PaymentActivity extends BaseActivity {
         return PaymentActivity.this;
     }
 }
-
-
-

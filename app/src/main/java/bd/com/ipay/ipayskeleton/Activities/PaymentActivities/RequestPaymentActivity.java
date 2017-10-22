@@ -18,16 +18,16 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetSinglePaymentRequestDetailRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PendingPaymentClass;
-import bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments.RequestPaymentFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentRequestReceivedDetailsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments.PaymentRequestSentDetailsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments.PaymentRequestsSentFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentRequestReceivedDetailsFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments.RequestPaymentFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -37,7 +37,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class RequestPaymentActivity extends BaseActivity implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetSingleRequestPaymentDetailsTask = null;
-    private PendingPaymentClass mGetSingleRequestPaymentDetailsResponse;
 
     private ProgressDialog mProgressDialog;
 
@@ -58,7 +57,6 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
     private String mPhotoUri;
     private String mTitle;
 
-    private long REQUEST_PAYMENT_TAG = -1;
     private long requestPaymentID;
 
     public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
@@ -79,6 +77,7 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
             }
         });
 
+        long REQUEST_PAYMENT_TAG = -1;
         requestPaymentID = getIntent().getLongExtra(Constants.REQUEST_ID, REQUEST_PAYMENT_TAG);
         if (requestPaymentID != REQUEST_PAYMENT_TAG) {
             switchedFromTransactionHistory = true;
@@ -86,7 +85,8 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
         } else
             switchToSentPaymentRequestsFragment();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -183,7 +183,7 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
         Gson gson = new Gson();
         if (result.getApiCommand().equals(Constants.COMMAND_GET_SINGLE_INVOICE)) {
             try {
-                mGetSingleRequestPaymentDetailsResponse = gson.fromJson(result.getJsonString(), PendingPaymentClass.class);
+                PendingPaymentClass mGetSingleRequestPaymentDetailsResponse = gson.fromJson(result.getJsonString(), PendingPaymentClass.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
@@ -274,8 +274,3 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
         return RequestPaymentActivity.this;
     }
 }
-
-
-
-
-

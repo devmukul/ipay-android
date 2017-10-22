@@ -18,11 +18,9 @@ public class AddMoneyActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cash_in);
-
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, new AddMoneyFragment()).commit();
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        switchToAddMoneyFragment();
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -37,7 +35,22 @@ public class AddMoneyActivity extends BaseActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        Utilities.hideKeyboard(this);
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            finish();
+        }
+    }
+
+    @Override
     public Context setContext() {
         return AddMoneyActivity.this;
+    }
+
+    public void switchToAddMoneyFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new AddMoneyFragment()).commit();
     }
 }
