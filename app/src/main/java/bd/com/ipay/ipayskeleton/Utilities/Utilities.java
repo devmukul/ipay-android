@@ -86,8 +86,12 @@ public class Utilities {
         if (context == null) return false;
 
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = cm.getActiveNetworkInfo();
-        return info != null && info.isConnected();
+        if (cm != null) {
+            NetworkInfo info = cm.getActiveNetworkInfo();
+            return info != null && info.isConnected();
+        } else {
+            return false;
+        }
     }
 
     public static void setAppropriateKeyboard(Context c, String documentType, EditText editText) {
