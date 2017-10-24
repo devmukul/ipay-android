@@ -274,7 +274,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             shouldProceed = false;
         } else if (TextUtils.isEmpty(mNoteEditText.getText())) {
             focusView = mNoteEditText;
-            mNoteEditText.setError(getString(R.string.select_a_bank));
+            mNoteEditText.setError(getString(R.string.please_write_note));
             shouldProceed = false;
         } else {
             focusView = null;
@@ -342,22 +342,10 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         startActivityForResult(intent, AddMoneyActivity.ADD_MONEY_REVIEW_REQUEST);
     }
 
-    private void launchReviewPageForAddMoneyByBank() {
-        final String amount = mAmountEditText.getText().toString().trim();
-        final String description = mNoteEditText.getText().toString().trim();
-
-
-        Intent intent = new Intent(getActivity(), AddMoneyReviewActivity.class);
-        intent.putExtra(Constants.AMOUNT, Double.parseDouble(amount));
-
-
-        startActivityForResult(intent, AddMoneyActivity.ADD_MONEY_REVIEW_REQUEST);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode == AddMoneyActivity.ADD_MONEY_REVIEW_REQUEST) {
-            if (data.hasExtra(Constants.CARD_TRANSACTION_DATA)) {
+            if (data != null && data.hasExtra(Constants.CARD_TRANSACTION_DATA)) {
                 Intent intent = new Intent(getActivity(), AddMoneyByCreditOrDebitCardStatusActivity.class);
                 intent.putExtra(Constants.CARD_TRANSACTION_DATA, data.getBundleExtra(Constants.CARD_TRANSACTION_DATA));
                 startActivity(intent);
@@ -385,7 +373,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_GET_BANK_LIST:
-                GetBankListResponse mBankListResponse = null;
+                GetBankListResponse mBankListResponse;
                 switch (result.getStatus()) {
                     case Constants.HTTP_RESPONSE_STATUS_OK:
                         try {

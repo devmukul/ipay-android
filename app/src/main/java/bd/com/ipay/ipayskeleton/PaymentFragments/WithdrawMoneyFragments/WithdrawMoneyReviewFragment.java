@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -31,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -48,11 +47,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
 
     private double mAmount;
     private String mDescription;
-    private long mBankAccountId;
-    private String mBankName;
-    private String mBankAccountNumber;
-    private int mBankCode;
-    private Drawable bankIcon;
+    private UserBankClass mSelectedBank;
 
     private TextView mServiceChargeTextView;
     private TextView mNetAmountTextView;
@@ -64,19 +59,11 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         super.onCreate(savedInstanceState);
 
         mAmount = getActivity().getIntent().getDoubleExtra(Constants.AMOUNT, 0);
+
         mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
-        mBankAccountId = getActivity().getIntent().getLongExtra(Constants.BANK_ACCOUNT_ID, -1);
-        mBankName = getActivity().getIntent().getStringExtra(Constants.BANK_NAME);
-        mBankAccountNumber = getActivity().getIntent().getStringExtra(Constants.BANK_ACCOUNT_NUMBER);
-        mBankCode = getActivity().getIntent().getIntExtra(Constants.BANK_CODE, 0);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            bankIcon = getResources().getDrawable(mBankCode, getActivity().getTheme());
-        } else {
-            bankIcon = getResources().getDrawable(mBankCode);
-        }
+        mSelectedBank = getActivity().getIntent().getParcelableExtra(Constants.SELECTED_BANK_ACCOUNT);
 
-        mProgressDialog = new ProgressDialog(getContext());
-
+        mProgressDialog = new ProgressDialog(getActivity());
         mTracker = Utilities.getTracker(getActivity());
     }
 
@@ -98,9 +85,9 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         final TextView bankNameTextView = findViewById(R.id.bank_name_text_view);
         final TextView bankAccountNumberTextView = findViewById(R.id.bank_account_number_text_view);
 
-        bankIconImageView.setImageDrawable(bankIcon);
-        bankNameTextView.setText(mBankName);
-        bankAccountNumberTextView.setText(mBankAccountNumber);
+        bankIconImageView.setImageResource(mSelectedBank.getBankIcon(getContext()));
+        bankNameTextView.setText(mSelectedBank.getBankName());
+        bankAccountNumberTextView.setText(mSelectedBank.getAccountNumber());
 
         final TextView amountTextView = findViewById(R.id.amount_text_view);
         mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
@@ -177,7 +164,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         mProgressDialog.setMessage(getString(R.string.progress_dialog_withdraw_money_in_progress));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        WithdrawMoneyRequest mAddMoneyRequest = new WithdrawMoneyRequest(mBankAccountId, mAmount, mDescription, pin);
+        WithdrawMoneyRequest mAddMoneyRequest = new WithdrawMoneyRequest(mSelectedBank.getBankAccountId(), mAmount, mDescription, pin);
         Gson gson = new Gson();
         String json = gson.toJson(mAddMoneyRequest);
         mWithdrawMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_WITHDRAW_MONEY,
