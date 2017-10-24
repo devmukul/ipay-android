@@ -245,11 +245,6 @@ public class HomeActivity extends BaseActivity
             } else {
                 locationProvider = LocationManager.GPS_PROVIDER;
             }
-            try {
-                Logger.logD("LOCATION", mLocationManager.getLastKnownLocation(locationProvider) + "");
-            } catch (Exception e) {
-
-            }
             mLocationManager.requestSingleUpdate(locationProvider, this, Looper.myLooper());
         }
     }
