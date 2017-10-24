@@ -170,7 +170,7 @@ public class PayFragment extends BaseFragment {
                     divider.setVisibility(View.INVISIBLE);
 
                 actionView.setText(serviceAction.text);
-                actionView.setDrawableLeft(getResources().getDrawable(PayPropertyConstants.PAY_PROPERTY_NAME_TO_ICON_MAP.get(serviceAction.text)));
+              //  actionView.setDrawableLeft(getResources().getDrawable(PayPropertyConstants.PAY_PROPERTY_NAME_TO_ICON_MAP.get(serviceAction.text)));
 
                 v.setOnClickListener(new View.OnClickListener() {
                     @Override
