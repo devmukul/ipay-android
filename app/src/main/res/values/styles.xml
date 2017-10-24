@@ -914,7 +914,12 @@
 
     <style name="ButtonSecondary" parent="ButtonStyle">
         <item name="android:textColor">@color/colorSecondaryButtonText</item>
-        <item name="android:background">@drawable/background_button_oval_gray</item>
+        <item name="android:background">@drawable/background_button_oval_white</item>
+    </style>
+
+    <style name="ButtonSecondary_No_Border" parent="ButtonStyle">
+        <item name="android:textColor">@color/colorSecondaryButtonText</item>
+        <item name="android:background">@drawable/background_button_oval_white_no_border</item>
     </style>
 
     <style name="ButtonCancel" parent="ButtonStyle">

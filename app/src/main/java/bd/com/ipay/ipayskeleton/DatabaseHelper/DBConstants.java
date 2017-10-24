@@ -11,7 +11,6 @@ public class DBConstants {
     public static final String DB_IPAY = "iPayDatabase";
     public static final String DB_TABLE_CONTACTS = "contacts";
     public static final String DB_TABLE_BUSINESS_ACCOUNTS = "business";
-    public static final String DB_TABLE_PUSH_EVENTS = "push_events";
     public static final Uri DB_TABLE_CONTACTS_URI = Uri
             .parse("sqlite://" + Constants.ApplicationPackage + "/" + DB_TABLE_CONTACTS);
     public static final Uri DB_TABLE_BUSINESS_URI = Uri

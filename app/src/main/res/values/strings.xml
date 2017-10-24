@@ -76,6 +76,7 @@
     <string name="mobile_number">Mobile Number</string>
     <string name="phone_number">Phone Number</string>
     <string name="number">number</string>
+    <string name="number_uppercase">Number</string>
     <string name="inception_date">Inception Date</string>
     <string name="contact_us">Contact Us</string>
     <string name="terms_of_service">Terms of Service</string>
@@ -311,6 +312,7 @@
     <string name="failed_empty_pin">PIN cannot be empty</string>
     <string name="account_number">Account Number</string>
     <string name="scan_valid_ipay_qr_code">Please scan a valid iPay account</string>
+    <string name="scan_valid_qr_code">Please scan a valid mobile number</string>
     <string name="please_check_terms_and_conditions">Please check the terms &amp; conditions</string>
     <string name="please_scan_a_valid_ticket">The ticket is invalid.</string>
     <string name="oath_sign_up"><![CDATA[I agree to the]]> </string>
@@ -626,6 +628,9 @@
     <string name="date_of_birth">Date of Birth</string>
     <string name="fathers_name">Father\'s Name</string>
     <string name="mothers_name">Mother\'s Name</string>
+    <string name="other">Other</string>
+    <string name="id">ID</string>
+    <string name="document_name">Document Name</string>
     <string name="mobile">Mobile No.</string>
     <string name="history">History</string>
     <string name="this_device">This device</string>
@@ -982,6 +987,7 @@
 
     <string name="no_browser_found_error_message">No default browser found to open. Please install or enable your browser.</string>
     <string name="no_browser_map_app_found_error_message">No default browser or google maps app found to open. Please install Google Maps/Browser or enable your browser.</string>
+    <string name="please_enter_a_document_name">Please Enter a Document Name</string>
     <string name="search_transaction">Search transaction</string>
     <string name="complete_transaction_list">Complete transaction list</string>
     <string name="pending_transaction_list">Pending transaction list</string>

@@ -18,7 +18,6 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         createContactsTable(db);
-        createPushNotificationTable(db);
         createBusinessAccountsTable(db);
     }
 
@@ -52,13 +51,6 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
                 DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM + " text, " +
                 DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH + " text, " +
                 DBConstants.KEY_BUSINESS_ACCOUNT_ID + " integer default 0)");
-    }
-
-    private void createPushNotificationTable(SQLiteDatabase db) {
-        db.execSQL("create table if not exists "
-                + DBConstants.DB_TABLE_PUSH_EVENTS
-                + "(" + DBConstants.KEY_TAG_NAME + " text unique not null, "
-                + DBConstants.KEY_JSON + " text)");
     }
 
     private void dropTable(SQLiteDatabase db, String tableName) {
