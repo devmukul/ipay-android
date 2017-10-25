@@ -986,4 +986,26 @@
     <string name="complete_transaction_list">Complete transaction list</string>
     <string name="pending_transaction_list">Pending transaction list</string>
 
+
+
+    <string name="upload_photo">Upload photo</string>
+    <string name="upload_photo_id">Upload photo id</string>
+    <string name="add_basic_info">Add basic info</string>
+    <string name="ask_for_introduction_onboard">Ask for Introduction</string>
+    <string name="add_bank_onboard">Add bank info</string>
+    <string name="skip_now">Skip now</string>
+
+    <string name="onboard_step_one_title">Great! You\'re Almost Done</string>
+    <string name="onboard_photo_id_upload_title">Update Photo ID</string>
+    <string name="onboard_profile_info_update_title">One Last Step</string>
+    <string name="onboard_add_bank_title">Add Bank Information</string>
+    <string name="onboard_get_introduced_upload_title">Ask for Introduction</string>
+    <string name="onboard_profile_info_update_page_title">Add Basic Information</string>
+
+    <string name="onboard_upload_photo_text">Upload your profile photo. Face the camera straight on, photo must be in focus and not blurry.</string>
+    <string name="onboard_upload_photo_id_text">Upload a copy of photo ID.\nLike: National ID, Driving License, Passport etc. Make sure all information is clearly readable and that it is fully in frame.</string>
+    <string name="onboard_upload_prifile_info_text">Add your basic information and present address to send some goodies or official doc.</string>
+    <string name="onboard_add_bank_text">Update your bank info to add money from your account to shop, send money or transfer.</string>
+    <string name="onboard_ask_for_introduction_text">Find an iPay user from your contact list and send request to introduce you.</string>
+
 </resources>

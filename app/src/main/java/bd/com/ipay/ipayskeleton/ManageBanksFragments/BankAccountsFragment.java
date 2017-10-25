@@ -333,6 +333,8 @@ public class BankAccountsFragment extends ProgressFragment implements HttpRespon
         if (this.isAdded())
             setContentShown(true);
 
+        System.out.println("Test "+result.toString());
+
         switch (result.getApiCommand()) {
             case Constants.COMMAND_GET_BANK_LIST:
                 try {

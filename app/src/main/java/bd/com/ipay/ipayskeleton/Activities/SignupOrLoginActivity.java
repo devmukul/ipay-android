@@ -23,6 +23,14 @@ import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.SignupPersonalStepOneFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SelectAccountTypeFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBankFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfiHelperFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBankHelperFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardConsentAgreementForBankFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardPhotoIdUploadHelperFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardPhotoIdUploadFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardProfilePictureUploadHelperFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -204,6 +212,61 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         }
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SignupBusinessStepThreeFragment()).addToBackStack(null).commit();
+    }
+
+    public void switchToProfileCompletionHelperActivity() {
+        Intent intent = new Intent(SignupOrLoginActivity.this, ProfileCompletionHelperActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        this.finish();
+    }
+
+
+    public void switchToProfilePictureFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new OnBoardProfilePictureUploadHelperFragment()).commit();
+    }
+
+    public void switchToIdentificationDocumentFragment(String profileImagePath) {
+        System.out.println("Test Path "+profileImagePath);
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.PROFILE_PHOTO_PATH, profileImagePath);
+
+        OnBoardPhotoIdUploadHelperFragment onBoardIcdentificationFragment = new OnBoardPhotoIdUploadHelperFragment();
+        onBoardIcdentificationFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, onBoardIcdentificationFragment).addToBackStack(null).commit();
+    }
+
+    public void switchToDocumentUploadFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new OnBoardPhotoIdUploadFragment()).addToBackStack(null).commit();
+    }
+
+    public void switchToAddressFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new OnBoardAddBasicInfiHelperFragment()).addToBackStack(null).commit();
+    }
+
+    public void switchToEditBasicFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new OnBoardAddBasicInfoFragment()).addToBackStack(null).commit();
+    }
+
+    public void switchToAddNewBankHelperFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new OnBoardAddBankHelperFragment()).commit();
+    }
+
+    public void switchToAddNewBankFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new OnBoardAddBankFragment()).commit();
+    }
+
+    public void switchToAddBankAgreementFragment(Bundle bundle) {
+        OnBoardConsentAgreementForBankFragment consentAgreementForBankFragment = new OnBoardConsentAgreementForBankFragment();
+        consentAgreementForBankFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, consentAgreementForBankFragment).addToBackStack(null).commit();
     }
 
     @Override

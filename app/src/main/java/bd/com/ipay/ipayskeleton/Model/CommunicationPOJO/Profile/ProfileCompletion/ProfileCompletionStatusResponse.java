@@ -36,6 +36,8 @@ public class ProfileCompletionStatusResponse {
         return message;
     }
 
+
+
     public List<PropertyDetails> getBasicInfoCompletionDetails() {
         return basicInfoCompletionDetails;
     }
@@ -165,6 +167,51 @@ public class ProfileCompletionStatusResponse {
             }
         }
     }
+
+    public boolean isBasicInfoUpdated() {
+
+        // Iterate the completionStatusList
+
+        int addressValue =0;int infoValue =0;
+        for (CompletionStatus mCompletionStatus : completionStatusList) {
+            if (mCompletionStatus.getProperty().equals("PERSONAL_ADDRESS")) {
+                addressValue=mCompletionStatus.getValue();
+            }
+            if (mCompletionStatus.getProperty().equals("PERSONAL_ADDRESS")) {
+                infoValue = mCompletionStatus.getValue();
+            }
+        }
+
+        if(addressValue>0)
+            if(infoValue>0)
+                return true;
+        return false;
+    }
+
+    public boolean isPhotoIdUpdated() {
+
+        // Iterate the completionStatusList
+        for (CompletionStatus mCompletionStatus : completionStatusList) {
+            if (mCompletionStatus.getProperty().equals("PHOTO_ID")) {
+                if(mCompletionStatus.getValue()>0)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isPhotoUpdated() {
+
+        // Iterate the completionStatusList
+        for (CompletionStatus mCompletionStatus : completionStatusList) {
+            if (mCompletionStatus.getProperty().equals("PROFILE_PICTURE")) {
+                if(mCompletionStatus.getValue()>0)
+                    return true;
+            }
+        }
+        return false;
+    }
+
 
     public class PropertyDetails implements Comparable<PropertyDetails>{
         private final String propertyName;

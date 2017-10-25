@@ -25,6 +25,8 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 import bd.com.ipay.ipayskeleton.Activities.DeviceTrustActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
+import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -267,8 +269,12 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                     String UUID = mAddToTrustedDeviceResponse.getUUID();
                     ProfileInfoCacheManager.setUUID(UUID);
 
-                    // Launch HomeActivity from here on successful trusted device add
-                    ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+//                    // Launch HomeActivity from here on successful trusted device add
+//                    ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+
+
+                    ProfileInfoCacheManager.switchedFromSignup(true);
+                    ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                 } else {
                     Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }

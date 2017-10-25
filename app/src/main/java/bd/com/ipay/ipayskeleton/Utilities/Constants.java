@@ -791,4 +791,7 @@ public class Constants {
 
     public static final String[] LOCATION_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
+    public static final String PROFILE_PHOTO_PATH = "profile_photo_path";
+
+
 }

@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -257,6 +258,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumber);
+                        ProfileInfoCacheManager.setUserName(SignupOrLoginActivity.mName);
                         ProfileInfoCacheManager.setName(SignupOrLoginActivity.mName);
                         ProfileInfoCacheManager.setBirthday(SignupOrLoginActivity.mBirthday);
                         ProfileInfoCacheManager.setGender(SignupOrLoginActivity.mGender);
@@ -392,8 +394,11 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         String UUID = mAddToTrustedDeviceResponse.getUUID();
                         ProfileInfoCacheManager.setUUID(UUID);
 
+                        ProfileInfoCacheManager.switchedFromSignup(true);
+                        ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
+
                         // Launch HomeActivity from here on successful trusted device add
-                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        //((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)
                         ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
                     else
