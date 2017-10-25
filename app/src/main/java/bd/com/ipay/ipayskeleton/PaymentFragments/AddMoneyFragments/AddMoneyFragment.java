@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.CustomView.AbstractSelectorView;
 import bd.com.ipay.ipayskeleton.CustomView.BankSelectorView;
 import bd.com.ipay.ipayskeleton.CustomView.SelectorView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
@@ -134,10 +135,11 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 }
             }
         });
-        mAddMoneyOptionSelectorView.setOnItemSelectListener(new SelectorView.OnItemSelectListener() {
+        mAddMoneyOptionSelectorView.setOnItemSelectListener(new AbstractSelectorView.OnItemSelectListener() {
+
             @Override
-            public boolean onItemSelected(int id, String name) {
-                switch (name) {
+            public boolean onItemSelected(int selectedItemPosition) {
+                switch (mAddMoneyOptionsTitle.get(selectedItemPosition)) {
                     case Constants.ADD_MONEY_BY_BANK_TITLE:
                         if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
                             setupAddMoneyFromBank();
@@ -205,6 +207,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         } else {
             attemptRefreshAvailableBankNames();
         }
+        mBankSelectorView.setSelectable(false);
     }
 
     private void getBankList() {
@@ -386,6 +389,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                                 }
                             }
                             mBankSelectorView.setItems(mListUserBankClasses);
+                            mBankSelectorView.setSelectable(true);
                             if (mBankSelectorView.isBankAdded() && mBankSelectorView.isVerifiedBankAdded()) {
                                 attemptGetBusinessRule(Constants.SERVICE_ID_ADD_MONEY_BY_BANK);
                             }

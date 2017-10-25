@@ -47,6 +47,7 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
     private int mSelectedItemPosition = -1;
 
     private BankListValidator mBankListValidator = new BankListValidator(null);
+    protected boolean mIsSelectable;
 
     private List<String> mUserBankList = new ArrayList<>();
     private int[] mBankIconArray = {};
@@ -86,7 +87,17 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
 
         setupCustomAttributes(attrs, defStyleAttr, defStyleRes);
         setOnClickListener(this);
+        setSelectable(true);
     }
+
+    public void setSelectable(boolean isSelectable) {
+        this.mIsSelectable = isSelectable;
+    }
+
+    public boolean isSelectable() {
+        return mIsSelectable;
+    }
+
 
     public void setItems(List<UserBankClass> listUserBankClasses) {
         mBankListValidator = new BankListValidator(listUserBankClasses);
@@ -169,10 +180,10 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
         if (attrs == null) {
             return;
         }
-        TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.SelectorView, defStyleAttr, defStyleRes);
+        TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.AbstractSelectorView, defStyleAttr, defStyleRes);
         try {
-            final String hint = typedArray.getString(R.styleable.SelectorView_android_hint);
-            final String selectorDialogTitle = typedArray.getString(R.styleable.SelectorView_selectorDialogTitle);
+            final String hint = typedArray.getString(R.styleable.AbstractSelectorView_android_hint);
+            final String selectorDialogTitle = typedArray.getString(R.styleable.AbstractSelectorView_selectorDialogTitle);
             if (hint != null) {
                 setHint(hint);
             }
@@ -187,6 +198,9 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
     @Override
     @ValidateAccess(ServiceIdConstants.SEE_BANK_ACCOUNTS)
     public void onClick(View v) {
+        if (!isSelectable()) {
+            return;
+        }
         if (!mBankListValidator.isBankAdded()) {
             if (getContext() instanceof AppCompatActivity)
                 mBankListValidator.showAddBankDialog(((AppCompatActivity) getContext()), false);
@@ -204,7 +218,6 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
                 }
             });
             bankSelectorDialogWithIcon.show();
-
         }
     }
 

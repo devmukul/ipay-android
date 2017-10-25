@@ -123,6 +123,7 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
         } else {
             attemptRefreshAvailableBankNames();
         }
+        mBankSelectorView.setSelectable(false);
     }
 
     @Override
@@ -285,6 +286,7 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
                                 }
                             }
                             mBankSelectorView.setItems(mListUserBankClasses);
+                            mBankSelectorView.setSelectable(true);
                         } catch (Exception e) {
                             e.printStackTrace();
                             if (getActivity() != null)

@@ -31,7 +31,7 @@
         </attr>
     </declare-styleable>
 
-    <declare-styleable name="SelectorView">
+    <declare-styleable name="AbstractSelectorView">
         <attr name="selectorDialogTitle" format="string" />
         <attr name="android:hint" />
     </declare-styleable>
