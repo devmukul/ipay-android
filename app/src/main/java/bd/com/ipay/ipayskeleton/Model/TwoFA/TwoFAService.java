@@ -7,6 +7,7 @@ public class TwoFAService {
     private boolean isEnabled;
 
     public TwoFAService() {
+
     }
 
     public TwoFAService(int serviceId, String serviceName, boolean isEnabled) {
