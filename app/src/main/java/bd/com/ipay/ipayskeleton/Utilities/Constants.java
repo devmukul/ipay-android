@@ -314,7 +314,7 @@ public class Constants {
     // Bank Transaction REST
     public static final String URL_ADD_MONEY = "banktransaction/cashin/v2";
 
-    public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout";
+    public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout/v2";
     // Bank Verify Rest
     public static final String URL_BANK_VERIFICATION_WITH_AMOUNT = "verify";
 
@@ -405,7 +405,7 @@ public class Constants {
     public static final String URL_PAYMENT_GET_INVOICE = "payment/invoice/get/";
 
 
-    public static final String URL_PAYMENT = "payment";
+    public static final String URL_PAYMENT = "payment/v2";
 
     // SM Reports REST
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";

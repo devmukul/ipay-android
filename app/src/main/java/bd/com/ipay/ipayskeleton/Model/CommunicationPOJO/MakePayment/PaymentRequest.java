@@ -8,6 +8,11 @@ public class PaymentRequest {
     private final String description;
     private final String pin;
     private final String ref;
+    private String otp;
+
+    public void setOtp(String otp) {
+        this.otp = otp;
+    }
 
     public PaymentRequest(String mobileNumber, String amount, String description, String pin, String ref) {
         this.mobileNumber = mobileNumber;
