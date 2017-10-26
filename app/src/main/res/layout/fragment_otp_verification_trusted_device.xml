@@ -50,27 +50,29 @@
             android:paddingBottom="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_horizontal_margin">
 
-            <Button
-                android:id="@+id/buttonVerifyOTP"
-                style="@style/ButtonPrimary"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                android:layout_marginRight="@dimen/value2"
-                android:layout_weight="1"
-                android:text="@string/verify" />
+
 
             <Button
                 android:id="@+id/buttonResend"
                 style="@style/ButtonSecondary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/value2"
-                android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+                android:layout_marginRight="@dimen/value2"
                 android:layout_weight="1"
                 android:enabled="false"
                 android:text="@string/resend" />
+
+            <Button
+                android:id="@+id/buttonVerifyOTP"
+                style="@style/ButtonPrimary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/value2"
+                android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                android:layout_weight="1"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/verify" />
         </LinearLayout>
 
         <TextView

@@ -11,7 +11,7 @@
 
     <TextView
         style="@style/TourTitleTextView"
-        android:text="@string/instant_money"/>
+        android:text="@string/send_money"/>
 
     <TextView
         style="@style/TourDescriptionTextView"
