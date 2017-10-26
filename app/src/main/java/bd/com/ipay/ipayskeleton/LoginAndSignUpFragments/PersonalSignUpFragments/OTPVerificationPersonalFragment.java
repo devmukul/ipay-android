@@ -38,12 +38,12 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrust
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.InvalidInputResponse;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationPersonalFragment extends Fragment implements HttpResponseListener {
@@ -78,6 +78,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
         super.onCreate(savedInstanceState);
         mTracker = Utilities.getTracker(getActivity());
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -255,16 +256,8 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     String otp = mSignupResponseModel.getOtp();
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumber);
-                        ProfileInfoCacheManager.setName(SignupOrLoginActivity.mName);
-                        ProfileInfoCacheManager.setBirthday(SignupOrLoginActivity.mBirthday);
-                        ProfileInfoCacheManager.setGender(SignupOrLoginActivity.mGender);
-                        SharedPrefManager.serUserCountry("Bangladesh");
-                        ProfileInfoCacheManager.setAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
-
-                        // Request a login immediately after sign up
-                        if (Utilities.isConnectionAvailable(getActivity()))
-                            attemptLogin(SignupOrLoginActivity.mMobileNumber, SignupOrLoginActivity.mPassword, otp);
+                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        Toaster.makeText(getActivity(), mSignupResponseModel.getMessage(), Toast.LENGTH_LONG);
 
                         // TODO: For now, switch to login fragment after a successful sign up. Don't remove it either. Can be used later
 //                        ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();

@@ -32,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPin
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.SendNewPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
@@ -204,6 +205,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPutAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_PUT_TWO_FA_SETTING, mUri, json, context);
             mHttpPutAsyncTask.mHttpResponseListener = this;
             mHttpPutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         } else if (mDesiredRequest.equals(Constants.COMMAND_SEND_MONEY)) {
             mProgressDialog.setMessage(context.getString(R.string.progress_dialog_text_sending_money));
             mProgressDialog.show();
@@ -213,6 +215,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_MONEY, mUri, json, context);
             mHttpPostAsyncTask.mHttpResponseListener = this;
             mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         } else if (mDesiredRequest.equals(Constants.COMMAND_TOPUP_REQUEST)) {
             mProgressDialog.setMessage(context.getString(R.string.dialog_requesting_top_up));
             mProgressDialog.show();
@@ -222,6 +225,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST, mUri, json, context);
             mHttpPostAsyncTask.mHttpResponseListener = this;
             mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         } else if (mDesiredRequest.equals(Constants.COMMAND_REQUEST_MONEY)) {
             mProgressDialog.setMessage(context.getString(R.string.requesting_money));
             mProgressDialog.show();
@@ -231,6 +235,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REQUEST_MONEY, mUri, json, context);
             mHttpPostAsyncTask.mHttpResponseListener = this;
             mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         } else if (mDesiredRequest.equals(Constants.COMMAND_ADD_MONEY)) {
             mProgressDialog.setMessage(context.getString(R.string.progress_dialog_add_money_in_progress));
             mProgressDialog.show();
@@ -240,6 +245,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_MONEY, mUri, json, context);
             mHttpPostAsyncTask.mHttpResponseListener = this;
             mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         } else if (mDesiredRequest.equals(Constants.COMMAND_WITHDRAW_MONEY)) {
             mProgressDialog.setMessage(context.getString(R.string.progress_dialog_withdraw_money_in_progress));
             mProgressDialog.show();
@@ -249,6 +255,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_WITHDRAW_MONEY, mUri, json, context);
             mHttpPostAsyncTask.mHttpResponseListener = this;
             mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         } else if (mDesiredRequest.equals(Constants.COMMAND_PAYMENT)) {
             mProgressDialog.setMessage(context.getString(R.string.progress_dialog_text_payment));
             mProgressDialog.show();
@@ -258,13 +265,24 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT, mUri, json, context);
             mHttpPostAsyncTask.mHttpResponseListener = this;
             mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         } else if (mDesiredRequest.equals(Constants.COMMAND_SET_PIN)) {
             mProgressDialog.setMessage(context.getString(R.string.saving_pin));
             mProgressDialog.show();
             SetPinRequest mSetPinRequest = gson.fromJson(json, SetPinRequest.class);
             mSetPinRequest.setOtp(mOTP);
             json = gson.toJson(mSetPinRequest);
-            mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PIN, mUri, json, context);
+            mHttpPutAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_SET_PIN, mUri, json, context);
+            mHttpPutAsyncTask.mHttpResponseListener = this;
+            mHttpPutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+        else if (mDesiredRequest.equals(Constants.COMMAND_SEND_PAYMENT_REQUEST)) {
+            mProgressDialog.setMessage(context.getString(R.string.progress_dialog_sending_payment_request));
+            mProgressDialog.show();
+            SendNewPaymentRequest mSendNewPaymentRequest = gson.fromJson(json, SendNewPaymentRequest.class);
+            mSendNewPaymentRequest.setOtp(mOTP);
+            json = gson.toJson(mSendNewPaymentRequest);
+            mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_PAYMENT_REQUEST, mUri, json, context);
             mHttpPostAsyncTask.mHttpResponseListener = this;
             mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }

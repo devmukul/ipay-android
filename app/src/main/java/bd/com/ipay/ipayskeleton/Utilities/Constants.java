@@ -394,11 +394,11 @@ public class Constants {
     public static final String URL_LOG_OUT_from_all_device = "signout/formAllDevice";
 
     // Sign up Rest
-    public static final String URL_SIGN_UP = "signup/activation";
-    public static final String URL_SIGN_UP_BUSINESS = "signup/business/activation";
-    public static final String URL_OTP_REQUEST = "signup";
+    public static final String URL_SIGN_UP = "signup/activation/v2";
+    public static final String URL_SIGN_UP_BUSINESS = "signup/business/activation/v2";
+    public static final String URL_OTP_REQUEST = "signup/v2";
     public static final String URL_CHECK_IF_USER_EXISTS = "signup/check/";
-    public static final String URL_OTP_REQUEST_BUSINESS = "signup/business";
+    public static final String URL_OTP_REQUEST_BUSINESS = "signup/business/v2";
 
     // SM Payment REST
     public static final String URL_SEND_PAYMENT_REQUEST = "payment/invoice/send";
