@@ -789,7 +789,7 @@ public class Constants {
     // Format
     public static final String DATE_FORMAT = "%02d/%02d/%4d";
 
-    public static final String[] LOCATION_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+    public static final String[] LOCATION_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
 
     public static final String PROFILE_PHOTO_PATH = "profile_photo_path";
 

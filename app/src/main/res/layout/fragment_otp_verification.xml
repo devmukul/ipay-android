@@ -39,8 +39,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/enter_otp"
                 android:inputType="number"
-                android:maxLines="1"
                 android:maxLength="6"
+                android:maxLines="1"
                 android:singleLine="true">
 
                 <requestFocus />
