@@ -26,8 +26,8 @@
                     android:id="@+id/list_trusted_person"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:clipToPadding="false"
-                    android:layout_marginBottom="@dimen/activity_horizontal_margin_double" />
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin_double"
+                    android:clipToPadding="false" />
 
             </android.support.v4.widget.SwipeRefreshLayout>
 
