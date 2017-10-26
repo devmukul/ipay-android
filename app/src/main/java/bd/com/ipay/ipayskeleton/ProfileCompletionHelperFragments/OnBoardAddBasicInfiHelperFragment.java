@@ -47,19 +47,6 @@ public class OnBoardAddBasicInfiHelperFragment extends Fragment {
 
         initializeViews(view);
         setButtonActions();
-
-        if(!ProfileInfoCacheManager.isSwitchedFromSignup()) {
-            mDocumentHelperTextView.setText("Add Basic Info");
-            mIdentificationDocumentImageView.setImageResource(R.drawable.ic_onboard_basic_info_upload_helper);
-        }
-        else {
-            mDocumentHelperTextView.setText("One Last Step");
-            if(!ProfileInfoCacheManager.isIdentificationDocumentUploaded())
-                mIdentificationDocumentImageView.setImageResource(R.drawable.ic_onboard_basic_info_upload_helper);
-            else
-                mIdentificationDocumentImageView.setImageResource(R.drawable.ic_onboard_step_three_done);
-
-        }
         return view;
     }
 

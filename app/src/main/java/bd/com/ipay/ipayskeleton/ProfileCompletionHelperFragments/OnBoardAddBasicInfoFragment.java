@@ -29,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.AddressInputOnboardView;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
@@ -56,7 +57,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
 
     private ResourceSelectorDialog<Occupation> mOccupationTypeResourceSelectorDialog;
     private AddressClass mPresentAddress;
-    private AddressInputView mAddressInputView;
+    private AddressInputOnboardView mAddressInputView;
     private ProgressDialog mProgressDialog;
 
     private EditText mOccupationEditText;
@@ -82,7 +83,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_onboard_add_basic_info, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
-        mAddressInputView = (AddressInputView) v.findViewById(R.id.input_address);
+        mAddressInputView = (AddressInputOnboardView) v.findViewById(R.id.input_address);
         Button mSaveButton = (Button) v.findViewById(R.id.button_upload_profile_pic);
 
         mSkipButton = (Button) v.findViewById(R.id.button_skip);
@@ -94,7 +95,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         mAddressInputView.clearFocus();
-        //mOrganizationNameEditText.requestFocus();
+        mOrganizationNameEditText.clearFocus();
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +138,6 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
 
     private void setUserAddress() {
         mProgressDialog.setMessage(getString(R.string.saving_profile_information));
-        mProgressDialog.show();
 
         SetUserAddressRequest userAddressRequest = new SetUserAddressRequest(Constants.ADDRESS_TYPE_PRESENT, mPresentAddress);
 
@@ -150,14 +150,11 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
 
     private void attemptSaveBasicInfo() {
         Gson gson = new Gson();
+        mProgressDialog.show();
 
         SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(ProfileInfoCacheManager.getUserName(), mGender, ProfileInfoCacheManager.getBirthday(),
                 mOccupation, mOrganizationName);
-
         String profileInfoJson = gson.toJson(setProfileInfoRequest);
-
-        System.out.println("Test Result "+profileInfoJson);
-
         mSetProfileInfoTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SET_PROFILE_INFO_REQUEST,
                 Constants.BASE_URL_MM + Constants.URL_SET_PROFILE_INFO_REQUEST, profileInfoJson, getActivity(), this);
         mSetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -182,8 +179,6 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
                 SetUserAddressResponse mSetUserAddressResponse = gson.fromJson(result.getJsonString(), SetUserAddressResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    //getActivity().onBackPressed();
-
                     ProfileInfoCacheManager.addBasicInfo(true);
                     ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
 
@@ -197,6 +192,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
                     Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
             }
 
+            mProgressDialog.dismiss();
             mSetUserAddressTask = null;
         }else if (result.getApiCommand().equals(Constants.COMMAND_GET_OCCUPATIONS_REQUEST)) {
 
@@ -218,30 +214,23 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
                 SetProfileInfoResponse mSetProfileInfoResponse = gson.fromJson(result.getJsonString(), SetProfileInfoResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
-//                        Toast.makeText(getActivity(), mSetProfileInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
                         setUserAddress();
-
-//                        if(!ProfileInfoCacheManager.isBankInfoAdded() && !ProfileCompletionHelperActivity.isFromSignUp){
-//                            ((ProfileCompletionHelperActivity) getActivity()).switchToAddNewBankHelperFragment();
-//                        }else if(!ProfileInfoCacheManager.isIntroductionAsked() && !ProfileCompletionHelperActivity.isFromSignUp){
-//                            ((ProfileCompletionHelperActivity) getActivity()).switchToAskedIntroductionHelperFragment();
-//                        }else {
-//                            ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
-//                        }
-
                     }
                 } else {
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
+                        mProgressDialog.dismiss();
                         Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                if (getActivity() != null)
+                if (getActivity() != null) {
+                    mProgressDialog.dismiss();
                     Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
+                }
             }
 
             mSetProfileInfoTask = null;
-            mProgressDialog.dismiss();
         }
     }
 

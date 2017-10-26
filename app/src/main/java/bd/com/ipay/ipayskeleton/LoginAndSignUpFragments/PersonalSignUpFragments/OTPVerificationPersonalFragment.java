@@ -393,6 +393,9 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         String UUID = mAddToTrustedDeviceResponse.getUUID();
                         ProfileInfoCacheManager.setUUID(UUID);
+                        ProfileInfoCacheManager.uploadProfilePicture(false);
+                        ProfileInfoCacheManager.uploadIdentificationDocument(false);
+                        ProfileInfoCacheManager.addBasicInfo(false);
 
                         ProfileInfoCacheManager.switchedFromSignup(true);
                         ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();

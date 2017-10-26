@@ -49,8 +49,6 @@
                     android:inputType="textPersonName"
                     android:maxLines="1"
                     android:singleLine="true" >
-
-                    <requestFocus />
                 </EditText>
 
             </android.support.design.widget.TextInputLayout>
@@ -78,7 +76,7 @@
             <View style="@style/Divider" />
 
 
-            <bd.com.ipay.ipayskeleton.CustomView.AddressInputView
+            <bd.com.ipay.ipayskeleton.CustomView.AddressInputOnboardView
                 android:id="@+id/input_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

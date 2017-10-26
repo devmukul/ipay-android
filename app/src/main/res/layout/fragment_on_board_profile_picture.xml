@@ -22,12 +22,13 @@
                 style="@style/OnBoardPageTitleStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/onboard_step_one_title"
+                android:text="@string/onboard_photo_upload_title"
                 android:layout_marginTop="@dimen/onboard_page_vertical_margin"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                android:id="@+id/profile_image_view"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
                 android:layout_marginTop="@dimen/onboard_page_vertical_margin"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/ic_onboard_profile_pic_upload_helper"/>
@@ -81,15 +82,33 @@
             android:paddingLeft="@dimen/activity_horizontal_margin_double"
             android:visibility="invisible"/>
 
-        <Button
-            android:id="@+id/button_upload_profile_pic"
-            style="@style/ButtonTransparent"
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/upload_photo"
-            android:gravity="right|center_vertical"
-            android:paddingRight="@dimen/activity_horizontal_margin_double"/>
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/button_select_profile_pic"
+                style="@style/ButtonTransparent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select Photo"
+                android:gravity="right|center_vertical"
+                android:paddingRight="@dimen/activity_horizontal_margin_double"/>
+
+            <Button
+                android:id="@+id/button_upload_profile_pic"
+                style="@style/ButtonTransparent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/upload_photo"
+                android:gravity="right|center_vertical"
+                android:paddingRight="@dimen/activity_horizontal_margin_double"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+
+
 
 
     </LinearLayout>

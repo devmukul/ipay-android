@@ -40,13 +40,6 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_on_board_identification_document, container, false);
 
         initializeViews(view);
-
-        if(!ProfileInfoCacheManager.isSwitchedFromSignup())
-            mDocumentHelperTextView.setText("Update Photo ID");
-        else
-            mDocumentHelperTextView.setText("Nice Profile Photo");
-
-        initializeProfilePicInfo(getArguments());
         setButtonActions();
         return view;
     }
@@ -66,19 +59,7 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment{
         }
     }
 
-    private void initializeProfilePicInfo(Bundle bundle) {
-        mSelectedImagePath = bundle.getString(Constants.PROFILE_PHOTO_PATH);
-        if(!mSelectedImagePath.equals("")){
-            mIdentificationDocumentImageView.setVisibility(View.INVISIBLE);
-            mDocumentHelperTextView.setText("Nice Profile Photo");
-            mProfileImageView.setVisibility(View.VISIBLE);
-            mProfileImageView.setProfilePicture(mSelectedImagePath,false);
-        }else {
-            mProfileImageView.setVisibility(View.INVISIBLE);
-            mDocumentHelperTextView.setText("Update Photo ID");
-            mIdentificationDocumentImageView.setVisibility(View.VISIBLE);
-        }
-    }
+
 
     public void setButtonActions() {
 

@@ -47,6 +47,7 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
     private ProgressDialog mProgressDialog;
+    public Uri mProfilePhotoUri;
 //    public static boolean isPhotoUploaded;
 //    public static boolean isProfileInfoAdded;
 //    public static boolean isPhotoIdAdded;
@@ -65,7 +66,7 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
             if(!ProfileInfoCacheManager.isProfilePictureUploaded()){
                 switchToProfilePictureFragment();
             }else if(!ProfileInfoCacheManager.isIdentificationDocumentUploaded()){
-                switchToPhotoIdUploadHelperFragment("");
+                switchToPhotoIdUploadHelperFragment();
             }else if(!ProfileInfoCacheManager.isBasicInfoAdded()){
                 switchToBasicInfoEditHelperFragment();
             }else {
@@ -135,11 +136,8 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
                 .replace(R.id.fragment_container, new OnBoardProfilePictureUploadHelperFragment()).addToBackStack(null).commit();
     }
 
-    public void switchToPhotoIdUploadHelperFragment(String profileImagePath) {
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.PROFILE_PHOTO_PATH, profileImagePath);
+    public void switchToPhotoIdUploadHelperFragment() {
         OnBoardPhotoIdUploadHelperFragment onBoardIcdentificationFragment = new OnBoardPhotoIdUploadHelperFragment();
-        onBoardIcdentificationFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, onBoardIcdentificationFragment).addToBackStack(null).commit();
     }

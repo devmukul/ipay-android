@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -11,10 +12,13 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -29,7 +33,9 @@ import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadProfilePictureAsyncT
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BuildConfig;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ProfilePictureHelperDialog;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetProfilePictureResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -44,19 +50,24 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
     private final int ACTION_PICK_PROFILE_PICTURE = 100;
+
     private SetProfilePictureResponse mSetProfilePictureResponse;
     private MaterialDialog.Builder mProfilePictureErrorDialogBuilder;
     private MaterialDialog mProfilePictureErrorDialog;
-    private ProfilePictureHelperDialog profilePictureHelperDialog;
+    private CustomUploadPickerDialog profilePictureHelperDialog;
     private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask = null;
 
     private Button mUploadButton;
+    private Button mSelectButton;
     private ProgressDialog mProgressDialog;
     private List<String> mOptionsForImageSelectionList;
     private int mSelectedOptionForImage = -1;
     private String mSelectedImagePath = "";
+    private ProfileImageView mUploadImageView;
+    private TextView mDocumentHelperTextView;
 
     private Uri mUri;
+    private Button mSkipButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,6 +76,14 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
         initializeViews(view);
         setButtonActions();
         initProfilePicHelperDialog();
+
+        mUri = ((ProfileCompletionHelperActivity) getActivity()).mProfilePhotoUri;
+        if (ProfileInfoCacheManager.isProfilePictureUploaded()) {
+            mUploadImageView.setProfilePicture(mUri.getPath(), true);
+            mSkipButton.setVisibility(View.VISIBLE);
+
+        }
+
         return view;
     }
 
@@ -72,27 +91,91 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
     public void onResume() {
         super.onResume();
     }
+
     private void initializeViews(View view) {
         mProgressDialog = new ProgressDialog(getActivity());
         mUploadButton = (Button) view.findViewById(R.id.button_upload_profile_pic);
+        mSelectButton = (Button) view.findViewById(R.id.button_select_profile_pic);
         mOptionsForImageSelectionList = Arrays.asList(getResources().getStringArray(R.array.upload_picker_action));
+        mUploadImageView = (ProfileImageView) view.findViewById(R.id.profile_image_view);
+        mUploadImageView.setProfilePicture(R.drawable.ic_onboard_profile_pic_upload_helper);
+        mDocumentHelperTextView  = (TextView) view.findViewById(R.id.profile_pic_upload_helper_title);
+        mSkipButton = (Button) view.findViewById(R.id.button_skip);
+
+        if(mUri==null){
+            mUploadButton.setVisibility(View.GONE);
+            mSelectButton.setVisibility(View.VISIBLE);
+            mDocumentHelperTextView.setText("Update Profile Photo");
+        }else{
+            mUploadButton.setVisibility(View.VISIBLE);
+            mSelectButton.setVisibility(View.GONE);
+            mDocumentHelperTextView.setText("Nice Profile Photo");
+        }
 
     }
 
     public void setButtonActions() {
 
-        mUploadButton.setOnClickListener(new View.OnClickListener() {
+        mUploadImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ProfileInfoCacheManager.isProfilePictureUploaded()) {
+                    showRepeatedPhotoSelectAlertDialog();
+
+                } else {
+                    profilePictureHelperDialog.show();
+                }
+            }
+        });
+
+        mSelectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 profilePictureHelperDialog.show();
             }
         });
+
+        mSkipButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(ProfileInfoCacheManager.isSwitchedFromSignup()){
+                    ((ProfileCompletionHelperActivity) getActivity()).switchToPhotoIdUploadHelperFragment();
+                }
+                else{
+                    if(!ProfileInfoCacheManager.isIdentificationDocumentUploaded()){
+                        ((ProfileCompletionHelperActivity) getActivity()).switchToPhotoIdUploadHelperFragment();
+                    }else if(!ProfileInfoCacheManager.isBasicInfoAdded()){
+                        ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
+                    }else {
+                        ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+                    }
+                }
+            }
+        });
+
+        mUploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateProfilePicture(mUri);
+            }
+        });
+    }
+
+    private void showRepeatedPhotoSelectAlertDialog() {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.upload_profile_photo_again)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        profilePictureHelperDialog.show();
+                    }
+                }).show();
     }
 
     private void initProfilePicHelperDialog() {
         if (!ProfileInfoCacheManager.isAccountVerified()) {
-            profilePictureHelperDialog = new ProfilePictureHelperDialog(getActivity(), getString(R.string.select_an_image), mOptionsForImageSelectionList);
-            profilePictureHelperDialog.setOnResourceSelectedListener(new ProfilePictureHelperDialog.OnResourceSelectedListener() {
+            profilePictureHelperDialog = new CustomUploadPickerDialog(getActivity(), getString(R.string.select_an_image), mOptionsForImageSelectionList);
+            profilePictureHelperDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
                 @Override
                 public void onResourceSelected(int mActionId, String action) {
                     if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS)) {
@@ -184,15 +267,17 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
         switch (requestCode) {
             case ACTION_PICK_PROFILE_PICTURE:
                 if (resultCode == Activity.RESULT_OK) {
-                    Uri uri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, data, "profile_picture.jpg");
-                    if (uri == null) {
+                    mUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, data, "profile_picture.jpg");
+                    if (mUri == null) {
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), R.string.could_not_load_image, Toast.LENGTH_SHORT).show();
                     } else {
                         // Check for a valid profile picture
-                        if (isSelectedProfilePictureValid(uri)) {
-                            mUri = uri;
-                            updateProfilePicture(uri);
+                        if (isSelectedProfilePictureValid(mUri)) {
+                            mUploadImageView.setProfilePicture(mUri.getPath(), true);
+                            mUploadButton.setVisibility(View.VISIBLE);
+                            mSelectButton.setVisibility(View.GONE);
+                            mDocumentHelperTextView.setText("Nice Profile Photo");
                         }
                     }
                 } else if (resultCode == CameraActivity.CAMERA_ACTIVITY_CRASHED) {
@@ -238,20 +323,22 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
         if (result.getApiCommand().equals(Constants.COMMAND_SET_PROFILE_PICTURE)) {
             try {
 
+                System.out.println("test "+result.toString());
+
                 mSetProfilePictureResponse = gson.fromJson(result.getJsonString(), SetProfilePictureResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
 
-
+                    ((ProfileCompletionHelperActivity) getActivity()).mProfilePhotoUri = mUri;
                     ProfileInfoCacheManager.uploadProfilePicture(true);
                     if(ProfileInfoCacheManager.isSwitchedFromSignup()){
-                        ((ProfileCompletionHelperActivity) getActivity()).switchToPhotoIdUploadHelperFragment(mUri.getPath());
+                        ((ProfileCompletionHelperActivity) getActivity()).switchToPhotoIdUploadHelperFragment();
                     }
                     else{
                         if(!ProfileInfoCacheManager.isIdentificationDocumentUploaded()){
-                            ((ProfileCompletionHelperActivity) getActivity()).switchToPhotoIdUploadHelperFragment("");
+                            ((ProfileCompletionHelperActivity) getActivity()).switchToPhotoIdUploadHelperFragment();
                         }else if(!ProfileInfoCacheManager.isBasicInfoAdded()){
                             ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
                         }else {
