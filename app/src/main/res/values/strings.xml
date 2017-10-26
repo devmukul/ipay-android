@@ -983,7 +983,7 @@
     <string name="no_browser_map_app_found_error_message">No default browser or google maps app found to open. Please install Google Maps/Browser or enable your browser.</string>
     <string name="please_enter_a_document_name">Please Enter a Document Name</string>
     <string name="search_transaction">Search transaction</string>
-    <string name="complete_transaction_list">Complete transaction list</string>
+    <string name="completed_transaction_list">Completed transaction list</string>
     <string name="pending_transaction_list">Pending transaction list</string>
 
 </resources>

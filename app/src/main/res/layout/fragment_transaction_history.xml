@@ -26,7 +26,7 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_toLeftOf="@+id/filter_clear"
-            android:text="@string/complete_transaction_list"/>
+            android:text="@string/completed_transaction_list"/>
 
         <Button
             android:id="@+id/filter_clear"
