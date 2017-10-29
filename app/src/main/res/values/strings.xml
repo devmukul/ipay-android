@@ -999,7 +999,7 @@
     <string name="onboard_photo_id_upload_title">Upload Photo ID</string>
     <string name="onboard_nice_profile_photo">Nice Profile Photo</string>
     <string name="onboard_photo_upload_title">Upload Profile Photo</string>
-    <string name="onboard_profile_info_update_title">One Last Step</string>
+    <string name="onboard_profile_info_update_title">Basic Information</string>
     <string name="onboard_add_bank_title">Add Bank Information</string>
     <string name="onboard_get_introduced_upload_title">Ask for Introduction</string>
     <string name="onboard_profile_info_update_page_title">Add Basic Information</string>

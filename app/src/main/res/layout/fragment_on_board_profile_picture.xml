@@ -25,13 +25,29 @@
                 android:text="@string/onboard_photo_upload_title"
                 android:layout_marginTop="@dimen/onboard_page_vertical_margin"/>
 
-            <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-                android:id="@+id/profile_image_view"
-                android:layout_width="180dp"
-                android:layout_height="180dp"
-                android:layout_marginTop="@dimen/onboard_page_vertical_margin"
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_onboard_profile_pic_upload_helper"/>
+                android:layout_marginTop="@dimen/onboard_page_vertical_margin">
+
+                <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                    android:id="@+id/profile_image_view"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:src="@drawable/ic_onboard_profile_pic_upload_helper"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_camera_upload_photo"
+                    android:layout_gravity="right|bottom"
+                    android:layout_marginRight="@dimen/value5"
+                    android:layout_marginBottom="@dimen/value5"/>
+
+            </FrameLayout>
+
+
 
 
             <LinearLayout
