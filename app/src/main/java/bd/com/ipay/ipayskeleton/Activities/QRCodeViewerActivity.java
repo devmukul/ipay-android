@@ -7,7 +7,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
@@ -60,6 +62,18 @@ public class QRCodeViewerActivity extends BaseActivity {
 
     public static final int REQUEST_CODE_PERMISSION = 1001;
 
+    private static int APPROPRIATE_TEXT_SIZE_UPPER = 180;
+    private static int APPROPRIATE_TEXT_SIZE_LOWER = 160;
+    private static int QR_CODE_HELPER_TEXT_WIDTH = 300;
+    private static int QR_CODE_HELPER_TEXT_HEIGHT = 300;
+    private static int APPORX_VALUE = 50;
+
+    private static final String HELPER_TEXT_UPPER = "scan me";
+    private static final String HELPER_TEXT_LOWER = "to pay me";
+
+    private Point size;
+    private Display display;
+
     private static final String[] NECESSARY_PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @Override
@@ -79,7 +93,7 @@ public class QRCodeViewerActivity extends BaseActivity {
                 }
             }
         });
-
+        getDisplayInfo();
         Intent intent = getIntent();
         if (intent != null) {
             stringToEncode = intent.getStringExtra(Constants.STRING_TO_ENCODE);
@@ -97,6 +111,33 @@ public class QRCodeViewerActivity extends BaseActivity {
             finish();
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    public void getDisplayInfo() {
+        float density = getResources().getDisplayMetrics().density;
+        float test = density;
+        if (density >= 1.5 && density < 2) {
+            APPORX_VALUE = 30;
+            QR_CODE_HELPER_TEXT_HEIGHT = QR_CODE_HELPER_TEXT_WIDTH = 100;
+            APPROPRIATE_TEXT_SIZE_LOWER = 80;
+            APPROPRIATE_TEXT_SIZE_UPPER = 90;
+        } else if (density >= 2 && density < 2.5) {
+            APPORX_VALUE = 40;
+            QR_CODE_HELPER_TEXT_HEIGHT = QR_CODE_HELPER_TEXT_WIDTH = 133;
+            APPROPRIATE_TEXT_SIZE_LOWER = 106;
+            APPROPRIATE_TEXT_SIZE_UPPER = 120;
+        } else if (density >= 2.5 && density < 3.5) {
+            APPORX_VALUE = 70;
+            QR_CODE_HELPER_TEXT_HEIGHT = QR_CODE_HELPER_TEXT_WIDTH = 200;
+            APPROPRIATE_TEXT_SIZE_LOWER = 180;
+            APPROPRIATE_TEXT_SIZE_UPPER = 200;
+        } else if (density >= 3.5 && density <= 4) {
+            APPORX_VALUE = 100;
+            QR_CODE_HELPER_TEXT_HEIGHT = QR_CODE_HELPER_TEXT_WIDTH = 266;
+            APPROPRIATE_TEXT_SIZE_LOWER = 220;
+            APPROPRIATE_TEXT_SIZE_UPPER = 250;
+        }
+
     }
 
     private void shareQrCode() {
@@ -152,8 +193,8 @@ public class QRCodeViewerActivity extends BaseActivity {
 
     private void setQrCode(String stringToEncode) {
         WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        Display display = manager.getDefaultDisplay();
-        Point size = new Point();
+        display = manager.getDefaultDisplay();
+        size = new Point();
         display.getSize(size);
         int smallerDimension = size.x < size.y ? size.x : size.y;
 
@@ -165,9 +206,6 @@ public class QRCodeViewerActivity extends BaseActivity {
                 Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(),
                 smallerDimension);
         try {
-           /* bitmap = qrCodeEncoder.encodeAsBitmap();
-
-            Bitmap overlay= BitmapFactory.decodeResource(getResources(),R.drawable.ic_logo_ipay_full_size);*/
             myImage = (ImageView) findViewById(R.id.qr_code_imageview);
             createAndSetQRCode(stringToEncode, "UTF-8", hintMap, smallerDimension, smallerDimension);
 
@@ -187,7 +225,6 @@ public class QRCodeViewerActivity extends BaseActivity {
         int canvasHeight = canvas.getHeight();
 
         canvas.drawBitmap(bitmap, new Matrix(), null);
-
         int centreX = (canvasWidth - overlay.getWidth()) / 2;
         int centreY = (canvasHeight - overlay.getHeight()) / 2;
         canvas.drawBitmap(overlay, centreX, centreY, null);
@@ -224,12 +261,28 @@ public class QRCodeViewerActivity extends BaseActivity {
 
             //getting the logo
             Bitmap overlay = BitmapFactory.decodeResource(getResources(), R.drawable.ic_airtel2);
+            Bitmap mergedBitmap = mergeBitmaps(overlay, bitmap);
+            bitmap = mergedBitmap;
+            bitmap = drawTextToBitmap(bitmap);
             myImage.setImageBitmap(bitmap);
 
 
         } catch (Exception er) {
             Log.e("QrGenerate", er.getMessage());
         }
+    }
+
+    public Bitmap drawTextToBitmap(Bitmap bitmap) {
+        Bitmap combined = Bitmap.createBitmap(bitmap.getWidth() + QR_CODE_HELPER_TEXT_WIDTH, bitmap.getHeight() + QR_CODE_HELPER_TEXT_HEIGHT, Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas(combined);
+        Paint paint = new Paint();
+        canvas.drawBitmap(bitmap, QR_CODE_HELPER_TEXT_WIDTH / 2, QR_CODE_HELPER_TEXT_HEIGHT / 2, null);
+        paint.setColor(Color.GRAY);
+        paint.setTextSize(APPROPRIATE_TEXT_SIZE_UPPER);
+        canvas.drawText(HELPER_TEXT_UPPER, QR_CODE_HELPER_TEXT_WIDTH + APPORX_VALUE, QR_CODE_HELPER_TEXT_WIDTH, paint);
+        paint.setTextSize(APPROPRIATE_TEXT_SIZE_LOWER);
+        canvas.drawText(HELPER_TEXT_LOWER, QR_CODE_HELPER_TEXT_WIDTH + APPORX_VALUE, bitmap.getHeight() + QR_CODE_HELPER_TEXT_HEIGHT / 2, paint);
+        return combined;
     }
 
     @Override

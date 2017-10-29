@@ -9,9 +9,9 @@
 
     <ImageView
         android:id="@+id/qr_code_imageview"
-        android:layout_width="@dimen/value180"
-        android:layout_height="@dimen/value180"
-        android:layout_centerHorizontal="true"
+        android:layout_width="@dimen/value250"
+        android:layout_height="@dimen/value250"
+        android:layout_gravity="center"
         android:scaleType="centerCrop" />
 
     <Button
@@ -19,7 +19,6 @@
         style="@style/ButtonPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/qr_code_imageview"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
         android:text="@string/share" />
