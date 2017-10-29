@@ -84,7 +84,7 @@
             android:label="@string/welcome_to_ipay"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustNothing|stateHidden" >
+            android:windowSoftInputMode="adjustResize|stateHidden" >
         </activity>
         <activity
             android:name=".Activities.HomeActivity"
