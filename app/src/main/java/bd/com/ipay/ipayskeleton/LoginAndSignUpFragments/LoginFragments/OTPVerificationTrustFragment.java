@@ -306,7 +306,6 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                 mRequestOTPTask = null;
                 break;
             case Constants.COMMAND_ADD_TRUSTED_DEVICE:
-                //hideProgressDialog();
 
                 try {
                     mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
@@ -317,30 +316,22 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
 
                         //Google Analytic event
                         Utilities.sendSuccessEventTracker(mTracker, "Login to Home", ProfileInfoCacheManager.getAccountId());
-                        // Launch HomeActivity from here on successful trusted device add
-
                         getProfileInfo();
-                        //((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
                         hideProgressDialog();
                         ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
-
                         //Google Analytic event
                         Utilities.sendSuccessEventTracker(mTracker, "Login to Add Trusted Device", ProfileInfoCacheManager.getAccountId());
                     } else {
                         hideProgressDialog();
                         Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
-
                         //Google Analytic event
                         Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), mAddToTrustedDeviceResponse.getMessage());
                     }
-
-
                 } catch (Exception e) {
                     hideProgressDialog();
                     e.printStackTrace();
                     Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
-
                     //Google Analytic event
                     Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), getString(R.string.failed_add_trusted_device));
                 }
@@ -382,12 +373,10 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
             case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
 
                 try {
-
                     mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
                         getProfileCompletionStatus();
-
                     } else {
                         Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                     }
@@ -395,14 +384,10 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                     e.printStackTrace();
                     Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 }
-
                 mGetProfileInfoTask = null;
-
                 break;
-
             default:
                 hideProgressDialog();
-
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                 break;
@@ -416,7 +401,6 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
     private void attemptTrustedDeviceAdd() {
         if (mAddTrustedDeviceTask != null)
             return;
-
         AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
                 Constants.MOBILE_ANDROID + mDeviceID, null);
         Gson gson = new Gson();
@@ -434,7 +418,6 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
         if (mGetProfileCompletionStatusTask != null) {
             return;
         }
-
         mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
                 Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
         mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -444,7 +427,6 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
         if (mGetProfileInfoTask != null) {
             return;
         }
-
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
                 Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity());
         mGetProfileInfoTask.mHttpResponseListener = this;
