@@ -204,7 +204,7 @@
 
         <Button
             android:id="@+id/business_next_button"
-            style="@style/ButtonSecondary"
+            style="@style/ButtonSecondary_No_Border"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_horizontal_margin"

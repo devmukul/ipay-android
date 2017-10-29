@@ -8,9 +8,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -30,9 +34,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
@@ -54,6 +60,8 @@ import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetRelationshipListAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.DataCollectors.Model.LocationCollector;
+import bd.com.ipay.ipayskeleton.DataCollectors.Model.UserLocation;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
@@ -80,9 +88,11 @@ import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class HomeActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HttpResponseListener {
+        implements NavigationView.OnNavigationItemSelectedListener, LocationListener, HttpResponseListener {
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
+
+    private HttpRequestPostAsyncTask mLocationUpdateRequestAsyncTask;
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
@@ -113,6 +123,7 @@ public class HomeActivity extends BaseActivity
     private static boolean switchedToHomeFragment = true;
     private boolean exitFromApplication = false;
 
+    private LocationManager mLocationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,6 +221,9 @@ public class HomeActivity extends BaseActivity
         // Check if important permissions (e.g. Contacts permission) is given. If not,
         // request user for permission.
         attemptRequestForPermission();
+        if (Utilities.isNecessaryPermissionExists(this, Constants.LOCATION_PERMISSIONS)) {
+            startLocationCollection();
+        }
 
         getAllBusinessAccountsList();
 
@@ -219,6 +233,20 @@ public class HomeActivity extends BaseActivity
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_INFO_UPDATE_BROADCAST));
+    }
+
+    @SuppressWarnings("MissingPermission")
+    private void startLocationCollection() {
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (Utilities.isNecessaryPermissionExists(this, Constants.LOCATION_PERMISSIONS) && mLocationManager != null) {
+            final String locationProvider;
+            if (mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                locationProvider = LocationManager.NETWORK_PROVIDER;
+            } else {
+                locationProvider = LocationManager.GPS_PROVIDER;
+            }
+            mLocationManager.requestSingleUpdate(locationProvider, this, Looper.myLooper());
+        }
     }
 
     /**
@@ -278,7 +306,7 @@ public class HomeActivity extends BaseActivity
     }
 
     private void attemptRequestForPermission() {
-        String[] requiredPermissions = {Manifest.permission.READ_CONTACTS};
+        String[] requiredPermissions = {Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_FINE_LOCATION};
 
         List<String> permissionsToRequest = new ArrayList<>();
         for (String permission : requiredPermissions) {
@@ -312,6 +340,8 @@ public class HomeActivity extends BaseActivity
                             if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS))
                                 new GetContactsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
+                    } else if (permissions[i].equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        startLocationCollection();
                     }
                 }
 
@@ -545,6 +575,7 @@ public class HomeActivity extends BaseActivity
             mLogoutTask = null;
             mGetProfileInfoTask = null;
             mGetBusinessInformationAsyncTask = null;
+            mLocationUpdateRequestAsyncTask = null;
             Toast.makeText(HomeActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
@@ -631,7 +662,51 @@ public class HomeActivity extends BaseActivity
 
                 mGetBusinessInformationAsyncTask = null;
                 break;
+            case Constants.COMMAND_POST_USER_LOCATION:
+                mLocationUpdateRequestAsyncTask = null;
+                break;
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            UserLocation userLocation = new UserLocation(location.getLatitude(), location.getLongitude());
+            if (mLocationUpdateRequestAsyncTask == null) {
+                try {
+                    sendUserLocation(Collections.singletonList(userLocation));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    private void sendUserLocation(List<UserLocation> userLocationList) {
+        LocationCollector locationCollector = new LocationCollector();
+        locationCollector.setDeviceId(DeviceInfoFactory.getDeviceId(this));
+        locationCollector.setUuid(ProfileInfoCacheManager.getUUID());
+        locationCollector.setMobileNumber(ProfileInfoCacheManager.getMobileNumber());
+        locationCollector.setLocationList(userLocationList);
+        String body = new GsonBuilder().create().toJson(locationCollector);
+        mLocationUpdateRequestAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_POST_USER_LOCATION, Constants.BASE_URL_DATA_COLLECTOR + Constants.URL_ENDPOINT_LOCATION_COLLECTOR, body, this, this);
+        mLocationUpdateRequestAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mLocationManager.removeUpdates(this);
     }
 
     @Override
