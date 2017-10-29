@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +15,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,9 +25,14 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.R;
@@ -36,6 +45,9 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import bd.com.ipay.ipayskeleton.camera.utility.CameraAndImageUtilities;
 
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.WHITE;
+
 public class QRCodeViewerActivity extends BaseActivity {
 
     private String stringToEncode = "";
@@ -43,6 +55,8 @@ public class QRCodeViewerActivity extends BaseActivity {
 
     private Button mShareButton;
     private Bitmap bitmap;
+
+    private ImageView myImage;
 
     public static final int REQUEST_CODE_PERMISSION = 1001;
 
@@ -143,17 +157,78 @@ public class QRCodeViewerActivity extends BaseActivity {
         display.getSize(size);
         int smallerDimension = size.x < size.y ? size.x : size.y;
 
+        Map<EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
+        hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+
         // Encode with a QR Code image
         QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(stringToEncode, null,
                 Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(),
                 smallerDimension);
         try {
-            bitmap = qrCodeEncoder.encodeAsBitmap();
-            ImageView myImage = (ImageView) findViewById(R.id.qr_code_imageview);
+           /* bitmap = qrCodeEncoder.encodeAsBitmap();
+
+            Bitmap overlay= BitmapFactory.decodeResource(getResources(),R.drawable.ic_logo_ipay_full_size);*/
+            myImage = (ImageView) findViewById(R.id.qr_code_imageview);
+            createAndSetQRCode(stringToEncode, "UTF-8", hintMap, smallerDimension, smallerDimension);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Bitmap mergeBitmaps(Bitmap overlay, Bitmap bitmap) {
+
+        int height = bitmap.getHeight();
+        int width = bitmap.getWidth();
+
+        Bitmap combined = Bitmap.createBitmap(width, height, bitmap.getConfig());
+        Canvas canvas = new Canvas(combined);
+        int canvasWidth = canvas.getWidth();
+        int canvasHeight = canvas.getHeight();
+
+        canvas.drawBitmap(bitmap, new Matrix(), null);
+
+        int centreX = (canvasWidth - overlay.getWidth()) / 2;
+        int centreY = (canvasHeight - overlay.getHeight()) / 2;
+        canvas.drawBitmap(overlay, centreX, centreY, null);
+
+        return combined;
+    }
+
+    public void createAndSetQRCode(String qrCodeData, String charset, Map hintMap, int qrCodeheight, int qrCodewidth) {
+
+
+        try {
+            //generating qr code.
+            BitMatrix matrix = new MultiFormatWriter().encode(new String(qrCodeData.getBytes(charset), charset),
+                    BarcodeFormat.QR_CODE, qrCodewidth, qrCodeheight, hintMap);
+            //converting bitmatrix to bitmap
+
+            int width = matrix.getWidth();
+            int height = matrix.getHeight();
+            int[] pixels = new int[width * height];
+            // All are 0, or black, by default
+            for (int y = 0; y < height; y++) {
+                int offset = y * width;
+                for (int x = 0; x < width; x++) {
+                    //for black and white
+                    pixels[offset + x] = matrix.get(x, y) ? BLACK : WHITE;
+                    //for custom color
+                    /*pixels[offset + x] = matrix.get(x, y) ?
+                            ResourcesCompat.getColor(getResources(),R.color.colorPrimary,null) :WHITE;*/
+                }
+            }
+            //creating bitmap
+            bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+
+            //getting the logo
+            Bitmap overlay = BitmapFactory.decodeResource(getResources(), R.drawable.ic_airtel2);
             myImage.setImageBitmap(bitmap);
 
-        } catch (WriterException e) {
-            e.printStackTrace();
+
+        } catch (Exception er) {
+            Log.e("QrGenerate", er.getMessage());
         }
     }
 
