@@ -90,6 +90,7 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
     private String mFileName;
     private String mOtherTypeName;
     private String mDocumentName;
+    private long mFileSize;
 
     private static final int[] DOCUMENT_TYPE_NAMES = {
             R.string.national_id,
@@ -530,14 +531,12 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
                 if (documentPreviewDetailsList.get(pos).getSelectedDocumentUri() != null) {
                     try {
                         mFile = new File(documentPreviewDetailsList.get(pos).getSelectedDocumentUri().getPath());
-                        int fileSize = (int)(mFile.length()/1024)/1024;
-                        if(fileSize<5) {
-
+                        mFileSize = mFile.length()/(1024*1024);
+                        System.out.println("File Size "+mFileSize);
+                        if(mFileSize<5) {
                             if (mFile.exists()) {
-                                System.gc();
                                 mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
                                 mPicker.setImageBitmap(mBitmap);
-
                             }
                         }else{
                             Toaster.makeText(getContext(), getString(R.string.file_size_large), Toast.LENGTH_LONG);
