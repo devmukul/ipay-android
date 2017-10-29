@@ -256,7 +256,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     String otp = mSignupResponseModel.getOtp();
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        attemptAddTrustedDevice();
                         Toaster.makeText(getActivity(), mSignupResponseModel.getMessage(), Toast.LENGTH_LONG);
 
                         // TODO: For now, switch to login fragment after a successful sign up. Don't remove it either. Can be used later
