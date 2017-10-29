@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         android:fillViewport="true"
         android:layout_above="@+id/button_layout"
-        android:layout_below="@+id/back">
+        android:layout_below="@+id/back" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -90,6 +90,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:isScrollContainer="false"
         android:background="@color/colorPrimaryButton">
 
         <Button

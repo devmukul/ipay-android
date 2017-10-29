@@ -25,7 +25,7 @@ import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SelectAccountTypeFragmen
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBankFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoFragment;
-import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfiHelperFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBankHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardConsentAgreementForBankFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardPhotoIdUploadHelperFragment;
@@ -245,7 +245,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
 
     public void switchToAddressFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new OnBoardAddBasicInfiHelperFragment()).addToBackStack(null).commit();
+                .replace(R.id.fragment_container, new OnBoardAddBasicInfoHelperFragment()).addToBackStack(null).commit();
     }
 
     public void switchToEditBasicFragment() {

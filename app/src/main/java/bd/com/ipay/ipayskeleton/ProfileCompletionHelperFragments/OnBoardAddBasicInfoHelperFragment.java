@@ -19,7 +19,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.SetUserA
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 
-public class OnBoardAddBasicInfiHelperFragment extends Fragment {
+public class OnBoardAddBasicInfoHelperFragment extends Fragment {
     private Button mUploadButton;
     private Button mSkipButton;
     private View view;
