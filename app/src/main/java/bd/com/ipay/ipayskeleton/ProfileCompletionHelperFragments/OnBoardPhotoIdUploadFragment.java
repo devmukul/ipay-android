@@ -532,7 +532,6 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
                     try {
                         mFile = new File(documentPreviewDetailsList.get(pos).getSelectedDocumentUri().getPath());
                         mFileSize = mFile.length()/(1024*1024);
-                        System.out.println("File Size "+mFileSize);
                         if(mFileSize<5) {
                             if (mFile.exists()) {
                                 mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());

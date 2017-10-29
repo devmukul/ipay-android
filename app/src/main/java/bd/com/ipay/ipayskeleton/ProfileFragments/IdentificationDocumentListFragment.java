@@ -93,6 +93,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     private String mFileName;
     private String mOtherTypeName;
     private String mDocumentName;
+    private long mFileSize;
 
     private static final int[] DOCUMENT_TYPE_NAMES = {
             R.string.national_id,
@@ -621,10 +622,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
                 if (documentPreviewDetailsList.get(pos).getSelectedDocumentUri() != null) {
                     mFile = new File(documentPreviewDetailsList.get(pos).getSelectedDocumentUri().getPath());
-                    int fileSize = (int)(mFile.length()/1024)/1024;
-                    if(fileSize<5) {
+                    mFileSize = mFile.length()/(1024*1024);
+                    if(mFileSize<5) {
                         if (mFile.exists()) {
-                            System.gc();
                             mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
                             mPicker.setImageBitmap(mBitmap);
                         }
