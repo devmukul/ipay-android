@@ -105,11 +105,11 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
         if(mUri==null){
             mUploadButton.setVisibility(View.GONE);
             mSelectButton.setVisibility(View.VISIBLE);
-            mDocumentHelperTextView.setText("Update Profile Photo");
+            mDocumentHelperTextView.setText(getString(R.string.onboard_photo_upload_title));
         }else{
             mUploadButton.setVisibility(View.VISIBLE);
             mSelectButton.setVisibility(View.GONE);
-            mDocumentHelperTextView.setText("Nice Profile Photo");
+            mDocumentHelperTextView.setText(getString(R.string.onboard_nice_profile_photo));
         }
 
     }
@@ -317,13 +317,9 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
             }
             return;
         }
-
         Gson gson = new Gson();
-
         if (result.getApiCommand().equals(Constants.COMMAND_SET_PROFILE_PICTURE)) {
             try {
-
-                System.out.println("test "+result.toString());
 
                 mSetProfilePictureResponse = gson.fromJson(result.getJsonString(), SetProfilePictureResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -333,6 +329,7 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
 
                     ((ProfileCompletionHelperActivity) getActivity()).mProfilePhotoUri = mUri;
                     ProfileInfoCacheManager.uploadProfilePicture(true);
+                    getActivity().getSupportFragmentManager().popBackStack();
                     if(ProfileInfoCacheManager.isSwitchedFromSignup()){
                         ((ProfileCompletionHelperActivity) getActivity()).switchToPhotoIdUploadHelperFragment();
                     }
@@ -345,9 +342,6 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
                             ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
                         }
                     }
-
-
-
                 } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_SHORT).show();

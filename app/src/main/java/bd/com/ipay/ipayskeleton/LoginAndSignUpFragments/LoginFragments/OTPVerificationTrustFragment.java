@@ -354,17 +354,10 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                 try {
                     mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
-
-
                         ProfileInfoCacheManager.switchedFromSignup(false);
                         ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
                         ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
-                        ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isBasicInfoUpdated());
-
-//                        ProfileCompletionHelperActivity.isPhotoIdAdded = mProfileCompletionStatusResponse.isPhotoIdUpdated();
-//                        ProfileCompletionHelperActivity.isPhotoUploaded = mProfileCompletionStatusResponse.isPhotoUpdated();
-//                        ProfileCompletionHelperActivity.isProfileInfoAdded = mProfileCompletionStatusResponse.isBasicInfoUpdated();
+                        ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
 
                         if(!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
                                 || !ProfileInfoCacheManager.isBasicInfoAdded()) {

@@ -32,6 +32,7 @@ import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -353,6 +354,7 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), mUploadDocumentResponse.getMessage(), Toast.LENGTH_LONG).show();
                             ProfileInfoCacheManager.uploadIdentificationDocument(true);
+                            getActivity().getSupportFragmentManager().popBackStack();
 
                             if(ProfileInfoCacheManager.isSwitchedFromSignup()){
                                 ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
@@ -526,10 +528,22 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
                 mDocumentIdEditTextView.setText(documentID);
 
                 if (documentPreviewDetailsList.get(pos).getSelectedDocumentUri() != null) {
-                    mFile = new File(documentPreviewDetailsList.get(pos).getSelectedDocumentUri().getPath());
-                    if (mFile.exists()) {
-                        mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
-                        mPicker.setImageBitmap(mBitmap);
+                    try {
+                        mFile = new File(documentPreviewDetailsList.get(pos).getSelectedDocumentUri().getPath());
+                        int fileSize = (int)(mFile.length()/1024)/1024;
+                        if(fileSize<5) {
+
+                            if (mFile.exists()) {
+                                System.gc();
+                                mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
+                                mPicker.setImageBitmap(mBitmap);
+
+                            }
+                        }else{
+                            Toaster.makeText(getContext(), getString(R.string.file_size_large), Toast.LENGTH_LONG);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
                 } else {
                     if (verificationStatus == null)

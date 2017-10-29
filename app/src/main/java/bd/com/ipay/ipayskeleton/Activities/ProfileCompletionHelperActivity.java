@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardProfileP
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -43,23 +44,17 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class ProfileCompletionHelperActivity extends BaseActivity implements HttpResponseListener {
-    //public static boolean isFromSignUp = false;
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
     private ProgressDialog mProgressDialog;
     public Uri mProfilePhotoUri;
-//    public static boolean isPhotoUploaded;
-//    public static boolean isProfileInfoAdded;
-//    public static boolean isPhotoIdAdded;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_completion_helper);
+        SharedPrefManager.setFirstLaunch(false);
         mProgressDialog = new ProgressDialog(ProfileCompletionHelperActivity.this);
-
-        //getAvailableBankList();
         if(ProfileInfoCacheManager.isSwitchedFromSignup()){
             switchToProfilePictureFragment();
         }else {
@@ -73,36 +68,34 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
                 switchToHomeActivity();
             }
         }
-
-
-
     }
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            getSupportFragmentManager().popBackStackImmediate();
-        } else {
-            new AlertDialog.Builder(ProfileCompletionHelperActivity.this)
-                    .setMessage(R.string.are_you_sure_to_exit)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (Utilities.isConnectionAvailable(ProfileCompletionHelperActivity.this)) {
-                                attemptLogout();
-                            } else {
-                                ProfileInfoCacheManager.setLoggedInStatus(false);
-                                ((MyApplication) ProfileCompletionHelperActivity.this.getApplication()).clearTokenAndTimer();
-                                finish();
+
+            if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+                getSupportFragmentManager().popBackStackImmediate();
+            } else {
+                new AlertDialog.Builder(ProfileCompletionHelperActivity.this)
+                        .setMessage(R.string.are_you_sure_to_exit)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (Utilities.isConnectionAvailable(ProfileCompletionHelperActivity.this)) {
+                                    attemptLogout();
+                                } else {
+                                    ProfileInfoCacheManager.setLoggedInStatus(false);
+                                    ((MyApplication) ProfileCompletionHelperActivity.this.getApplication()).clearTokenAndTimer();
+                                    finish();
+                                }
                             }
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
-                        }
-                    })
-                    .show();
-        }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .show();
+            }
     }
 
     private void attemptLogout() {
@@ -199,20 +192,16 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
         }
 
         Gson gson = new Gson();
-
         switch (result.getApiCommand()) {
             case Constants.COMMAND_LOG_OUT:
-
                 try {
                     mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         ((MyApplication) this.getApplication()).clearTokenAndTimer();
                         finish();
-
                     } else {
                         Toast.makeText(ProfileCompletionHelperActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(ProfileCompletionHelperActivity.this, R.string.could_not_sign_out, Toast.LENGTH_LONG).show();

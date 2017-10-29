@@ -34,7 +34,8 @@
         android:logo="@drawable/logo_ipay"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:icon">
+        tools:replace="android:icon"
+        android:hardwareAccelerated="false">
 
         <provider
             android:name="android.support.v4.content.FileProvider"

@@ -621,9 +621,15 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
                 if (documentPreviewDetailsList.get(pos).getSelectedDocumentUri() != null) {
                     mFile = new File(documentPreviewDetailsList.get(pos).getSelectedDocumentUri().getPath());
-                    if (mFile.exists()) {
-                        mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
-                        mPicker.setImageBitmap(mBitmap);
+                    int fileSize = (int)(mFile.length()/1024)/1024;
+                    if(fileSize<5) {
+                        if (mFile.exists()) {
+                            System.gc();
+                            mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
+                            mPicker.setImageBitmap(mBitmap);
+                        }
+                    }else{
+                        Toaster.makeText(getContext(), getString(R.string.file_size_large), Toast.LENGTH_LONG);
                     }
                 } else {
                     if (verificationStatus == null)

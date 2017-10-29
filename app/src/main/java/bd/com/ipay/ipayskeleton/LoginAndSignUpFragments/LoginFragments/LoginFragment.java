@@ -18,8 +18,6 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
-import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -113,7 +111,6 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             public void onClick(View v) {
                 // Hiding the keyboard after login button pressed
                 Utilities.hideKeyboard(getActivity());
-
                 if (Utilities.isConnectionAvailable(getActivity())) attemptLogin();
                 else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
@@ -331,10 +328,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
         }
-
         Gson gson = new Gson();
-
-        System.out.println("Test Result "+result.toString());
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_LOG_IN:
@@ -363,9 +357,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                             if (!SharedPrefManager.ifContainsUUID()) {
                                 attemptAddTrustedDevice();
                             } else {
-
                                 getProfileInfo();
-//                                getProfileCompletionStatus();
                             }
                             //Google Analytic event
                             Utilities.sendSuccessEventTracker(mTracker, "Login to Home", ProfileInfoCacheManager.getAccountId());
@@ -462,9 +454,6 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         String UUID = mAddToTrustedDeviceResponse.getUUID();
                         ProfileInfoCacheManager.setUUID(UUID);
-
-                        // Launch HomeActivity from here on successful trusted device add
-                        //((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                         getProfileInfo();
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)
                         ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
@@ -486,16 +475,10 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                     mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-
-
                         ProfileInfoCacheManager.switchedFromSignup(false);
                         ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
                         ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
-                        ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isBasicInfoUpdated());
-
-//                        ProfileCompletionHelperActivity.isPhotoIdAdded = mProfileCompletionStatusResponse.isPhotoIdUpdated();
-//                        ProfileCompletionHelperActivity.isPhotoUploaded = mProfileCompletionStatusResponse.isPhotoUpdated();
-//                        ProfileCompletionHelperActivity.isProfileInfoAdded = mProfileCompletionStatusResponse.isBasicInfoUpdated();
+                        ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
 
                         if(!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
                                 || !ProfileInfoCacheManager.isBasicInfoAdded()) {

@@ -1,19 +1,14 @@
 package bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments;
 
-import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -23,14 +18,12 @@ import com.google.gson.Gson;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
-import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputOnboardView;
-import bd.com.ipay.ipayskeleton.CustomView.AddressInputView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.SetUserAddressRequest;
@@ -42,10 +35,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Occupation;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.OccupationRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.Common.GenderList;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
-import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpResponseListener {
 
@@ -62,9 +52,6 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
 
     private EditText mOccupationEditText;
     private EditText mOrganizationNameEditText;
-
-    private String mName = null;
-    private String mDateOfBirth =null;
     private String mGender = null;
     private String mOrganizationName=null;
     private int mOccupation = -1;
@@ -93,7 +80,6 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
         back  = (ImageView) v.findViewById(R.id.back);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
         mAddressInputView.clearFocus();
         mOrganizationNameEditText.clearFocus();
 
@@ -171,7 +157,6 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
         }
 
         Gson gson = new Gson();
-        System.out.println("Test Result "+result.toString());
 
         if (result.getApiCommand().equals(Constants.COMMAND_SET_USER_ADDRESS_REQUEST)) {
 
@@ -180,6 +165,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_LONG).show();
                     ProfileInfoCacheManager.addBasicInfo(true);
+                    getActivity().getSupportFragmentManager().popBackStack();
                     ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
 
                 } else {
@@ -191,7 +177,6 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.profile_info_save_failed, Toast.LENGTH_SHORT).show();
             }
-
             mProgressDialog.dismiss();
             mSetUserAddressTask = null;
         }else if (result.getApiCommand().equals(Constants.COMMAND_GET_OCCUPATIONS_REQUEST)) {
@@ -200,7 +185,6 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
                 mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mOccupationList = mGetOccupationResponse.getOccupations();
-
                     setOccupationAdapter();
                     setOccupation();
                 }
