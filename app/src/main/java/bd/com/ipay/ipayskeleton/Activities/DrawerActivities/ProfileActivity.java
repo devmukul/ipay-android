@@ -19,7 +19,9 @@ import bd.com.ipay.ipayskeleton.ProfileFragments.EditAddressFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EditBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EditParentInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EmailFragment;
-import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentListFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.NewIdentificationDocumentListFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.PreviewIdentificationDocumentFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.UploadIdentificationFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationHolderFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.ProfileCompletionFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.RecommendationReviewFragment;
@@ -28,12 +30,12 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.ADD_AND_VERIFY_BANK;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BASIC_PROFILE;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_ADDRESS;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_DOCUMENTS;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_INFO;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.INTRODUCER;
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.ADD_AND_VERIFY_BANK;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PARENT;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PERSONAL_ADDRESS;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PHOTOID;
@@ -119,11 +121,11 @@ public class ProfileActivity extends BaseActivity {
                     launchIntendedActivity(new ManageBanksActivity(), Constants.BANK_ACCOUNT);
                     break;
                 case Constants.ADD_BANK:
-                    launchIntendedActivity(new ManageBanksActivity(),Constants.ADD_BANK);
+                    launchIntendedActivity(new ManageBanksActivity(), Constants.ADD_BANK);
                     break;
                 case TRUSTED_NETWORK:
                 case TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE:
-                    launchIntendedActivity(new SecuritySettingsActivity(),Constants.ADD_TRUSTED_PERSON);
+                    launchIntendedActivity(new SecuritySettingsActivity(), Constants.ADD_TRUSTED_PERSON);
                     break;
                 case BASIC_PROFILE:
                     if (ProfileInfoCacheManager.isBusinessAccount())
@@ -158,7 +160,7 @@ public class ProfileActivity extends BaseActivity {
                 case BUSINESS_DOCUMENTS:
                 case VERIFICATION_DOCUMENT:
                 case PHOTOID:
-                    fragment = new IdentificationDocumentListFragment();
+                    fragment = new NewIdentificationDocumentListFragment();
                     break;
                 case PROFILE_COMPLETENESS:
                     fragment = new ProfileCompletionFragment();
@@ -267,7 +269,23 @@ public class ProfileActivity extends BaseActivity {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStackImmediate();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new IdentificationDocumentListFragment()).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NewIdentificationDocumentListFragment()).addToBackStack(null).commit();
+    }
+
+    public void switchToPreviewIdentificationDocumentFragment(Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 3)
+            getSupportFragmentManager().popBackStackImmediate();
+        PreviewIdentificationDocumentFragment previewIdentificationDocumentFragment = new PreviewIdentificationDocumentFragment();
+        previewIdentificationDocumentFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, previewIdentificationDocumentFragment).addToBackStack(null).commit();
+    }
+
+    public void switchToUploadIdentificationDocumentFragment(Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 4)
+            getSupportFragmentManager().popBackStackImmediate();
+        UploadIdentificationFragment uploadIdentificationFragment = new UploadIdentificationFragment();
+        uploadIdentificationFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, uploadIdentificationFragment).addToBackStack(null).commit();
     }
 
     public void switchToIntroducerFragment() {

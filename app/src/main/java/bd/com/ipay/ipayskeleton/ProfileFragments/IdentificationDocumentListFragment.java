@@ -53,6 +53,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
+import bd.com.ipay.ipayskeleton.Utilities.IdentificationDocumentConstants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
@@ -100,7 +101,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             R.string.passport,
             R.string.driving_license,
             R.string.birth_certificate,
-            R.string.tin,
+            R.string.personal_tin_id,
             R.string.other
     };
 
@@ -137,23 +138,25 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
         // Before making any change, make sure DOCUMENT_TYPES matches with DOCUMENT_TYPE_NAMES
         DOCUMENT_TYPES = new String[]{
-                Constants.DOCUMENT_TYPE_NATIONAL_ID,
-                Constants.DOCUMENT_TYPE_PASSPORT,
-                Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
-                Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
-                Constants.DOCUMENT_TYPE_TIN,
-                Constants.DOCUMENT_TYPE_OTHER
+                IdentificationDocumentConstants.DOCUMENT_TYPE_NATIONAL_ID,
+                IdentificationDocumentConstants.DOCUMENT_TYPE_PASSPORT,
+                IdentificationDocumentConstants.DOCUMENT_TYPE_DRIVING_LICENSE,
+                IdentificationDocumentConstants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
+                IdentificationDocumentConstants.DOCUMENT_TYPE_TIN,
+                IdentificationDocumentConstants.DOCUMENT_TYPE_OTHER
         };
         BUSINESS_DOCUMENT_TYPES = new String[]{
-                Constants.DOCUMENT_TYPE_NATIONAL_ID,
-                Constants.DOCUMENT_TYPE_BUSINESS_TIN,
-                Constants.DOCUMENT_TYPE_TRADE_LICENSE,
-                Constants.DOCUMENT_TYPE_VAT_REG_CERT,
-                Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
-                Constants.DOCUMENT_TYPE_PASSPORT,
-                Constants.DOCUMENT_TYPE_OTHER
+                IdentificationDocumentConstants.DOCUMENT_TYPE_NATIONAL_ID,
+                IdentificationDocumentConstants.DOCUMENT_TYPE_BUSINESS_TIN,
+                IdentificationDocumentConstants.DOCUMENT_TYPE_TRADE_LICENSE,
+                IdentificationDocumentConstants.DOCUMENT_TYPE_VAT_REG_CERT,
+                IdentificationDocumentConstants.DOCUMENT_TYPE_DRIVING_LICENSE,
+                IdentificationDocumentConstants.DOCUMENT_TYPE_PASSPORT,
+                IdentificationDocumentConstants.DOCUMENT_TYPE_OTHER
         };
         mTracker = Utilities.getTracker(getActivity());
+
+        getActivity().setTitle(R.string.profile_documents);
     }
 
     @Override
@@ -247,7 +250,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     if (identificationDocument.getDocumentType().equals(BUSINESS_DOCUMENT_TYPES[i])) {
                         documentId = identificationDocument.getDocumentIdNumber();
                         verificationStatus = identificationDocument.getDocumentVerificationStatus();
-                        documentUrl = identificationDocument.getDocumentUrl();
+                        documentUrl = identificationDocument.getDocumentPages().get(0).getUrl();
                         mDocumentName = identificationDocument.getDocumentName();
                         documentPreviewDetailsList.get(i).setDocumentId(documentId);
                         documentPreviewDetailsList.get(i).setVerificationStatus(verificationStatus);
@@ -270,7 +273,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     if (identificationDocument.getDocumentType().equals(DOCUMENT_TYPES[i].toLowerCase())) {
                         documentId = identificationDocument.getDocumentIdNumber();
                         verificationStatus = identificationDocument.getDocumentVerificationStatus();
-                        documentUrl = identificationDocument.getDocumentUrl();
+                        documentUrl = identificationDocument.getDocumentPages().get(0).getUrl();
                         mDocumentName = identificationDocument.getDocumentName();
                         documentPreviewDetailsList.get(i).setDocumentId(documentId);
                         documentPreviewDetailsList.get(i).setVerificationStatus(verificationStatus);

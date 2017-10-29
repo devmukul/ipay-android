@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/value15"
+        android:focusable="true"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/verification_status_image_view"
+            android:layout_toStartOf="@+id/verification_status_image_view"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/document_type_name_text_view"
+                style="@style/TextStyleSecondaryMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/document_id_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/verification_status_image_view"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/verification_icon"
+            android:paddingEnd="@dimen/activity_vertical_margin_semi_card"
+            android:paddingLeft="@dimen/activity_vertical_margin_card"
+            android:paddingRight="@dimen/activity_vertical_margin_semi_card"
+            android:paddingStart="@dimen/activity_vertical_margin_card"
+            android:src="@drawable/ic_verified" />
+    </RelativeLayout>
+
+    <View style="@style/Divider" />
+
+</LinearLayout>
