@@ -240,9 +240,6 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         }
 
         Gson gson = new Gson();
-
-        System.out.println("Test " + result.toString());
-
         if (result.getApiCommand().equals(Constants.COMMAND_GET_TRUSTED_DEVICES)) {
 
             try {
@@ -393,7 +390,6 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
 
     private class TrustedDeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-
         public TrustedDeviceAdapter() {
         }
 
@@ -474,7 +470,4 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
             else return 0;
         }
     }
-
-    
-
 }
