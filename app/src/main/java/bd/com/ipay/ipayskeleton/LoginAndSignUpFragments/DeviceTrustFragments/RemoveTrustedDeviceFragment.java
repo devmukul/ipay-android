@@ -199,6 +199,30 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
 
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+    
+    private void getProfileCompletionStatus() {
+
+        mProgressDialog.show();
+
+        if (mGetProfileCompletionStatusTask != null) {
+            return;
+        }
+
+        mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
+        mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getProfileInfo() {
+        if (mGetProfileInfoTask != null) {
+            return;
+        }
+
+        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity());
+        mGetProfileInfoTask.mHttpResponseListener = this;
+        mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
@@ -451,28 +475,6 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         }
     }
 
-    private void getProfileCompletionStatus() {
-
-        mProgressDialog.show();
-
-        if (mGetProfileCompletionStatusTask != null) {
-            return;
-        }
-
-        mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
-                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
-        mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void getProfileInfo() {
-        if (mGetProfileInfoTask != null) {
-            return;
-        }
-
-        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
-                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity());
-        mGetProfileInfoTask.mHttpResponseListener = this;
-        mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+    
 
 }
