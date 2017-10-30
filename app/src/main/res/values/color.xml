@@ -67,4 +67,6 @@
     <color name="colorWarningButton">#F4D03F</color>
     <color name="colorErrorButton">#E7505A</color>
     <color name="colorGrayDevider">#E0E0E0</color>
+
+    <color name="colorOnBoardText">#212121</color>
 </resources>

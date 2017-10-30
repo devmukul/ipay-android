@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
+
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/left_arrow"
+        android:padding="15dp"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:layout_below="@+id/back">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/layout_progress_container" />
+
+            <LinearLayout
+                android:id="@+id/content_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/profile_pic_upload_helper_title"
+                    style="@style/OnBoardPageTitleStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/onboard_photo_id_upload_title"/>
+
+                <TextView
+                    android:id="@+id/textview_document_upload_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:text="@string/you_need_to_upload_identification_documents_to_get_verified"
+                    android:textSize="@dimen/text_size_small" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/list_documents"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                    android:paddingBottom="@dimen/activity_horizontal_margin" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/button_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="@color/colorPrimaryButton">-->
+
+        <!--<Button-->
+            <!--android:id="@+id/button_skip"-->
+            <!--style="@style/ButtonTransparent"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="@string/skip_now"-->
+            <!--android:gravity="left|center_vertical"-->
+            <!--android:paddingLeft="@dimen/activity_horizontal_margin_double"/>-->
+
+        <!--<Button-->
+            <!--android:id="@+id/button_upload_profile_pic"-->
+            <!--style="@style/ButtonTransparent"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="@string/done"-->
+            <!--android:gravity="right|center_vertical"-->
+            <!--android:paddingRight="@dimen/activity_horizontal_margin_double"/>-->
+
+
+    <!--</LinearLayout>-->
+
+
+
+</RelativeLayout>
+

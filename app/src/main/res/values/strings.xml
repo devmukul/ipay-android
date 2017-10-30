@@ -241,7 +241,7 @@
     <string name="sending_otp">Sending OTP in your mobile…</string>
     <string name="change_pass_failed">Failed to change password</string>
     <string name="otp_going_to_send">We have sent you a code via sms, please enter it below and press verify</string>
-    <string name="otp_going_to_send_sign_up">We have sent you a code via sms, please enter it below and press done</string>
+    <string name="otp_going_to_send_sign_up">We have sent you a code via sms, please enter it below and press continue</string>
     <string name="done">Done</string>
     <string name="verify">Verify</string>
     <string name="verify_email">Verify Email</string>
@@ -562,8 +562,8 @@
     <string name="passport_id">Passport ID</string>
     <string name="driving_license">Driving License</string>
     <string name="driving_license_id">Driving License ID</string>
-    <string name="birth_certificate">Birth Cirtificate</string>
-    <string name="birth_certificate_id">Birth Cirtificate ID</string>
+    <string name="birth_certificate">Birth Certificate</string>
+    <string name="birth_certificate_id">Birth Certificate ID</string>
     <string name="tin">e-Tin (Personal)</string>
     <string name="business_tin_id">Business TIN ID</string>
     <string name="trade_license">Trade License</string>
@@ -983,7 +983,35 @@
     <string name="no_browser_map_app_found_error_message">No default browser or google maps app found to open. Please install Google Maps/Browser or enable your browser.</string>
     <string name="please_enter_a_document_name">Please Enter a Document Name</string>
     <string name="search_transaction">Search transaction</string>
-    <string name="complete_transaction_list">Complete transaction list</string>
+    <string name="completed_transaction_list">Completed transaction list</string>
     <string name="pending_transaction_list">Pending transaction list</string>
+
+
+
+    <string name="upload_photo">Upload photo</string>
+    <string name="upload_photo_id">Upload photo id</string>
+    <string name="add_basic_info">Add basic info</string>
+    <string name="ask_for_introduction_onboard">Ask for Introduction</string>
+    <string name="add_bank_onboard">Add bank info</string>
+    <string name="skip_now">Skip now</string>
+
+    <string name="onboard_step_one_title">Great! You\'re Almost Done</string>
+    <string name="onboard_photo_id_upload_title">Upload Photo ID</string>
+    <string name="onboard_nice_profile_photo">Nice Profile Photo</string>
+    <string name="onboard_photo_upload_title">Upload Profile Photo</string>
+    <string name="onboard_profile_info_update_title">Basic Information</string>
+    <string name="onboard_add_bank_title">Add Bank Information</string>
+    <string name="onboard_get_introduced_upload_title">Ask for Introduction</string>
+    <string name="onboard_profile_info_update_page_title">Add Basic Information</string>
+
+    <string name="onboard_upload_photo_text">Upload your profile photo. Face the camera straight on, photo must be in focus and not blurry.</string>
+    <string name="onboard_upload_photo_id_text">Upload a copy of photo ID.\nLike: National ID, Driving License, Passport etc. Make sure all information is clearly readable and that it is fully in frame.</string>
+    <string name="onboard_upload_prifile_info_text">Add your basic information and present address to send some goodies or official doc.</string>
+    <string name="onboard_add_bank_text">Update your bank info to add money from your account to shop, send money or transfer.</string>
+    <string name="onboard_ask_for_introduction_text">Find an iPay user from your contact list and send request to introduce you.</string>
+    <string name="upload_profile_photo_again">Do you want to upload a profile photo again? You have already uploaded once</string>
+    <string name="upload_identification_document_again">Do you want to upload a identification document again? You have already uploaded once</string>
+
+    <string name="file_size_large">Your file size is too large. Please select another.</string>
 
 </resources>
