@@ -7,9 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,32 +15,29 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.Contents;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
-import bd.com.ipay.ipayskeleton.Utilities.QRCodeEncoder;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import bd.com.ipay.ipayskeleton.camera.utility.CameraAndImageUtilities;
@@ -57,22 +52,9 @@ public class QRCodeViewerActivity extends BaseActivity {
 
     private Button mShareButton;
     private Bitmap bitmap;
-
-    private ImageView myImage;
+    private LinearLayout mLinearLayout;
 
     public static final int REQUEST_CODE_PERMISSION = 1001;
-
-    private static int APPROPRIATE_TEXT_SIZE_UPPER = 180;
-    private static int APPROPRIATE_TEXT_SIZE_LOWER = 160;
-    private static int QR_CODE_HELPER_TEXT_WIDTH = 300;
-    private static int QR_CODE_HELPER_TEXT_HEIGHT = 300;
-    private static int APPORX_VALUE = 50;
-
-    private static final String HELPER_TEXT_UPPER = "scan me";
-    private static final String HELPER_TEXT_LOWER = "to pay me";
-
-    private Point size;
-    private Display display;
 
     private static final String[] NECESSARY_PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
@@ -82,7 +64,7 @@ public class QRCodeViewerActivity extends BaseActivity {
         setContentView(R.layout.activity_qr_code_viewer);
 
         mShareButton = (Button) findViewById(R.id.share_button);
-
+        mLinearLayout = (LinearLayout) findViewById(R.id.drawing_cache_layout);
         mShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,7 +75,7 @@ public class QRCodeViewerActivity extends BaseActivity {
                 }
             }
         });
-        getDisplayInfo();
+
         Intent intent = getIntent();
         if (intent != null) {
             stringToEncode = intent.getStringExtra(Constants.STRING_TO_ENCODE);
@@ -113,39 +95,47 @@ public class QRCodeViewerActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    public void getDisplayInfo() {
-        float density = getResources().getDisplayMetrics().density;
-        float test = density;
-        if (density >= 1.5 && density < 2) {
-            APPORX_VALUE = 30;
-            QR_CODE_HELPER_TEXT_HEIGHT = QR_CODE_HELPER_TEXT_WIDTH = 100;
-            APPROPRIATE_TEXT_SIZE_LOWER = 80;
-            APPROPRIATE_TEXT_SIZE_UPPER = 90;
-        } else if (density >= 2 && density < 2.5) {
-            APPORX_VALUE = 40;
-            QR_CODE_HELPER_TEXT_HEIGHT = QR_CODE_HELPER_TEXT_WIDTH = 133;
-            APPROPRIATE_TEXT_SIZE_LOWER = 106;
-            APPROPRIATE_TEXT_SIZE_UPPER = 120;
-        } else if (density >= 2.5 && density < 3.5) {
-            APPORX_VALUE = 70;
-            QR_CODE_HELPER_TEXT_HEIGHT = QR_CODE_HELPER_TEXT_WIDTH = 200;
-            APPROPRIATE_TEXT_SIZE_LOWER = 180;
-            APPROPRIATE_TEXT_SIZE_UPPER = 200;
-        } else if (density >= 3.5 && density <= 4) {
-            APPORX_VALUE = 100;
-            QR_CODE_HELPER_TEXT_HEIGHT = QR_CODE_HELPER_TEXT_WIDTH = 266;
-            APPROPRIATE_TEXT_SIZE_LOWER = 220;
-            APPROPRIATE_TEXT_SIZE_UPPER = 250;
-        }
+    public void createAndSetQRCode(String qrCodeData, String charset, Map hintMap, int qrCodeheight, int qrCodewidth) {
 
+        try {
+            //generating qr code.
+            BitMatrix matrix = new MultiFormatWriter().encode(new String(qrCodeData.getBytes(charset), charset),
+                    BarcodeFormat.QR_CODE, qrCodewidth, qrCodeheight, hintMap);
+            //converting bitmatrix to bitmap
+
+            int width = matrix.getWidth();
+            int height = matrix.getHeight();
+            int[] pixels = new int[width * height];
+            // All are 0, or black, by default
+            for (int y = 0; y < height; y++) {
+                int offset = y * width;
+                for (int x = 0; x < width; x++) {
+                    //for black and white
+                    pixels[offset + x] = matrix.get(x, y) ? BLACK : WHITE;
+                    //for custom color
+                    /*pixels[offset + x] = matrix.get(x, y) ?
+                            ResourcesCompat.getColor(getResources(),R.color.colorPrimary,null) :WHITE;*/
+                }
+            }
+            bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+
+            Bitmap overlayIcon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_qr_ipay_logo);
+            Bitmap mergedBitmap = mergeBitmaps(overlayIcon, bitmap);
+            bitmap = mergedBitmap;
+            ImageView myImage = (ImageView) findViewById(R.id.qr_code_imageview);
+            myImage.setImageBitmap(bitmap);
+
+
+        } catch (Exception er) {
+        }
     }
 
     private void shareQrCode() {
         String imageName = "Qr payment.png";
         String share_qr_code_message = getString(R.string.scan_this_qr_code_prompt) + " " +
                 ProfileInfoCacheManager.getUserName() + " " + getString(R.string.scan_this_qr_code_prompt_continue);
-
-        CameraAndImageUtilities.saveImageBitmap(imageName, bitmap, QRCodeViewerActivity.this);
+        CameraAndImageUtilities.saveImageBitmap(imageName, getBitmapFromLayout(), QRCodeViewerActivity.this);
         if (!TextUtils.isEmpty(imageName)) {
 
             File qrCodeFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), imageName);
@@ -191,24 +181,31 @@ public class QRCodeViewerActivity extends BaseActivity {
         }
     }
 
+    private Bitmap getBitmapFromLayout() {
+        mLinearLayout.buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(mLinearLayout.getDrawingCache());
+        return bitmap;
+    }
+
     private void setQrCode(String stringToEncode) {
         WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        display = manager.getDefaultDisplay();
-        size = new Point();
+        Display display = manager.getDefaultDisplay();
+        Point size = new Point();
         display.getSize(size);
         int smallerDimension = size.x < size.y ? size.x : size.y;
-
-        Map<EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
-        hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
-
-        // Encode with a QR Code image
-        QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(stringToEncode, null,
-                Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(),
-                smallerDimension);
         try {
-            myImage = (ImageView) findViewById(R.id.qr_code_imageview);
-            createAndSetQRCode(stringToEncode, "UTF-8", hintMap, smallerDimension, smallerDimension);
-
+            Map<EncodeHintType, Object> hints = new EnumMap<EncodeHintType, Object>(EncodeHintType.class);
+            hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+            hints.put(EncodeHintType.MARGIN, 0); /* default = 4 */
+            /*QRCodeWriter qrWritter = new QRCodeWriter();
+            BitMatrix bitMatrix = qrWritter.encode(stringToEncode, BarcodeFormat.QR_CODE, smallerDimension, smallerDimension, hints);
+            bitmap = Bitmap.createBitmap(smallerDimension, smallerDimension, Bitmap.Config.RGB_565);
+            for (int x = 0; x < smallerDimension; x++){
+                for (int y = 0; y < smallerDimension; y++){
+                    bitmap.setPixel(x, y, bitMatrix.get(x,y) ? BLACK : WHITE);
+                }
+            }*/
+            createAndSetQRCode(stringToEncode, "UTF-8", hints, smallerDimension, smallerDimension);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -223,65 +220,11 @@ public class QRCodeViewerActivity extends BaseActivity {
         Canvas canvas = new Canvas(combined);
         int canvasWidth = canvas.getWidth();
         int canvasHeight = canvas.getHeight();
-
+        canvas.setDensity(Bitmap.DENSITY_NONE);
         canvas.drawBitmap(bitmap, new Matrix(), null);
         int centreX = (canvasWidth - overlay.getWidth()) / 2;
         int centreY = (canvasHeight - overlay.getHeight()) / 2;
         canvas.drawBitmap(overlay, centreX, centreY, null);
-
-        return combined;
-    }
-
-    public void createAndSetQRCode(String qrCodeData, String charset, Map hintMap, int qrCodeheight, int qrCodewidth) {
-
-
-        try {
-            //generating qr code.
-            BitMatrix matrix = new MultiFormatWriter().encode(new String(qrCodeData.getBytes(charset), charset),
-                    BarcodeFormat.QR_CODE, qrCodewidth, qrCodeheight, hintMap);
-            //converting bitmatrix to bitmap
-
-            int width = matrix.getWidth();
-            int height = matrix.getHeight();
-            int[] pixels = new int[width * height];
-            // All are 0, or black, by default
-            for (int y = 0; y < height; y++) {
-                int offset = y * width;
-                for (int x = 0; x < width; x++) {
-                    //for black and white
-                    pixels[offset + x] = matrix.get(x, y) ? BLACK : WHITE;
-                    //for custom color
-                    /*pixels[offset + x] = matrix.get(x, y) ?
-                            ResourcesCompat.getColor(getResources(),R.color.colorPrimary,null) :WHITE;*/
-                }
-            }
-            //creating bitmap
-            bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
-
-            //getting the logo
-            Bitmap overlay = BitmapFactory.decodeResource(getResources(), R.drawable.ic_airtel2);
-            Bitmap mergedBitmap = mergeBitmaps(overlay, bitmap);
-            bitmap = mergedBitmap;
-            bitmap = drawTextToBitmap(bitmap);
-            myImage.setImageBitmap(bitmap);
-
-
-        } catch (Exception er) {
-            Log.e("QrGenerate", er.getMessage());
-        }
-    }
-
-    public Bitmap drawTextToBitmap(Bitmap bitmap) {
-        Bitmap combined = Bitmap.createBitmap(bitmap.getWidth() + QR_CODE_HELPER_TEXT_WIDTH, bitmap.getHeight() + QR_CODE_HELPER_TEXT_HEIGHT, Bitmap.Config.ARGB_4444);
-        Canvas canvas = new Canvas(combined);
-        Paint paint = new Paint();
-        canvas.drawBitmap(bitmap, QR_CODE_HELPER_TEXT_WIDTH / 2, QR_CODE_HELPER_TEXT_HEIGHT / 2, null);
-        paint.setColor(Color.GRAY);
-        paint.setTextSize(APPROPRIATE_TEXT_SIZE_UPPER);
-        canvas.drawText(HELPER_TEXT_UPPER, QR_CODE_HELPER_TEXT_WIDTH + APPORX_VALUE, QR_CODE_HELPER_TEXT_WIDTH, paint);
-        paint.setTextSize(APPROPRIATE_TEXT_SIZE_LOWER);
-        canvas.drawText(HELPER_TEXT_LOWER, QR_CODE_HELPER_TEXT_WIDTH + APPORX_VALUE, bitmap.getHeight() + QR_CODE_HELPER_TEXT_HEIGHT / 2, paint);
         return combined;
     }
 
