@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,11 +33,9 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.IdentificationDocumentConstants;
 
-public class NewIdentificationDocumentListFragment extends ProgressFragment implements HttpResponseListener {
+public class IdentificationDocumentListFragment extends ProgressFragment implements HttpResponseListener {
 
     private HttpRequestAsyncTask mGetIdentificationDocumentsTask;
-
-    private ProgressDialog mProgressDialog;
 
     private DocumentListAdapter mDocumentListAdapter;
 
@@ -47,10 +44,7 @@ public class NewIdentificationDocumentListFragment extends ProgressFragment impl
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         createUserIdentificationList();
-
-        mProgressDialog = new ProgressDialog(getContext());
     }
 
     private void createUserIdentificationList() {
@@ -68,7 +62,7 @@ public class NewIdentificationDocumentListFragment extends ProgressFragment impl
 
         for (int i = 0; i < documentTypeName.length; i++) {
             IdentificationDocument identificationDocument = new IdentificationDocument();
-            identificationDocument.setDocumentName(documentTypeName[i]);
+            identificationDocument.setDocumentTypeTitle(documentTypeName[i]);
             identificationDocument.setDocumentType(documentType[i]);
             mUserIdentificationDocumentList.add(identificationDocument);
         }
@@ -76,7 +70,7 @@ public class NewIdentificationDocumentListFragment extends ProgressFragment impl
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_identification_documents, container, false);
+        return inflater.inflate(R.layout.fragment_identification_document_list, container, false);
     }
 
     @Override
@@ -109,6 +103,9 @@ public class NewIdentificationDocumentListFragment extends ProgressFragment impl
                     mUserIdentificationDocumentList.get(j).setDocumentPages(serverIdentificationDocumentList.get(i).getDocumentPages());
                     mUserIdentificationDocumentList.get(j).setDocumentVerificationStatus(serverIdentificationDocumentList.get(i).getDocumentVerificationStatus());
                     mUserIdentificationDocumentList.get(j).setDocumentIdNumber(serverIdentificationDocumentList.get(i).getDocumentIdNumber());
+                    if (serverIdentificationDocumentList.get(i).getDocumentName() != null) {
+                        mUserIdentificationDocumentList.get(j).setDocumentName(serverIdentificationDocumentList.get(i).getDocumentName());
+                    }
                     break;
                 }
             }
@@ -174,7 +171,7 @@ public class NewIdentificationDocumentListFragment extends ProgressFragment impl
             final IdentificationDocument identificationDocument = mIdentificationDocumentList.get(position);
 
             //Showing the name of the Document
-            holder.documentTypeNameTextView.setText(identificationDocument.getDocumentName());
+            holder.documentTypeNameTextView.setText(identificationDocument.getDocumentTypeTitle());
 
             //Showing the submitted document id number
             if (identificationDocument.getDocumentIdNumber() == null) {

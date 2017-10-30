@@ -1,10 +1,12 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
@@ -19,36 +21,53 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadMultipleIdentifierDocumentAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.IdentificationDocument;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.IdentificationDocumentConstants;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 import bd.com.ipay.ipayskeleton.camera.CameraActivity;
 
-public class UploadIdentificationFragment extends BaseFragment {
+public class UploadIdentificationFragment extends BaseFragment implements HttpResponseListener {
 
     private static final int ACTION_UPLOAD_DOCUMENT = 100;
     private static final int REQUEST_CODE_PERMISSION = 1001;
 
+    //private MultipartRequestAsyncTask mUploadIdentificationDocumentRequestAsyncTask;
+    private UploadMultipleIdentifierDocumentAsyncTask mUploadIdentifierDocumentAsyncTask;
+
     private IdentificationDocument mSelectedIdentificationDocument;
 
-    private EditText documentNameEditText;
-    private EditText documentIdEditText;
+    private EditText mDocumentNameEditText;
+    private EditText mDocumentIdEditText;
 
     private View documentBackSideUploadOptionViewHolder;
 
     private ImageView mDocumentFrontSideImageView;
     private ImageView mDocumentBackSideImageView;
+
+    private TextView mDocumentFirstPageErrorTextView;
 
     private int maxDocumentSideCount;
     private boolean mIsOtherTypeDocument;
@@ -57,8 +76,10 @@ public class UploadIdentificationFragment extends BaseFragment {
     private int mPickerActionId;
     private String mSelectedDocumentSide;
 
-    private Uri mDocumentFirstPageImageUri;
-    private Uri mDocumentSecondPageImageUri;
+    private File mDocumentFirstPageImageFile;
+    private File mDocumentSecondPageImageFile;
+
+    private ProgressDialog mProgressDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,11 +87,13 @@ public class UploadIdentificationFragment extends BaseFragment {
         if (getArguments() != null) {
             mSelectedIdentificationDocument = getArguments().getParcelable(Constants.SELECTED_IDENTIFICATION_DOCUMENT);
             if (mSelectedIdentificationDocument != null) {
-                maxDocumentSideCount = IdentificationDocumentConstants.DOCUMENT_ID_MAX_PAGE_COUNT_MAP.get(mSelectedIdentificationDocument.getDocumentType());
+                maxDocumentSideCount = IdentificationDocumentConstants.getMaxDocumentPageCount(mSelectedIdentificationDocument.getDocumentType());
                 mIsOtherTypeDocument = mSelectedIdentificationDocument.getDocumentType().equals(IdentificationDocumentConstants.DOCUMENT_TYPE_OTHER);
-                mDocumentIdEditTextHint = getString(IdentificationDocumentConstants.DOCUMENT_ID_TO_EDIT_TEXT_HINT_MAP.get(mSelectedIdentificationDocument.getDocumentType()));
+                mDocumentIdEditTextHint = getString(IdentificationDocumentConstants.getDocumentIDHintText(mSelectedIdentificationDocument.getDocumentType()));
             }
         }
+        mProgressDialog = new ProgressDialog(getContext());
+        mProgressDialog.setMessage(getString(R.string.uploading));
 
     }
 
@@ -86,15 +109,16 @@ public class UploadIdentificationFragment extends BaseFragment {
         getActivity().setTitle(R.string.upload_document);
 
         final View documentNameViewHolder = findViewById(R.id.document_name_view_holder);
-        documentNameEditText = findViewById(R.id.document_name_edit_text);
+        mDocumentNameEditText = findViewById(R.id.document_name_edit_text);
 
         if (mIsOtherTypeDocument) {
             documentNameViewHolder.setVisibility(View.VISIBLE);
+            mDocumentNameEditText.setText(mSelectedIdentificationDocument.getDocumentName());
         } else {
             documentNameViewHolder.setVisibility(View.GONE);
         }
 
-        documentIdEditText = findViewById(R.id.document_id_edit_text);
+        mDocumentIdEditText = findViewById(R.id.document_id_edit_text);
 
         final TextInputLayout documentIdTextInputLayout = findViewById(R.id.document_id_text_input_layout);
 
@@ -102,11 +126,14 @@ public class UploadIdentificationFragment extends BaseFragment {
             documentIdTextInputLayout.setHint(mDocumentIdEditTextHint);
         if (mSelectedIdentificationDocument != null) {
             if (!TextUtils.isEmpty(mSelectedIdentificationDocument.getDocumentIdNumber())) {
-                documentIdEditText.setText(mSelectedIdentificationDocument.getDocumentIdNumber());
+                mDocumentIdEditText.setText(mSelectedIdentificationDocument.getDocumentIdNumber());
             }
         }
 
         mDocumentFrontSideImageView = findViewById(R.id.document_front_side_image_view);
+        mDocumentFirstPageErrorTextView = findViewById(R.id.document_first_page_error_text_view);
+
+        mDocumentFirstPageErrorTextView.setVisibility(View.INVISIBLE);
 
         final DocumentChooserButtonClickListener documentChooserButtonClickListener = new DocumentChooserButtonClickListener();
         final Button documentFrontSideSelectorButton = findViewById(R.id.document_front_side_selector_button);
@@ -127,9 +154,89 @@ public class UploadIdentificationFragment extends BaseFragment {
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (verifyUserInputs()) {
+                    Map<String, List<Object>> multipartEntityMap = new HashMap<>();
 
+                    multipartEntityMap.put("documentType", Collections.<Object>singletonList(mSelectedIdentificationDocument.getDocumentType()));
+                    multipartEntityMap.put("documentIdNumber", Collections.<Object>singletonList(mDocumentIdEditText.getText()));
+                    List<Object> documentFile = new ArrayList<>();
+                    documentFile.add(mDocumentFirstPageImageFile);
+                    if (mDocumentSecondPageImageFile != null) {
+                        documentFile.add(mDocumentSecondPageImageFile);
+                    }
+                    multipartEntityMap.put("files", documentFile);
+
+                    final String url;
+                    if (ProfileInfoCacheManager.isBusinessAccount()) {
+                        url = Constants.BASE_URL_MM + Constants.URL_UPLOAD_BUSINESS_DOCUMENTS + "/v2";
+                    } else {
+                        url = Constants.BASE_URL_MM + Constants.URL_UPLOAD_DOCUMENTS + "/v2";
+                    }
+                    //mUploadIdentificationDocumentRequestAsyncTask = new MultipartRequestAsyncTask(Constants.COMMAND_UPLOAD_DOCUMENT, url, getContext(), multipartEntityMap, UploadIdentificationFragment.this);
+                    //mUploadIdentificationDocumentRequestAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    final String documentName;
+                    if (mSelectedIdentificationDocument.getDocumentType().equals(IdentificationDocumentConstants.DOCUMENT_TYPE_OTHER)) {
+                        documentName = mDocumentNameEditText.getText().toString();
+                    } else {
+                        documentName = null;
+                    }
+                    final String documentIdNumber = mDocumentIdEditText.getText().toString();
+                    final String documentType = mSelectedIdentificationDocument.getDocumentType();
+
+                    final String[] files;
+                    if (mDocumentSecondPageImageFile == null) {
+                        files = new String[1];
+                    } else {
+                        files = new String[2];
+                        files[1] = mDocumentSecondPageImageFile.getAbsolutePath();
+                    }
+                    files[0] = mDocumentFirstPageImageFile.getAbsolutePath();
+
+                    mUploadIdentifierDocumentAsyncTask = new UploadMultipleIdentifierDocumentAsyncTask(Constants.COMMAND_UPLOAD_DOCUMENT, url, getContext(), documentType, documentIdNumber, documentName, files, UploadIdentificationFragment.this);
+                    mUploadIdentifierDocumentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    mProgressDialog.show();
+                }
             }
         });
+    }
+
+    private boolean verifyUserInputs() {
+        clearAllErrorMessages();
+        final boolean isValidInput;
+        final View focusableView;
+        if (mSelectedIdentificationDocument.getDocumentType().equals(IdentificationDocumentConstants.DOCUMENT_TYPE_OTHER) && TextUtils.isEmpty(mDocumentNameEditText.getText())) {
+            mDocumentNameEditText.setError(getString(R.string.please_enter_a_document_name));
+            focusableView = mDocumentNameEditText;
+            isValidInput = false;
+        } else if (TextUtils.isEmpty(mDocumentIdEditText.getText())) {
+            mDocumentIdEditText.setError(getString(R.string.please_enter_a_document_id));
+            focusableView = mDocumentIdEditText;
+            isValidInput = false;
+        } else if (InputValidator.isValidDocumentID(getContext(), mDocumentIdEditText.getText().toString(), mSelectedIdentificationDocument.getDocumentType()) != null) {
+            mDocumentIdEditText.setError(InputValidator.isValidDocumentID(getContext(), mDocumentIdEditText.getText().toString(), mSelectedIdentificationDocument.getDocumentType()));
+            focusableView = mDocumentIdEditText;
+            isValidInput = false;
+        } else if (mDocumentFirstPageImageFile == null) {
+            mDocumentFirstPageErrorTextView.setText(R.string.please_select_a_file_to_upload);
+            mDocumentFirstPageErrorTextView.setVisibility(View.VISIBLE);
+            focusableView = null;
+            isValidInput = false;
+        } else {
+            focusableView = null;
+            isValidInput = true;
+        }
+        if (focusableView != null) {
+            focusableView.requestFocus();
+        }
+        return isValidInput;
+    }
+
+    private void clearAllErrorMessages() {
+        mDocumentFirstPageErrorTextView.setText("");
+        mDocumentFirstPageErrorTextView.setVisibility(View.INVISIBLE);
+        mDocumentNameEditText.setError(null);
+        mDocumentIdEditText.setError(null);
+
     }
 
     @Override
@@ -148,13 +255,17 @@ public class UploadIdentificationFragment extends BaseFragment {
                         final Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
                         if (mSelectedDocumentSide.equals(IdentificationDocumentConstants.DOCUMENT_SIDE_FRONT)) {
                             mDocumentFrontSideImageView.setImageBitmap(imageBitmap);
+                            mDocumentFirstPageImageFile = imageFile;
                             if (maxDocumentSideCount > 1) {
                                 documentBackSideUploadOptionViewHolder.setVisibility(View.VISIBLE);
                             }
+                            mDocumentFirstPageErrorTextView.setText("");
+                            mDocumentFirstPageErrorTextView.setVisibility(View.INVISIBLE);
                         } else {
                             if (mDocumentBackSideImageView != null) {
                                 mDocumentBackSideImageView.setImageBitmap(imageBitmap);
                             }
+                            mDocumentSecondPageImageFile = imageFile;
                         }
                         mPickerActionId = -1;
                         mSelectedDocumentSide = "";
@@ -195,6 +306,34 @@ public class UploadIdentificationFragment extends BaseFragment {
     public <T extends View> T findViewById(@IdRes int id) {
         //noinspection unchecked,ConstantConditions
         return (T) getView().findViewById(id);
+    }
+
+    @Override
+    public void httpResponseReceiver(GenericHttpResponse result) {
+        mProgressDialog.cancel();
+        if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
+                || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            //mUploadIdentificationDocumentRequestAsyncTask = null;
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_UPLOAD_DOCUMENT:
+                switch (result.getStatus()) {
+                    case Constants.HTTP_RESPONSE_STATUS_OK:
+                        if (getActivity() instanceof ProfileActivity) {
+                            ((ProfileActivity) getActivity()).switchToIdentificationDocumentListFragment();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     class DocumentChooserButtonClickListener implements View.OnClickListener {

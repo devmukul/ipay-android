@@ -19,7 +19,7 @@ import bd.com.ipay.ipayskeleton.ProfileFragments.EditAddressFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EditBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EditParentInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.EmailFragment;
-import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.NewIdentificationDocumentListFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.IdentificationDocumentListFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.PreviewIdentificationDocumentFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.UploadIdentificationFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationHolderFragment;
@@ -160,7 +160,7 @@ public class ProfileActivity extends BaseActivity {
                 case BUSINESS_DOCUMENTS:
                 case VERIFICATION_DOCUMENT:
                 case PHOTOID:
-                    fragment = new NewIdentificationDocumentListFragment();
+                    fragment = new IdentificationDocumentListFragment();
                     break;
                 case PROFILE_COMPLETENESS:
                     fragment = new ProfileCompletionFragment();
@@ -269,7 +269,7 @@ public class ProfileActivity extends BaseActivity {
         while (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStackImmediate();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NewIdentificationDocumentListFragment()).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new IdentificationDocumentListFragment()).addToBackStack(null).commit();
     }
 
     public void switchToPreviewIdentificationDocumentFragment(Bundle bundle) {

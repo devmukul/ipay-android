@@ -997,7 +997,6 @@
     <string name="upload_document">Upload Document</string>
 
 
-
     <string name="upload_photo">Upload photo</string>
     <string name="upload_photo_id">Upload photo id</string>
     <string name="add_basic_info">Add basic info</string>
@@ -1023,5 +1022,6 @@
     <string name="upload_identification_document_again">Do you want to upload a identification document again? You have already uploaded once</string>
 
     <string name="file_size_large">Your file size is too large. Please select another.</string>
+    <string name="please_enter_a_document_id">Please enter your document ID</string>
 
 </resources>

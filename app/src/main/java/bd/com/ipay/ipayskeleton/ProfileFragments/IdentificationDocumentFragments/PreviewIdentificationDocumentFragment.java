@@ -34,6 +34,8 @@ import bd.com.ipay.ipayskeleton.Utilities.IdentificationDocumentConstants;
 public class PreviewIdentificationDocumentFragment extends BaseFragment {
 
     private IdentificationDocument mSelectedIdentificationDocument;
+    private ImageView mDocumentLargePreviewImageView;
+    private View mDocumentImagePreviewHolder;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,7 +55,7 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (mSelectedIdentificationDocument != null)
-            getActivity().setTitle(mSelectedIdentificationDocument.getDocumentName());
+            getActivity().setTitle(mSelectedIdentificationDocument.getDocumentTypeTitle());
 
         final TextView documentTypeNameTextView = findViewById(R.id.document_type_name_text_view);
         final TextView documentIdTextView = findViewById(R.id.document_id_text_view);
@@ -61,13 +63,26 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
         final RecyclerView documentPreviewRecyclerView = findViewById(R.id.document_preview_recycler_view);
         final ImageButton documentInformationEditImageButton = findViewById(R.id.document_information_edit_image_button);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+
+        mDocumentImagePreviewHolder = findViewById(R.id.document_image_preview_holder);
+        mDocumentLargePreviewImageView = findViewById(R.id.document_large_preview_image_view);
+        mDocumentImagePreviewHolder.setVisibility(View.GONE);
+
+        mDocumentImagePreviewHolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDocumentImagePreviewHolder.setVisibility(View.GONE);
+            }
+        });
+
+
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         documentPreviewRecyclerView.setLayoutManager(linearLayoutManager);
 
         if (mSelectedIdentificationDocument != null) {
-            documentTypeNameTextView.setText(mSelectedIdentificationDocument.getDocumentName());
+            documentTypeNameTextView.setText(mSelectedIdentificationDocument.getDocumentTypeTitle());
             documentIdTextView.setText(mSelectedIdentificationDocument.getDocumentIdNumber());
-            documentTypePreviewTextView.setText(String.format(Locale.US, "%s Preview", mSelectedIdentificationDocument.getDocumentName()));
+            documentTypePreviewTextView.setText(String.format(Locale.US, "%s Preview", mSelectedIdentificationDocument.getDocumentTypeTitle()));
             if (mSelectedIdentificationDocument.getDocumentVerificationStatus().equals(IdentificationDocumentConstants.DOCUMENT_VERIFICATION_STATUS_VERIFIED)) {
                 documentInformationEditImageButton.setVisibility(View.GONE);
             } else {
@@ -123,10 +138,11 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
 
                             @Override
                             public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                holder.documentPreviewImageView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-
+                                        mDocumentImagePreviewHolder.setVisibility(View.VISIBLE);
+                                        Glide.with(PreviewIdentificationDocumentFragment.this).load(Constants.BASE_URL_FTP_SERVER + documentPage.getUrl()).into(mDocumentLargePreviewImageView);
                                     }
                                 });
                                 return false;

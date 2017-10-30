@@ -7,6 +7,7 @@ import java.util.List;
 
 public class IdentificationDocument implements Parcelable {
     private String documentType;
+    private String documentTypeTitle;
     private String documentIdNumber;
     private String documentVerificationStatus;
     private List<DocumentPage> documentPages;
@@ -16,8 +17,10 @@ public class IdentificationDocument implements Parcelable {
 
     }
 
-    public IdentificationDocument(String documentType, String documentIdNumber, String documentVerificationStatus, List<DocumentPage> documentPages, String documentName) {
+    public IdentificationDocument(String documentType, String documentTypeTitle, String documentIdNumber, String documentVerificationStatus, List<DocumentPage> documentPages, String documentName) {
+
         this.documentType = documentType;
+        this.documentTypeTitle = documentTypeTitle;
         this.documentIdNumber = documentIdNumber;
         this.documentVerificationStatus = documentVerificationStatus;
         this.documentPages = documentPages;
@@ -26,6 +29,7 @@ public class IdentificationDocument implements Parcelable {
 
     protected IdentificationDocument(Parcel in) {
         documentType = in.readString();
+        documentTypeTitle = in.readString();
         documentIdNumber = in.readString();
         documentVerificationStatus = in.readString();
         documentPages = in.createTypedArrayList(DocumentPage.CREATOR);
@@ -45,11 +49,20 @@ public class IdentificationDocument implements Parcelable {
     };
 
     public String getDocumentType() {
+
         return documentType;
     }
 
     public void setDocumentType(String documentType) {
         this.documentType = documentType;
+    }
+
+    public String getDocumentTypeTitle() {
+        return documentTypeTitle;
+    }
+
+    public void setDocumentTypeTitle(String documentTypeTitle) {
+        this.documentTypeTitle = documentTypeTitle;
     }
 
     public String getDocumentIdNumber() {
@@ -85,12 +98,15 @@ public class IdentificationDocument implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(documentType);
-        dest.writeString(documentIdNumber);
-        dest.writeString(documentVerificationStatus);
-        dest.writeTypedList(documentPages);
-        dest.writeString(documentName);
+    public String toString() {
+        return "IdentificationDocument{" +
+                "documentType='" + documentType + '\'' +
+                ", documentTypeTitle='" + documentTypeTitle + '\'' +
+                ", documentIdNumber='" + documentIdNumber + '\'' +
+                ", documentVerificationStatus='" + documentVerificationStatus + '\'' +
+                ", documentPages=" + documentPages +
+                ", documentName='" + documentName + '\'' +
+                '}';
     }
 
     @Override
@@ -99,13 +115,12 @@ public class IdentificationDocument implements Parcelable {
     }
 
     @Override
-    public String toString() {
-        return "IdentificationDocument{" +
-                "documentType='" + documentType + '\'' +
-                ", documentIdNumber='" + documentIdNumber + '\'' +
-                ", documentVerificationStatus='" + documentVerificationStatus + '\'' +
-                ", documentPages=" + documentPages +
-                ", documentName='" + documentName + '\'' +
-                '}';
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(documentType);
+        dest.writeString(documentTypeTitle);
+        dest.writeString(documentIdNumber);
+        dest.writeString(documentVerificationStatus);
+        dest.writeTypedList(documentPages);
+        dest.writeString(documentName);
     }
 }

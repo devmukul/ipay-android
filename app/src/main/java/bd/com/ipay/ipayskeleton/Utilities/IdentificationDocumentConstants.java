@@ -1,9 +1,16 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
+import android.support.annotation.StringDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 import java.util.HashMap;
 import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.R;
+
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class IdentificationDocumentConstants {
 
@@ -17,7 +24,7 @@ public class IdentificationDocumentConstants {
     public static final String DOCUMENT_SIDE_FRONT = "front_side";
     public static final String DOCUMENT_SIDE_BACK = "back_side";
 
-    public static String DOCUMENT_TYPE_OTHER = "other";
+    public static final String DOCUMENT_TYPE_OTHER = "other";
     public static final String DOCUMENT_TYPE_PASSPORT = "passport";
 
     public static final String DOCUMENT_VERIFICATION_STATUS_VERIFIED = "VERIFIED";
@@ -41,8 +48,8 @@ public class IdentificationDocumentConstants {
             DOCUMENT_TYPE_OTHER
     };
 
-    public static final Map<String, Integer> DOCUMENT_ID_TO_EDIT_TEXT_HINT_MAP;
-    public static final Map<String, Integer> DOCUMENT_ID_MAX_PAGE_COUNT_MAP;
+    private static final Map<String, Integer> DOCUMENT_ID_TO_EDIT_TEXT_HINT_MAP;
+    private static final Map<String, Integer> DOCUMENT_ID_MAX_PAGE_COUNT_MAP;
 
     static {
         DOCUMENT_ID_TO_EDIT_TEXT_HINT_MAP = new HashMap<>();
@@ -82,5 +89,29 @@ public class IdentificationDocumentConstants {
         DOCUMENT_ID_MAX_PAGE_COUNT_MAP.put(DOCUMENT_TYPE_TRADE_LICENSE, 1);
         DOCUMENT_ID_MAX_PAGE_COUNT_MAP.put(DOCUMENT_TYPE_VAT_REG_CERT, 1);
         DOCUMENT_ID_MAX_PAGE_COUNT_MAP.put(DOCUMENT_TYPE_TRADE_LICENSE, 1);
+    }
+
+    public static int getMaxDocumentPageCount(@DocumentType String documentType) {
+        return DOCUMENT_ID_MAX_PAGE_COUNT_MAP.get(documentType);
+    }
+
+    public static int getDocumentIDHintText(@DocumentType String documentType) {
+        return DOCUMENT_ID_TO_EDIT_TEXT_HINT_MAP.get(documentType);
+    }
+
+    @Retention(SOURCE)
+    @Target({PARAMETER})
+    @StringDef(value = {DOCUMENT_TYPE_NATIONAL_ID,
+            DOCUMENT_TYPE_OTHER,
+            DOCUMENT_TYPE_DRIVING_LICENSE,
+            DOCUMENT_TYPE_PASSPORT,
+            DOCUMENT_TYPE_BIRTH_CERTIFICATE,
+            DOCUMENT_TYPE_TIN,
+            DOCUMENT_TYPE_BUSINESS_TIN,
+            DOCUMENT_TYPE_TRADE_LICENSE,
+            DOCUMENT_TYPE_VAT_REG_CERT,
+            DOCUMENT_TYPE_TRADE_LICENSE})
+    private @interface DocumentType {
+
     }
 }
