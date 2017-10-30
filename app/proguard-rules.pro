@@ -34,6 +34,7 @@
 -keep class bd.com.ipay.ipayskeleton.Model.** { *; }
 -keep class com.afollestad.** { *; }
 -keepclassmembers class bd.com.ipay.ipayskeleton.Model.** { *; }
+-keepclassmembers class bd.com.ipay.ipayskeleton.DataCollectors.Model.** { *; }
 
 -keepattributes Signature
 -keepattributes *Annotation*
