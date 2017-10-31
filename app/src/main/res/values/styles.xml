@@ -944,6 +944,8 @@
         <item name="android:paddingLeft">@dimen/value25</item>
         <item name="android:paddingRight">@dimen/value25</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
     </style>
 
     <style name="ButtonStyleInvited" parent="@android:style/Widget.Button">
@@ -1006,4 +1008,11 @@
         <item name="android:lineSpacingExtra">4dp</item>
     </style>
 
+    <style name="DocumentPreviewImageStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/value125</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:src">@drawable/ic_image</item>
+    </style>
 </resources>

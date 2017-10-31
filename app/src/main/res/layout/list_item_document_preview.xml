@@ -13,14 +13,7 @@
 
         <ImageView
             android:id="@+id/document_preview_image_view"
-            android:layout_width="match_parent"
-            android:layout_height="125dip"
-            android:layout_centerInParent="true"
-            android:layout_gravity="start"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_image" />
+            style="@style/DocumentPreviewImageStyle" />
 
     </RelativeLayout>
 

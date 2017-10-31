@@ -171,17 +171,17 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         public void onBindViewHolder(final DocumentViewHolder holder, int position) {
             final IdentificationDocument identificationDocument = mIdentificationDocumentList.get(position);
 
-            //Showing the name of the Document
+            // Showing the name of the Document
             holder.documentTypeNameTextView.setText(identificationDocument.getDocumentTypeTitle());
 
-            //Showing the submitted document id number
+            // Showing the submitted document id number
             if (identificationDocument.getDocumentIdNumber() == null) {
                 holder.documentIdTextView.setText(R.string.not_submitted);
             } else {
                 holder.documentIdTextView.setText(identificationDocument.getDocumentIdNumber());
             }
 
-            //Showing if the document is already verified or not.
+            // Showing if the document is already verified or not.
             if (identificationDocument.getDocumentVerificationStatus() == null) {
                 holder.verificationStatusImageView.setVisibility(View.GONE);
             } else if (identificationDocument.getDocumentVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED)) {

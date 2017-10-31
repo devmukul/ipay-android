@@ -65,8 +65,8 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
         documentPreviewImageView = findViewById(R.id.document_preview_image_view);
-        documentPreviewImageView.setVisibility(View.GONE);
 
+        documentPreviewImageView.setVisibility(View.GONE);
         documentPreviewImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
