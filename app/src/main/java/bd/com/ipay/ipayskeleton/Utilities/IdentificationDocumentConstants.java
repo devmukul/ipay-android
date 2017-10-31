@@ -51,6 +51,13 @@ public class IdentificationDocumentConstants {
     private static final Map<String, Integer> DOCUMENT_ID_TO_EDIT_TEXT_HINT_MAP;
     private static final Map<String, Integer> DOCUMENT_ID_MAX_PAGE_COUNT_MAP;
 
+    static final String INVALID_PASSPORT_ID_WITH_INSUFFICIENT_LENGTH_PATTERN = "[A-Z]{2}[0-9]{0,6}|[A-Z]{1}";
+    static final String VALID_PASSPORT_ID_PATTERN = "[A-Z]{2}[0-9]{7}";
+    static final String
+            INVALID_DRIVING_LICENSE_ID_WITH_INSUFFICIENT_LENGTH_PATTERN = "[A-Z]{2}[0-9]{0,7}|[A-Z]{1}|[A-Z]{2}[0-9]{7}[A-Z]{1,2}|" +
+            "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{1,4}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{1,3}";
+    static final String VALID_DRIVING_LICENSE_ID_PATTERN = "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{5}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{4}";
+
     static {
         DOCUMENT_ID_TO_EDIT_TEXT_HINT_MAP = new HashMap<>();
 
