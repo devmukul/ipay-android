@@ -64,4 +64,5 @@
     <dimen name="tour_page_vertical_margin">60dp</dimen>
 
     <dimen name="value40">40.0dip</dimen>
+    <dimen name="negative_value5">-5dp</dimen>
 </resources>

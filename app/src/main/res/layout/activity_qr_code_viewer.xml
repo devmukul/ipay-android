@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="-5dp"
+            android:layout_marginBottom="@dimen/negative_value5"
             android:fontFamily="sans-serif-light"
             android:includeFontPadding="false"
             android:text="scan me"
@@ -30,9 +30,9 @@
             android:textSize="@dimen/value40" />
 
         <RelativeLayout
+            android:id="@+id/image_layout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/image_layout">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/qr_code_imageview"
@@ -40,6 +40,7 @@
                 android:layout_height="@dimen/value150"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop" />
+
             <ImageView
                 android:layout_width="@dimen/value34"
                 android:layout_height="@dimen/value34"
@@ -52,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="-5dp"
+            android:layout_marginTop="@dimen/negative_value5"
             android:fontFamily="sans-serif-light"
             android:includeFontPadding="false"
             android:text="to pay me"
