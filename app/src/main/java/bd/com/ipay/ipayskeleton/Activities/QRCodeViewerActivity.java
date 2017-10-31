@@ -7,7 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
@@ -53,6 +53,7 @@ public class QRCodeViewerActivity extends BaseActivity {
     private Button mShareButton;
     private Bitmap bitmap;
     private LinearLayout mLinearLayout;
+    private LinearLayout mDummyLayout;
 
     public static final int REQUEST_CODE_PERMISSION = 1001;
 
@@ -94,40 +95,30 @@ public class QRCodeViewerActivity extends BaseActivity {
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-
+ 
     public void createAndSetQRCode(String qrCodeData, String charset, Map hintMap, int qrCodeheight, int qrCodewidth) {
 
         try {
-            //generating qr code.
             BitMatrix matrix = new MultiFormatWriter().encode(new String(qrCodeData.getBytes(charset), charset),
                     BarcodeFormat.QR_CODE, qrCodewidth, qrCodeheight, hintMap);
-            //converting bitmatrix to bitmap
 
             int width = matrix.getWidth();
             int height = matrix.getHeight();
             int[] pixels = new int[width * height];
-            // All are 0, or black, by default
             for (int y = 0; y < height; y++) {
                 int offset = y * width;
                 for (int x = 0; x < width; x++) {
-                    //for black and white
                     pixels[offset + x] = matrix.get(x, y) ? BLACK : WHITE;
-                    //for custom color
-                    /*pixels[offset + x] = matrix.get(x, y) ?
-                            ResourcesCompat.getColor(getResources(),R.color.colorPrimary,null) :WHITE;*/
                 }
             }
             bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
-
-            Bitmap overlayIcon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_qr_ipay_logo);
-            Bitmap mergedBitmap = mergeBitmaps(overlayIcon, bitmap);
-            bitmap = mergedBitmap;
             ImageView myImage = (ImageView) findViewById(R.id.qr_code_imageview);
+            Bitmap overlay = BitmapFactory.decodeResource(getResources(), R.drawable.qr_ipay_logo);
+            bitmap = mergeBitmaps(overlay, bitmap);
             myImage.setImageBitmap(bitmap);
-
-
         } catch (Exception er) {
+
         }
     }
 
@@ -182,8 +173,8 @@ public class QRCodeViewerActivity extends BaseActivity {
     }
 
     private Bitmap getBitmapFromLayout() {
-        mLinearLayout.buildDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(mLinearLayout.getDrawingCache());
+        mLinearLayout.buildDrawingCache(true);
+        Bitmap bitmap = Bitmap.createBitmap(mLinearLayout.getDrawingCache(true));
         return bitmap;
     }
 
@@ -196,15 +187,7 @@ public class QRCodeViewerActivity extends BaseActivity {
         try {
             Map<EncodeHintType, Object> hints = new EnumMap<EncodeHintType, Object>(EncodeHintType.class);
             hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-            hints.put(EncodeHintType.MARGIN, 0); /* default = 4 */
-            /*QRCodeWriter qrWritter = new QRCodeWriter();
-            BitMatrix bitMatrix = qrWritter.encode(stringToEncode, BarcodeFormat.QR_CODE, smallerDimension, smallerDimension, hints);
-            bitmap = Bitmap.createBitmap(smallerDimension, smallerDimension, Bitmap.Config.RGB_565);
-            for (int x = 0; x < smallerDimension; x++){
-                for (int y = 0; y < smallerDimension; y++){
-                    bitmap.setPixel(x, y, bitMatrix.get(x,y) ? BLACK : WHITE);
-                }
-            }*/
+            hints.put(EncodeHintType.MARGIN, 0);
             createAndSetQRCode(stringToEncode, "UTF-8", hints, smallerDimension, smallerDimension);
         } catch (Exception e) {
             e.printStackTrace();
@@ -212,20 +195,14 @@ public class QRCodeViewerActivity extends BaseActivity {
     }
 
     public Bitmap mergeBitmaps(Bitmap overlay, Bitmap bitmap) {
-
-        int height = bitmap.getHeight();
-        int width = bitmap.getWidth();
-
-        Bitmap combined = Bitmap.createBitmap(width, height, bitmap.getConfig());
-        Canvas canvas = new Canvas(combined);
+        Canvas canvas = new Canvas(bitmap);
         int canvasWidth = canvas.getWidth();
         int canvasHeight = canvas.getHeight();
-        canvas.setDensity(Bitmap.DENSITY_NONE);
-        canvas.drawBitmap(bitmap, new Matrix(), null);
+        Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
         int centreX = (canvasWidth - overlay.getWidth()) / 2;
         int centreY = (canvasHeight - overlay.getHeight()) / 2;
-        canvas.drawBitmap(overlay, centreX, centreY, null);
-        return combined;
+        canvas.drawBitmap(overlay, centreX, centreY, paint);
+        return bitmap;
     }
 
     @Override

@@ -12,9 +12,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
         android:background="@color/ef_white"
         android:gravity="center"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
         android:orientation="vertical">
 
         <TextView
@@ -22,34 +22,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="sans-serif-light"
-            android:gravity="bottom"
-            android:text="scan me"
             android:layout_marginBottom="-5dp"
-            android:textStyle="normal"
+            android:fontFamily="sans-serif-light"
             android:includeFontPadding="false"
-            android:textColor="@color/colorBlack87"
-            android:textSize="@dimen/value40" />
+            android:text="scan me"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/value50" />
 
         <ImageView
             android:id="@+id/qr_code_imageview"
-            android:layout_width="@dimen/value150"
-            android:layout_height="@dimen/value150"
+            android:layout_width="@dimen/value200"
+            android:layout_height="@dimen/value200"
             android:layout_gravity="center"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/text_view_qr_code_lower"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:includeFontPadding="false"
-            android:layout_marginTop="-5dp"
             android:layout_gravity="center"
+            android:layout_marginTop="-5dp"
             android:fontFamily="sans-serif-light"
-            android:textColor="@color/colorBlack87"
-            android:gravity="start"
+            android:includeFontPadding="false"
             android:text="to pay me"
-            android:textSize="@dimen/value34" />
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/value50" />
     </LinearLayout>
 
     <Button
