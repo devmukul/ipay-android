@@ -354,7 +354,8 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     }
 
     private void selectProfilePictureIntent(int id) {
-        Intent imagePickerIntent = DocumentPicker.getPickerIntentByID(getActivity(), getString(R.string.select_a_document), id, Constants.CAMERA_FRONT, "profile_picture.jpg");
+        Intent imagePickerIntent = DocumentPicker.getPickerIntentByID(getActivity(), getString(R.string.select_a_document),
+                id, Constants.CAMERA_FRONT, getString(R.string.profile_picture_temp_file));
         startActivityForResult(imagePickerIntent, ACTION_PICK_PROFILE_PICTURE);
     }
 
@@ -442,7 +443,8 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                     }
                 } else if (resultCode == CameraActivity.CAMERA_ACTIVITY_CRASHED) {
                     Intent systemCameraOpenIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    systemCameraOpenIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID, DocumentPicker.getTempFile(getActivity(), "profile_picture.jpg")));
+                    systemCameraOpenIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(),
+                            BuildConfig.APPLICATION_ID, DocumentPicker.getTempFile(getActivity(), getString(R.string.profile_picture_temp_file))));
                     startActivityForResult(systemCameraOpenIntent, ACTION_PICK_PROFILE_PICTURE);
                 }
                 break;
