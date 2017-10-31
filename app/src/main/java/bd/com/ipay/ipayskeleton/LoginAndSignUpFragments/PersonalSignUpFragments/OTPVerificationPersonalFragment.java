@@ -38,7 +38,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrust
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;

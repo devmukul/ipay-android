@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,15 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
-import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.CustomView.AddressInputSignUpView;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.SetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 
 public class OnBoardAddBasicInfoHelperFragment extends Fragment {
     private Button mUploadButton;
