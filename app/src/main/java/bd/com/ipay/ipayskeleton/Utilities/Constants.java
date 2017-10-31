@@ -785,6 +785,9 @@ public class Constants {
     public static final int REQUEST_TYPE_RECEIVED_REQUEST = 1;
     public static final int REQUEST_TYPE_SENT_REQUEST = 2;
 
+    public static final int TYPE_PROFILE_PICTURE = 1;
+    public static final int TYPE_BUSINESS_LOGO = 2;
+
     public static final int INVALID_ACCOUNT_ID = -1;
 
     // API Version Checker

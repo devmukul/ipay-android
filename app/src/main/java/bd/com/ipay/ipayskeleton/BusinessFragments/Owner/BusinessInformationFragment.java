@@ -36,7 +36,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BuildConfig;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ProfilePictureHelperDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PhotoSelectionHelperDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
@@ -140,7 +140,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private ProgressDialog mProgressDialog;
     private MaterialDialog.Builder mProfilePictureErrorDialogBuilder;
     private MaterialDialog mProfilePictureErrorDialog;
-    private ProfilePictureHelperDialog profilePictureHelperDialog;
+    private PhotoSelectionHelperDialog photoSelectionHelperDialog;
 
     private TextView mBusinessInfoServiceNotAllowedTextView;
     private TextView mBusinessAddressServiceNotAllowedTextView;
@@ -305,7 +305,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             @Override
             @ValidateAccess(ServiceIdConstants.MANAGE_PROFILE_PICTURE)
             public void onClick(View v) {
-                profilePictureHelperDialog.show();
+                photoSelectionHelperDialog.show();
             }
         });
     }
@@ -338,8 +338,9 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
     private void initProfilePicHelperDialog() {
         if (!ProfileInfoCacheManager.isAccountVerified()) {
-            profilePictureHelperDialog = new ProfilePictureHelperDialog(getActivity(), getString(R.string.select_an_image), mOptionsForImageSelectionList);
-            profilePictureHelperDialog.setOnResourceSelectedListener(new ProfilePictureHelperDialog.OnResourceSelectedListener() {
+            photoSelectionHelperDialog = new PhotoSelectionHelperDialog(getActivity(), getString(R.string.select_an_image),
+                    mOptionsForImageSelectionList, Constants.TYPE_PROFILE_PICTURE);
+            photoSelectionHelperDialog.setOnResourceSelectedListener(new PhotoSelectionHelperDialog.OnResourceSelectedListener() {
                 @Override
                 public void onResourceSelected(int mActionId, String action) {
                     if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS)) {
@@ -404,7 +405,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        profilePictureHelperDialog.show();
+                        photoSelectionHelperDialog.show();
                     }
                 });
         mProfilePictureErrorDialog = mProfilePictureErrorDialogBuilder.build();
