@@ -20,17 +20,9 @@
 
             <LinearLayout
                 android:id="@+id/content_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:layout_toLeftOf="@+id/document_information_edit_image_button"
                 android:layout_toStartOf="@+id/document_information_edit_image_button"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                style="@style/DocumentPreviewDetailsContainer">
 
                 <TextView
                     android:id="@+id/document_type_name_text_view"
