@@ -266,7 +266,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                 Intent intent = new Intent(getActivity(), QRCodeViewerActivity.class);
 
                 intent.putExtra(Constants.STRING_TO_ENCODE, ProfileInfoCacheManager.getMobileNumber());
-                intent.putExtra(Constants.ACTIVITY_TITLE, "QR Code to Share");
+                intent.putExtra(Constants.ACTIVITY_TITLE, "My QR Code to Share");
                 startActivity(intent);
             }
         });

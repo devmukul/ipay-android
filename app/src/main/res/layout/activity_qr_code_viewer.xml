@@ -7,21 +7,57 @@
     android:orientation="vertical"
     android:padding="@dimen/activity_vertical_margin">
 
-    <ImageView
-        android:id="@+id/qr_code_imageview"
-        android:layout_width="@dimen/value180"
-        android:layout_height="@dimen/value180"
-        android:layout_centerHorizontal="true"
-        android:scaleType="centerCrop" />
+    <LinearLayout
+        android:id="@+id/drawing_cache_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:background="@color/ef_white"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_view_qr_code_upper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/qr_code_helper_text_upper"
+            style="@style/QRCodeHelperTextViewStyle"
+            android:textSize="@dimen/value40" />
+
+        <RelativeLayout
+            android:id="@+id/image_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/qr_code_imageview"
+                android:layout_width="@dimen/value150"
+                android:layout_height="@dimen/value150"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:layout_width="@dimen/value34"
+                android:layout_height="@dimen/value34"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_qr_ipay_logo" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/text_view_qr_code_lower"
+            android:text="@string/qr_code_helper_text_lower"
+            android:layout_height="wrap_content"
+            style="@style/QRCodeHelperTextViewStyle"
+            android:layout_width="wrap_content"/>
+    </LinearLayout>
 
     <Button
         android:id="@+id/share_button"
         style="@style/ButtonPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/qr_code_imageview"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="@dimen/value40"
         android:text="@string/share" />
-
 </LinearLayout>
