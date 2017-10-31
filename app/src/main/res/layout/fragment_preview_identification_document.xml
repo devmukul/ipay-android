@@ -20,9 +20,9 @@
 
             <LinearLayout
                 android:id="@+id/content_container"
+                style="@style/DocumentPreviewDetailsContainer"
                 android:layout_toLeftOf="@+id/document_information_edit_image_button"
-                android:layout_toStartOf="@+id/document_information_edit_image_button"
-                style="@style/DocumentPreviewDetailsContainer">
+                android:layout_toStartOf="@+id/document_information_edit_image_button">
 
                 <TextView
                     android:id="@+id/document_type_name_text_view"
@@ -36,7 +36,7 @@
                     android:id="@+id/document_id_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="@dimen/value4"
                     android:textStyle="bold" />
 
             </LinearLayout>
