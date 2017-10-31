@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +33,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ProfilePictureHelperDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetProfilePictureResponse;
 import bd.com.ipay.ipayskeleton.R;

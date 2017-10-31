@@ -56,7 +56,7 @@ public class QRCodeViewerActivity extends BaseActivity {
 
     private Button mShareButton;
     private Bitmap bitmap;
-    private LinearLayout mDummyLayout;
+    private LinearLayout mCustomLayout;
 
     public static final int REQUEST_CODE_PERMISSION = 1001;
 
@@ -124,33 +124,40 @@ public class QRCodeViewerActivity extends BaseActivity {
         }
     }
 
-    private Bitmap getBitmapFromDummyLayout() {
+    private Bitmap getBitmapFromCustomLayout() {
+        mCustomLayout = new LinearLayout(this);
+        ImageView qrCodeImageView = new ImageView(this);
+        TextView qrCodeHelperTextUpper = new TextView(this);
+        TextView qrCodeHelperTextLower = new TextView(this);
+
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
-        layoutParams.setMargins(0, 0, 0, 16);
-        mDummyLayout = new LinearLayout(this);
-        mDummyLayout.setOrientation(LinearLayout.VERTICAL);
-        mDummyLayout.setLayoutParams(layoutParams);
-        ImageView imageView = new ImageView(this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(250, 250);
-        mDummyLayout.setBackgroundColor(WHITE);
-        imageView.setLayoutParams(lp);
-        imageView.setImageBitmap(bitmap);
-        TextView upper = new TextView(this);
-        LinearLayout.LayoutParams lps = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lps.gravity = Gravity.CENTER;
-        upper.setText("scan me");
-        upper.setLayoutParams(lps);
-        setLayoutAttributesToTextView(upper, 90);
-        TextView lower = new TextView(this);
-        setLayoutAttributesToTextView(lower, 80);
-        lower.setLayoutParams(lps);
-        lower.setText("to pay me");
-        mDummyLayout.addView(upper);
-        imageView.setLayoutParams(lps);
-        mDummyLayout.addView(imageView);
-        mDummyLayout.addView(lower);
-        mDummyLayout.measure(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        LinearLayout.LayoutParams qrCodeViewParams = new LinearLayout.LayoutParams(250, 250);
+        qrCodeViewParams.gravity = Gravity.CENTER;
+
+        LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textViewParams.gravity = Gravity.CENTER;
+
+        mCustomLayout.setOrientation(LinearLayout.VERTICAL);
+        mCustomLayout.setLayoutParams(layoutParams);
+        mCustomLayout.setBackgroundColor(WHITE);
+
+        qrCodeImageView.setLayoutParams(qrCodeViewParams);
+        qrCodeImageView.setImageBitmap(bitmap);
+
+        qrCodeHelperTextUpper.setText(getResources().getString(R.string.qr_code_helper_text_upper));
+        qrCodeHelperTextUpper.setLayoutParams(textViewParams);
+        setLayoutAttributesToTextView(qrCodeHelperTextUpper, 90);
+
+        qrCodeHelperTextLower.setLayoutParams(textViewParams);
+        qrCodeHelperTextLower.setText(getResources().getString(R.string.qr_code_helper_text_lower));
+        setLayoutAttributesToTextView(qrCodeHelperTextLower, 80);
+
+        mCustomLayout.addView(qrCodeHelperTextUpper);
+        mCustomLayout.addView(qrCodeImageView);
+        mCustomLayout.addView(qrCodeHelperTextLower);
+
         Bitmap bitmap = createBitmap();
         return bitmap;
     }
@@ -164,12 +171,13 @@ public class QRCodeViewerActivity extends BaseActivity {
     }
 
     private Bitmap createBitmap() {
-        mDummyLayout.measure(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        Bitmap bitmap = Bitmap.createBitmap(mDummyLayout.getMeasuredWidth(),
-                mDummyLayout.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        mCustomLayout.measure(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        mCustomLayout.measure(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        Bitmap bitmap = Bitmap.createBitmap(mCustomLayout.getMeasuredWidth(),
+                mCustomLayout.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        mDummyLayout.layout(0, 0, mDummyLayout.getMeasuredWidth(), mDummyLayout.getMeasuredHeight());
-        mDummyLayout.draw(canvas);
+        mCustomLayout.layout(0, 0, mCustomLayout.getMeasuredWidth(), mCustomLayout.getMeasuredHeight());
+        mCustomLayout.draw(canvas);
         return bitmap;
     }
 
@@ -177,7 +185,7 @@ public class QRCodeViewerActivity extends BaseActivity {
         String imageName = "Qr payment.png";
         String share_qr_code_message = getString(R.string.scan_this_qr_code_prompt) + " " +
                 ProfileInfoCacheManager.getUserName() + " " + getString(R.string.scan_this_qr_code_prompt_continue);
-        CameraAndImageUtilities.saveImageBitmap(imageName, getBitmapFromDummyLayout(), QRCodeViewerActivity.this);
+        CameraAndImageUtilities.saveImageBitmap(imageName, getBitmapFromCustomLayout(), QRCodeViewerActivity.this);
         if (!TextUtils.isEmpty(imageName)) {
 
             File qrCodeFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), imageName);

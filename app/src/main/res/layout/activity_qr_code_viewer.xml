@@ -46,7 +46,7 @@
 
         <TextView
             android:id="@+id/text_view_qr_code_lower"
-            android:text="@string/qr_code_helper_text_upper"
+            android:text="@string/qr_code_helper_text_lower"
             android:layout_height="wrap_content"
             style="@style/QRCodeHelperTextViewStyle"
             android:layout_width="wrap_content"/>
