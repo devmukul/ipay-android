@@ -25,8 +25,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 import bd.com.ipay.ipayskeleton.Activities.DeviceTrustActivity;
-import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
-import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -202,6 +200,30 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getProfileCompletionStatus() {
+
+        mProgressDialog.show();
+
+        if (mGetProfileCompletionStatusTask != null) {
+            return;
+        }
+
+        mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
+        mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getProfileInfo() {
+        if (mGetProfileInfoTask != null) {
+            return;
+        }
+
+        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity());
+        mGetProfileInfoTask.mHttpResponseListener = this;
+        mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
@@ -218,9 +240,6 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         }
 
         Gson gson = new Gson();
-
-        System.out.println("Test Respons "+result.toString());
-
         if (result.getApiCommand().equals(Constants.COMMAND_GET_TRUSTED_DEVICES)) {
 
             try {
@@ -289,6 +308,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                 Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
             }
 
+            mProgressDialog.dismiss();
             mAddTrustedDeviceTask = null;
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
@@ -368,7 +388,6 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
     }
 
     private class TrustedDeviceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
 
         public TrustedDeviceAdapter() {
         }
@@ -450,30 +469,4 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
             else return 0;
         }
     }
-
-
-    private void getProfileCompletionStatus() {
-
-        mProgressDialog.show();
-
-        if (mGetProfileCompletionStatusTask != null) {
-            return;
-        }
-
-        mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
-                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
-        mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void getProfileInfo() {
-        if (mGetProfileInfoTask != null) {
-            return;
-        }
-
-        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
-                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity());
-        mGetProfileInfoTask.mHttpResponseListener = this;
-        mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
 }

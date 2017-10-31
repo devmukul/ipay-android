@@ -876,6 +876,8 @@
     <string name="scan_this_qr_code_prompt">Please scan this QR code to pay</string>
     <string name="scan_this_qr_code_prompt_continue">using iPay app</string>
     <string name="ipay_qr_code_title">iPay pay by QR code</string>
+    <string name="qr_code_helper_text_upper">scan me</string>
+    <string name="qr_code_helper_text_lower">to pay me</string>
 
     <string name="select_from_gallery_message">Select from gallery</string>
     <string name="take_a_picture_message">Take a picture</string>

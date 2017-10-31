@@ -69,4 +69,5 @@
     <dimen name="onboard_page_title_horizontal_margin">30dp</dimen>
     <dimen name="onboard_page_description_horizontal_margin">45dp</dimen>
     <dimen name="onboard_page_vertical_margin">35dp</dimen>
+    <dimen name="negative_value5">-5dp</dimen>
 </resources>
