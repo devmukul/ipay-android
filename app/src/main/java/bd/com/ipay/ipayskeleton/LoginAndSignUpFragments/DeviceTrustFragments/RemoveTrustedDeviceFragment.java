@@ -34,6 +34,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.GetTrustedDeviceResponse;
@@ -44,6 +46,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RemoveTrustedDeviceFragment extends ProgressFragment implements HttpResponseListener {
@@ -56,6 +59,12 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
 
     private HttpRequestPostAsyncTask mAddTrustedDeviceTask = null;
     private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
+
+    private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
+    private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
+
+    private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
+    private GetProfileInfoResponse mGetProfileInfoResponse;
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
@@ -210,6 +219,8 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
 
         Gson gson = new Gson();
 
+        System.out.println("Test Respons "+result.toString());
+
         if (result.getApiCommand().equals(Constants.COMMAND_GET_TRUSTED_DEVICES)) {
 
             try {
@@ -268,13 +279,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String UUID = mAddToTrustedDeviceResponse.getUUID();
                     ProfileInfoCacheManager.setUUID(UUID);
-
-//                    // Launch HomeActivity from here on successful trusted device add
-//                    ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
-
-
-                    ProfileInfoCacheManager.switchedFromSignup(true);
-                    ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
+                    getProfileInfo();
                 } else {
                     Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
@@ -284,7 +289,6 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                 Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
             }
 
-            mProgressDialog.dismiss();
             mAddTrustedDeviceTask = null;
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
@@ -303,6 +307,50 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
 
             mProgressDialog.dismiss();
             mLogoutTask = null;
+        }else if(result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS)) {
+                try {
+                    mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                        ProfileInfoCacheManager.switchedFromSignup(false);
+                        ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
+                        ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
+                        ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
+
+                        if (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                                || !ProfileInfoCacheManager.isBasicInfoAdded()) {
+                            ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
+                        } else {
+                            ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+                        }
+                    } else {
+                        if (getActivity() != null)
+                            Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toaster.makeText(getActivity(), R.string.failed_fetching_profile_completion_status, Toast.LENGTH_LONG);
+                }
+                mProgressDialog.dismiss();
+                mGetProfileCompletionStatusTask = null;
+        }else if(result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
+                try {
+                    mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
+                        getProfileCompletionStatus();
+
+                    } else {
+                        Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+                }
+
+                mGetProfileInfoTask = null;
         }
     }
 
@@ -401,6 +449,31 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                 return mTrustedDeviceList.size();
             else return 0;
         }
+    }
+
+
+    private void getProfileCompletionStatus() {
+
+        mProgressDialog.show();
+
+        if (mGetProfileCompletionStatusTask != null) {
+            return;
+        }
+
+        mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
+        mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getProfileInfo() {
+        if (mGetProfileInfoTask != null) {
+            return;
+        }
+
+        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity());
+        mGetProfileInfoTask.mHttpResponseListener = this;
+        mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 }
