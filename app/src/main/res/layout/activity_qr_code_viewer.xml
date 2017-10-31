@@ -44,7 +44,7 @@
                 android:layout_width="@dimen/value34"
                 android:layout_height="@dimen/value34"
                 android:layout_centerInParent="true"
-                android:src="@drawable/qr_ipay_logo" />
+                android:src="@drawable/ic_qr_ipay_logo" />
         </RelativeLayout>
 
         <TextView
