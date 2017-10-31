@@ -27,14 +27,25 @@
             android:includeFontPadding="false"
             android:text="scan me"
             android:textColor="@color/colorBlack"
-            android:textSize="@dimen/value50" />
+            android:textSize="@dimen/value40" />
 
-        <ImageView
-            android:id="@+id/qr_code_imageview"
-            android:layout_width="@dimen/value200"
-            android:layout_height="@dimen/value200"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/image_layout">
+
+            <ImageView
+                android:id="@+id/qr_code_imageview"
+                android:layout_width="@dimen/value150"
+                android:layout_height="@dimen/value150"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop" />
+            <ImageView
+                android:layout_width="@dimen/value34"
+                android:layout_height="@dimen/value34"
+                android:layout_centerInParent="true"
+                android:src="@drawable/qr_ipay_logo" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/text_view_qr_code_lower"
@@ -46,7 +57,7 @@
             android:includeFontPadding="false"
             android:text="to pay me"
             android:textColor="@color/colorBlack"
-            android:textSize="@dimen/value50" />
+            android:textSize="@dimen/value34" />
     </LinearLayout>
 
     <Button

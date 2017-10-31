@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,12 +17,15 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
@@ -52,7 +56,6 @@ public class QRCodeViewerActivity extends BaseActivity {
 
     private Button mShareButton;
     private Bitmap bitmap;
-    private LinearLayout mLinearLayout;
     private LinearLayout mDummyLayout;
 
     public static final int REQUEST_CODE_PERMISSION = 1001;
@@ -65,7 +68,6 @@ public class QRCodeViewerActivity extends BaseActivity {
         setContentView(R.layout.activity_qr_code_viewer);
 
         mShareButton = (Button) findViewById(R.id.share_button);
-        mLinearLayout = (LinearLayout) findViewById(R.id.drawing_cache_layout);
         mShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,7 +97,7 @@ public class QRCodeViewerActivity extends BaseActivity {
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
- 
+
     public void createAndSetQRCode(String qrCodeData, String charset, Map hintMap, int qrCodeheight, int qrCodewidth) {
 
         try {
@@ -114,7 +116,7 @@ public class QRCodeViewerActivity extends BaseActivity {
             bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
             ImageView myImage = (ImageView) findViewById(R.id.qr_code_imageview);
-            Bitmap overlay = BitmapFactory.decodeResource(getResources(), R.drawable.qr_ipay_logo);
+            Bitmap overlay = BitmapFactory.decodeResource(getResources(), R.drawable.ic_qr_ipay_logo);
             bitmap = mergeBitmaps(overlay, bitmap);
             myImage.setImageBitmap(bitmap);
         } catch (Exception er) {
@@ -122,11 +124,60 @@ public class QRCodeViewerActivity extends BaseActivity {
         }
     }
 
+    private Bitmap getBitmapFromDummyLayout() {
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+        layoutParams.setMargins(0, 0, 0, 16);
+        mDummyLayout = new LinearLayout(this);
+        mDummyLayout.setOrientation(LinearLayout.VERTICAL);
+        mDummyLayout.setLayoutParams(layoutParams);
+        ImageView imageView = new ImageView(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(250, 250);
+        mDummyLayout.setBackgroundColor(WHITE);
+        imageView.setLayoutParams(lp);
+        imageView.setImageBitmap(bitmap);
+        TextView upper = new TextView(this);
+        LinearLayout.LayoutParams lps = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lps.gravity = Gravity.CENTER;
+        upper.setText("scan me");
+        upper.setLayoutParams(lps);
+        setLayoutAttributesToTextView(upper, 90);
+        TextView lower = new TextView(this);
+        setLayoutAttributesToTextView(lower, 80);
+        lower.setLayoutParams(lps);
+        lower.setText("to pay me");
+        mDummyLayout.addView(upper);
+        imageView.setLayoutParams(lps);
+        mDummyLayout.addView(imageView);
+        mDummyLayout.addView(lower);
+        mDummyLayout.measure(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        Bitmap bitmap = createBitmap();
+        return bitmap;
+    }
+
+    private void setLayoutAttributesToTextView(TextView view, int textSize) {
+        view.setTextSize(textSize);
+        view.setIncludeFontPadding(false);
+        view.setTextColor(BLACK);
+        view.setTypeface(Typeface.SANS_SERIF);
+        view.setIncludeFontPadding(false);
+    }
+
+    private Bitmap createBitmap() {
+        mDummyLayout.measure(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        Bitmap bitmap = Bitmap.createBitmap(mDummyLayout.getMeasuredWidth(),
+                mDummyLayout.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        mDummyLayout.layout(0, 0, mDummyLayout.getMeasuredWidth(), mDummyLayout.getMeasuredHeight());
+        mDummyLayout.draw(canvas);
+        return bitmap;
+    }
+
     private void shareQrCode() {
         String imageName = "Qr payment.png";
         String share_qr_code_message = getString(R.string.scan_this_qr_code_prompt) + " " +
                 ProfileInfoCacheManager.getUserName() + " " + getString(R.string.scan_this_qr_code_prompt_continue);
-        CameraAndImageUtilities.saveImageBitmap(imageName, getBitmapFromLayout(), QRCodeViewerActivity.this);
+        CameraAndImageUtilities.saveImageBitmap(imageName, getBitmapFromDummyLayout(), QRCodeViewerActivity.this);
         if (!TextUtils.isEmpty(imageName)) {
 
             File qrCodeFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), imageName);
@@ -137,7 +188,6 @@ public class QRCodeViewerActivity extends BaseActivity {
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // temp permission for receiving app to read this file
                 shareIntent.setType(getContentResolver().getType(contentUri));
-                shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.ipay_qr_code_title));
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, share_qr_code_message);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
                 startActivity(Intent.createChooser(shareIntent, "Choose an app to share"));
@@ -170,12 +220,6 @@ public class QRCodeViewerActivity extends BaseActivity {
         } else {
             return super.onOptionsItemSelected(item);
         }
-    }
-
-    private Bitmap getBitmapFromLayout() {
-        mLinearLayout.buildDrawingCache(true);
-        Bitmap bitmap = Bitmap.createBitmap(mLinearLayout.getDrawingCache(true));
-        return bitmap;
     }
 
     private void setQrCode(String stringToEncode) {
