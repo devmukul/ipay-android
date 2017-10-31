@@ -40,7 +40,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class EditBasicInfoFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSetProfileInfoTask = null;
-
     private ResourceSelectorDialog<Occupation> mOccupationTypeResourceSelectorDialog;
 
     private EditText mNameEditText;

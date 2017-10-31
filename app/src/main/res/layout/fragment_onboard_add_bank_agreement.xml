@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/button_layout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:paddingBottom="@dimen/activity_horizontal_margin_card"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_horizontal_margin"
+                android:text="@string/add_bank_agreement_title"
+                android:textAlignment="center"
+                android:textSize="@dimen/text_size_medium" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:text="@string/add_bank_agreement" />
+
+            <View style="@style/Divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewLeftAlignMedium"
+                    android:text="@string/account_name" />
+
+                <TextView
+                    android:id="@+id/bank_account_name"
+                    style="@style/TextViewRightAlignMedium" />
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewLeftAlignMedium"
+                    android:text="@string/bank_name" />
+
+                <TextView
+                    android:id="@+id/bank_name"
+                    style="@style/TextViewRightAlignMedium" />
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewLeftAlignMedium"
+                    android:text="@string/bank_branch" />
+
+                <TextView
+                    android:id="@+id/bank_branch_name"
+                    style="@style/TextViewRightAlignMedium" />
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewLeftAlignMedium"
+                    android:text="@string/account_number" />
+
+                <TextView
+                    android:id="@+id/bank_account_number"
+                    style="@style/TextViewRightAlignMedium" />
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:text="@string/add_bank_agreement_additional_message" />
+
+        </LinearLayout>
+
+
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryButton">
+
+        <Button
+            android:id="@+id/button_disagree"
+            style="@style/ButtonTransparent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/disagree"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="@dimen/activity_horizontal_margin_double"/>
+
+        <Button
+            android:id="@+id/button_agree"
+            style="@style/ButtonTransparent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/i_agree"
+            android:gravity="right|center_vertical"
+            android:paddingRight="@dimen/activity_horizontal_margin_double"/>
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

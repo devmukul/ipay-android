@@ -36,6 +36,8 @@ public class ProfileCompletionStatusResponse {
         return message;
     }
 
+
+
     public List<PropertyDetails> getBasicInfoCompletionDetails() {
         return basicInfoCompletionDetails;
     }
@@ -165,6 +167,53 @@ public class ProfileCompletionStatusResponse {
             }
         }
     }
+
+    public boolean isPhotoIdUpdated() {
+        for (CompletionStatus mCompletionStatus : completionStatusList) {
+            if (mCompletionStatus.getProperty().equals("VERIFICATION_DOCUMENT")) {
+                if(mCompletionStatus.getValue()>0)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isPhotoUpdated() {
+        for (CompletionStatus mCompletionStatus : completionStatusList) {
+            if (mCompletionStatus.getProperty().equals("PROFILE_PICTURE")) {
+                if(mCompletionStatus.getValue()>0)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isAddressUpdated() {
+        for (CompletionStatus mCompletionStatus : completionStatusList) {
+            if (mCompletionStatus.getProperty().equals("PERSONAL_ADDRESS")) {
+                if(mCompletionStatus.getValue()>0)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isBasicProfileUpdated() {
+        for (CompletionStatus mCompletionStatus : completionStatusList) {
+            if (mCompletionStatus.getProperty().equals("BASIC_PROFILE")) {
+                if(mCompletionStatus.getValue()>0)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isOnboardBasicInfoUpdated() {
+        if(isAddressUpdated() || isBasicProfileUpdated())
+                return true;
+        return false;
+    }
+
 
     public class PropertyDetails implements Comparable<PropertyDetails>{
         private final String propertyName;

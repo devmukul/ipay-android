@@ -39,6 +39,8 @@
     <dimen name="value230">230dip</dimen>
     <dimen name="value250">250dip</dimen>
     <dimen name="text_size_button">16sp</dimen>
+    <dimen name="text_size_button_small">14sp</dimen>
+    <dimen name="text_size_large">22sp</dimen>
     <dimen name="text_size_medium">20sp</dimen>
     <dimen name="text_size_small_medium">16sp</dimen>
     <dimen name="text_size_small_medium_value18">18sp</dimen>
@@ -62,7 +64,10 @@
     <dimen name="button_margin">40dp</dimen>
     <dimen name="tour_page_vertical_margin_large">75dp</dimen>
     <dimen name="tour_page_vertical_margin">60dp</dimen>
-
     <dimen name="value40">40.0dip</dimen>
+
+    <dimen name="onboard_page_title_horizontal_margin">30dp</dimen>
+    <dimen name="onboard_page_description_horizontal_margin">45dp</dimen>
+    <dimen name="onboard_page_vertical_margin">40dp</dimen>
     <dimen name="negative_value5">-5dp</dimen>
 </resources>

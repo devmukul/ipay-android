@@ -137,17 +137,12 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
         mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
 
         mProgressDialog = new ProgressDialog(getActivity());
-
         mNameView.requestFocus();
-
         // Enable hyperlinked
         mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
         mPrivacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
-
         setGenderCheckBoxTextColor(mMaleCheckBox.isChecked(), mFemaleCheckBox.isChecked());
-
         mDatePickerDialog = Utilities.getDatePickerDialog(getActivity(), null, mDateSetListener);
-
         mBirthdayEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

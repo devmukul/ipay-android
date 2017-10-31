@@ -34,7 +34,8 @@
         android:logo="@drawable/logo_ipay"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:icon">
+        tools:replace="android:icon"
+        android:hardwareAccelerated="false">
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -76,6 +77,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".Activities.ProfileCompletionHelperActivity"
+            android:label="@string/welcome_to_ipay"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize|stateHidden" >
         </activity>
         <activity
             android:name=".Activities.HomeActivity"
