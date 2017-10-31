@@ -21,12 +21,8 @@
             android:id="@+id/text_view_qr_code_upper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/negative_value5"
-            android:fontFamily="sans-serif-light"
-            android:includeFontPadding="false"
-            android:text="scan me"
-            android:textColor="@color/colorBlack"
+            android:text="@string/qr_code_helper_text_upper"
+            style="@style/QRCodeHelperTextViewStyle"
             android:textSize="@dimen/value40" />
 
         <RelativeLayout
@@ -50,15 +46,10 @@
 
         <TextView
             android:id="@+id/text_view_qr_code_lower"
-            android:layout_width="wrap_content"
+            android:text="@string/qr_code_helper_text_upper"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/negative_value5"
-            android:fontFamily="sans-serif-light"
-            android:includeFontPadding="false"
-            android:text="to pay me"
-            android:textColor="@color/colorBlack"
-            android:textSize="@dimen/value34" />
+            style="@style/QRCodeHelperTextViewStyle"
+            android:layout_width="wrap_content"/>
     </LinearLayout>
 
     <Button
