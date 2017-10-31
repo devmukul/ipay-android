@@ -66,7 +66,15 @@
                 style="@style/ButtonPrimaryOnBoard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/upload_photo"/>
+                android:text="@string/upload_photo"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/button_select_profile_pic"
+                style="@style/ButtonPrimaryOnBoard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/select_photo"/>
 
         </LinearLayout>
 

@@ -155,6 +155,9 @@ public class Constants {
     public static final int STARTING_YEAR = 2016;
     public static final int DEFAULT_USER_CLASS = 1;
 
+
+    public static final int MAX_FILE_SIZE_MB = 5;
+
     public static final String IS_FINGERPRINT_AUTHENTICATION_ON = "LOGIN_WITH_FINGERPRINT";
     public static final String KEY_NAME = "key_name";
     /**

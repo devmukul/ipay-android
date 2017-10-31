@@ -57,14 +57,15 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
     private CustomUploadPickerDialog profilePictureHelperDialog;
     private UploadProfilePictureAsyncTask mUploadProfilePictureAsyncTask = null;
 
-    private Button mUploadButton;
+    private Button mUploadPhotoButton;
+    private Button mSelectPhotoButton;
     private ProgressDialog mProgressDialog;
-    private List<String> mOptionsForImageSelectionList;
-    private int mSelectedOptionForImage = -1;
-    private String mSelectedImagePath = "";
     private ProfileImageView mUploadImageView;
     private TextView mDocumentHelperTextView;
 
+    private List<String> mOptionsForImageSelectionList;
+    private int mSelectedOptionForImage = -1;
+    private String mSelectedImagePath = "";
     private Uri mUri;
 
     @Override
@@ -80,7 +81,6 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
             mUploadImageView.setProfilePicture(mUri.getPath(), true);
 
         }
-
         return view;
     }
 
@@ -91,18 +91,22 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
 
     private void initializeViews(View view) {
         mProgressDialog = new ProgressDialog(getActivity());
-        mUploadButton = (Button) view.findViewById(R.id.button_upload_profile_pic);
+        mUploadPhotoButton = (Button) view.findViewById(R.id.button_upload_profile_pic);
+        mSelectPhotoButton = (Button) view.findViewById(R.id.button_select_profile_pic);
         mOptionsForImageSelectionList = Arrays.asList(getResources().getStringArray(R.array.upload_picker_action));
         mUploadImageView = (ProfileImageView) view.findViewById(R.id.profile_image_view);
         mUploadImageView.setProfilePicture(R.drawable.ic_onboard_profile_pic_upload_helper);
         mDocumentHelperTextView  = (TextView) view.findViewById(R.id.profile_pic_upload_helper_title);
 
         if(mUri==null){
+            mSelectPhotoButton.setVisibility(View.VISIBLE);
+            mUploadPhotoButton.setVisibility(View.GONE);
             mDocumentHelperTextView.setText(getString(R.string.onboard_photo_upload_title));
         }else{
+            mUploadPhotoButton.setVisibility(View.VISIBLE);
+            mSelectPhotoButton.setVisibility(View.GONE);
             mDocumentHelperTextView.setText(getString(R.string.onboard_nice_profile_photo));
         }
-
     }
 
     public void setButtonActions() {
@@ -112,17 +116,29 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
             public void onClick(View view) {
                 if (ProfileInfoCacheManager.isProfilePictureUploaded()) {
                     showRepeatedPhotoSelectAlertDialog();
-
                 } else {
                     profilePictureHelperDialog.show();
                 }
             }
         });
 
-        mUploadButton.setOnClickListener(new View.OnClickListener() {
+        mSelectPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateProfilePicture(mUri);
+                if (ProfileInfoCacheManager.isProfilePictureUploaded()) {
+                    showRepeatedPhotoSelectAlertDialog();
+                } else {
+                    profilePictureHelperDialog.show();
+                }
+            }
+        });
+
+        mUploadPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mUri != null) {
+                    updateProfilePicture(mUri);
+                }
             }
         });
     }
@@ -241,6 +257,8 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
                         if (isSelectedProfilePictureValid(mUri)) {
                             mUploadImageView.setProfilePicture(mUri.getPath(), true);
                             mDocumentHelperTextView.setText("Nice Profile Photo");
+                            mSelectPhotoButton.setVisibility(View.GONE);
+                            mUploadPhotoButton.setVisibility(View.VISIBLE);
                         }
                     }
                 } else if (resultCode == CameraActivity.CAMERA_ACTIVITY_CRASHED) {
