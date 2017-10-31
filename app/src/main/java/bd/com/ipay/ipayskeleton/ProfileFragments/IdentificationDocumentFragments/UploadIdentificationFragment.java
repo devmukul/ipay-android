@@ -25,12 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadMultipleIdentifierDocumentAsyncTask;
@@ -54,7 +49,6 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
     private static final int ACTION_UPLOAD_DOCUMENT = 100;
     private static final int REQUEST_CODE_PERMISSION = 1001;
 
-    //private MultipartRequestAsyncTask mUploadIdentificationDocumentRequestAsyncTask;
     private UploadMultipleIdentifierDocumentAsyncTask mUploadIdentifierDocumentAsyncTask;
 
     private IdentificationDocument mSelectedIdentificationDocument;
@@ -62,10 +56,10 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
     private EditText mDocumentNameEditText;
     private EditText mDocumentIdEditText;
 
-    private View documentBackSideUploadOptionViewHolder;
-
     private ImageView mDocumentFrontSideImageView;
     private ImageView mDocumentBackSideImageView;
+
+    private View documentBackSideUploadOptionViewHolder;
 
     private TextView mDocumentFirstPageErrorTextView;
 
@@ -109,7 +103,18 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
         getActivity().setTitle(R.string.upload_document);
 
         final View documentNameViewHolder = findViewById(R.id.document_name_view_holder);
+        final TextInputLayout documentIdTextInputLayout = findViewById(R.id.document_id_text_input_layout);
+        final DocumentChooserButtonClickListener documentChooserButtonClickListener = new DocumentChooserButtonClickListener();
+        final Button documentFrontSideSelectorButton = findViewById(R.id.document_front_side_selector_button);
+        final Button uploadButton = findViewById(R.id.upload_button);
+        final Button documentBackSideSelectorButton = findViewById(R.id.document_back_side_selector_button);
+
+        mDocumentFrontSideImageView = findViewById(R.id.document_front_side_image_view);
+        mDocumentFirstPageErrorTextView = findViewById(R.id.document_first_page_error_text_view);
+        documentBackSideUploadOptionViewHolder = findViewById(R.id.document_back_side_upload_option_view_holder);
         mDocumentNameEditText = findViewById(R.id.document_name_edit_text);
+        mDocumentIdEditText = findViewById(R.id.document_id_edit_text);
+        mDocumentBackSideImageView = findViewById(R.id.document_back_side_image_view);
 
         if (mIsOtherTypeDocument) {
             documentNameViewHolder.setVisibility(View.VISIBLE);
@@ -117,10 +122,6 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
         } else {
             documentNameViewHolder.setVisibility(View.GONE);
         }
-
-        mDocumentIdEditText = findViewById(R.id.document_id_edit_text);
-
-        final TextInputLayout documentIdTextInputLayout = findViewById(R.id.document_id_text_input_layout);
 
         if (!TextUtils.isEmpty(mDocumentIdEditTextHint))
             documentIdTextInputLayout.setHint(mDocumentIdEditTextHint);
@@ -130,74 +131,57 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
             }
         }
 
-        mDocumentFrontSideImageView = findViewById(R.id.document_front_side_image_view);
-        mDocumentFirstPageErrorTextView = findViewById(R.id.document_first_page_error_text_view);
-
         mDocumentFirstPageErrorTextView.setVisibility(View.INVISIBLE);
 
-        final DocumentChooserButtonClickListener documentChooserButtonClickListener = new DocumentChooserButtonClickListener();
-        final Button documentFrontSideSelectorButton = findViewById(R.id.document_front_side_selector_button);
-
         documentFrontSideSelectorButton.setOnClickListener(documentChooserButtonClickListener);
-
-        documentBackSideUploadOptionViewHolder = findViewById(R.id.document_back_side_upload_option_view_holder);
+        documentBackSideSelectorButton.setOnClickListener(documentChooserButtonClickListener);
 
         documentBackSideUploadOptionViewHolder.setVisibility(View.GONE);
-        if (maxDocumentSideCount >= 2) {
-            final Button documentBackSideSelectorButton = findViewById(R.id.document_back_side_selector_button);
-            mDocumentBackSideImageView = findViewById(R.id.document_back_side_image_view);
-            documentBackSideSelectorButton.setOnClickListener(documentChooserButtonClickListener);
-        }
-
-        final Button uploadButton = findViewById(R.id.upload_button);
 
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (verifyUserInputs()) {
-                    Map<String, List<Object>> multipartEntityMap = new HashMap<>();
-
-                    multipartEntityMap.put("documentType", Collections.<Object>singletonList(mSelectedIdentificationDocument.getDocumentType()));
-                    multipartEntityMap.put("documentIdNumber", Collections.<Object>singletonList(mDocumentIdEditText.getText()));
-                    List<Object> documentFile = new ArrayList<>();
-                    documentFile.add(mDocumentFirstPageImageFile);
-                    if (mDocumentSecondPageImageFile != null) {
-                        documentFile.add(mDocumentSecondPageImageFile);
-                    }
-                    multipartEntityMap.put("files", documentFile);
-
-                    final String url;
-                    if (ProfileInfoCacheManager.isBusinessAccount()) {
-                        url = Constants.BASE_URL_MM + Constants.URL_UPLOAD_BUSINESS_DOCUMENTS + "/v2";
-                    } else {
-                        url = Constants.BASE_URL_MM + Constants.URL_UPLOAD_DOCUMENTS + "/v2";
-                    }
-                    //mUploadIdentificationDocumentRequestAsyncTask = new MultipartRequestAsyncTask(Constants.COMMAND_UPLOAD_DOCUMENT, url, getContext(), multipartEntityMap, UploadIdentificationFragment.this);
-                    //mUploadIdentificationDocumentRequestAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    final String documentName;
-                    if (mSelectedIdentificationDocument.getDocumentType().equals(IdentificationDocumentConstants.DOCUMENT_TYPE_OTHER)) {
-                        documentName = mDocumentNameEditText.getText().toString();
-                    } else {
-                        documentName = null;
-                    }
-                    final String documentIdNumber = mDocumentIdEditText.getText().toString();
-                    final String documentType = mSelectedIdentificationDocument.getDocumentType();
-
-                    final String[] files;
-                    if (mDocumentSecondPageImageFile == null) {
-                        files = new String[1];
-                    } else {
-                        files = new String[2];
-                        files[1] = mDocumentSecondPageImageFile.getAbsolutePath();
-                    }
-                    files[0] = mDocumentFirstPageImageFile.getAbsolutePath();
-
-                    mUploadIdentifierDocumentAsyncTask = new UploadMultipleIdentifierDocumentAsyncTask(Constants.COMMAND_UPLOAD_DOCUMENT, url, getContext(), documentType, documentIdNumber, documentName, files, UploadIdentificationFragment.this);
-                    mUploadIdentifierDocumentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    mProgressDialog.show();
+                    performIdentificationDocumentUpload();
                 }
             }
         });
+    }
+
+    private void performIdentificationDocumentUpload() {
+        final String url;
+        final String documentName;
+        final String documentIdNumber = mDocumentIdEditText.getText().toString();
+        final String documentType = mSelectedIdentificationDocument.getDocumentType();
+        final String[] files = getUploadFilePaths();
+
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
+            url = Constants.BASE_URL_MM + Constants.URL_UPLOAD_BUSINESS_DOCUMENTS_V2;
+        } else {
+            url = Constants.BASE_URL_MM + Constants.URL_UPLOAD_DOCUMENTS_V2;
+        }
+
+        if (mSelectedIdentificationDocument.getDocumentType().equals(IdentificationDocumentConstants.DOCUMENT_TYPE_OTHER)) {
+            documentName = mDocumentNameEditText.getText().toString();
+        } else {
+            documentName = null;
+        }
+
+        mUploadIdentifierDocumentAsyncTask = new UploadMultipleIdentifierDocumentAsyncTask(Constants.COMMAND_UPLOAD_DOCUMENT, url, getContext(), documentType, documentIdNumber, documentName, files, UploadIdentificationFragment.this);
+        mUploadIdentifierDocumentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mProgressDialog.show();
+    }
+
+    private String[] getUploadFilePaths() {
+        final String[] files;
+        if (mDocumentSecondPageImageFile == null) {
+            files = new String[1];
+        } else {
+            files = new String[2];
+            files[1] = mDocumentSecondPageImageFile.getAbsolutePath();
+        }
+        files[0] = mDocumentFirstPageImageFile.getAbsolutePath();
+        return files;
     }
 
     private boolean verifyUserInputs() {
@@ -244,32 +228,7 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
         switch (requestCode) {
             case ACTION_UPLOAD_DOCUMENT:
                 if (resultCode == Activity.RESULT_OK) {
-                    String filePath = DocumentPicker.getFilePathFromResult(getActivity(), intent);
-
-                    if (filePath != null) {
-                        String[] temp = filePath.split(File.separator);
-                        final String mFileName = temp[temp.length - 1];
-                        Uri mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent, mFileName);
-                        final File imageFile = new File(mSelectedDocumentUri.getPath());
-
-                        final Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
-                        if (mSelectedDocumentSide.equals(IdentificationDocumentConstants.DOCUMENT_SIDE_FRONT)) {
-                            mDocumentFrontSideImageView.setImageBitmap(imageBitmap);
-                            mDocumentFirstPageImageFile = imageFile;
-                            if (maxDocumentSideCount > 1) {
-                                documentBackSideUploadOptionViewHolder.setVisibility(View.VISIBLE);
-                            }
-                            mDocumentFirstPageErrorTextView.setText("");
-                            mDocumentFirstPageErrorTextView.setVisibility(View.INVISIBLE);
-                        } else {
-                            if (mDocumentBackSideImageView != null) {
-                                mDocumentBackSideImageView.setImageBitmap(imageBitmap);
-                            }
-                            mDocumentSecondPageImageFile = imageFile;
-                        }
-                        mPickerActionId = -1;
-                        mSelectedDocumentSide = "";
-                    }
+                    performFileSelectAction(resultCode, intent);
                 } else if (resultCode == CameraActivity.CAMERA_ACTIVITY_CRASHED) {
                     Intent systemCameraOpenIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     systemCameraOpenIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID, DocumentPicker.getTempFile(getActivity(), "document_" + mSelectedDocumentSide + ".jpg")));
@@ -282,6 +241,36 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, intent);
+        }
+    }
+
+    private void performFileSelectAction(int resultCode, Intent intent) {
+        String filePath = DocumentPicker.getFilePathFromResult(getActivity(), intent);
+
+        if (filePath != null) {
+            String[] temp = filePath.split(File.separator);
+            final String mFileName = temp[temp.length - 1];
+
+            Uri mSelectedDocumentUri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, intent, mFileName);
+            final File imageFile = new File(mSelectedDocumentUri.getPath());
+            final Bitmap imageBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+
+            if (mSelectedDocumentSide.equals(IdentificationDocumentConstants.DOCUMENT_SIDE_FRONT)) {
+                mDocumentFrontSideImageView.setImageBitmap(imageBitmap);
+                mDocumentFirstPageImageFile = imageFile;
+                if (maxDocumentSideCount > 1) {
+                    documentBackSideUploadOptionViewHolder.setVisibility(View.VISIBLE);
+                }
+                mDocumentFirstPageErrorTextView.setText("");
+                mDocumentFirstPageErrorTextView.setVisibility(View.INVISIBLE);
+            } else {
+                if (mDocumentBackSideImageView != null) {
+                    mDocumentBackSideImageView.setImageBitmap(imageBitmap);
+                }
+                mDocumentSecondPageImageFile = imageFile;
+            }
+            mPickerActionId = -1;
+            mSelectedDocumentSide = "";
         }
     }
 
@@ -313,7 +302,7 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
         mProgressDialog.cancel();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            //mUploadIdentificationDocumentRequestAsyncTask = null;
+            mUploadIdentifierDocumentAsyncTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;

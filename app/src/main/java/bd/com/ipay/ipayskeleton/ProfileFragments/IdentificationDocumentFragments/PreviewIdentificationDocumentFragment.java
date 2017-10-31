@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.DocumentPreviewImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.DocumentPage;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.IdentificationDocument;
 import bd.com.ipay.ipayskeleton.R;
@@ -34,8 +35,7 @@ import bd.com.ipay.ipayskeleton.Utilities.IdentificationDocumentConstants;
 public class PreviewIdentificationDocumentFragment extends BaseFragment {
 
     private IdentificationDocument mSelectedIdentificationDocument;
-    private ImageView mDocumentLargePreviewImageView;
-    private View mDocumentImagePreviewHolder;
+    private DocumentPreviewImageView documentPreviewImageView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,17 +64,18 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
         final ImageButton documentInformationEditImageButton = findViewById(R.id.document_information_edit_image_button);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
-        mDocumentImagePreviewHolder = findViewById(R.id.document_image_preview_holder);
-        mDocumentLargePreviewImageView = findViewById(R.id.document_large_preview_image_view);
-        mDocumentImagePreviewHolder.setVisibility(View.GONE);
+        documentPreviewImageView = findViewById(R.id.document_preview_image_view);
+        documentPreviewImageView.setVisibility(View.GONE);
 
-        mDocumentImagePreviewHolder.setOnClickListener(new View.OnClickListener() {
+        documentPreviewImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDocumentImagePreviewHolder.setVisibility(View.GONE);
+                if (documentPreviewImageView.isImageLoaded()) {
+                    documentPreviewImageView.setVisibility(View.GONE);
+                    documentPreviewImageView.setImageLoaded(false);
+                }
             }
         });
-
 
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         documentPreviewRecyclerView.setLayoutManager(linearLayoutManager);
@@ -141,14 +142,25 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
                                 holder.documentPreviewImageView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        mDocumentImagePreviewHolder.setVisibility(View.VISIBLE);
-                                        Glide.with(PreviewIdentificationDocumentFragment.this).load(Constants.BASE_URL_FTP_SERVER + documentPage.getUrl()).into(mDocumentLargePreviewImageView);
+                                        documentPreviewImageView.setVisibility(View.VISIBLE);
+                                        Glide.with(PreviewIdentificationDocumentFragment.this).load(Constants.BASE_URL_FTP_SERVER + documentPage.getUrl()).listener(new RequestListener<String, GlideDrawable>() {
+                                            @Override
+                                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+
+                                                return false;
+                                            }
+
+                                            @Override
+                                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                                documentPreviewImageView.setImageLoaded(true);
+                                                return false;
+                                            }
+                                        }).into(documentPreviewImageView.getImageView());
                                     }
                                 });
                                 return false;
                             }
                         }).into(holder.documentPreviewImageView);
-
             }
         }
 
