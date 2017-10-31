@@ -245,7 +245,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 mMoreButton.setVisibility(View.VISIBLE);
                 mCancelButton.setVisibility(View.INVISIBLE);
                 mClearFilterButton.setVisibility(View.INVISIBLE);
-                mFilterTitle.setText(getString(R.string.complete_transaction_list));
+                mFilterTitle.setText(getString(R.string.completed_transaction_list));
                 break;
         }
     }

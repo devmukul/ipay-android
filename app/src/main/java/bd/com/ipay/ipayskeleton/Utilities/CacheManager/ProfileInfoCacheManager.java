@@ -143,6 +143,10 @@ public class ProfileInfoCacheManager {
         pref.edit().putString(SharedPrefConstants.NAME, value).apply();
     }
 
+    public static String getName() {
+        return pref.getString(SharedPrefConstants.NAME, "");
+    }
+
     public static String getGender() {
         return pref.getString(SharedPrefConstants.GENDER, null);
     }
@@ -196,6 +200,7 @@ public class ProfileInfoCacheManager {
         setAccountId(profileInfo.getAccountId());
         setSignupTime(profileInfo.getSignupTime());
         setGender(profileInfo.getGender());
+        setBirthday(profileInfo.getDob());
 
         BroadcastServiceIntent.sendBroadcast(context, Constants.PROFILE_INFO_UPDATE_BROADCAST);
     }
@@ -207,5 +212,69 @@ public class ProfileInfoCacheManager {
 
         BroadcastServiceIntent.sendBroadcast(context, Constants.PROFILE_INFO_UPDATE_BROADCAST);
     }
+
+    public static void setOnBoardAllStepsDoneStatus(boolean isAllOnBoardStepsDone) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(SharedPrefConstants.ON_BOARD_STEPS_DONE, isAllOnBoardStepsDone).apply();
+    }
+
+    public static boolean isAnyOnBoardStepSkipped() {
+        return !pref.getBoolean(SharedPrefConstants.ON_BOARD_STEPS_DONE, false);
+    }
+
+    public static void uploadProfilePicture(boolean defaultvalue) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(SharedPrefConstants.PROFILE_PICTURE_UPLOADED, defaultvalue).apply();
+    }
+
+    public static boolean isProfilePictureUploaded() {
+        return pref.getBoolean(SharedPrefConstants.PROFILE_PICTURE_UPLOADED, false);
+    }
+
+    public static void uploadIdentificationDocument(boolean defaultvalue) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(SharedPrefConstants.IDENTIFICATION_DOCUMENT_UPLOADED, defaultvalue).apply();
+    }
+
+    public static boolean isIdentificationDocumentUploaded() {
+        return pref.getBoolean(SharedPrefConstants.IDENTIFICATION_DOCUMENT_UPLOADED, false);
+    }
+
+    public static void addBasicInfo(boolean defaultvalue) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(SharedPrefConstants.BASIC_INFO_ADDED, defaultvalue).apply();
+    }
+
+    public static boolean isBasicInfoAdded() {
+        return pref.getBoolean(SharedPrefConstants.BASIC_INFO_ADDED, false);
+    }
+
+    public static void addBankInfo(boolean defaultvalue) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(SharedPrefConstants.BANK_INFO_ADDED, defaultvalue).apply();
+    }
+
+    public static boolean isBankInfoAdded() {
+        return pref.getBoolean(SharedPrefConstants.BANK_INFO_ADDED, false);
+    }
+
+    public static void askForIntroduction(boolean defaultvalue) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(SharedPrefConstants.INTRODUCTION_ASKED, defaultvalue).apply();
+    }
+
+    public static boolean isIntroductionAsked() {
+        return pref.getBoolean(SharedPrefConstants.INTRODUCTION_ASKED, false);
+    }
+
+    public static void switchedFromSignup(boolean defaultvalue) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(SharedPrefConstants.SWITCHED_FROM_SIGNUP, defaultvalue).apply();
+    }
+
+    public static boolean isSwitchedFromSignup() {
+        return pref.getBoolean(SharedPrefConstants.SWITCHED_FROM_SIGNUP, false);
+    }
+
 }
 

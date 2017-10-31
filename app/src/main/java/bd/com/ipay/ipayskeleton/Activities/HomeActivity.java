@@ -14,6 +14,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -239,12 +240,12 @@ public class HomeActivity extends BaseActivity
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (Utilities.isNecessaryPermissionExists(this, Constants.LOCATION_PERMISSIONS) && mLocationManager != null) {
             final String locationProvider;
-            if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                locationProvider = LocationManager.GPS_PROVIDER;
-            } else {
+            if (mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                 locationProvider = LocationManager.NETWORK_PROVIDER;
+            } else {
+                locationProvider = LocationManager.GPS_PROVIDER;
             }
-            mLocationManager.requestSingleUpdate(locationProvider, this, null);
+            mLocationManager.requestSingleUpdate(locationProvider, this, Looper.myLooper());
         }
     }
 
@@ -305,7 +306,7 @@ public class HomeActivity extends BaseActivity
     }
 
     private void attemptRequestForPermission() {
-        String[] requiredPermissions = {Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        String[] requiredPermissions = {Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_FINE_LOCATION};
 
         List<String> permissionsToRequest = new ArrayList<>();
         for (String permission : requiredPermissions) {
@@ -339,7 +340,7 @@ public class HomeActivity extends BaseActivity
                             if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS))
                                 new GetContactsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
-                    } else if (permissions[i].equals(Manifest.permission.ACCESS_COARSE_LOCATION) || permissions[i].equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    } else if (permissions[i].equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
                         startLocationCollection();
                     }
                 }

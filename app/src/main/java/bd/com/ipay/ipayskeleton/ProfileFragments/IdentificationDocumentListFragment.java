@@ -93,6 +93,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
     private String mFileName;
     private String mOtherTypeName;
     private String mDocumentName;
+    private long mFileSize;
 
     private static final int[] DOCUMENT_TYPE_NAMES = {
             R.string.national_id,
@@ -621,9 +622,14 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
                 if (documentPreviewDetailsList.get(pos).getSelectedDocumentUri() != null) {
                     mFile = new File(documentPreviewDetailsList.get(pos).getSelectedDocumentUri().getPath());
-                    if (mFile.exists()) {
-                        mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
-                        mPicker.setImageBitmap(mBitmap);
+                    mFileSize = mFile.length()/(1024*1024);
+                    if(mFileSize<5) {
+                        if (mFile.exists()) {
+                            mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
+                            mPicker.setImageBitmap(mBitmap);
+                        }
+                    }else{
+                        Toaster.makeText(getContext(), getString(R.string.file_size_large), Toast.LENGTH_LONG);
                     }
                 } else {
                     if (verificationStatus == null)

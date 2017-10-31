@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrust
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
@@ -243,7 +244,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
             return;
         }
 
-
         Gson gson = new Gson();
 
         switch (result.getApiCommand()) {
@@ -258,9 +258,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         attemptAddTrustedDevice();
                         Toaster.makeText(getActivity(), mSignupResponseModel.getMessage(), Toast.LENGTH_LONG);
-
-                        // TODO: For now, switch to login fragment after a successful sign up. Don't remove it either. Can be used later
-//                        ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();
 
                         //Google Analytic event
                         Utilities.sendSuccessEventTracker(mTracker, "Signup", ProfileInfoCacheManager.getAccountId());
@@ -350,17 +347,13 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         if (pushRegistrationID != null) {
                             new RegisterFCMTokenToServerAsyncTask(getContext());
                         }
-
                         // Saving the allowed services id for the user
                         if (mLoginResponseModel.getAccessControlList() != null) {
                             ACLManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
                         }
-
                         attemptAddTrustedDevice();
-
                     } else {
                         hideProgressDialog();
-
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                     }
@@ -383,9 +376,13 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         String UUID = mAddToTrustedDeviceResponse.getUUID();
                         ProfileInfoCacheManager.setUUID(UUID);
+                        ProfileInfoCacheManager.uploadProfilePicture(false);
+                        ProfileInfoCacheManager.uploadIdentificationDocument(false);
+                        ProfileInfoCacheManager.addBasicInfo(false);
 
-                        // Launch HomeActivity from here on successful trusted device add
-                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        ProfileInfoCacheManager.switchedFromSignup(true);
+                        ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
+
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE)
                         ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
                     else
@@ -412,7 +409,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
     private void attemptAddTrustedDevice() {
         if (mAddTrustedDeviceTask != null)
             return;
-
 
         AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
                 Constants.MOBILE_ANDROID + mDeviceID, null);

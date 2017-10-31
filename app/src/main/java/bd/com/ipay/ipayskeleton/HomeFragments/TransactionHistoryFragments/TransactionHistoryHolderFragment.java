@@ -56,10 +56,10 @@ public class TransactionHistoryHolderFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION)) {
-            mPendingTransactionRadioButton.setChecked(true);
-        } else if (ACLManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION)) {
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.COMPLETED_TRANSACTION)) {
             mCompletedTransactionRadioButton.setChecked(true);
+        } else if (ACLManager.hasServicesAccessibility(ServiceIdConstants.PENDING_TRANSACTION)) {
+            mPendingTransactionRadioButton.setChecked(true);
         }
     }
 
