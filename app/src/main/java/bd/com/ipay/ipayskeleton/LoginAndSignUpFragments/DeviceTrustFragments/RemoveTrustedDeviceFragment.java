@@ -300,15 +300,15 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                     ProfileInfoCacheManager.setUUID(UUID);
                     getProfileInfo();
                 } else {
+                    mProgressDialog.dismiss();
                     Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
             } catch (Exception e) {
+                mProgressDialog.dismiss();
                 e.printStackTrace();
                 Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
             }
-
-            mProgressDialog.dismiss();
             mAddTrustedDeviceTask = null;
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
@@ -363,9 +363,11 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                         getProfileCompletionStatus();
 
                     } else {
+                        mProgressDialog.dismiss();
                         Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                     }
                 } catch (Exception e) {
+                    mProgressDialog.dismiss();
                     e.printStackTrace();
                     Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 }
