@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -370,8 +371,13 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mRequestMoneyAcceptRejectOrCancelResponse.getMessage());
                         Utilities.sendBlockedEventTracker(mTracker, "Money Request", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                        Toaster.makeText(getActivity(),mRequestMoneyAcceptRejectOrCancelResponse.getMessage(),Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration=mRequestMoneyAcceptRejectOrCancelResponse.getOtpValidFor();
                         launchOTPVerification();
+                        mOTPVerificationForTwoFaServicesDialog.mDismissListener = this;
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                        Toaster.makeText(getActivity(),mRequestMoneyAcceptRejectOrCancelResponse.getMessage(),Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration=mRequestMoneyAcceptRejectOrCancelResponse.getOtpValidFor();
                         launchOTPVerification();
                     } else {
                         if (getActivity() != null)
