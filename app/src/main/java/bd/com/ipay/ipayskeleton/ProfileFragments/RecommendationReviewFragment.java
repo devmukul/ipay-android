@@ -260,7 +260,6 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
-
         mProgressDialog.setMessage(getString(R.string.processing));
         mProgressDialog.show();
         mRecommendActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_INTRODUCE_ACTION,
