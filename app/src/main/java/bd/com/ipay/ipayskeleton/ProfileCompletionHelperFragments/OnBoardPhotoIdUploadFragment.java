@@ -90,7 +90,7 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
     private String mFileName;
     private String mOtherTypeName;
     private String mDocumentName;
-    private long mFileSize;
+    private long mSelectedFileSize;
 
     private static final int[] DOCUMENT_TYPE_NAMES = {
             R.string.national_id,
@@ -525,8 +525,8 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
                 if (documentPreviewDetailsList.get(pos).getSelectedDocumentUri() != null) {
                     try {
                         mFile = new File(documentPreviewDetailsList.get(pos).getSelectedDocumentUri().getPath());
-                        mFileSize = mFile.length()/(1024*1024);
-                        if(mFileSize<Constants.MAX_FILE_SIZE_MB) {
+                        mSelectedFileSize = mFile.length()/(1024*1024);
+                        if(mSelectedFileSize <Constants.PHOTO_ID_FILE_MAX_SIZE) {
                             if (mFile.exists()) {
                                 mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
                                 mPicker.setImageBitmap(mBitmap);
