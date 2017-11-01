@@ -361,7 +361,7 @@ public class Constants {
     public static final String URL_TOPUP_REQUEST = "topup/dotopup/v2";
 
     // Money Request REST
-    public static final String URL_REQUEST_MONEY = "requestmoney/v2";
+    public static final String URL_REQUEST_MONEY = "requestmoney";
 
     // News Feed REST
     public static final String URL_GET_NEWS_FEED = "resource/news";

@@ -33,7 +33,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPin
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.SendNewPaymentRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyResponse;
@@ -226,16 +225,6 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPostAsyncTask.mHttpResponseListener = this;
             mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-        } else if (mDesiredRequest.equals(Constants.COMMAND_REQUEST_MONEY)) {
-            mProgressDialog.setMessage(context.getString(R.string.requesting_money));
-            mProgressDialog.show();
-            RequestMoneyRequest requestMoneyRequest = gson.fromJson(json, RequestMoneyRequest.class);
-            requestMoneyRequest.setOtp(mOTP);
-            json = gson.toJson(requestMoneyRequest);
-            mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REQUEST_MONEY, mUri, json, context);
-            mHttpPostAsyncTask.mHttpResponseListener = this;
-            mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
         } else if (mDesiredRequest.equals(Constants.COMMAND_ADD_MONEY)) {
             mProgressDialog.setMessage(context.getString(R.string.progress_dialog_add_money_in_progress));
             mProgressDialog.show();
@@ -275,8 +264,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPutAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_SET_PIN, mUri, json, context);
             mHttpPutAsyncTask.mHttpResponseListener = this;
             mHttpPutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-        else if (mDesiredRequest.equals(Constants.COMMAND_SEND_PAYMENT_REQUEST)) {
+        } else if (mDesiredRequest.equals(Constants.COMMAND_SEND_PAYMENT_REQUEST)) {
             mProgressDialog.setMessage(context.getString(R.string.progress_dialog_sending_payment_request));
             mProgressDialog.show();
             SendNewPaymentRequest mSendNewPaymentRequest = gson.fromJson(json, SendNewPaymentRequest.class);
