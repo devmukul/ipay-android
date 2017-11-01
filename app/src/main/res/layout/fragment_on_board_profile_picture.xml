@@ -48,88 +48,37 @@
             </FrameLayout>
 
 
-
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/onboard_photo_upload_helper_text"
+                style="@style/OnBoardPageDescriptionTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:text="@string/onboard_upload_photo_text"
                 android:layout_marginTop="@dimen/onboard_page_vertical_margin"
                 android:layout_marginLeft="@dimen/onboard_page_description_horizontal_margin"
-                android:layout_marginRight="@dimen/onboard_page_description_horizontal_margin">
+                android:layout_marginRight="@dimen/onboard_page_description_horizontal_margin"
+                android:gravity="top|center_horizontal"
+                android:minLines="4"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/onboard_page_vertical_margin"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_onboard_profile_pic_upload_small"
-                    android:paddingTop="4dp"/>
 
-                <TextView
-                    android:id="@+id/onboard_photo_upload_helper_text"
-                    style="@style/OnBoardPageDescriptionTextStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/onboard_upload_photo_text"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+            <Button
+                android:id="@+id/button_upload_profile_pic"
+                style="@style/ButtonPrimaryOnBoard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/upload_photo"
+                android:visibility="gone"/>
 
-            </LinearLayout>
+            <Button
+                android:id="@+id/button_select_profile_pic"
+                style="@style/ButtonPrimaryOnBoard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/select_photo"/>
 
         </LinearLayout>
 
     </ScrollView>
-
-    <LinearLayout
-        android:id="@+id/button_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimaryButton">
-
-        <Button
-            android:id="@+id/button_skip"
-            style="@style/ButtonTransparent"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/skip_now"
-            android:gravity="left|center_vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin_double"
-            android:visibility="invisible"/>
-
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <Button
-                android:id="@+id/button_select_profile_pic"
-                style="@style/ButtonTransparent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Select Photo"
-                android:gravity="right|center_vertical"
-                android:paddingRight="@dimen/activity_horizontal_margin_double"/>
-
-            <Button
-                android:id="@+id/button_upload_profile_pic"
-                style="@style/ButtonTransparent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/upload_photo"
-                android:gravity="right|center_vertical"
-                android:paddingRight="@dimen/activity_horizontal_margin_double"
-                android:visibility="gone"/>
-
-        </FrameLayout>
-
-
-
-
-    </LinearLayout>
-
-
 
 </RelativeLayout>
 

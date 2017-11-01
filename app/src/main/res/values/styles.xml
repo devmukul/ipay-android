@@ -899,6 +899,22 @@
         <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
     </style>
 
+    <style name="ButtonPrimaryOnBoard" parent="ButtonPrimary">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:paddingTop">@dimen/value10</item>
+        <item name="android:paddingBottom">@dimen/value10</item>
+        <item name="android:layout_marginTop">@dimen/onboard_page_title_horizontal_margin</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+    </style>
+
+    <style name="ButtonSkipOnBoard">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:padding">@dimen/value10</item>
+        <item name="android:layout_marginTop">@dimen/activity_horizontal_margin</item>
+        <item name="android:background">@color/colorTransparent</item>
+    </style>
+
     <style name="ButtonSecondary" parent="ButtonStyle">
         <item name="android:textColor">@color/colorSecondaryButtonText</item>
         <item name="android:background">@drawable/background_button_oval_white</item>

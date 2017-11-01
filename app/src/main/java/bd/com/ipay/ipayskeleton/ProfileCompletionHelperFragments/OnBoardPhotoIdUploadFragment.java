@@ -62,6 +62,10 @@ import bd.com.ipay.ipayskeleton.camera.CameraActivity;
 
 public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements HttpResponseListener {
 
+    private static final int ACTION_UPLOAD_DOCUMENT = 100;
+    private static final int REQUEST_CODE_PERMISSION = 1001;
+    private static final int OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT = 1;
+
     private HttpRequestGetAsyncTask mGetIdentificationDocumentsTask = null;
     private GetIdentificationDocumentResponse mIdentificationDocumentResponse = null;
 
@@ -71,26 +75,23 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
     private HttpRequestGetAsyncTask mGetDocumentAccessTokenTask = null;
 
     private ProgressDialog mProgressDialog;
-
     private DocumentListAdapter mDocumentListAdapter;
     private RecyclerView mDocumentListRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 
+
+    private ImageView mBackButtonTop;
     private List<IdentificationDocument> mIdentificationDocuments = new ArrayList<>();
-    private List<IdentificationDocument> mIdentificationBusinessDocuments = new ArrayList<>();
-
     private DocumentPreviewDetails mSelectedDocumentDetails;
-
     private ArrayList<DocumentPreviewDetails> documentPreviewDetailsList;
 
     private String[] DOCUMENT_TYPES;
     private String[] DOCUMENT_HINT_TYPES;
-
     private Uri mSelectedDocumentUri;
     private String mFileName;
     private String mOtherTypeName;
     private String mDocumentName;
-    private long mFileSize;
+    private long mSelectedFileSize;
 
     private static final int[] DOCUMENT_TYPE_NAMES = {
             R.string.national_id,
@@ -103,13 +104,8 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
 
     private static String[] DOCUMENT_ID_MAX_LENGTH;
 
-    private static final int ACTION_UPLOAD_DOCUMENT = 100;
-    private static final int REQUEST_CODE_PERMISSION = 1001;
-    private static final int OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT = 1;
-
     private int mSelectedItemId = -1;
     private int mPickerActionId = -1;
-    ImageView backButtonImageView;
 
     @Override
     public void onResume() {
@@ -143,12 +139,12 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
         mLayoutManager = new LinearLayoutManager(getActivity());
         mDocumentListRecyclerView.setLayoutManager(mLayoutManager);
 
-        backButtonImageView = (ImageView) v.findViewById(R.id.back);
-        if (getActivity().getSupportFragmentManager().getBackStackEntryCount() <= 1) {
-            backButtonImageView.setVisibility(View.INVISIBLE);
+        mBackButtonTop  = (ImageView) v.findViewById(R.id.back);
+        if (getActivity().getSupportFragmentManager().getBackStackEntryCount()<=1){
+            mBackButtonTop.setVisibility(View.INVISIBLE);
         }
 
-        backButtonImageView.setOnClickListener(new View.OnClickListener() {
+        mBackButtonTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().onBackPressed();
@@ -240,7 +236,6 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
         if (mGetIdentificationDocumentsTask != null) {
             return;
         }
-
         setContentShown(false);
 
         mGetIdentificationDocumentsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST,
@@ -530,8 +525,8 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
                 if (documentPreviewDetailsList.get(pos).getSelectedDocumentUri() != null) {
                     try {
                         mFile = new File(documentPreviewDetailsList.get(pos).getSelectedDocumentUri().getPath());
-                        mFileSize = mFile.length() / (1024 * 1024);
-                        if (mFileSize < Constants.MAX_FILE_MB_LIMIT) {
+                        mSelectedFileSize = mFile.length()/(1024*1024);
+                        if(mSelectedFileSize <Constants.PHOTO_ID_FILE_MAX_SIZE) {
                             if (mFile.exists()) {
                                 mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
                                 mPicker.setImageBitmap(mBitmap);

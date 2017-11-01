@@ -16,7 +16,7 @@ public class OnBoardAddBasicInfoHelperFragment extends Fragment {
     private Button mUploadButton;
     private Button mSkipButton;
     private View view;
-    private ImageView back;
+    private ImageView mBackButtonTop;
 
     @Nullable
     @Override
@@ -31,10 +31,10 @@ public class OnBoardAddBasicInfoHelperFragment extends Fragment {
     private void initializeViews(View view) {
         mUploadButton = (Button) view.findViewById(R.id.button_add_basic_info);
         mSkipButton = (Button) view.findViewById(R.id.button_skip);
-        back  = (ImageView) view.findViewById(R.id.back);
+        mBackButtonTop  = (ImageView) view.findViewById(R.id.back);
 
         if (getActivity().getSupportFragmentManager().getBackStackEntryCount()<=1){
-            back.setVisibility(View.INVISIBLE);
+            mBackButtonTop.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -53,7 +53,7 @@ public class OnBoardAddBasicInfoHelperFragment extends Fragment {
             }
         });
 
-        back.setOnClickListener(new View.OnClickListener() {
+        mBackButtonTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().onBackPressed();

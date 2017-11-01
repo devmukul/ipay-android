@@ -58,7 +58,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
     private List<Occupation> mOccupationList;
 
     private Button mSkipButton;
-    ImageView back;
+    private ImageView mBackButtonTop;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
 
         mOccupationEditText = (EditText) v.findViewById(R.id.occupationEditText);
         mOrganizationNameEditText = (EditText) v.findViewById(R.id.organizationNameEditText);
-        back  = (ImageView) v.findViewById(R.id.back);
+        mBackButtonTop  = (ImageView) v.findViewById(R.id.back);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         mAddressInputView.clearFocus();
@@ -102,10 +102,10 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
         });
 
         if (getActivity().getSupportFragmentManager().getBackStackEntryCount()<=1){
-            back.setVisibility(View.INVISIBLE);
+            mBackButtonTop.setVisibility(View.INVISIBLE);
         }
 
-        back.setOnClickListener(new View.OnClickListener() {
+        mBackButtonTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().onBackPressed();
