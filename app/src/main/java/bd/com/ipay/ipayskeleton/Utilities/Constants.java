@@ -431,7 +431,7 @@ public class Constants {
     public static final String URL_GET_USER_INFO = "user/userinfo";
     public static final String URL_GET_PARENT_INFO_REQUEST = "user/parent";
     public static final String URL_SET_PARENT_INFO_REQUEST = "user/parent";
-    public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";
+    public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile/v1";
     public static final String URL_SET_PROFILE_INFO_REQUEST = "user/profile";
 
     // User Rest (Profile Completion)
@@ -442,6 +442,9 @@ public class Constants {
 
     // User Rest (Profile Picture)
     public static final String URL_SET_PROFILE_PICTURE = "user/profile/profilepicture/";
+
+    // User Rest (Business Contact Profile Picture)
+    public static final String URL_SET_BUSINESS_CONTACT_PROFILE_PICTURE = "user/profile/business-owner/picture";
 
     // User Rest (Address)
     public static final String URL_GET_USER_ADDRESS_REQUEST = "user/profile/address";
@@ -544,6 +547,7 @@ public class Constants {
     public static final String COMMAND_SEND_PAYMENT_REQUEST = "COMMAND_SEND_PAYMENT_REQUEST";
     public static final String COMMAND_GET_SINGLE_INVOICE = "COMMAND_GET_SINGLE_INVOICE";
     public static final String COMMAND_SET_PROFILE_PICTURE = "COMMAND_SET_PROFILE_PICTURE";
+    public static final String COMMAND_SET_BUSINESS_CONTACT_PROFILE_PICTURE = "COMMAND_SET_BUSINESS_CONTACT_PROFILE_PICTURE";
     public static final String COMMAND_ADD_A_BANK = "COMMAND_ADD_A_BANK";
     public static final String COMMAND_VERIFICATION_BANK_WITH_AMOUNT = "COMMAND_VERIFICATION_BANK_WITH_AMOUNT";
     public static final String COMMAND_REMOVE_A_BANK = "COMMAND_REMOVE_A_BANK";
@@ -782,6 +786,9 @@ public class Constants {
 
     public static final int REQUEST_TYPE_RECEIVED_REQUEST = 1;
     public static final int REQUEST_TYPE_SENT_REQUEST = 2;
+
+    public static final int TYPE_PROFILE_PICTURE = 1;
+    public static final int TYPE_BUSINESS_LOGO = 2;
 
     public static final int INVALID_ACCOUNT_ID = -1;
 
