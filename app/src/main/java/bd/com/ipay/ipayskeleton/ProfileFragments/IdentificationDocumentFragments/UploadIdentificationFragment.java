@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.FileProvider;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,6 +63,7 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
     private View documentBackSideUploadOptionViewHolder;
 
     private TextView mDocumentFirstPageErrorTextView;
+    private TextView mDocumentSecondPageErrorTextView;
 
     private int maxDocumentSideCount;
     private boolean mIsOtherTypeDocument;
@@ -111,10 +113,16 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
 
         mDocumentFrontSideImageView = findViewById(R.id.document_front_side_image_view);
         mDocumentFirstPageErrorTextView = findViewById(R.id.document_first_page_error_text_view);
+        mDocumentSecondPageErrorTextView = findViewById(R.id.document_second_page_error_text_view);
         documentBackSideUploadOptionViewHolder = findViewById(R.id.document_back_side_upload_option_view_holder);
         mDocumentNameEditText = findViewById(R.id.document_name_edit_text);
         mDocumentIdEditText = findViewById(R.id.document_id_edit_text);
         mDocumentBackSideImageView = findViewById(R.id.document_back_side_image_view);
+
+
+        if (mSelectedIdentificationDocument.getDocumentType().equals(IdentificationDocumentConstants.DOCUMENT_TYPE_NATIONAL_ID)) {
+            mDocumentIdEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        }
 
         if (mIsOtherTypeDocument) {
             documentNameViewHolder.setVisibility(View.VISIBLE);
@@ -205,6 +213,11 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
             mDocumentFirstPageErrorTextView.setVisibility(View.VISIBLE);
             focusableView = null;
             isValidInput = false;
+        } else if (!mSelectedIdentificationDocument.getDocumentType().equals(IdentificationDocumentConstants.DOCUMENT_TYPE_OTHER) && mDocumentSecondPageImageFile == null) {
+            mDocumentSecondPageErrorTextView.setText(R.string.please_select_a_file_to_upload);
+            mDocumentSecondPageErrorTextView.setVisibility(View.VISIBLE);
+            focusableView = null;
+            isValidInput = false;
         } else {
             focusableView = null;
             isValidInput = true;
@@ -218,6 +231,8 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
     private void clearAllErrorMessages() {
         mDocumentFirstPageErrorTextView.setText("");
         mDocumentFirstPageErrorTextView.setVisibility(View.INVISIBLE);
+        mDocumentSecondPageErrorTextView.setText("");
+        mDocumentSecondPageErrorTextView.setVisibility(View.INVISIBLE);
         mDocumentNameEditText.setError(null);
         mDocumentIdEditText.setError(null);
 
@@ -268,6 +283,8 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
                     mDocumentBackSideImageView.setImageBitmap(imageBitmap);
                 }
                 mDocumentSecondPageImageFile = imageFile;
+                mDocumentSecondPageErrorTextView.setText("");
+                mDocumentSecondPageErrorTextView.setVisibility(View.INVISIBLE);
             }
             mPickerActionId = -1;
             mSelectedDocumentSide = "";

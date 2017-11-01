@@ -2,7 +2,10 @@ package bd.com.ipay.ipayskeleton.CustomView;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,7 +22,6 @@ public class DocumentPreviewImageView extends RelativeLayout {
     private View mChildView;
     private RelativeLayout mDocumentImagePreviewHolder;
     private ImageView mImageView;
-    private boolean isImageLoaded = false;
 
     public DocumentPreviewImageView(@NonNull Context context) {
         this(context, null);
@@ -61,11 +63,15 @@ public class DocumentPreviewImageView extends RelativeLayout {
         mDocumentImagePreviewHolder.setOnClickListener(l);
     }
 
-    public void setImageLoaded(boolean isImageLoaded) {
-        this.isImageLoaded = isImageLoaded;
+    public void setImageResource(@DrawableRes int resId) {
+        mImageView.setImageResource(resId);
     }
 
-    public boolean isImageLoaded() {
-        return isImageLoaded;
+    public void setImageBitmap(Bitmap bitmap) {
+        mImageView.setImageBitmap(bitmap);
+    }
+
+    public void setImageDrawable(Drawable drawable) {
+        mImageView.setImageDrawable(drawable);
     }
 }

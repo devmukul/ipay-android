@@ -12,7 +12,7 @@
         android:focusable="true">
 
         <ImageView
-            android:id="@+id/document_preview_image_view"
+            android:id="@+id/document_image_view"
             style="@style/DocumentPreviewImageStyle" />
 
     </RelativeLayout>

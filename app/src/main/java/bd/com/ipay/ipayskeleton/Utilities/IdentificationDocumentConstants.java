@@ -58,6 +58,7 @@ public class IdentificationDocumentConstants {
             "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{1,4}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{1,3}";
     static final String VALID_DRIVING_LICENSE_ID_PATTERN = "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{5}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{4}";
 
+
     static {
         DOCUMENT_ID_TO_EDIT_TEXT_HINT_MAP = new HashMap<>();
 

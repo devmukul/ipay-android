@@ -1,7 +1,9 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,6 +38,7 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
 
     private IdentificationDocument mSelectedIdentificationDocument;
     private DocumentPreviewImageView documentPreviewImageView;
+    private ProgressDialog mProgressDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,6 +46,8 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
         if (getArguments() != null) {
             mSelectedIdentificationDocument = getArguments().getParcelable(Constants.SELECTED_IDENTIFICATION_DOCUMENT);
         }
+        mProgressDialog = new ProgressDialog(getContext());
+
     }
 
     @Nullable
@@ -70,10 +75,7 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
         documentPreviewImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (documentPreviewImageView.isImageLoaded()) {
-                    documentPreviewImageView.setVisibility(View.GONE);
-                    documentPreviewImageView.setImageLoaded(false);
-                }
+                documentPreviewImageView.setVisibility(View.GONE);
             }
         });
 
@@ -115,6 +117,9 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
         private LayoutInflater mLayoutInflater;
         private List<DocumentPage> mDocumentPageList;
 
+        private static final int FIRST_PAGE = 0;
+        private static final int SECOND_PAGE = 1;
+
         public DocumentPreviewAdapter(Context context, List<DocumentPage> documentPageList) {
             this.mContext = context;
             this.mDocumentPageList = new ArrayList<>(documentPageList);
@@ -129,6 +134,17 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
         @Override
         public void onBindViewHolder(final DocumentPreviewViewPager holder, int position) {
             final DocumentPage documentPage = mDocumentPageList.get(position);
+            final @DrawableRes int previewImageResId;
+            switch (position) {
+                case SECOND_PAGE:
+                    previewImageResId = R.drawable.icon_id_card_back;
+                    break;
+                case FIRST_PAGE:
+                default:
+                    previewImageResId = R.drawable.icon_id_card_front;
+                    break;
+            }
+            holder.documentImageView.setImageResource(previewImageResId);
             if (!TextUtils.isEmpty(documentPage.getUrl())) {
                 Glide.with(this.mContext).load(Constants.BASE_URL_FTP_SERVER + documentPage.getUrl())
                         .listener(new RequestListener<String, GlideDrawable>() {
@@ -139,20 +155,23 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
 
                             @Override
                             public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                holder.documentPreviewImageView.setOnClickListener(new View.OnClickListener() {
+                                holder.documentImageView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        documentPreviewImageView.setVisibility(View.VISIBLE);
+                                        mProgressDialog.setMessage(getString(R.string.loading));
+                                        mProgressDialog.setCancelable(false);
+                                        mProgressDialog.show();
                                         Glide.with(PreviewIdentificationDocumentFragment.this).load(Constants.BASE_URL_FTP_SERVER + documentPage.getUrl()).listener(new RequestListener<String, GlideDrawable>() {
                                             @Override
                                             public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-
+                                                mProgressDialog.cancel();
                                                 return false;
                                             }
 
                                             @Override
                                             public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                                documentPreviewImageView.setImageLoaded(true);
+                                                mProgressDialog.cancel();
+                                                documentPreviewImageView.setVisibility(View.VISIBLE);
                                                 return false;
                                             }
                                         }).into(documentPreviewImageView.getImageView());
@@ -160,7 +179,7 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
                                 });
                                 return false;
                             }
-                        }).into(holder.documentPreviewImageView);
+                        }).crossFade().into(holder.documentImageView);
             }
         }
 
@@ -174,11 +193,11 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
 
         class DocumentPreviewViewPager extends RecyclerView.ViewHolder {
 
-            private ImageView documentPreviewImageView;
+            private ImageView documentImageView;
 
             public DocumentPreviewViewPager(View itemView) {
                 super(itemView);
-                documentPreviewImageView = findViewById(R.id.document_preview_image_view);
+                documentImageView = findViewById(R.id.document_image_view);
             }
 
             public <T extends View> T findViewById(@IdRes int id) {
