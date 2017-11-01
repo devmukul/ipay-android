@@ -109,7 +109,7 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
 
     private int mSelectedItemId = -1;
     private int mPickerActionId = -1;
-    ImageView back;
+    ImageView backButtonImageView;
 
     @Override
     public void onResume() {
@@ -143,12 +143,12 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
         mLayoutManager = new LinearLayoutManager(getActivity());
         mDocumentListRecyclerView.setLayoutManager(mLayoutManager);
 
-        back = (ImageView) v.findViewById(R.id.back);
+        backButtonImageView = (ImageView) v.findViewById(R.id.back);
         if (getActivity().getSupportFragmentManager().getBackStackEntryCount() <= 1) {
-            back.setVisibility(View.INVISIBLE);
+            backButtonImageView.setVisibility(View.INVISIBLE);
         }
 
-        back.setOnClickListener(new View.OnClickListener() {
+        backButtonImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().onBackPressed();
@@ -531,7 +531,7 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
                     try {
                         mFile = new File(documentPreviewDetailsList.get(pos).getSelectedDocumentUri().getPath());
                         mFileSize = mFile.length() / (1024 * 1024);
-                        if (mFileSize < 5) {
+                        if (mFileSize < Constants.MAX_FILE_MB_LIMIT) {
                             if (mFile.exists()) {
                                 mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
                                 mPicker.setImageBitmap(mBitmap);

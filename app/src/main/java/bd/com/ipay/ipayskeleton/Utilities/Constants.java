@@ -142,6 +142,7 @@ public class Constants {
     public static final int MIN_AGE_LIMIT = 14;
     public static final int MIN_VALID_NAME_LENGTH = 5;
     public static final int MAX_FILE_ATTACHMENT_LIMIT = 5;
+    public static final int MAX_FILE_MB_LIMIT = 5;
     public static final int MINIMUM_REQUIRED_NID_LENGTH = 10;
     public static final int MAXIMUM_REQUIRED_NID_LENGTH = 17;
     public static final int BUSINESS_TIN_LENGTH = 12;
