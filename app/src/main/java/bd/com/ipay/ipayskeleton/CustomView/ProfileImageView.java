@@ -14,6 +14,7 @@ import com.bumptech.glide.signature.StringSignature;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CircleTransform;
 
 public class ProfileImageView extends FrameLayout {
@@ -79,6 +80,39 @@ public class ProfileImageView extends FrameLayout {
                     .dontAnimate()
                     .transform(new CircleTransform(context))
                     .into(mProfilePictureView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setAccountPhoto(String photoUri, boolean forceLoad) {
+        try {
+            final DrawableTypeRequest<String> glide = Glide.with(context).load(photoUri);
+
+            glide
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+
+            if (forceLoad) {
+                glide
+                        .signature(new StringSignature(String.valueOf(System.currentTimeMillis())));
+            }
+
+            if (ProfileInfoCacheManager.isBusinessAccount()) {
+                glide
+                        .placeholder(R.drawable.ic_business_logo_round)
+                        .error(R.drawable.ic_business_logo_round);
+            } else {
+                glide
+                        .placeholder(R.drawable.ic_profile)
+                        .error(R.drawable.ic_profile);
+            }
+
+            glide
+                    .crossFade()
+                    .dontAnimate()
+                    .transform(new CircleTransform(context))
+                    .into(mProfilePictureView);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

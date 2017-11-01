@@ -92,7 +92,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         public void onReceive(Context context, Intent intent) {
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
             Logger.logD("Broadcast home fragment", newProfilePicture);
-            mProfilePictureView.setProfilePicture(newProfilePicture, true);
+            mProfilePictureView.setAccountPhoto(newProfilePicture, true);
         }
     };
     private View mProfileInfo;
@@ -329,7 +329,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private void updateProfileData() {
         mNameView.setText(ProfileInfoCacheManager.getUserName());
         mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
-        mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
+        mProfilePictureView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
                 ProfileInfoCacheManager.getProfileImageUrl(), false);
 
         try {

@@ -148,10 +148,13 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         if (!ProfileInfoCacheManager.getProfileImageUrl().isEmpty()) {
             Logger.logD("Profile Picture", ProfileInfoCacheManager.getProfileImageUrl());
 
-            mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
+            mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
                     ProfileInfoCacheManager.getProfileImageUrl(), false);
         } else {
-            mProfileImageView.setProfilePicture(R.drawable.ic_profile);
+            if (ProfileInfoCacheManager.isBusinessAccount())
+                mProfileImageView.setProfilePicture(R.drawable.ic_business_logo_round);
+            else
+                mProfileImageView.setProfilePicture(R.drawable.ic_profile);
         }
 
         return v;

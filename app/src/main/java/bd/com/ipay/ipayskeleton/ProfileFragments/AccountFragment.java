@@ -344,7 +344,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
                     } else {
                         // Check for a valid profile picture
                         if (isSelectedProfilePictureValid(uri)) {
-                            mProfilePictureView.setProfilePicture(uri.getPath(), true);
+                            mProfilePictureView.setAccountPhoto(uri.getPath(), true);
                             updateProfilePicture(uri);
                         }
                     }
@@ -363,8 +363,8 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
         Logger.logD("Profile Pic Account", mProfilePicture);
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
-        mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
-                mProfilePicture, false);
+        mProfilePictureView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
+                mProfilePicture, true);
 
         if (ProfileInfoCacheManager.isAccountVerified()) {
             mVerificationStatusView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_verified_profile));
