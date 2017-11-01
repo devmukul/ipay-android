@@ -277,7 +277,7 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
 
         mSelectedImagePath = selectedImageUri.getPath();
 
-        mUploadProfilePictureAsyncTask = new UploadProfilePictureAsyncTask(Constants.COMMAND_SET_PROFILE_PICTURE,
+        mUploadProfilePictureAsyncTask = new UploadProfilePictureAsyncTask(Constants.COMMAND_SET_PROFILE_PICTURE, Constants.URL_SET_PROFILE_PICTURE,
                 mSelectedImagePath, getActivity());
         mUploadProfilePictureAsyncTask.mHttpResponseListener = this;
         mUploadProfilePictureAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
