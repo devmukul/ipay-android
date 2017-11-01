@@ -1,8 +1,16 @@
 package bd.com.ipay.ipayskeleton.BusinessFragments.Owner;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,23 +18,31 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadProfilePictureAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BuildConfig;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PhotoSelectionHelperDialog;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.GetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetProfilePictureResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.District;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.DistrictRequestBuilder;
@@ -41,11 +57,17 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
+import bd.com.ipay.ipayskeleton.camera.CameraActivity;
+import bd.com.ipay.ipayskeleton.camera.utility.CameraAndImageUtilities;
 
 public class BusinessInformationFragment extends ProgressFragment implements HttpResponseListener {
+    private static final int REQUEST_CODE_PERMISSION = 1001;
+    private final int ACTION_PICK_PROFILE_PICTURE = 100;
+
     private HttpRequestGetAsyncTask mGetBusinessInformationAsyncTask;
     private GetBusinessInformationResponse mGetBusinessInformationResponse;
 
@@ -66,6 +88,9 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private HttpRequestGetAsyncTask mGetDistrictListAsyncTask = null;
     private GetDistrictResponse mGetDistrictResponse;
 
+    private UploadProfilePictureAsyncTask mUploadBusinessContactProfilePictureAsyncTask = null;
+    private SetProfilePictureResponse mSetBusinessContactProfilePictureResponse;
+
     private TextView mBusinessNameView;
     private TextView mBusinessMobileNumberView;
     private TextView mBusinessTypeView;
@@ -81,6 +106,12 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private View mPresentAddressHolder;
     private AddressClass mPresentAddress;
 
+    private View mBusinessContactProfilePictureHolderView;
+    private ProfileImageView mBusinessContactProfilePictureView;
+
+    private List<String> mOptionsForImageSelectionList;
+    private int mSelectedOptionForImage = -1;
+
     private ImageButton mPresentAddressEditButton;
     private ImageButton mContactInfoEditButton;
     private ImageButton mOfficeInfoEditButton;
@@ -89,6 +120,8 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
     private String mMobileNumber = "";
     private String mProfileImageUrl = "";
     private String mDateOfBirth = "";
+    private String mBusinessContactProfilePictureUrl = "";
+    private String mSelectedImagePath = "";
 
     private int mOccupation = 0;
     private String mOrganizationName = "";
@@ -103,6 +136,11 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
     private View mBusinessInformationViewHolder;
     private View mBusinessAddressViewHolder;
+
+    private ProgressDialog mProgressDialog;
+    private MaterialDialog.Builder mProfilePictureErrorDialogBuilder;
+    private MaterialDialog mProfilePictureErrorDialog;
+    private PhotoSelectionHelperDialog photoSelectionHelperDialog;
 
     private TextView mBusinessInfoServiceNotAllowedTextView;
     private TextView mBusinessAddressServiceNotAllowedTextView;
@@ -135,6 +173,10 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mMobileNumberView = (TextView) view.findViewById(R.id.textview_mobile_number);
         mVerificationStatusView = (TextView) view.findViewById(R.id.textview_verification_status);
         mSignUpTimeView = (TextView) view.findViewById(R.id.textview_signup);
+
+        mBusinessContactProfilePictureHolderView = view.findViewById(R.id.business_contact_profile_picture_layout);
+        mBusinessContactProfilePictureView = (ProfileImageView) view.findViewById(R.id.business_contact_profile_picture);
+
         mPresentAddressView = (TextView) view.findViewById(R.id.textview_present_address);
         mPresentAddressHolder = view.findViewById(R.id.present_address_holder);
 
@@ -148,6 +190,9 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         mBusinessAddressServiceNotAllowedTextView = (TextView) view.findViewById(R.id.business_address_service_not_allowed_text_view);
 
         mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
+
+        mProgressDialog = new ProgressDialog(getActivity());
+        mOptionsForImageSelectionList = Arrays.asList(getResources().getStringArray(R.array.upload_picker_action));
 
         if (ProfileInfoCacheManager.isAccountVerified()) {
             mOfficeInfoEditButton.setVisibility(View.GONE);
@@ -174,6 +219,8 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         });
 
         setHasOptionsMenu(true);
+        initProfilePicHelperDialog();
+        setButtonActions();
 
         return view;
     }
@@ -253,6 +300,16 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         ((ProfileActivity) getActivity()).switchToEditBasicInfoFragment(bundle);
     }
 
+    private void setButtonActions() {
+        mBusinessContactProfilePictureHolderView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            @ValidateAccess(ServiceIdConstants.MANAGE_PROFILE_PICTURE)
+            public void onClick(View v) {
+                photoSelectionHelperDialog.show();
+            }
+        });
+    }
+
     private void setProfileInformation() {
         mMobileNumberView.setText(getString(R.string.phone_number) + ": " + mMobileNumber);
         mNameView.setText(getString(R.string.name) + ": " + mName);
@@ -272,7 +329,129 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                 mVerificationStatusView.setText(R.string.unverified);
             }
         }
+
+        mBusinessContactProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
+                mBusinessContactProfilePictureUrl, false);
+
         ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
+    }
+
+    private void initProfilePicHelperDialog() {
+        if (!ProfileInfoCacheManager.isAccountVerified()) {
+            photoSelectionHelperDialog = new PhotoSelectionHelperDialog(getActivity(), getString(R.string.select_an_image),
+                    mOptionsForImageSelectionList, Constants.TYPE_PROFILE_PICTURE);
+            photoSelectionHelperDialog.setOnResourceSelectedListener(new PhotoSelectionHelperDialog.OnResourceSelectedListener() {
+                @Override
+                public void onResourceSelected(int mActionId, String action) {
+                    if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS)) {
+                        selectProfilePictureIntent(mActionId);
+                    } else {
+                        mSelectedOptionForImage = mActionId;
+                        Utilities.requestRequiredPermissions(BusinessInformationFragment.this, REQUEST_CODE_PERMISSION, DocumentPicker.DOCUMENT_PICK_PERMISSIONS);
+                    }
+                }
+            });
+        }
+    }
+
+    private void selectProfilePictureIntent(int id) {
+        Intent imagePickerIntent = DocumentPicker.getPickerIntentByID(getActivity(), getString(R.string.select_a_document),
+                id, Constants.CAMERA_FRONT, getString(R.string.profile_picture_temp_file));
+        startActivityForResult(imagePickerIntent, ACTION_PICK_PROFILE_PICTURE);
+    }
+
+    private boolean isSelectedProfilePictureValid(Uri uri) {
+        String selectedImagePath = uri.getPath();
+        String result = null;
+
+        try {
+            result = CameraAndImageUtilities.validateProfilePicture(getActivity(), selectedImagePath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (result == null) {
+            return true;
+        } else {
+            String errorMessage;
+            switch (result) {
+                case CameraAndImageUtilities.NO_FACE_DETECTED:
+                    errorMessage = getString(R.string.no_face_detected);
+                    break;
+                case CameraAndImageUtilities.VALID_PROFILE_PICTURE:
+                    return true;
+                case CameraAndImageUtilities.MULTIPLE_FACES:
+                    errorMessage = getString(R.string.multiple_face_detected);
+                    break;
+                case CameraAndImageUtilities.NOT_AN_IMAGE:
+                    errorMessage = getString(R.string.not_an_image);
+                    break;
+                default:
+                    errorMessage = getString(R.string.default_profile_pic_inappropriate_message);
+                    break;
+            }
+
+            showProfilePictureErrorDialog(errorMessage);
+            return false;
+        }
+    }
+
+    private void showProfilePictureErrorDialog(String content) {
+        mProfilePictureErrorDialogBuilder = new MaterialDialog.Builder(getActivity())
+                .title(R.string.attention)
+                .content(content)
+                .cancelable(true)
+                .positiveText(R.string.try_again)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        photoSelectionHelperDialog.show();
+                    }
+                });
+        mProfilePictureErrorDialog = mProfilePictureErrorDialogBuilder.build();
+        mProfilePictureErrorDialog.show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION:
+                if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS)) {
+                    selectProfilePictureIntent(mSelectedOptionForImage);
+                } else {
+                    Toast.makeText(getActivity(), R.string.prompt_grant_permission, Toast.LENGTH_LONG).show();
+                }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case ACTION_PICK_PROFILE_PICTURE:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri uri = DocumentPicker.getDocumentFromResult(getActivity(), resultCode, data, "profile_picture.jpg");
+                    if (uri == null) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(),
+                                    R.string.could_not_load_image,
+                                    Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Check for a valid profile picture
+                        if (isSelectedProfilePictureValid(uri)) {
+                            mBusinessContactProfilePictureView.setProfilePicture(uri.getPath(), true);
+                            updateProfilePicture(uri);
+                        }
+                    }
+                } else if (resultCode == CameraActivity.CAMERA_ACTIVITY_CRASHED) {
+                    Intent systemCameraOpenIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    systemCameraOpenIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(),
+                            BuildConfig.APPLICATION_ID, DocumentPicker.getTempFile(getActivity(), getString(R.string.profile_picture_temp_file))));
+                    startActivityForResult(systemCameraOpenIntent, ACTION_PICK_PROFILE_PICTURE);
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void getProfileInfo() {
@@ -368,6 +547,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             mVerificationStatus = mGetProfileInfoResponse.getVerificationStatus();
 
             mProfileImageUrl = Utilities.getImage(mGetProfileInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
+            mBusinessContactProfilePictureUrl = Utilities.getImage(mGetProfileInfoResponse.getBusinessContactProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
 
             setProfileInformation();
             getOccupationList();
@@ -377,8 +557,23 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         }
     }
 
+    private void updateProfilePicture(Uri selectedImageUri) {
+        mProgressDialog.setMessage(getString(R.string.uploading_profile_picture));
+        mProgressDialog.show();
+
+        mSelectedImagePath = selectedImageUri.getPath();
+
+        mUploadBusinessContactProfilePictureAsyncTask = new UploadProfilePictureAsyncTask(Constants.COMMAND_SET_BUSINESS_CONTACT_PROFILE_PICTURE,
+                Constants.URL_SET_BUSINESS_CONTACT_PROFILE_PICTURE, mSelectedImagePath, getActivity());
+        mUploadBusinessContactProfilePictureAsyncTask.mHttpResponseListener = this;
+        mUploadBusinessContactProfilePictureAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
+        if (getActivity() != null) {
+            mProgressDialog.dismiss();
+        }
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
 
@@ -459,6 +654,44 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
                 }
 
                 mGetProfileInfoTask = null;
+                break;
+
+            case Constants.COMMAND_SET_BUSINESS_CONTACT_PROFILE_PICTURE:
+                try {
+                    mSetBusinessContactProfilePictureResponse = gson.fromJson(result.getJsonString(), SetProfilePictureResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mSetBusinessContactProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+                        //Google Analytic event
+                        if (!TextUtils.isEmpty(ProfileInfoCacheManager.getProfileImageUrl())) {
+                            Utilities.sendSuccessEventTracker(mTracker, "Business Contact Profile Picture", ProfileInfoCacheManager.getAccountId());
+                        } else {
+                            Utilities.sendSuccessEventTracker(mTracker, "Business Contact Profile Picture", ProfileInfoCacheManager.getAccountId());
+                        }
+
+                    } else {
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), mSetBusinessContactProfilePictureResponse.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        //Google Analytic event
+                        if (!TextUtils.isEmpty(ProfileInfoCacheManager.getProfileImageUrl())) {
+                            Utilities.sendFailedEventTracker(mTracker, "Business Contact Profile Picture", ProfileInfoCacheManager.getAccountId(), mSetBusinessContactProfilePictureResponse.getMessage());
+                        } else {
+                            Utilities.sendFailedEventTracker(mTracker, "Business Contact Profile Picture", ProfileInfoCacheManager.getAccountId(), mSetBusinessContactProfilePictureResponse.getMessage());
+                        }
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toaster.makeText(getActivity(), R.string.profile_picture_set_failed, Toast.LENGTH_SHORT);
+
+                    //Google Analytic event
+                    Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
+                }
+
+                mUploadBusinessContactProfilePictureAsyncTask = null;
                 break;
 
             case Constants.COMMAND_GET_USER_ADDRESS_REQUEST:
