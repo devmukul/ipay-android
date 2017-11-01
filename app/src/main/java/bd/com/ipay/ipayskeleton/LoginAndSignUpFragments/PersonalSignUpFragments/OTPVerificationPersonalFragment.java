@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrust
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
@@ -373,6 +374,13 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumber);
+                        ProfileInfoCacheManager.setUserName(SignupOrLoginActivity.mName);
+                        ProfileInfoCacheManager.setName(SignupOrLoginActivity.mName);
+                        ProfileInfoCacheManager.setBirthday(SignupOrLoginActivity.mBirthday);
+                        ProfileInfoCacheManager.setGender(SignupOrLoginActivity.mGender);
+                        SharedPrefManager.serUserCountry("Bangladesh");
+                        ProfileInfoCacheManager.setAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
                         String UUID = mAddToTrustedDeviceResponse.getUUID();
                         ProfileInfoCacheManager.setUUID(UUID);
                         ProfileInfoCacheManager.uploadProfilePicture(false);

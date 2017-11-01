@@ -470,6 +470,7 @@
     <string name="select_a_bank">Select Bank</string>
     <string name="remove_bank_title">Remove this account?</string>
     <string name="blocked_bank_title">Blocked!</string>
+    <string name="block_account_message">Your Account has been blocked. Please contact our customer support</string>
     <string name="bank_name">Bank Name</string>
     <string name="saving_profile_information">Saving profile information</string>
     <string name="saving_parent_information">Saving parent information</string>
@@ -1017,5 +1018,6 @@
 
     <string name="file_size_large">Your file size is too large. Please select another.</string>
     <string name="change_two_fa_settings">Changing Two Fa Settings</string>
+    <string name="accepting_send_money_request">Accepting Money Request</string>
 
 </resources>

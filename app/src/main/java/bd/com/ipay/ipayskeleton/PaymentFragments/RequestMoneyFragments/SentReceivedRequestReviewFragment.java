@@ -30,6 +30,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFaServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
@@ -43,7 +44,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SentReceivedRequestReviewFragment extends ReviewFragment implements HttpResponseListener {
+public class SentReceivedRequestReviewFragment extends ReviewFragment implements HttpResponseListener, OTPVerificationForTwoFaServicesDialog.dismissListener {
 
     private HttpRequestPostAsyncTask mAcceptRequestTask = null;
 
@@ -51,6 +52,9 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
     private HttpRequestPostAsyncTask mRejectRequestTask = null;
 
+    private OTPVerificationForTwoFaServicesDialog mOTPVerificationForTwoFaServicesDialog;
+
+    private RequestMoneyAcceptRejectOrCancelRequest mRequestMoneyAcceptRejectOrCancelRequest;
     private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
 
     private ProgressDialog mProgressDialog;
@@ -291,6 +295,13 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mRequestMoneyAcceptRejectOrCancelRequest);
+        mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), jsonString,
+                Constants.COMMAND_ACCEPT_REQUESTS_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST);
+    }
+
     private void acceptRequestMoney(long id, String pin) {
         if (mAcceptRequestTask != null) {
             return;
@@ -299,10 +310,10 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_accepted));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
+        mRequestMoneyAcceptRejectOrCancelRequest =
                 new RequestMoneyAcceptRejectOrCancelRequest(id, pin);
         Gson gson = new Gson();
-        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
+        String json = gson.toJson(mRequestMoneyAcceptRejectOrCancelRequest);
         mAcceptRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_REQUESTS_MONEY,
                 Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
         mAcceptRequestTask.mHttpResponseListener = this;
@@ -358,6 +369,10 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mRequestMoneyAcceptRejectOrCancelResponse.getMessage());
                         Utilities.sendBlockedEventTracker(mTracker, "Money Request", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                        launchOTPVerification();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                        launchOTPVerification();
                     } else {
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
@@ -458,5 +473,13 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     @Override
     public void onPinLoadFinished(boolean isPinRequired) {
         this.isPinRequired = isPinRequired;
+    }
+
+    @Override
+    public void onDismissDialog() {
+        if (switchedFromTransactionHistory) {
+            Utilities.finishLauncherActivity(getActivity());
+        } else
+            getActivity().onBackPressed();
     }
 }
