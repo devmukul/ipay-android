@@ -80,13 +80,14 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
         final RecyclerView identificationDocumentRecyclerView = findViewById(R.id.identification_document_recycler_view);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        final String url;
 
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         identificationDocumentRecyclerView.setLayoutManager(linearLayoutManager);
         mDocumentListAdapter = new DocumentListAdapter(getContext(), mUserIdentificationDocumentList);
         identificationDocumentRecyclerView.setAdapter(mDocumentListAdapter);
 
-        final String url;
+
         if (ProfileInfoCacheManager.isBusinessAccount())
             url = Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_DOCUMENTS_v2;
         else
