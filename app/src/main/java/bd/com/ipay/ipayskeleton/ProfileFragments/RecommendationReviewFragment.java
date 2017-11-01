@@ -261,7 +261,7 @@ public class RecommendationReviewFragment extends ProgressFragment implements Ht
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.verifying_user));
+        mProgressDialog.setMessage(getString(R.string.processing));
         mProgressDialog.show();
         mRecommendActionTask = new HttpRequestPostAsyncTask(Constants.COMMAND_INTRODUCE_ACTION,
                 Constants.BASE_URL_MM + Constants.URL_INTRODUCE_ACTION + requestID + "/" + recommendationStatus, null, getActivity());
