@@ -103,7 +103,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
         mCancelButton = (Button) view.findViewById(R.id.buttonCancel);
 
         mProgressDialog = new ProgressDialog(context);
-        mProgressDialog.setCancelable(true);
+        mProgressDialog.setCancelable(false);
 
         setSMSBroadcastReceiver();
         setCountDownTimer();
@@ -196,7 +196,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
     private void attemptDesiredRequestWithOTP() {
         Gson gson = new Gson();
         if (mDesiredRequest.equals(Constants.COMMAND_PUT_TWO_FA_SETTING)) {
-            mProgressDialog.setMessage(context.getString(R.string.change_password_progress));
+            mProgressDialog.setMessage(context.getString(R.string.change_two_fa_settings));
             mProgressDialog.show();
             TwoFaServiceListWithOTPRequest twoFaServiceListWithOTPRequest = gson.fromJson(json,
                     TwoFaServiceListWithOTPRequest.class);
@@ -308,11 +308,12 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mProgressDialog.dismiss();
                     Toaster.makeText(context, twoFaServiceAccomplishWithOTPResponse.getMessage(), Toast.LENGTH_SHORT);
-                    mDismissListener.onDismissDialog();
                     mOTPInputDialog.dismiss();
-
+                    mDismissListener.onDismissDialog();
                 } else {
+                    mProgressDialog.dismiss();
                     Toaster.makeText(context, twoFaServiceAccomplishWithOTPResponse.getMessage(), Toast.LENGTH_LONG);
+                    mOTPInputDialog.dismiss();
                 }
 
             } else if (result.getApiCommand().equals(Constants.COMMAND_SEND_MONEY)) {

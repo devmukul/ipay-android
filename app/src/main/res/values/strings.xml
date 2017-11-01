@@ -1014,5 +1014,6 @@
     <string name="upload_identification_document_again">Do you want to upload a identification document again? You have already uploaded once</string>
 
     <string name="file_size_large">Your file size is too large. Please select another.</string>
+    <string name="change_two_fa_settings">Changing Two Fa Settings</string>
 
 </resources>

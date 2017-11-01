@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,10 +37,11 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
-public class Implement2FASettingsFragment extends Fragment implements HttpResponseListener,OTPVerificationForTwoFaServicesDialog.dismissListener {
+public class Implement2FASettingsFragment extends Fragment implements HttpResponseListener, OTPVerificationForTwoFaServicesDialog.dismissListener {
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
+    private ProgressDialog mProgressDialog;
 
     private OTPVerificationForTwoFaServicesDialog mOTPVerificationForTwoFaServicesDialog;
 
@@ -58,13 +61,13 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
     private String mJsonString;
 
 
-
     HashMap<Integer, TwoFAService> mPositionToServiceIDMap = new HashMap<Integer, TwoFAService>();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_2fa_implement, container, false);
+        mProgressDialog = new ProgressDialog(getActivity());
         getTwoFaSettings();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyler_2fa);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
@@ -214,11 +217,11 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
                 desiredPositon = position - selectedHeaderPosition - 1;
                 mDescriptionTextView.setText(twoFAService.getServiceName());
                 mSwitch.setChecked(twoFAService.getIsEnabled());
-                mSwitch.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mTwoFAServiceGroupList.get(twoFaSettingsGroupIndex).getServices().get(desiredPositon).setIsEnabled(mSwitch.isChecked());
 
+                mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        mTwoFAServiceGroupList.get(twoFaSettingsGroupIndex).getServices().get(desiredPositon).setIsEnabled(mSwitch.isChecked());
                     }
                 });
             }
@@ -323,6 +326,9 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
+                            if (mProgressDialog.isShowing()) {
+                                mProgressDialog.dismiss();
+                            }
                             mTwoFaServiceResponse = gson.fromJson(result.getJsonString(), TwoFAServiceListResponse.class);
                             mTwoFaServiceList = mTwoFaServiceResponse.getResponse();
                             Implement2FaAdapter adapter = new Implement2FaAdapter(mTwoFaServiceList);
@@ -338,14 +344,14 @@ public class Implement2FASettingsFragment extends Fragment implements HttpRespon
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
                         if (getActivity() != null) {
-                            SecuritySettingsActivity.otpDuration=twoFaSettingsSaveResponse.getOtpValidFor();
+                            SecuritySettingsActivity.otpDuration = twoFaSettingsSaveResponse.getOtpValidFor();
                             mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), mJsonString,
                                     Constants.COMMAND_PUT_TWO_FA_SETTING, mUri);
-                            mOTPVerificationForTwoFaServicesDialog.mDismissListener=this;
+                            mOTPVerificationForTwoFaServicesDialog.mDismissListener = this;
                         }
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         if (getActivity() != null) {
-                            SecuritySettingsActivity.otpDuration=twoFaSettingsSaveResponse.getOtpValidFor();
+                            SecuritySettingsActivity.otpDuration = twoFaSettingsSaveResponse.getOtpValidFor();
                             mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), mJsonString,
                                     Constants.COMMAND_PUT_TWO_FA_SETTING, mUri);
                         }
