@@ -55,14 +55,14 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
     private HttpRequestDeleteAsyncTask mRemoveTrustedDeviceTask = null;
     private RemoveTrustedDeviceResponse mRemoveTrustedDeviceResponse = null;
 
+    private HttpRequestPostAsyncTask mAddTrustedDeviceTask = null;
+    private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
+
     private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
     private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetProfileInfoResponse mGetProfileInfoResponse;
-
-    private HttpRequestPostAsyncTask mAddTrustedDeviceTask = null;
-    private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
@@ -199,7 +199,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
 
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
-    
+
     private void getProfileCompletionStatus() {
 
         mProgressDialog.show();
@@ -300,15 +300,15 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                     ProfileInfoCacheManager.setUUID(UUID);
                     getProfileInfo();
                 } else {
+                    mProgressDialog.dismiss();
                     Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
             } catch (Exception e) {
+                mProgressDialog.dismiss();
                 e.printStackTrace();
                 Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
             }
-
-            mProgressDialog.dismiss();
             mAddTrustedDeviceTask = null;
 
         } else if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
@@ -327,51 +327,52 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
 
             mProgressDialog.dismiss();
             mLogoutTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS)) {
-            try {
-                mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+        }else if(result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS)) {
+                try {
+                    mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                    ProfileInfoCacheManager.switchedFromSignup(false);
-                    ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
-                    ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
-                    ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
+                        ProfileInfoCacheManager.switchedFromSignup(false);
+                        ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
+                        ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
+                        ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
 
-                    if (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                            || !ProfileInfoCacheManager.isBasicInfoAdded()) {
-                        ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
+                        if (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                                || !ProfileInfoCacheManager.isBasicInfoAdded()) {
+                            ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
+                        } else {
+                            ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+                        }
                     } else {
-                        ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+                        if (getActivity() != null)
+                            Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
                     }
-                } else {
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                     if (getActivity() != null)
-                        Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.failed_fetching_profile_completion_status, Toast.LENGTH_LONG);
                 }
+                mProgressDialog.dismiss();
+                mGetProfileCompletionStatusTask = null;
+        }else if(result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
+                try {
+                    mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
+                        getProfileCompletionStatus();
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (getActivity() != null)
-                    Toaster.makeText(getActivity(), R.string.failed_fetching_profile_completion_status, Toast.LENGTH_LONG);
-            }
-            mProgressDialog.dismiss();
-            mGetProfileCompletionStatusTask = null;
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_PROFILE_INFO_REQUEST)) {
-
-            try {
-                mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
-                    getProfileCompletionStatus();
-
-                } else {
+                    } else {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+                    }
+                } catch (Exception e) {
+                    mProgressDialog.dismiss();
+                    e.printStackTrace();
                     Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
-            }
 
-            mGetProfileInfoTask = null;
+                mGetProfileInfoTask = null;
         }
     }
 

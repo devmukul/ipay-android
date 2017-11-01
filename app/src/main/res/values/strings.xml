@@ -988,23 +988,22 @@
     <string name="completed_transaction_list">Completed transaction list</string>
     <string name="pending_transaction_list">Pending transaction list</string>
 
-
-
-    <string name="upload_photo">Upload photo</string>
+    <string name="select_photo">Select photo</string>
+    <string name="upload_photo">Confirm photo</string>
     <string name="upload_photo_id">Upload photo id</string>
     <string name="add_basic_info">Add basic info</string>
     <string name="ask_for_introduction_onboard">Ask for Introduction</string>
     <string name="add_bank_onboard">Add bank info</string>
     <string name="skip_now">Skip now</string>
 
-    <string name="onboard_step_one_title">Great! You\'re Almost Done</string>
-    <string name="onboard_photo_id_upload_title">Upload Photo ID</string>
-    <string name="onboard_nice_profile_photo">Nice Profile Photo</string>
-    <string name="onboard_photo_upload_title">Upload Profile Photo</string>
-    <string name="onboard_profile_info_update_title">Basic Information</string>
-    <string name="onboard_add_bank_title">Add Bank Information</string>
-    <string name="onboard_get_introduced_upload_title">Ask for Introduction</string>
-    <string name="onboard_profile_info_update_page_title">Add Basic Information</string>
+    <string name="onboard_step_one_title">Great! you\'re almost done</string>
+    <string name="onboard_photo_id_upload_title">Upload photo id</string>
+    <string name="onboard_nice_profile_photo">Nice profile photo</string>
+    <string name="onboard_photo_upload_title">Upload profile photo</string>
+    <string name="onboard_profile_info_update_title">Basic information</string>
+    <string name="onboard_add_bank_title">Add bank information</string>
+    <string name="onboard_get_introduced_upload_title">Ask for introduction</string>
+    <string name="onboard_profile_info_update_page_title">Add basic information</string>
 
     <string name="onboard_upload_photo_text">Upload your profile photo. Face the camera straight on, photo must be in focus and not blurry.</string>
     <string name="onboard_upload_photo_id_text">Upload a copy of photo ID.\nLike: National ID, Driving License, Passport etc. Make sure all information is clearly readable and that it is fully in frame.</string>
