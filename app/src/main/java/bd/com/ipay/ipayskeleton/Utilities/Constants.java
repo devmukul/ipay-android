@@ -373,7 +373,7 @@ public class Constants {
     public static final String URL_GET_All_NOTIFICATIONS = "requests/received/all-list";
     public static final String URL_GET_NOTIFICATIONS = "requests/received";
     public static final String URL_GET_SENT_REQUESTS = "requests/sent";
-    public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept";
+    public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept/v2";
     public static final String URL_CANCEL_NOTIFICATION_REQUEST = "requests/cancel";
     public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/reject";
 
