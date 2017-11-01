@@ -214,16 +214,18 @@
         <item name="android:gravity">left</item>
     </style>
 
-    <!--<style name="TextViewInfoLabelWithNoMargin" parent="@android:style/Widget.TextView">-->
-    <!--<item name="android:layout_height">wrap_content</item>-->
-    <!--<item name="android:layout_width">match_parent</item>-->
-    <!--<item name="android:paddingTop">@dimen/value5</item>-->
-    <!--<item name="android:paddingBottom">@dimen/value5</item>-->
-    <!--<item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>-->
-    <!--<item name="android:textSize">@dimen/text_size_small_medium</item>-->
-    <!--<item name="android:layout_weight">0.5</item>-->
-    <!--<item name="android:gravity">left</item>-->
-    <!--</style>-->
+    <style name="QRCodeHelperTextViewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginTop">@dimen/negative_value5</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textSize">@dimen/value34</item>
+    </style>
+
+    <!--<style name="TextViewInfoLabelWithNoMargin" parent="@android:style/Widget.TextView">--><!--<item name="android:layout_height">wrap_content</item>--><!--<item name="android:layout_width">match_parent</item>--><!--<item name="android:paddingTop">@dimen/value5</item>--><!--<item name="android:paddingBottom">@dimen/value5</item>--><!--<item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>--><!--<item name="android:textSize">@dimen/text_size_small_medium</item>--><!--<item name="android:layout_weight">0.5</item>--><!--<item name="android:gravity">left</item>--><!--</style>-->
 
     <style name="TextViewInfoLabelReview" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
@@ -711,24 +713,22 @@
         <item name="colorControlNormal">@color/colorGray</item>
         <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
-    </style>
-    <!-- Business Profile -->
+    </style><!-- Business Profile -->
 
 
-    <!-- Transaction History -->
-    <style name="TransactionHistoryFilterCheckboxStyle">
+    <!-- Transaction History --><style name="TransactionHistoryFilterCheckboxStyle">
 
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
-        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
-        <item name="android:paddingTop">@dimen/activity_horizontal_margin_card</item>
-        <item name="android:paddingBottom">@dimen/activity_horizontal_margin_card</item>
-        <item name="android:drawableRight">@drawable/round_checkbox_for_filter</item>
-        <item name="android:button">@null</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/colorTextPrimary</item>
-    </style>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+    <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+    <item name="android:paddingTop">@dimen/activity_horizontal_margin_card</item>
+    <item name="android:paddingBottom">@dimen/activity_horizontal_margin_card</item>
+    <item name="android:drawableRight">@drawable/round_checkbox_for_filter</item>
+    <item name="android:button">@null</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:textColor">@color/colorTextPrimary</item>
+</style>
 
     <style name="TransactionHistoryLeftTextViewStyle">
         <item name="android:maxLines">1</item>
@@ -751,15 +751,14 @@
         <item name="android:textSize">12sp</item>
     </style>
 
-    <!-- Transaction History Details -->
-    <style name="TransactionHistoryDetailsRow">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@android:color/white</item>
-        <item name="android:paddingTop">4dp</item>
-        <item name="android:paddingBottom">4dp</item>
-        <item name="android:orientation">horizontal</item>
-    </style>
+    <!-- Transaction History Details --><style name="TransactionHistoryDetailsRow">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:background">@android:color/white</item>
+    <item name="android:paddingTop">4dp</item>
+    <item name="android:paddingBottom">4dp</item>
+    <item name="android:orientation">horizontal</item>
+</style>
 
     <style name="LinearLayoutHolder">
         <item name="android:layout_width">match_parent</item>
