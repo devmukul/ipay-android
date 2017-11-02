@@ -40,8 +40,8 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyReque
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFaServiceAccomplishWithOTPResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFaServiceListWithOTPRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFaSettingsSaveResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
@@ -127,6 +127,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mEnableDisableSMSBroadcastReceiver.disableBroadcastReceiver(getContext());
                 mOTPInputDialog.dismiss();
 
             }
@@ -134,7 +135,10 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
         mResendOTPButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                attemptDesiredRequestWithOTP(null);
+                if (Utilities.isConnectionAvailable(context))
+                    attemptDesiredRequestWithOTP(null);
+                else
+                    Toaster.makeText(context, R.string.no_internet_connection, Toast.LENGTH_LONG);
             }
         });
     }
@@ -309,24 +313,34 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
 
         Gson gson = new Gson();
 
-        TwoFaServiceAccomplishWithOTPResponse twoFaServiceAccomplishWithOTPResponse
-                = gson.fromJson(result.getJsonString(), TwoFaServiceAccomplishWithOTPResponse.class);
+        TwoFaSettingsSaveResponse twoFaSettingsSaveResponse
+                = gson.fromJson(result.getJsonString(), TwoFaSettingsSaveResponse.class);
         if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
             if (context != null) {
                 Utilities.hideKeyboard(context, view);
-                ((MyApplication) context.getApplication()).launchLoginPage(twoFaServiceAccomplishWithOTPResponse.getMessage());
+                ((MyApplication) context.getApplication()).launchLoginPage(twoFaSettingsSaveResponse.getMessage());
             }
         } else {
             try {
                 if (result.getApiCommand().equals(Constants.COMMAND_PUT_TWO_FA_SETTING)) {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mProgressDialog.dismiss();
-                        Toaster.makeText(context, twoFaServiceAccomplishWithOTPResponse.getMessage(), Toast.LENGTH_SHORT);
+                        Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_SHORT);
                         mOTPInputDialog.dismiss();
                         mDismissListener.onDismissDialog();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = twoFaSettingsSaveResponse.getOtpValidFor();
+                        setCountDownTimer();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = twoFaSettingsSaveResponse.getOtpValidFor();
+                        setCountDownTimer();
                     } else {
                         mProgressDialog.dismiss();
-                        Toaster.makeText(context, twoFaServiceAccomplishWithOTPResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
                         mOTPInputDialog.dismiss();
                     }
 
@@ -336,8 +350,19 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
+                        mEnableDisableSMSBroadcastReceiver.disableBroadcastReceiver(context);
                         mOTPInputDialog.dismiss();
                         launchHomeActivity();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, sendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = sendMoneyResponse.getOtpValidFor();
+                        setCountDownTimer();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, sendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = sendMoneyResponse.getOtpValidFor();
+                        setCountDownTimer();
                     } else {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
@@ -350,6 +375,16 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                         mOTPInputDialog.dismiss();
                         launchHomeActivity();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, topupResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = topupResponse.getOtpValidFor();
+                        setCountDownTimer();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, topupResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = topupResponse.getOtpValidFor();
+                        setCountDownTimer();
                     } else {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
@@ -362,6 +397,16 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                         mOTPInputDialog.dismiss();
                         launchHomeActivity();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, requestMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = requestMoneyResponse.getOtpValidFor();
+                        setCountDownTimer();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, requestMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = requestMoneyResponse.getOtpValidFor();
+                        setCountDownTimer();
                     } else {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
@@ -374,6 +419,16 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                         mOTPInputDialog.dismiss();
                         launchHomeActivity();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, addMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = addMoneyResponse.getOtpValidFor();
+                        setCountDownTimer();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, addMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = addMoneyResponse.getOtpValidFor();
+                        setCountDownTimer();
                     } else {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
@@ -386,6 +441,16 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                         mOTPInputDialog.dismiss();
                         launchHomeActivity();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, withdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = withdrawMoneyResponse.getOtpValidFor();
+                        setCountDownTimer();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, withdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = withdrawMoneyResponse.getOtpValidFor();
+                        setCountDownTimer();
                     } else {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
@@ -398,6 +463,16 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                         mOTPInputDialog.dismiss();
                         launchHomeActivity();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, mSetPinResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = mSetPinResponse.getOtpValidFor();
+                        setCountDownTimer();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, mSetPinResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = mSetPinResponse.getOtpValidFor();
+                        setCountDownTimer();
                     } else {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
@@ -410,6 +485,16 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                         mOTPInputDialog.dismiss();
                         launchHomeActivity();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, paymentResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = paymentResponse.getOtpValidFor();
+                        setCountDownTimer();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, paymentResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = paymentResponse.getOtpValidFor();
+                        setCountDownTimer();
                     } else {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
@@ -423,6 +508,16 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                         Toaster.makeText(context, message, Toast.LENGTH_LONG);
                         mOTPInputDialog.dismiss();
                         mDismissListener.onDismissDialog();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, requestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = requestMoneyAcceptRejectOrCancelResponse.getOtpValidFor();
+                        setCountDownTimer();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(context, requestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = requestMoneyAcceptRejectOrCancelResponse.getOtpValidFor();
+                        setCountDownTimer();
                     } else {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, message, Toast.LENGTH_LONG);
@@ -430,7 +525,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                 }
 
             } catch (Exception e) {
-                Toaster.makeText(context, twoFaServiceAccomplishWithOTPResponse.getMessage(), Toast.LENGTH_LONG);
+                Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
             }
         }
     }

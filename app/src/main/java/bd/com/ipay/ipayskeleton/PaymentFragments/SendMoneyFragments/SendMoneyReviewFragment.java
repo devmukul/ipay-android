@@ -288,10 +288,11 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
                     Utilities.sendBlockedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
                     Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    SecuritySettingsActivity.otpDuration=mSendMoneyResponse.getOtpValidFor();
+                    SecuritySettingsActivity.otpDuration = mSendMoneyResponse.getOtpValidFor();
                     launchOTPVerification();
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                     Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    SecuritySettingsActivity.otpDuration = mSendMoneyResponse.getOtpValidFor();
                     launchOTPVerification();
                 } else {
                     if (getActivity() != null)
