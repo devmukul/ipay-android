@@ -79,7 +79,7 @@
                         android:id="@+id/ccp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:ccp_defaultNameCode="US" />
+                        app:defaultNameCode="bd" />
 
                     <EditText
                         android:id="@+id/mobile_number"
