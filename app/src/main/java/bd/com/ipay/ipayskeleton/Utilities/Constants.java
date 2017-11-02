@@ -209,6 +209,7 @@ public class Constants {
     public static final String FRAGMENT_SERVICE_ACCESS_SET = "FRAGMENT_SERVICE_ACCESS_SET";
     public static final String MOBILE_NUMBER_REGEX = "^(((\\+)?880)?|(0)?)(1[356789][\\d]{8})$";
     public static final String SELECTED_IDENTIFICATION_DOCUMENT = "SELECTED_IDENTIFICATION_DOCUMENT";
+    public static final String IMAGE_VALIDATOR_REGEX = "([^\\\\s]+(\\\\.(?i)(jpg|png|gif|bmp))$)";
 
     static {
         if (SERVER_TYPE == DEV_SERVER) {

@@ -139,8 +139,8 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
         mLayoutManager = new LinearLayoutManager(getActivity());
         mDocumentListRecyclerView.setLayoutManager(mLayoutManager);
 
-        mBackButtonTop  = (ImageView) v.findViewById(R.id.back);
-        if (getActivity().getSupportFragmentManager().getBackStackEntryCount()<=1){
+        mBackButtonTop = (ImageView) v.findViewById(R.id.back);
+        if (getActivity().getSupportFragmentManager().getBackStackEntryCount() <= 1) {
             mBackButtonTop.setVisibility(View.INVISIBLE);
         }
 
@@ -525,8 +525,8 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
                 if (documentPreviewDetailsList.get(pos).getSelectedDocumentUri() != null) {
                     try {
                         mFile = new File(documentPreviewDetailsList.get(pos).getSelectedDocumentUri().getPath());
-                        mSelectedFileSize = mFile.length()/(1024*1024);
-                        if(mSelectedFileSize <Constants.PHOTO_ID_FILE_MAX_SIZE) {
+                        mSelectedFileSize = mFile.length() / (1024 * 1024);
+                        if (mSelectedFileSize < Constants.PHOTO_ID_FILE_MAX_SIZE) {
                             if (mFile.exists()) {
                                 mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
                                 mPicker.setImageBitmap(mBitmap);
