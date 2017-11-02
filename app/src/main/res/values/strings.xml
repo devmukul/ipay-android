@@ -876,11 +876,14 @@
     <string name="scan_this_qr_code_prompt">Please scan this QR code to pay</string>
     <string name="scan_this_qr_code_prompt_continue">using iPay app</string>
     <string name="ipay_qr_code_title">iPay pay by QR code</string>
+    <string name="qr_code_helper_text_upper">scan me</string>
+    <string name="qr_code_helper_text_lower">to pay me</string>
 
     <string name="select_from_gallery_message">Select from gallery</string>
     <string name="take_a_picture_message">Take a picture</string>
     <string name="select_a_pdf_message">Select a PDF</string>
     <string name="view_uploaded_document_message">View uploaded document</string>
+    <string name="profile_picture_temp_file">profile_picture.jpg</string>
 
     <string name="grameenphone">Grameenphone</string>
     <string name="robi">Robi</string>
@@ -986,23 +989,22 @@
     <string name="completed_transaction_list">Completed transaction list</string>
     <string name="pending_transaction_list">Pending transaction list</string>
 
-
-
-    <string name="upload_photo">Upload photo</string>
+    <string name="select_photo">Select photo</string>
+    <string name="upload_photo">Confirm photo</string>
     <string name="upload_photo_id">Upload photo id</string>
     <string name="add_basic_info">Add basic info</string>
     <string name="ask_for_introduction_onboard">Ask for Introduction</string>
     <string name="add_bank_onboard">Add bank info</string>
     <string name="skip_now">Skip now</string>
 
-    <string name="onboard_step_one_title">Great! You\'re Almost Done</string>
-    <string name="onboard_photo_id_upload_title">Upload Photo ID</string>
-    <string name="onboard_nice_profile_photo">Nice Profile Photo</string>
-    <string name="onboard_photo_upload_title">Upload Profile Photo</string>
-    <string name="onboard_profile_info_update_title">One Last Step</string>
-    <string name="onboard_add_bank_title">Add Bank Information</string>
-    <string name="onboard_get_introduced_upload_title">Ask for Introduction</string>
-    <string name="onboard_profile_info_update_page_title">Add Basic Information</string>
+    <string name="onboard_step_one_title">Great! you\'re almost done</string>
+    <string name="onboard_photo_id_upload_title">Upload photo id</string>
+    <string name="onboard_nice_profile_photo">Nice profile photo</string>
+    <string name="onboard_photo_upload_title">Upload profile photo</string>
+    <string name="onboard_profile_info_update_title">Basic information</string>
+    <string name="onboard_add_bank_title">Add bank information</string>
+    <string name="onboard_get_introduced_upload_title">Ask for introduction</string>
+    <string name="onboard_profile_info_update_page_title">Add basic information</string>
 
     <string name="onboard_upload_photo_text">Upload your profile photo. Face the camera straight on, photo must be in focus and not blurry.</string>
     <string name="onboard_upload_photo_id_text">Upload a copy of photo ID.\nLike: National ID, Driving License, Passport etc. Make sure all information is clearly readable and that it is fully in frame.</string>
@@ -1013,5 +1015,6 @@
     <string name="upload_identification_document_again">Do you want to upload a identification document again? You have already uploaded once</string>
 
     <string name="file_size_large">Your file size is too large. Please select another.</string>
+    <string name="alpha_numeric">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
 
 </resources>

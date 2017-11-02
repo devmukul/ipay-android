@@ -155,17 +155,40 @@
 
                 </LinearLayout>
 
+                <RelativeLayout
+                    android:id="@+id/business_contact_profile_picture_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true">
+
+                    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                        android:id="@+id/business_contact_profile_picture"
+                        android:layout_width="@dimen/value80"
+                        android:layout_height="@dimen/value80"
+                        android:layout_gravity="left"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:layout_marginLeft="@dimen/value30"
+                        android:layout_marginTop="@dimen/activity_vertical_margin_card" />
+
+                    <ImageView
+                        android:id="@+id/button_profile_picture_edit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/business_contact_profile_picture"
+                        android:layout_alignRight="@+id/business_contact_profile_picture"
+                        android:src="@drawable/ic_edit_pic" />
+                </RelativeLayout>
+
+
                 <LinearLayout style="@style/LinearLayoutHolderVertical">
 
                     <TextView
                         android:id="@+id/textview_name"
                         style="@style/TextViewInfoLeftAlign" />
 
-                    ght="@dimen/activity_horizontal_margin"
-                    android:text="@striactivity_horizontal_margin"
-                    android:text="@stri
-                    android:id="@+id/textview_occupation"
-                    style="@style/TextViewInfoLeftAlign" />
+                    <TextView
+                        android:id="@+id/textview_occupation"
+                        style="@style/TextViewInfoLeftAlign" />
 
                     <TextView
                         android:id="@+id/textview_organization_name"

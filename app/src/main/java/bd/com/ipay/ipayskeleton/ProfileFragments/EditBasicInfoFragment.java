@@ -282,13 +282,12 @@ public class EditBasicInfoFragment extends BaseFragment implements HttpResponseL
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), mSetProfileInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
-
-                            getActivity().onBackPressed();
                             if (mGender != null)
                                 ProfileInfoCacheManager.setGender(GenderList.genderCodeToNameMap.get(mGender));
 
                             //Google Analytic event
                             Utilities.sendSuccessEventTracker(mTracker, "Basic Info Update", ProfileInfoCacheManager.getAccountId());
+                            getActivity().onBackPressed();
                         }
                     } else {
                         if (getActivity() != null)

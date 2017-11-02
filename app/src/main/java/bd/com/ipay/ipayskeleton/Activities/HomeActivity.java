@@ -301,7 +301,7 @@ public class HomeActivity extends BaseActivity
     private void updateProfileData() {
         mNameView.setText(ProfileInfoCacheManager.getUserName());
         mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
-        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
+        mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
                 ProfileInfoCacheManager.getProfileImageUrl(), false);
     }
 
@@ -625,7 +625,7 @@ public class HomeActivity extends BaseActivity
                         //saving user info in shared preference
                         ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
 
-                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+                        mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
                     } else {
                         Toaster.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
@@ -649,7 +649,7 @@ public class HomeActivity extends BaseActivity
 
                         //saving user info in shared preference
                         ProfileInfoCacheManager.updateBusinessInfoCache(mGetBusinessInformationResponse);
-                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+                        mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                     } else {
                         Toaster.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);
 
@@ -720,7 +720,7 @@ public class HomeActivity extends BaseActivity
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
             Logger.logD("Broadcast home activity", newProfilePicture);
 
-            mProfileImageView.setProfilePicture(newProfilePicture, true);
+            mProfileImageView.setAccountPhoto(newProfilePicture, true);
 
             // We need to update the profile picture url in ProfileInfoCacheManager. Ideally,
             // we should have received a push from the server and FcmListenerService should have

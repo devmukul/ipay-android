@@ -29,6 +29,13 @@ public class DeviceTrustActivity extends BaseActivity {
                 .replace(R.id.fragment_container, new RemoveTrustedDeviceFragment()).commit();
     }
 
+    public void switchToProfileCompletionHelperActivity() {
+        Intent intent = new Intent(DeviceTrustActivity.this, ProfileCompletionHelperActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        this.finish();
+    }
+
     @Override
     public Context setContext() {
         return DeviceTrustActivity.this;

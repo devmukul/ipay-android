@@ -33,7 +33,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BuildConfig;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ProfilePictureHelperDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PhotoSelectionHelperDialog;
 import bd.com.ipay.ipayskeleton.CustomView.IconifiedTextViewWithButton;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.SetProfilePictureResponse;
@@ -89,7 +89,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
     private ProgressDialog mProgressDialog;
     private MaterialDialog.Builder mProfilePictureErrorDialogBuilder;
     private MaterialDialog mProfilePictureErrorDialog;
-    private ProfilePictureHelperDialog profilePictureHelperDialog;
+    private PhotoSelectionHelperDialog photoSelectionHelperDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -151,7 +151,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
                 @ValidateAccess(ServiceIdConstants.MANAGE_PROFILE_PICTURE)
                 public void onClick(View v) {
                     if (!ProfileInfoCacheManager.isAccountVerified()) {
-                        profilePictureHelperDialog.show();
+                        photoSelectionHelperDialog.show();
                     } else
                         showProfilePictureUpdateRestrictionDialog();
                 }
@@ -236,8 +236,14 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
 
     private void initProfilePicHelperDialog() {
         if (!ProfileInfoCacheManager.isAccountVerified()) {
-            profilePictureHelperDialog = new ProfilePictureHelperDialog(getActivity(), getString(R.string.select_an_image), mOptionsForImageSelectionList);
-            profilePictureHelperDialog.setOnResourceSelectedListener(new ProfilePictureHelperDialog.OnResourceSelectedListener() {
+            if (ProfileInfoCacheManager.isBusinessAccount()) {
+                photoSelectionHelperDialog = new PhotoSelectionHelperDialog(getActivity(), getString(R.string.select_an_image),
+                        mOptionsForImageSelectionList, Constants.TYPE_BUSINESS_LOGO);
+            } else {
+                photoSelectionHelperDialog = new PhotoSelectionHelperDialog(getActivity(), getString(R.string.select_an_image),
+                        mOptionsForImageSelectionList, Constants.TYPE_PROFILE_PICTURE);
+            }
+            photoSelectionHelperDialog.setOnResourceSelectedListener(new PhotoSelectionHelperDialog.OnResourceSelectedListener() {
                 @Override
                 public void onResourceSelected(int mActionId, String action) {
                     if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS)) {
@@ -252,7 +258,15 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
     }
 
     private void selectProfilePictureIntent(int id) {
-        Intent imagePickerIntent = DocumentPicker.getPickerIntentByID(getActivity(), getString(R.string.select_a_document), id, Constants.CAMERA_FRONT, "profile_picture.jpg");
+        Intent imagePickerIntent;
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
+            imagePickerIntent = DocumentPicker.getPickerIntentByID(getActivity(), getString(R.string.select_a_document), id,
+                    Constants.CAMERA_REAR, getString(R.string.profile_picture_temp_file));
+        } else {
+            imagePickerIntent = DocumentPicker.getPickerIntentByID(getActivity(), getString(R.string.select_a_document), id,
+                    Constants.CAMERA_FRONT, getString(R.string.profile_picture_temp_file));
+        }
+
         startActivityForResult(imagePickerIntent, ACTION_PICK_PROFILE_PICTURE);
     }
 
@@ -305,7 +319,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        profilePictureHelperDialog.show();
+                        photoSelectionHelperDialog.show();
                     }
                 });
         mProfilePictureErrorDialog = mProfilePictureErrorDialogBuilder.build();
@@ -338,13 +352,13 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
                     } else {
                         // Check for a valid profile picture
                         if (isSelectedProfilePictureValid(uri)) {
-                            mProfilePictureView.setProfilePicture(uri.getPath(), true);
+                            mProfilePictureView.setAccountPhoto(uri.getPath(), true);
                             updateProfilePicture(uri);
                         }
                     }
                 } else if (resultCode == CameraActivity.CAMERA_ACTIVITY_CRASHED) {
                     Intent systemCameraOpenIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    systemCameraOpenIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID, DocumentPicker.getTempFile(getActivity(),"profile_picture.jpg")));
+                    systemCameraOpenIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID, DocumentPicker.getTempFile(getActivity(), "profile_picture.jpg")));
                     startActivityForResult(systemCameraOpenIntent, ACTION_PICK_PROFILE_PICTURE);
                 }
                 break;
@@ -357,8 +371,8 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
         Logger.logD("Profile Pic Account", mProfilePicture);
         mMobileNumberView.setText(mMobileNumber);
         mNameView.setText(mName);
-        mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
-                mProfilePicture, false);
+        mProfilePictureView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
+                mProfilePicture, true);
 
         if (ProfileInfoCacheManager.isAccountVerified()) {
             mVerificationStatusView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_verified_profile));
@@ -388,7 +402,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
 
         mSelectedImagePath = selectedImageUri.getPath();
 
-        mUploadProfilePictureAsyncTask = new UploadProfilePictureAsyncTask(Constants.COMMAND_SET_PROFILE_PICTURE,
+        mUploadProfilePictureAsyncTask = new UploadProfilePictureAsyncTask(Constants.COMMAND_SET_PROFILE_PICTURE, Constants.URL_SET_PROFILE_PICTURE,
                 mSelectedImagePath, getActivity());
         mUploadProfilePictureAsyncTask.mHttpResponseListener = this;
         mUploadProfilePictureAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
