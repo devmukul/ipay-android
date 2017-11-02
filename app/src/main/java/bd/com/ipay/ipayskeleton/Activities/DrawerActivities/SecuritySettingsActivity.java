@@ -12,7 +12,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.AddTrustedPersonFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.ChangePasswordFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.FingerPrintAuthenticationSettingsFragment;
-import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.Implement2FASettingsFragment;
+import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.ImplementTwoFaSettingsFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.PasswordRecoveryFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.SecurityQuestionFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.SetPinFragment;
@@ -163,7 +163,7 @@ public class SecuritySettingsActivity extends BaseActivity {
             getSupportFragmentManager().popBackStackImmediate();
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new Implement2FASettingsFragment()).addToBackStack(null).commit();
+                .replace(R.id.fragment_container, new ImplementTwoFaSettingsFragment()).addToBackStack(null).commit();
     }
 
     @Override

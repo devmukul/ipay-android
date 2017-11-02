@@ -200,6 +200,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
     private void attemptDesiredRequestWithOTP(String otp) {
         Gson gson = new Gson();
         if (mDesiredRequest.equals(Constants.COMMAND_PUT_TWO_FA_SETTING)) {
+            if (mHttpPutAsyncTask != null) return;
             mProgressDialog.setMessage(context.getString(R.string.change_two_fa_settings));
             mProgressDialog.show();
             TwoFaServiceListWithOTPRequest twoFaServiceListWithOTPRequest = gson.fromJson(json,
@@ -212,6 +213,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         } else if (mDesiredRequest.equals(Constants.COMMAND_SEND_MONEY)) {
+            if (mHttpPostAsyncTask != null) return;
             mProgressDialog.setMessage(context.getString(R.string.progress_dialog_text_sending_money));
             mProgressDialog.show();
             SendMoneyRequest sendMoneyRequest = gson.fromJson(json, SendMoneyRequest.class);
@@ -223,6 +225,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         } else if (mDesiredRequest.equals(Constants.COMMAND_TOPUP_REQUEST)) {
+            if (mHttpPostAsyncTask != null) return;
             mProgressDialog.setMessage(context.getString(R.string.dialog_requesting_top_up));
             mProgressDialog.show();
             TopupRequest topupRequest = gson.fromJson(json, TopupRequest.class);
@@ -234,6 +237,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         } else if (mDesiredRequest.equals(Constants.COMMAND_ADD_MONEY)) {
+            if (mHttpPostAsyncTask != null) return;
             mProgressDialog.setMessage(context.getString(R.string.progress_dialog_add_money_in_progress));
             mProgressDialog.show();
             AddMoneyRequest addMoneyRequest = gson.fromJson(json, AddMoneyRequest.class);
@@ -245,6 +249,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         } else if (mDesiredRequest.equals(Constants.COMMAND_WITHDRAW_MONEY)) {
+            if (mHttpPostAsyncTask != null) return;
             mProgressDialog.setMessage(context.getString(R.string.progress_dialog_withdraw_money_in_progress));
             mProgressDialog.show();
             WithdrawMoneyRequest withdrawMoneyRequest = gson.fromJson(json, WithdrawMoneyRequest.class);
@@ -256,6 +261,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         } else if (mDesiredRequest.equals(Constants.COMMAND_PAYMENT)) {
+            if (mHttpPostAsyncTask != null) return;
             mProgressDialog.setMessage(context.getString(R.string.progress_dialog_text_payment));
             mProgressDialog.show();
             PaymentRequest paymentRequest = gson.fromJson(json, PaymentRequest.class);
@@ -267,6 +273,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         } else if (mDesiredRequest.equals(Constants.COMMAND_SET_PIN)) {
+            if (mHttpPutAsyncTask != null) return;
             mProgressDialog.setMessage(context.getString(R.string.saving_pin));
             mProgressDialog.show();
             SetPinRequest mSetPinRequest = gson.fromJson(json, SetPinRequest.class);
@@ -277,6 +284,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPutAsyncTask.mHttpResponseListener = this;
             mHttpPutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else if (mDesiredRequest.equals(Constants.COMMAND_SEND_PAYMENT_REQUEST)) {
+            if (mHttpPostAsyncTask != null) return;
             mProgressDialog.setMessage(context.getString(R.string.progress_dialog_sending_payment_request));
             mProgressDialog.show();
             SendNewPaymentRequest mSendNewPaymentRequest = gson.fromJson(json, SendNewPaymentRequest.class);
@@ -287,6 +295,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
             mHttpPostAsyncTask.mHttpResponseListener = this;
             mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else if (mDesiredRequest.equals(Constants.COMMAND_ACCEPT_REQUESTS_MONEY)) {
+            if (mHttpPostAsyncTask != null) return;
             mProgressDialog.setMessage(context.getString(R.string.accepting_send_money_request));
             mProgressDialog.show();
             RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest
@@ -343,6 +352,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                         Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
                         mOTPInputDialog.dismiss();
                     }
+                    mHttpPutAsyncTask = null;
 
                 } else if (result.getApiCommand().equals(Constants.COMMAND_SEND_MONEY)) {
                     SendMoneyResponse sendMoneyResponse = gson.fromJson(result.getJsonString(), SendMoneyResponse.class);
@@ -367,6 +377,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                     }
+                    mHttpPostAsyncTask = null;
                 } else if (result.getApiCommand().equals(Constants.COMMAND_TOPUP_REQUEST)) {
                     TopupResponse topupResponse = gson.fromJson(result.getJsonString(), TopupResponse.class);
                     String message = topupResponse.getMessage();
@@ -389,6 +400,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                     }
+                    mHttpPostAsyncTask = null;
                 } else if (result.getApiCommand().equals(Constants.COMMAND_REQUEST_MONEY)) {
                     RequestMoneyResponse requestMoneyResponse = gson.fromJson(result.getJsonString(), RequestMoneyResponse.class);
                     String message = requestMoneyResponse.getMessage();
@@ -411,6 +423,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                     }
+                    mHttpPostAsyncTask = null;
                 } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_MONEY)) {
                     AddMoneyResponse addMoneyResponse = gson.fromJson(result.getJsonString(), AddMoneyResponse.class);
                     String message = addMoneyResponse.getMessage();
@@ -433,6 +446,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                     }
+                    mHttpPostAsyncTask = null;
                 } else if (result.getApiCommand().equals(Constants.COMMAND_WITHDRAW_MONEY)) {
                     WithdrawMoneyResponse withdrawMoneyResponse = gson.fromJson(result.getJsonString(), WithdrawMoneyResponse.class);
                     String message = withdrawMoneyResponse.getMessage();
@@ -455,6 +469,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                     }
+                    mHttpPostAsyncTask = null;
                 } else if (result.getApiCommand().equals(Constants.COMMAND_SET_PIN)) {
                     SetPinResponse mSetPinResponse = gson.fromJson(result.getJsonString(), SetPinResponse.class);
                     String message = mSetPinResponse.getMessage();
@@ -477,6 +492,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                     }
+                    mHttpPutAsyncTask = null;
                 } else if (result.getApiCommand().equals(Constants.COMMAND_PAYMENT)) {
                     PaymentResponse paymentResponse = gson.fromJson(result.getJsonString(), PaymentResponse.class);
                     String message = paymentResponse.getMessage();
@@ -499,6 +515,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                     }
+                    mHttpPostAsyncTask = null;
                 } else if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_REQUESTS_MONEY)) {
                     RequestMoneyAcceptRejectOrCancelResponse requestMoneyAcceptRejectOrCancelResponse =
                             gson.fromJson(result.getJsonString(), RequestMoneyAcceptRejectOrCancelResponse.class);
@@ -522,10 +539,13 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, message, Toast.LENGTH_LONG);
                     }
+                    mHttpPostAsyncTask = null;
                 }
 
             } catch (Exception e) {
                 Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
+                if (mProgressDialog.isShowing())
+                    mProgressDialog.dismiss();
             }
         }
     }
