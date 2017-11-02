@@ -19,6 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
+import com.hbb20.CountryCodePicker;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -37,12 +41,14 @@ import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.InvalidInputResponse;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SignupPersonalStepOneFragment extends BaseFragment implements HttpResponseListener {
     private HttpRequestPostAsyncTask mRequestOTPTask = null;
     private OTPResponsePersonalSignup mOtpResponsePersonalSignup;
 
+    private CountryCodePicker mCountryCodePicker;
     private EditText mPasswordView;
     private EditText mConfirmPasswordView;
     private EditText mMobileNumberView;
@@ -124,6 +130,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
         mNameView = (EditText) v.findViewById(R.id.user_name);
         mPasswordView = (EditText) v.findViewById(R.id.password);
         mConfirmPasswordView = (EditText) v.findViewById(R.id.confirm_password);
+        mCountryCodePicker = (CountryCodePicker) v.findViewById(R.id.ccp);
         mMobileNumberView = (EditText) v.findViewById(R.id.mobile_number);
         mNextButton = (Button) v.findViewById(R.id.personal_sign_in_button);
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
@@ -137,6 +144,9 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
         mAgreementCheckBox = (CheckBox) v.findViewById(R.id.checkBoxTermsConditions);
 
         mProgressDialog = new ProgressDialog(getActivity());
+
+        mCountryCodePicker.registerCarrierNumberEditText(mMobileNumberView);
+
         mNameView.requestFocus();
         // Enable hyperlinked
         mTermsConditions.setMovementMethod(LinkMovementMethod.getInstance());
@@ -211,6 +221,19 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
             mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
     }
 
+    private boolean isValidMobileNumber(String mobileNumber, String countryCode) {
+
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        try {
+            Phonenumber.PhoneNumber phoneNumberWithCountryCode = phoneUtil.parse(mobileNumber, countryCode);
+            boolean isValid = phoneUtil.isValidNumber(phoneNumberWithCountryCode);
+            return isValid;
+        } catch (NumberParseException e) {
+            Logger.logD("NumberParseException was thrown: ", e.toString());
+            return false;
+        }
+    }
+
     private void attemptRequestOTP() {
         // Reset errors.
         mNameView.setError(null);
@@ -244,7 +267,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
             focusView = mNameView;
             cancel = true;
 
-        } else if (!ContactEngine.isValidNumber(SignupOrLoginActivity.mMobileNumber)) {
+        } else if (!isValidMobileNumber(mMobileNumberView.getText().toString(), mCountryCodePicker.getSelectedCountryNameCode())) {
             mMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mMobileNumberView;
             cancel = true;

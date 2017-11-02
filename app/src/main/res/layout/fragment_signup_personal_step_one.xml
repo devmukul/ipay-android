@@ -90,7 +90,6 @@
                         android:background="@android:color/transparent"
                         android:hint="@string/mobile_number"
                         android:inputType="phone"
-                        android:maxLength="14"
                         android:maxLines="1" />
                 </RelativeLayout>
 
