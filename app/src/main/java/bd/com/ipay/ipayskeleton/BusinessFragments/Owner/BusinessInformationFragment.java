@@ -219,7 +219,6 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         });
 
         setHasOptionsMenu(true);
-        initProfilePicHelperDialog();
         setButtonActions();
 
         return view;
@@ -239,6 +238,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
 
         }
     }
+
 
     private void loadAddresses() {
         if (mPresentAddress == null) {
@@ -305,6 +305,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
             @Override
             @ValidateAccess(ServiceIdConstants.MANAGE_PROFILE_PICTURE)
             public void onClick(View v) {
+                initProfilePicHelperDialog();
                 photoSelectionHelperDialog.show();
             }
         });
