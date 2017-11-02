@@ -1015,5 +1015,6 @@
     <string name="upload_identification_document_again">Do you want to upload a identification document again? You have already uploaded once</string>
 
     <string name="file_size_large">Your file size is too large. Please select another.</string>
+    <string name="alpha_numeric">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
 
 </resources>
