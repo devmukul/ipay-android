@@ -54,6 +54,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -724,7 +725,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                         || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
-                    if (ContactEngine.isValidNumber(receiver)) {
+                    if (InputValidator.isValidNumber(receiver)) {
                         int mIcon = getOperatorIcon(receiver);
                         mOtherImageView.setImageResource(mIcon);
                     } else mOtherImageView.setImageResource(R.drawable.ic_top_up);

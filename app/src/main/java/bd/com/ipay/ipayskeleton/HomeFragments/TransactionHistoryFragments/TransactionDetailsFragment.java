@@ -24,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -182,7 +183,7 @@ public class TransactionDetailsFragment extends BaseFragment {
             mMobileNumberView.setText(receiver);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            if (ContactEngine.isValidNumber(receiver)) {
+            if (InputValidator.isValidNumber(receiver)) {
                 int mIcon = getOperatorIcon(receiver);
                 otherImageView.setImageResource(mIcon);
             } else
@@ -192,7 +193,7 @@ public class TransactionDetailsFragment extends BaseFragment {
             mMobileNumberView.setText(receiver);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            if (ContactEngine.isValidNumber(receiver)) {
+            if (InputValidator.isValidNumber(receiver)) {
                 int mIcon = getOperatorIcon(receiver);
                 otherImageView.setImageResource(mIcon);
             } else

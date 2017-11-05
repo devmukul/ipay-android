@@ -281,7 +281,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             cancel = true;
         }
 
-        if (!ContactEngine.isValidNumber(mUserNameLogin)) {
+        if (!InputValidator.isValidNumber(mUserNameLogin)) {
             mUserNameEditText.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mUserNameEditText;
             cancel = true;

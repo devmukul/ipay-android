@@ -221,18 +221,6 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
             mFemaleCheckBox.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
     }
 
-    private boolean isValidMobileNumber(String mobileNumber, String countryCode) {
-
-        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-        try {
-            Phonenumber.PhoneNumber phoneNumberWithCountryCode = phoneUtil.parse(mobileNumber, countryCode);
-            boolean isValid = phoneUtil.isValidNumber(phoneNumberWithCountryCode);
-            return isValid;
-        } catch (NumberParseException e) {
-            Logger.logD("NumberParseException was thrown: ", e.toString());
-            return false;
-        }
-    }
 
     private void attemptRequestOTP() {
         // Reset errors.
@@ -248,8 +236,8 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
 
         // Store values at the time of the login attempt.
         SignupOrLoginActivity.mPassword = mPasswordView.getText().toString().trim();
-        SignupOrLoginActivity.mMobileNumber = ContactEngine.formatMobileNumberBD(
-                mMobileNumberView.getText().toString().trim());
+        SignupOrLoginActivity.mMobileNumber = ContactEngine.formatMobileNumberInternational(
+                mMobileNumberView.getText().toString().trim(), mCountryCodePicker.getSelectedCountryNameCode());
         SignupOrLoginActivity.mAccountType = Constants.PERSONAL_ACCOUNT_TYPE;
         // Check for a valid password, if the user entered one.
         String passwordValidationMsg = InputValidator.isPasswordValid(SignupOrLoginActivity.mPassword);
@@ -267,7 +255,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
             focusView = mNameView;
             cancel = true;
 
-        } else if (!isValidMobileNumber(mMobileNumberView.getText().toString(), mCountryCodePicker.getSelectedCountryNameCode())) {
+        } else if (!InputValidator.isValidMobileNumberWithCountryCode(mMobileNumberView.getText().toString(), mCountryCodePicker.getSelectedCountryNameCode())) {
             mMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mMobileNumberView;
             cancel = true;

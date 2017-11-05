@@ -3,16 +3,22 @@ package bd.com.ipay.ipayskeleton.Utilities;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
+
 import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 /**
  * Validates user inputs (e.g. email, password, date of birth)
  */
 public class InputValidator {
+    public static final String MOBILE_NUMBER_REGEX = "^(((\\+)?880)?|(0)?)(1[356789][\\d]{8})$";
     private static final String INVALID_PASSPORT_ID_WITH_INSUFFICIENT_LENGTH_PATTERN = "[A-Z]{2}[0-9]{0,6}|[A-Z]{1}";
     private static final String VALID_PASSPORT_ID_PATTERN = "[A-Z]{2}[0-9]{7}";
     private static final String
@@ -181,5 +187,34 @@ public class InputValidator {
             }
         }
         return errorMessage;
+    }
+
+    public static boolean isValidNumber(String number) {
+        if (number == null)
+            return false;
+
+        number = number.replaceAll("[^\\d]", "");
+        if (number.length() == 11 && number.startsWith("0"))
+            return true;
+        else return number.length() == 13 && number.startsWith("880");
+    }
+
+    public static boolean isValidMobileNumberWithCountryCode(String mobileNumber, String countryCode) {
+        if (countryCode.equals("BD")) {
+            String formattedNumber = ContactEngine.formatMobileNumberInternational(mobileNumber, countryCode);
+            if (formattedNumber.matches(MOBILE_NUMBER_REGEX))
+                return true;
+            return false;
+        }
+
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        try {
+            Phonenumber.PhoneNumber phoneNumberWithCountryCode = phoneUtil.parse(mobileNumber, countryCode);
+            boolean isValid = phoneUtil.isValidNumber(phoneNumberWithCountryCode);
+            return isValid;
+        } catch (NumberParseException e) {
+            Logger.logD("NumberParseException was thrown: ", e.toString());
+            return false;
+        }
     }
 }

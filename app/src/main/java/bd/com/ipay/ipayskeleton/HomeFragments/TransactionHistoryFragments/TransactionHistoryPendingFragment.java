@@ -59,6 +59,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -713,7 +714,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
-                    if (ContactEngine.isValidNumber(receiver)) {
+                    if (InputValidator.isValidNumber(receiver)) {
                         int mIcon = getOperatorIcon(receiver);
                         mOtherImageView.setImageResource(mIcon);
                     } else mOtherImageView.setImageResource(R.drawable.ic_top_up);

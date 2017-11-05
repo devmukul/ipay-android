@@ -946,7 +946,7 @@ public class ContactEngine {
 
                 if (phoneNumber != null) phoneNumber = phoneNumber.replaceAll("[^\\d]", "");
 
-                if (ContactEngine.isValidNumber(phoneNumber)) {
+                if (InputValidator.isValidNumber(phoneNumber)) {
                     phoneNumber = formatMobileNumberBD(phoneNumber);
 
                     ContactNode contactNode;
@@ -960,6 +960,7 @@ public class ContactEngine {
 
         return phoneContacts;
     }
+
 
     public static String formatMobileNumberBD(String bdNumber) {
 
@@ -979,15 +980,22 @@ public class ContactEngine {
         return bdNumberStr;
     }
 
-    public static boolean isValidNumber(String number) {
+    public static String formatMobileNumberInternational(String number, String countryCode) {
 
-        if (number == null)
-            return false;
+        String numberStr = number;
+        Phonenumber.PhoneNumber numberProto = null;
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 
-        number = number.replaceAll("[^\\d]", "");
-        if (number.length() == 11 && number.startsWith("0"))
-            return true;
-        else return number.length() == 13 && number.startsWith("880");
+        try {
+            numberProto = phoneUtil.parse(numberStr, countryCode); // We have a mapping for country code vs country ISO code in the CountryList class
+        } catch (NumberParseException e) {
+            System.err.println("NumberParseException was thrown: " + e.toString());
+        }
+
+        if (numberProto != null)
+            numberStr = phoneUtil.format(numberProto, PhoneNumberUtil.PhoneNumberFormat.E164);
+
+        return numberStr;
     }
 
 
