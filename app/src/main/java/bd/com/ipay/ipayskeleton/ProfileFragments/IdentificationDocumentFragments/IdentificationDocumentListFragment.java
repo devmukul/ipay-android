@@ -119,6 +119,16 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
         return (T) getView().findViewById(id);
     }
 
+    private void performOnItemClickAction(final IdentificationDocument identificationDocument) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constants.SELECTED_IDENTIFICATION_DOCUMENT, identificationDocument);
+        if (identificationDocument.getDocumentVerificationStatus() == null) {
+            ((ProfileActivity) getActivity()).switchToUploadIdentificationDocumentFragment(bundle);
+        } else {
+            ((ProfileActivity) getActivity()).switchToPreviewIdentificationDocumentFragment(bundle);
+        }
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
@@ -199,16 +209,6 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                     performOnItemClickAction(getItem(holder.getAdapterPosition()));
                 }
             });
-        }
-
-        private void performOnItemClickAction(final IdentificationDocument identificationDocument) {
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(Constants.SELECTED_IDENTIFICATION_DOCUMENT, identificationDocument);
-            if (identificationDocument.getDocumentVerificationStatus() == null) {
-                ((ProfileActivity) getActivity()).switchToUploadIdentificationDocumentFragment(bundle);
-            } else {
-                ((ProfileActivity) getActivity()).switchToPreviewIdentificationDocumentFragment(bundle);
-            }
         }
 
         public void updateItems(List<IdentificationDocument> identificationDocumentList) {
