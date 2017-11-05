@@ -100,7 +100,7 @@ public class Utilities {
                 documentType.equals(IdentificationDocumentConstants.DOCUMENT_TYPE_VAT_REG_CERT) ||
                 documentType.equals(IdentificationDocumentConstants.DOCUMENT_TYPE_TRADE_LICENSE)) {
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-        } else editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        }
     }
 
     public static boolean isTabletDevice(Context context) {

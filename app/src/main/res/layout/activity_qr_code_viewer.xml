@@ -38,8 +38,8 @@
                 android:scaleType="centerCrop" />
 
             <ImageView
-                android:layout_width="@dimen/value34"
-                android:layout_height="@dimen/value34"
+                android:layout_width="@dimen/value25"
+                android:layout_height="@dimen/value25"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_qr_ipay_logo" />
         </RelativeLayout>

@@ -1026,5 +1026,4 @@
     <string name="file_size_large">Your file size is too large. Please select another.</string>
     <string name="please_enter_a_document_id">Please enter your document ID</string>
     <string name="alpha_numeric">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
-
 </resources>
