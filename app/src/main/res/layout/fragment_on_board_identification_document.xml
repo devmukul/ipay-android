@@ -38,8 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/ic_onboard_photo_id_upload_helper"
-                android:layout_marginTop="@dimen/onboard_page_vertical_margin"/>
-
+                android:layout_marginTop="@dimen/onboard_page_vertical_margin" />
 
 
             <TextView
@@ -52,14 +51,14 @@
                 android:layout_marginLeft="@dimen/onboard_page_description_horizontal_margin"
                 android:layout_marginRight="@dimen/onboard_page_description_horizontal_margin"
                 android:minLines="4"
-                android:gravity="top|center_horizontal"/>
+                android:gravity="top|center_horizontal" />
 
             <Button
                 android:id="@+id/button_upload_photo_id"
                 style="@style/ButtonPrimaryOnBoard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/upload_photo_id"/>
+                android:text="@string/upload_photo_id" />
 
             <Button
                 android:id="@+id/button_skip"
@@ -67,7 +66,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/skip_now" />
-
 
 
         </LinearLayout>

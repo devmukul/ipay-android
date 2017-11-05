@@ -77,7 +77,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
 
         mOccupationEditText = (EditText) v.findViewById(R.id.occupationEditText);
         mOrganizationNameEditText = (EditText) v.findViewById(R.id.organizationNameEditText);
-        mBackButtonTop  = (ImageView) v.findViewById(R.id.back);
+        mBackButtonTop = (ImageView) v.findViewById(R.id.back);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         mAddressInputView.clearFocus();
