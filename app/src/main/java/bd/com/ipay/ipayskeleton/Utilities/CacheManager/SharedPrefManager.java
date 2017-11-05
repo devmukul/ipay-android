@@ -50,6 +50,10 @@ public class SharedPrefManager {
         pref.edit().putString(SharedPrefConstants.USERCOUNTRY, value).apply();
     }
 
+    public static String getUserCountry(String defaultValue) {
+        return pref.getString(SharedPrefConstants.USERCOUNTRY, defaultValue);
+    }
+
     public static String getKeyPassword(String defaultValue) {
         return pref.getString(SharedPrefConstants.KEY_PASSWORD, defaultValue);
     }
