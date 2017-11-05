@@ -195,10 +195,10 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             // Showing if the document is already verified or not.
             if (identificationDocument.getDocumentVerificationStatus() == null) {
                 holder.verificationStatusImageView.setVisibility(View.GONE);
-            } else if (identificationDocument.getDocumentVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_NOT_VERIFIED)) {
+            } else if (identificationDocument.getDocumentVerificationStatus().equals(IdentificationDocumentConstants.DOCUMENT_VERIFICATION_STATUS_NOT_VERIFIED)) {
                 holder.verificationStatusImageView.setVisibility(View.VISIBLE);
                 holder.verificationStatusImageView.setImageResource(R.drawable.ic_workinprogress);
-            } else if (identificationDocument.getDocumentVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
+            } else if (identificationDocument.getDocumentVerificationStatus().equals(IdentificationDocumentConstants.DOCUMENT_VERIFICATION_STATUS_VERIFIED)) {
                 holder.verificationStatusImageView.setVisibility(View.VISIBLE);
                 holder.verificationStatusImageView.setImageResource(R.drawable.ic_verified);
             }
