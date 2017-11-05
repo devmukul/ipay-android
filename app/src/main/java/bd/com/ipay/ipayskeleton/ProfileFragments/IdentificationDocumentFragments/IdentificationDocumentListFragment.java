@@ -146,7 +146,7 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
                         Gson gson = new GsonBuilder().create();
                         GetIdentificationDocumentResponse identificationDocumentResponse = gson.fromJson(result.getJsonString(), GetIdentificationDocumentResponse.class);
                         updateIdentificationDocumentList(identificationDocumentResponse.getDocuments());
-                        mDocumentListAdapter.updateItems(mUserIdentificationDocumentList);
+                        mDocumentListAdapter.updateIdentificationDocumentList();
                         mDocumentListAdapter.notifyDataSetChanged();
                         setContentShown(true);
                         break;
@@ -211,9 +211,9 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
             });
         }
 
-        public void updateItems(List<IdentificationDocument> identificationDocumentList) {
+        public void updateIdentificationDocumentList() {
             this.mIdentificationDocumentList.clear();
-            addItems(identificationDocumentList);
+            addItems(mUserIdentificationDocumentList);
         }
 
         public void addItems(List<IdentificationDocument> identificationDocumentList) {
