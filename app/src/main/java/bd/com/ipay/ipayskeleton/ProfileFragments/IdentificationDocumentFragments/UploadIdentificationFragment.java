@@ -14,7 +14,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.FileProvider;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -119,10 +118,7 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
         mDocumentIdEditText = findViewById(R.id.document_id_edit_text);
         mDocumentBackSideImageView = findViewById(R.id.document_back_side_image_view);
 
-
-        if (mSelectedIdentificationDocument.getDocumentType().equals(IdentificationDocumentConstants.DOCUMENT_TYPE_NATIONAL_ID)) {
-            mDocumentIdEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-        }
+        Utilities.setAppropriateKeyboard(getContext(), mSelectedIdentificationDocument.getDocumentType(), mDocumentIdEditText);
 
         if (mIsOtherTypeDocument) {
             documentNameViewHolder.setVisibility(View.VISIBLE);
