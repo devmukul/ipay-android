@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrust
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
@@ -242,6 +243,9 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                         if (pushRegistrationID != null) {
                             new RegisterFCMTokenToServerAsyncTask(getContext());
                         }
+
+                        if(!SharedPrefManager.ifContainsUserCountry())
+                            SharedPrefManager.serUserCountry(SignupOrLoginActivity.mCountryCode);
 
                         // Saving the allowed services id for the user
                         if (mLoginResponseModel.getAccessControlList() != null) {

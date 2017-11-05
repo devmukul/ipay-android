@@ -33,6 +33,7 @@ import java.util.Set;
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
 import bd.com.ipay.ipayskeleton.Model.Contact.PhoneName;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class ContactEngine {
@@ -998,6 +999,23 @@ public class ContactEngine {
         return numberStr;
     }
 
+    public static String formatLocalMobileNumber(String mobileNumber) {
+
+        String numberStr = mobileNumber;
+        Phonenumber.PhoneNumber numberProto = null;
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+
+        try {
+            numberProto = phoneUtil.parse(numberStr, SharedPrefManager.getUserCountry(null)); // We have a mapping for country code vs country ISO code in the CountryList class
+        } catch (NumberParseException e) {
+            System.err.println("NumberParseException was thrown: " + e.toString());
+        }
+
+        if (numberProto != null)
+            numberStr = String.valueOf(numberProto.getNationalNumber());
+
+        return numberStr;
+    }
 
     /**
      * Pass phone contacts in the newContacts list and server contacts in the oldContacts list

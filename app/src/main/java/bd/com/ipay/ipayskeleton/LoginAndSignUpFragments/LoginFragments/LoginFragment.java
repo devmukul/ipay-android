@@ -199,10 +199,13 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             mPasswordEditText.setText("");
             mPasswordEditText.requestFocus();
 
-            mCountryCodePicker.setVisibility(View.GONE);
+            mCountryCodePicker.setCcpClickable(false);
+            mCountryCodePicker.setCountryForNameCode(SharedPrefManager.getUserCountry(null));
+
             mUserNameEditText.setEnabled(false);
             mInfoView.setVisibility(View.VISIBLE);
-            String mobileNumber = ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber());
+
+            String mobileNumber = ContactEngine.formatLocalMobileNumber(ProfileInfoCacheManager.getMobileNumber());
             mUserNameEditText.setText(mobileNumber);
             mButtonJoinUs.setVisibility(View.GONE);
 
@@ -306,6 +309,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             SignupOrLoginActivity.mPassword = mPasswordLogin;
             SignupOrLoginActivity.mMobileNumberBusiness = mUserNameLogin;
             SignupOrLoginActivity.mPasswordBusiness = mPasswordLogin;
+            SignupOrLoginActivity.mCountryCode = mCountryCodePicker.getSelectedCountryNameCode();
 
             mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
             mProgressDialog.show();
@@ -355,6 +359,9 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
 
                             ProfileInfoCacheManager.setMobileNumber(mUserNameLogin);
                             ProfileInfoCacheManager.setAccountType(mLoginResponseModel.getAccountType());
+
+                            if(!SharedPrefManager.ifContainsUserCountry())
+                            SharedPrefManager.serUserCountry(SignupOrLoginActivity.mCountryCode);
                             // When user logs in, we want that by default he would log in to his default account
                             TokenManager.deactivateEmployerAccount();
 
