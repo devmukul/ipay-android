@@ -10,13 +10,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 
 public class OnBoardPhotoIdUploadHelperFragment extends Fragment{
+
+    private ImageView mUploadImageView;
     private Button mUploadButton;
     private Button mSkipButton;
-    private ImageView back;
+    private ImageView mBackButtonTop;
 
     @Nullable
     @Override
@@ -28,11 +31,12 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment{
     }
 
     private void initializeViews(View view) {
+        mUploadImageView = (ImageView) view.findViewById(R.id.document_id_helper_image);
         mUploadButton = (Button) view.findViewById(R.id.button_upload_photo_id);
         mSkipButton = (Button) view.findViewById(R.id.button_skip);
-        back  = (ImageView) view.findViewById(R.id.back);
+        mBackButtonTop  = (ImageView) view.findViewById(R.id.back);
         if (getActivity().getSupportFragmentManager().getBackStackEntryCount()<=1){
-            back.setVisibility(View.INVISIBLE);
+            mBackButtonTop.setVisibility(View.INVISIBLE);
         }
     }
     public void setButtonActions() {
@@ -60,7 +64,14 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment{
             }
         });
 
-        back.setOnClickListener(new View.OnClickListener() {
+        mUploadImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((ProfileCompletionHelperActivity) getActivity()).switchToPhotoIdUploadFragment();
+            }
+        });
+
+        mBackButtonTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().onBackPressed();

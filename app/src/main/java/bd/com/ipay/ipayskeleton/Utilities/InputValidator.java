@@ -15,10 +15,6 @@ import bd.com.ipay.ipayskeleton.R;
 public class InputValidator {
     private static final String INVALID_PASSPORT_ID_WITH_INSUFFICIENT_LENGTH_PATTERN = "[A-Z]{2}[0-9]{0,6}|[A-Z]{1}";
     private static final String VALID_PASSPORT_ID_PATTERN = "[A-Z]{2}[0-9]{7}";
-    private static final String
-            INVALID_DRIVING_LICENSE_ID_WITH_INSUFFICIENT_LENGTH_PATTERN = "[A-Z]{2}[0-9]{0,7}|[A-Z]{1}|[A-Z]{2}[0-9]{7}[A-Z]{1,2}|" +
-            "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{1,4}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{1,3}";
-    private static final String VALID_DRIVING_LICENSE_ID_PATTERN = "[A-Z]{2}[0-9]{7}[A-Z]{1}[0-9]{5}|[A-Z]{2}[0-9]{7}[A-Z]{2}[0-9]{4}";
     private static final String ALPHA_NUMERIC_PATTERN = "^[a-zA-Z0-9]*$";
 
     public static String isPasswordValid(String password) {
@@ -117,9 +113,7 @@ public class InputValidator {
                     break;
 
                 case Constants.DOCUMENT_TYPE_DRIVING_LICENSE:
-                    if (documentID.matches(INVALID_DRIVING_LICENSE_ID_WITH_INSUFFICIENT_LENGTH_PATTERN))
-                        errorMessage = context.getString(R.string.invalid_driving_license_ID_insufficient_length);
-                    else if (!documentID.matches(VALID_DRIVING_LICENSE_ID_PATTERN))
+                    if (!documentID.matches(ALPHA_NUMERIC_PATTERN))
                         errorMessage = context.getString(R.string.invalid_driving_license_ID);
                     break;
                 case Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE:
@@ -173,9 +167,7 @@ public class InputValidator {
                     break;
 
                 case Constants.DOCUMENT_TYPE_DRIVING_LICENSE:
-                    if (documentID.matches(INVALID_DRIVING_LICENSE_ID_WITH_INSUFFICIENT_LENGTH_PATTERN))
-                        errorMessage = context.getString(R.string.invalid_driving_license_ID_insufficient_length);
-                    else if (!documentID.matches(VALID_DRIVING_LICENSE_ID_PATTERN))
+                    if (!documentID.matches(ALPHA_NUMERIC_PATTERN))
                         errorMessage = context.getString(R.string.invalid_driving_license_ID);
                     break;
             }

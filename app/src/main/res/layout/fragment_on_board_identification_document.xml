@@ -32,91 +32,47 @@
                 android:layout_height="wrap_content"
                 android:text="@string/onboard_photo_id_upload_title"/>
 
-            <FrameLayout
+            <ImageView
+                android:id="@+id/document_id_helper_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/onboard_page_vertical_margin">
-
-                <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-                    android:id="@+id/profile_image"
-                    android:layout_width="180dp"
-                    android:layout_height="180dp"
-                    android:visibility="invisible"/>
-
-                <ImageView
-                    android:id="@+id/document_id_helper_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_onboard_photo_id_upload_helper"/>
-
-
-            </FrameLayout>
+                android:src="@drawable/ic_onboard_photo_id_upload_helper"
+                android:layout_marginTop="@dimen/onboard_page_vertical_margin"/>
 
 
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/onboard_photo_id_upload_helper_text"
+                style="@style/OnBoardPageDescriptionTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:text="@string/onboard_upload_photo_id_text"
                 android:layout_marginTop="@dimen/onboard_page_vertical_margin"
                 android:layout_marginLeft="@dimen/onboard_page_description_horizontal_margin"
-                android:layout_marginRight="@dimen/onboard_page_description_horizontal_margin">
+                android:layout_marginRight="@dimen/onboard_page_description_horizontal_margin"
+                android:minLines="4"
+                android:gravity="top|center_horizontal"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/onboard_page_vertical_margin"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_onboard_photo_id_small"
-                    android:paddingTop="4dp"/>
+            <Button
+                android:id="@+id/button_upload_photo_id"
+                style="@style/ButtonPrimaryOnBoard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/upload_photo_id"/>
 
-                <TextView
-                    android:id="@+id/onboard_photo_id_upload_helper_text"
-                    style="@style/OnBoardPageDescriptionTextStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/onboard_upload_photo_id_text"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+            <Button
+                android:id="@+id/button_skip"
+                style="@style/ButtonSkipOnBoard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/skip_now" />
 
-            </LinearLayout>
+
+
         </LinearLayout>
 
     </ScrollView>
-
-    <LinearLayout
-        android:id="@+id/button_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimaryButton">
-
-        <Button
-            android:id="@+id/button_skip"
-            style="@style/ButtonTransparent"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/skip_now"
-            android:gravity="left|center_vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin_double"/>
-
-        <Button
-            android:id="@+id/button_upload_photo_id"
-            style="@style/ButtonTransparent"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/upload_photo_id"
-            android:gravity="right|center_vertical"
-            android:paddingRight="@dimen/activity_horizontal_margin_double"/>
-
-
-    </LinearLayout>
-
-
-
 </RelativeLayout>
 
 

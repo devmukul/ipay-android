@@ -75,47 +75,28 @@
 
             <View style="@style/Divider" />
 
-
             <bd.com.ipay.ipayskeleton.CustomView.AddressInputOnboardView
                 android:id="@+id/input_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+
+            <Button
+                android:id="@+id/button_upload_profile_pic"
+                style="@style/ButtonPrimaryOnBoard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/done"/>
+
+            <Button
+                android:id="@+id/button_skip"
+                style="@style/ButtonSkipOnBoard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/skip_now" />
+
         </LinearLayout>
 
     </ScrollView>
-
-    <LinearLayout
-        android:id="@+id/button_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:isScrollContainer="false"
-        android:background="@color/colorPrimaryButton">
-
-        <Button
-            android:id="@+id/button_skip"
-            style="@style/ButtonTransparent"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/skip_now"
-            android:gravity="left|center_vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin_double"/>
-
-        <Button
-            android:id="@+id/button_upload_profile_pic"
-            style="@style/ButtonTransparent"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/done"
-            android:gravity="right|center_vertical"
-            android:paddingRight="@dimen/activity_horizontal_margin_double"/>
-
-
-    </LinearLayout>
-
-
 
 </RelativeLayout>
