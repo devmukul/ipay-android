@@ -244,8 +244,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                             new RegisterFCMTokenToServerAsyncTask(getContext());
                         }
 
-                        if(!SharedPrefManager.ifContainsUserCountry())
-                            SharedPrefManager.serUserCountry(SignupOrLoginActivity.mCountryCode);
+                        SharedPrefManager.serUserCountry(SignupOrLoginActivity.mCountryCode);
 
                         // Saving the allowed services id for the user
                         if (mLoginResponseModel.getAccessControlList() != null) {
@@ -354,14 +353,14 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                         ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
                         ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
 
-                        if(!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                        if (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
                                 || !ProfileInfoCacheManager.isBasicInfoAdded()) {
                             ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
-                        }else {
+                        } else {
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                         }
                     } else {
-                        if (getActivity()!= null)
+                        if (getActivity() != null)
                             Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
                     }
 

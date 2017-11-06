@@ -51,7 +51,8 @@
                         <com.hbb20.CountryCodePicker
                             android:id="@+id/ccp"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            app:defaultNameCode="bd"/>
 
                         <EditText
                             android:id="@+id/login_mobile_number"

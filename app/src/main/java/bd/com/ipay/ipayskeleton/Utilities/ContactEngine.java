@@ -1000,13 +1000,13 @@ public class ContactEngine {
     }
 
     public static String formatLocalMobileNumber(String mobileNumber) {
-
         String numberStr = mobileNumber;
         Phonenumber.PhoneNumber numberProto = null;
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 
         try {
-            numberProto = phoneUtil.parse(numberStr, SharedPrefManager.getUserCountry(null)); // We have a mapping for country code vs country ISO code in the CountryList class
+            numberProto = phoneUtil.parse(numberStr, "BD");
+
         } catch (NumberParseException e) {
             System.err.println("NumberParseException was thrown: " + e.toString());
         }

@@ -200,7 +200,8 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             mPasswordEditText.requestFocus();
 
             mCountryCodePicker.setCcpClickable(false);
-            mCountryCodePicker.setCountryForNameCode(SharedPrefManager.getUserCountry(null));
+
+            mCountryCodePicker.setCountryForNameCode(SharedPrefManager.getUserCountry());
 
             mUserNameEditText.setEnabled(false);
             mInfoView.setVisibility(View.VISIBLE);
@@ -275,8 +276,10 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         mPasswordEditText.setError(null);
 
         // Store values at the time of the login attempt.
-        String countryCode = SharedPrefManager.getUserCountry(mCountryCodePicker.getSelectedCountryNameCode());
-        mUserNameLogin = ContactEngine.formatMobileNumberInternational(mUserNameEditText.getText().toString().trim(), countryCode);
+        String countryCode = mCountryCodePicker.getSelectedCountryNameCode();
+        String mobileNumber = mUserNameEditText.getText().toString().trim();
+
+        mUserNameLogin = ContactEngine.formatMobileNumberInternational(mobileNumber, countryCode);
         if (!tryLogInWithTouchID)
             mPasswordLogin = mPasswordEditText.getText().toString().trim();
 
@@ -359,9 +362,8 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
 
                             ProfileInfoCacheManager.setMobileNumber(mUserNameLogin);
                             ProfileInfoCacheManager.setAccountType(mLoginResponseModel.getAccountType());
-
-                            if(!SharedPrefManager.ifContainsUserCountry())
                             SharedPrefManager.serUserCountry(SignupOrLoginActivity.mCountryCode);
+
                             // When user logs in, we want that by default he would log in to his default account
                             TokenManager.deactivateEmployerAccount();
 

@@ -50,8 +50,8 @@ public class SharedPrefManager {
         pref.edit().putString(SharedPrefConstants.USERCOUNTRY, value).apply();
     }
 
-    public static String getUserCountry(String defaultValue) {
-        return pref.getString(SharedPrefConstants.USERCOUNTRY, defaultValue);
+    public static String getUserCountry() {
+        return pref.getString(SharedPrefConstants.USERCOUNTRY, "BD");
     }
 
     public static String getKeyPassword(String defaultValue) {
@@ -80,9 +80,5 @@ public class SharedPrefManager {
 
     public static boolean ifContainsUserID() {
         return (pref.contains(SharedPrefConstants.USERID));
-    }
-
-    public static boolean ifContainsUserCountry() {
-        return (pref.contains(SharedPrefConstants.USERCOUNTRY));
     }
 }
