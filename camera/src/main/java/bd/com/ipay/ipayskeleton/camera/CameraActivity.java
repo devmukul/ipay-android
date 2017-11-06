@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.camera;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -44,6 +45,7 @@ public class CameraActivity extends AppCompatActivity {
     public static final String CAMERA_FACING_NAME = "CAMERA_FACING_NAME";
     public static final String DOCUMENT_NAME = "DOCUMENT_NAME";
     private static final String TAG = CameraActivity.class.getSimpleName();
+    public static final String SAVED_FILE_PATH = "SAVED_FILE_PATH";
     private CameraSource mCameraSource;
     private CameraSourcePreview mCameraPreview;
     private CameraOverlay mCameraOverlay;
@@ -272,7 +274,9 @@ public class CameraActivity extends AppCompatActivity {
                         fos = new FileOutputStream(pictureFile);
                         fos.write(imageData);
                         fos.close();
-                        setResult(RESULT_OK);
+                        Intent intent = new Intent();
+                        intent.putExtra(SAVED_FILE_PATH, pictureFile.getAbsolutePath());
+                        setResult(RESULT_OK, intent);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {

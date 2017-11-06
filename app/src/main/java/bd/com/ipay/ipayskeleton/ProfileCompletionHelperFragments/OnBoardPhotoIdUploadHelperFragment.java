@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
-import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 
@@ -34,7 +33,7 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment{
         mUploadImageView = (ImageView) view.findViewById(R.id.document_id_helper_image);
         mUploadButton = (Button) view.findViewById(R.id.button_upload_photo_id);
         mSkipButton = (Button) view.findViewById(R.id.button_skip);
-        mBackButtonTop  = (ImageView) view.findViewById(R.id.back);
+        mBackButtonTop = (ImageView) view.findViewById(R.id.back);
         if (getActivity().getSupportFragmentManager().getBackStackEntryCount()<=1){
             mBackButtonTop.setVisibility(View.INVISIBLE);
         }

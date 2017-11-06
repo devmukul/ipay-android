@@ -53,6 +53,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
+import bd.com.ipay.ipayskeleton.Utilities.IdentificationDocumentConstants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
@@ -117,12 +118,12 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
 
         // Before making any change, make sure DOCUMENT_TYPES matches with DOCUMENT_TYPE_NAMES
         DOCUMENT_TYPES = new String[]{
-                Constants.DOCUMENT_TYPE_NATIONAL_ID,
-                Constants.DOCUMENT_TYPE_PASSPORT,
-                Constants.DOCUMENT_TYPE_DRIVING_LICENSE,
-                Constants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
-                Constants.DOCUMENT_TYPE_TIN,
-                Constants.DOCUMENT_TYPE_OTHER
+                IdentificationDocumentConstants.DOCUMENT_TYPE_NATIONAL_ID,
+                IdentificationDocumentConstants.DOCUMENT_TYPE_PASSPORT,
+                IdentificationDocumentConstants.DOCUMENT_TYPE_DRIVING_LICENSE,
+                IdentificationDocumentConstants.DOCUMENT_TYPE_BIRTH_CERTIFICATE,
+                IdentificationDocumentConstants.DOCUMENT_TYPE_TIN,
+                IdentificationDocumentConstants.DOCUMENT_TYPE_OTHER
         };
     }
 
@@ -138,8 +139,8 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
         mLayoutManager = new LinearLayoutManager(getActivity());
         mDocumentListRecyclerView.setLayoutManager(mLayoutManager);
 
-        mBackButtonTop  = (ImageView) v.findViewById(R.id.back);
-        if (getActivity().getSupportFragmentManager().getBackStackEntryCount()<=1){
+        mBackButtonTop = (ImageView) v.findViewById(R.id.back);
+        if (getActivity().getSupportFragmentManager().getBackStackEntryCount() <= 1) {
             mBackButtonTop.setVisibility(View.INVISIBLE);
         }
 
@@ -218,7 +219,7 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
                 if (identificationDocument.getDocumentType().equals(DOCUMENT_TYPES[i].toLowerCase())) {
                     documentId = identificationDocument.getDocumentIdNumber();
                     verificationStatus = identificationDocument.getDocumentVerificationStatus();
-                    documentUrl = identificationDocument.getDocumentUrl();
+                    documentUrl = identificationDocument.getDocumentPages().get(0).getUrl();
                     mDocumentName = identificationDocument.getDocumentName();
                     documentPreviewDetailsList.get(i).setDocumentId(documentId);
                     documentPreviewDetailsList.get(i).setVerificationStatus(verificationStatus);
@@ -278,8 +279,8 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
         Logger.logW("Loading document", mDocumentID + " " + mID + " " + selectedOImagePath + " " + mDocumentType);
 
         mUploadIdentifierDocumentAsyncTask = new UploadIdentifierDocumentAsyncTask(
-                    Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
-                    mDocumentID, mDocumentType.toLowerCase(), mDocumentName, OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT);
+                Constants.COMMAND_UPLOAD_DOCUMENT, selectedOImagePath, getActivity(),
+                mDocumentID, mDocumentType.toLowerCase(), mDocumentName, OPTION_UPLOAD_TYPE_PERSONAL_DOCUMENT);
 
         mUploadIdentifierDocumentAsyncTask.mHttpResponseListener = this;
         mUploadIdentifierDocumentAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -351,13 +352,12 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
                             ProfileInfoCacheManager.uploadIdentificationDocument(true);
                             getActivity().getSupportFragmentManager().popBackStack();
 
-                            if(ProfileInfoCacheManager.isSwitchedFromSignup()){
+                            if (ProfileInfoCacheManager.isSwitchedFromSignup()) {
                                 ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
-                            }
-                            else{
-                                if(!ProfileInfoCacheManager.isBasicInfoAdded()){
+                            } else {
+                                if (!ProfileInfoCacheManager.isBasicInfoAdded()) {
                                     ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
-                                }else {
+                                } else {
                                     ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
                                 }
                             }
@@ -525,16 +525,16 @@ public class OnBoardPhotoIdUploadFragment extends ProgressFragment implements Ht
                 if (documentPreviewDetailsList.get(pos).getSelectedDocumentUri() != null) {
                     try {
                         mFile = new File(documentPreviewDetailsList.get(pos).getSelectedDocumentUri().getPath());
-                        mSelectedFileSize = mFile.length()/(1024*1024);
-                        if(mSelectedFileSize <Constants.PHOTO_ID_FILE_MAX_SIZE) {
+                        mSelectedFileSize = mFile.length() / (1024 * 1024);
+                        if (mSelectedFileSize < Constants.PHOTO_ID_FILE_MAX_SIZE) {
                             if (mFile.exists()) {
                                 mBitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
                                 mPicker.setImageBitmap(mBitmap);
                             }
-                        }else{
+                        } else {
                             Toaster.makeText(getContext(), getString(R.string.file_size_large), Toast.LENGTH_LONG);
                         }
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else {

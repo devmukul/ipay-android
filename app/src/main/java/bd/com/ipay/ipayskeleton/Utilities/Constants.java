@@ -142,6 +142,7 @@ public class Constants {
     public static final int MIN_AGE_LIMIT = 14;
     public static final int MIN_VALID_NAME_LENGTH = 5;
     public static final int MAX_FILE_ATTACHMENT_LIMIT = 5;
+    public static final int MAX_FILE_MB_LIMIT = 5;
     public static final int MINIMUM_REQUIRED_NID_LENGTH = 10;
     public static final int MAXIMUM_REQUIRED_NID_LENGTH = 17;
     public static final int BUSINESS_TIN_LENGTH = 12;
@@ -206,6 +207,9 @@ public class Constants {
     public static final String SERVICE_ID_SET = "SERVICE_ID_SET";
     public static final String NAVIGATION_MENU_SERVICE_ACCESS_SET = "NAVIGATION_MENU_SERVICE_ACCESS_SET";
     public static final String FRAGMENT_SERVICE_ACCESS_SET = "FRAGMENT_SERVICE_ACCESS_SET";
+    public static final String MOBILE_NUMBER_REGEX = "^(((\\+)?880)?|(0)?)(1[356789][\\d]{8})$";
+    public static final String SELECTED_IDENTIFICATION_DOCUMENT = "SELECTED_IDENTIFICATION_DOCUMENT";
+    public static final String IMAGE_VALIDATOR_REGEX = "([^\\\\s]+(\\\\.(?i)(jpg|png|gif|bmp))$)";
 
     static {
         if (SERVER_TYPE == DEV_SERVER) {
@@ -324,10 +328,14 @@ public class Constants {
     public static final String URL_REMOVE_TRUSTED_DEVICE = "device/";
     // Documents Rest
     public static final String URL_GET_DOCUMENTS = "docs/identification/documents";
-
+    public static final String URL_GET_DOCUMENTS_v2 = "docs/identification/documents/v2";
     public static final String URL_GET_BUSINESS_DOCUMENTS = "docs/identification/documents/business";
+    public static final String URL_GET_BUSINESS_DOCUMENTS_v2 = "docs/identification/documents/business/v2";
+
     public static final String URL_UPLOAD_DOCUMENTS = "docs/identification/documents";
+    public static final String URL_UPLOAD_DOCUMENTS_V2 = "docs/identification/documents/v2";
     public static final String URL_UPLOAD_BUSINESS_DOCUMENTS = "docs/identification/documents/business";
+    public static final String URL_UPLOAD_BUSINESS_DOCUMENTS_V2 = "docs/identification/documents/business/v2";
     public static final String URL_GET_DOCUMENT_ACCESS_TOKEN = "user/contentAccessToken";
 
     // Fee Charge REST
@@ -689,16 +697,6 @@ public class Constants {
     public static final String DELETE_URL = "DELETE_URL: ";
 
     public static final String PARSED_TOKEN = "Parsed Token: ";
-
-    public static final String DOCUMENT_TYPE_NATIONAL_ID = "national_id";
-    public static final String DOCUMENT_TYPE_PASSPORT = "passport";
-    public static String DOCUMENT_TYPE_OTHER = "Other";
-    public static final String DOCUMENT_TYPE_DRIVING_LICENSE = "driving_license";
-    public static final String DOCUMENT_TYPE_BIRTH_CERTIFICATE = "birth_certificate";
-    public static final String DOCUMENT_TYPE_TIN = "tin";
-    public static final String DOCUMENT_TYPE_BUSINESS_TIN = "business_tin";
-    public static final String DOCUMENT_TYPE_TRADE_LICENSE = "trade_license";
-    public static final String DOCUMENT_TYPE_VAT_REG_CERT = "vat_reg_certificate";
 
     public static final String DOCUMENT_ID_NUMBER = "documentIdNumber";
     public static final String DOCUMENT_TYPE = "documentType";

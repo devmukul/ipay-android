@@ -19,7 +19,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textview_document_upload_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
@@ -31,7 +30,7 @@
                 android:textSize="@dimen/text_size_small" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/list_documents"
+                android:id="@+id/identification_document_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin_card"

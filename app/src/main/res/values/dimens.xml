@@ -31,6 +31,7 @@
     <dimen name="value80">80dip</dimen>
     <dimen name="value100">100dp</dimen>
     <dimen name="value110">110dip</dimen>
+    <dimen name="value125">125dip</dimen>
     <dimen name="value140">140dip</dimen>
     <dimen name="value150">150dip</dimen>
     <dimen name="value160">160dip</dimen>
