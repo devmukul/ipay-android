@@ -24,6 +24,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.File;
 import java.util.Arrays;
 
@@ -35,6 +38,7 @@ import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomUploadPickerDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.IdentificationDocument;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -209,7 +213,7 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
             mDocumentFirstPageErrorTextView.setVisibility(View.VISIBLE);
             focusableView = null;
             isValidInput = false;
-        } else if (!mSelectedIdentificationDocument.getDocumentType().equals(IdentificationDocumentConstants.DOCUMENT_TYPE_OTHER) && mDocumentSecondPageImageFile == null) {
+        } else if (!mSelectedIdentificationDocument.getDocumentType().equals(IdentificationDocumentConstants.DOCUMENT_TYPE_OTHER) && maxDocumentSideCount > 1 && mDocumentSecondPageImageFile == null) {
             mDocumentSecondPageErrorTextView.setText(R.string.please_select_a_file_to_upload);
             mDocumentSecondPageErrorTextView.setVisibility(View.VISIBLE);
             focusableView = null;
@@ -323,6 +327,8 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_UPLOAD_DOCUMENT:
+                Gson gson = new GsonBuilder().create();
+                UploadDocumentResponse uploadDocumentResponse = gson.fromJson(result.getJsonString(), UploadDocumentResponse.class);
                 switch (result.getStatus()) {
                     case Constants.HTTP_RESPONSE_STATUS_OK:
                         if (getActivity() instanceof ProfileActivity) {
@@ -330,10 +336,14 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
                         }
                         break;
                     default:
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), uploadDocumentResponse.getMessage(), Toast.LENGTH_SHORT).show();
                         break;
                 }
                 break;
             default:
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
                 break;
         }
     }

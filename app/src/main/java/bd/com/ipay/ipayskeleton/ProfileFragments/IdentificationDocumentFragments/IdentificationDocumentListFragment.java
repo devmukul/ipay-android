@@ -141,20 +141,25 @@ public class IdentificationDocumentListFragment extends ProgressFragment impleme
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_GET_IDENTIFICATION_DOCUMENTS_REQUEST:
+                Gson gson = new GsonBuilder().create();
+                GetIdentificationDocumentResponse identificationDocumentResponse = gson.fromJson(result.getJsonString(), GetIdentificationDocumentResponse.class);
                 switch (result.getStatus()) {
                     case Constants.HTTP_RESPONSE_STATUS_OK:
-                        Gson gson = new GsonBuilder().create();
-                        GetIdentificationDocumentResponse identificationDocumentResponse = gson.fromJson(result.getJsonString(), GetIdentificationDocumentResponse.class);
                         updateIdentificationDocumentList(identificationDocumentResponse.getDocuments());
                         mDocumentListAdapter.updateIdentificationDocumentList();
                         mDocumentListAdapter.notifyDataSetChanged();
                         setContentShown(true);
                         break;
                     default:
+                        // OTP has not been expired yet
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), identificationDocumentResponse.getMessage(), Toast.LENGTH_SHORT).show();
                         break;
                 }
                 break;
             default:
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_SHORT).show();
                 break;
         }
 

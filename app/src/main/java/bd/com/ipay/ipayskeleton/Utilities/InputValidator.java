@@ -138,18 +138,14 @@ public class InputValidator {
                 else if (length > Constants.MAXIMUM_REQUIRED_NID_LENGTH)
                     errorMessage = context.getString(R.string.invalid_nid_max_length);
                 break;
-
             case IdentificationDocumentConstants.DOCUMENT_TYPE_PASSPORT:
                 if (documentID.matches(IdentificationDocumentConstants.INVALID_PASSPORT_ID_WITH_INSUFFICIENT_LENGTH_PATTERN))
                     errorMessage = context.getString(R.string.invalid_passport_ID_insufficient_length);
                 else if (!documentID.matches(IdentificationDocumentConstants.VALID_PASSPORT_ID_PATTERN))
                     errorMessage = context.getString(R.string.invalid_passport_ID);
                 break;
-
             case IdentificationDocumentConstants.DOCUMENT_TYPE_DRIVING_LICENSE:
-                if (documentID.matches(IdentificationDocumentConstants.INVALID_DRIVING_LICENSE_ID_WITH_INSUFFICIENT_LENGTH_PATTERN))
-                    errorMessage = context.getString(R.string.invalid_driving_license_ID_insufficient_length);
-                else if (!documentID.matches(IdentificationDocumentConstants.VALID_DRIVING_LICENSE_ID_PATTERN))
+                if (!documentID.matches(ALPHA_NUMERIC_PATTERN))
                     errorMessage = context.getString(R.string.invalid_driving_license_ID);
                 break;
             case IdentificationDocumentConstants.DOCUMENT_TYPE_BIRTH_CERTIFICATE:
@@ -173,52 +169,6 @@ public class InputValidator {
                 if (documentID.length() != Constants.VAT_REG_CERT_ID_LENGTH)
                     errorMessage = context.getString(R.string.invalid_vat_reg_cert_ID_wrong_length);
                 break;
-        }
-        return errorMessage;
-    }
-
-    public static String isValidBusinessDocumentID(Context context, String documentID, String documentType, int pos) {
-        String business_document_types[];
-        business_document_types = context.getResources().getStringArray(R.array.business_document_id);
-        String errorMessage = null;
-        if (documentID.length() == 0)
-            errorMessage = context.getString(R.string.enter) + " " + business_document_types[pos] + " " + context.getString(R.string.number);
-        else {
-            switch (documentType) {
-                case IdentificationDocumentConstants.DOCUMENT_TYPE_NATIONAL_ID:
-                    int length = documentID.length();
-                    if (length < Constants.MINIMUM_REQUIRED_NID_LENGTH)
-                        errorMessage = context.getString(R.string.invalid_nid_min_length);
-                    else if (length > Constants.MAXIMUM_REQUIRED_NID_LENGTH)
-                        errorMessage = context.getString(R.string.invalid_nid_max_length);
-                    break;
-
-                case IdentificationDocumentConstants.DOCUMENT_TYPE_BUSINESS_TIN:
-                    if (documentID.length() != Constants.BUSINESS_TIN_LENGTH)
-                        errorMessage = context.getString(R.string.invalid_business_tin_wrong_length);
-                    break;
-
-                case IdentificationDocumentConstants.DOCUMENT_TYPE_TRADE_LICENSE:
-                    if (documentID.length() != Constants.TRADE_LICENSE_ID_LENGTH)
-                        errorMessage = context.getString(R.string.invalid_trade_license_ID_wrong_length);
-                    break;
-
-                case IdentificationDocumentConstants.DOCUMENT_TYPE_VAT_REG_CERT:
-                    if (documentID.length() != Constants.VAT_REG_CERT_ID_LENGTH)
-                        errorMessage = context.getString(R.string.invalid_vat_reg_cert_ID_wrong_length);
-                    break;
-                case IdentificationDocumentConstants.DOCUMENT_TYPE_PASSPORT:
-                    if (documentID.matches(IdentificationDocumentConstants.INVALID_PASSPORT_ID_WITH_INSUFFICIENT_LENGTH_PATTERN))
-                        errorMessage = context.getString(R.string.invalid_passport_ID_insufficient_length);
-                    else if (!documentID.matches(IdentificationDocumentConstants.VALID_PASSPORT_ID_PATTERN))
-                        errorMessage = context.getString(R.string.invalid_passport_ID);
-                    break;
-
-                case IdentificationDocumentConstants.DOCUMENT_TYPE_DRIVING_LICENSE:
-                    if (!documentID.matches(ALPHA_NUMERIC_PATTERN))
-                        errorMessage = context.getString(R.string.invalid_driving_license_ID);
-                    break;
-            }
         }
         return errorMessage;
     }
