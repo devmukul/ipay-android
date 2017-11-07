@@ -26,9 +26,12 @@ import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasic
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAskForIntroductionHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardConsentAgreementForBankFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardContactsFragment;
-import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardPhotoIdUploadFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardIdentificationDocumentListFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardIdentificationDocumentUploadFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardPhotoIdUploadHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardProfilePictureUploadHelperFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.PreviewIdentificationDocumentFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.UploadIdentificationFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -128,10 +131,31 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
                 .replace(R.id.fragment_container, onBoardIcdentificationFragment).addToBackStack(null).commit();
     }
 
-    public void switchToPhotoIdUploadFragment() {
+    public void switchToIdentificationDocumentListFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new OnBoardPhotoIdUploadFragment()).addToBackStack(null).commit();
+                .replace(R.id.fragment_container, new OnBoardIdentificationDocumentListFragment()).addToBackStack(null).commit();
     }
+
+    public void switchToUploadIdentificationDocumentFragment(Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 4)
+            getSupportFragmentManager().popBackStackImmediate();
+        OnBoardIdentificationDocumentUploadFragment uploadIdentificationFragment = new OnBoardIdentificationDocumentUploadFragment();
+        uploadIdentificationFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, uploadIdentificationFragment).addToBackStack(null).commit();
+    }
+
+    public void switchToPreviewIdentificationDocumentFragment(Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 3)
+            getSupportFragmentManager().popBackStackImmediate();
+        PreviewIdentificationDocumentFragment previewIdentificationDocumentFragment = new PreviewIdentificationDocumentFragment();
+        previewIdentificationDocumentFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, previewIdentificationDocumentFragment).addToBackStack(null).commit();
+    }
+
+//    public void switchToIdentificationDocumentListFragment() {
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.fragment_container, new OnBoardPhotoIdUploadFragment()).addToBackStack(null).commit();
+//    }
 
     public void switchToBasicInfoEditHelperFragment() {
         getSupportFragmentManager().beginTransaction()
