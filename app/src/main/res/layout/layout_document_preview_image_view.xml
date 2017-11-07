@@ -30,10 +30,9 @@
 
         <ImageView
             android:id="@+id/cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/image_view"
-            android:layout_alignTop="@+id/image_view"
-            android:src="@drawable/cancel" />
+            android:layout_width="@dimen/value25"
+            android:layout_height="@dimen/value25"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"/>
     </RelativeLayout>
 </RelativeLayout>
