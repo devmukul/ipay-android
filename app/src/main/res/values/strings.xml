@@ -1009,6 +1009,8 @@
 
     <string name="onboard_step_one_title">Great! you\'re almost done</string>
     <string name="onboard_photo_id_upload_title">Upload photo id</string>
+    <string name="onboard_document_title">Documents</string>
+    <string name="onboard_upload_document_title">Upload document</string>
     <string name="onboard_nice_profile_photo">Nice profile photo</string>
     <string name="onboard_photo_upload_title">Upload profile photo</string>
     <string name="onboard_profile_info_update_title">Basic information</string>
