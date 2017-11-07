@@ -31,7 +31,6 @@ import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardIdentifi
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardPhotoIdUploadHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardProfilePictureUploadHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.PreviewIdentificationDocumentFragment;
-import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.UploadIdentificationFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -151,11 +150,6 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
         previewIdentificationDocumentFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, previewIdentificationDocumentFragment).addToBackStack(null).commit();
     }
-
-//    public void switchToIdentificationDocumentListFragment() {
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.fragment_container, new OnBoardPhotoIdUploadFragment()).addToBackStack(null).commit();
-//    }
 
     public void switchToBasicInfoEditHelperFragment() {
         getSupportFragmentManager().beginTransaction()
