@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.CustomView;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
@@ -21,6 +22,7 @@ public class DocumentPreviewImageView extends RelativeLayout {
 
     private View mChildView;
     private RelativeLayout mDocumentImagePreviewHolder;
+    private RelativeLayout mImageLayout;
     private ImageView mImageView;
     private ImageView mCancelButton;
 
@@ -49,6 +51,9 @@ public class DocumentPreviewImageView extends RelativeLayout {
         mImageView = findViewByIdAutoCast(R.id.image_view);
         mCancelButton =findViewByIdAutoCast(R.id.cancel_button);
         addView(mChildView);
+        Drawable drawable=getResources().getDrawable(R.drawable.cancel);
+        drawable.setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
+        mCancelButton.setImageDrawable(drawable);
         setCancelButtonAction();
     }
 
@@ -58,6 +63,12 @@ public class DocumentPreviewImageView extends RelativeLayout {
 
     private void setCancelButtonAction(){
         mCancelButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hidePreview();
+            }
+        });
+        mImageView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 hidePreview();

@@ -154,7 +154,7 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
             }
             holder.documentImageView.setImageResource(previewImageResId);
             if (!TextUtils.isEmpty(documentPage.getUrl())) {
-                Glide.with(this.mContext).load(Constants.BASE_URL_FTP_SERVER + documentPage.getUrl())
+                Glide.with(this.mContext).load(Constants.BASE_URL_FTP_SERVER + documentPage.getUrl()).override(100,80)
                         .listener(new RequestListener<String, GlideDrawable>() {
                             @Override
                             public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
