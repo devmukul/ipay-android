@@ -22,7 +22,7 @@ public class DocumentPreviewImageView extends RelativeLayout {
     private View mChildView;
     private RelativeLayout mDocumentImagePreviewHolder;
     private ImageView mImageView;
-    private ImageView mCrossButton;
+    private ImageView mCancelButton;
 
     public DocumentPreviewImageView(@NonNull Context context) {
         this(context, null);
@@ -47,7 +47,7 @@ public class DocumentPreviewImageView extends RelativeLayout {
         mChildView = LayoutInflater.from(getContext()).inflate(R.layout.layout_document_preview_image_view, null, false);
         mDocumentImagePreviewHolder = findViewByIdAutoCast(R.id.document_image_preview_holder);
         mImageView = findViewByIdAutoCast(R.id.image_view);
-        mCrossButton=findViewByIdAutoCast(R.id.cancel_button);
+        mCancelButton=findViewByIdAutoCast(R.id.cancel_button);
         addView(mChildView);
         setCancelButtonAction();
     }
@@ -57,7 +57,7 @@ public class DocumentPreviewImageView extends RelativeLayout {
     }
 
     private void setCancelButtonAction(){
-        mCrossButton.setOnClickListener(new OnClickListener() {
+        mCancelButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 hidePreview();
