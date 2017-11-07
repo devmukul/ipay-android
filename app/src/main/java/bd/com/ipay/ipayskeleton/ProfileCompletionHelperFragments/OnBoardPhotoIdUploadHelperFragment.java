@@ -23,7 +23,7 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_on_board_identification_document, container, false);
+        View view = inflater.inflate(R.layout.fragment_onboard_identification_document, container, false);
         initializeViews(view);
         setButtonActions();
         return view;
@@ -59,14 +59,14 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment{
         mUploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileCompletionHelperActivity) getActivity()).switchToPhotoIdUploadFragment();
+                ((ProfileCompletionHelperActivity) getActivity()).switchToIdentificationDocumentListFragment();
             }
         });
 
         mUploadImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileCompletionHelperActivity) getActivity()).switchToPhotoIdUploadFragment();
+                ((ProfileCompletionHelperActivity) getActivity()).switchToIdentificationDocumentListFragment();
             }
         });
 
