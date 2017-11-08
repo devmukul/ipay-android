@@ -13,6 +13,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.MakePaymen
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentRequestReceivedDetailsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentRequestsReceivedFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -44,7 +45,9 @@ public class PaymentActivity extends BaseActivity {
             }
         });
 
-        if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false))
+        if (getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
+            switchToMakePaymentFragment();
+        } else if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false))
             switchToMakePaymentFragment();
         else
             switchToReceivedPaymentRequestsFragment();

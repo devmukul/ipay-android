@@ -29,12 +29,14 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, Generic
     private final Context mContext;
     private final String imagePath;
     private final String API_COMMAND;
+    private final String API_URL;
     public HttpResponseListener mHttpResponseListener;
 
-    public UploadProfilePictureAsyncTask(String API_COMMAND, String imagePath, Context mContext) {
+    public UploadProfilePictureAsyncTask(String API_COMMAND, String URL, String imagePath, Context mContext) {
         this.mContext = mContext;
         this.imagePath = imagePath;
         this.API_COMMAND = API_COMMAND;
+        this.API_URL = URL;
     }
 
     @Override
@@ -81,7 +83,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, Generic
         try {
             HttpClient client = new DefaultHttpClient();
             File file = new File(selectedImagePath);
-            HttpPost post = new HttpPost(Constants.BASE_URL_MM + Constants.URL_SET_PROFILE_PICTURE);
+            HttpPost post = new HttpPost(Constants.BASE_URL_MM + API_URL);
 
             if (TokenManager.isTokenExists())
                 post.setHeader(Constants.TOKEN, TokenManager.getToken());

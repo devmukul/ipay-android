@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
+
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/left_arrow"
+        android:paddingLeft="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_vertical_margin"
+        android:paddingTop="@dimen/activity_horizontal_margin_semi_double"
+        android:paddingBottom="@dimen/activity_horizontal_margin_semi_double"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:layout_above="@+id/button_layout"
+        android:layout_below="@+id/back" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/profile_pic_upload_helper_title"
+                style="@style/OnBoardPageTitleStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/onboard_profile_info_update_page_title"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+                <EditText
+                    android:id="@+id/occupationEditText"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:hint="@string/occupation"
+                    android:inputType="textPersonName"
+                    android:maxLines="1"
+                    android:singleLine="true" >
+                </EditText>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <View style="@style/Divider" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/organizationNameEditText"
+                    style="@style/CustomEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/organization_name"
+                    android:inputType="text"
+                    android:maxLength="50" >
+
+                    <requestFocus />
+                </EditText>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <View style="@style/Divider" />
+
+            <bd.com.ipay.ipayskeleton.CustomView.AddressInputOnboardView
+                android:id="@+id/input_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+            <Button
+                android:id="@+id/button_upload_profile_pic"
+                style="@style/ButtonPrimaryOnBoard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/done" />
+
+            <Button
+                android:id="@+id/button_skip"
+                style="@style/ButtonSkipOnBoard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/skip_now" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

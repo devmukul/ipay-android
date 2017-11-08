@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -30,6 +31,8 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequ
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPRequestTrustedDevice;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPResponseTrustedDevice;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -39,6 +42,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationTrustFragment extends BaseFragment implements HttpResponseListener {
@@ -51,6 +55,12 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
 
     private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
     private HttpRequestPostAsyncTask mAddTrustedDeviceTask = null;
+
+    private HttpRequestGetAsyncTask mGetProfileCompletionStatusTask = null;
+    private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
+
+    private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
+    private GetProfileInfoResponse mGetProfileInfoResponse;
 
     private Button mActivateButton;
     private EditText mOTPEditText;
@@ -296,7 +306,6 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                 mRequestOTPTask = null;
                 break;
             case Constants.COMMAND_ADD_TRUSTED_DEVICE:
-                hideProgressDialog();
 
                 try {
                     mAddToTrustedDeviceResponse = gson.fromJson(result.getJsonString(), AddToTrustedDeviceResponse.class);
@@ -307,25 +316,22 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
 
                         //Google Analytic event
                         Utilities.sendSuccessEventTracker(mTracker, "Login to Home", ProfileInfoCacheManager.getAccountId());
-                        // Launch HomeActivity from here on successful trusted device add
-                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        getProfileInfo();
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
+                        hideProgressDialog();
                         ((SignupOrLoginActivity) getActivity()).switchToDeviceTrustActivity();
-
                         //Google Analytic event
                         Utilities.sendSuccessEventTracker(mTracker, "Login to Add Trusted Device", ProfileInfoCacheManager.getAccountId());
                     } else {
+                        hideProgressDialog();
                         Toast.makeText(getActivity(), mAddToTrustedDeviceResponse.getMessage(), Toast.LENGTH_LONG).show();
-
                         //Google Analytic event
                         Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), mAddToTrustedDeviceResponse.getMessage());
                     }
-
-
                 } catch (Exception e) {
+                    hideProgressDialog();
                     e.printStackTrace();
                     Toast.makeText(getActivity(), R.string.failed_add_trusted_device, Toast.LENGTH_LONG).show();
-
                     //Google Analytic event
                     Utilities.sendFailedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId(), getString(R.string.failed_add_trusted_device));
                 }
@@ -333,9 +339,55 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                 mProgressDialog.dismiss();
                 mAddTrustedDeviceTask = null;
                 break;
+
+            case Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS:
+                hideProgressDialog();
+                try {
+                    mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        ProfileInfoCacheManager.switchedFromSignup(false);
+                        ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
+                        ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
+                        ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
+
+                        if(!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                                || !ProfileInfoCacheManager.isBasicInfoAdded()) {
+                            ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
+                        }else {
+                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        }
+                    } else {
+                        if (getActivity()!= null)
+                            Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toaster.makeText(getActivity(), R.string.failed_fetching_profile_completion_status, Toast.LENGTH_LONG);
+                }
+                mProgressDialog.dismiss();
+                mGetProfileCompletionStatusTask = null;
+                break;
+
+            case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
+
+                try {
+                    mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
+                        getProfileCompletionStatus();
+                    } else {
+                        Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+                }
+                mGetProfileInfoTask = null;
+                break;
             default:
                 hideProgressDialog();
-
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                 break;
@@ -349,7 +401,6 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
     private void attemptTrustedDeviceAdd() {
         if (mAddTrustedDeviceTask != null)
             return;
-
         AddToTrustedDeviceRequest mAddToTrustedDeviceRequest = new AddToTrustedDeviceRequest(mDeviceName,
                 Constants.MOBILE_ANDROID + mDeviceID, null);
         Gson gson = new Gson();
@@ -358,5 +409,27 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                 Constants.BASE_URL_MM + Constants.URL_ADD_TRUSTED_DEVICE, json, getActivity());
         mAddTrustedDeviceTask.mHttpResponseListener = this;
         mAddTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getProfileCompletionStatus() {
+
+        mProgressDialog.show();
+
+        if (mGetProfileCompletionStatusTask != null) {
+            return;
+        }
+        mGetProfileCompletionStatusTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_COMPLETION_STATUS,
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_COMPLETION_STATUS, getActivity(), this);
+        mGetProfileCompletionStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getProfileInfo() {
+        if (mGetProfileInfoTask != null) {
+            return;
+        }
+        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PROFILE_INFO_REQUEST,
+                Constants.BASE_URL_MM + Constants.URL_GET_PROFILE_INFO_REQUEST, getActivity());
+        mGetProfileInfoTask.mHttpResponseListener = this;
+        mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 }

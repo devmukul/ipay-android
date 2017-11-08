@@ -11,6 +11,7 @@
     <color name="colorBorderGray">#c3c1c1</color>
     <color name="colorTextPrimary">#6D6D6D</color>
     <color name="colorTextSecondary">#B3000000</color>
+    <color name="colorBlack87">#575757</color>
     <color name="colorPrimaryButton">#00B2A2</color>
     <color name="colorPrimaryButtonPressed">#00D3C0</color>
     <color name="colorSecondaryButton">#F5F5F5</color>
@@ -67,4 +68,6 @@
     <color name="colorWarningButton">#F4D03F</color>
     <color name="colorErrorButton">#E7505A</color>
     <color name="colorGrayDevider">#E0E0E0</color>
+
+    <color name="colorOnBoardText">#212121</color>
 </resources>
