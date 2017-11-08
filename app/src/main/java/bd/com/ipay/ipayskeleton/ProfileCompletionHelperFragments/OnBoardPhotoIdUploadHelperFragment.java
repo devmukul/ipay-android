@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 
 public class OnBoardPhotoIdUploadHelperFragment extends Fragment{
 
@@ -43,11 +44,11 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment{
         mSkipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(ProfileInfoCacheManager.isSwitchedFromSignup()){
+                if(ProfileInfoCacheManager.isSwitchedFromSignup() && SharedPrefManager.isBangladesh()){
                     ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
                 }
                 else{
-                    if(!ProfileInfoCacheManager.isBasicInfoAdded()){
+                    if(!ProfileInfoCacheManager.isBasicInfoAdded() && SharedPrefManager.isBangladesh()){
                         ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
                     }else {
                         ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();

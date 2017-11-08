@@ -161,11 +161,6 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
                 .replace(R.id.fragment_container, new OnBoardAddBasicInfoFragment()).addToBackStack(null).commit();
     }
 
-    public void switchToAddNewBankHelperFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new OnBoardAddBankHelperFragment()).commit();
-    }
-
     public void switchToAddNewBankFragment() {
         getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new OnBoardAddBankFragment()).commit();

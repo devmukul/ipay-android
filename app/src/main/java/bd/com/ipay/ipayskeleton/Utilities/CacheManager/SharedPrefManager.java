@@ -81,4 +81,8 @@ public class SharedPrefManager {
     public static boolean ifContainsUserID() {
         return (pref.contains(SharedPrefConstants.USERID));
     }
+
+    public static boolean isBangladesh() {
+       return getUserCountry().equalsIgnoreCase("BD");
+    }
 }
