@@ -95,13 +95,13 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
         mOptionsForImageSelectionList = Arrays.asList(getResources().getStringArray(R.array.upload_picker_action));
         mUploadImageView = (ProfileImageView) view.findViewById(R.id.profile_image_view);
         mUploadImageView.setProfilePicture(R.drawable.ic_onboard_profile_pic_upload_helper);
-        mDocumentHelperTextView  = (TextView) view.findViewById(R.id.profile_pic_upload_helper_title);
+        mDocumentHelperTextView = (TextView) view.findViewById(R.id.profile_pic_upload_helper_title);
 
-        if(mUri==null){
+        if (mUri == null) {
             mSelectPhotoButton.setVisibility(View.VISIBLE);
             mUploadPhotoButton.setVisibility(View.GONE);
             mDocumentHelperTextView.setText(getString(R.string.onboard_photo_upload_title));
-        }else{
+        } else {
             mUploadPhotoButton.setVisibility(View.VISIBLE);
             mSelectPhotoButton.setVisibility(View.GONE);
             mDocumentHelperTextView.setText(getString(R.string.onboard_nice_profile_photo));
@@ -262,7 +262,7 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
                     }
                 } else if (resultCode == CameraActivity.CAMERA_ACTIVITY_CRASHED) {
                     Intent systemCameraOpenIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    systemCameraOpenIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID, DocumentPicker.getTempFile(getActivity(),"profile_picture.jpg")));
+                    systemCameraOpenIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID, DocumentPicker.getTempFile(getActivity(), "profile_picture.jpg")));
                     startActivityForResult(systemCameraOpenIntent, ACTION_PICK_PROFILE_PICTURE);
                 }
                 break;
@@ -310,15 +310,14 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
                     ((ProfileCompletionHelperActivity) getActivity()).mProfilePhotoUri = mUri;
                     ProfileInfoCacheManager.uploadProfilePicture(true);
                     getActivity().getSupportFragmentManager().popBackStack();
-                    if(ProfileInfoCacheManager.isSwitchedFromSignup()){
+                    if (ProfileInfoCacheManager.isSwitchedFromSignup()) {
                         ((ProfileCompletionHelperActivity) getActivity()).switchToPhotoIdUploadHelperFragment();
-                    }
-                    else{
-                        if(!ProfileInfoCacheManager.isIdentificationDocumentUploaded()){
+                    } else {
+                        if (!ProfileInfoCacheManager.isIdentificationDocumentUploaded()) {
                             ((ProfileCompletionHelperActivity) getActivity()).switchToPhotoIdUploadHelperFragment();
-                        }else if(!ProfileInfoCacheManager.isBasicInfoAdded() && SharedPrefManager.isBangladesh()){
+                        } else if (!ProfileInfoCacheManager.isBasicInfoAdded() && SharedPrefManager.isBangladesh()) {
                             ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
-                        }else {
+                        } else {
                             ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
                         }
                     }

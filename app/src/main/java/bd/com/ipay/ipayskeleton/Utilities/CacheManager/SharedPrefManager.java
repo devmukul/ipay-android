@@ -83,6 +83,6 @@ public class SharedPrefManager {
     }
 
     public static boolean isBangladesh() {
-       return getUserCountry().equalsIgnoreCase("BD");
+        return getUserCountry().equalsIgnoreCase("BD");
     }
 }

@@ -14,7 +14,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 
-public class OnBoardPhotoIdUploadHelperFragment extends Fragment{
+public class OnBoardPhotoIdUploadHelperFragment extends Fragment {
 
     private ImageView mUploadImageView;
     private Button mUploadButton;
@@ -35,22 +35,22 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment{
         mUploadButton = (Button) view.findViewById(R.id.button_upload_photo_id);
         mSkipButton = (Button) view.findViewById(R.id.button_skip);
         mBackButtonTop = (ImageView) view.findViewById(R.id.back);
-        if (getActivity().getSupportFragmentManager().getBackStackEntryCount()<=1){
+        if (getActivity().getSupportFragmentManager().getBackStackEntryCount() <= 1) {
             mBackButtonTop.setVisibility(View.INVISIBLE);
         }
     }
+
     public void setButtonActions() {
 
         mSkipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(ProfileInfoCacheManager.isSwitchedFromSignup() && SharedPrefManager.isBangladesh()){
+                if (ProfileInfoCacheManager.isSwitchedFromSignup() && SharedPrefManager.isBangladesh()) {
                     ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
-                }
-                else{
-                    if(!ProfileInfoCacheManager.isBasicInfoAdded() && SharedPrefManager.isBangladesh()){
+                } else {
+                    if (!ProfileInfoCacheManager.isBasicInfoAdded() && SharedPrefManager.isBangladesh()) {
                         ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
-                    }else {
+                    } else {
                         ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
                     }
                 }
