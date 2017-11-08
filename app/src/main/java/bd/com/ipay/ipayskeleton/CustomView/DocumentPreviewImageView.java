@@ -49,19 +49,19 @@ public class DocumentPreviewImageView extends RelativeLayout {
         mChildView = LayoutInflater.from(getContext()).inflate(R.layout.layout_document_preview_image_view, null, false);
         mDocumentImagePreviewHolder = findViewByIdAutoCast(R.id.document_image_preview_holder);
         mImageView = findViewByIdAutoCast(R.id.image_view);
-        mCancelButton =findViewByIdAutoCast(R.id.cancel_button);
+        mCancelButton = findViewByIdAutoCast(R.id.cancel_button);
         addView(mChildView);
-        Drawable drawable=getResources().getDrawable(R.drawable.cancel);
+        Drawable drawable = getResources().getDrawable(R.drawable.cancel);
         drawable.setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
         mCancelButton.setImageDrawable(drawable);
         setCancelButtonAction();
     }
 
-    private void hidePreview(){
+    private void hidePreview() {
         this.setVisibility(GONE);
     }
 
-    private void setCancelButtonAction(){
+    private void setCancelButtonAction() {
         mCancelButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -10,22 +10,23 @@
         android:background="#99000000"
         android:clickable="true"
         android:focusable="true"
-        android:padding="@dimen/value10">
-    </RelativeLayout>
+        android:padding="@dimen/value10"></RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/image_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:id="@+id/image_layout"
-        android:layout_margin="@dimen/value15">
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_centerInParent="true">
 
         <ImageView
             android:id="@+id/image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@color/divider_gray"
+            android:layout_margin="@dimen/value10"
             android:clickable="true"
-            android:layout_margin="@dimen/value15"
             android:focusable="true"
             android:scaleType="fitCenter" />
 
@@ -34,6 +35,6 @@
             android:layout_width="@dimen/value25"
             android:layout_height="@dimen/value25"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"/>
+            android:layout_alignParentTop="true" />
     </RelativeLayout>
 </RelativeLayout>
