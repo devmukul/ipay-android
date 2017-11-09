@@ -31,7 +31,7 @@ public class OnBoardAddBasicInfoHelperFragment extends Fragment {
     private void initializeViews(View view) {
         mUploadButton = (Button) view.findViewById(R.id.button_add_basic_info);
         mSkipButton = (Button) view.findViewById(R.id.button_skip);
-        mBackButtonTop  = (ImageView) view.findViewById(R.id.back);
+        mBackButtonTop = (ImageView) view.findViewById(R.id.back);
 
         if (getActivity().getSupportFragmentManager().getBackStackEntryCount()<=1){
             mBackButtonTop.setVisibility(View.INVISIBLE);

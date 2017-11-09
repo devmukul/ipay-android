@@ -567,6 +567,8 @@
     <string name="birth_certificate">Birth Certificate</string>
     <string name="birth_certificate_id">Birth Certificate ID</string>
     <string name="tin">e-Tin (Personal)</string>
+    <string name="personal_tin">e-Tin (Personal)</string>
+    <string name="personal_tin_id">e-Tin (Personal) ID</string>
     <string name="business_tin_id">Business TIN ID</string>
     <string name="trade_license">Trade License</string>
     <string name="trade_license_id">Trade License ID</string>
@@ -628,6 +630,7 @@
     <string name="fathers_name">Father\'s Name</string>
     <string name="mothers_name">Mother\'s Name</string>
     <string name="other">Other</string>
+    <string name="other_id">Document ID</string>
     <string name="id">ID</string>
     <string name="document_name">Document Name</string>
     <string name="mobile">Mobile No.</string>
@@ -944,11 +947,28 @@
     <string name="screen_name_notifications">Notifications list</string>
     <string name="screen_name_pay">Payment</string>
 
+    <string name="screen_name_home">Wallet Page</string>
+    <string name="screen_name_withdraw_money_review">Withdraw Money Confirmation Page</string>
+    <string name="screen_name_withdraw_money">Withdraw Money Page</string>
+    <string name="screen_name_mobile_topup_review">Topup Confirmation Page</string>
+    <string name="screen_name_mobile_topup">Topup Page</string>
+    <string name="screen_name_send_money_review">Send Money Confirmation Page</string>
+    <string name="screen_name_send_money">Send Money Page</string>
+    <string name="screen_name_add_money_review">Add Money Confirmation Page</string>
+    <string name="screen_name_add_money">Add Money Page</string>
+    <string name="screen_name_scan_qr_code">QR Scan Page</string>
+    <string name="screen_name_invite_to_ipay">Invite Page</string>
     <string name="screen_name_login">Signin Page</string>
+    <string name="screen_name_create_ticket">Create Support Ticket Page</string>
+    <string name="screen_name_ticket_list">Support Ticket Page</string>
     <string name="screen_name_otp_for_login">Signin OTP Page</string>
     <string name="screen_name_personal_otp_verification">Signup OTP Page</string>
     <string name="screen_name_personal_signup_step_1">Personal Signup Page</string>
     <string name="screen_name_bank_account">Bank List Page</string>
+    <string name="screen_name_ipay_contacts">Contact Us Page</string>
+    <string name="screen_name_activity_log">Activity Page</string>
+    <string name="screen_name_notifications">Notification Page</string>
+    <string name="screen_name_pay">Pay Page</string>
     <string name="screen_name_user_email">Email Page</string>
     <string name="screen_name_user_address">Address Page</string>
     <string name="screen_name_identification_documents_list">Document Page</string>
@@ -967,6 +987,11 @@
     <string name="screen_name_business_signup_step_3">Business Signup A/H Info Page</string>
     <string name="screen_name_user_account">Profile Page</string>
     <string name="screen_name_address_edit">Address Edit Page</string>
+    <string name="screen_name_ipay_about">About Us Page</string>
+    <string name="screen_name_money_request_sent">Request Money Page</string>
+    <string name="screen_name_request_money_sent_review">Request Money Accept/Reject Page</string>
+    <string name="screen_name_request_money_sent">Request Money Page</string>
+    <string name="screen_name_request_money_review">Request Money Confirmation Page</string>
     <string name="screen_name_basic_info_edit">Basic Info Update Page</string>
     <string name="screen_name_permanent_info_edit">Permanent Info Update Page</string>
     <string name="screen_name_parent_info_edit">Parent Info Update Page</string>
@@ -978,11 +1003,35 @@
     <string name="screen_name_trusted_network">Trusted Network Page</string>
     <string name="screen_name_update_security_question">Update Security Question Page</string>
     <string name="screen_name_select_account_type">Join Page</string>
+    <string name="screen_name_make_payment_review">Make Payment Confirmation Page</string>
+    <string name="screen_name_make_payment">Permanent Address Page</string>
+    <string name="screen_name_payment_request_received_details">Payment Request Accept/Reject Page</string>
+    <string name="screen_name_payment_request_received">Payment Request Page</string>
+    <string name="screen_name_single_invoice">Invoice Page</string>
+    <string name="screen_name_business_information">Business Basic Info Page</string>
+
+    <string name="screen_name_business_information_edit">Update Business Basic Info Page</string>
+    <string name="screen_name_ticket_details">Ticket Details Page</string>
+    <string name="screen_name_privacy_policy">Privacy policy Page</string>
+    <string name="screen_name_terms_and_service">Terms and Service Page</string>
+    <string name="screen_name_invite_list">Invite Page</string>
+    <string name="screen_name_security_settings">Security Page</string>
+    <string name="screen_name_business_contact">Business Contact Page</string>
+    <string name="screen_name_contacts">Contacts Page</string>
+    <string name="screen_name_transaction_details">Transaction Details Page</string>
+    <string name="screen_name_transaction_history_completed">Completed Transaction History Page</string>
+    <string name="screen_name_transaction_history_pending">Pending Transaction History Page</string>
 
     <string name="screen_name_business_otp_verifications">Signup OTP Page</string>
     <string name="screen_name_remove_trusted_device">Trusted Device Removal Page</string>
     <string name="screen_name_consent_agreement_for_bank">Consent Agreement Page</string>
 
+    <string name="screen_name_request_payment_review">Make Payment Confirmation Page</string>
+    <string name="screen_name_request_payment">Make Payment List Page</string>
+    <string name="screen_name_money_request_sent_details">Request Money Details Page</string>
+    <string name="screen_name_request_money">Request Money List Page</string>
+    <string name="screen_name_received_money_request_history">Received Money History PAge Page</string>
+    <string name="screen_name_received_money_request">Received Money Page</string>
 
     <string name="no_browser_found_error_message">No default browser found to open. Please install or enable your browser.</string>
     <string name="no_browser_map_app_found_error_message">No default browser or google maps app found to open. Please install Google Maps/Browser or enable your browser.</string>
@@ -990,7 +1039,13 @@
     <string name="search_transaction">Search transaction</string>
     <string name="completed_transaction_list">Completed transaction list</string>
     <string name="pending_transaction_list">Pending transaction list</string>
-
+    <string name="verification_icon">Verification Icon</string>
+    <string name="document_front_side">Document Front Side/First Page</string>
+    <string name="upload_front_page">Upload first/front page</string>
+    <string name="upload_back_page">Upload second/back page</string>
+    <string name="choose_file">Choose file</string>
+    <string name="maximum_file_size_message">Maximum file size is 5 MB. JPG or PNG format only.</string>
+    <string name="upload_document">Upload Document</string>
     <string name="select_photo">Select photo</string>
     <string name="upload_photo">Confirm photo</string>
     <string name="upload_photo_id">Upload photo id</string>
@@ -1001,6 +1056,8 @@
 
     <string name="onboard_step_one_title">Great! you\'re almost done</string>
     <string name="onboard_photo_id_upload_title">Upload photo id</string>
+    <string name="onboard_document_title">Documents</string>
+    <string name="onboard_upload_document_title">Upload document</string>
     <string name="onboard_nice_profile_photo">Nice profile photo</string>
     <string name="onboard_photo_upload_title">Upload profile photo</string>
     <string name="onboard_profile_info_update_title">Basic information</string>
@@ -1020,4 +1077,6 @@
     <string name="change_two_fa_settings">Changing Two Fa Settings</string>
     <string name="accepting_send_money_request">Accepting Money Request</string>
 
+    <string name="please_enter_a_document_id">Please enter your document ID</string>
+    <string name="alpha_numeric">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
 </resources>

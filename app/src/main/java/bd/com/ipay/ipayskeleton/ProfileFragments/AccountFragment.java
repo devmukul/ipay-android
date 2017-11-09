@@ -258,7 +258,15 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
     }
 
     private void selectProfilePictureIntent(int id) {
-        Intent imagePickerIntent = DocumentPicker.getPickerIntentByID(getActivity(), getString(R.string.select_a_document), id, Constants.CAMERA_FRONT, "profile_picture.jpg");
+        Intent imagePickerIntent;
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
+            imagePickerIntent = DocumentPicker.getPickerIntentByID(getActivity(), getString(R.string.select_a_document), id,
+                    Constants.CAMERA_REAR, getString(R.string.profile_picture_temp_file));
+        } else {
+            imagePickerIntent = DocumentPicker.getPickerIntentByID(getActivity(), getString(R.string.select_a_document), id,
+                    Constants.CAMERA_FRONT, getString(R.string.profile_picture_temp_file));
+        }
+
         startActivityForResult(imagePickerIntent, ACTION_PICK_PROFILE_PICTURE);
     }
 
