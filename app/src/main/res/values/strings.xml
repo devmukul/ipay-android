@@ -901,52 +901,6 @@
     <string name="post_paid">Post-paid</string>
 
     <!--All Screen Name for Google Analytic .... Can be optimized later-->
-    <string name="screen_name_withdraw_money_review">Withdraw money review</string>
-    <string name="screen_name_withdraw_money">Withdraw money</string>
-    <string name="screen_name_mobile_topup_review">Mobile topup review</string>
-    <string name="screen_name_mobile_topup">Mobile topup</string>
-    <string name="screen_name_send_money_review">Send money review</string>
-    <string name="screen_name_send_money">Send money</string>
-    <string name="screen_name_request_payment_review">Request payment review</string>
-    <string name="screen_name_request_payment">Request payment</string>
-    <string name="screen_name_money_request_sent_details">Request money sent details</string>
-    <string name="screen_name_money_request_sent">Request money sent</string>
-    <string name="screen_name_request_money_sent_review">Request money sent review</string>
-    <string name="screen_name_request_money_sent">Request money sent</string>
-    <string name="screen_name_request_money_review">Request money review</string>
-    <string name="screen_name_request_money">Request money</string>
-    <string name="screen_name_received_money_request_history">Received money request history</string>
-    <string name="screen_name_received_money_request">Received money request</string>
-    <string name="screen_name_scan_qr_code">Scan QR code</string>
-    <string name="screen_name_add_money_review">Add money review</string>
-    <string name="screen_name_add_money">Add money</string>
-    <string name="screen_name_invite_to_ipay">Invite to iPay</string>
-    <string name="screen_name_make_payment_review">Make payment review</string>
-    <string name="screen_name_make_payment">make payment</string>
-    <string name="screen_name_payment_request_received_details">Request payment received details</string>
-    <string name="screen_name_payment_request_received">Request payment received</string>
-    <string name="screen_name_single_invoice">Single invoice</string>
-    <string name="screen_name_business_information">Business information</string>
-    <string name="screen_name_business_information_edit">Business information edit</string>
-    <string name="screen_name_create_ticket">Create ticket</string>
-    <string name="screen_name_ticket_details">Ticket Details</string>
-    <string name="screen_name_ticket_list">Ticket list</string>
-    <string name="screen_name_ipay_contacts">iPay contacts</string>
-    <string name="screen_name_ipay_about">About iPay</string>
-    <string name="screen_name_privacy_policy">Privacy policy</string>
-    <string name="screen_name_terms_and_service">Terms and service</string>
-    <string name="screen_name_activity_log">Activity log</string>
-    <string name="screen_name_invite_list">Invite list</string>
-    <string name="screen_name_security_settings">Security settings</string>
-    <string name="screen_name_business_contact">Business contact</string>
-    <string name="screen_name_contacts">Contacts</string>
-    <string name="screen_name_transaction_details">Transaction details</string>
-    <string name="screen_name_transaction_history_completed">Complete transaction history</string>
-    <string name="screen_name_transaction_history_pending">Pending transaction history</string>
-    <string name="screen_name_home">Home page</string>
-    <string name="screen_name_notifications">Notifications list</string>
-    <string name="screen_name_pay">Payment</string>
-
     <string name="screen_name_home">Wallet Page</string>
     <string name="screen_name_withdraw_money_review">Withdraw Money Confirmation Page</string>
     <string name="screen_name_withdraw_money">Withdraw Money Page</string>
@@ -1076,6 +1030,7 @@
     <string name="file_size_large">Your file size is too large. Please select another.</string>
     <string name="change_two_fa_settings">Changing Two Fa Settings</string>
     <string name="accepting_send_money_request">Accepting Money Request</string>
+    <string name="two_fa_settings">Two Factor Authentication</string>
 
     <string name="please_enter_a_document_id">Please enter your document ID</string>
     <string name="alpha_numeric">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
