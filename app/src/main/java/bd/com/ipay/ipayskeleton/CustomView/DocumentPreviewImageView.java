@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.CustomView;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
@@ -21,7 +22,9 @@ public class DocumentPreviewImageView extends RelativeLayout {
 
     private View mChildView;
     private RelativeLayout mDocumentImagePreviewHolder;
+    private RelativeLayout mImageLayout;
     private ImageView mImageView;
+    private ImageView mCancelButton;
 
     public DocumentPreviewImageView(@NonNull Context context) {
         this(context, null);
@@ -46,7 +49,31 @@ public class DocumentPreviewImageView extends RelativeLayout {
         mChildView = LayoutInflater.from(getContext()).inflate(R.layout.layout_document_preview_image_view, null, false);
         mDocumentImagePreviewHolder = findViewByIdAutoCast(R.id.document_image_preview_holder);
         mImageView = findViewByIdAutoCast(R.id.image_view);
+        mCancelButton = findViewByIdAutoCast(R.id.cancel_button);
         addView(mChildView);
+        Drawable drawable = getResources().getDrawable(R.drawable.cancel);
+        drawable.setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
+        mCancelButton.setImageDrawable(drawable);
+        setCancelButtonAction();
+    }
+
+    private void hidePreview() {
+        this.setVisibility(GONE);
+    }
+
+    private void setCancelButtonAction() {
+        mCancelButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hidePreview();
+            }
+        });
+        mImageView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hidePreview();
+            }
+        });
     }
 
     private <T extends View> T findViewByIdAutoCast(@IdRes int id) {
