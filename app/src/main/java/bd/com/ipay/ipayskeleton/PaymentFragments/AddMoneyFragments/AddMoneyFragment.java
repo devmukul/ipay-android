@@ -25,7 +25,6 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
@@ -77,7 +76,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
     private ProgressDialog mProgressDialog;
 
-    private List<String> mAddMoneyOptionsTitle = Arrays.asList(Constants.ADD_MONEY_BY_BANK_TITLE, Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE);
+    private String[] mAddMoneyOptionsTitle = {Constants.ADD_MONEY_BY_BANK_TITLE, Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE};
     private int[] mAddMoneyOptionsIcon = {R.drawable.ic_bank111, R.drawable.ic_activity_cash_in};
 
     @Override
@@ -113,7 +112,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     if (verifyUserInputs()) {
-                        launchReviewPage(mAddMoneyOptionsTitle.get(mAddMoneyOptionSelectorView.getSelectedItemPosition()));
+                        launchReviewPage(mAddMoneyOptionsTitle[mAddMoneyOptionSelectorView.getSelectedItemPosition()]);
                     }
                 } else
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
@@ -121,7 +120,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         });
 
         mAddMoneyOptionSelectorView.setSelectorDialogTitle(getString(R.string.add_money_from));
-        mAddMoneyOptionSelectorView.setItems(mAddMoneyOptionsTitle, mAddMoneyOptionsIcon);
         mAddMoneyOptionSelectorView.setOnItemAccessValidation(new SelectorView.OnItemAccessValidation() {
             @Override
             public boolean hasItemAccessAbility(int id, String name) {
@@ -135,11 +133,34 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 }
             }
         });
+        final List<String> availableAddMoneyOptions = new ArrayList<>();
+        final List<Integer> dummyList = new ArrayList<>();
+        for (int i = 0; i < mAddMoneyOptionsTitle.length; i++) {
+            switch (mAddMoneyOptionsTitle[i]) {
+                case Constants.ADD_MONEY_BY_BANK_TITLE:
+                    if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK)) {
+                        availableAddMoneyOptions.add(mAddMoneyOptionsTitle[i]);
+                        dummyList.add(mAddMoneyOptionsIcon[i]);
+                    }
+                    break;
+                case Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE:
+                    if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)) {
+                        availableAddMoneyOptions.add(mAddMoneyOptionsTitle[i]);
+                        dummyList.add(mAddMoneyOptionsIcon[i]);
+                    }
+                    break;
+            }
+        }
+        int[] availableAddMoneyOptionIcons = new int[dummyList.size()];
+        for (int i = 0; i < dummyList.size(); i++) {
+            availableAddMoneyOptionIcons[i] = dummyList.get(i);
+        }
+        mAddMoneyOptionSelectorView.setItems(availableAddMoneyOptions, availableAddMoneyOptionIcons);
         mAddMoneyOptionSelectorView.setOnItemSelectListener(new AbstractSelectorView.OnItemSelectListener() {
 
             @Override
             public boolean onItemSelected(int selectedItemPosition) {
-                switch (mAddMoneyOptionsTitle.get(selectedItemPosition)) {
+                switch (availableAddMoneyOptions.get(selectedItemPosition)) {
                     case Constants.ADD_MONEY_BY_BANK_TITLE:
                         if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
                             setupAddMoneyFromBank();
