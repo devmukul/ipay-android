@@ -436,14 +436,19 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                             BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
 
                             for (BusinessRule rule : businessRuleArray) {
-                                if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                                    AddMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                                    AddMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_CARDMONEY_MAX_AMOUNT_SINGLE)) {
-                                    AddMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_ADD_CARDMONEY_MIN_AMOUNT_SINGLE)) {
-                                    AddMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                switch (rule.getRuleID()) {
+                                    case Constants.SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT:
+                                        AddMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                        break;
+                                    case Constants.SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT:
+                                        AddMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                        break;
+                                    case Constants.SERVICE_RULE_ADD_CARDMONEY_MAX_AMOUNT_SINGLE:
+                                        AddMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                        break;
+                                    case Constants.SERVICE_RULE_ADD_CARDMONEY_MIN_AMOUNT_SINGLE:
+                                        AddMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                        break;
                                 }
                             }
 
