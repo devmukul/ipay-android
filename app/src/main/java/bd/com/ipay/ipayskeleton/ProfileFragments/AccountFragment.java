@@ -71,6 +71,8 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
     private IconifiedTextViewWithButton mIntroducer;
     private IconifiedTextViewWithButton mAddress;
     private IconifiedTextViewWithButton mProfileCompleteness;
+    private IconifiedTextViewWithButton mManagePeople;
+    private View mDividerManagePeople;
 
     private String mName = "";
     private String mMobileNumber = "";
@@ -111,6 +113,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
         mAddress = (IconifiedTextViewWithButton) view.findViewById(R.id.present_address);
         mIntroducer = (IconifiedTextViewWithButton) view.findViewById(R.id.introducer);
         mDocuments = (IconifiedTextViewWithButton) view.findViewById(R.id.documents);
+        mManagePeople = (IconifiedTextViewWithButton) view.findViewById(R.id.manage_people);
         mProfileCompleteness = (IconifiedTextViewWithButton) view.findViewById(R.id.profile_completion);
 
         mProgressDialog = new ProgressDialog(getActivity());
@@ -121,11 +124,17 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
 
         mOptionsForImageSelectionList = Arrays.asList(getResources().getStringArray(R.array.upload_picker_action));
 
+        mDividerManagePeople = view.findViewById(R.id.divider_manage_people);
+
         setProfileInformation();
         setVisibilityOfProfilePicUploadButton();
         initProfilePicHelperDialog();
         setButtonActions();
         getProfileCompletionStatus();
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
+            mDividerManagePeople.setVisibility(View.VISIBLE);
+            mManagePeople.setVisibility(View.VISIBLE);
+        }
 
         return view;
     }
@@ -135,7 +144,6 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
         super.onResume();
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_user_account));
     }
-
 
     private void setVisibilityOfProfilePicUploadButton() {
         if (ProfileInfoCacheManager.isAccountVerified())
@@ -154,6 +162,13 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
                         photoSelectionHelperDialog.show();
                     } else
                         showProfilePictureUpdateRestrictionDialog();
+                }
+            });
+
+            mManagePeople.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ///TODO Switch To Manage People Fragment
                 }
             });
 
