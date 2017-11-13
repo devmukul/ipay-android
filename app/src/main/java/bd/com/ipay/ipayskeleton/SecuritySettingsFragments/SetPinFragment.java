@@ -19,7 +19,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFaServicesDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -37,7 +37,7 @@ public class SetPinFragment extends BaseFragment implements HttpResponseListener
     private SetPinRequest mSetPinRequest;
 
     private ProgressDialog mProgressDialog;
-    private OTPVerificationForTwoFaServicesDialog mOTPVerificationForTwoFaServicesDialog;
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private EditText mEnterPINEditText;
     private EditText mConfirmPINEditText;
@@ -126,8 +126,8 @@ public class SetPinFragment extends BaseFragment implements HttpResponseListener
 
     private void launchOTPVerification() {
         String jsonString = new Gson().toJson(mSetPinRequest);
-        mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), jsonString, Constants.COMMAND_SET_PIN,
-                Constants.BASE_URL_MM + Constants.URL_SET_PIN);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_SET_PIN,
+                Constants.BASE_URL_MM + Constants.URL_SET_PIN, Constants.METHOD_PUT);
     }
 
     public void setTitle() {
@@ -165,15 +165,10 @@ public class SetPinFragment extends BaseFragment implements HttpResponseListener
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mSetPinResponse.getMessage());
                     Utilities.sendBlockedEventTracker(mTracker, "Pin Set", ProfileInfoCacheManager.getAccountId());
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                     Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     SecuritySettingsActivity.otpDuration = mSetPinResponse.getOtpValidFor();
                     launchOTPVerification();
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                    Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    SecuritySettingsActivity.otpDuration = mSetPinResponse.getOtpValidFor();
-                    launchOTPVerification();
-
                 } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();

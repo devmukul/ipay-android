@@ -25,7 +25,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFaServicesDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentResponse;
@@ -47,7 +47,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     private PaymentRequest mPaymentRequest;
 
     private ProgressDialog mProgressDialog;
-    private OTPVerificationForTwoFaServicesDialog mOTPVerificationForTwoFaServicesDialog;
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private BigDecimal mAmount;
     private String mReceiverName;
@@ -238,8 +238,8 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
 
     private void launchOTPVerification() {
         String jsonString = new Gson().toJson(mPaymentRequest);
-        mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), jsonString, Constants.COMMAND_PAYMENT,
-                Constants.BASE_URL_SM + Constants.URL_PAYMENT);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_PAYMENT,
+                Constants.BASE_URL_SM + Constants.URL_PAYMENT, Constants.METHOD_POST);
     }
 
 
@@ -276,11 +276,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                     ((MyApplication) getActivity().getApplication()).launchLoginPage(mPaymentResponse.getMessage());
                     Utilities.sendBlockedEventTracker(mTracker, "Make Payment", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
 
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
-                    Toast.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    SecuritySettingsActivity.otpDuration = mPaymentResponse.getOtpValidFor();
-                    launchOTPVerification();
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                     Toast.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     SecuritySettingsActivity.otpDuration = mPaymentResponse.getOtpValidFor();
                     launchOTPVerification();

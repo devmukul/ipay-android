@@ -28,7 +28,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFaServicesDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
@@ -69,7 +69,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
 
     private AddMoneyRequest mAddMoneyRequest;
 
-    private OTPVerificationForTwoFaServicesDialog mOTPVerificationForTwoFaServicesDialog;
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
 
     @Override
@@ -163,10 +163,11 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
             attemptAddMoney(null);
         }
     }
+
     private void launchOTPVerification() {
         String jsonString = new Gson().toJson(mAddMoneyRequest);
-        mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), jsonString, Constants.COMMAND_ADD_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_ADD_MONEY);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_ADD_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_ADD_MONEY, Constants.METHOD_POST);
     }
 
     private void attemptAddMoney(String pin) {
@@ -255,16 +256,11 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mAddMoneyResponse.getMessage());
                     Utilities.sendBlockedEventTracker(mTracker, "Add Money", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
-                }
-                else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                     Toast.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    SecuritySettingsActivity.otpDuration=mAddMoneyResponse.getOtpValidFor();
+                    SecuritySettingsActivity.otpDuration = mAddMoneyResponse.getOtpValidFor();
                     launchOTPVerification();
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                    Toast.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    SecuritySettingsActivity.otpDuration=mAddMoneyResponse.getOtpValidFor();
-                    launchOTPVerification();
-                }else {
+                } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_LONG);
 

@@ -30,7 +30,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFaServicesDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
@@ -79,7 +79,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
     private TopupRequest mTopupRequestModel;
 
-    private OTPVerificationForTwoFaServicesDialog mOTPVerificationForTwoFaServicesDialog;
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private View v;
     private Tracker mTracker;
@@ -251,8 +251,8 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
     private void launchOTPVerification() {
         String jsonString = new Gson().toJson(mTopupRequestModel);
-        mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), jsonString, Constants.COMMAND_TOPUP_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_TOPUP_REQUEST,
+                Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, Constants.METHOD_POST);
     }
 
     private void getProfileInfo(String mobileNumber) {
@@ -322,11 +322,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                         Toaster.makeText(getActivity(), mTopupResponse.getMessage(), Toast.LENGTH_LONG);
                         //Google Analytic event
                         Utilities.sendFailedEventTracker(mTracker, "TopUp", ProfileInfoCacheManager.getAccountId(), errorMessage, Double.valueOf(mAmount).longValue());
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
-                        Toast.makeText(getActivity(), mTopupResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                        SecuritySettingsActivity.otpDuration = mTopupResponse.getOtpValidFor();
-                        launchOTPVerification();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         Toast.makeText(getActivity(), mTopupResponse.getMessage(), Toast.LENGTH_SHORT).show();
                         SecuritySettingsActivity.otpDuration = mTopupResponse.getOtpValidFor();
                         launchOTPVerification();

@@ -2,15 +2,15 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Model.TwoFA.TwoFAService;
+import bd.com.ipay.ipayskeleton.Model.TwoFA.TwoFactorAuthService;
 
 public class TwoFaServiceListWithOTPRequest {
     String otp;
-    List<TwoFAService> services;
+    List<TwoFactorAuthService> services;
 
-    public TwoFaServiceListWithOTPRequest(String otp, List<TwoFAService> mTwoFaService) {
+    public TwoFaServiceListWithOTPRequest(String otp, List<TwoFactorAuthService> mTwoFactorAuthService) {
         this.otp = otp;
-        this.services = mTwoFaService;
+        this.services = mTwoFactorAuthService;
     }
 
     public String getOtp() {
@@ -21,11 +21,11 @@ public class TwoFaServiceListWithOTPRequest {
         this.otp = otp;
     }
 
-    public List<TwoFAService> getmTwoFaService() {
+    public List<TwoFactorAuthService> getmTwoFaService() {
         return services;
     }
 
-    public void setmTwoFaService(List<TwoFAService> mTwoFaService) {
-        this.services = mTwoFaService;
+    public void setmTwoFaService(List<TwoFactorAuthService> mTwoFactorAuthService) {
+        this.services = mTwoFactorAuthService;
     }
 }

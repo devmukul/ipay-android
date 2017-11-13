@@ -12,7 +12,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.AddTrustedPersonFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.ChangePasswordFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.FingerPrintAuthenticationSettingsFragment;
-import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.ImplementTwoFaSettingsFragment;
+import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.ImplementTwoFactorAuthenticationSettingsFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.PasswordRecoveryFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.SecurityQuestionFragment;
 import bd.com.ipay.ipayskeleton.SecuritySettingsFragments.SetPinFragment;
@@ -36,7 +36,7 @@ public class SecuritySettingsActivity extends BaseActivity {
             if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.ADD_TRUSTED_PERSON)) {
                 switchToTrustedPersonFragment();
             } else if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.TWO_FA_SETTINGS)) {
-                switchTo2FaSettingsFragment();
+                switchToTwoFactorAuthSettingsFragment();
             } else {
                 switchToAccountSettingsFragment();
             }
@@ -158,12 +158,12 @@ public class SecuritySettingsActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    public void switchTo2FaSettingsFragment() {
+    public void switchToTwoFactorAuthSettingsFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 1)
             getSupportFragmentManager().popBackStackImmediate();
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new ImplementTwoFaSettingsFragment()).addToBackStack(null).commit();
+                .replace(R.id.fragment_container, new ImplementTwoFactorAuthenticationSettingsFragment()).addToBackStack(null).commit();
     }
 
     @Override

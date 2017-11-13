@@ -137,7 +137,7 @@ public class SecuritySettingsFragment extends BaseFragment implements HttpRespon
         mTwoFAHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((SecuritySettingsActivity) getActivity()).switchTo2FaSettingsFragment();
+                ((SecuritySettingsActivity) getActivity()).switchToTwoFactorAuthSettingsFragment();
             }
         });
     }

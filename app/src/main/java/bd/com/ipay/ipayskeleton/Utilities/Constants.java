@@ -643,8 +643,8 @@ public class Constants {
     public static final String COMMAND_MAKE_PAYMENT_EDUCATION = "COMMAND_MAKE_PAYMENT_EDUCATION";
 
     //Two FA
-    public static final String COMMAND_GET_TWO_FA_SETTING="COMMAND_GET_TWO_FA_SETTING";
-    public static final String COMMAND_PUT_TWO_FA_SETTING="COMMAND_PUT_TWO_FA_SETTING";
+    public static final String COMMAND_GET_TWO_FACTOR_AUTH_SETTINGS ="COMMAND_GET_TWO_FACTOR_AUTH_SETTINGS";
+    public static final String COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS ="COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS";
 
     //Data Collector
     public static final String COMMAND_POST_USER_LOCATION = "COMMAND_POST_USER_LOCATION";
@@ -804,6 +804,9 @@ public class Constants {
     public static final String[] LOCATION_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
 
     public static final String PROFILE_PHOTO_PATH = "profile_photo_path";
+
+    public static final String METHOD_POST="POST";
+    public static final String METHOD_PUT="PUT";
 
 
 }

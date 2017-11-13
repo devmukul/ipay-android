@@ -5,12 +5,12 @@ import java.util.List;
 public class TwoFAServiceGroup {
 
     private String groupName;
-    private List<TwoFAService> services;
+    private List<TwoFactorAuthService> services;
 
     public TwoFAServiceGroup() {
     }
 
-    public TwoFAServiceGroup(String groupName, List<TwoFAService> services) {
+    public TwoFAServiceGroup(String groupName, List<TwoFactorAuthService> services) {
 
         this.groupName = groupName;
         this.services = services;
@@ -25,11 +25,11 @@ public class TwoFAServiceGroup {
         this.groupName = groupName;
     }
 
-    public List<TwoFAService> getServices() {
+    public List<TwoFactorAuthService> getServices() {
         return services;
     }
 
-    public void setServices(List<TwoFAService> services) {
+    public void setServices(List<TwoFactorAuthService> services) {
         this.services = services;
     }
 

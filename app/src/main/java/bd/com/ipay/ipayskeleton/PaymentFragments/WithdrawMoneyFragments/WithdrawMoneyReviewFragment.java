@@ -28,7 +28,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFaServicesDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
@@ -46,7 +46,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     private WithdrawMoneyResponse mWithdrawMoneyResponse;
 
     private ProgressDialog mProgressDialog;
-    private OTPVerificationForTwoFaServicesDialog mOTPVerificationForTwoFaServicesDialog;
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private double mAmount;
     private String mDescription;
@@ -218,8 +218,8 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
 
     private void launchOTPVerification() {
         String jsonString = new Gson().toJson(mWithdrawMoneyRequest);
-        mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), jsonString, Constants.COMMAND_WITHDRAW_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_WITHDRAW_MONEY);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_WITHDRAW_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_WITHDRAW_MONEY,Constants.METHOD_POST);
     }
 
     @Override

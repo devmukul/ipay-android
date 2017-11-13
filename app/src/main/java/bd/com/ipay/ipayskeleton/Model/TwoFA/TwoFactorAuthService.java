@@ -1,16 +1,16 @@
 package bd.com.ipay.ipayskeleton.Model.TwoFA;
 
-public class TwoFAService {
+public class TwoFactorAuthService {
 
     private int serviceId;
     private String serviceName;
     private boolean isEnabled;
 
-    public TwoFAService() {
+    public TwoFactorAuthService() {
 
     }
 
-    public TwoFAService(int serviceId, String serviceName, boolean isEnabled) {
+    public TwoFactorAuthService(int serviceId, String serviceName, boolean isEnabled) {
 
         this.serviceId = serviceId;
         this.serviceName = serviceName;
@@ -44,7 +44,7 @@ public class TwoFAService {
 
     @Override
     public String toString() {
-        return "TwoFAService{" +
+        return "TwoFactorAuthService{" +
                 "serviceId='" + serviceId + '\'' +
                 ", serviceName='" + serviceName + '\'' +
                 ", isEnabled='" + isEnabled + '\'' +
