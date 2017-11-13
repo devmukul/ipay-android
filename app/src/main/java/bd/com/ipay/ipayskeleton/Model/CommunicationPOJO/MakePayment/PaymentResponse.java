@@ -13,10 +13,6 @@ public class PaymentResponse {
         return otpValidFor;
     }
 
-    public void setOtpValidFor(long otpValidFor) {
-        this.otpValidFor = otpValidFor;
-    }
-
     public String getMessage() {
         return message;
     }

@@ -2,15 +2,15 @@ package bd.com.ipay.ipayskeleton.Model.TwoFA;
 
 import java.util.List;
 
-public class TwoFAServiceGroup {
+public class TwoFactorAuthServiceGroup {
 
     private String groupName;
     private List<TwoFactorAuthService> services;
 
-    public TwoFAServiceGroup() {
+    public TwoFactorAuthServiceGroup() {
     }
 
-    public TwoFAServiceGroup(String groupName, List<TwoFactorAuthService> services) {
+    public TwoFactorAuthServiceGroup(String groupName, List<TwoFactorAuthService> services) {
 
         this.groupName = groupName;
         this.services = services;
@@ -35,7 +35,7 @@ public class TwoFAServiceGroup {
 
     @Override
     public String toString() {
-        return "TwoFAServiceGroup{" +
+        return "TwoFactorAuthServiceGroup{" +
                 "groupName='" + groupName + '\'' +
                 ", services=" + services +
                 '}';

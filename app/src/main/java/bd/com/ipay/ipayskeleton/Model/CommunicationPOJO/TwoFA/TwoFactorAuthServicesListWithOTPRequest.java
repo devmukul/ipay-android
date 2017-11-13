@@ -4,11 +4,11 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.TwoFA.TwoFactorAuthService;
 
-public class TwoFaServiceListWithOTPRequest {
+public class TwoFactorAuthServicesListWithOTPRequest {
     String otp;
     List<TwoFactorAuthService> services;
 
-    public TwoFaServiceListWithOTPRequest(String otp, List<TwoFactorAuthService> mTwoFactorAuthService) {
+    public TwoFactorAuthServicesListWithOTPRequest(String otp, List<TwoFactorAuthService> mTwoFactorAuthService) {
         this.otp = otp;
         this.services = mTwoFactorAuthService;
     }

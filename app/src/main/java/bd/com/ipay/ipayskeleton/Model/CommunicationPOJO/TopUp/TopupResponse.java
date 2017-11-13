@@ -12,10 +12,6 @@ public class TopupResponse {
         return otpValidFor;
     }
 
-    public void setOtpValidFor(long otpValidFor) {
-        this.otpValidFor = otpValidFor;
-    }
-
     public TopupResponse() {
     }
 

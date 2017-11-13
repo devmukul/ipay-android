@@ -2,16 +2,16 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Model.TwoFA.TwoFAServiceGroup;
+import bd.com.ipay.ipayskeleton.Model.TwoFA.TwoFactorAuthServiceGroup;
 
-public class TwoFAServiceListResponse {
-    private List<TwoFAServiceGroup> response;
+public class TwoFactorAuthServicesListResponse {
+    private List<TwoFactorAuthServiceGroup> response;
     private String message;
 
-    public TwoFAServiceListResponse() {
+    public TwoFactorAuthServicesListResponse() {
     }
 
-    public TwoFAServiceListResponse(List<TwoFAServiceGroup> response) {
+    public TwoFactorAuthServicesListResponse(List<TwoFactorAuthServiceGroup> response) {
 
         this.response = response;
     }
@@ -24,18 +24,18 @@ public class TwoFAServiceListResponse {
         this.message = message;
     }
 
-    public List<TwoFAServiceGroup> getResponse() {
+    public List<TwoFactorAuthServiceGroup> getResponse() {
 
         return response;
     }
 
-    public void setResponse(List<TwoFAServiceGroup> response) {
+    public void setResponse(List<TwoFactorAuthServiceGroup> response) {
         this.response = response;
     }
 
     @Override
     public String toString() {
-        return "TwoFAServiceListResponse{" +
+        return "TwoFactorAuthServicesListResponse{" +
                 "response=" + response +
                 '}';
     }

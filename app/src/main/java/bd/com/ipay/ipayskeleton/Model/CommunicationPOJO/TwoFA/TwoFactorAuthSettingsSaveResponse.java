@@ -1,15 +1,11 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA;
 
-public class TwoFaSettingsSaveResponse {
+public class TwoFactorAuthSettingsSaveResponse {
     private String message;
     private long otpValidFor;
 
     public long getOtpValidFor() {
         return otpValidFor;
-    }
-
-    public void setOtpValidFor(long otpValidFor) {
-        this.otpValidFor = otpValidFor;
     }
 
     public String getMessage() {

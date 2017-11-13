@@ -8,10 +8,6 @@ public class PaymentRequestSentResponse {
         return otpValidFor;
     }
 
-    public void setOtpValidFor(long otpValidFor) {
-        this.otpValidFor = otpValidFor;
-    }
-
     public PaymentRequestSentResponse() {
 
     }

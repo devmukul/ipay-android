@@ -33,13 +33,14 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMone
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFaSettingsSaveResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFactorAuthSettingsSaveResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthServicesAsynctaskMap;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -85,15 +86,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
 
     private void createProgresDialogStringMap() {
         mProgressDialogStringMap = new HashMap<>();
-        mProgressDialogStringMap.put(Constants.COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS, context.getString(R.string.change_two_fa_settings));
-        mProgressDialogStringMap.put(Constants.COMMAND_SEND_MONEY, context.getString(R.string.progress_dialog_text_sending_money));
-        mProgressDialogStringMap.put(Constants.COMMAND_TOPUP_REQUEST, context.getString(R.string.dialog_requesting_top_up));
-        mProgressDialogStringMap.put(Constants.COMMAND_ADD_MONEY, context.getString(R.string.progress_dialog_add_money_in_progress));
-        mProgressDialogStringMap.put(Constants.COMMAND_WITHDRAW_MONEY, context.getString(R.string.progress_dialog_withdraw_money_in_progress));
-        mProgressDialogStringMap.put(Constants.COMMAND_PAYMENT, context.getString(R.string.progress_dialog_text_payment));
-        mProgressDialogStringMap.put(Constants.COMMAND_SET_PIN, context.getString(R.string.saving_pin));
-        mProgressDialogStringMap.put(Constants.COMMAND_SEND_PAYMENT_REQUEST, context.getString(R.string.progress_dialog_sending_payment_request));
-        mProgressDialogStringMap.put(Constants.COMMAND_ACCEPT_REQUESTS_MONEY, context.getString(R.string.accepting_send_money_request));
+        mProgressDialogStringMap = TwoFactorAuthConstants.getProgressDialogStringMap(context);
     }
 
     public OTPVerificationForTwoFactorAuthenticationServicesDialog(Activity context) {
@@ -248,29 +241,29 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
 
         Gson gson = new Gson();
 
-        TwoFaSettingsSaveResponse twoFaSettingsSaveResponse
-                = gson.fromJson(result.getJsonString(), TwoFaSettingsSaveResponse.class);
+        TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse
+                = gson.fromJson(result.getJsonString(), TwoFactorAuthSettingsSaveResponse.class);
         if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
             if (context != null) {
                 Utilities.hideKeyboard(context, view);
-                ((MyApplication) context.getApplication()).launchLoginPage(twoFaSettingsSaveResponse.getMessage());
+                ((MyApplication) context.getApplication()).launchLoginPage(twoFactorAuthSettingsSaveResponse.getMessage());
             }
         } else {
             try {
                 if (result.getApiCommand().equals(Constants.COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS)) {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mProgressDialog.dismiss();
-                        Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_SHORT);
+                        Toaster.makeText(context, twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_SHORT);
                         mOTPInputDialog.dismiss();
                         mDismissListener.onDismissDialog();
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         mProgressDialog.dismiss();
-                        Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = twoFaSettingsSaveResponse.getOtpValidFor();
+                        Toaster.makeText(context, twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = twoFactorAuthSettingsSaveResponse.getOtpValidFor();
                         setCountDownTimer();
                     } else {
                         mProgressDialog.dismiss();
-                        Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(context, twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
                         mOTPInputDialog.hide();
                     }
                     mHttpPutAsyncTask = null;
@@ -424,7 +417,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
                 }
 
             } catch (Exception e) {
-                Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
+                Toaster.makeText(context, twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
                 if (mProgressDialog.isShowing())
                     mProgressDialog.dismiss();
             }

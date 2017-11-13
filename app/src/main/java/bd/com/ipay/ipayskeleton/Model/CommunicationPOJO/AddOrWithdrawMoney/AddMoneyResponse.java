@@ -9,12 +9,6 @@ public class AddMoneyResponse {
         return otpValidFor;
     }
 
-    public void setOtpValidFor(long otpValidFor) {
-        otpValidFor = otpValidFor;
-    }
-
-
-
     public AddMoneyResponse() {
 
     }

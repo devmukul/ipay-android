@@ -14,7 +14,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.SendNewPayme
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFaServiceListWithOTPRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFactorAuthServicesListWithOTPRequest;
 
 
 public class TwoFactorAuthServicesAsynctaskMap {
@@ -26,11 +26,11 @@ public class TwoFactorAuthServicesAsynctaskMap {
         Gson gson = new Gson();
         switch (command) {
             case Constants.COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS:
-                TwoFaServiceListWithOTPRequest twoFaServiceListWithOTPRequest = gson.fromJson(json,
-                        TwoFaServiceListWithOTPRequest.class);
+                TwoFactorAuthServicesListWithOTPRequest twoFactorAuthServicesListWithOTPRequest = gson.fromJson(json,
+                        TwoFactorAuthServicesListWithOTPRequest.class);
                 if (otp != null)
-                    twoFaServiceListWithOTPRequest.setOtp(otp);
-                json = gson.toJson(twoFaServiceListWithOTPRequest);
+                    twoFactorAuthServicesListWithOTPRequest.setOtp(otp);
+                json = gson.toJson(twoFactorAuthServicesListWithOTPRequest);
                 mHttpPutAsyncTask = new HttpRequestPutAsyncTask(command, uri, json, context);
                 return mHttpPutAsyncTask;
 

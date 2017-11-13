@@ -17,10 +17,6 @@ public class WithdrawMoneyResponse {
         return otpValidFor;
     }
 
-    public void setOtpValidFor(long otpValidFor) {
-        this.otpValidFor = otpValidFor;
-    }
-
     public String getMessage() {
         return message;
     }

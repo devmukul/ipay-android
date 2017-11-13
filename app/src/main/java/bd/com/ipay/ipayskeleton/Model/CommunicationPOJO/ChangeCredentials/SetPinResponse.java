@@ -8,10 +8,6 @@ public class SetPinResponse {
         return otpValidFor;
     }
 
-    public void setOtpValidFor(long otpValidFor) {
-        this.otpValidFor = otpValidFor;
-    }
-
     private long otpValidFor;
 
     public SetPinResponse() {

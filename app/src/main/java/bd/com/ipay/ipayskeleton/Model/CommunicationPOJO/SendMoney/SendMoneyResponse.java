@@ -13,9 +13,6 @@ public class SendMoneyResponse {
         return otpValidFor;
     }
 
-    public void setOtpValidFor(long otpValidFor) {
-        this.otpValidFor = otpValidFor;
-    }
 
     public SendMoneyResponse() {
     }

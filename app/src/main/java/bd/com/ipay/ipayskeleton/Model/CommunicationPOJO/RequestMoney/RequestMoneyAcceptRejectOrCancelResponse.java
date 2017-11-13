@@ -9,10 +9,6 @@ public class RequestMoneyAcceptRejectOrCancelResponse {
         return otpValidFor;
     }
 
-    public void setOtpValidFor(long otpValidFor) {
-        this.otpValidFor = otpValidFor;
-    }
-
     public RequestMoneyAcceptRejectOrCancelResponse() {
 
     }
