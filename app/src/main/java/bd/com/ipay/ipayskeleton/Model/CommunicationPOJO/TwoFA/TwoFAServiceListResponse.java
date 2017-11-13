@@ -6,6 +6,7 @@ import bd.com.ipay.ipayskeleton.Model.TwoFA.TwoFAServiceGroup;
 
 public class TwoFAServiceListResponse {
     private List<TwoFAServiceGroup> response;
+    private String message;
 
     public TwoFAServiceListResponse() {
     }
@@ -13,6 +14,14 @@ public class TwoFAServiceListResponse {
     public TwoFAServiceListResponse(List<TwoFAServiceGroup> response) {
 
         this.response = response;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public List<TwoFAServiceGroup> getResponse() {

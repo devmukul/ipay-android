@@ -335,8 +335,8 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_SHORT);
-                        mOTPInputDialog.dismiss();
                         mDismissListener.onDismissDialog();
+                        mOTPInputDialog.hide();
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
