@@ -91,7 +91,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
 
     }
 
-    private void initializeView() {
+    public void initializeView() {
         mOTPInputDialog = new MaterialDialog.Builder(this.getContext())
                 .title(R.string.title_otp_verification_for_change_password)
                 .customView(R.layout.dialog_otp_verification_change_password, true)
@@ -111,6 +111,10 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
         setCountDownTimer();
         setButtonActions();
 
+    }
+
+    public void dismiss(){
+        this.dismiss();
     }
 
     private void setButtonActions() {
@@ -335,8 +339,8 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_SHORT);
+                        mOTPInputDialog.dismiss();
                         mDismissListener.onDismissDialog();
-                        mOTPInputDialog.hide();
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
@@ -350,7 +354,7 @@ public class OTPVerificationForTwoFaServicesDialog extends MaterialDialog.Builde
                     } else {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
-                        mOTPInputDialog.dismiss();
+                        mOTPInputDialog.hide();
                     }
                     mHttpPutAsyncTask = null;
 

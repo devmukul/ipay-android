@@ -83,7 +83,7 @@
             android:id="@+id/implement_2fa"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_logout23x"
+            android:drawableLeft="@drawable/two_way_verification"
             android:paddingBottom="@dimen/value4"
             android:paddingLeft="@dimen/activity_horizontal_margin_card"
             android:paddingTop="@dimen/value4"

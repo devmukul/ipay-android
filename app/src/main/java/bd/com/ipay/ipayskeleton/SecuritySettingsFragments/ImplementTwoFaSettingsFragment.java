@@ -119,6 +119,9 @@ public class ImplementTwoFaSettingsFragment extends Fragment implements HttpResp
                 mTotalServices++;
             }
         }
+        if (mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
     }
 
     private void getChangedSettings() {
@@ -328,14 +331,16 @@ public class ImplementTwoFaSettingsFragment extends Fragment implements HttpResp
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
-                            if (mProgressDialog.isShowing()) {
-                                mProgressDialog.dismiss();
-                            }
                             mTwoFaServiceResponse = gson.fromJson(result.getJsonString(), TwoFAServiceListResponse.class);
                             mTwoFaServiceList = mTwoFaServiceResponse.getResponse();
                             Implement2FaAdapter adapter = new Implement2FaAdapter(mTwoFaServiceList);
                             mRecyclerView.setAdapter(adapter);
                             setCurrentSettings();
+                        }
+                    } else {
+                        if (getActivity() != null) {
+                            mProgressDialog.dismiss();
+                            Toaster.makeText(getActivity(), mTwoFaServiceResponse.getMessage(), Toast.LENGTH_LONG);
                         }
                     }
                 } catch (Exception e) {
@@ -350,7 +355,7 @@ public class ImplementTwoFaSettingsFragment extends Fragment implements HttpResp
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
                         if (getActivity() != null) {
                             SecuritySettingsActivity.otpDuration = twoFaSettingsSaveResponse.getOtpValidFor();
-                            Toaster.makeText(getActivity(),twoFaSettingsSaveResponse.getMessage(),Toast.LENGTH_LONG);
+                            Toaster.makeText(getActivity(), twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
                             mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), mJsonString,
                                     Constants.COMMAND_PUT_TWO_FA_SETTING, mUri);
                             mOTPVerificationForTwoFaServicesDialog.mDismissListener = this;
@@ -358,9 +363,10 @@ public class ImplementTwoFaSettingsFragment extends Fragment implements HttpResp
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         if (getActivity() != null) {
                             SecuritySettingsActivity.otpDuration = twoFaSettingsSaveResponse.getOtpValidFor();
-                            Toaster.makeText(getActivity(),twoFaSettingsSaveResponse.getMessage(),Toast.LENGTH_LONG);
+                            Toaster.makeText(getActivity(), twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
                             mOTPVerificationForTwoFaServicesDialog = new OTPVerificationForTwoFaServicesDialog(getActivity(), mJsonString,
                                     Constants.COMMAND_PUT_TWO_FA_SETTING, mUri);
+                            mOTPVerificationForTwoFaServicesDialog.mDismissListener = this;
                         }
                     } else {
                         Toaster.makeText(getActivity(), twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_SHORT);
