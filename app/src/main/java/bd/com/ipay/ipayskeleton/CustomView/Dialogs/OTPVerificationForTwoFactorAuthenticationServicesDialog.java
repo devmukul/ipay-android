@@ -40,7 +40,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
-import bd.com.ipay.ipayskeleton.Utilities.TwoFaServicesAsyncTaskMap;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthServicesAsynctaskMap;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends MaterialDialog.Builder implements HttpResponseListener {
@@ -217,7 +217,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
             else {
                 mProgressDialog.setMessage(mProgressDialogStringMap.get(desiredRequest));
                 mProgressDialog.show();
-                mHttpPutAsyncTask = TwoFaServicesAsyncTaskMap.getPutAsyncTask(desiredRequest, json, otp, context, mUri);
+                mHttpPutAsyncTask = TwoFactorAuthServicesAsynctaskMap.getPutAsyncTask(desiredRequest, json, otp, context, mUri);
                 mHttpPutAsyncTask.mHttpResponseListener = this;
                 mHttpPutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
@@ -226,7 +226,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
             else {
                 mProgressDialog.setMessage(mProgressDialogStringMap.get(desiredRequest));
                 mProgressDialog.show();
-                mHttpPostAsyncTask = TwoFaServicesAsyncTaskMap.getPostAsyncTask(desiredRequest, json, otp, context, mUri);
+                mHttpPostAsyncTask = TwoFactorAuthServicesAsynctaskMap.getPostAsyncTask(desiredRequest, json, otp, context, mUri);
                 mHttpPostAsyncTask.mHttpResponseListener = this;
                 mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
@@ -239,8 +239,10 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mHttpPutAsyncTask = null;
-            if (context != null)
+            if (context != null) {
                 Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT).show();
+                mProgressDialog.dismiss();
+            }
             return;
         }
 
@@ -261,12 +263,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
                         Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_SHORT);
                         mOTPInputDialog.dismiss();
                         mDismissListener.onDismissDialog();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = twoFaSettingsSaveResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, twoFaSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
                         SecuritySettingsActivity.otpDuration = twoFaSettingsSaveResponse.getOtpValidFor();
@@ -287,12 +284,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
                         mEnableDisableSMSBroadcastReceiver.disableBroadcastReceiver(context);
                         mOTPInputDialog.dismiss();
                         launchHomeActivity();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, sendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = sendMoneyResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, sendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
                         SecuritySettingsActivity.otpDuration = sendMoneyResponse.getOtpValidFor();
@@ -310,12 +302,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                         mOTPInputDialog.dismiss();
                         launchHomeActivity();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, topupResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = topupResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, topupResponse.getMessage(), Toast.LENGTH_LONG);
                         SecuritySettingsActivity.otpDuration = topupResponse.getOtpValidFor();
@@ -333,12 +320,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                         mOTPInputDialog.dismiss();
                         launchHomeActivity();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, requestMoneyResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = requestMoneyResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, requestMoneyResponse.getMessage(), Toast.LENGTH_LONG);
                         SecuritySettingsActivity.otpDuration = requestMoneyResponse.getOtpValidFor();
@@ -356,12 +338,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                         mOTPInputDialog.dismiss();
                         launchHomeActivity();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, addMoneyResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = addMoneyResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, addMoneyResponse.getMessage(), Toast.LENGTH_LONG);
                         SecuritySettingsActivity.otpDuration = addMoneyResponse.getOtpValidFor();
@@ -379,12 +356,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                         mOTPInputDialog.dismiss();
                         launchHomeActivity();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, withdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = withdrawMoneyResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, withdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG);
                         SecuritySettingsActivity.otpDuration = withdrawMoneyResponse.getOtpValidFor();
@@ -402,12 +374,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                         mOTPInputDialog.dismiss();
                         launchHomeActivity();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, mSetPinResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = mSetPinResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, mSetPinResponse.getMessage(), Toast.LENGTH_LONG);
                         SecuritySettingsActivity.otpDuration = mSetPinResponse.getOtpValidFor();
@@ -425,12 +392,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
                         Toaster.makeText(context, message, Toast.LENGTH_SHORT);
                         mOTPInputDialog.dismiss();
                         launchHomeActivity();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, paymentResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = paymentResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, paymentResponse.getMessage(), Toast.LENGTH_LONG);
                         SecuritySettingsActivity.otpDuration = paymentResponse.getOtpValidFor();
@@ -449,12 +411,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
                         Toaster.makeText(context, message, Toast.LENGTH_LONG);
                         mOTPInputDialog.dismiss();
                         mDismissListener.onDismissDialog();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, requestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = requestMoneyAcceptRejectOrCancelResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         mProgressDialog.dismiss();
                         Toaster.makeText(context, requestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
                         SecuritySettingsActivity.otpDuration = requestMoneyAcceptRejectOrCancelResponse.getOtpValidFor();

@@ -17,7 +17,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFaServiceListWithOTPRequest;
 
 
-public class TwoFaServicesAsyncTaskMap {
+public class TwoFactorAuthServicesAsynctaskMap {
     private static HttpRequestPostAsyncTask mHttpPostAsyncTask;
     private static HttpRequestPutAsyncTask mHttpPutAsyncTask;
 
@@ -40,7 +40,7 @@ public class TwoFaServicesAsyncTaskMap {
                     mSetPinRequest.setOtp(otp);
                 json = gson.toJson(mSetPinRequest);
                 mHttpPutAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_SET_PIN, uri, json, context);
-
+                return mHttpPutAsyncTask;
             default:
                 return null;
         }
