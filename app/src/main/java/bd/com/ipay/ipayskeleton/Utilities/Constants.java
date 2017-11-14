@@ -477,6 +477,16 @@ public class Constants {
     // Business Information (Employee)
     public static final String URL_GET_BUSINESS_LIST_ALL = "business/list/all";
 
+    // Business Information (Owner)
+    public static final String URL_CREATE_EMPLOYEE = "business/user";
+    public static final String URL_UPDATE_EMPLOYEE = "business/user";
+    public static final String URL_GET_EMPLOYEE_LIST = "business-manager";
+    public static final String URL_GET_EMPLOYEE_DETAILS = "business/user/";
+    public static final String URL_REMOVE_AN_EMPLOYEE_FIRST_PART = "business/user/";
+    public static final String URL_REMOVE_AN_EMPLOYEE_LAST_PART = "/resignation/confirm";
+    public static final String URL_GET_BUSINESS_ROLES = "business-role";
+
+
     // Education
     public static final String URL_GET_ALL_INSTITUTIONS_LIST = "institute/all";
     public static final String URL_GET_ALL_SESSIONS_LIST = "session";
@@ -634,6 +644,13 @@ public class Constants {
     // Business Information (Owner)
     public static final String COMMAND_GET_BUSINESS_INFORMATION = "COMMAND_GET_BUSINESS_INFORMATION";
     public static final String COMMAND_SET_BUSINESS_INFORMATION = "COMMAND_SET_BUSINESS_INFORMATION";
+
+    public static final String COMMAND_CREATE_EMPLOYEE = "COMMAND_CREATE_EMPLOYEE";
+    public static final String COMMAND_UPDATE_EMPLOYEE = "COMMAND_UPDATE_EMPLOYEE";
+    public static final String COMMAND_GET_EMPLOYEE_LIST = "COMMAND_GET_EMPLOYEE_LIST";
+    public static final String COMMAND_REMOVE_AN_EMPLOYEE = "COMMAND_REMOVE_AN_EMPLOYEE";
+    public static final String COMMAND_GET_EMPLOYEE_DETAILS = "COMMAND_GET_EMPLOYEE_DETAILS";
+    public static final String COMMAND_GET_ALL_ROLES = "COMMAND_GET_ALL_ROLES";
 
     // Education
     public static final String COMMAND_GET_INSTITUTION_LIST = "COMMAND_GET_INSTITUTION_LIST";
