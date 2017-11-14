@@ -389,7 +389,7 @@ public class Constants {
     public static final String URL_GET_SECURITY_QUESTIONS = "settings/security/questions";
     public static final String URL_SET_SECURITY_ANSWERS = "settings/security/answers";
     public static final String URL_FORGET_PASSWORD = "/forgot-password";
-    public static final String URL_TWO_FA_SETTINGS="settings/2fa/preference";
+    public static final String URL_TWO_FACTOR_AUTH_SETTINGS ="settings/2fa/preference";
     public static final String URL_GET_PIN_INFO = "settings/pin";
     public static final String URL_SET_PIN = "settings/pin/v2";
 

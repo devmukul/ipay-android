@@ -45,10 +45,10 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
 
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
-    private HttpRequestGetAsyncTask mGetTwoFaSettingsAsynctask;
+    private HttpRequestGetAsyncTask mGetTwoFactorAuthSettingsAsynctask;
     private TwoFactorAuthServicesListResponse mTwoFaServiceResponse;
 
-    private HttpRequestPutAsyncTask mPutTwoFaSettingsAsyncTask;
+    private HttpRequestPutAsyncTask mPutTwoFactorAuthSettingsAsyncTask;
 
     private int mCurrentSettings = 0;
     private int mChangedSettings = 0;
@@ -68,7 +68,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_2fa_implement, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
-        getTwoFaSettings();
+        getTwoFactorAuthSettings();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyler_view__two_factor_auth);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -76,13 +76,13 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
         return view;
     }
 
-    private void getTwoFaSettings() {
+    private void getTwoFactorAuthSettings() {
         String API_COMMAND = Constants.COMMAND_GET_TWO_FACTOR_AUTH_SETTINGS;
-        String mUri = Constants.BASE_URL_MM + Constants.URL_TWO_FA_SETTINGS;
-        mGetTwoFaSettingsAsynctask = new HttpRequestGetAsyncTask(API_COMMAND, mUri, getActivity());
-        mGetTwoFaSettingsAsynctask.mHttpResponseListener = this;
+        String mUri = Constants.BASE_URL_MM + Constants.URL_TWO_FACTOR_AUTH_SETTINGS;
+        mGetTwoFactorAuthSettingsAsynctask = new HttpRequestGetAsyncTask(API_COMMAND, mUri, getActivity());
+        mGetTwoFactorAuthSettingsAsynctask.mHttpResponseListener = this;
         try {
-            mGetTwoFaSettingsAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            mGetTwoFactorAuthSettingsAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } catch (Exception e) {
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -139,22 +139,22 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
         }
     }
 
-    public void attemptSaveTwoFaSettings(List<TwoFactorAuthService> mChangedList) {
-        if (mPutTwoFaSettingsAsyncTask != null)
+    public void attemptSaveTwoFactorAuthSettings(List<TwoFactorAuthService> mChangedList) {
+        if (mPutTwoFactorAuthSettingsAsyncTask != null)
             return;
         Gson gson = new Gson();
         String API_COMMAND = Constants.COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS;
-        mUri = Constants.BASE_URL_MM + Constants.URL_TWO_FA_SETTINGS;
+        mUri = Constants.BASE_URL_MM + Constants.URL_TWO_FACTOR_AUTH_SETTINGS;
         TwoFactorAuthServicesListWithOTPRequest twoFactorAuthServicesListWithOtpRequest = new TwoFactorAuthServicesListWithOTPRequest(null, mChangedList);
         mJsonString = gson.toJson(twoFactorAuthServicesListWithOtpRequest);
-        mPutTwoFaSettingsAsyncTask = new HttpRequestPutAsyncTask(API_COMMAND, mUri, mJsonString, getActivity());
-        mPutTwoFaSettingsAsyncTask.mHttpResponseListener = this;
-        mPutTwoFaSettingsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mPutTwoFactorAuthSettingsAsyncTask = new HttpRequestPutAsyncTask(API_COMMAND, mUri, mJsonString, getActivity());
+        mPutTwoFactorAuthSettingsAsyncTask.mHttpResponseListener = this;
+        mPutTwoFactorAuthSettingsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public class Implement2FaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        private static final int IMPLEMENT_2FA_HEADER_VIEW = 1;
-        private static final int IMPLEMENT_2FA_ITEM_VIEW = 2;
+    public class ImplementTwoFactorAuthAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private static final int IMPLEMENT_TWO_FACTOR_AUTH_HEADER_VIEW = 1;
+        private static final int IMPLEMENT_TWO_FACTOR_AUTH_ITEM_VIEW = 2;
         private static final int FOOTER_VIEW = 3;
 
         private List<TwoFactorAuthServiceGroup> mTwoFactorAuthServiceGroupList;
@@ -162,7 +162,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
         private int footerPosition;
         private int itemCount;
 
-        public Implement2FaAdapter(List<TwoFactorAuthServiceGroup> twoFactorAuthServiceGroupList) {
+        public ImplementTwoFactorAuthAdapter(List<TwoFactorAuthServiceGroup> twoFactorAuthServiceGroupList) {
             this.mTwoFactorAuthServiceGroupList = twoFactorAuthServiceGroupList;
             this.headerPositionList = new ArrayList<>();
             footerPosition = 0;
@@ -247,7 +247,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
                                     mChangedList.add(mPositionToServiceIDMap.get(i));
                                 }
                             }
-                            attemptSaveTwoFaSettings(mChangedList);
+                            attemptSaveTwoFactorAuthSettings(mChangedList);
                         }
                     }
                 });
@@ -275,9 +275,9 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             switch (viewType) {
-                case IMPLEMENT_2FA_HEADER_VIEW:
+                case IMPLEMENT_TWO_FACTOR_AUTH_HEADER_VIEW:
                     return new ServiceHeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_header_2fa, parent, false));
-                case IMPLEMENT_2FA_ITEM_VIEW:
+                case IMPLEMENT_TWO_FACTOR_AUTH_ITEM_VIEW:
                     return new ServiceListViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_2fa, parent, false));
                 case FOOTER_VIEW:
                     return new ServiceFooterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_button_two_fa_footer, parent, false));
@@ -309,11 +309,11 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
         public int getItemViewType(int position) {
             int headerPositionIndex = headerPositionList.indexOf(position);
             if (headerPositionIndex != -1) {
-                return IMPLEMENT_2FA_HEADER_VIEW;
+                return IMPLEMENT_TWO_FACTOR_AUTH_HEADER_VIEW;
             } else if (position == footerPosition) {
                 return FOOTER_VIEW;
             } else {
-                return IMPLEMENT_2FA_ITEM_VIEW;
+                return IMPLEMENT_TWO_FACTOR_AUTH_ITEM_VIEW;
             }
         }
     }
@@ -323,7 +323,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
         Gson gson = new Gson();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mGetTwoFaSettingsAsynctask = null;
+            mGetTwoFactorAuthSettingsAsynctask = null;
             if (getActivity() != null)
                 return;
         } else {
@@ -333,7 +333,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
                         if (getActivity() != null) {
                             mTwoFaServiceResponse = gson.fromJson(result.getJsonString(), TwoFactorAuthServicesListResponse.class);
                             mTwoFaServiceList = mTwoFaServiceResponse.getResponse();
-                            Implement2FaAdapter adapter = new Implement2FaAdapter(mTwoFaServiceList);
+                            ImplementTwoFactorAuthAdapter adapter = new ImplementTwoFactorAuthAdapter(mTwoFaServiceList);
                             mRecyclerView.setAdapter(adapter);
                             setCurrentSettings();
                         }
@@ -346,7 +346,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
                 } catch (Exception e) {
                     Toaster.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
                 }
-                mGetTwoFaSettingsAsynctask = null;
+                mGetTwoFactorAuthSettingsAsynctask = null;
                 if (mProgressDialog.isShowing())
                     mProgressDialog.dismiss();
 
@@ -356,7 +356,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mProgressDialog.dismiss();
                         Toaster.makeText(getActivity(), twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_SHORT);
-                        getTwoFaSettings();
+                        getTwoFactorAuthSettings();
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         if (getActivity() != null) {
                             SecuritySettingsActivity.otpDuration = twoFactorAuthSettingsSaveResponse.getOtpValidFor();
@@ -371,7 +371,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
                 } catch (Exception e) {
                     Toaster.makeText(getActivity(), twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
                 }
-                mPutTwoFaSettingsAsyncTask = null;
+                mPutTwoFactorAuthSettingsAsyncTask = null;
                 if (mProgressDialog.isShowing())
                     mProgressDialog.dismiss();
             }
