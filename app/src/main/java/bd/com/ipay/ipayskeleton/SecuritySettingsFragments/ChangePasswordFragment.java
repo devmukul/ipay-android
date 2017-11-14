@@ -23,6 +23,8 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.Change
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager.FingerprintAuthenticationDialog;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -36,6 +38,7 @@ public class ChangePasswordFragment extends BaseFragment implements HttpResponse
     private EditText mEnterCurrentPasswordEditText;
     private EditText mEnterNewPasswordEditText;
     private EditText mEnterConfirmNewPasswordEditText;
+    private Button mChangePasswordButton;
 
     private String mPassword;
     private String mNewPassword;
@@ -56,13 +59,13 @@ public class ChangePasswordFragment extends BaseFragment implements HttpResponse
         mEnterNewPasswordEditText = (EditText) v.findViewById(R.id.new_password);
         mEnterConfirmNewPasswordEditText = (EditText) v.findViewById(R.id.confirm_new_password);
 
-        Button changePasswordButton = (Button) v.findViewById(R.id.save_pass);
+        mChangePasswordButton = (Button) v.findViewById(R.id.save_pass);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
         mEnterCurrentPasswordEditText.requestFocus();
 
-        changePasswordButton.setOnClickListener(new View.OnClickListener() {
+        mChangePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 attemptChangePasswordValidation();
@@ -136,6 +139,23 @@ public class ChangePasswordFragment extends BaseFragment implements HttpResponse
         }
     }
 
+
+    private void saveNewPasswordWithTouchID() {
+        FingerprintAuthenticationDialog fingerprintAuthenticationDialog = new FingerprintAuthenticationDialog(getContext(),
+                FingerprintAuthenticationDialog.Stage.FINGERPRINT_ENCRYPT);
+        fingerprintAuthenticationDialog.setFinishEncryptionCheckerListener(new FingerprintAuthenticationDialog.FinishEncryptionCheckerListener() {
+            @Override
+            public void ifEncryptionFinished() {
+                if (ProfileInfoCacheManager.ifPasswordEncrypted()) {
+                    ProfileInfoCacheManager.setFingerprintAuthenticationStatus(true);
+                } else
+                    ProfileInfoCacheManager.setFingerprintAuthenticationStatus(false);
+
+                ((SecuritySettingsActivity) getActivity()).switchToAccountSettingsFragment();
+            }
+        });
+    }
+
     public void setTitle() {
         getActivity().setTitle(R.string.change_password);
     }
@@ -165,20 +185,15 @@ public class ChangePasswordFragment extends BaseFragment implements HttpResponse
                 mChangePasswordValidationResponse = gson.fromJson(result.getJsonString(), ChangePasswordValidationResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toast.makeText(getActivity(), mChangePasswordValidationResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        DialogUtils.showChangePasswordSuccessDialog(getActivity());
+                    }
 
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mChangePasswordValidationResponse.getMessage(), Toast.LENGTH_LONG).show();
                         launchOTPVerificationFragment();
-                    }
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), mChangePasswordValidationResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        if (result.getJsonString().contains(getString(R.string.otp))) {
-                            launchOTPVerificationFragment();
-                        }
                     }
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     if (getActivity() != null)
