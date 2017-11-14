@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
@@ -50,7 +51,10 @@ public class HttpResponseParser {
 
                     // Start the timer for token.
                     MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
-                    myApplicationInstance.startTokenTimer();
+
+                    if(!SharedPrefManager.isRemberMeActive()) {
+                        myApplicationInstance.startTokenTimer();
+                    }
 
                 } else if (header.getName().equals(Constants.REFRESH_TOKEN)) {
                     TokenManager.setRefreshToken(header.getValue());

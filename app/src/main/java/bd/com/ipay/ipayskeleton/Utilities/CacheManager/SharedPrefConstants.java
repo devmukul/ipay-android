@@ -7,6 +7,8 @@ public class SharedPrefConstants {
 
     public static final String PUSH_NOTIFICATION_TOKEN = "token";
 
+    public static final String REMEMBER_ME = "remember_me";
+
     public static final String USER_BALANCE = "USER_BALANCE";
     public static final String IS_PIN_ADDED = "is-pin-added";
 
