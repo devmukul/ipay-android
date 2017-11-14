@@ -256,17 +256,6 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     String otp = mSignupResponseModel.getOtp();
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumber);
-                        ProfileInfoCacheManager.setUserName(SignupOrLoginActivity.mName);
-                        ProfileInfoCacheManager.setName(SignupOrLoginActivity.mName);
-                        ProfileInfoCacheManager.setBirthday(SignupOrLoginActivity.mBirthday);
-                        ProfileInfoCacheManager.setGender(SignupOrLoginActivity.mGender);
-                        SharedPrefManager.serUserCountry(SignupOrLoginActivity.mCountryCode);
-                        ProfileInfoCacheManager.setAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
-
-                        // Request a login immediately after sign up
-                        if (Utilities.isConnectionAvailable(getActivity()))
-                            attemptLogin(SignupOrLoginActivity.mMobileNumber, SignupOrLoginActivity.mPassword, otp);
                         attemptAddTrustedDevice();
                         Toaster.makeText(getActivity(), mSignupResponseModel.getMessage(), Toast.LENGTH_LONG);
 
@@ -390,8 +379,9 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         ProfileInfoCacheManager.setName(SignupOrLoginActivity.mName);
                         ProfileInfoCacheManager.setBirthday(SignupOrLoginActivity.mBirthday);
                         ProfileInfoCacheManager.setGender(SignupOrLoginActivity.mGender);
-                        SharedPrefManager.serUserCountry("Bangladesh");
+                        SharedPrefManager.setUserCountry(SignupOrLoginActivity.mCountryCode);
                         ProfileInfoCacheManager.setAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
+
                         String UUID = mAddToTrustedDeviceResponse.getUUID();
                         ProfileInfoCacheManager.setUUID(UUID);
                         ProfileInfoCacheManager.uploadProfilePicture(false);

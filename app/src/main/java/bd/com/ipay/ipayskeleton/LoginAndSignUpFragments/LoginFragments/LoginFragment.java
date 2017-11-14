@@ -362,7 +362,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
 
                             ProfileInfoCacheManager.setMobileNumber(mUserNameLogin);
                             ProfileInfoCacheManager.setAccountType(mLoginResponseModel.getAccountType());
-                            SharedPrefManager.serUserCountry(SignupOrLoginActivity.mCountryCode);
+                            SharedPrefManager.setUserCountry(SignupOrLoginActivity.mCountryCode);
 
                             // When user logs in, we want that by default he would log in to his default account
                             TokenManager.deactivateEmployerAccount();
