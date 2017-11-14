@@ -489,7 +489,7 @@
     <string name="question">Question</string>
     <string name="answer">Answer</string>
     <string name="set_security_answer">Saving answers</string>
-    <string name="two_fa_setting">Two Factor Authentication</string>
+    <string name="two_factor_auth_settings">Two Factor Authentication</string>
 
     <!-- Finger Print Auth -->
     <string name="use_fingerprint_for_login">Use Fingerprint for Login</string>
