@@ -168,7 +168,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
             mManagePeople.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ///TODO Switch To Manage People Fragment
+
                 }
             });
 
