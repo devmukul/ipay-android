@@ -254,9 +254,7 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
 
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), getString(R.string.signup_successful), Toast.LENGTH_LONG).show();
-
-                        // Request a login immediately after sign up
-                        attemptLogin(SignupOrLoginActivity.mMobileNumberBusiness, SignupOrLoginActivity.mPasswordBusiness, otp);
+                        attemptAddTrustedDevice();
 
                         // TODO: For now, switch to login fragment after a successful sign up. Don't remove it either. Can be used later
 //                ((SignupOrLoginActivity) getActivity()).switchToLoginFragment();

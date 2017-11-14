@@ -11,6 +11,7 @@ public class TopupRequest {
     private final int senderAccountUserType;
     private final int senderAccountUserClass;
     private final String pin;
+    private String otp;
 
     public TopupRequest(long senderAccountID, String receiverMobileNumber,
                         int mobileNumberType, int operatorCode, double amount, String countryCode,
@@ -25,4 +26,13 @@ public class TopupRequest {
         this.senderAccountUserType = senderAccountUserType;
         this.pin = pin;
     }
+
+    public  String getOtp() {
+        return otp;
+    }
+
+    public  void setOtp(String otp) {
+        this.otp = otp;
+    }
+
 }

@@ -470,6 +470,7 @@
     <string name="select_a_bank">Select Bank</string>
     <string name="remove_bank_title">Remove this account?</string>
     <string name="blocked_bank_title">Blocked!</string>
+    <string name="block_account_message">Your Account has been blocked. Please contact our customer support</string>
     <string name="bank_name">Bank Name</string>
     <string name="saving_profile_information">Saving profile information</string>
     <string name="saving_parent_information">Saving parent information</string>
@@ -488,6 +489,7 @@
     <string name="question">Question</string>
     <string name="answer">Answer</string>
     <string name="set_security_answer">Saving answers</string>
+    <string name="two_factor_auth_settings">Two Factor Authentication</string>
 
     <!-- Finger Print Auth -->
     <string name="use_fingerprint_for_login">Use Fingerprint for Login</string>
@@ -652,6 +654,7 @@
     <string name="failed_make_primary">Failed to make this primary email</string>
     <string name="confirmation_remove_email_address">Remove this email address?</string>
     <string name="confirmation_add_to_contacts">Add this number to contacts?</string>
+    <string name="link_bank">Link Bank</string>
     <string name="bank_consent_agreement">Bank consent agreement</string>
     <string name="progress_dialog_if_pin_exists">Preparing. Please wait…</string>
     <string name="failed_loading_pin">Failed loading PIN</string>
@@ -898,7 +901,6 @@
     <string name="post_paid">Post-paid</string>
 
     <!--All Screen Name for Google Analytic .... Can be optimized later-->
-
     <string name="screen_name_home">Wallet Page</string>
     <string name="screen_name_withdraw_money_review">Withdraw Money Confirmation Page</string>
     <string name="screen_name_withdraw_money">Withdraw Money Page</string>
@@ -1026,6 +1028,10 @@
     <string name="upload_identification_document_again">Do you want to upload a identification document again? You have already uploaded once</string>
 
     <string name="file_size_large">Your file size is too large. Please select another.</string>
+    <string name="change_two_fa_settings">Changing Two Fa Settings</string>
+    <string name="accepting_send_money_request">Accepting Money Request</string>
+    <string name="two_fa_settings">Two Factor Authentication</string>
+
     <string name="please_enter_a_document_id">Please enter your document ID</string>
     <string name="alpha_numeric">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
 </resources>
