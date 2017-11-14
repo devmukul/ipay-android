@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.Api.ContactApi;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -13,7 +12,6 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
 import bd.com.ipay.ipayskeleton.Model.Contact.GetContactsResponse;
-import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class GetContactsAsyncTask extends HttpRequestGetAsyncTask implements HttpResponseListener {

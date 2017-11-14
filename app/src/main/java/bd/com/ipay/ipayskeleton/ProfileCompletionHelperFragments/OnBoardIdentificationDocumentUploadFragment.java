@@ -30,7 +30,6 @@ import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.util.Arrays;
 
-import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
 import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadMultipleIdentifierDocumentAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
