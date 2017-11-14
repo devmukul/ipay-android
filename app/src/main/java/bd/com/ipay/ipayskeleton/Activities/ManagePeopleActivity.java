@@ -6,6 +6,7 @@ import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.ManagePeopleFragments.EmployeeManagementFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -26,6 +27,8 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
     }
 
     private void switchToEmployeeManagementFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new EmployeeManagementFragment()).commit();
 
     }
 
