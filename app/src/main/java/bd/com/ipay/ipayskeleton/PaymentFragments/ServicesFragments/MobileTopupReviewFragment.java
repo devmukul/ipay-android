@@ -253,6 +253,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
         String jsonString = new Gson().toJson(mTopupRequestModel);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_TOPUP_REQUEST,
                 Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
     private void getProfileInfo(String mobileNumber) {

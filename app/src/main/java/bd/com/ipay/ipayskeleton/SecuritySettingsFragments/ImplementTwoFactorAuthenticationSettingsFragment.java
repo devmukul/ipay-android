@@ -37,7 +37,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
-public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment implements HttpResponseListener, OTPVerificationForTwoFactorAuthenticationServicesDialog.dismissListener {
+public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment implements HttpResponseListener {
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
@@ -353,13 +353,17 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
             } else if (result.getApiCommand().equals(Constants.COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS)) {
                 TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse = gson.fromJson(result.getJsonString(), TwoFactorAuthSettingsSaveResponse.class);
                 try {
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mProgressDialog.dismiss();
+                        Toaster.makeText(getActivity(), twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_SHORT);
+                        getTwoFaSettings();
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         if (getActivity() != null) {
                             SecuritySettingsActivity.otpDuration = twoFactorAuthSettingsSaveResponse.getOtpValidFor();
                             Toaster.makeText(getActivity(), twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), mJsonString,
                                     Constants.COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS, mUri, Constants.METHOD_PUT);
-                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.mDismissListener = this;
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
                         }
                     } else {
                         Toaster.makeText(getActivity(), twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_SHORT);
@@ -372,10 +376,5 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
                     mProgressDialog.dismiss();
             }
         }
-    }
-
-    @Override
-    public void onDismissDialog() {
-        getTwoFaSettings();
     }
 }

@@ -128,6 +128,7 @@ public class SetPinFragment extends BaseFragment implements HttpResponseListener
         String jsonString = new Gson().toJson(mSetPinRequest);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_SET_PIN,
                 Constants.BASE_URL_MM + Constants.URL_SET_PIN, Constants.METHOD_PUT);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
     public void setTitle() {

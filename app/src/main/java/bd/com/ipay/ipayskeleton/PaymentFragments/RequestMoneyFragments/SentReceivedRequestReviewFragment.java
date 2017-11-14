@@ -45,7 +45,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SentReceivedRequestReviewFragment extends ReviewFragment implements HttpResponseListener, OTPVerificationForTwoFactorAuthenticationServicesDialog.dismissListener {
+public class SentReceivedRequestReviewFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mAcceptRequestTask = null;
 
@@ -301,13 +301,14 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString,
                 Constants.COMMAND_ACCEPT_REQUESTS_MONEY,
                 Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
     private void acceptRequestMoney(long id, String pin) {
         if (mAcceptRequestTask != null) {
             return;
         }
-
+        
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_accepted));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
@@ -374,7 +375,6 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                         Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
                         SecuritySettingsActivity.otpDuration = mRequestMoneyAcceptRejectOrCancelResponse.getOtpValidFor();
                         launchOTPVerification();
-                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mDismissListener = this;
                     } else {
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
@@ -475,13 +475,5 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     @Override
     public void onPinLoadFinished(boolean isPinRequired) {
         this.isPinRequired = isPinRequired;
-    }
-
-    @Override
-    public void onDismissDialog() {
-        if (switchedFromTransactionHistory) {
-            Utilities.finishLauncherActivity(getActivity());
-        } else
-            getActivity().onBackPressed();
     }
 }

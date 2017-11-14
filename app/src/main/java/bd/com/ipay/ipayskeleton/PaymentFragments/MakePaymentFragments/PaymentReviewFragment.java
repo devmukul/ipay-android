@@ -240,6 +240,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         String jsonString = new Gson().toJson(mPaymentRequest);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_PAYMENT,
                 Constants.BASE_URL_SM + Constants.URL_PAYMENT, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
 

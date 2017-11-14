@@ -219,7 +219,8 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     private void launchOTPVerification() {
         String jsonString = new Gson().toJson(mWithdrawMoneyRequest);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_WITHDRAW_MONEY,
-                Constants.BASE_URL_SM + Constants.URL_WITHDRAW_MONEY,Constants.METHOD_POST);
+                Constants.BASE_URL_SM + Constants.URL_WITHDRAW_MONEY, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
     @Override

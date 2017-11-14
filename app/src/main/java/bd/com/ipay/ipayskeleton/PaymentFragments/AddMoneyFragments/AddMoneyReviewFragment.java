@@ -168,6 +168,7 @@ public class AddMoneyReviewFragment extends ReviewFragment implements HttpRespon
         String jsonString = new Gson().toJson(mAddMoneyRequest);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_ADD_MONEY,
                 Constants.BASE_URL_SM + Constants.URL_ADD_MONEY, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
     private void attemptAddMoney(String pin) {

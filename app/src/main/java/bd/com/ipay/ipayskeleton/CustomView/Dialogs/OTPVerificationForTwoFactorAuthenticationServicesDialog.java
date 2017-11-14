@@ -25,20 +25,11 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TwoFA.TwoFactorAuthSettingsSaveResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
-import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthServicesAsynctaskMap;
@@ -67,7 +58,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
     private MaterialDialog mOTPInputDialog;
     private ProgressDialog mProgressDialog;
 
-    public dismissListener mDismissListener;
+    public HttpResponseListener mParentHttpResponseListener;
 
     private HashMap<String, String> mProgressDialogStringMap;
 
@@ -228,7 +219,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-
+        mProgressDialog.dismiss();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mHttpPutAsyncTask = null;
@@ -238,193 +229,12 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
             }
             return;
         }
-
         Gson gson = new Gson();
-
         TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse
                 = gson.fromJson(result.getJsonString(), TwoFactorAuthSettingsSaveResponse.class);
-        if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
-            if (context != null) {
-                Utilities.hideKeyboard(context, view);
-                ((MyApplication) context.getApplication()).launchLoginPage(twoFactorAuthSettingsSaveResponse.getMessage());
-            }
-        } else {
-            try {
-                if (result.getApiCommand().equals(Constants.COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS)) {
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_SHORT);
-                        mOTPInputDialog.dismiss();
-                        mDismissListener.onDismissDialog();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = twoFactorAuthSettingsSaveResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
-                        mOTPInputDialog.hide();
-                    }
-                    mHttpPutAsyncTask = null;
-
-                } else if (result.getApiCommand().equals(Constants.COMMAND_SEND_MONEY)) {
-                    SendMoneyResponse sendMoneyResponse = gson.fromJson(result.getJsonString(), SendMoneyResponse.class);
-                    String message = sendMoneyResponse.getMessage();
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, message, Toast.LENGTH_SHORT);
-                        mEnableDisableSMSBroadcastReceiver.disableBroadcastReceiver(context);
-                        mOTPInputDialog.dismiss();
-                        launchHomeActivity();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, sendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = sendMoneyResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, message, Toast.LENGTH_SHORT);
-                    }
-                    mHttpPostAsyncTask = null;
-                } else if (result.getApiCommand().equals(Constants.COMMAND_TOPUP_REQUEST)) {
-                    TopupResponse topupResponse = gson.fromJson(result.getJsonString(), TopupResponse.class);
-                    String message = topupResponse.getMessage();
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, message, Toast.LENGTH_SHORT);
-                        mOTPInputDialog.dismiss();
-                        launchHomeActivity();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, topupResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = topupResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, message, Toast.LENGTH_SHORT);
-                    }
-                    mHttpPostAsyncTask = null;
-                } else if (result.getApiCommand().equals(Constants.COMMAND_REQUEST_MONEY)) {
-                    RequestMoneyResponse requestMoneyResponse = gson.fromJson(result.getJsonString(), RequestMoneyResponse.class);
-                    String message = requestMoneyResponse.getMessage();
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, message, Toast.LENGTH_SHORT);
-                        mOTPInputDialog.dismiss();
-                        launchHomeActivity();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, requestMoneyResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = requestMoneyResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, message, Toast.LENGTH_SHORT);
-                    }
-                    mHttpPostAsyncTask = null;
-                } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_MONEY)) {
-                    AddMoneyResponse addMoneyResponse = gson.fromJson(result.getJsonString(), AddMoneyResponse.class);
-                    String message = addMoneyResponse.getMessage();
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, message, Toast.LENGTH_SHORT);
-                        mOTPInputDialog.dismiss();
-                        launchHomeActivity();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, addMoneyResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = addMoneyResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, message, Toast.LENGTH_SHORT);
-                    }
-                    mHttpPostAsyncTask = null;
-                } else if (result.getApiCommand().equals(Constants.COMMAND_WITHDRAW_MONEY)) {
-                    WithdrawMoneyResponse withdrawMoneyResponse = gson.fromJson(result.getJsonString(), WithdrawMoneyResponse.class);
-                    String message = withdrawMoneyResponse.getMessage();
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, message, Toast.LENGTH_SHORT);
-                        mOTPInputDialog.dismiss();
-                        launchHomeActivity();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, withdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = withdrawMoneyResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, message, Toast.LENGTH_SHORT);
-                    }
-                    mHttpPostAsyncTask = null;
-                } else if (result.getApiCommand().equals(Constants.COMMAND_SET_PIN)) {
-                    SetPinResponse mSetPinResponse = gson.fromJson(result.getJsonString(), SetPinResponse.class);
-                    String message = mSetPinResponse.getMessage();
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, message, Toast.LENGTH_SHORT);
-                        mOTPInputDialog.dismiss();
-                        launchHomeActivity();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, mSetPinResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = mSetPinResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, message, Toast.LENGTH_SHORT);
-                    }
-                    mHttpPutAsyncTask = null;
-                } else if (result.getApiCommand().equals(Constants.COMMAND_PAYMENT)) {
-                    PaymentResponse paymentResponse = gson.fromJson(result.getJsonString(), PaymentResponse.class);
-                    String message = paymentResponse.getMessage();
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, message, Toast.LENGTH_SHORT);
-                        mOTPInputDialog.dismiss();
-                        launchHomeActivity();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, paymentResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = paymentResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, message, Toast.LENGTH_SHORT);
-                    }
-                    mHttpPostAsyncTask = null;
-                } else if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_REQUESTS_MONEY)) {
-                    RequestMoneyAcceptRejectOrCancelResponse requestMoneyAcceptRejectOrCancelResponse =
-                            gson.fromJson(result.getJsonString(), RequestMoneyAcceptRejectOrCancelResponse.class);
-                    String message = requestMoneyAcceptRejectOrCancelResponse.getMessage();
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, message, Toast.LENGTH_LONG);
-                        mOTPInputDialog.dismiss();
-                        mDismissListener.onDismissDialog();
-                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, requestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
-                        SecuritySettingsActivity.otpDuration = requestMoneyAcceptRejectOrCancelResponse.getOtpValidFor();
-                        setCountDownTimer();
-                    } else {
-                        mProgressDialog.dismiss();
-                        Toaster.makeText(context, message, Toast.LENGTH_LONG);
-                    }
-                    mHttpPostAsyncTask = null;
-                }
-
-            } catch (Exception e) {
-                Toaster.makeText(context, twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
-                if (mProgressDialog.isShowing())
-                    mProgressDialog.dismiss();
-            }
-        }
+        mOTPInputDialog.dismiss();
+        mParentHttpResponseListener.httpResponseReceiver(result);
+        return;
     }
 
-    public interface dismissListener {
-        void onDismissDialog();
-    }
 }
