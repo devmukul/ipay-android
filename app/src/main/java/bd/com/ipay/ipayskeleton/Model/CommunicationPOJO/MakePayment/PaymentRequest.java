@@ -10,15 +10,15 @@ public class PaymentRequest {
     private final String ref;
     private String otp;
 
-    public void setOtp(String otp) {
-        this.otp = otp;
-    }
-
     public PaymentRequest(String mobileNumber, String amount, String description, String pin, String ref) {
         this.mobileNumber = mobileNumber;
         this.amount = Double.parseDouble(amount);
         this.description = description;
         this.pin = pin;
-        this.ref=ref;
+        this.ref = ref;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
     }
 }

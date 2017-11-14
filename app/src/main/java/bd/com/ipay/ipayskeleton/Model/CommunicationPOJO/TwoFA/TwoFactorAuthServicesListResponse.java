@@ -25,7 +25,6 @@ public class TwoFactorAuthServicesListResponse {
     }
 
     public List<TwoFactorAuthServiceGroup> getResponse() {
-
         return response;
     }
 
