@@ -16,12 +16,7 @@ public class TwoFactorAuthService {
         this.serviceName = serviceName;
         this.isEnabled = isEnabled;
     }
-
-    public int getServiceId() {
-
-        return serviceId;
-    }
-
+    
     public void setServiceId(int serviceId) {
         this.serviceId = serviceId;
     }
