@@ -1,9 +1,10 @@
-package bd.com.ipay.ipayskeleton.Activities;
+package bd.com.ipay.ipayskeleton.Activities.DrawerActivities;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.ManagePeopleFragments.EmployeeManagementFragment;
