@@ -51,12 +51,13 @@ public class ProfileActivity extends BaseActivity {
 
 
     private final String STARTED_FROM_PROFILE_ACTIVITY = "started_from_profile_activity";
+    PreviewIdentificationDocumentFragment mPreviewIdentificationDocumentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
+        mPreviewIdentificationDocumentFragment = new PreviewIdentificationDocumentFragment();
         String targetFragment = getIntent().getStringExtra(Constants.TARGET_FRAGMENT);
 
         if (targetFragment != null) {
@@ -73,7 +74,15 @@ public class ProfileActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             Utilities.hideKeyboard(this);
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            if(mPreviewIdentificationDocumentFragment.isVisible()){
+                if(mPreviewIdentificationDocumentFragment.isDocumentViewOpen()){
+                    mPreviewIdentificationDocumentFragment.hideDocumentPreview();
+                }
+                else{
+                    getSupportFragmentManager().popBackStackImmediate();
+                }
+            }
+            else if (getSupportFragmentManager().getBackStackEntryCount() > 0)
                 getSupportFragmentManager().popBackStack();
             else {
                 finish();
@@ -86,7 +95,15 @@ public class ProfileActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+        if(mPreviewIdentificationDocumentFragment.isVisible()){
+            if(mPreviewIdentificationDocumentFragment.isDocumentViewOpen()){
+                mPreviewIdentificationDocumentFragment.hideDocumentPreview();
+            }
+            else{
+                getSupportFragmentManager().popBackStackImmediate();
+            }
+        }
+        else if (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStack();
         else
             super.onBackPressed();
@@ -275,9 +292,9 @@ public class ProfileActivity extends BaseActivity {
     public void switchToPreviewIdentificationDocumentFragment(Bundle bundle) {
         while (getSupportFragmentManager().getBackStackEntryCount() > 3)
             getSupportFragmentManager().popBackStackImmediate();
-        PreviewIdentificationDocumentFragment previewIdentificationDocumentFragment = new PreviewIdentificationDocumentFragment();
-        previewIdentificationDocumentFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, previewIdentificationDocumentFragment).addToBackStack(null).commit();
+        mPreviewIdentificationDocumentFragment = new PreviewIdentificationDocumentFragment();
+        mPreviewIdentificationDocumentFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mPreviewIdentificationDocumentFragment).addToBackStack(null).commit();
     }
 
     public void switchToUploadIdentificationDocumentFragment(Bundle bundle) {
