@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/header_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:paddingTop="@dimen/value15"
+        android:paddingBottom="@dimen/value15"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:background="@color/colorLightGray"
+        android:textSize="@dimen/text_size_small_medium_value18" />
+</FrameLayout>

@@ -381,9 +381,11 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                         ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
                         getProfileCompletionStatus();
                     } else {
+                        hideProgressDialog();
                         Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                     }
                 } catch (Exception e) {
+                    hideProgressDialog();
                     e.printStackTrace();
                     Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 }
@@ -415,9 +417,6 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
     }
 
     private void getProfileCompletionStatus() {
-
-        mProgressDialog.show();
-
         if (mGetProfileCompletionStatusTask != null) {
             return;
         }

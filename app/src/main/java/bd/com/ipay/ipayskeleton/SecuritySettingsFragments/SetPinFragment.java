@@ -19,6 +19,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -33,7 +34,10 @@ public class SetPinFragment extends BaseFragment implements HttpResponseListener
     private HttpRequestPutAsyncTask mSavePINTask = null;
     private SetPinResponse mSetPinResponse;
 
+    private SetPinRequest mSetPinRequest;
+
     private ProgressDialog mProgressDialog;
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private EditText mEnterPINEditText;
     private EditText mConfirmPINEditText;
@@ -110,7 +114,7 @@ public class SetPinFragment extends BaseFragment implements HttpResponseListener
 
             mProgressDialog.setMessage(getString(R.string.saving_pin));
             mProgressDialog.show();
-            SetPinRequest mSetPinRequest = new SetPinRequest(pin, password);
+            mSetPinRequest = new SetPinRequest(pin, password);
             Gson gson = new Gson();
             String json = gson.toJson(mSetPinRequest);
             mSavePINTask = new HttpRequestPutAsyncTask(Constants.COMMAND_SET_PIN,
@@ -118,6 +122,13 @@ public class SetPinFragment extends BaseFragment implements HttpResponseListener
             mSavePINTask.mHttpResponseListener = this;
             mSavePINTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
+    }
+
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mSetPinRequest);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_SET_PIN,
+                Constants.BASE_URL_MM + Constants.URL_SET_PIN, Constants.METHOD_PUT);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
     public void setTitle() {
@@ -155,9 +166,14 @@ public class SetPinFragment extends BaseFragment implements HttpResponseListener
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mSetPinResponse.getMessage());
                     Utilities.sendBlockedEventTracker(mTracker, "Pin Set", ProfileInfoCacheManager.getAccountId());
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    SecuritySettingsActivity.otpDuration = mSetPinResponse.getOtpValidFor();
+                    launchOTPVerification();
                 } else {
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
 
                     //Google Analytic event
                     Utilities.sendFailedEventTracker(mTracker, "Pin Set", ProfileInfoCacheManager.getAccountId(), mSetPinResponse.getMessage());

@@ -111,6 +111,14 @@ public class PreviewIdentificationDocumentFragment extends BaseFragment {
         return (T) getView().findViewById(id);
     }
 
+    public boolean isDocumentViewOpen() {
+        return documentPreviewImageView.getVisibility() == View.VISIBLE;
+    }
+
+    public void hideDocumentPreview() {
+        documentPreviewImageView.setVisibility(View.GONE);
+    }
+
     class DocumentPreviewAdapter extends RecyclerView.Adapter<DocumentPreviewAdapter.DocumentPreviewViewPager> {
 
         private Context mContext;

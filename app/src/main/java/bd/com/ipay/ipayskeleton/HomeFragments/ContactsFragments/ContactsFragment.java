@@ -843,6 +843,18 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                             sendRecommendationRequest(mobileNumber);
                         }
                     });
+                }else{
+                    if (isMember) {
+                        if (!isVerified) {
+                            verificationStatus.setVisibility(View.GONE);
+                        } else {
+                            verificationStatus.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    else {
+                        verificationStatus.setVisibility(View.GONE);
+                    }
+
                 }
 
                 profilePictureView.setProfilePicture(profilePictureUrlQualityMedium, false);

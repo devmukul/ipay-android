@@ -213,11 +213,6 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
             mDocumentFirstPageErrorTextView.setVisibility(View.VISIBLE);
             focusableView = null;
             isValidInput = false;
-        } else if (!mSelectedIdentificationDocument.getDocumentType().equals(IdentificationDocumentConstants.DOCUMENT_TYPE_OTHER) && maxDocumentSideCount > 1 && mDocumentSecondPageImageFile == null) {
-            mDocumentSecondPageErrorTextView.setText(R.string.please_select_a_file_to_upload);
-            mDocumentSecondPageErrorTextView.setVisibility(View.VISIBLE);
-            focusableView = null;
-            isValidInput = false;
         } else {
             focusableView = null;
             isValidInput = true;

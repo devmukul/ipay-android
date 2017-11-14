@@ -337,7 +337,15 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
                 //Google Analytic event
                 Utilities.sendSuccessEventTracker(mTracker, "Signup to OTP", ProfileInfoCacheManager.getAccountId());
 
-            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE) {
+            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+
+                // Previous OTP has not been expired yet
+                SignupOrLoginActivity.otpDuration = mOtpResponsePersonalSignup.getOtpValidFor();
+                ((SignupOrLoginActivity) getActivity()).switchToOTPVerificationPersonalFragment();
+
+            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
