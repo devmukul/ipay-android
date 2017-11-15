@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,6 +96,7 @@ public class TransactionDetailsFragment extends BaseFragment {
         String bankAccountNumber = transactionHistory.getAdditionalInfo().getBankAccountNumber();
         int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
         String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
+        String cardNumber = transactionHistory.getAdditionalInfo().getCardNumber();
 
         final String receiver = transactionHistory.getReceiver();
         final String otherProfilePicture = transactionHistory.getAdditionalInfo().getUserProfilePic();
@@ -148,9 +150,12 @@ public class TransactionDetailsFragment extends BaseFragment {
             else otherImageView.setImageResource(R.drawable.ic_tran_add);
 
         } else if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD) {
-            //TODO change here to show card number and card issuer bank
-            mNameView.setText("Money Added from Credit/Debit Card");
-            mMobileNumberView.setText("405*****123");
+            if (TextUtils.isEmpty(transactionHistory.getAdditionalInfo().getCardHolderName())) {
+                mNameView.setText(R.string.credit_or_debit_card_transaction_default_header);
+            } else {
+                mNameView.setText(transactionHistory.getAdditionalInfo().getCardHolderName());
+            }
+            mMobileNumberView.setText(cardNumber);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
             otherImageView.setImageResource(R.drawable.ic_activity_cash_in);

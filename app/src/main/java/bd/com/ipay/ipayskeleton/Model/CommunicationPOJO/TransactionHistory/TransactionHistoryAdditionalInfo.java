@@ -16,19 +16,28 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
     private String bankName;
     private String branchName;
     private String bankCode;
+    private String cardHolderName;
+    private String cardNumber;
     private boolean isReceiver;
     private EducationPaymentDetails educationPayment;
 
-    public TransactionHistoryAdditionalInfo(String userName, String userMobileNumber, String userProfilePic,
-                String bankAccountNumber, String bankAccountName, String bankName, String branchName, String bankCode) {
-        this.userName = userName;
-        this.userMobileNumber = userMobileNumber;
-        this.userProfilePic = userProfilePic;
-        this.bankAccountNumber = bankAccountNumber;
-        this.bankAccountName = bankAccountName;
-        this.bankName = bankName;
-        this.branchName = branchName;
-        this.bankCode = bankCode;
+    public TransactionHistoryAdditionalInfo() {
+
+    }
+
+    protected TransactionHistoryAdditionalInfo(Parcel in) {
+        userName = in.readString();
+        userMobileNumber = in.readString();
+        userProfilePic = in.readString();
+        bankAccountNumber = in.readString();
+        bankAccountName = in.readString();
+        bankName = in.readString();
+        branchName = in.readString();
+        bankCode = in.readString();
+        cardHolderName = in.readString();
+        cardNumber = in.readString();
+        isReceiver = in.readByte() != 0;
+        educationPayment = in.readParcelable(EducationPaymentDetails.class.getClassLoader());
     }
 
     public String getUserName() {
@@ -63,6 +72,22 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
         return bankCode;
     }
 
+    public String getCardHolderName() {
+        return cardHolderName;
+    }
+
+    public void setCardHolderName(String cardHolderName) {
+        this.cardHolderName = cardHolderName;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
     public int getBankIcon(Context context) {
         Resources resources = context.getResources();
         return resources.getIdentifier("ic_bank" + getBankCode(), "drawable",
@@ -77,41 +102,15 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
         return educationPayment;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.userName);
-        dest.writeString(this.userMobileNumber);
-        dest.writeString(this.userProfilePic);
-        dest.writeString(this.bankAccountNumber);
-        dest.writeString(this.bankAccountName);
-        dest.writeString(this.bankName);
-        dest.writeString(this.branchName);
-        dest.writeString(this.bankCode);
-        dest.writeParcelable(this.educationPayment, flags);
-    }
-
-    protected TransactionHistoryAdditionalInfo(Parcel in) {
-        this.userName = in.readString();
-        this.userMobileNumber = in.readString();
-        this.userProfilePic = in.readString();
-        this.bankAccountNumber = in.readString();
-        this.bankAccountName = in.readString();
-        this.bankName = in.readString();
-        this.branchName = in.readString();
-        this.bankCode = in.readString();
-        this.educationPayment = in.readParcelable(EducationPaymentDetails.class.getClassLoader());
-    }
-
-    public static final Parcelable.Creator<TransactionHistoryAdditionalInfo> CREATOR = new Parcelable.Creator<TransactionHistoryAdditionalInfo>() {
+    public static final Creator<TransactionHistoryAdditionalInfo> CREATOR = new Creator<TransactionHistoryAdditionalInfo>() {
         @Override
-        public TransactionHistoryAdditionalInfo createFromParcel(Parcel source) {
-            return new TransactionHistoryAdditionalInfo(source);
+        public TransactionHistoryAdditionalInfo createFromParcel(Parcel in) {
+            return new TransactionHistoryAdditionalInfo(in);
         }
 
         @Override
@@ -119,4 +118,20 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
             return new TransactionHistoryAdditionalInfo[size];
         }
     };
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(userName);
+        dest.writeString(userMobileNumber);
+        dest.writeString(userProfilePic);
+        dest.writeString(bankAccountNumber);
+        dest.writeString(bankAccountName);
+        dest.writeString(bankName);
+        dest.writeString(branchName);
+        dest.writeString(bankCode);
+        dest.writeString(cardHolderName);
+        dest.writeString(cardNumber);
+        dest.writeByte((byte) (isReceiver ? 1 : 0));
+        dest.writeParcelable(educationPayment, flags);
+    }
 }

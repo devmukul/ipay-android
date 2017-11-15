@@ -30,6 +30,8 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyByCreditOrDebitCardStatusActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyReviewActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.CardPaymentWebViewActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -349,9 +351,19 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode == AddMoneyActivity.ADD_MONEY_REVIEW_REQUEST) {
             if (data != null && data.hasExtra(Constants.CARD_TRANSACTION_DATA)) {
-                Intent intent = new Intent(getActivity(), AddMoneyByCreditOrDebitCardStatusActivity.class);
-                intent.putExtra(Constants.CARD_TRANSACTION_DATA, data.getBundleExtra(Constants.CARD_TRANSACTION_DATA));
+                final int addMoneyByCreditOrDebitCardStatus = data.getBundleExtra(Constants.CARD_TRANSACTION_DATA).getInt(Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_STATUS, 0);
+                final Intent intent;
+                if (addMoneyByCreditOrDebitCardStatus == CardPaymentWebViewActivity.CARD_TRANSACTION_SUCCESSFUL) {
+                    final String transactionId = data.getBundleExtra(Constants.CARD_TRANSACTION_DATA).getString(Constants.TRANSACTION_ID);
+                    intent = new Intent(getActivity(), TransactionDetailsActivity.class);
+                    intent.putExtra(Constants.STATUS, Constants.PAYMENT_REQUEST_STATUS_ALL);
+                    intent.putExtra(Constants.MONEY_REQUEST_ID, transactionId);
+                } else {
+                    intent = new Intent(getActivity(), AddMoneyByCreditOrDebitCardStatusActivity.class);
+                    intent.putExtra(Constants.CARD_TRANSACTION_DATA, data.getBundleExtra(Constants.CARD_TRANSACTION_DATA));
+                }
                 startActivity(intent);
+
             }
             if (getActivity() != null)
                 getActivity().finish();
