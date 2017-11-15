@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -193,16 +194,16 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    /*private void launchPrevilegePage(String mobileNumber, String name, String profilePicture, String designation) {
+    private void launchPrevilegePage(String mobileNumber, String name, String profilePicture, String role) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.MOBILE_NUMBER, mobileNumber);
-        bundle.putString(Constants.DESIGNATION, designation);
+        bundle.putString(Constants.ROLE, role);
         bundle.putString(Constants.NAME, name);
         bundle.putString(Constants.PROFILE_PICTURE, profilePicture);
-        bundle.putLong(Constants.ASSOCIATION_ID, mAssociationId);
+        //bundle.putLong(Constants.ASSOCIATION_ID, mAssociationId);
 
         ((ManagePeopleActivity) getActivity()).switchToEmployeePrivilegeFragment(bundle);
-    }*/
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -243,7 +244,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
 
                     String mobileNumber = ContactEngine.formatMobileNumberBD(mMobileNumberEditText.getText().toString());
                     String designation = mRoleEditText.getText().toString();
-                    //launchPrevilegePage(mobileNumber, name, profilePicture, designation);
+                    launchPrevilegePage(mobileNumber, name, profilePicture, designation);
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                     if (getActivity() != null)

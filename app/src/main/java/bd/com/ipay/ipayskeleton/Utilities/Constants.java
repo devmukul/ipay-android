@@ -733,6 +733,7 @@ public class Constants {
     public static final String ADDRESS_TYPE_OFFICE = "OFFICE";
 
     public static final String TOTAL = "total";
+    public static final String ROLE = "role";
     public static final String RECEIVER_MOBILE_NUMBER = "receiver";
     public static final String INVOICE_ITEM_NAME_TAG = "item_name";
     public static final String DESCRIPTION_TAG = "description";
