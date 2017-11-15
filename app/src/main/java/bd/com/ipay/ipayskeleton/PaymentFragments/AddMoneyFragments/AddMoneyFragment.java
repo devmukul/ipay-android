@@ -38,10 +38,12 @@ import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.AbstractSelectorView;
 import bd.com.ipay.ipayskeleton.CustomView.BankSelectorView;
 import bd.com.ipay.ipayskeleton.CustomView.SelectorView;
+import bd.com.ipay.ipayskeleton.CustomView.ServiceSelectorView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.Service.IpayService;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -65,7 +67,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     private EditText mNoteEditText;
     private EditText mAmountEditText;
 
-    private SelectorView mAddMoneyOptionSelectorView;
+    private ServiceSelectorView mAddMoneyOptionSelectorView;
 
     private View mBankSelectorViewHolder;
     private BankSelectorView mBankSelectorView;
@@ -75,9 +77,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     private List<UserBankClass> mListUserBankClasses;
 
     private ProgressDialog mProgressDialog;
-
-    private String[] mAddMoneyOptionsTitle = {Constants.ADD_MONEY_BY_BANK_TITLE, Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE};
-    private int[] mAddMoneyOptionsIcon = {R.drawable.ic_bank111, R.drawable.ic_activity_cash_in};
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,7 +111,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     if (verifyUserInputs()) {
-                        launchReviewPage(mAddMoneyOptionsTitle[mAddMoneyOptionSelectorView.getSelectedItemPosition()]);
+                        launchReviewPage(mAddMoneyOptionSelectorView.getSelectedItem().getServiceId());
                     }
                 } else
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
@@ -133,42 +132,22 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 }
             }
         });
-        final List<String> availableAddMoneyOptions = new ArrayList<>();
-        final List<Integer> dummyList = new ArrayList<>();
-        for (int i = 0; i < mAddMoneyOptionsTitle.length; i++) {
-            switch (mAddMoneyOptionsTitle[i]) {
-                case Constants.ADD_MONEY_BY_BANK_TITLE:
-                    if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK)) {
-                        availableAddMoneyOptions.add(mAddMoneyOptionsTitle[i]);
-                        dummyList.add(mAddMoneyOptionsIcon[i]);
-                    }
-                    break;
-                case Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE:
-                    if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)) {
-                        availableAddMoneyOptions.add(mAddMoneyOptionsTitle[i]);
-                        dummyList.add(mAddMoneyOptionsIcon[i]);
-                    }
-                    break;
-            }
-        }
-        int[] availableAddMoneyOptionIcons = new int[dummyList.size()];
-        for (int i = 0; i < dummyList.size(); i++) {
-            availableAddMoneyOptionIcons[i] = dummyList.get(i);
-        }
-        mAddMoneyOptionSelectorView.setItems(availableAddMoneyOptions, availableAddMoneyOptionIcons);
+        final List<IpayService> availableAddMoneyOptions = Utilities.getAvailableAddMoneyOptions();
+
+        mAddMoneyOptionSelectorView.setItems(availableAddMoneyOptions);
         mAddMoneyOptionSelectorView.setOnItemSelectListener(new AbstractSelectorView.OnItemSelectListener() {
 
             @Override
             public boolean onItemSelected(int selectedItemPosition) {
-                switch (availableAddMoneyOptions.get(selectedItemPosition)) {
-                    case Constants.ADD_MONEY_BY_BANK_TITLE:
+                switch (availableAddMoneyOptions.get(selectedItemPosition).getServiceId()) {
+                    case ServiceIdConstants.ADD_MONEY_BY_BANK:
                         if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
                             setupAddMoneyFromBank();
                         } else {
                             showGetVerifiedDialog();
                         }
                         break;
-                    case Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE:
+                    case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
                         setupAddMoneyFromCreditOrDebitCard();
                         break;
                 }
@@ -340,7 +319,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         mNoteEditText.setError(null);
     }
 
-    private void launchReviewPage(final String selectedOptionTitle) {
+    private void launchReviewPage(final int addMonerServiceId) {
         final String amount = mAmountEditText.getText().toString().trim();
         final String description = mNoteEditText.getText().toString().trim();
 
@@ -349,8 +328,8 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         intent.putExtra(Constants.DESCRIPTION_TAG, description);
 
 
-        switch (selectedOptionTitle) {
-            case Constants.ADD_MONEY_BY_BANK_TITLE:
+        switch (addMonerServiceId) {
+            case ServiceIdConstants.ADD_MONEY_BY_BANK:
                 // Adding the type is by bank
                 intent.putExtra(Constants.ADD_MONEY_TYPE, Constants.ADD_MONEY_TYPE_BY_BANK);
 
@@ -358,7 +337,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 UserBankClass selectedBankAccount = mListUserBankClasses.get(mBankSelectorView.getSelectedItemPosition());
                 intent.putExtra(Constants.SELECTED_BANK_ACCOUNT, selectedBankAccount);
                 break;
-            case Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE:
+            case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
                 // Adding the type is by credit/debit card
                 intent.putExtra(Constants.ADD_MONEY_TYPE, Constants.ADD_MONEY_TYPE_BY_CREDIT_OR_DEBIT_CARD);
                 break;

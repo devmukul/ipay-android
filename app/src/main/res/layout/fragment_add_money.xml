@@ -30,7 +30,7 @@
 
         <View style="@style/Divider" />
 
-        <bd.com.ipay.ipayskeleton.CustomView.SelectorView
+        <bd.com.ipay.ipayskeleton.CustomView.ServiceSelectorView
             android:id="@+id/add_money_option_selector_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

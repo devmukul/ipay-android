@@ -97,6 +97,13 @@ public abstract class AbstractSelectorView<T> extends LinearLayout implements Vi
         this.itemsIcon = iconsArray;
     }
 
+    public T getSelectedItem() {
+        if (mSelectedItemPosition != -1)
+            return (T) selectableOptionList.get(mSelectedItemPosition);
+        else
+            return null;
+    }
+
     public void selectedItem(int selectedItemPosition) {
         if (selectableOptionList != null && !selectableOptionList.isEmpty()) {
             resourceSelectionAction(selectedItemPosition);
