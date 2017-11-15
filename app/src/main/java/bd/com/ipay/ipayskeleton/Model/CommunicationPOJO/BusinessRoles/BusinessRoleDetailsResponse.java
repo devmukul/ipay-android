@@ -9,7 +9,7 @@ public class BusinessRoleDetailsResponse {
     private long id;
     private String roleName;
     private long businessAccountId;
-    private List<BusinessService> mBusinessServiceList;
+    private List<BusinessService> serviceList;
 
     public String getMessage() {
         return message;
@@ -27,7 +27,7 @@ public class BusinessRoleDetailsResponse {
         return businessAccountId;
     }
 
-    public List<BusinessService> getmBusinessServiceList() {
-        return mBusinessServiceList;
+    public List<BusinessService> getServiceList() {
+        return serviceList;
     }
 }

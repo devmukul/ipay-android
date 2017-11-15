@@ -237,7 +237,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                     BusinessRoleDetailsResponse businessRoleDetailsResponse = gson.fromJson(result.getJsonString(),
                             BusinessRoleDetailsResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mPrivilegeList = getServiceNamesFromBusinessServices(businessRoleDetailsResponse.getmBusinessServiceList());
+                        mPrivilegeList = getServiceNamesFromBusinessServices(businessRoleDetailsResponse.getServiceList());
                         mEmployeePrivilegeAdapter.notifyDataSetChanged();
                         if (getActivity() != null) {
                             Toaster.makeText(getActivity(), businessRoleDetailsResponse.getMessage(), Toast.LENGTH_LONG);

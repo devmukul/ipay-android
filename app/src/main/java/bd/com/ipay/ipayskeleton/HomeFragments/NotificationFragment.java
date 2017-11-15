@@ -73,6 +73,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private HttpRequestGetAsyncTask mGetPendingIntroducerListTask = null;
     private GetPendingIntroducerListResponse mPendingIntroducerListResponse;
 
+    private HttpRequestGetAsyncTask mGetPendingRoleManagerRequestTask = null;
+
     private RecyclerView mNotificationsRecyclerView;
     private NotificationListAdapter mNotificationListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -143,7 +145,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         if (Utilities.isConnectionAvailable(getActivity())) {
             refreshNotificationLists(getActivity());
         }
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_notifications) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_notifications));
     }
 
     @Override
@@ -177,6 +179,11 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         getMoneyAndPaymentRequest(context);
         getIntroductionRequestList(context);
         getPendingIntroducersList(context);
+        getPendingInvitationRequestsForRoleManager();
+    }
+
+    private void getPendingInvitationRequestsForRoleManager() {
+
     }
 
     public void refreshNotificationLists(Context context) {

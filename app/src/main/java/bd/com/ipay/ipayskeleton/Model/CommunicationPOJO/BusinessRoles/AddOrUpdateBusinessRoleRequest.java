@@ -6,11 +6,11 @@ import java.util.List;
 public class AddOrUpdateBusinessRoleRequest {
 
     private String roleName;
-    private List<BusinessService> mBusinessServiceList;
+    private List<BusinessService> serviceList;
 
-    public AddOrUpdateBusinessRoleRequest(String roleName, List<BusinessService> mBusinessServiceList) {
+    public AddOrUpdateBusinessRoleRequest(String roleName, List<BusinessService> serviceList) {
         this.roleName = roleName;
-        this.mBusinessServiceList = mBusinessServiceList;
+        this.serviceList = serviceList;
     }
 
     public String getRoleName() {
@@ -21,11 +21,11 @@ public class AddOrUpdateBusinessRoleRequest {
         this.roleName = roleName;
     }
 
-    public List<BusinessService> getmBusinessServiceList() {
-        return mBusinessServiceList;
+    public List<BusinessService> getServiceList() {
+        return serviceList;
     }
 
-    public void setmBusinessServiceList(List<BusinessService> mBusinessServiceList) {
-        this.mBusinessServiceList = mBusinessServiceList;
+    public void setServiceList(List<BusinessService> serviceList) {
+        this.serviceList = serviceList;
     }
 }

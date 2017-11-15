@@ -7,10 +7,10 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Resource;
 public class BusinessRole implements Resource {
     private long id;
     private String roleName;
-    private List<BusinessService> mServiceList;
+    private List<BusinessService> serviceList;
 
-    public List<BusinessService> getmServiceList() {
-        return mServiceList;
+    public List<BusinessService> getServiceList() {
+        return serviceList;
     }
 
     public BusinessRole(long id, String roleName) {

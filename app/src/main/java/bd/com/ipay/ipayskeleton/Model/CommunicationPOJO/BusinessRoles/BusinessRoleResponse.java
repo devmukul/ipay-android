@@ -4,11 +4,11 @@ import java.util.List;
 
 public class BusinessRoleResponse {
 
-    private List<BusinessRole> mBusinessRoleList;
+    private List<BusinessRole> businessRoleList;
     private String message;
 
-    public List<BusinessRole> getmBusinessRoleList() {
-        return mBusinessRoleList;
+    public List<BusinessRole> getBusinessRoleList() {
+        return businessRoleList;
     }
 
     public String getMessage() {
