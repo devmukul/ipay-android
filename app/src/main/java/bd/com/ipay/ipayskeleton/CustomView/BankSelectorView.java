@@ -221,6 +221,14 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
         }
     }
 
+    public void showAddBankDialog(final boolean shouldDestroyActivityOnCancel) {
+        mBankListValidator.showVerifyBankDialog(((AppCompatActivity) getContext()), shouldDestroyActivityOnCancel);
+    }
+
+    public void showVerifyBankDialog(final boolean shouldDestroyActivityOnCancel) {
+        mBankListValidator.showVerifyBankDialog(((AppCompatActivity) getContext()), shouldDestroyActivityOnCancel);
+    }
+
     private void showBankDetails() {
         mBankNameTextView.setError(null);
         mBankBranchTextView.setVisibility(View.VISIBLE);
