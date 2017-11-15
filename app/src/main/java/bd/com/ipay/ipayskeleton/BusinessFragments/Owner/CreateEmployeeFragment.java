@@ -17,10 +17,15 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRole;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -39,13 +44,19 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
 
     private EditText mMobileNumberEditText;
     private ImageView mSelectMobileNumberFromContactsButton;
-    private EditText mDesignationEditText;
+    private EditText mRoleEditText;
+
+    private String mSelectedRoleName;
+    private long mSelectedRoleID;
 
     private Button mContinueButton;
     private long mAssociationId;
 
     private ProgressDialog mProgressDialog;
+    private ResourceSelectorDialog mRolesSelectorDialog;
     private boolean isReturnedFromContactPicker = false;
+    private HashMap<String, Integer> mIDtoRoleNameMap;
+    private ArrayList<BusinessRole> mAllRolesList;
 
     @Nullable
     @Override
@@ -61,11 +72,15 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
         else getActivity().setTitle(R.string.edit_employee);
 
         mMobileNumberEditText = (EditText) v.findViewById(R.id.mobile_number);
-        mDesignationEditText = (EditText) v.findViewById(R.id.designation);
+        mRoleEditText = (EditText) v.findViewById(R.id.role);
+        mRoleEditText.setFocusable(false);
+        mRoleEditText.setClickable(true);
+
 
         mSelectMobileNumberFromContactsButton = (ImageView) v.findViewById(R.id.select_mobile_number_from_contacts);
         mContinueButton = (Button) v.findViewById(R.id.button_continue);
-
+        mIDtoRoleNameMap = new HashMap<>();
+        createRoleNameToIDMap();
         if (mAssociationId == 0) {
             mSelectMobileNumberFromContactsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,6 +103,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
                 }
             }
         });
+        setRolesSelectorAdapter(mAllRolesList);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -102,13 +118,42 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
             mMobileNumberEditText.setEnabled(true);
             if (!isReturnedFromContactPicker) {
                 mMobileNumberEditText.setText("");
-                mDesignationEditText.setText("");
+                mRoleEditText.setText("");
             } else isReturnedFromContactPicker = false;
 
         } else {
             mMobileNumberEditText.setText(getArguments().getString(Constants.MOBILE_NUMBER));
             mMobileNumberEditText.setEnabled(false);
         }
+    }
+
+    private void setRolesSelectorAdapter(ArrayList<BusinessRole> rolesList) {
+        mRolesSelectorDialog = new ResourceSelectorDialog(getActivity(), getActivity().getString(R.string.select_a_role), rolesList);
+        mRolesSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
+            @Override
+            public void onResourceSelected(int id, String name) {
+                mRoleEditText.setText(name);
+                mSelectedRoleName = name;
+                mSelectedRoleID = id;
+
+            }
+        });
+
+        mRoleEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRolesSelectorDialog.show();
+            }
+        });
+    }
+
+    private void createRoleNameToIDMap() {
+        mAllRolesList = new ArrayList<>();
+        mAllRolesList.add(new BusinessRole(1, "Finance"));
+        mAllRolesList.add(new BusinessRole(2, "Management"));
+        // mAllRolesList = ((ManagePeopleActivity) (getActivity())).mAllRoleList;
+        for (BusinessRole roles : mAllRolesList)
+            mIDtoRoleNameMap.put(roles.getName(), roles.getId());
     }
 
     private boolean verifyUserInputs() {
@@ -197,7 +242,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
                     }
 
                     String mobileNumber = ContactEngine.formatMobileNumberBD(mMobileNumberEditText.getText().toString());
-                    String designation = mDesignationEditText.getText().toString();
+                    String designation = mRoleEditText.getText().toString();
                     //launchPrevilegePage(mobileNumber, name, profilePicture, designation);
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {

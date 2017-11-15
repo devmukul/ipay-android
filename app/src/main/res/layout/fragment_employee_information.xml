@@ -41,7 +41,7 @@
         android:layout_height="wrap_content">
 
         <EditText
-            android:id="@+id/designation"
+            android:id="@+id/role"
             style="@style/CustomEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
