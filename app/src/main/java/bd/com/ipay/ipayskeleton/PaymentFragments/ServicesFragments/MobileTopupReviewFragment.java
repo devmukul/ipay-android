@@ -23,12 +23,14 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
@@ -74,6 +76,10 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     private View mServiceCharge;
     private List<String> mArrayPackages;
     private List<String> mArrayOperators;
+
+    private TopupRequest mTopupRequestModel;
+
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private View v;
     private Tracker mTracker;
@@ -171,7 +177,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     private void attemptTopUp(String pin) {
         if (mTopupTask != null)
             return;
-        TopupRequest mTopupRequestModel = new TopupRequest(Long.parseLong(mMobileNumber.replaceAll("[^0-9]", "")),
+        mTopupRequestModel = new TopupRequest(Long.parseLong(mMobileNumber.replaceAll("[^0-9]", "")),
                 mMobileNumber, mMobileNumberType, mOperatorCode, mAmount,
                 mCountryCode, mMobileNumberType, Constants.DEFAULT_USER_CLASS, pin);
 
@@ -243,6 +249,13 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
         mOperatorImageView.setImageResource(images[mOperatorCode - 1]);
     }
 
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mTopupRequestModel);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_TOPUP_REQUEST,
+                Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
+    }
+
     private void getProfileInfo(String mobileNumber) {
         if (mGetProfileInfoTask != null) {
             return;
@@ -300,7 +313,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                             ((MyApplication) getActivity().getApplication()).launchLoginPage(mTopupResponse.getMessage());
                         Utilities.sendBlockedEventTracker(mTracker, "Topup", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
 
-
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
                         final String errorMessage;
                         if (!TextUtils.isEmpty(mTopupResponse.getMessage())) {
@@ -311,6 +323,10 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                         Toaster.makeText(getActivity(), mTopupResponse.getMessage(), Toast.LENGTH_LONG);
                         //Google Analytic event
                         Utilities.sendFailedEventTracker(mTracker, "TopUp", ProfileInfoCacheManager.getAccountId(), errorMessage, Double.valueOf(mAmount).longValue());
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                        Toast.makeText(getActivity(), mTopupResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        SecuritySettingsActivity.otpDuration = mTopupResponse.getOtpValidFor();
+                        launchOTPVerification();
                     } else {
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG);
@@ -353,6 +369,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                         if (photoUri != null)
                             mProfileImageView.setProfilePicture(photoUri, false);
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);

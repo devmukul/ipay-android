@@ -6,6 +6,7 @@ public class AddMoneyRequest {
     private final double amount;
     private final String description;
     private final String pin;
+    private String otp;
 
     public AddMoneyRequest(long bankAccountId, double amount, String description, String pin) {
         this.bankAccountId = bankAccountId;
@@ -13,4 +14,14 @@ public class AddMoneyRequest {
         this.description = description;
         this.pin = pin;
     }
+
+    public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
+    }
+
+
 }

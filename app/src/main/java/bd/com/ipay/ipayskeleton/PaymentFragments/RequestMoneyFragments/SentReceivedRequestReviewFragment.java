@@ -24,12 +24,14 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
@@ -51,6 +53,9 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
     private HttpRequestPostAsyncTask mRejectRequestTask = null;
 
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
+
+    private RequestMoneyAcceptRejectOrCancelRequest mRequestMoneyAcceptRejectOrCancelRequest;
     private RequestMoneyAcceptRejectOrCancelResponse mRequestMoneyAcceptRejectOrCancelResponse;
 
     private ProgressDialog mProgressDialog;
@@ -291,18 +296,26 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mRequestMoneyAcceptRejectOrCancelRequest);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString,
+                Constants.COMMAND_ACCEPT_REQUESTS_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
+    }
+
     private void acceptRequestMoney(long id, String pin) {
         if (mAcceptRequestTask != null) {
             return;
         }
-
+        
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_accepted));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
+        mRequestMoneyAcceptRejectOrCancelRequest =
                 new RequestMoneyAcceptRejectOrCancelRequest(id, pin);
         Gson gson = new Gson();
-        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
+        String json = gson.toJson(mRequestMoneyAcceptRejectOrCancelRequest);
         mAcceptRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_REQUESTS_MONEY,
                 Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
         mAcceptRequestTask.mHttpResponseListener = this;
@@ -358,6 +371,10 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mRequestMoneyAcceptRejectOrCancelResponse.getMessage());
                         Utilities.sendBlockedEventTracker(mTracker, "Money Request", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
+                    } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                        Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
+                        SecuritySettingsActivity.otpDuration = mRequestMoneyAcceptRejectOrCancelResponse.getOtpValidFor();
+                        launchOTPVerification();
                     } else {
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);

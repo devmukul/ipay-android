@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -22,6 +23,8 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -29,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyResponse;
@@ -46,6 +50,10 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class SendMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSendMoneyTask = null;
+
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
+
+    private SendMoneyRequest mSendMoneyRequest;
 
     private ProgressDialog mProgressDialog;
 
@@ -189,6 +197,21 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         }
     }
 
+    private void launchHomeActivity() {
+        Intent intent = new Intent(((Activity) getActivity()), HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        getActivity().startActivity(intent);
+        getActivity().finish();
+    }
+
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mSendMoneyRequest);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_SEND_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_SEND_MONEY, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
+
+    }
+
     @ValidateAccess
     private void addContact(String name, String phoneNumber, String relationship) {
         AddContactRequestBuilder addContactRequestBuilder = new
@@ -207,7 +230,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        SendMoneyRequest mSendMoneyRequest = new SendMoneyRequest(
+        mSendMoneyRequest = new SendMoneyRequest(
                 mSenderMobileNumber, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber),
                 mAmount.toString(), mDescription, pin);
         Gson gson = new Gson();
@@ -251,13 +274,40 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         SendMoneyActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
     }
 
+    private void responseProcesseor(int status) {
+        if (status == Constants.HTTP_RESPONSE_STATUS_OK) {
+            if (getActivity() != null)
+                Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+            launchHomeActivity();
+
+            //Google Analytic event
+            Utilities.sendSuccessEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
+        } else if (status == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+            if (getActivity() != null)
+                ((MyApplication) getActivity().getApplication()).launchLoginPage(mSendMoneyResponse.getMessage());
+            Utilities.sendBlockedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
+        } else if (status == Constants.HTTP_RESPONSE_STATUS_ACCEPTED ||
+                status == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+            Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
+            SecuritySettingsActivity.otpDuration = mSendMoneyResponse.getOtpValidFor();
+            launchOTPVerification();
+        } else {
+            if (getActivity() != null)
+                Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+
+            //Google Analytic event
+            Utilities.sendFailedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(),
+                    mSendMoneyResponse.getMessage(), mAmount.longValue());
+        }
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);
+        mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.dismiss();
             mSendMoneyTask = null;
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT);
@@ -270,35 +320,43 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
             try {
                 SendMoneyResponse mSendMoneyResponse = gson.fromJson(result.getJsonString(), SendMoneyResponse.class);
+                switch (result.getStatus()) {
+                    case Constants.HTTP_RESPONSE_STATUS_OK:
+                        if (getActivity() != null)
+                            Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                        launchHomeActivity();
+                        //Google Analytic event
+                        Utilities.sendSuccessEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
+                        break;
+                    case Constants.HTTP_RESPONSE_STATUS_ACCEPTED:
+                    case Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED:
+                        Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        SecuritySettingsActivity.otpDuration = mSendMoneyResponse.getOtpValidFor();
+                        launchOTPVerification();
+                        break;
+                    case Constants.HTTP_RESPONSE_STATUS_BLOCKED:
+                        if (getActivity() != null)
+                            ((MyApplication) getActivity().getApplication()).launchLoginPage(mSendMoneyResponse.getMessage());
+                        Utilities.sendBlockedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
+                        break;
+                    default:
+                        if (getActivity() != null)
+                            Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
 
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
-                        Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
-                    getActivity().setResult(Activity.RESULT_OK);
-                    getActivity().finish();
+                        //Google Analytic event
+                        Utilities.sendFailedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(),
+                                mSendMoneyResponse.getMessage(), mAmount.longValue());
+                        break;
 
-                    //Google Analytic event
-                    Utilities.sendSuccessEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
-                    if (getActivity() != null)
-                        ((MyApplication) getActivity().getApplication()).launchLoginPage(mSendMoneyResponse.getMessage());
-                    Utilities.sendBlockedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
-
-                } else {
-                    if (getActivity() != null)
-                        Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
-
-                    //Google Analytic event
-                    Utilities.sendFailedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mSendMoneyResponse.getMessage(), mAmount.longValue());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }
-
             mProgressDialog.dismiss();
             mSendMoneyTask = null;
 
         }
+
     }
 }

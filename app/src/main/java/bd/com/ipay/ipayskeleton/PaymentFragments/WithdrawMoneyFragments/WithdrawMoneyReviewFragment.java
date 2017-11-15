@@ -22,11 +22,13 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
@@ -44,6 +46,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     private HttpRequestPostAsyncTask mWithdrawMoneyTask = null;
 
     private ProgressDialog mProgressDialog;
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private double mAmount;
     private String mDescription;
@@ -119,13 +122,14 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
                             WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
                     if (errorMessage == null) {
-                        attemptAddMoneyWithPinCheck();
+                        attemptWithdrawMoneyWithPinCheck();
 
                     } else {
                         showErrorDialog(errorMessage);
                     }
                 } else
-                    attemptAddMoneyWithPinCheck();
+                    attemptWithdrawMoneyWithPinCheck();
+                ;
 
             }
         });
@@ -143,7 +147,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         return (T) getView().findViewById(id);
     }
 
-    private void attemptAddMoneyWithPinCheck() {
+    private void attemptWithdrawMoneyWithPinCheck() {
         if (WithdrawMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
@@ -164,9 +168,9 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         mProgressDialog.setMessage(getString(R.string.progress_dialog_withdraw_money_in_progress));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        WithdrawMoneyRequest mAddMoneyRequest = new WithdrawMoneyRequest(mSelectedBank.getBankAccountId(), mAmount, mDescription, pin);
+        mWithdrawMoneyRequest = new WithdrawMoneyRequest(mSelectedBank.getBankAccountId(), mAmount, mDescription, pin);
         Gson gson = new Gson();
-        String json = gson.toJson(mAddMoneyRequest);
+        String json = gson.toJson(mWithdrawMoneyRequest);
         mWithdrawMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_WITHDRAW_MONEY,
                 Constants.BASE_URL_SM + Constants.URL_WITHDRAW_MONEY, json, getActivity());
         mWithdrawMoneyTask.mHttpResponseListener = this;
@@ -208,6 +212,13 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         WithdrawMoneyActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
     }
 
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mWithdrawMoneyRequest);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_WITHDRAW_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_WITHDRAW_MONEY, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);
@@ -242,6 +253,15 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
                     Utilities.sendBlockedEventTracker(mTracker, "Withdraw Money", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
 
 
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                    Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    SecuritySettingsActivity.otpDuration = mWithdrawMoneyResponse.getOtpValidFor();
+                    launchOTPVerification();
+
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    SecuritySettingsActivity.otpDuration = mWithdrawMoneyResponse.getOtpValidFor();
+                    launchOTPVerification();
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();

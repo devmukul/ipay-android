@@ -22,12 +22,14 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByBankResponse;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
@@ -53,6 +55,11 @@ public class AddMoneyByBankReviewFragment extends ReviewFragment implements Http
     private TextView mNetAmountTextView;
 
     private Tracker mTracker;
+
+    private AddMoneyRequest mAddMoneyRequest;
+
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -154,6 +161,13 @@ public class AddMoneyByBankReviewFragment extends ReviewFragment implements Http
         return (T) getView().findViewById(id);
     }
 
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mAddMoneyRequest);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_ADD_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_ADD_MONEY, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
+    }
+
     private void attemptAddMoney(String pin) {
         if (mAddMoneyTask != null) {
             return;
@@ -162,7 +176,7 @@ public class AddMoneyByBankReviewFragment extends ReviewFragment implements Http
         mProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        AddMoneyRequest mAddMoneyRequest = new AddMoneyRequest(mSelectedBank.getBankAccountId(), mAmount, mDescription, pin);
+        mAddMoneyRequest = new AddMoneyRequest(mSelectedBank.getBankAccountId(), mAmount, mDescription, pin);
         Gson gson = new Gson();
         String json = gson.toJson(mAddMoneyRequest);
         mAddMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ADD_MONEY,
@@ -240,6 +254,10 @@ public class AddMoneyByBankReviewFragment extends ReviewFragment implements Http
                     if (getActivity() != null)
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mAddMoneyByBankResponse.getMessage());
                     Utilities.sendBlockedEventTracker(mTracker, "Add Money By Bank", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    Toast.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    SecuritySettingsActivity.otpDuration = mAddMoneyResponse.getOtpValidFor();
+                    launchOTPVerification();
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mAddMoneyByBankResponse.getMessage(), Toast.LENGTH_LONG);

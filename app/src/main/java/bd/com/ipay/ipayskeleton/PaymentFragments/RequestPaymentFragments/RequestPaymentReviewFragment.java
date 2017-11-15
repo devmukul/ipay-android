@@ -21,10 +21,12 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequestSentResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.SendNewPaymentRequest;
@@ -39,7 +41,10 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
 
     private HttpRequestPostAsyncTask mSendPaymentRequestTask = null;
 
+    private SendNewPaymentRequest mSendNewPaymentRequest;
+
     private ProgressDialog mProgressDialog;
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private String mReceiverMobileNumber;
     private String mDescription;
@@ -186,13 +191,20 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         mProgressDialog.setMessage(getString(R.string.progress_dialog_sending_payment_request));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        SendNewPaymentRequest sendNewPaymentRequest = new SendNewPaymentRequest(mAmount, mReceiverMobileNumber, mDescription, null, mVat);
+        mSendNewPaymentRequest = new SendNewPaymentRequest(mAmount, mReceiverMobileNumber, mDescription, null, mVat);
         Gson gson = new Gson();
-        String json = gson.toJson(sendNewPaymentRequest);
+        String json = gson.toJson(mSendNewPaymentRequest);
         mSendPaymentRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_PAYMENT_REQUEST,
                 Constants.BASE_URL_SM + Constants.URL_SEND_PAYMENT_REQUEST, json, getActivity());
         mSendPaymentRequestTask.mHttpResponseListener = this;
         mSendPaymentRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mSendNewPaymentRequest);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_SEND_PAYMENT_REQUEST,
+                Constants.BASE_URL_SM + Constants.URL_SEND_PAYMENT_REQUEST, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
     @Override
@@ -239,6 +251,10 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mPaymentRequestSentResponse.getMessage(), Toast.LENGTH_LONG);
                     getActivity().finish();
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    Toast.makeText(getActivity(), mPaymentRequestSentResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    SecuritySettingsActivity.otpDuration = mPaymentRequestSentResponse.getOtpValidFor();
+                    launchOTPVerification();
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mPaymentRequestSentResponse.getMessage(), Toast.LENGTH_SHORT);
