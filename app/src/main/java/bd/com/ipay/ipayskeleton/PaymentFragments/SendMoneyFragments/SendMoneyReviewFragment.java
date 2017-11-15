@@ -274,33 +274,6 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         SendMoneyActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
     }
 
-    private void responseProcesseor(int status) {
-        if (status == Constants.HTTP_RESPONSE_STATUS_OK) {
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
-            launchHomeActivity();
-
-            //Google Analytic event
-            Utilities.sendSuccessEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
-        } else if (status == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
-            if (getActivity() != null)
-                ((MyApplication) getActivity().getApplication()).launchLoginPage(mSendMoneyResponse.getMessage());
-            Utilities.sendBlockedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
-        } else if (status == Constants.HTTP_RESPONSE_STATUS_ACCEPTED ||
-                status == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-            Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
-            SecuritySettingsActivity.otpDuration = mSendMoneyResponse.getOtpValidFor();
-            launchOTPVerification();
-        } else {
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
-
-            //Google Analytic event
-            Utilities.sendFailedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(),
-                    mSendMoneyResponse.getMessage(), mAmount.longValue());
-        }
-    }
-
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);

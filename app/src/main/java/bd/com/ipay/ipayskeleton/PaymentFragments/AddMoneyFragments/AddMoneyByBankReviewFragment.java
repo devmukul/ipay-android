@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +29,8 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByBankResponse;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByBankResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
@@ -101,7 +102,7 @@ public class AddMoneyByBankReviewFragment extends ReviewFragment implements Http
         final TextView descriptionTextView = findViewById(R.id.description_text_view);
         final Button addMoneyButton = findViewById(R.id.add_money_button);
 
-        if (mDescription == null || mDescription.isEmpty()) {
+        if (TextUtils.isEmpty(mDescription)) {
             descriptionViewHolder.setVisibility(View.GONE);
         } else {
             descriptionViewHolder.setVisibility(View.VISIBLE);
@@ -255,8 +256,8 @@ public class AddMoneyByBankReviewFragment extends ReviewFragment implements Http
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(mAddMoneyByBankResponse.getMessage());
                     Utilities.sendBlockedEventTracker(mTracker, "Add Money By Bank", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                    Toast.makeText(getActivity(), mAddMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    SecuritySettingsActivity.otpDuration = mAddMoneyResponse.getOtpValidFor();
+                    Toast.makeText(getActivity(), mAddMoneyByBankResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    SecuritySettingsActivity.otpDuration = mAddMoneyByBankResponse.getOtpValidFor();
                     launchOTPVerification();
                 } else {
                     if (getActivity() != null)

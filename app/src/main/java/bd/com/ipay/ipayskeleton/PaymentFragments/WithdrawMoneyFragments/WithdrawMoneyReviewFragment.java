@@ -44,6 +44,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mWithdrawMoneyTask = null;
+    private WithdrawMoneyRequest mWithdrawMoneyRequest;
 
     private ProgressDialog mProgressDialog;
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
