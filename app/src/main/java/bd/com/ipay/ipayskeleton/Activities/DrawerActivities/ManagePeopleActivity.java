@@ -111,7 +111,7 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                        mAllRoleList = (ArrayList<BusinessRole>) mGetRolesResponse.getmBusinessRoleList();
+                        mAllRoleList = (ArrayList<BusinessRole>) mGetRolesResponse.getBusinessRoleList();
 
 //                        // Create a hash map for roleId - Privileges
 //                        for (BusinessRole mRole : mAllRoleList)
