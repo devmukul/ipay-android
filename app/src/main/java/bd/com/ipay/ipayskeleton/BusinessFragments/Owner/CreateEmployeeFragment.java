@@ -194,11 +194,12 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void launchPrevilegePage(String mobileNumber, String name, String profilePicture, String role) {
+    private void launchPrevilegePage(String mobileNumber, String name, String profilePicture, String roleName,long roleID) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.MOBILE_NUMBER, mobileNumber);
-        bundle.putString(Constants.ROLE, role);
+        bundle.putString(Constants.ROLENAME, roleName);
         bundle.putString(Constants.NAME, name);
+        bundle.putLong(Constants.ROLEID,roleID);
         bundle.putString(Constants.PROFILE_PICTURE, profilePicture);
         //bundle.putLong(Constants.ASSOCIATION_ID, mAssociationId);
 
@@ -243,8 +244,8 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
                     }
 
                     String mobileNumber = ContactEngine.formatMobileNumberBD(mMobileNumberEditText.getText().toString());
-                    String designation = mRoleEditText.getText().toString();
-                    launchPrevilegePage(mobileNumber, name, profilePicture, designation);
+                    String role = mRoleEditText.getText().toString();
+                    launchPrevilegePage(mobileNumber, name, profilePicture, role,mSelectedRoleID);
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                     if (getActivity() != null)

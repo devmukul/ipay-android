@@ -47,7 +47,7 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void switchToEmployeeManagementFragment() {
+    public void switchToEmployeeManagementFragment() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new EmployeeManagementFragment()).commit();
 

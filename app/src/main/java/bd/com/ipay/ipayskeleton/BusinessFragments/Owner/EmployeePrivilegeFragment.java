@@ -1,61 +1,72 @@
 package bd.com.ipay.ipayskeleton.BusinessFragments.Owner;
 
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.CreateEmployeeRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.CreateEmployeeResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class EmployeePrivilegeFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mCreateEmployeeAsyncTask;
-   // private CreateEmployeeResponse mCreateEmployeeResponse;
+    // private CreateEmployeeResponse mCreateEmployeeResponse;
 
     private HttpRequestPutAsyncTask mEditEmployeeAsyncTask;
     //private UpdateEmployeeResponse mEditEmployeeResponse;
 
-    private HttpRequestGetAsyncTask mEmployeeDetailsAsyncTask;
-   // private GetEmployeeDetailsResponse mGetEmployeeDetailsResponse;
+    private HttpRequestGetAsyncTask mRoleDetailsAsyncTask;
 
-   // private EmployeeDetails mEmployeeDetails;
+    private HttpRequestGetAsyncTask mEmployeeDetailsAsyncTask;
+    // private GetEmployeeDetailsResponse mGetEmployeeDetailsResponse;
+
+    // private EmployeeDetails mEmployeeDetails;
 
     private List<String> mPrivilegeList;
-   // private EmployeePrivilegeAdapter mEmployeePrivilegeAdapter;
+    private EmployeePrivilegeAdapter mEmployeePrivilegeAdapter;
 
     private String mProfilePicture;
     private String mName;
     private String mMobileNumber;
-    private String mDesignation;
+    private String mRoleName;
+    private long mRoleID;
 
     private ProfileImageView mProfilePictureView;
     private TextView mNameView;
     private TextView mMobileNumberView;
-    private TextView mDesignationView;
+    private TextView mRoleView;
 
     private Button mAddEmployeeOrSavePermissionsButton;
     private long mAssociationId;
 
     private RecyclerView mPrivilegeListView;
     private ProgressDialog mProgressDialog;
-
-    private ResourceSelectorDialog roleSelectorDialog;
     private EditText roleSelection;
     private int mSelectedRoleId = -1;
     private String mSelectedRoleName = "";
@@ -67,15 +78,14 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
 
        /* if (getArguments() != null && getArguments().containsKey(Constants.ASSOCIATION_ID)) {
             mAssociationId = getArguments().getLong(Constants.ASSOCIATION_ID);
-        }
+        }*/
 
         mProfilePictureView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mDesignationView = (TextView) v.findViewById(R.id.textview_designation);
+        mRoleView = (TextView) v.findViewById(R.id.textview_role);
         mPrivilegeListView = (RecyclerView) v.findViewById(R.id.privilege_list);
         mAddEmployeeOrSavePermissionsButton = (Button) v.findViewById(R.id.button_add_employee_or_save_permissions);
-        roleSelection = (EditText) v.findViewById(R.id.select_role);
 
         if (mAssociationId != 0)
             mAddEmployeeOrSavePermissionsButton.setText(R.string.edit_employee);
@@ -86,56 +96,35 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
             mProfilePicture = getArguments().getString(Constants.PROFILE_PICTURE);
             mName = getArguments().getString(Constants.NAME);
             mMobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
-            //mDesignation = getArguments().getString(Constants.DESIGNATION);
+            mRoleName = getArguments().getString(Constants.ROLENAME);
+            mRoleID = getArguments().getLong(Constants.ROLEID);
         }
 
         mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture, false);
         mNameView.setText(mName);
         mMobileNumberView.setText(mMobileNumber);
-        if (!mDesignation.equals("")) mDesignationView.setText(mDesignation);
-        else mDesignationView.setVisibility(View.GONE);
+        if (!mRoleName.equals("")) mRoleView.setText(mRoleName);
+        else mRoleView.setVisibility(View.GONE);
 
         mAddEmployeeOrSavePermissionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mAssociationId == 0) createEmployee(getString(R.string.create_new_employee));
-                else editEmployee(getString(R.string.edit_employee_details));
+                //else editEmployee(getString(R.string.edit_employee_details));
             }
         });
 
         //setRolesAdapter();
-       // setUpEmployeeDetails();
+        // setUpEmployeeDetails();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mPrivilegeListView.setLayoutManager(layoutManager);
 
         mEmployeePrivilegeAdapter = new EmployeePrivilegeAdapter();
 
-        mPrivilegeListView.setAdapter(mEmployeePrivilegeAdapter);*/
+        mPrivilegeListView.setAdapter(mEmployeePrivilegeAdapter);
 
         return v;
-    }
-    /*
-
-    private void setRolesAdapter() {
-        roleSelectorDialog = new ResourceSelectorDialog(getActivity(), getString(R.string.select_role), ManagePeopleActivity.mAllRoleList);
-        roleSelectorDialog.setOnResourceSelectedListener(new ResourceSelectorDialog.OnResourceSelectedListener() {
-            @Override
-            public void onResourceSelected(int id, String name) {
-                roleSelection.setError(null);
-                roleSelection.setText(name);
-                mSelectedRoleId = id;
-                mSelectedRoleName = name;
-                mPrivilegeList = Arrays.asList(ManagePeopleActivity.mRolePrivilegeMap.get(id));
-            }
-        });
-
-        roleSelection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                roleSelectorDialog.show();
-            }
-        });
     }
 
     private void setUpEmployeeDetails() {
@@ -150,7 +139,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
         mProgressDialog.setMessage(progressMessage);
         mProgressDialog.show();
 
-        CreateEmployeeRequest createEmployeeRequest = new CreateEmployeeRequest(mMobileNumber, mDesignation, mSelectedRoleId);
+        CreateEmployeeRequest createEmployeeRequest = new CreateEmployeeRequest(mMobileNumber, mRoleID);
         Gson gson = new Gson();
         String json = gson.toJson(createEmployeeRequest);
 
@@ -159,21 +148,32 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
         mCreateEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void editEmployee(String progressMessage) {
-        if (mEditEmployeeAsyncTask != null)
-            return;
+    /*
+        private void editEmployee(String progressMessage) {
+            if (mEditEmployeeAsyncTask != null)
+                return;
 
-        mProgressDialog.setMessage(progressMessage);
-        mProgressDialog.show();
+            mProgressDialog.setMessage(progressMessage);
+            mProgressDialog.show();
 
-        UpdateEmployeeRequest editEmployeeRequest = new UpdateEmployeeRequest(mDesignation, mAssociationId, mSelectedRoleId);
-        Gson gson = new Gson();
-        String json = gson.toJson(editEmployeeRequest);
+            UpdateEmployeeRequest editEmployeeRequest = new UpdateEmployeeRequest(mRole, mAssociationId, mSelectedRoleId);
+            Gson gson = new Gson();
+            String json = gson.toJson(editEmployeeRequest);
 
-        mEditEmployeeAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_UPDATE_EMPLOYEE,
-                Constants.BASE_URL_MM + Constants.URL_UPDATE_EMPLOYEE, json, getActivity(), this);
-        mEditEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+            mEditEmployeeAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_UPDATE_EMPLOYEE,
+                    Constants.BASE_URL_MM + Constants.URL_UPDATE_EMPLOYEE, json, getActivity(), this);
+            mEditEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }*/
+  /*  private void getDetailsOfSelectedRole() {
+
+        if (mRoleDetailsAsyncTask != null) return;
+        else{
+            mProgressDialog.setMessage(getString(R.string.preparing));
+            mProgressDialog.show();
+            mRoleDetailsAsyncTask=new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
+                    Constants.BASE_URL_MM+Constants.URL_GET_BUSINESS_ROLES);
+        }
+    }*/
 
     private void getEmployeeDetails(long assotiationId) {
         if (mEmployeeDetailsAsyncTask != null) {
@@ -202,16 +202,16 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
         switch (result.getApiCommand()) {
             case Constants.COMMAND_CREATE_EMPLOYEE:
                 try {
-                    mCreateEmployeeResponse = gson.fromJson(result.getJsonString(), CreateEmployeeResponse.class);
+                    CreateEmployeeResponse createEmployeeResponse = gson.fromJson(result.getJsonString(), CreateEmployeeResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (getActivity() != null) {
-                            Toaster.makeText(getActivity(), mCreateEmployeeResponse.getMessage(), Toast.LENGTH_LONG);
+                            Toaster.makeText(getActivity(), createEmployeeResponse.getMessage(), Toast.LENGTH_LONG);
                             ((ManagePeopleActivity) getActivity()).switchToEmployeeManagementFragment();
                         }
                     } else {
                         if (getActivity() != null) {
-                            Toaster.makeText(getActivity(), mCreateEmployeeResponse.getMessage(), Toast.LENGTH_LONG);
+                            Toaster.makeText(getActivity(), createEmployeeResponse.getMessage(), Toast.LENGTH_LONG);
                         }
                     }
                 } catch (Exception e) {
@@ -220,7 +220,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                 }
                 break;
 
-            case Constants.COMMAND_UPDATE_EMPLOYEE:
+           /* case Constants.COMMAND_UPDATE_EMPLOYEE:
                 try {
                     mEditEmployeeResponse = gson.fromJson(result.getJsonString(), UpdateEmployeeResponse.class);
 
@@ -239,8 +239,9 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                         Toaster.makeText(getActivity(), R.string.edit_employee_details_failed, Toast.LENGTH_LONG);
                 }
                 break;
+                */
 
-            case Constants.COMMAND_GET_EMPLOYEE_DETAILS:
+         /*   case Constants.COMMAND_GET_EMPLOYEE_DETAILS:
                 try {
                     mGetEmployeeDetailsResponse = gson.fromJson(result.getJsonString(), GetEmployeeDetailsResponse.class);
 
@@ -282,7 +283,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                 }
                 break;
             default:
-                break;
+                break;*/
         }
     }
 
@@ -299,7 +300,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
             }
 
             public void bindView(final int pos) {
-                mPrivilegeCheckBox.setText(PrivilegeConstants.PRIVILEGE_NAME_MAP.get(mPrivilegeList.get(pos)));
+                //mPrivilegeCheckBox.setText(PrivilegeConstants.PRIVILEGE_NAME_MAP.get(mPrivilegeList.get(pos)));
             }
         }
 
@@ -323,10 +324,5 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
             else
                 return mPrivilegeList.size();
         }
-    }*/
-
-    @Override
-    public void httpResponseReceiver(GenericHttpResponse result) {
-
     }
 }

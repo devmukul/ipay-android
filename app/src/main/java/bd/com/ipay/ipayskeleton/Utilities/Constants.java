@@ -115,6 +115,7 @@ public class Constants {
     public static final String MOTHERS_MOBILE = "MOTHERS_MOBILE";
 
     public static final String ADDRESS = "ADDRESS";
+    public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
     public static final String PRESENT_ADDRESS = "PRESENT_ADDRESS";
@@ -389,7 +390,7 @@ public class Constants {
     public static final String URL_GET_SECURITY_QUESTIONS = "settings/security/questions";
     public static final String URL_SET_SECURITY_ANSWERS = "settings/security/answers";
     public static final String URL_FORGET_PASSWORD = "/forgot-password";
-    public static final String URL_TWO_FACTOR_AUTH_SETTINGS ="settings/2fa/preference";
+    public static final String URL_TWO_FACTOR_AUTH_SETTINGS = "settings/2fa/preference";
     public static final String URL_GET_PIN_INFO = "settings/pin";
     public static final String URL_SET_PIN = "settings/pin/v2";
 
@@ -510,7 +511,7 @@ public class Constants {
     public static final String URL_ENDPOINT_LOCATION_COLLECTOR = "location";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
-    public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED=452;
+    public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
     public static final int HTTP_RESPONSE_STATUS_PAYMENT_REQUIRED = 402;
     public static final int HTTP_RESPONSE_STATUS_OK = 200;
@@ -660,8 +661,8 @@ public class Constants {
     public static final String COMMAND_MAKE_PAYMENT_EDUCATION = "COMMAND_MAKE_PAYMENT_EDUCATION";
 
     //Two FA
-    public static final String COMMAND_GET_TWO_FACTOR_AUTH_SETTINGS ="COMMAND_GET_TWO_FACTOR_AUTH_SETTINGS";
-    public static final String COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS ="COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS";
+    public static final String COMMAND_GET_TWO_FACTOR_AUTH_SETTINGS = "COMMAND_GET_TWO_FACTOR_AUTH_SETTINGS";
+    public static final String COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS = "COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS";
 
     //Data Collector
     public static final String COMMAND_POST_USER_LOCATION = "COMMAND_POST_USER_LOCATION";
@@ -733,7 +734,7 @@ public class Constants {
     public static final String ADDRESS_TYPE_OFFICE = "OFFICE";
 
     public static final String TOTAL = "total";
-    public static final String ROLE = "role";
+    public static final String ROLENAME = "role";
     public static final String RECEIVER_MOBILE_NUMBER = "receiver";
     public static final String INVOICE_ITEM_NAME_TAG = "item_name";
     public static final String DESCRIPTION_TAG = "description";
@@ -823,8 +824,8 @@ public class Constants {
 
     public static final String PROFILE_PHOTO_PATH = "profile_photo_path";
 
-    public static final String METHOD_POST="POST";
-    public static final String METHOD_PUT="PUT";
+    public static final String METHOD_POST = "POST";
+    public static final String METHOD_PUT = "PUT";
 
 
 }
