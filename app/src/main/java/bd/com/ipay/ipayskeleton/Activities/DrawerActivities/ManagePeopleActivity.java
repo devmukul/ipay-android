@@ -15,6 +15,7 @@ import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.CreateEmployeeFragment;
 import bd.com.ipay.ipayskeleton.ManagePeopleFragments.EmployeeManagementFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRole;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRoleResponse;
@@ -81,6 +82,10 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
         mGetRolesAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ALL_ROLES,
                 Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_ROLES, ManagePeopleActivity.this, this);
         mGetRolesAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public void switchToEmployeeInformationFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CreateEmployeeFragment()).commit();
     }
 
     @Override

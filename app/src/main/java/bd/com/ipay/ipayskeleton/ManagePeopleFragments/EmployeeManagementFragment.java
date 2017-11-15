@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -34,7 +35,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EmployeeManagementFragment extends ProgressFragment implements HttpResponseListener{
+public class EmployeeManagementFragment extends ProgressFragment implements HttpResponseListener {
 
     private FloatingActionButton mFabAddNewEmployee;
     private List<ManagerList> mEmployeeList;
@@ -62,7 +63,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
         mFabAddNewEmployee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ((ManagePeopleActivity) getActivity()).switchToEmployeeInformationFragment(null);
+                ((ManagePeopleActivity) getActivity()).switchToEmployeeInformationFragment();
             }
         });
 
@@ -137,7 +138,7 @@ public class EmployeeManagementFragment extends ProgressFragment implements Http
         Gson gson = new Gson();
         if (result.getApiCommand().equals(Constants.COMMAND_GET_EMPLOYEE_LIST)) {
 
-            System.out.println("Response "+result.toString());
+            System.out.println("Response " + result.toString());
             try {
                 mGetAllEmployeesResponse = gson.fromJson(result.getJsonString(), ManagerListResponse.class);
 
