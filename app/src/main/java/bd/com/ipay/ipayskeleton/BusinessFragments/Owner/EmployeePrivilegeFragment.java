@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
@@ -27,6 +28,8 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRoleDetailsResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessService;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.CreateEmployeeRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.CreateEmployeeResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -105,12 +108,12 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
         mMobileNumberView.setText(mMobileNumber);
         if (!mRoleName.equals("")) mRoleView.setText(mRoleName);
         else mRoleView.setVisibility(View.GONE);
+        getDetailsOfSelectedRole();
 
         mAddEmployeeOrSavePermissionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mAssociationId == 0) createEmployee(getString(R.string.create_new_employee));
-                //else editEmployee(getString(R.string.edit_employee_details));
+                createEmployee(getString(R.string.create_new_employee));
             }
         });
 
@@ -164,16 +167,18 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                     Constants.BASE_URL_MM + Constants.URL_UPDATE_EMPLOYEE, json, getActivity(), this);
             mEditEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }*/
-  /*  private void getDetailsOfSelectedRole() {
+    private void getDetailsOfSelectedRole() {
 
         if (mRoleDetailsAsyncTask != null) return;
-        else{
+        else {
             mProgressDialog.setMessage(getString(R.string.preparing));
             mProgressDialog.show();
-            mRoleDetailsAsyncTask=new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
-                    Constants.BASE_URL_MM+Constants.URL_GET_BUSINESS_ROLES);
+            mRoleDetailsAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DETAILS_OF_BUSINESS_ROLE,
+                    Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_ROLES + "/" + Long.toString(mRoleID), getActivity());
+            mRoleDetailsAsyncTask.mHttpResponseListener = this;
+            mRoleDetailsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-    }*/
+    }
 
     private void getEmployeeDetails(long assotiationId) {
         if (mEmployeeDetailsAsyncTask != null) {
@@ -186,6 +191,14 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                 Constants.BASE_URL_MM + Constants.URL_GET_EMPLOYEE_DETAILS + assotiationId, getActivity());
         mEmployeeDetailsAsyncTask.mHttpResponseListener = this;
         mEmployeeDetailsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private List<String> getServiceNamesFromBusinessServices(List<BusinessService> businessServicesList) {
+        List<String> serviceNames = new ArrayList<>();
+        for (BusinessService businessService : businessServicesList) {
+            serviceNames.add(businessService.getServiceName());
+        }
+        return serviceNames;
     }
 
     @Override
@@ -219,6 +232,20 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                         Toaster.makeText(getActivity(), R.string.new_employee_creation_failed, Toast.LENGTH_LONG);
                 }
                 break;
+            case Constants.COMMAND_GET_DETAILS_OF_BUSINESS_ROLE:
+                try {
+                    BusinessRoleDetailsResponse businessRoleDetailsResponse = gson.fromJson(result.getJsonString(),
+                            BusinessRoleDetailsResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mPrivilegeList = getServiceNamesFromBusinessServices(businessRoleDetailsResponse.getmBusinessServiceList());
+                        mEmployeePrivilegeAdapter.notifyDataSetChanged();
+                        if (getActivity() != null) {
+                            Toaster.makeText(getActivity(), businessRoleDetailsResponse.getMessage(), Toast.LENGTH_LONG);
+                        }
+                    }
+                } catch (Exception e) {
+                    Toaster.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+                }
 
            /* case Constants.COMMAND_UPDATE_EMPLOYEE:
                 try {
@@ -300,7 +327,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
             }
 
             public void bindView(final int pos) {
-                //mPrivilegeCheckBox.setText(PrivilegeConstants.PRIVILEGE_NAME_MAP.get(mPrivilegeList.get(pos)));
+                mPrivilegeCheckBox.setText(mPrivilegeList.get(pos));
             }
         }
 

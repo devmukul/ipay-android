@@ -4,11 +4,11 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles;
 public class CreateEmployeeRequest {
 
     private String mobileNumber;
-    private long roleID;
+    private long roleId;
 
-    public CreateEmployeeRequest(String mobileNumber, long roleID) {
+    public CreateEmployeeRequest(String mobileNumber, long roleId) {
         this.mobileNumber = mobileNumber;
-        this.roleID = roleID;
+        this.roleId = roleId;
     }
 
     public String getMobileNumber() {
@@ -19,11 +19,11 @@ public class CreateEmployeeRequest {
         this.mobileNumber = mobileNumber;
     }
 
-    public long getRoleID() {
-        return roleID;
+    public long getRoleId() {
+        return roleId;
     }
 
-    public void setRoleID(long roleID) {
-        this.roleID = roleID;
+    public void setRoleId(long roleId) {
+        this.roleId = roleId;
     }
 }

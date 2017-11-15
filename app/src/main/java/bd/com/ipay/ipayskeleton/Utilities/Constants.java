@@ -479,7 +479,7 @@ public class Constants {
     public static final String URL_GET_BUSINESS_LIST_ALL = "business/list/all";
 
     // Business Information (Owner)
-    public static final String URL_CREATE_EMPLOYEE = "business/user";
+    public static final String URL_CREATE_EMPLOYEE = "business-manager-invitation";
     public static final String URL_UPDATE_EMPLOYEE = "business/user";
     public static final String URL_GET_EMPLOYEE_LIST = "business-manager";
     public static final String URL_GET_EMPLOYEE_DETAILS = "business/user/";
@@ -645,6 +645,7 @@ public class Constants {
     // Business Information (Owner)
     public static final String COMMAND_GET_BUSINESS_INFORMATION = "COMMAND_GET_BUSINESS_INFORMATION";
     public static final String COMMAND_SET_BUSINESS_INFORMATION = "COMMAND_SET_BUSINESS_INFORMATION";
+    public static final String COMMAND_GET_DETAILS_OF_BUSINESS_ROLE ="COMMAND_GET_DETAILS_OF_BUSINESS_ROLE";
 
     public static final String COMMAND_CREATE_EMPLOYEE = "COMMAND_CREATE_EMPLOYEE";
     public static final String COMMAND_UPDATE_EMPLOYEE = "COMMAND_UPDATE_EMPLOYEE";
