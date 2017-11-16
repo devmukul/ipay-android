@@ -6,6 +6,7 @@ import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentRequestReceivedDetailsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.SentReceivedRequestReviewFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.BusinessRoleReviewFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.RecommendationReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -67,6 +68,12 @@ public class NotificationActivity extends BaseActivity {
         RecommendationReviewFragment recommendationReviewFragment = new RecommendationReviewFragment();
         recommendationReviewFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recommendationReviewFragment).commit();
+    }
+
+    public void switchToBusinessRoleReviewFragment(Bundle bundle){
+        BusinessRoleReviewFragment businessRoleReviewFragment=new BusinessRoleReviewFragment();
+        businessRoleReviewFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,businessRoleReviewFragment).commit();
     }
 
     @Override

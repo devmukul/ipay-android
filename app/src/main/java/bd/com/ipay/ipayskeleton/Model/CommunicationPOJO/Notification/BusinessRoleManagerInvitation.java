@@ -12,7 +12,7 @@ public class BusinessRoleManagerInvitation implements Notification {
     private String businessName;
     private String roleName;
     private long createdAt;
-    private List<ProfilePicture> proflePictures;
+    private List<ProfilePicture> profilePictures;
 
     @Override
     public String getNotificationTitle() {
@@ -26,7 +26,7 @@ public class BusinessRoleManagerInvitation implements Notification {
 
     @Override
     public String getImageUrl() {
-        return proflePictures.get(0).getUrl();
+        return profilePictures.get(0).getUrl();
     }
 
     public long getId() {
@@ -50,7 +50,7 @@ public class BusinessRoleManagerInvitation implements Notification {
     }
 
     public List<ProfilePicture> getProflePictures() {
-        return proflePictures;
+        return profilePictures;
     }
 
     @Override

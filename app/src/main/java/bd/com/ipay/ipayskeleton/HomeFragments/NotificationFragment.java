@@ -306,7 +306,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private boolean isAllNotificationsLoaded() {
-        return mGetMoneyAndPaymentRequestTask == null && mGetIntroductionRequestTask == null;
+        return mGetMoneyAndPaymentRequestTask == null && mGetIntroductionRequestTask == null && mGetPendingRoleManagerRequestTask == null;
     }
 
     private List<Notification> mergeNotificationLists() {
@@ -426,6 +426,13 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         Intent intent = new Intent(getActivity(), NotificationActivity.class);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+    private void launchBusinessRoleReviewFragment(final BusinessRoleManagerInvitation businessRoleManagerInvitation){
+        Bundle bundle=new Bundle();
+        Gson gson=new Gson();
+        String jsonString=gson.toJson(businessRoleManagerInvitation);
+        bundle.putString(Constants.BUSINESS_ROLE_REQUEST,jsonString);
+
     }
 
     public interface OnNotificationUpdateListener {
@@ -550,7 +557,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 mServiceChargeTask = null;
                 break;
             case Constants.COMMAND_GET_ROLE_MAANGER_REQUESTS:
-                mProgressDialog.dismiss();
                 try {
                     mGetPendingRoleManagerInvitationResponse = gson.fromJson(result.getJsonString(),
                             GetPendingRoleManagerInvitationResponse.class);
@@ -688,10 +694,18 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             @Override
             public void bindView(int pos) {
                 super.bindView(pos);
+                final int position = pos;
                 mBusinessNameTextView = (TextView) itemView.findViewById(R.id.business_name_view);
                 BusinessRoleManagerInvitation businessRoleManagerInvitation = (BusinessRoleManagerInvitation) mNotifications.get(pos);
                 String businessName = businessRoleManagerInvitation.getBusinessName();
                 mBusinessNameTextView.setText(businessName);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        launchBusinessRoleReviewFragment((BusinessRoleManagerInvitation) mNotifications.get(position));
+                    }
+                });
+
             }
         }
 
