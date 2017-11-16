@@ -427,11 +427,13 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         intent.putExtras(bundle);
         startActivity(intent);
     }
-    private void launchBusinessRoleReviewFragment(final BusinessRoleManagerInvitation businessRoleManagerInvitation){
-        Bundle bundle=new Bundle();
-        Gson gson=new Gson();
-        String jsonString=gson.toJson(businessRoleManagerInvitation);
-        bundle.putString(Constants.BUSINESS_ROLE_REQUEST,jsonString);
+
+    private void launchBusinessRoleReviewFragment(final BusinessRoleManagerInvitation businessRoleManagerInvitation) {
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(businessRoleManagerInvitation);
+        bundle.putString(Constants.BUSINESS_ROLE_REQUEST, jsonString);
+        ((NotificationActivity) getActivity()).switchToBusinessRoleReviewFragment(bundle);
 
     }
 

@@ -33,11 +33,13 @@ public class BusinessRoleReviewFragment extends Fragment {
         mAcceptButton = (Button) v.findViewById(R.id.button_accept);
         mRejectButton = (Button) v.findViewById(R.id.button_reject);
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
-        if (getArguments() != null){
-            mBundle=getArguments();
-            String jsonString =mBundle.getString(Constants.BUSINESS_ROLE_REQUEST);
-            Gson gson=new Gson();
-            mBusinessRoleManagerInvitation=gson.fromJson(jsonString,BusinessRoleManagerInvitation.class);
+        if (getArguments() != null) {
+            mBundle = getArguments();
+            String jsonString = mBundle.getString(Constants.BUSINESS_ROLE_REQUEST);
+            Gson gson = new Gson();
+            mBusinessRoleManagerInvitation = gson.fromJson(jsonString, BusinessRoleManagerInvitation.class);
+           // Uri ImageUri = mBusinessRoleManagerInvitation.getImageUrl();
+            //mProfileImageView.setProfilePicture();
         }
     }
 }
