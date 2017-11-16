@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import com.google.gson.Gson;
 
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.BusinessRoleManagerInvitation;
 import bd.com.ipay.ipayskeleton.R;
@@ -22,10 +23,15 @@ public class BusinessRoleReviewFragment extends Fragment {
     private Bundle mBundle;
     private BusinessRoleManagerInvitation mBusinessRoleManagerInvitation;
 
+    private HttpRequestPutAsyncTask mAcceptOrCancelBusinessAsynctask = null;
+
+    private static final String ACCEPT="ACCEPTED";
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_business_role_review, container, false);
+        setUpViews(v);
         return v;
     }
 
@@ -38,8 +44,33 @@ public class BusinessRoleReviewFragment extends Fragment {
             String jsonString = mBundle.getString(Constants.BUSINESS_ROLE_REQUEST);
             Gson gson = new Gson();
             mBusinessRoleManagerInvitation = gson.fromJson(jsonString, BusinessRoleManagerInvitation.class);
-           // Uri ImageUri = mBusinessRoleManagerInvitation.getImageUrl();
-            //mProfileImageView.setProfilePicture();
+            String imageUri = Constants.BASE_URL_FTP_SERVER + mBusinessRoleManagerInvitation.getImageUrl();
+            mProfileImageView.setProfilePicture(imageUri, false);
         }
+        setButtonActions();
+    }
+
+    private void setButtonActions() {
+        mAcceptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                acceptBusinessRoleRequest();
+            }
+        });
+
+        mRejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelBusinessRoleRequest();
+            }
+        });
+    }
+
+    private void cancelBusinessRoleRequest() {
+
+    }
+
+    private void acceptBusinessRoleRequest() {
+
     }
 }
