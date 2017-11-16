@@ -1,11 +1,13 @@
 package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceRequest;
@@ -37,10 +39,12 @@ public class CardPaymentWebViewActivity extends AppCompatActivity {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                if (Constants.SERVER_TYPE != Constants.SERVER_TYPE_LIVE) {
-                    handler.proceed();
+
+                if (error.getUrl().matches("(http://|https://)?(www|dev|test|stage|internal).ipay.com.bd/(.+)")) {
+                    showSslErrorDialog(handler, error);
+                } else {
+                    super.onReceivedSslError(view, handler, error);
                 }
-                super.onReceivedSslError(view, handler, error);
             }
 
             @Override
@@ -75,6 +79,42 @@ public class CardPaymentWebViewActivity extends AppCompatActivity {
         mWebView.loadUrl(cardPaymentUrl);
     }
 
+    private void showSslErrorDialog(final SslErrorHandler handler, SslError error) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(CardPaymentWebViewActivity.this);
+        String message = "SSL Certificate error.";
+        switch (error.getPrimaryError()) {
+            case SslError.SSL_UNTRUSTED:
+                message = "The certificate authority is not trusted.";
+                break;
+            case SslError.SSL_EXPIRED:
+                message = "The certificate has expired.";
+                break;
+            case SslError.SSL_IDMISMATCH:
+                message = "The certificate Hostname mismatch.";
+                break;
+            case SslError.SSL_NOTYETVALID:
+                message = "The certificate is not yet valid.";
+                break;
+        }
+        message += " Do you want to continue anyway?";
+        builder.setTitle("SSL Certificate Error");
+        builder.setMessage(message);
+        builder.setPositiveButton("continue", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                handler.proceed();
+            }
+        });
+        builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                handler.cancel();
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     @Override
     public void onBackPressed() {
         if (transactionCancelDialog != null && transactionCancelDialog.isShowing()) {
@@ -100,7 +140,7 @@ public class CardPaymentWebViewActivity extends AppCompatActivity {
         data.putString(Constants.TRANSACTION_ID, transactionId);
         data.putInt(Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_STATUS, transactionStatusCode);
         Intent intent = new Intent();
-        intent.putExtra(Constants.CARD_TRANSACTION_DATA,data);
+        intent.putExtra(Constants.CARD_TRANSACTION_DATA, data);
         setResult(RESULT_OK, intent);
         finish();
     }
