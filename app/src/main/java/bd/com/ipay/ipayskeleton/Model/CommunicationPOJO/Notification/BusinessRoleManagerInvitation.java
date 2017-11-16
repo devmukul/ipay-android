@@ -4,40 +4,41 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.ProfilePicture;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class BusinessRoleManagerRequest implements Notification {
+public class BusinessRoleManagerInvitation implements Notification {
     private long id;
-    private long managerAccountId;
-    private String managerMobileNumber;
+    private long businessAccountId;
+    private String businessName;
     private String roleName;
     private long createdAt;
     private List<ProfilePicture> proflePictures;
 
     @Override
     public String getNotificationTitle() {
-        return null;
+        return "Added you as a manager";
     }
 
     @Override
     public String getName() {
-        return null;
+        return roleName;
     }
 
     @Override
     public String getImageUrl() {
-        return null;
+        return proflePictures.get(0).getUrl();
     }
 
     public long getId() {
         return id;
     }
 
-    public long getManagerAccountId() {
-        return managerAccountId;
+    public long getBusinessAccountId() {
+        return businessAccountId;
     }
 
-    public String getManagerMobileNumber() {
-        return managerMobileNumber;
+    public String getBusinessName() {
+        return businessName;
     }
 
     public String getRoleName() {
@@ -54,11 +55,12 @@ public class BusinessRoleManagerRequest implements Notification {
 
     @Override
     public long getTime() {
-        return 0;
+        return createdAt;
     }
 
     @Override
     public int getNotificationType() {
-        return 0;
+        return Constants.NOTIFICATION_TYPE_PENDING_ROLE_MANAGER_REQUEST;
     }
 }
+

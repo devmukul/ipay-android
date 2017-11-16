@@ -486,6 +486,7 @@ public class Constants {
     public static final String URL_REMOVE_AN_EMPLOYEE_FIRST_PART = "business/user/";
     public static final String URL_REMOVE_AN_EMPLOYEE_LAST_PART = "/resignation/confirm";
     public static final String URL_GET_BUSINESS_ROLES = "business-role";
+    public static final String URL_GET_ROLE_MANAGER_REQUESTS = "business-manager-invitation/received";
 
 
     // Education
@@ -645,7 +646,8 @@ public class Constants {
     // Business Information (Owner)
     public static final String COMMAND_GET_BUSINESS_INFORMATION = "COMMAND_GET_BUSINESS_INFORMATION";
     public static final String COMMAND_SET_BUSINESS_INFORMATION = "COMMAND_SET_BUSINESS_INFORMATION";
-    public static final String COMMAND_GET_DETAILS_OF_BUSINESS_ROLE ="COMMAND_GET_DETAILS_OF_BUSINESS_ROLE";
+    public static final String COMMAND_GET_DETAILS_OF_BUSINESS_ROLE = "COMMAND_GET_DETAILS_OF_BUSINESS_ROLE";
+    public static final String COMMAND_GET_ROLE_MAANGER_REQUESTS = "COMMAND_GET_ROLE_MAANGER_REQUESTS";
 
     public static final String COMMAND_CREATE_EMPLOYEE = "COMMAND_CREATE_EMPLOYEE";
     public static final String COMMAND_UPDATE_EMPLOYEE = "COMMAND_UPDATE_EMPLOYEE";
@@ -786,6 +788,7 @@ public class Constants {
     public static final int NOTIFICATION_TYPE_MAKE_PAYMENT = 2;
     public static final int NOTIFICATION_TYPE_INTRODUCTION_REQUEST = 4;
     public static final int NOTIFICATION_TYPE_PENDING_INTRODUCER_REQUEST = 5;
+    public static final int NOTIFICATION_TYPE_PENDING_ROLE_MANAGER_REQUEST = 6;
 
     public static final String ACTION_TYPE_VERIFY = "Verify";
     public static final String ACTION_TYPE_REMOVE = "Remove";

@@ -37,9 +37,11 @@ import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PendingIntroducerReviewDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.GetPendingRoleManagerInvitationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.BusinessRoleManagerInvitation;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.GetMoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.GetMoneyAndPaymentRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.MoneyAndPaymentRequest;
@@ -74,6 +76,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private GetPendingIntroducerListResponse mPendingIntroducerListResponse;
 
     private HttpRequestGetAsyncTask mGetPendingRoleManagerRequestTask = null;
+    private GetPendingRoleManagerInvitationResponse mGetPendingRoleManagerInvitationResponse;
 
     private RecyclerView mNotificationsRecyclerView;
     private NotificationListAdapter mNotificationListAdapter;
@@ -86,6 +89,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private List<MoneyAndPaymentRequest> mMoneyAndPaymentRequests;
     private List<IntroductionRequestClass> mIntroductionRequests;
     private List<PendingIntroducer> mPendingIntroducerList;
+    private List<BusinessRoleManagerInvitation> mBusinessRoleManagerRequestsList;
 
     // These variables hold the information needed to populate the review dialog
     private List<InvoiceItem> mInvoiceItemList;
@@ -179,10 +183,17 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         getMoneyAndPaymentRequest(context);
         getIntroductionRequestList(context);
         getPendingIntroducersList(context);
-        getPendingInvitationRequestsForRoleManager();
+        getPendingInvitationRequestsForRoleManager(context);
     }
 
-    private void getPendingInvitationRequestsForRoleManager() {
+    private void getPendingInvitationRequestsForRoleManager(Context context) {
+        if (mGetPendingRoleManagerRequestTask != null) return;
+        else {
+            mGetPendingRoleManagerRequestTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ROLE_MAANGER_REQUESTS,
+                    Constants.BASE_URL_MM + Constants.URL_GET_ROLE_MANAGER_REQUESTS, context, this);
+            mGetPendingRoleManagerRequestTask.mHttpResponseListener = this;
+            mGetPendingRoleManagerRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
 
     }
 
@@ -190,6 +201,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         refreshIntroductionRequestList(context);
         refreshMoneyAndPaymentRequestList(context);
         refreshPendingIntroducerList(context);
+        refreshBusinessRoleManagerList(context);
     }
 
     @Override
@@ -279,6 +291,13 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
     }
 
+    private void refreshBusinessRoleManagerList(Context context) {
+        if (Utilities.isConnectionAvailable(context)) {
+            mBusinessRoleManagerRequestsList = null;
+            getPendingInvitationRequestsForRoleManager(context);
+        }
+    }
+
     private void refreshPendingIntroducerList(Context context) {
         if (Utilities.isConnectionAvailable(context)) {
             mPendingIntroducerList = null;
@@ -298,6 +317,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             notifications.addAll(mIntroductionRequests);
         if (mPendingIntroducerList != null)
             notifications.addAll(mPendingIntroducerList);
+        if (mBusinessRoleManagerRequestsList != null)
+            notifications.addAll(mBusinessRoleManagerRequestsList);
 
         // Date wise sort all notifications
         Collections.sort(notifications, new Comparator<Notification>() {
@@ -420,6 +441,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             mServiceChargeTask = null;
             mGetIntroductionRequestTask = null;
             mGetPendingIntroducerListTask = null;
+            mGetPendingRoleManagerRequestTask = null;
 
             if (isAdded()) {
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -527,7 +549,18 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 mServiceChargeTask = null;
                 break;
+            case Constants.COMMAND_GET_ROLE_MAANGER_REQUESTS:
+                mProgressDialog.dismiss();
+                try {
+                    mGetPendingRoleManagerInvitationResponse = gson.fromJson(result.getJsonString(),
+                            GetPendingRoleManagerInvitationResponse.class);
+                    mBusinessRoleManagerRequestsList = mGetPendingRoleManagerInvitationResponse.getInvitationList();
+                } catch (Exception e) {
 
+                }
+                mGetPendingRoleManagerRequestTask = null;
+                postProcessNotificationList();
+                break;
             default:
                 break;
         }
@@ -644,6 +677,24 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         }
 
+        public class BusinessRoleManagerViewHolder extends NotificationViewHolder {
+
+            private TextView mBusinessNameTextView;
+
+            public BusinessRoleManagerViewHolder(final View itemView) {
+                super(itemView);
+            }
+
+            @Override
+            public void bindView(int pos) {
+                super.bindView(pos);
+                mBusinessNameTextView = (TextView) itemView.findViewById(R.id.business_name_view);
+                BusinessRoleManagerInvitation businessRoleManagerInvitation = (BusinessRoleManagerInvitation) mNotifications.get(pos);
+                String businessName = businessRoleManagerInvitation.getBusinessName();
+                mBusinessNameTextView.setText(businessName);
+            }
+        }
+
 
         public class PendingIntroductionListViewHolder extends NotificationViewHolder {
 
@@ -688,6 +739,10 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             } else if (viewType == Constants.NOTIFICATION_TYPE_PENDING_INTRODUCER_REQUEST) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_requests_notification, parent, false);
                 return new PendingIntroductionListViewHolder(v);
+            } else if (viewType == Constants.NOTIFICATION_TYPE_PENDING_ROLE_MANAGER_REQUEST) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_business_role_manager_requests_notification,
+                        parent, false);
+                return new BusinessRoleManagerViewHolder(v);
             } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_and_make_payment_request, parent, false);
                 return new MoneyAndPaymentRequestViewHolder(v);
