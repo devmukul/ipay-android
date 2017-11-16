@@ -103,10 +103,11 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         mBankSelectorView = findViewById(R.id.bank_selector_view);
         mNoteEditText = findViewById(R.id.note_edit_text);
         mMessageTextView = findViewById(R.id.message_text_view);
+        final Button mAddMoneyProceedButton = findViewById(R.id.add_money_proceed_button);
+
+        final List<IpayService> availableAddMoneyOptions = Utilities.getAvailableAddMoneyOptions();
 
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
-
-        Button mAddMoneyProceedButton = findViewById(R.id.add_money_proceed_button);
 
         mAddMoneyProceedButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +135,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 }
             }
         });
-        final List<IpayService> availableAddMoneyOptions = Utilities.getAvailableAddMoneyOptions();
 
         mAddMoneyOptionSelectorView.setItems(availableAddMoneyOptions);
         mAddMoneyOptionSelectorView.setOnItemSelectListener(new AbstractSelectorView.OnItemSelectListener() {

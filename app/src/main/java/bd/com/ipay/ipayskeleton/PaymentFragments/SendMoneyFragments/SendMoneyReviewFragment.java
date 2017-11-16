@@ -109,6 +109,13 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         final ProfileImageView receiverProfileImageView = findViewById(R.id.receiver_profile_image_view);
         final TextView receiverNameTextView = findViewById(R.id.receiver_name_text_view);
         final TextView receiverMobileNumberTextView = findViewById(R.id.receiver_mobile_number_text_view);
+        final TextView amountTextView = findViewById(R.id.amount_text_view);
+        mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
+        mNetAmountTextView = findViewById(R.id.net_amount_text_view);
+        TextView descriptionTextView = findViewById(R.id.description_text_view);
+        View descriptionViewHolder = findViewById(R.id.description_view_holder);
+        final CheckBox addToContactCheckBox = findViewById(R.id.add_to_contact_check_box);
+        Button sendMoneyButton = findViewById(R.id.send_money_button);
 
         if (!TextUtils.isEmpty(mPhotoUri)) {
             receiverProfileImageView.setProfilePicture(mPhotoUri, false);
@@ -121,17 +128,9 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         }
         receiverMobileNumberTextView.setText(mReceiverMobileNumber);
 
-        final TextView amountTextView = findViewById(R.id.amount_text_view);
-        mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
-        mNetAmountTextView = findViewById(R.id.net_amount_text_view);
-
         amountTextView.setText(Utilities.formatTaka(mAmount));
         mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
         mServiceChargeTextView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
-
-        TextView descriptionTextView = findViewById(R.id.description_text_view);
-        View descriptionViewHolder = findViewById(R.id.description_view_holder);
-        final CheckBox addToContactCheckBox = findViewById(R.id.add_to_contact_check_box);
 
         if (TextUtils.isEmpty(mDescription)) {
             descriptionViewHolder.setVisibility(View.GONE);
@@ -143,8 +142,6 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
             addToContactCheckBox.setVisibility(View.VISIBLE);
             addToContactCheckBox.setChecked(true);
         }
-
-        Button sendMoneyButton = findViewById(R.id.send_money_button);
 
         sendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override

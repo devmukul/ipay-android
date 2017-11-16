@@ -88,22 +88,20 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         final ImageView bankIconImageView = findViewById(R.id.bank_icon_image_view);
         final TextView bankNameTextView = findViewById(R.id.bank_name_text_view);
         final TextView bankAccountNumberTextView = findViewById(R.id.bank_account_number_text_view);
+        final TextView amountTextView = findViewById(R.id.amount_text_view);
+        mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
+        mNetAmountTextView = findViewById(R.id.net_amount_text_view);
+        final LinearLayout descriptionViewHolder = findViewById(R.id.description_view_holder);
+        final TextView descriptionTextView = findViewById(R.id.description_text_view);
+        final Button withdrawMoneyButton = findViewById(R.id.withdraw_money_button);
 
         bankIconImageView.setImageResource(mSelectedBank.getBankIcon(getContext()));
         bankNameTextView.setText(mSelectedBank.getBankName());
         bankAccountNumberTextView.setText(mSelectedBank.getAccountNumber());
 
-        final TextView amountTextView = findViewById(R.id.amount_text_view);
-        mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
-        mNetAmountTextView = findViewById(R.id.net_amount_text_view);
-
         amountTextView.setText(Utilities.formatTaka(getAmount()));
         mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
         mNetAmountTextView.setText(Utilities.formatTaka(getAmount().subtract(new BigDecimal(0.0))));
-
-        final LinearLayout descriptionViewHolder = findViewById(R.id.description_view_holder);
-        final TextView descriptionTextView = findViewById(R.id.description_text_view);
-        final Button withdrawMoneyButton = findViewById(R.id.withdraw_money_button);
 
         if (mDescription == null || mDescription.isEmpty()) {
             descriptionViewHolder.setVisibility(View.GONE);

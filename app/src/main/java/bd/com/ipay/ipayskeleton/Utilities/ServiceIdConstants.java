@@ -34,9 +34,11 @@ public class ServiceIdConstants {
     public static final int STATEMENT = 1012;
 
 
-    // Bank Transaction
+    // Add Money Service
     public static final int ADD_MONEY_BY_BANK = 3001;
     public static final int ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD = 3011;
+
+    // Withdraw Money Service
     public static final int WITHDRAW_MONEY = 3002;
 
     // Contact

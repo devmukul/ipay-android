@@ -101,6 +101,15 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         final ProfileImageView businessProfileImageView = findViewById(R.id.business_profile_image_view);
         final TextView businessNameTextView = findViewById(R.id.business_name_text_view);
         final TextView businessMobileNumberTextView = findViewById(R.id.business_mobile_number_text_view);
+        final TextView amountTextView = findViewById(R.id.amount_text_view);
+        final View referenceNumberViewHolder = findViewById(R.id.reference_number_view_holder);
+        final TextView referenceNumberTextView = findViewById(R.id.reference_number_text_view);
+        final View descriptionViewHolder = findViewById(R.id.description_view_holder);
+        final TextView descriptionTextView = findViewById(R.id.description_text_view);
+        final Button makePaymentButton = findViewById(R.id.make_payment_button);
+
+        mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
+        mNetAmountTextView = findViewById(R.id.net_amount_text_view);
 
         if (!TextUtils.isEmpty(mPhotoUri)) {
             businessProfileImageView.setProfilePicture(mPhotoUri, false);
@@ -113,16 +122,10 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         }
         businessMobileNumberTextView.setText(mReceiverBusinessMobileNumber);
 
-        final TextView amountTextView = findViewById(R.id.amount_text_view);
-        mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
-        mNetAmountTextView = findViewById(R.id.net_amount_text_view);
-
         amountTextView.setText(Utilities.formatTaka(mAmount));
         mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
         mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
 
-        final View referenceNumberViewHolder = findViewById(R.id.reference_number_view_holder);
-        final TextView referenceNumberTextView = findViewById(R.id.reference_number_text_view);
 
         if (TextUtils.isEmpty(mReferenceNumber)) {
             referenceNumberViewHolder.setVisibility(View.GONE);
@@ -131,17 +134,12 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
             referenceNumberTextView.setText(mReferenceNumber);
         }
 
-        final View descriptionViewHolder = findViewById(R.id.description_view_holder);
-        final TextView descriptionTextView = findViewById(R.id.description_text_view);
-
         if (TextUtils.isEmpty(mDescription)) {
             descriptionViewHolder.setVisibility(View.GONE);
         } else {
             descriptionViewHolder.setVisibility(View.VISIBLE);
             descriptionTextView.setText(mDescription);
         }
-
-        final Button makePaymentButton = findViewById(R.id.make_payment_button);
 
         makePaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override

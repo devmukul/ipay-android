@@ -101,6 +101,14 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         final ProfileImageView receiverProfileImageView = findViewById(R.id.receiver_profile_image_view);
         final TextView receiverNameTextView = findViewById(R.id.receiver_name_text_view);
         final TextView receiverMobileNumberTextView = findViewById(R.id.receiver_mobile_number_text_view);
+        final TextView amountTextView = findViewById(R.id.amount_text_view);
+        final TextView vatTextView = findViewById(R.id.vat_text_view);
+        final TextView totalTextView = findViewById(R.id.total_text_view);
+        serviceChargeTextView = findViewById(R.id.service_charge_text_view);
+        netAmountTextView = findViewById(R.id.net_amount_text_view);
+        final View descriptionViewHolder = findViewById(R.id.description_view_holder);
+        final TextView descriptionTextView = findViewById(R.id.description_text_view);
+        final Button paymentRequestButton = findViewById(R.id.payment_request_button);
 
         receiverProfileImageView.setProfilePicture(mPhotoUri, false);
 
@@ -111,15 +119,6 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
             receiverNameTextView.setText(mReceiverName);
         }
         receiverMobileNumberTextView.setText(mReceiverMobileNumber);
-
-        final TextView amountTextView = findViewById(R.id.amount_text_view);
-        final TextView vatTextView = findViewById(R.id.vat_text_view);
-        final TextView totalTextView = findViewById(R.id.total_text_view);
-        serviceChargeTextView = findViewById(R.id.service_charge_text_view);
-        netAmountTextView = findViewById(R.id.net_amount_text_view);
-        final View descriptionViewHolder = findViewById(R.id.description_view_holder);
-        final TextView descriptionTextView = findViewById(R.id.description_text_view);
-
 
         amountTextView.setText(Utilities.formatTaka(mAmount));
         vatTextView.setText(Utilities.formatTaka(mVat));
@@ -134,8 +133,6 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
             descriptionViewHolder.setVisibility(View.VISIBLE);
             descriptionTextView.setText(mDescription);
         }
-
-        final Button paymentRequestButton = findViewById(R.id.payment_request_button);
 
         paymentRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override

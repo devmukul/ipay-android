@@ -69,13 +69,14 @@ public class AddMoneyByCreditOrDebitCardReviewFragment extends ReviewFragment im
         final TextView amountTextView = findViewById(R.id.amount_text_view);
         mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
         mNetAmountTextView = findViewById(R.id.net_amount_text_view);
+        final LinearLayout descriptionViewHolder = findViewById(R.id.description_view_holder);
+        final TextView descriptionTextView = findViewById(R.id.description_text_view);
+        final Button addMoneyButton = findViewById(R.id.add_money_button);
 
         amountTextView.setText(Utilities.formatTaka(getAmount()));
         mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
         mNetAmountTextView.setText(Utilities.formatTaka(getAmount().subtract(new BigDecimal(0.0))));
 
-        final LinearLayout descriptionViewHolder = findViewById(R.id.description_view_holder);
-        final TextView descriptionTextView = findViewById(R.id.description_text_view);
 
         if (mDescription == null || mDescription.isEmpty()) {
             descriptionViewHolder.setVisibility(View.GONE);
@@ -84,7 +85,6 @@ public class AddMoneyByCreditOrDebitCardReviewFragment extends ReviewFragment im
             descriptionTextView.setText(mDescription);
         }
 
-        final Button addMoneyButton = findViewById(R.id.add_money_button);
 
         addMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override

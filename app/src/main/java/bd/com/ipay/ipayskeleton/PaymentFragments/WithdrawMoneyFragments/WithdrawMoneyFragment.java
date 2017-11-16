@@ -81,19 +81,16 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
         super.onViewCreated(view, savedInstanceState);
 
         mBankSelectorView = findViewById(R.id.bank_selector_view);
+        mAmountEditText = findViewById(R.id.amount);
+        mNoteEditText = findViewById(R.id.description);
+        Button buttonWithdrawMoney = findViewById(R.id.button_cash_out);
 
         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS)) {
             getBankInformation();
         }
 
-        mAmountEditText = findViewById(R.id.amount);
-
         // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
-
-
-        mNoteEditText = findViewById(R.id.description);
-        Button buttonWithdrawMoney = findViewById(R.id.button_cash_out);
 
         buttonWithdrawMoney.setOnClickListener(new View.OnClickListener() {
             @Override
