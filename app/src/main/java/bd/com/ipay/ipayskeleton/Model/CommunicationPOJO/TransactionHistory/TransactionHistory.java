@@ -68,7 +68,7 @@ public class TransactionHistory implements Parcelable {
                 case (Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT):
                     return getBankName();
                 case (Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD):
-                    return "Credit/Debit Card";
+                    return originatingMobileNumber;
                 case (Constants.TRANSACTION_HISTORY_TOP_UP):
                     return receiverInfo;
                 case (Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT):
