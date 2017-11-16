@@ -21,12 +21,9 @@ import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.EnableDisableSMSBroadcastReceiver;
 import bd.com.ipay.ipayskeleton.BroadcastReceivers.SMSReaderBroadcastReceiver;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPRequestBusinessSignup;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.OTPResponseBusinessSignup;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.SignupRequestBusiness;
@@ -48,8 +45,6 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
     private HttpRequestPostAsyncTask mSignUpTask = null;
 
     private HttpRequestPostAsyncTask mRequestOTPTask = null;
-
-    private HttpRequestPostAsyncTask mLoginTask = null;
 
     private HttpRequestPostAsyncTask mAddTrustedDeviceTask = null;
 
@@ -204,22 +199,6 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
         }
     }
 
-    private void attemptLogin(String mUserNameLogin, String mPasswordLogin, String otp) {
-        if (mLoginTask != null) {
-            return;
-        }
-
-        mProgressDialog.show();
-        LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
-                Constants.MOBILE_ANDROID + mDeviceID, null, otp, null, null);
-        Gson gson = new Gson();
-        String json = gson.toJson(mLoginModel);
-        mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
-                Constants.BASE_URL_MM + Constants.URL_LOGIN, json, getActivity());
-        mLoginTask.mHttpResponseListener = this;
-        mLoginTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
@@ -229,7 +208,6 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
 
             mSignUpTask = null;
             mRequestOTPTask = null;
-            mLoginTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
@@ -241,9 +219,8 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
             case Constants.COMMAND_SIGN_UP_BUSINESS:
                 hideProgressDialog();
                 try {
-                    SignupResponseBusiness mSignupResponseBusiness = gson.fromJson(result.getJsonString(), SignupResponseBusiness.class);
-                    String message = mSignupResponseBusiness.getMessage();
-                    String otp = mSignupResponseBusiness.getOtp();
+                    SignupResponseBusiness signupResponseBusiness = gson.fromJson(result.getJsonString(), SignupResponseBusiness.class);
+                    String message = signupResponseBusiness.getMessage();
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         ProfileInfoCacheManager.setMobileNumber(SignupOrLoginActivity.mMobileNumberBusiness);
@@ -251,6 +228,12 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
                         ProfileInfoCacheManager.setBirthday(SignupOrLoginActivity.mBirthdayBusinessHolder);
                         ProfileInfoCacheManager.setGender("M");
                         ProfileInfoCacheManager.setAccountType(Constants.BUSINESS_ACCOUNT_TYPE);
+
+
+                        // Saving the allowed services id for the user
+                        if (signupResponseBusiness.getAccessControlList() != null) {
+                            ACLManager.updateAllowedServiceArray(signupResponseBusiness.getAccessControlList());
+                        }
 
                         if (getActivity() != null)
                             Toast.makeText(getActivity(), getString(R.string.signup_successful), Toast.LENGTH_LONG).show();
@@ -329,40 +312,6 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
 
                 mProgressDialog.dismiss();
                 mRequestOTPTask = null;
-                break;
-
-            case Constants.COMMAND_LOG_IN:
-                try {
-                    LoginResponse mLoginResponseModel = gson.fromJson(result.getJsonString(), LoginResponse.class);
-                    String message = mLoginResponseModel.getMessage();
-
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        ProfileInfoCacheManager.setLoggedInStatus(true);
-
-                        String pushRegistrationID = ProfileInfoCacheManager.getPushNotificationToken(null);
-                        if (pushRegistrationID != null)
-                            new RegisterFCMTokenToServerAsyncTask(getContext());
-
-                        // Saving the allowed services id for the user
-                        if (mLoginResponseModel.getAccessControlList() != null) {
-                            ACLManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
-                        }
-
-                        attemptAddTrustedDevice();
-
-                    } else {
-                        hideProgressDialog();
-
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                    }
-                } catch (Exception e) {
-                    hideProgressDialog();
-
-                    e.printStackTrace();
-                }
-
-                mLoginTask = null;
                 break;
             case Constants.COMMAND_ADD_TRUSTED_DEVICE:
                 hideProgressDialog();
