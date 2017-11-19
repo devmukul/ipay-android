@@ -158,7 +158,7 @@ public class TransactionDetailsFragment extends BaseFragment {
             mMobileNumberView.setText(cardNumber);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            otherImageView.setImageResource(R.drawable.ic_activity_cash_in);
+            otherImageView.setImageResource(transactionHistory.getAdditionalInfo().getCardIcon());
         } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
                 || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT
                 || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK) {

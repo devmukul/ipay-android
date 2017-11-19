@@ -6,6 +6,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.EducationPaymentDetails;
+import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class TransactionHistoryAdditionalInfo implements Parcelable {
     private String userName;
@@ -92,6 +94,22 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
         Resources resources = context.getResources();
         return resources.getIdentifier("ic_bank" + getBankCode(), "drawable",
                 context.getPackageName());
+    }
+
+    public int getCardIcon() {
+        if (cardNumber != null) {
+            if (cardNumber.matches(Constants.VISA_CARD_STARTS_WITH_REGEX)) {
+                return R.drawable.visa_card;
+            } else if (cardNumber.matches(Constants.AMEX_CARD_STARTS_WITH_REGEX)) {
+                return R.drawable.amex_card;
+            } else if (cardNumber.matches(Constants.MASTER_CARD_STARTS_WITH_REGEX)) {
+                return R.drawable.master_card;
+            } else {
+                return R.drawable.basic_card;
+            }
+        } else {
+            return R.drawable.basic_card;
+        }
     }
 
     public boolean isReceiver() {

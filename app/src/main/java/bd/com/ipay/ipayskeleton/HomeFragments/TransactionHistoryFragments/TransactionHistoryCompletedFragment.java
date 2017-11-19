@@ -710,7 +710,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
-                    mOtherImageView.setImageResource(R.drawable.ic_activity_cash_in);
+                    mOtherImageView.setImageResource(transactionHistory.getAdditionalInfo().getCardIcon());
 
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
                         || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK

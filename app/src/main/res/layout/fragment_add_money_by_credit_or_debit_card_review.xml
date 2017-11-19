@@ -19,7 +19,7 @@
                 style="@style/ReviewBankImageStyle"
                 android:contentDescription="@string/card_icon"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_activity_cash_in" />
+                android:src="@drawable/basic_card" />
 
             <LinearLayout
                 android:layout_width="match_parent"
