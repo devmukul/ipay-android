@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -67,7 +68,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.please_wait));
         getTwoFactorAuthSettings();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyler_view__two_factor_auth);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyler_view_two_factor_auth);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mChangedList = new ArrayList<>();
@@ -239,25 +240,51 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
             itemCount++;
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView mHeaderTextView;
-            private TextView mDescriptionTextView;
-            private Switch mSwitch;
-            private Button mButtonSave;
-            private int twoFactorAuthSettingsGroupIndex = 0;
-            private int selectedHeaderPosition = 0;
-            private int desiredPosition = 0;
+        public abstract class ViewHolder extends RecyclerView.ViewHolder {
 
             public ViewHolder(final View itemView) {
                 super(itemView);
-                mHeaderTextView = (TextView) itemView.findViewById(R.id.header_text_view);
-                mDescriptionTextView = (TextView) itemView.findViewById(R.id.description_text_view);
-                mSwitch = (Switch) itemView.findViewById(R.id.switch_list_item);
-                mButtonSave = (Button) itemView.findViewById(R.id.button_footer_save);
+
             }
 
-            void bindViewListItem(int position) {
+            public <T extends View> T findViewById(@IdRes int id) {
+                //noinspection unchecked
+                return (T) itemView.findViewById(id);
+            }
 
+            public abstract void bindView(int position);
+        }
+
+        class HeaderViewHolder extends ViewHolder {
+            private TextView mHeaderTextView;
+
+            HeaderViewHolder(View itemView) {
+                super(itemView);
+                mHeaderTextView = findViewById(R.id.header_text_view);
+            }
+
+            @Override
+            public void bindView(int position) {
+                mHeaderTextView.setText(mTwoFactorAuthServiceGroupList.get(headerPositionList.indexOf(position)).getGroupName());
+            }
+        }
+
+        class ItemViewHolder extends ViewHolder {
+            private TextView mDescriptionTextView;
+            private Switch mSwitch;
+
+            int twoFactorAuthSettingsGroupIndex = 0;
+            int selectedHeaderPosition = 0;
+            int desiredPosition = 0;
+
+            ItemViewHolder(View itemView) {
+                super(itemView);
+                mDescriptionTextView = findViewById(R.id.description_text_view);
+                mSwitch = findViewById(R.id.switch_list_item);
+            }
+
+            @Override
+            public void bindView(int position) {
                 for (int i = 0; i < headerPositionList.size(); i++) {
                     if (position > headerPositionList.get(i)) {
                         if (i < headerPositionList.size() - 1) {
@@ -285,12 +312,19 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
                     }
                 });
             }
+        }
 
-            void bindHeader(int position) {
-                mHeaderTextView.setText(mTwoFactorAuthServiceGroupList.get(headerPositionList.indexOf(position)).getGroupName());
+        class FooterViewHolder extends ViewHolder {
+            private Button mButtonSave;
+
+            FooterViewHolder(View itemView) {
+                super(itemView);
+                mButtonSave = findViewById(R.id.button_footer_save);
             }
 
-            void bindFooter() {
+
+            @Override
+            public void bindView(int position) {
                 mButtonSave.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -319,11 +353,11 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             switch (viewType) {
                 case IMPLEMENT_TWO_FACTOR_AUTH_HEADER_VIEW:
-                    return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_header_2fa, parent, false));
+                    return new HeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_header_2fa, parent, false));
                 case IMPLEMENT_TWO_FACTOR_AUTH_ITEM_VIEW:
-                    return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_2fa, parent, false));
+                    return new ItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_2fa, parent, false));
                 case FOOTER_VIEW:
-                    return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_button_two_fa_footer, parent, false));
+                    return new FooterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_button_two_fa_footer, parent, false));
                 default:
                     return null;
             }
@@ -331,17 +365,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            switch (getItemViewType(position)) {
-                case IMPLEMENT_TWO_FACTOR_AUTH_HEADER_VIEW:
-                    holder.bindHeader(position);
-                    break;
-                case IMPLEMENT_TWO_FACTOR_AUTH_ITEM_VIEW:
-                    holder.bindViewListItem(position);
-                    break;
-                case FOOTER_VIEW:
-                    holder.bindFooter();
-                    break;
-            }
+            holder.bindView(position);
         }
 
         @Override
