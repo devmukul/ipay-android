@@ -687,8 +687,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         public class BusinessRoleManagerViewHolder extends NotificationViewHolder {
 
-            private TextView mBusinessNameTextView;
-
             public BusinessRoleManagerViewHolder(final View itemView) {
                 super(itemView);
             }
@@ -697,10 +695,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             public void bindView(int pos) {
                 super.bindView(pos);
                 final int position = pos;
-                //mBusinessNameTextView = (TextView) itemView.findViewById(R.id.business_name_view);
                 BusinessRoleManagerInvitation businessRoleManagerInvitation = (BusinessRoleManagerInvitation) mNotifications.get(pos);
                 String businessName = businessRoleManagerInvitation.getBusinessName();
-                mBusinessNameTextView.setText(businessName);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

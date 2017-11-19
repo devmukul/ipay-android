@@ -16,7 +16,7 @@ public class BusinessRoleManagerInvitation implements Notification {
 
     @Override
     public String getNotificationTitle() {
-        return "Added you as a manager";
+        return getBusinessName() + " Added you as a manager";
     }
 
     @Override
