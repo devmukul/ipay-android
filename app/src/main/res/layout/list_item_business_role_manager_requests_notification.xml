@@ -12,6 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:visibility="gone">
 
         <View
@@ -25,8 +27,12 @@
             android:orientation="horizontal">
 
             <Button
-                style="@style/RowButton"
-                android:text="@string/accept" />
+                style="@style/ButtonPrimary"
+                android:text="@string/accept"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_weight="1"/>
 
             <View
                 android:layout_width="1px"
@@ -34,8 +40,12 @@
                 android:background="@color/colorDivider" />
 
             <Button
-                style="@style/RowButton"
-                android:text="@string/reject" />
+                style="@style/ButtonReject"
+                android:text="@string/reject"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_weight="1"/>
 
             <View
                 android:layout_width="1px"
@@ -43,8 +53,12 @@
                 android:background="@color/colorDivider" />
 
             <Button
-                style="@style/RowButton"
-                android:text="@string/mark_as_spam" />
+                style="@style/ButtonSpam"
+                android:text="@string/mark_as_spam"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_weight="1"/>
 
         </LinearLayout>
     </LinearLayout>

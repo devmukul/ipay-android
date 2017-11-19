@@ -697,7 +697,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             public void bindView(int pos) {
                 super.bindView(pos);
                 final int position = pos;
-                mBusinessNameTextView = (TextView) itemView.findViewById(R.id.business_name_view);
+                //mBusinessNameTextView = (TextView) itemView.findViewById(R.id.business_name_view);
                 BusinessRoleManagerInvitation businessRoleManagerInvitation = (BusinessRoleManagerInvitation) mNotifications.get(pos);
                 String businessName = businessRoleManagerInvitation.getBusinessName();
                 mBusinessNameTextView.setText(businessName);
