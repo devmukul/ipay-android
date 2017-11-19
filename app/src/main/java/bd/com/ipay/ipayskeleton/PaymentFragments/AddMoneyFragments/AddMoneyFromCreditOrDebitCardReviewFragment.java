@@ -36,7 +36,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AddMoneyByCreditOrDebitCardReviewFragment extends ReviewFragment implements HttpResponseListener {
+public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment implements HttpResponseListener {
 
     private static final int CARD_PAYMENT_WEB_VIEW_REQUEST = 2001;
     private HttpRequestPostAsyncTask mAddMoneyTask = null;

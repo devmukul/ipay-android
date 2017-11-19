@@ -37,7 +37,7 @@
 
                 <TextView
                     style="@style/TextViewUserInfoSecondary"
-                    android:text="@string/add_money_option_by_credit_or_debit_card"
+                    android:text="@string/option_add_money_from_credit_or_debit_card"
                     android:textStyle="bold" />
 
             </LinearLayout>

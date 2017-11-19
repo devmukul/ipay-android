@@ -296,14 +296,14 @@
 
         <activity
             android:name=".Activities.PaymentActivities.CardPaymentWebViewActivity"
-            android:label="@string/add_money_card_web_view_title"
+            android:label="@string/card_payment_web_view_title"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
-            android:name=".Activities.PaymentActivities.AddMoneyByCreditOrDebitCardStatusActivity"
-            android:label="@string/add_money_card_web_view_title"
+            android:name=".Activities.PaymentActivities.AddMoneyFromCreditOrDebitCardStatusActivity"
+            android:label="@string/card_payment_web_view_title"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />

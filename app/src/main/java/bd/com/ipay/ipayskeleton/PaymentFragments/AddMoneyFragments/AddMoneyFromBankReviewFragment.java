@@ -42,7 +42,7 @@ import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AddMoneyByBankReviewFragment extends ReviewFragment implements HttpResponseListener {
+public class AddMoneyFromBankReviewFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mAddMoneyTask = null;
 

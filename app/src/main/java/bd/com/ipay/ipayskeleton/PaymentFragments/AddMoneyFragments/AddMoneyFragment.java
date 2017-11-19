@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyByCreditOrDebitCardStatusActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyFromCreditOrDebitCardStatusActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.CardPaymentWebViewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
@@ -182,7 +182,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
     @ValidateAccess(ServiceIdConstants.ADD_MONEY_BY_BANK)
     private void setupAddMoneyFromBank() {
-        mMessageTextView.setText(R.string.add_money_by_bank_info);
+        mMessageTextView.setText(R.string.add_money_from_bank_info);
         mBankSelectorViewHolder.setVisibility(View.VISIBLE);
         if (mListUserBankClasses == null || mListUserBankClasses.isEmpty()) {
             if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS)) {
@@ -195,7 +195,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
     @ValidateAccess(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)
     private void setupAddMoneyFromCreditOrDebitCard() {
-        mMessageTextView.setText(R.string.add_money_by_credit_or_debit_card_info);
+        mMessageTextView.setText(R.string.add_money_from_credit_or_debit_card_info);
         mBankSelectorViewHolder.setVisibility(View.GONE);
         attemptGetBusinessRule(Constants.SERVICE_ID_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD);
     }
@@ -359,7 +359,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                     intent.putExtra(Constants.STATUS, Constants.PAYMENT_REQUEST_STATUS_ALL);
                     intent.putExtra(Constants.MONEY_REQUEST_ID, transactionId);
                 } else {
-                    intent = new Intent(getActivity(), AddMoneyByCreditOrDebitCardStatusActivity.class);
+                    intent = new Intent(getActivity(), AddMoneyFromCreditOrDebitCardStatusActivity.class);
                     intent.putExtra(Constants.CARD_TRANSACTION_DATA, data.getBundleExtra(Constants.CARD_TRANSACTION_DATA));
                 }
                 startActivity(intent);

@@ -223,7 +223,7 @@
                         <CheckBox
                             android:id="@+id/filter_add_money_by_bank"
                             style="@style/TransactionHistoryFilterCheckboxStyle"
-                            android:text="@string/filter_add_money_by_bank" />
+                            android:text="@string/filter_add_money_from_bank" />
 
                         <View
                             android:layout_width="wrap_content"
@@ -233,7 +233,7 @@
                         <CheckBox
                             android:id="@+id/filter_add_money_by_credit_or_debit_card"
                             style="@style/TransactionHistoryFilterCheckboxStyle"
-                            android:text="@string/filter_add_money_by_credit_or_debit_card" />
+                            android:text="@string/filter_add_money_from_credit_or_debit_card" />
 
                         <View
                             android:layout_width="wrap_content"

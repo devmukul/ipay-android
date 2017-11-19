@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.AddMoneyByBankReviewFragment;
-import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.AddMoneyByCreditOrDebitCardReviewFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.AddMoneyFromBankReviewFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.AddMoneyFragments.AddMoneyFromCreditOrDebitCardReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -25,11 +25,11 @@ public class AddMoneyReviewActivity extends BaseActivity {
         switch (addMoneyReviewType) {
             case Constants.ADD_MONEY_TYPE_BY_BANK:
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.fragment_container, new AddMoneyByBankReviewFragment()).commit();
+                        .add(R.id.fragment_container, new AddMoneyFromBankReviewFragment()).commit();
                 break;
             case Constants.ADD_MONEY_TYPE_BY_CREDIT_OR_DEBIT_CARD:
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.fragment_container, new AddMoneyByCreditOrDebitCardReviewFragment()).commit();
+                        .add(R.id.fragment_container, new AddMoneyFromCreditOrDebitCardReviewFragment()).commit();
                 break;
         }
     }

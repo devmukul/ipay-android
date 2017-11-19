@@ -13,7 +13,7 @@ import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class AddMoneyByCreditOrDebitCardStatusFragment extends BaseFragment {
+public class AddMoneyFromCreditOrDebitCardStatusFragment extends BaseFragment {
 
 
     @Nullable
