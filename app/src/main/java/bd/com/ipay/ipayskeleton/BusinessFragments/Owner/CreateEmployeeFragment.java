@@ -150,9 +150,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
 
     private void createRoleNameToIDMap() {
         mAllRolesList = new ArrayList<>();
-        mAllRolesList.add(new BusinessRole(1, "Finance"));
-        mAllRolesList.add(new BusinessRole(2, "Management"));
-        // mAllRolesList = ((ManagePeopleActivity) (getActivity())).mAllRoleList;
+         mAllRolesList = ((ManagePeopleActivity) (getActivity())).mAllRoleList;
         for (BusinessRole roles : mAllRolesList)
             mIDtoRoleNameMap.put(roles.getName(), roles.getId());
     }

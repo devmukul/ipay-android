@@ -81,7 +81,7 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
             return;
         }
         mGetRolesAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ALL_ROLES,
-                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_ROLES, ManagePeopleActivity.this, this);
+                Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_ROLES_DETAILS, ManagePeopleActivity.this, this);
         mGetRolesAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

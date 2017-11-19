@@ -121,6 +121,9 @@
     <string name="are_you_sure_to_invite">Do you want to invite this person to iPay? By inviting to iPay you acknowledge that you know this person personally.</string>
     <string name="are_you_sure_to_remove_employee">Are you sure you want to remove this employee?</string>
     <string name="accept">Accept</string>
+    <string name="accepting_business_role_manager_request">Accepting Business Role Manager Request</string>
+    <string name="rejecting_business_role_manager_request">Rejecting Business Role Manager Request</string>
+    <string name="canceling_business_role_manager_request">Canceling Business Role Manager Request</string>
     <string name="this_person">this person</string>
     <string name="are_you_sure_to_remove_bank_account">Are you sure you want to remove this account from your bank list?</string>
     <string name="blocked_bank_message">Sorry, you have taken too many attempts to verify this bank account. Please contact with our customer support for any further queries.</string>
@@ -221,6 +224,7 @@
     <string name="progress_dialog_fetching_bank_list">Fetching bank list…</string>
     <string name="progress_dialog_sending_invite">Sending invitation…</string>
     <string name="progress_dialog_fetching_business_types">Loading business types..</string>
+    <string name="progress_dialog_fetching_details">Fetching Details</string>
     <string name="progress_dialog_sending_payment_request">Sending Payment Request…</string>
     <string name="progress_dialog_rejecting">Rejecting request…</string>
     <string name="progress_dialog_accepted">Accepting request…</string>

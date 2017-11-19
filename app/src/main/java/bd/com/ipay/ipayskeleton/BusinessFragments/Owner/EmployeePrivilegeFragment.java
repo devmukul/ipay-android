@@ -174,7 +174,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
             mProgressDialog.setMessage(getString(R.string.preparing));
             mProgressDialog.show();
             mRoleDetailsAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DETAILS_OF_BUSINESS_ROLE,
-                    Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_ROLES + "/" + Long.toString(mRoleID), getActivity());
+                    Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_ROLES_DETAILS + "/" + Long.toString(mRoleID), getActivity());
             mRoleDetailsAsyncTask.mHttpResponseListener = this;
             mRoleDetailsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }

@@ -25,8 +25,8 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadProfilePictureAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -135,6 +135,9 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             mDividerManagePeople.setVisibility(View.VISIBLE);
             mManagePeople.setVisibility(View.VISIBLE);
+        } else {
+            mDividerManagePeople.setVisibility(View.GONE);
+            mManagePeople.setVisibility(View.GONE);
         }
 
         return view;

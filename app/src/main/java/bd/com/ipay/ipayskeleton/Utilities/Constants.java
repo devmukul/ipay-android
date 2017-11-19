@@ -100,6 +100,10 @@ public class Constants {
     public static final String MESSAGE = "message";
 
     public static final String NAME = "NAME";
+    public static final String ACCEPTED = "ACCEPTED";
+    public static final String REJECTED = "REJECTED";
+    public static final String CANCELED = "CANCELED";
+
 
     public static final String OCCUPATION = "OCCUPATION";
     public static final String OCCUPATION_LIST = "OCCUPATION_LIST";
@@ -355,6 +359,7 @@ public class Constants {
 
     public static final String URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "introducer/downstream/notapproved";
     public static final String URL_GET_DOWNSTREAM_APPROVED_INTRODUCTION_REQUESTS = "introducer/downstream/approved";
+    public static final String URL_GET_DETAILS_OF_INVITED_BUSINESS_ROLE = "business-manager-invitation/received/";
 
     public static final String URL_GET_UPSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "introducer/upstream/notapproved";
     public static final String URL_GET_UPSTREAM_APPROVED_INTRODUCTION_REQUESTS = "introducer/upstream/approved";
@@ -486,7 +491,7 @@ public class Constants {
     public static final String URL_GET_EMPLOYEE_DETAILS = "business/user/";
     public static final String URL_REMOVE_AN_EMPLOYEE_FIRST_PART = "business/user/";
     public static final String URL_REMOVE_AN_EMPLOYEE_LAST_PART = "/resignation/confirm";
-    public static final String URL_GET_BUSINESS_ROLES = "business-role";
+    public static final String URL_GET_BUSINESS_ROLES_DETAILS = "business-role";
     public static final String URL_GET_ROLE_MANAGER_REQUESTS = "business-manager-invitation/received";
 
 
@@ -585,6 +590,7 @@ public class Constants {
     public static final String COMMAND_GET_IDENTIFICATION_BUSINESS_DOCUMENTS_REQUEST = "COMMAND_GET_IDENTIFICATION_BUSINESS_DOCUMENTS_REQUEST";
     public static final String COMMAND_GET_INTRODUCER_LIST = "COMMAND_GET_INTRODUCER_LIST";
     public static final String COMMAND_GET_INTRODUCED_LIST = "COMMAND_GET_INTRODUCED_LIST";
+    public static final String COMMAND_GET_DETAILS_OF_INVITED_BUSINESS_ROLE = "COMMAND_GET_DETAILS_OF_INVITED_BUSINESS_ROLE";
     public static final String COMMAND_GET_PENDING_INTRODUCER_LIST = "COMMAND_GET_PENDING_INTRODUCER_LIST";
     public static final String COMMAND_GET_SENT_REQUEST_LIST = "COMMAND_GET_SENT_REQUEST_LIST";
     public static final String COMMAND_SET_PROFILE_INFO_REQUEST = "COMMAND_SET_PROFILE_INFO_REQUEST";
@@ -606,6 +612,7 @@ public class Constants {
     public static final String COMMAND_DELETE_CONTACTS = "COMMAND_DELETE_CONTACTS";
     public static final String COMMAND_UPDATE_CONTACTS = "COMMAND_UPDATE_CONTACTS";
     public static final String COMMAND_GET_BUSINESS_RULE = "COMMAND_GET_BUSINESS_RULE";
+    public static final String COMMAND_UPDATE_BUSINESS_ROLE_INVITATION = "COMMAND_UPDATE_BUSINESS_ROLE_INVITATION";
     public static final String COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE = "COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE";
     public static final String COMMAND_GET_ALL_BUSINESS_LIST = "COMMAND_GET_ALL_BUSINESS_LIST";
     public static final String COMMAND_GET_ALL_SECURITY_QUESTIONS = "COMMAND_GET_ALL_SECURITY_QUESTIONS";
