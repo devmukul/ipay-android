@@ -72,19 +72,20 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mChangedList = new ArrayList<>();
+        getActivity().setTitle(R.string.two_fa_settings);
         return view;
     }
 
     private void getTwoFactorAuthSettings() {
+        if (mGetTwoFactorAuthSettingsAsyncTask != null) {
+            return;
+        }
         String API_COMMAND = Constants.COMMAND_GET_TWO_FACTOR_AUTH_SETTINGS;
         String mUri = Constants.BASE_URL_MM + Constants.URL_TWO_FACTOR_AUTH_SETTINGS;
         mGetTwoFactorAuthSettingsAsyncTask = new HttpRequestGetAsyncTask(API_COMMAND, mUri, getActivity());
         mGetTwoFactorAuthSettingsAsyncTask.mHttpResponseListener = this;
-        try {
-            mGetTwoFactorAuthSettingsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } catch (Exception e) {
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+        mGetTwoFactorAuthSettingsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mProgressDialog.show();
     }
 
     int setBit(int N, int pos) {
@@ -156,6 +157,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetTwoFactorAuthSettingsAsyncTask = null;
+            mPutTwoFactorAuthSettingsAsyncTask = null;
             if (getActivity() != null)
                 Toaster.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_SHORT);
         } else {
@@ -179,8 +181,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
                     Toaster.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
                 }
                 mGetTwoFactorAuthSettingsAsyncTask = null;
-                if (mProgressDialog.isShowing())
-                    mProgressDialog.dismiss();
+                mProgressDialog.dismiss();
 
             } else if (result.getApiCommand().equals(Constants.COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS)) {
                 TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse = gson.fromJson(result.getJsonString(), TwoFactorAuthSettingsSaveResponse.class);
@@ -204,8 +205,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
                     Toaster.makeText(getActivity(), twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
                 }
                 mPutTwoFactorAuthSettingsAsyncTask = null;
-                if (mProgressDialog.isShowing())
-                    mProgressDialog.dismiss();
+                mProgressDialog.dismiss();
             }
         }
     }
