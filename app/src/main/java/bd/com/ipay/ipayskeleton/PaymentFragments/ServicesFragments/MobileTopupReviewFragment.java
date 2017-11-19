@@ -329,7 +329,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                         launchOTPVerification();
                     } else {
                         if (getActivity() != null)
-                            Toaster.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG);
+                            Toaster.makeText(getActivity(), mTopupResponse.getMessage(), Toast.LENGTH_LONG);
 
                         //Google Analytic event
                         Utilities.sendFailedEventTracker(mTracker, "TopUp", ProfileInfoCacheManager.getAccountId(), getString(R.string.recharge_failed), Double.valueOf(mAmount).longValue());
