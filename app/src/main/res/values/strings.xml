@@ -1034,5 +1034,5 @@
 
     <string name="please_enter_a_document_id">Please enter your document ID</string>
     <string name="alpha_numeric">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
-    <string name="please_select_max_file_size_message">Please select select a file with max size %d MB</string>
+    <string name="please_select_max_file_size_message">Please select a file with max size %d MB</string>
 </resources>
