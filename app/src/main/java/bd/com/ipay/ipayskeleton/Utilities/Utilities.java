@@ -780,6 +780,10 @@ public class Utilities {
         ActivityCompat.requestPermissions(activity, requiredPermissions.toArray(new String[requiredPermissions.size()]), permissionCode);
     }
 
+    public static boolean isValidToeknWindowTime(){
+        return true;
+    }
+
     public static Tracker getTracker(Activity activity) {
         Tracker mTracker;
         MyApplication application = (MyApplication) activity.getApplication();

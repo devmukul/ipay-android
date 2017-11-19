@@ -3,7 +3,9 @@ package bd.com.ipay.ipayskeleton.Activities;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -21,6 +23,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         MyApplication myApp = (MyApplication) this.getApplication();
         myApp.isAppInBackground = false;
+
+        if(SharedPrefManager.isRemberMeActive()){
+
+            if(Utilities.isValidToeknWindowTime())
+            myApp.refreshToken();
+        }
     }
 
     @Override
@@ -34,8 +42,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onUserInteraction() {
         super.onUserInteraction();
 
-        ((MyApplication) this.getApplication()).stopUserInactivityDetectorTimer();
-        ((MyApplication) this.getApplication()).startUserInactivityDetectorTimer();
+        if (!SharedPrefManager.isRemberMeActive()) {
+            ((MyApplication) this.getApplication()).stopUserInactivityDetectorTimer();
+            ((MyApplication) this.getApplication()).startUserInactivityDetectorTimer();
+        }
     }
 
 }

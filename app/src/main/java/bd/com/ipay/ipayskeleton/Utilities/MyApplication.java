@@ -129,7 +129,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
         }
     }
 
-    private void refreshToken() {
+    public void refreshToken() {
         Logger.logW("Token_Timer", "Refresh token called");
 
         if (mRefreshTokenAsyncTask != null) {
