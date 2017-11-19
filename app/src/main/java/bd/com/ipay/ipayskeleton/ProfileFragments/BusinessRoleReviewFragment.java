@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -17,15 +18,21 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class BusinessRoleReviewFragment extends Fragment {
+
     private ProfileImageView mProfileImageView;
     private Button mAcceptButton;
     private Button mRejectButton;
+    private TextView mNameTextView;
+    private TextView mMobileNumberTextView;
+    private TextView mRoleNameTextView;
+    private String mImageUri;
+
     private Bundle mBundle;
     private BusinessRoleManagerInvitation mBusinessRoleManagerInvitation;
 
     private HttpRequestPutAsyncTask mAcceptOrCancelBusinessAsynctask = null;
 
-    private static final String ACCEPT="ACCEPTED";
+    private static final String ACCEPT = "ACCEPTED";
 
     @Nullable
     @Override
@@ -38,14 +45,22 @@ public class BusinessRoleReviewFragment extends Fragment {
     public void setUpViews(View v) {
         mAcceptButton = (Button) v.findViewById(R.id.button_accept);
         mRejectButton = (Button) v.findViewById(R.id.button_reject);
+        mNameTextView = (TextView) v.findViewById(R.id.textview_name);
+        mMobileNumberTextView = (TextView) v.findViewById(R.id.textview_mobile_number);
+        mRoleNameTextView = (TextView) v.findViewById(R.id.role);
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
+
         if (getArguments() != null) {
             mBundle = getArguments();
             String jsonString = mBundle.getString(Constants.BUSINESS_ROLE_REQUEST);
             Gson gson = new Gson();
             mBusinessRoleManagerInvitation = gson.fromJson(jsonString, BusinessRoleManagerInvitation.class);
-            String imageUri = Constants.BASE_URL_FTP_SERVER + mBusinessRoleManagerInvitation.getImageUrl();
-            mProfileImageView.setProfilePicture(imageUri, false);
+
+            mImageUri = Constants.BASE_URL_FTP_SERVER + mBusinessRoleManagerInvitation.getImageUrl();
+            mProfileImageView.setProfilePicture(mImageUri, false);
+
+            mNameTextView.setText(mBusinessRoleManagerInvitation.getBusinessName());
+            mRoleNameTextView.setText(mBusinessRoleManagerInvitation.getRoleName());
         }
         setButtonActions();
     }
