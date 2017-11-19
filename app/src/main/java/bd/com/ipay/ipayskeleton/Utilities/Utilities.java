@@ -877,6 +877,9 @@ public class Utilities {
                 .build());
     }
 
+    public static long getBytesToMegaBytes(long length) {
+        return length / 1000000;
+    }
     private static final int[] ADD_MONEY_OPTION_SERVICE_ID = {ServiceIdConstants.ADD_MONEY_BY_BANK, ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
     private static final String[] ADD_MONEY_OPTION_TITLE = {Constants.ADD_MONEY_BY_BANK_TITLE, Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE};
     private static final int[] ADD_MONEY_OPTION_ICON = {R.drawable.ic_bank111, R.drawable.basic_card};
