@@ -875,4 +875,7 @@ public class Utilities {
                 .build());
     }
 
+    public static long getBytesToMegaBytes(long length) {
+        return length / 1000000;
+    }
 }
