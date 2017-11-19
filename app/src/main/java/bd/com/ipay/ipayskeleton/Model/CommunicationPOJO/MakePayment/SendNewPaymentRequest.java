@@ -9,6 +9,15 @@ public class SendNewPaymentRequest {
     private final String description;
     private final Integer requestId;
     private final BigDecimal vat;
+    private String otp;
+
+    public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
+    }
 
     public SendNewPaymentRequest(BigDecimal amount, String clientMobileNumber, String description, Integer requestId, BigDecimal vat) {
         this.amount = amount;
