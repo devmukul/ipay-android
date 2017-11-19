@@ -117,8 +117,6 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
             }
         });
 
-        //setRolesAdapter();
-        // setUpEmployeeDetails();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mPrivilegeListView.setLayoutManager(layoutManager);
@@ -131,8 +129,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
     }
 
     private void setUpEmployeeDetails() {
-        if (mAssociationId != 0)
-            getEmployeeDetails(mAssociationId);
+        getEmployeeDetails(mAssociationId);
     }
 
     private void createEmployee(String progressMessage) {
@@ -174,7 +171,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
             mProgressDialog.setMessage(getString(R.string.preparing));
             mProgressDialog.show();
             mRoleDetailsAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DETAILS_OF_BUSINESS_ROLE,
-                    Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_ROLES_DETAILS + "/" + Long.toString(mRoleID), getActivity());
+                    Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_ROLES_DETAILS + mRoleID, getActivity());
             mRoleDetailsAsyncTask.mHttpResponseListener = this;
             mRoleDetailsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -238,10 +235,13 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                             BusinessRoleDetailsResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mPrivilegeList = getServiceNamesFromBusinessServices(businessRoleDetailsResponse.getServiceList());
+                        int size = mPrivilegeList.size();
                         mEmployeePrivilegeAdapter.notifyDataSetChanged();
                         if (getActivity() != null) {
                             Toaster.makeText(getActivity(), businessRoleDetailsResponse.getMessage(), Toast.LENGTH_LONG);
                         }
+                    } else {
+                        int i = 0;
                     }
                 } catch (Exception e) {
                     Toaster.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);

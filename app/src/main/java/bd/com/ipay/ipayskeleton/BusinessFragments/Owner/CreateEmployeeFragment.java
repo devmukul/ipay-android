@@ -135,7 +135,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
             public void onResourceSelected(int id, String name) {
                 mRoleEditText.setText(name);
                 mSelectedRoleName = name;
-                mSelectedRoleID = id;
+                mSelectedRoleID = mIDtoRoleNameMap.get(name);
 
             }
         });
