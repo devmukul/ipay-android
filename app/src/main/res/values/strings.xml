@@ -998,7 +998,7 @@
     <string name="upload_front_page">Upload first/front page</string>
     <string name="upload_back_page">Upload second/back page</string>
     <string name="choose_file">Choose file</string>
-    <string name="maximum_file_size_message">Maximum file size is 5 MB. JPG or PNG format only.</string>
+    <string name="maximum_file_size_message">Maximum file size is 3 MB. JPG or PNG format only.</string>
     <string name="upload_document">Upload Document</string>
     <string name="select_photo">Select photo</string>
     <string name="upload_photo">Confirm photo</string>
@@ -1034,4 +1034,5 @@
 
     <string name="please_enter_a_document_id">Please enter your document ID</string>
     <string name="alpha_numeric">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
+    <string name="please_select_max_file_size_message">Please select select a file with max size %d MB</string>
 </resources>
