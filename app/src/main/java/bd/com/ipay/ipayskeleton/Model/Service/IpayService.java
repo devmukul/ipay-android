@@ -3,10 +3,6 @@ package bd.com.ipay.ipayskeleton.Model.Service;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 
-/**
- * Created by sajid.shahriar on 11/14/17.
- */
-
 public class IpayService {
 
 
