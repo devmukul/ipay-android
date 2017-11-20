@@ -104,11 +104,12 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         final TextView amountTextView = findViewById(R.id.amount_text_view);
         final TextView vatTextView = findViewById(R.id.vat_text_view);
         final TextView totalTextView = findViewById(R.id.total_text_view);
-        serviceChargeTextView = findViewById(R.id.service_charge_text_view);
-        netAmountTextView = findViewById(R.id.net_amount_text_view);
         final View descriptionViewHolder = findViewById(R.id.description_view_holder);
         final TextView descriptionTextView = findViewById(R.id.description_text_view);
         final Button paymentRequestButton = findViewById(R.id.payment_request_button);
+
+        serviceChargeTextView = findViewById(R.id.service_charge_text_view);
+        netAmountTextView = findViewById(R.id.net_amount_text_view);
 
         receiverProfileImageView.setProfilePicture(mPhotoUri, false);
 
