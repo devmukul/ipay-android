@@ -31,7 +31,12 @@ public class CardPaymentWebViewActivity extends AppCompatActivity {
     public static final int CARD_TRANSACTION_FAILED = -1;
     public static final int CARD_TRANSACTION_CANCELED = 0;
     public static final int CARD_TRANSACTION_SUCCESSFUL = 1;
-    private static final int ZERO_PROGRESS = 0;
+
+    public static final String URL_REGEX_APP_CARD_CANCELLED = "(.+)app/card/cancelled(/?.*)";
+    public static final String URL_REGEX_APP_CARD_FAILED = "(.+)app/card/failed(/?.*)";
+    public static final String URL_REGEX_APP_TRANSACTION_CARD = "(.+)/app/transaction/card/(.+)";
+
+    private static final String TRANSACTION_ID_POSITION = "$2";
 
     private MaterialDialog transactionCancelDialog;
 
@@ -69,7 +74,7 @@ public class CardPaymentWebViewActivity extends AppCompatActivity {
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
 
-                if (error.getUrl().matches("(http://|https://)?(www|dev|test|stage|internal).ipay.com.bd/(.+)")) {
+                if (error.getUrl().matches(Constants.VALID_IPAY_BD_ADDRESS)) {
                     showSslErrorDialog(handler, error);
                 } else {
                     super.onReceivedSslError(view, handler, error);
@@ -84,14 +89,14 @@ public class CardPaymentWebViewActivity extends AppCompatActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Logger.logD("Redirect URL", url);
-                if (url.matches("(.+)app/card/cancelled(/?.*)")) {
+                if (url.matches(URL_REGEX_APP_CARD_CANCELLED)) {
                     finishWithResult(CARD_TRANSACTION_CANCELED, null);
                     return true;
-                } else if (url.matches("(.+)app/card/failed(/?.*)")) {
+                } else if (url.matches(URL_REGEX_APP_CARD_FAILED)) {
                     finishWithResult(CARD_TRANSACTION_FAILED, null);
                     return true;
-                } else if (url.matches("(.+)/app/transaction/card/(.+)")) {
-                    finishWithResult(CARD_TRANSACTION_SUCCESSFUL, url.replaceAll("(.+)/app/transaction/card/(.+)", "$2"));
+                } else if (url.matches(URL_REGEX_APP_TRANSACTION_CARD)) {
+                    finishWithResult(CARD_TRANSACTION_SUCCESSFUL, url.replaceAll(URL_REGEX_APP_TRANSACTION_CARD, TRANSACTION_ID_POSITION));
                     return true;
                 } else {
                     return super.shouldOverrideUrlLoading(view, url);
@@ -110,31 +115,31 @@ public class CardPaymentWebViewActivity extends AppCompatActivity {
 
     private void showSslErrorDialog(final SslErrorHandler handler, SslError error) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(CardPaymentWebViewActivity.this);
-        String message = "SSL Certificate error.";
+        String message = "";
         switch (error.getPrimaryError()) {
             case SslError.SSL_UNTRUSTED:
-                message = "The certificate authority is not trusted.";
+                message = getString(R.string.ssl_untrustred_message);
                 break;
             case SslError.SSL_EXPIRED:
-                message = "The certificate has expired.";
+                message = getString(R.string.ssl_expired_message);
                 break;
             case SslError.SSL_IDMISMATCH:
-                message = "The certificate Hostname mismatch.";
+                message = getString(R.string.ssl_id_mismatch_message);
                 break;
             case SslError.SSL_NOTYETVALID:
-                message = "The certificate is not yet valid.";
+                message = getString(R.string.ssl_not_yet_valid_message);
                 break;
         }
-        message += " Do you want to continue anyway?";
-        builder.setTitle("SSL Certificate Error");
+        message += getString(R.string.do_you_want_to_continue);
+        builder.setTitle(R.string.ssl_error_title);
         builder.setMessage(message);
-        builder.setPositiveButton("continue", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.continue_message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 handler.proceed();
             }
         });
-        builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 handler.cancel();
@@ -152,7 +157,7 @@ public class CardPaymentWebViewActivity extends AppCompatActivity {
 
         transactionCancelDialog = new MaterialDialog.Builder(this).
                 content(R.string.card_transaction_cancel_warning).
-                positiveText(R.string.continue_add_money).
+                positiveText(R.string.continue_message).
                 negativeText(R.string.cancel).
                 onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override

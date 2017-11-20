@@ -1057,4 +1057,11 @@
     <string name="please_select_max_file_size_message">Please select a file with max size %d MB</string>
     <string name="settings_not_changed">No change in settings.</string>
     <string name="credit_or_debit_card_transaction_default_header">Money Added from Credit/Debit Card</string>
+    <string name="ssl_error_title">SSL Certificate Error</string>
+    <string name="ssl_untrustred_message">The certificate authority is not trusted.</string>
+    <string name="ssl_expired_message">The certificate has expired.</string>
+    <string name="ssl_id_mismatch_message">The certificate Hostname mismatch.</string>
+    <string name="ssl_not_yet_valid_message">The certificate is not yet valid.</string>
+    <string name="do_you_want_to_continue">Do you want to continue anyway?</string>
+    <string name="continue_message">Continue</string>
 </resources>
