@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyFromCreditOrDebitCardStatusActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.CardPaymentWebViewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
@@ -365,11 +364,8 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                     intent = new Intent(getActivity(), TransactionDetailsActivity.class);
                     intent.putExtra(Constants.STATUS, Constants.PAYMENT_REQUEST_STATUS_ALL);
                     intent.putExtra(Constants.MONEY_REQUEST_ID, transactionId);
-                } else {
-                    intent = new Intent(getActivity(), AddMoneyFromCreditOrDebitCardStatusActivity.class);
-                    intent.putExtra(Constants.CARD_TRANSACTION_DATA, data.getBundleExtra(Constants.CARD_TRANSACTION_DATA));
+                    startActivity(intent);
                 }
-                startActivity(intent);
 
             }
             if (getActivity() != null)

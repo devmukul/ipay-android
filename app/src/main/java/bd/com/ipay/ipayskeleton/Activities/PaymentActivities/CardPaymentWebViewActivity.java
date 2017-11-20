@@ -171,11 +171,38 @@ public class CardPaymentWebViewActivity extends AppCompatActivity {
 
     private void finishWithResult(final int transactionStatusCode, final String transactionId) {
         Bundle data = new Bundle();
-        data.putString(Constants.TRANSACTION_ID, transactionId);
         data.putInt(Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_STATUS, transactionStatusCode);
         Intent intent = new Intent();
         intent.putExtra(Constants.CARD_TRANSACTION_DATA, data);
-        setResult(RESULT_OK, intent);
-        finish();
+
+        switch (transactionStatusCode) {
+            case CARD_TRANSACTION_CANCELED:
+                showTransactionErrorDialog(intent, getString(R.string.add_money_from_credit_or_debit_card_cancel_title), getString(R.string.add_money_from_credit_or_debit_card_cancel_message));
+                break;
+            case CARD_TRANSACTION_FAILED:
+                showTransactionErrorDialog(intent, getString(R.string.add_money_from_credit_or_debit_card_failed_title), getString(R.string.add_money_from_credit_or_debit_card_failed_message));
+                break;
+            case CARD_TRANSACTION_SUCCESSFUL:
+                data.putString(Constants.TRANSACTION_ID, transactionId);
+                setResult(RESULT_OK, intent);
+                finish();
+                break;
+        }
+    }
+
+    private void showTransactionErrorDialog(final Intent intent, String title, String message) {
+        MaterialDialog transactionErrorDialog = new MaterialDialog.Builder(this).
+                title(title).
+                content(message).
+                negativeText(R.string.ok).
+                onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.cancel();
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                }).cancelable(false).build();
+        transactionErrorDialog.show();
     }
 }
