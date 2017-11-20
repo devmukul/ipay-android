@@ -279,7 +279,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             focusView = null;
             mAddMoneyOptionSelectorView.setError(R.string.choose_add_money_option);
             shouldProceed = false;
-        } else if (mAddMoneyOptionSelectorView.getSelectedItemPosition() == 0 && mBankSelectorView.getSelectedItemPosition() == -1) {
+        } else if (mAddMoneyOptionSelectorView.getSelectedItem().getServiceId() == ServiceIdConstants.ADD_MONEY_BY_BANK && mBankSelectorView.getSelectedItemPosition() == -1) {
             focusView = null;
             mBankSelectorView.setError(R.string.select_a_bank);
             shouldProceed = false;
