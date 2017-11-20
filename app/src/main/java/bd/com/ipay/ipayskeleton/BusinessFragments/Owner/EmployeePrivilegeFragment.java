@@ -235,13 +235,10 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                             BusinessRoleDetailsResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mPrivilegeList = getServiceNamesFromBusinessServices(businessRoleDetailsResponse.getServiceList());
-                        int size = mPrivilegeList.size();
                         mEmployeePrivilegeAdapter.notifyDataSetChanged();
                         if (getActivity() != null) {
                             Toaster.makeText(getActivity(), businessRoleDetailsResponse.getMessage(), Toast.LENGTH_LONG);
                         }
-                    } else {
-                        int i = 0;
                     }
                 } catch (Exception e) {
                     Toaster.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);

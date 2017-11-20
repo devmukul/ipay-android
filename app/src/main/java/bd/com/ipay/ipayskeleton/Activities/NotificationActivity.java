@@ -70,10 +70,10 @@ public class NotificationActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recommendationReviewFragment).commit();
     }
 
-    public void switchToBusinessRoleReviewFragment(Bundle bundle){
-        BusinessRoleReviewFragment businessRoleReviewFragment=new BusinessRoleReviewFragment();
+    public void switchToBusinessRoleReviewFragment(Bundle bundle) {
+        BusinessRoleReviewFragment businessRoleReviewFragment = new BusinessRoleReviewFragment();
         businessRoleReviewFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,businessRoleReviewFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, businessRoleReviewFragment).commit();
     }
 
     @Override

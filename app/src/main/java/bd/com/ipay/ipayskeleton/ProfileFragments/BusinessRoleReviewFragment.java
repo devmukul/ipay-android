@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -191,7 +192,9 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
                 switch (result.getStatus()) {
                     case Constants.HTTP_RESPONSE_STATUS_OK:
                         Toast.makeText(getActivity(), updateInvitationRequestResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        switchToNotificationFragment();
+                        getActivity().finish();
+                        Intent intent = new Intent(this.getContext(), NotificationActivity.class);
+                        startActivity(intent);
                         break;
                     default:
                         Toast.makeText(getActivity(), updateInvitationRequestResponse.getMessage(), Toast.LENGTH_LONG).show();
