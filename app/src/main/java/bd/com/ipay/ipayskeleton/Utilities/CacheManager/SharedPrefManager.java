@@ -18,8 +18,8 @@ public class SharedPrefManager {
         return pref.getBoolean(SharedPrefConstants.FIRST_LAUNCH, defaultValue);
     }
 
-    public static boolean isRemberMeActive(){
-        return pref.getBoolean(SharedPrefConstants.REMEMBER_ME, false);
+    public static boolean isRememberMeActive(){
+        return pref.getBoolean(SharedPrefConstants.REMEMBER_ME, true);
     }
 
     public static String getUserBalance() {

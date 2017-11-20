@@ -52,11 +52,12 @@ public class HttpResponseParser {
                     // Start the timer for token.
                     MyApplication myApplicationInstance = MyApplication.getMyApplicationInstance();
 
-                    if(!SharedPrefManager.isRemberMeActive()) {
+                    if(!SharedPrefManager.isRememberMeActive()) {
                         myApplicationInstance.startTokenTimer();
                     }
 
                 } else if (header.getName().equals(Constants.REFRESH_TOKEN)) {
+                    TokenManager.setLastRefreshTokenFetchTime(Utilities.currentTime());
                     TokenManager.setRefreshToken(header.getValue());
                     Logger.logD(Constants.REFRESH_TOKEN, TokenManager.getRefreshToken());
                 }

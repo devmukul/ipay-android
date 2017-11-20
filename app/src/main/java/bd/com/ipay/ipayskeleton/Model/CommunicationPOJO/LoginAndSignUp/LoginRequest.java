@@ -22,6 +22,6 @@ public class LoginRequest {
         this.otp = otp;
         this.pushRegistrationId = pushRegistrationId;
         this.captcha = captcha;
-        this.isRemember = SharedPrefManager.isRemberMeActive();
+        this.isRemember = SharedPrefManager.isRememberMeActive();
     }
 }

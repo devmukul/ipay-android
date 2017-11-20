@@ -24,10 +24,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         MyApplication myApp = (MyApplication) this.getApplication();
         myApp.isAppInBackground = false;
 
-        if(SharedPrefManager.isRemberMeActive()){
-
-            if(Utilities.isValidToeknWindowTime())
-            myApp.refreshToken();
+        if (SharedPrefManager.isRememberMeActive()) {
+            if (Utilities.isValidTokenWindowTime())
+                myApp.refreshToken();
         }
     }
 
@@ -42,10 +41,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onUserInteraction() {
         super.onUserInteraction();
 
-        if (!SharedPrefManager.isRemberMeActive()) {
+        if (!SharedPrefManager.isRememberMeActive()) {
             ((MyApplication) this.getApplication()).stopUserInactivityDetectorTimer();
             ((MyApplication) this.getApplication()).startUserInactivityDetectorTimer();
         }
     }
-
 }

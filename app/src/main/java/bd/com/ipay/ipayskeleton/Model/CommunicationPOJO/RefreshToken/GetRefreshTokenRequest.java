@@ -9,6 +9,6 @@ public class GetRefreshTokenRequest {
 
     public GetRefreshTokenRequest(String refreshToken) {
         this.refreshToken = refreshToken;
-        this.isRemember = SharedPrefManager.isRemberMeActive();
+        this.isRemember = SharedPrefManager.isRememberMeActive();
     }
 }

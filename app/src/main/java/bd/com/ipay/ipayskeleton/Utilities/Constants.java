@@ -523,6 +523,7 @@ public class Constants {
 
     public static final long DEFAULT_TOKEN_TIME = 60000;   // By default token time is one minute
     public static final long DEFAULT_TOKEN_OVERLAP_TIME = 15000;   // By default token time is one minute
+    public static final long MIN_REQUIRED_REFRESH_TOKEN_TIME = 24 * 60 * 60 * 1000;   // Refresh token should be called atleast after 24 hours
 
     public static final String COMMAND_OTP_VERIFICATION = "COMMAND_OTP_VERIFICATION";
     public static final String COMMAND_RESEND_OTP = "COMMAND_RESEND_OTP";
