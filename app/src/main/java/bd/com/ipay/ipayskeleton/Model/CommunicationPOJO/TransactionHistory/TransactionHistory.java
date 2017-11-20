@@ -68,7 +68,17 @@ public class TransactionHistory implements Parcelable {
                 case (Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT):
                     return getBankName();
                 case (Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD):
-                    return originatingMobileNumber;
+                    if (additionalInfo != null) {
+                        if (additionalInfo.getCardHolderName() != null) {
+                            return additionalInfo.getCardHolderName();
+                        } else if (additionalInfo.getCardNumber() != null) {
+                            return additionalInfo.getCardNumber();
+                        } else {
+                            return originatingMobileNumber;
+                        }
+                    } else {
+                        return originatingMobileNumber;
+                    }
                 case (Constants.TRANSACTION_HISTORY_TOP_UP):
                     return receiverInfo;
                 case (Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT):
@@ -398,9 +408,9 @@ public class TransactionHistory implements Parcelable {
                         return "No Information Available";
                     }
                 case (Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK):
-                    return "Money Added";
+                    return "Money Added From Bank";
                 case (Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD):
-                    return "Money Added";
+                    return "Money Added From Credit/Debit Card";
                 case (Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT):
                     return "Add Money Revert";
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):

@@ -30,15 +30,22 @@
 
         <View style="@style/Divider" />
 
-        <bd.com.ipay.ipayskeleton.CustomView.ServiceSelectorView
-            android:id="@+id/add_money_option_selector_view"
+        <LinearLayout
+            android:id="@+id/add_money_option_selector_view_holder"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:hint="@string/add_money_type" />
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
 
-        <View style="@style/Divider" />
+            <bd.com.ipay.ipayskeleton.CustomView.ServiceSelectorView
+                android:id="@+id/add_money_option_selector_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:hint="@string/add_money_type" />
+
+            <View style="@style/Divider" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/bank_selector_view_holder"

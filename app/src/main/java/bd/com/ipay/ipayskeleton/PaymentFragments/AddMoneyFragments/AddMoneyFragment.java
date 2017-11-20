@@ -103,6 +103,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         mBankSelectorView = findViewById(R.id.bank_selector_view);
         mNoteEditText = findViewById(R.id.note_edit_text);
         mMessageTextView = findViewById(R.id.message_text_view);
+        final View mAddMoneyOptionSelectorViewHolder = findViewById(R.id.add_money_option_selector_view_holder);
         final Button mAddMoneyProceedButton = findViewById(R.id.add_money_proceed_button);
 
         final List<IpayService> availableAddMoneyOptions = Utilities.getAvailableAddMoneyOptions();
@@ -156,6 +157,12 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 return true;
             }
         });
+        if (availableAddMoneyOptions.size() == 1) {
+            mAddMoneyOptionSelectorView.selectedItem(0);
+            mAddMoneyOptionSelectorViewHolder.setVisibility(View.GONE);
+        } else {
+            mAddMoneyOptionSelectorViewHolder.setVisibility(View.VISIBLE);
+        }
     }
 
     private <T extends View> T findViewById(@IdRes int viewId) {
