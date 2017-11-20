@@ -87,18 +87,6 @@ public class TokenManager {
     }
 
     public static long getLastRefreshTokenFetchTime() {
-
-       /* //String givenDateString = "Tue Apr 23 16:08:28 GMT+05:30 2013";
-        String givenDateString = "Tue Nov 19 17:40:28 GMT+06:00 2017";
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
-        try {
-            Date mDate = sdf.parse(givenDateString);
-            long timeInMilliseconds = mDate.getTime();
-            System.out.println("Date in milli :: " + timeInMilliseconds);
-            return timeInMilliseconds;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }*/
       return lastRefreshTokenFetchTime;
     }
 }
