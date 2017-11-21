@@ -194,6 +194,7 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
                         Toast.makeText(getActivity(), updateInvitationRequestResponse.getMessage(), Toast.LENGTH_LONG).show();
                         getActivity().finish();
                         Intent intent = new Intent(this.getContext(), NotificationActivity.class);
+                        intent.putExtra(Constants.TAG, Constants.RELOAD);
                         startActivity(intent);
                         break;
                     default:
