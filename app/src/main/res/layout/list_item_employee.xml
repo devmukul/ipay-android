@@ -29,32 +29,44 @@
             android:gravity="center"
             android:orientation="vertical">
 
+
+
             <TextView
                 android:id="@+id/textview_name"
+                style="@style/TextStyleListItemPrimary"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_small_medium"/>
 
             <TextView
                 android:id="@+id/textview_mobile_number"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_small"/>
 
             <TextView
                 android:id="@+id/textview_designation"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_small"/>
 
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/verification_status"
+            android:id="@+id/edit_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/delete_employee"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_editgrey" />
+
+        <ImageView
+            android:id="@+id/delete_employee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:src="@drawable/ic_verified" />
+            android:src="@drawable/ic_delete_grey" />
     </RelativeLayout>
 
     <View

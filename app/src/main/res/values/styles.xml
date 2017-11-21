@@ -451,6 +451,13 @@
         <item name="android:gravity">left</item>
     </style>
 
+    <style name="TextStyleListItemPrimary" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:gravity">left</item>
+    </style>
+
     <style name="TextStylePrimary" parent="@android:style/Widget.TextView">
         <item name="android:textSize">18.0sp</item>
         <item name="android:gravity">center</item>
@@ -630,6 +637,17 @@
         <item name="android:textColorHint">@color/colorGray</item>
         <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+    </style>
+
+
+    <style name="EditTextForBussinessManager" parent="@android:style/Widget.Holo.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">@dimen/text_size_small_medium</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:paddingTop">@dimen/value5</item>
+        <item name="android:paddingBottom">@dimen/value5</item>
+        <item name="android:textColorHint">@color/colorGray</item>
     </style>
 
     <style name="CustomEditTextWithNoMargin" parent="@android:style/Widget.Holo.TextView">

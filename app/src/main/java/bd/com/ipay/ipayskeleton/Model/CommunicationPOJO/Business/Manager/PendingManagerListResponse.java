@@ -5,14 +5,14 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ManagerListResponse {
+public class PendingManagerListResponse {
 
     @SerializedName("message")
     @Expose
     private String message;
-    @SerializedName("managerList")
+    @SerializedName("pendingInvitationList")
     @Expose
-    private List<ManagerList> managerList = null;
+    private List<PendingInvitationList> pendingInvitationList = null;
 
     public String getMessage() {
         return message;
@@ -22,12 +22,12 @@ public class ManagerListResponse {
         this.message = message;
     }
 
-    public List<ManagerList> getManagerList() {
-        return managerList;
+    public List<PendingInvitationList> getPendingInvitationList() {
+        return pendingInvitationList;
     }
 
-    public void setManagerList(List<ManagerList> managerList) {
-        this.managerList = managerList;
+    public void setPendingInvitationList(List<PendingInvitationList> pendingInvitationList) {
+        this.pendingInvitationList = pendingInvitationList;
     }
 
 }

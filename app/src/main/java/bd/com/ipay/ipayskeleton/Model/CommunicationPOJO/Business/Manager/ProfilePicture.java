@@ -6,17 +6,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class ProfilePicture {
 
-    @SerializedName("quality")
-    private String quality;
     @SerializedName("url")
+    @Expose
     private String url;
+    @SerializedName("quality")
+    @Expose
+    private String quality;
 
-    public ProfilePicture() {
+    public String getUrl() {
+        return url;
     }
 
-    public ProfilePicture(String quality, String url) {
-        super();
-        this.quality = quality;
+    public void setUrl(String url) {
         this.url = url;
     }
 
@@ -26,14 +27,6 @@ public class ProfilePicture {
 
     public void setQuality(String quality) {
         this.quality = quality;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
 }

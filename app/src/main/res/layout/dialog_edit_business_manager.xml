@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin"
+    android:background="@color/ef_white">
+
+    <TextView
+        android:id="@+id/manager_name_text_view"
+        style="@style/TextStyleListItemPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mahbub Hasan"/>
+
+    <RelativeLayout
+        android:id="@+id/description_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin">
+
+        <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/activity_horizontal_margin" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/verification_status"
+            android:layout_toRightOf="@+id/profile_picture"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_extra_small"
+                android:text="Change Role"/>
+
+            <EditText
+                android:id="@+id/role"
+                style="@style/EditTextForBussinessManager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/role"
+                android:drawableRight="@drawable/dropdown_arrow"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="right">
+
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTransparent"
+            android:text="CANCEL"
+            android:layout_gravity="right"
+            android:textSize="@dimen/text_size_small"
+            android:textColor="@color/colorTextPrimary"/>
+
+
+        <Button
+            android:id="@+id/button_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTransparent"
+            android:text="UPDATE"
+            android:layout_gravity="right"
+            android:textSize="@dimen/text_size_small"
+            android:textColor="@color/colorPrimaryButton"/>
+
+    </LinearLayout>
+
+</LinearLayout>

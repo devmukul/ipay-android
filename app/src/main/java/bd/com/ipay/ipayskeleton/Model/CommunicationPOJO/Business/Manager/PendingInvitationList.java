@@ -5,36 +5,43 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ManagerList {
+public class PendingInvitationList {
 
     @SerializedName("id")
-    private int id;
+    @Expose
+    private long id;
     @SerializedName("managerAccountId")
-    private int managerAccountId;
+    @Expose
+    private long managerAccountId;
     @SerializedName("managerName")
+    @Expose
     private String managerName;
     @SerializedName("managerMobileNumber")
+    @Expose
     private String managerMobileNumber;
     @SerializedName("roleName")
+    @Expose
     private String roleName;
     @SerializedName("createdAt")
+    @Expose
     private long createdAt;
     @SerializedName("profilePictures")
+    @Expose
     private List<ProfilePicture> profilePictures = null;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getManagerAccountId() {
+    public long getManagerAccountId() {
         return managerAccountId;
     }
 
-    public void setManagerAccountId(int managerAccountId) {
+    public void setManagerAccountId(long managerAccountId) {
         this.managerAccountId = managerAccountId;
     }
 
