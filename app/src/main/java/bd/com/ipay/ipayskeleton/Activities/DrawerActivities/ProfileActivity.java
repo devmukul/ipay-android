@@ -188,7 +188,9 @@ public class ProfileActivity extends BaseActivity {
                 default:
                     fragment = new AccountFragment();
             }
-            if (fragment != null) {
+            if (fragment == null) {
+                finish();
+            } else {
                 if (bundle != null)
                     fragment.setArguments(bundle);
 
