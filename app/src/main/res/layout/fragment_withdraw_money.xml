@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
@@ -33,81 +34,6 @@
             android:textColor="@android:color/white"
             android:visibility="gone" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/bank_account_number_hint"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:focusable="false"
-                android:fontFamily="sans-serif-light"
-                android:hint="@string/bank_account"
-                android:textSize="@dimen/text_size_extra_small"
-                android:visibility="gone" />
-
-            <RelativeLayout
-                android:id="@+id/account_number_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/bank_account_number_hint"
-                android:clickable="true">
-
-                <ImageView
-                    android:id="@+id/portrait"
-                    android:layout_width="@dimen/value48"
-                    android:layout_height="@dimen/value48"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginTop="@dimen/activity_horizontal_margin"
-                    android:src="@drawable/ic_bank111"
-                    android:visibility="gone" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/portrait"
-                    android:orientation="vertical"
-                    android:paddingBottom="@dimen/value10"
-                    android:paddingTop="@dimen/value10">
-
-                    <TextView
-                        android:id="@+id/bank_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:fontFamily="sans-serif-light"
-                        android:hint="@string/enter_bank_account_number"
-                        android:textSize="@dimen/text_size_small_medium" />
-
-                    <TextView
-                        android:id="@+id/bank_branch"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:fontFamily="sans-serif-light"
-                        android:textSize="@dimen/text_size_extra_small"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:id="@+id/bank_account_number"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:fontFamily="sans-serif-light"
-                        android:textSize="@dimen/text_size_extra_small"
-                        android:visibility="gone" />
-                </LinearLayout>
-            </RelativeLayout>
-        </RelativeLayout>
-
-        <View style="@style/Divider" />
-
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -125,6 +51,18 @@
         </android.support.design.widget.TextInputLayout>
 
         <View style="@style/Divider" />
+
+        <bd.com.ipay.ipayskeleton.CustomView.BankSelectorView
+            android:id="@+id/bank_selector_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:hint="@string/bank_account"
+            custom:selectorDialogTitle="@string/bank_account" />
+
+        <View style="@style/Divider" />
+
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -155,6 +93,6 @@
             style="@style/CustomNoteTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_money_info" />
+            android:text="@string/withdraw_money_to_bank_info" />
     </LinearLayout>
 </ScrollView>

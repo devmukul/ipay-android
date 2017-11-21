@@ -60,12 +60,13 @@
                         android:backgroundTint="@color/colorPrimary"
                         android:paddingLeft="@dimen/activity_horizontal_margin_card"
                         android:paddingRight="@dimen/activity_horizontal_margin_card"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
 
+        <View style="@style/Divider" />
 
         <LinearLayout style="@style/LinearLayoutHolder">
 
@@ -76,7 +77,7 @@
 
             <TextView
                 android:id="@+id/transaction_id"
-                style="@style/TextViewInfoColorPrimaryReviewSmall" />
+                style="@style/TextViewInfoReview" />
 
         </LinearLayout>
 
@@ -92,7 +93,7 @@
 
             <TextView
                 android:id="@+id/your_number"
-                style="@style/TextViewInfoColorPrimaryReviewSmall" />
+                style="@style/TextViewInfoReview" />
         </LinearLayout>
 
         <LinearLayout style="@style/LinearLayoutHolder">
@@ -104,38 +105,10 @@
 
             <TextView
                 android:id="@+id/time"
-                style="@style/TextViewInfoColorPrimaryReviewSmall" />
+                style="@style/TextViewInfoReview" />
         </LinearLayout>
 
         <View style="@style/Divider" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/TextViewInfoLabelReviewSmall"
-                android:layout_weight=".8"
-                android:text="@string/description" />
-
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:paddingBottom="@dimen/value10"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:textSize="@dimen/text_size_small" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/value4"
-            android:background="@color/colorDividerGapGray" />
 
         <include layout="@layout/view_transaction_details_education_payment" />
 
@@ -143,11 +116,11 @@
 
             <TextView
                 style="@style/TextViewInfoLabelReviewSmall"
-                android:text="@string/amount" />
+                android:text="@string/amount_in_tk" />
 
             <TextView
                 android:id="@+id/amount"
-                style="@style/TextViewInfoColorPrimaryReviewSmall" />
+                style="@style/TextViewInfoReview" />
         </LinearLayout>
 
         <View style="@style/Divider" />
@@ -160,7 +133,7 @@
 
             <TextView
                 android:id="@+id/fee"
-                style="@style/TextViewInfoColorPrimaryReviewSmall" />
+                style="@style/TextViewInfoColorRedReview" />
         </LinearLayout>
 
         <View style="@style/Divider" />
@@ -173,7 +146,7 @@
 
             <TextView
                 android:id="@+id/netAmount"
-                style="@style/TextViewInfoColorPrimaryReviewSmall" />
+                style="@style/TextViewInfoBoldReview" />
         </LinearLayout>
 
         <View style="@style/Divider" />
@@ -186,14 +159,10 @@
 
             <TextView
                 android:id="@+id/balance"
-                style="@style/TextViewInfoColorPrimaryReviewSmall" />
+                style="@style/TextViewInfoColorPrimaryBoldReview" />
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/value4"
-            android:background="@color/colorDividerGapGray" />
+        <View style="@style/Divider" />
 
         <LinearLayout
             android:id="@+id/purpose_layout"
@@ -204,12 +173,13 @@
             <LinearLayout style="@style/LinearLayoutHolder">
 
                 <TextView
+                    android:id="@+id/textView2"
                     style="@style/TextViewInfoLabelReviewSmall"
                     android:text="@string/purpose" />
 
                 <TextView
                     android:id="@+id/purpose"
-                    style="@style/TextViewInfoColorPrimaryReviewSmall" />
+                    style="@style/TextViewInfoReview" />
             </LinearLayout>
 
             <View style="@style/Divider" />
@@ -230,15 +200,44 @@
 
         <LinearLayout
             android:id="@+id/failure_cause_layout"
-            style="@style/LinearLayoutHolder">
+            style="@style/LinearLayoutHolderVertical">
+
+            <LinearLayout style="@style/LinearLayoutHolder">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReviewSmall"
+                    android:text="@string/failure_cause" />
+
+                <TextView
+                    android:id="@+id/failure_cause"
+                    style="@style/TextViewInfoColorPrimaryReviewSmall" />
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <TextView
                 style="@style/TextViewInfoLabelReviewSmall"
-                android:text="@string/failure_cause" />
+                android:layout_weight=".8"
+                android:text="@string/description" />
 
             <TextView
-                android:id="@+id/failure_cause"
-                style="@style/TextViewInfoColorPrimaryReviewSmall" />
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:paddingBottom="@dimen/value10"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:textSize="@dimen/text_size_small_medium" />
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

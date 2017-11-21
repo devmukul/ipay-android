@@ -64,9 +64,21 @@ public class TransactionHistory implements Parcelable {
                         return additionalInfo.getUserName();
                     else
                         return "";
-                case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
+                case (Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK):
                 case (Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT):
                     return getBankName();
+                case (Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD):
+                    if (additionalInfo != null) {
+                        if (additionalInfo.getCardHolderName() != null) {
+                            return additionalInfo.getCardHolderName();
+                        } else if (additionalInfo.getCardNumber() != null) {
+                            return additionalInfo.getCardNumber();
+                        } else {
+                            return originatingMobileNumber;
+                        }
+                    } else {
+                        return originatingMobileNumber;
+                    }
                 case (Constants.TRANSACTION_HISTORY_TOP_UP):
                     return receiverInfo;
                 case (Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT):
@@ -131,7 +143,7 @@ public class TransactionHistory implements Parcelable {
                 } else if (receiverInfo.equals(userMobileNumber))
                     // Service charge effect
                     return Utilities.formatTakaWithSignAndComma("-", netAmount);
-            case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
+            case (Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK):
                 return Utilities.formatTakaWithSignAndComma("+", netAmount);
             case (Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT):
                 return Utilities.formatTakaWithSignAndComma("-", netAmount);
@@ -301,13 +313,15 @@ public class TransactionHistory implements Parcelable {
                     } else {
                         return "No information available";
                     }
-                case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
+                case (Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK):
                     if (statusCode == Constants.TRANSACTION_STATUS_ACCEPTED)
                         return "Added " + Utilities.formatTaka(getNetAmount()) + "  from account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")";
                     else if (statusCode == Constants.TRANSACTION_STATUS_PROCESSING)
                         return "Adding " + Utilities.formatTaka(getNetAmount()) + "  from account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")";
                     else
                         return "Failed to add " + Utilities.formatTaka(getNetAmount()) + " from account " + getBankAccountNumber() + ", " + getBankName() + "(" + getBankBranch() + ")";
+                case (Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD):
+                    return description;
                 case (Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT):
                     return description;
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
@@ -393,8 +407,10 @@ public class TransactionHistory implements Parcelable {
                     } else {
                         return "No Information Available";
                     }
-                case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
-                    return "Money Added";
+                case (Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK):
+                    return "Money Added From Bank";
+                case (Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD):
+                    return "Money Added From Credit/Debit Card";
                 case (Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT):
                     return "Add Money Revert";
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
@@ -519,7 +535,7 @@ public class TransactionHistory implements Parcelable {
                     return +netAmount;
                 else
                     return 0;
-            case (Constants.TRANSACTION_HISTORY_ADD_MONEY):
+            case (Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK):
                 return +netAmount;
             case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):
                 return -netAmount;
