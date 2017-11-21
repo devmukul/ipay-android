@@ -5,6 +5,12 @@ public class TopupResponse {
     private String transactionID;
     private int statusCode;
     private String message;
+    private long otpValidFor;
+
+    public long getOtpValidFor() {
+
+        return otpValidFor;
+    }
 
     public TopupResponse() {
     }

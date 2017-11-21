@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
-import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 
@@ -24,7 +23,7 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_on_board_identification_document, container, false);
+        View view = inflater.inflate(R.layout.fragment_onboard_identification_document, container, false);
         initializeViews(view);
         setButtonActions();
         return view;
@@ -34,7 +33,7 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment{
         mUploadImageView = (ImageView) view.findViewById(R.id.document_id_helper_image);
         mUploadButton = (Button) view.findViewById(R.id.button_upload_photo_id);
         mSkipButton = (Button) view.findViewById(R.id.button_skip);
-        mBackButtonTop  = (ImageView) view.findViewById(R.id.back);
+        mBackButtonTop = (ImageView) view.findViewById(R.id.back);
         if (getActivity().getSupportFragmentManager().getBackStackEntryCount()<=1){
             mBackButtonTop.setVisibility(View.INVISIBLE);
         }
@@ -60,14 +59,14 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment{
         mUploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileCompletionHelperActivity) getActivity()).switchToPhotoIdUploadFragment();
+                ((ProfileCompletionHelperActivity) getActivity()).switchToIdentificationDocumentListFragment();
             }
         });
 
         mUploadImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileCompletionHelperActivity) getActivity()).switchToPhotoIdUploadFragment();
+                ((ProfileCompletionHelperActivity) getActivity()).switchToIdentificationDocumentListFragment();
             }
         });
 

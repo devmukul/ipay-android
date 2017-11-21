@@ -144,7 +144,11 @@ public class DocumentPicker {
                     returnedIntent.getData().toString().contains(documentFile.toString()));
 
             if (isCamera) {     // CAMERA
-                return getTempFile(context).getAbsolutePath();
+                if (returnedIntent != null && returnedIntent.hasExtra(CameraActivity.SAVED_FILE_PATH)) {
+                    return returnedIntent.getStringExtra(CameraActivity.SAVED_FILE_PATH);
+                } else {
+                    return getTempFile(context).getAbsolutePath();
+                }
             } else if (returnedIntent.getData().toString().startsWith("file://")) {
                 return returnedIntent.getData().toString();
             } else {            // ALBUM

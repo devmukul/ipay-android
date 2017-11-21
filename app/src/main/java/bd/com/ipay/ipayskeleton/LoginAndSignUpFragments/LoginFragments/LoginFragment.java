@@ -379,7 +379,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                             Utilities.sendSuccessEventTracker(mTracker, "Login to OTP", ProfileInfoCacheManager.getAccountId());
 
                             break;
-                        case Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE:
+                        case Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED:
                             hideProgressDialog();
 
                             // OTP has not been expired yet
@@ -423,6 +423,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                             break;
                         case Constants.HTTP_RESPONSE_STATUS_BLOCKED:
                             hideProgressDialog();
+
                             Toast.makeText(getActivity(), mLoginResponseModel.getMessage(), Toast.LENGTH_LONG).show();
                             Utilities.sendBlockedEventTracker(mTracker, "Login", ProfileInfoCacheManager.getAccountId());
                             break;

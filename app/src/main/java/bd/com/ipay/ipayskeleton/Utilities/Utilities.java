@@ -95,10 +95,10 @@ public class Utilities {
     }
 
     public static void setAppropriateKeyboard(Context c, String documentType, EditText editText) {
-        if (documentType.equals(Constants.DOCUMENT_TYPE_NATIONAL_ID) ||
-                documentType.equals(Constants.DOCUMENT_TYPE_BUSINESS_TIN) ||
-                documentType.equals(Constants.DOCUMENT_TYPE_VAT_REG_CERT) ||
-                documentType.equals(Constants.DOCUMENT_TYPE_TRADE_LICENSE)) {
+        if (documentType.equals(IdentificationDocumentConstants.DOCUMENT_TYPE_NATIONAL_ID) ||
+                documentType.equals(IdentificationDocumentConstants.DOCUMENT_TYPE_BUSINESS_TIN) ||
+                documentType.equals(IdentificationDocumentConstants.DOCUMENT_TYPE_VAT_REG_CERT) ||
+                documentType.equals(IdentificationDocumentConstants.DOCUMENT_TYPE_TRADE_LICENSE)) {
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         }
     }
@@ -875,4 +875,7 @@ public class Utilities {
                 .build());
     }
 
+    public static long getBytesToMegaBytes(long length) {
+        return length / 1000000;
+    }
 }

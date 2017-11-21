@@ -26,9 +26,11 @@ import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasic
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAskForIntroductionHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardConsentAgreementForBankFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardContactsFragment;
-import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardPhotoIdUploadFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardIdentificationDocumentListFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardIdentificationDocumentUploadFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardPhotoIdUploadHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardProfilePictureUploadHelperFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments.PreviewIdentificationDocumentFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -48,16 +50,16 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
         setContentView(R.layout.activity_profile_completion_helper);
         SharedPrefManager.setFirstLaunch(false);
         mProgressDialog = new ProgressDialog(ProfileCompletionHelperActivity.this);
-        if(ProfileInfoCacheManager.isSwitchedFromSignup()){
+        if (ProfileInfoCacheManager.isSwitchedFromSignup()) {
             switchToProfilePictureFragment();
-        }else {
-            if(!ProfileInfoCacheManager.isProfilePictureUploaded()){
+        } else {
+            if (!ProfileInfoCacheManager.isProfilePictureUploaded()) {
                 switchToProfilePictureFragment();
-            }else if(!ProfileInfoCacheManager.isIdentificationDocumentUploaded()){
+            } else if (!ProfileInfoCacheManager.isIdentificationDocumentUploaded()) {
                 switchToPhotoIdUploadHelperFragment();
-            }else if(!ProfileInfoCacheManager.isBasicInfoAdded()){
+            } else if (!ProfileInfoCacheManager.isBasicInfoAdded()) {
                 switchToBasicInfoEditHelperFragment();
-            }else {
+            } else {
                 switchToHomeActivity();
             }
         }
@@ -66,29 +68,29 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
     @Override
     public void onBackPressed() {
 
-            if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-                getSupportFragmentManager().popBackStackImmediate();
-            } else {
-                new AlertDialog.Builder(ProfileCompletionHelperActivity.this)
-                        .setMessage(R.string.are_you_sure_to_exit)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (Utilities.isConnectionAvailable(ProfileCompletionHelperActivity.this)) {
-                                    attemptLogout();
-                                } else {
-                                    ProfileInfoCacheManager.setLoggedInStatus(false);
-                                    ((MyApplication) ProfileCompletionHelperActivity.this.getApplication()).clearTokenAndTimer();
-                                    finish();
-                                }
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStackImmediate();
+        } else {
+            new AlertDialog.Builder(ProfileCompletionHelperActivity.this)
+                    .setMessage(R.string.are_you_sure_to_exit)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (Utilities.isConnectionAvailable(ProfileCompletionHelperActivity.this)) {
+                                attemptLogout();
+                            } else {
+                                ProfileInfoCacheManager.setLoggedInStatus(false);
+                                ((MyApplication) ProfileCompletionHelperActivity.this.getApplication()).clearTokenAndTimer();
+                                finish();
                             }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        })
-                        .show();
-            }
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .show();
+        }
     }
 
     private void attemptLogout() {
@@ -128,9 +130,25 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
                 .replace(R.id.fragment_container, onBoardIcdentificationFragment).addToBackStack(null).commit();
     }
 
-    public void switchToPhotoIdUploadFragment() {
+    public void switchToIdentificationDocumentListFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new OnBoardPhotoIdUploadFragment()).addToBackStack(null).commit();
+                .replace(R.id.fragment_container, new OnBoardIdentificationDocumentListFragment()).addToBackStack(null).commit();
+    }
+
+    public void switchToUploadIdentificationDocumentFragment(Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 4)
+            getSupportFragmentManager().popBackStackImmediate();
+        OnBoardIdentificationDocumentUploadFragment uploadIdentificationFragment = new OnBoardIdentificationDocumentUploadFragment();
+        uploadIdentificationFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, uploadIdentificationFragment).addToBackStack(null).commit();
+    }
+
+    public void switchToPreviewIdentificationDocumentFragment(Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 3)
+            getSupportFragmentManager().popBackStackImmediate();
+        PreviewIdentificationDocumentFragment previewIdentificationDocumentFragment = new PreviewIdentificationDocumentFragment();
+        previewIdentificationDocumentFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, previewIdentificationDocumentFragment).addToBackStack(null).commit();
     }
 
     public void switchToBasicInfoEditHelperFragment() {
@@ -150,7 +168,7 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
 
     public void switchToAddNewBankFragment() {
         getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new OnBoardAddBankFragment()).commit();
+                .replace(R.id.fragment_container, new OnBoardAddBankFragment()).commit();
     }
 
     public void switchToAskedIntroductionHelperFragment() {

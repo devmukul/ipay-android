@@ -470,6 +470,7 @@
     <string name="select_a_bank">Select Bank</string>
     <string name="remove_bank_title">Remove this account?</string>
     <string name="blocked_bank_title">Blocked!</string>
+    <string name="block_account_message">Your Account has been blocked. Please contact our customer support</string>
     <string name="bank_name">Bank Name</string>
     <string name="saving_profile_information">Saving profile information</string>
     <string name="saving_parent_information">Saving parent information</string>
@@ -488,6 +489,7 @@
     <string name="question">Question</string>
     <string name="answer">Answer</string>
     <string name="set_security_answer">Saving answers</string>
+    <string name="two_factor_auth_settings">Two Factor Authentication</string>
 
     <!-- Finger Print Auth -->
     <string name="use_fingerprint_for_login">Use Fingerprint for Login</string>
@@ -565,6 +567,8 @@
     <string name="birth_certificate">Birth Certificate</string>
     <string name="birth_certificate_id">Birth Certificate ID</string>
     <string name="tin">e-Tin (Personal)</string>
+    <string name="personal_tin">e-Tin (Personal)</string>
+    <string name="personal_tin_id">e-Tin (Personal) ID</string>
     <string name="business_tin_id">Business TIN ID</string>
     <string name="trade_license">Trade License</string>
     <string name="trade_license_id">Trade License ID</string>
@@ -626,6 +630,7 @@
     <string name="fathers_name">Father\'s Name</string>
     <string name="mothers_name">Mother\'s Name</string>
     <string name="other">Other</string>
+    <string name="other_id">Document ID</string>
     <string name="id">ID</string>
     <string name="document_name">Document Name</string>
     <string name="mobile">Mobile No.</string>
@@ -649,6 +654,7 @@
     <string name="failed_make_primary">Failed to make this primary email</string>
     <string name="confirmation_remove_email_address">Remove this email address?</string>
     <string name="confirmation_add_to_contacts">Add this number to contacts?</string>
+    <string name="link_bank">Link Bank</string>
     <string name="bank_consent_agreement">Bank consent agreement</string>
     <string name="progress_dialog_if_pin_exists">Preparing. Please wait…</string>
     <string name="failed_loading_pin">Failed loading PIN</string>
@@ -895,7 +901,6 @@
     <string name="post_paid">Post-paid</string>
 
     <!--All Screen Name for Google Analytic .... Can be optimized later-->
-
     <string name="screen_name_home">Wallet Page</string>
     <string name="screen_name_withdraw_money_review">Withdraw Money Confirmation Page</string>
     <string name="screen_name_withdraw_money">Withdraw Money Page</string>
@@ -988,7 +993,13 @@
     <string name="search_transaction">Search transaction</string>
     <string name="completed_transaction_list">Completed transaction list</string>
     <string name="pending_transaction_list">Pending transaction list</string>
-
+    <string name="verification_icon">Verification Icon</string>
+    <string name="document_front_side">Document Front Side/First Page</string>
+    <string name="upload_front_page">Upload first/front page</string>
+    <string name="upload_back_page">Upload second/back page</string>
+    <string name="choose_file">Choose file</string>
+    <string name="maximum_file_size_message">Maximum file size is 3 MB. JPG or PNG format only.</string>
+    <string name="upload_document">Upload Document</string>
     <string name="select_photo">Select photo</string>
     <string name="upload_photo">Confirm photo</string>
     <string name="upload_photo_id">Upload photo id</string>
@@ -999,6 +1010,8 @@
 
     <string name="onboard_step_one_title">Great! you\'re almost done</string>
     <string name="onboard_photo_id_upload_title">Upload photo id</string>
+    <string name="onboard_document_title">Documents</string>
+    <string name="onboard_upload_document_title">Upload document</string>
     <string name="onboard_nice_profile_photo">Nice profile photo</string>
     <string name="onboard_photo_upload_title">Upload profile photo</string>
     <string name="onboard_profile_info_update_title">Basic information</string>
@@ -1015,6 +1028,12 @@
     <string name="upload_identification_document_again">Do you want to upload a identification document again? You have already uploaded once</string>
 
     <string name="file_size_large">Your file size is too large. Please select another.</string>
-    <string name="alpha_numeric">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
+    <string name="change_two_fa_settings">Changing 2FA Settings</string>
+    <string name="accepting_send_money_request">Accepting Money Request</string>
+    <string name="two_fa_settings">Two Factor Authentication</string>
 
+    <string name="please_enter_a_document_id">Please enter your document ID</string>
+    <string name="alpha_numeric">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
+    <string name="please_select_max_file_size_message">Please select a file with max size %d MB</string>
+    <string name="settings_not_changed">No change in settings.</string>
 </resources>

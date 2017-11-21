@@ -950,6 +950,19 @@
         <item name="android:background">@drawable/background_button_only_border</item>
     </style>
 
+    <style name="ButtonStyleUpload" parent="ButtonStyleInvite">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:minHeight">0dip</item>
+        <item name="android:minWidth">0dip</item>
+        <item name="android:paddingTop">@dimen/value5</item>
+        <item name="android:paddingBottom">@dimen/value5</item>
+        <item name="android:paddingLeft">@dimen/value25</item>
+        <item name="android:paddingRight">@dimen/value25</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
     <style name="ButtonStyleInvited" parent="@android:style/Widget.Button">
         <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">24dp</item>
@@ -1010,4 +1023,23 @@
         <item name="android:lineSpacingExtra">4dp</item>
     </style>
 
+    <style name="DocumentPreviewImageStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/value125</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:src">@drawable/ic_image</item>
+    </style>
+
+    <style name="DocumentPreviewDetailsContainer">
+
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginBottom">@dimen/activity_horizontal_margin_card</item>
+        <item name="android:layout_marginTop">@dimen/activity_horizontal_margin</item>
+    </style>
 </resources>
