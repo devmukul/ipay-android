@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles;
+package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager;
 
 
 public class CreateEmployeeRequest {
