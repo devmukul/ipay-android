@@ -13,15 +13,25 @@ import java.util.Map;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.CreateCustomNotificationAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FCMNotificationResponse;
 import bd.com.ipay.ipayskeleton.Utilities.AppInstance.AppInstanceUtilities;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class FCMListenerService extends FirebaseMessagingService {
     private FCMNotificationResponse mFcmNotificationResponse;
+    private int serviceId;
+    private RemoteMessage.Notification notification;
+    private String from;
+    private Map data;
 
     @Override
     public void onMessageReceived(RemoteMessage message) {
-        String from = message.getFrom();
-        Map data = message.getData();
+        parseRemoteMessage(message);
+    }
+
+    private void parseRemoteMessage(RemoteMessage message) {
+        from = message.getFrom();
+        data = message.getData();
+        notification = message.getNotification();
 
         Logger.logD("Message", "From: " + from);
 
@@ -32,26 +42,29 @@ public class FCMListenerService extends FirebaseMessagingService {
         }
 
         // Check if message contains a notification payload.
-        if (message.getNotification() != null) {
-            Logger.logD("Notification Payload", "Message Notification Body: " + message.getNotification().getBody());
+        if (!(AppInstanceUtilities.isUserActive(this)) || serviceId == Constants.SERVICE_ID_BATCH_NOTIFICATION) {
+            if (notification != null) {
+                Logger.logD("Notification Payload", "Message Notification Body: " + notification.getBody());
 
-            if (!(AppInstanceUtilities.isUserActive(this)))
-                createNotification(this, message.getNotification().getTitle(),
-                        message.getNotification().getBody(), mFcmNotificationResponse.getIcon());
+                createNotification(this, notification.getTitle(),
+                        notification.getBody(), mFcmNotificationResponse.getIcon());
+            }
+        } else {
+            FCMNotificationParser.parseInAppNotificationResponse(this, mFcmNotificationResponse);
         }
+
     }
 
     private void parseNotificationResponseFromData(Map data) {
         Gson gson = new Gson();
         JsonElement jsonElement = gson.toJsonTree(data);
         mFcmNotificationResponse = gson.fromJson(jsonElement, FCMNotificationResponse.class);
-
-        if (AppInstanceUtilities.isUserActive(this))
-            FCMNotificationParser.parseNotificationResponse(this, mFcmNotificationResponse);
+        serviceId = mFcmNotificationResponse.getServiceId();
     }
 
     private void createNotification(Context context, String title, String message, String imageUrl) {
         new CreateCustomNotificationAsyncTask(context, title,
                 message, imageUrl).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
 }
