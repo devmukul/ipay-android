@@ -1,11 +1,13 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -115,18 +117,38 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
         mAcceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mProgressDialog.setMessage(getString(R.string.accepting_business_role_manager_request));
-                mProgressDialog.show();
-                updateBusinessRoleRequest(Constants.ACCEPTED);
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
+                        .setMessage(R.string.accept_invitation_request)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mProgressDialog.setMessage(getString(R.string.accepting_business_role_manager_request));
+                                mProgressDialog.show();
+                                updateBusinessRoleRequest(Constants.ACCEPTED);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null);
+
+                dialog.show();
             }
         });
 
         mRejectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mProgressDialog.setMessage(getString(R.string.rejecting_business_role_manager_request));
-                mProgressDialog.show();
-                updateBusinessRoleRequest(Constants.REJECTED);
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
+                        .setMessage(R.string.reject_invitation_request)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mProgressDialog.setMessage(getString(R.string.rejecting_business_role_manager_request));
+                                mProgressDialog.show();
+                                updateBusinessRoleRequest(Constants.REJECTED);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null);
+
+                dialog.show();
             }
         });
     }

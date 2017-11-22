@@ -192,7 +192,10 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private void getPendingInvitationRequestsForRoleManager(Context context) {
-        if (mGetPendingRoleManagerRequestTask != null) return;
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_ROLE_INVITATION_REQUEST))
+            return;
+        if (mGetPendingRoleManagerRequestTask != null)
+            return;
         else {
             mGetPendingRoleManagerRequestTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ROLE_MAANGER_REQUESTS,
                     Constants.BASE_URL_MM + Constants.URL_GET_ROLE_MANAGER_REQUESTS, context, this);

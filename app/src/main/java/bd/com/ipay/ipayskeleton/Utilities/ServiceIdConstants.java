@@ -86,6 +86,8 @@ public class ServiceIdConstants {
     public static final int SEE_ACTIVITY = 8017;
     public static final int SEE_OTHER_ACTIVITY = 8046;
 
+    public static final int SEE_BUSINESS_ROLE_INVITATION_REQUEST = 8057;
+
     // Identification Document Related
     public static final int SEE_BUSINESS_DOCS = 8010;
     public static final int UPLOAD_BUSINESS_DOCS = 8011;
