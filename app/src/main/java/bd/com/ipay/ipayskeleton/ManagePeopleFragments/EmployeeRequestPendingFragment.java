@@ -1,53 +1,95 @@
 package bd.com.ipay.ipayskeleton.ManagePeopleFragments;
 
+import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
+import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.EditBusinessManagerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.ManagerList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.ManagerListResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.PendingInvitationList;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.PendingManagerListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.RemoveEmployeeResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.RemovePendingEmployeeRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.UpdateEmployeeRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EmployeePrivilageCompletedFragment extends ProgressFragment implements HttpResponseListener {
+public class EmployeeRequestPendingFragment extends ProgressFragment implements HttpResponseListener{
 
 
-    private FloatingActionButton mFabAddNewEmployee;
-    private List<ManagerList> mEmployeeList;
+    private List<PendingInvitationList> mEmployeeList;
     private TextView mEmptyListTextView;
 
     private HttpRequestGetAsyncTask mGetAllEmployeeAsyncTask;
-    private ManagerListResponse mGetAllEmployeesResponse;
+    private PendingManagerListResponse mGetAllEmployeesResponse;
 
-    private HttpRequestDeleteAsyncTask mRemoveAnEmployeeAsyncTask;
+
+    private HttpRequestPutAsyncTask mRemoveAnEmployeeAsyncTask;
     private RemoveEmployeeResponse mRemoveAnEmployeeResponse;
 
     private EmployeeListAdapter adapter;
@@ -59,16 +101,6 @@ public class EmployeePrivilageCompletedFragment extends ProgressFragment impleme
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_employee_management, container, false);
-        getActivity().setTitle(R.string.manage_people);
-
-        mFabAddNewEmployee = (FloatingActionButton) v.findViewById(R.id.fab_add_employee);
-        mFabAddNewEmployee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((ManagePeopleActivity) getActivity()).switchToEmployeeInformationFragment();
-            }
-        });
-
 
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
         mEmployeeListView = (RecyclerView) v.findViewById(R.id.list_employee);
@@ -91,7 +123,9 @@ public class EmployeePrivilageCompletedFragment extends ProgressFragment impleme
         super.onActivityCreated(savedInstanceState);
         getEmployeeList();
         setContentShown(false);
-    }private void showDeleteEmployeeConfirmationDialog(final ManagerList employee) {
+    }
+
+    private void showDeleteEmployeeConfirmationDialog(final PendingInvitationList employee) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.are_you_sure_to_remove_employee)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -111,7 +145,7 @@ public class EmployeePrivilageCompletedFragment extends ProgressFragment impleme
             return;
 
         mGetAllEmployeeAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_EMPLOYEE_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_EMPLOYEE_LIST, getActivity(), this);
+                Constants.BASE_URL_MM + Constants.URL_GET_PENDING_EMPLOYEE_LIST, getActivity(), this);
         mGetAllEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -119,10 +153,15 @@ public class EmployeePrivilageCompletedFragment extends ProgressFragment impleme
         if (mRemoveAnEmployeeAsyncTask != null)
             return;
 
-        mRemoveAnEmployeeAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
-                Constants.BASE_URL_MM + Constants.URL_REMOVE_AN_EMPLOYEE_FIRST_PART + associationId , getContext(), this);
+        RemovePendingEmployeeRequest createEmployeeRequest = new RemovePendingEmployeeRequest(associationId, "CANCELED");
+        Gson gson = new Gson();
+        String json = gson.toJson(createEmployeeRequest);
+
+        mRemoveAnEmployeeAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_PENDING_EMPLOYEE , json, getContext(), this);
         mRemoveAnEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
@@ -138,11 +177,10 @@ public class EmployeePrivilageCompletedFragment extends ProgressFragment impleme
         Gson gson = new Gson();
         if (result.getApiCommand().equals(Constants.COMMAND_GET_EMPLOYEE_LIST)) {
             try {
-                mGetAllEmployeesResponse = gson.fromJson(result.getJsonString(), ManagerListResponse.class);
+                mGetAllEmployeesResponse = gson.fromJson(result.getJsonString(), PendingManagerListResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mEmployeeList = mGetAllEmployeesResponse.getManagerList();
-
+                    mEmployeeList = mGetAllEmployeesResponse.getPendingInvitationList();
                     adapter.notifyDataSetChanged();
                     if (isAdded())
                         setContentShown(true);
@@ -205,7 +243,6 @@ public class EmployeePrivilageCompletedFragment extends ProgressFragment impleme
             private final ImageView mDeleteView;
             private final ImageView mEditView;
             private final View divider;
-            private EditBusinessManagerDialog editBusinessManagerDialog;
 
             private CustomSelectorDialog mCustomSelectorDialog;
             private List<String> mEmployee_manage_ActionList;
@@ -220,15 +257,16 @@ public class EmployeePrivilageCompletedFragment extends ProgressFragment impleme
                 mDeleteView = (ImageView) itemView.findViewById(R.id.delete_employee);
                 mEditView = (ImageView) itemView.findViewById(R.id.edit_info);
                 divider = itemView.findViewById(R.id.divider);
+                mEditView.setVisibility(View.GONE);
             }
 
             public void bindView(final int pos) {
                 if (pos == mEmployeeList.size() - 1) divider.setVisibility(View.GONE);
-                final ManagerList employee = mEmployeeList.get(pos);
+                final PendingInvitationList employee = mEmployeeList.get(pos);
                 mEmployee_manage_ActionList = Arrays.asList(getResources().getStringArray(R.array.employee_management_action));
 
-                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + employee.getProfilePictures().get(0).getUrl(),
-                        false);
+//                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + employee.getProfilePictureUrl(),
+//                        false);
                 mNameView.setText(employee.getManagerName());
                 mMobileNumberView.setText(employee.getManagerMobileNumber());
 
@@ -238,6 +276,21 @@ public class EmployeePrivilageCompletedFragment extends ProgressFragment impleme
                 } else {
                     mDesignationView.setVisibility(View.GONE);
                 }
+
+//                switch (employee.getStatus()) {
+//                    case Constants.BUSINESS_INVITATION_ACCEPTED:
+//                        mStatusView.setImageResource(R.drawable.ic_verified);
+//                        mStatusView.setColorFilter(null);
+//                        break;
+//                    case Constants.BUSINESS_STATUS_PENDING:
+//                        mStatusView.setImageResource(R.drawable.ic_workinprogress);
+//                        mStatusView.setColorFilter(Color.GRAY);
+//                        break;
+//                    default:
+//                        mStatusView.setImageResource(R.drawable.ic_notverifiedgrey);
+//                        mStatusView.setColorFilter(null);
+//                        break;
+//                }
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -272,17 +325,6 @@ public class EmployeePrivilageCompletedFragment extends ProgressFragment impleme
                         showDeleteEmployeeConfirmationDialog(employee);
                     }
                 });
-
-                mEditView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        System.out.println("Test  "+employee.getId()+" "+employee.getManagerAccountId()
-                                +" "+employee.getCreatedAt());
-
-                        editBusinessManagerDialog = new EditBusinessManagerDialog(getActivity(), "Edit Account", employee.getManagerName(), employee.getManagerAccountId(),employee.getRoleName(), employee.getProfilePictures().get(0).getUrl());
-                        editBusinessManagerDialog.show();
-                    }
-                });
             }
         }
 
@@ -315,3 +357,4 @@ public class EmployeePrivilageCompletedFragment extends ProgressFragment impleme
         }
     }
 }
+

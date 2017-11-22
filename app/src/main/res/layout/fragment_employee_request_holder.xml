@@ -1,0 +1,79 @@
+<com.flipboard.bottomsheet.BottomSheetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/transaction_history_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBackground">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="12dp"
+                android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/background_contact_selector_background"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <RadioGroup
+                    android:id="@+id/employee_request_radio_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radio_button_pending"
+                        style="@style/ContactsSelectorStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_left_round_checkbox"
+                        android:text="@string/pending"
+                        android:textColor="@color/radio_button_text_color" />
+
+                    <RadioButton
+                        android:id="@+id/radio_button_accepted"
+                        style="@style/ContactsSelectorStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_right_round_checkbox"
+                        android:text="@string/accepted"
+                        android:textColor="@color/radio_button_text_color" />
+
+                </RadioGroup>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <FrameLayout
+            android:id="@+id/fragment_container_transaction_history"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/transaction_history_header"
+            android:layout_above="@+id/invite_employee"/>
+
+
+        <Button
+            android:id="@+id/invite_employee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ButtonPrimaryWithNote"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:text="INVITE PEOPLE"/>
+
+    </RelativeLayout>
+</com.flipboard.bottomsheet.BottomSheetLayout>
