@@ -58,6 +58,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
         SharedPrefManager.initialize(getApplicationContext());
         ProfileInfoCacheManager.initialize(getApplicationContext());
         ACLManager.initialize(this);
+        TokenManager.initialize(this);
         Intercom.initialize(this, Constants.INTERCOM_ANDROID_SDK_KEY, Constants.INTERCOM_API_KEY);
         Utilities.resetIntercomInformation();
 

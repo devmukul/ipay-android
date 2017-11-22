@@ -1,5 +1,11 @@
 package bd.com.ipay.ipayskeleton.Utilities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Log;
+
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 /**
@@ -9,6 +15,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
  */
 public class TokenManager {
 
+    private static final String TOKEN = "TOKEN";
     // This field will be set when a personal user switches to an employer's account
     private static String operatingOnAccountId;
 
@@ -20,6 +27,12 @@ public class TokenManager {
     private static long tokenWindowOverlapTime = Constants.DEFAULT_TOKEN_OVERLAP_TIME;
 
     private static long lastRefreshTokenFetchTime = Utilities.currentTime();
+
+    private static SharedPreferences preferences;
+
+    public static void initialize(Context context) {
+        preferences = context.getSharedPreferences(Constants.ApplicationTag, Context.MODE_PRIVATE);
+    }
 
     public static String getOperatingOnAccountId() {
         return operatingOnAccountId;
@@ -42,6 +55,9 @@ public class TokenManager {
     }
 
     public static String getToken() {
+        if (TextUtils.isEmpty(token)) {
+            token = preferences.getString(getTokenKey(), "");
+        }
         return token;
     }
 
@@ -51,6 +67,7 @@ public class TokenManager {
 
     public static void setToken(String token) {
         TokenManager.token = token;
+        preferences.edit().putString(getTokenKey(), Base64.encodeToString(token.getBytes(), Base64.DEFAULT)).apply();
     }
 
     public static String getRefreshToken() {
@@ -87,6 +104,11 @@ public class TokenManager {
     }
 
     public static long getLastRefreshTokenFetchTime() {
-      return lastRefreshTokenFetchTime;
+        return lastRefreshTokenFetchTime;
+    }
+
+    public static String getTokenKey() {
+        Log.d("TOKEN", Base64.encodeToString(TOKEN.getBytes(), Base64.DEFAULT));
+        return Base64.encodeToString(TOKEN.getBytes(), Base64.DEFAULT);
     }
 }
