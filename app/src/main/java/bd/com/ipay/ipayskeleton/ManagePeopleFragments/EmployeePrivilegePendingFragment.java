@@ -63,6 +63,8 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.Manager
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.PendingInvitationList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.PendingManagerListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.RemoveEmployeeResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.RemovePendingEmployeeRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.UpdateEmployeeRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
@@ -88,7 +90,7 @@ public class EmployeePrivilegePendingFragment extends ProgressFragment implement
     private PendingManagerListResponse mGetAllEmployeesResponse;
 
 
-    private HttpRequestDeleteAsyncTask mRemoveAnEmployeeAsyncTask;
+    private HttpRequestPutAsyncTask mRemoveAnEmployeeAsyncTask;
     private RemoveEmployeeResponse mRemoveAnEmployeeResponse;
 
     private EmployeeListAdapter adapter;
@@ -162,10 +164,15 @@ public class EmployeePrivilegePendingFragment extends ProgressFragment implement
         if (mRemoveAnEmployeeAsyncTask != null)
             return;
 
-        mRemoveAnEmployeeAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
-                Constants.BASE_URL_MM + Constants.URL_REMOVE_AN_EMPLOYEE_FIRST_PART + associationId , getContext(), this);
+        RemovePendingEmployeeRequest createEmployeeRequest = new RemovePendingEmployeeRequest(associationId, "CANCELED");
+        Gson gson = new Gson();
+        String json = gson.toJson(createEmployeeRequest);
+
+        mRemoveAnEmployeeAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_PENDING_EMPLOYEE , json, getContext(), this);
         mRemoveAnEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {

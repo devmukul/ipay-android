@@ -493,10 +493,9 @@ public class Constants {
     public static final String URL_GET_EMPLOYEE_LIST = "business-manager";
     public static final String URL_GET_EMPLOYEE_DETAILS = "business/user/";
     public static final String URL_REMOVE_AN_EMPLOYEE_FIRST_PART = "business-manager/";
-    public static final String URL_REMOVE_AN_EMPLOYEE_LAST_PART = "/resignation/confirm";
+    public static final String URL_REMOVE_PENDING_EMPLOYEE = "/business-manager-invitation";
     public static final String URL_GET_BUSINESS_ROLES_DETAILS = "business-role/";
     public static final String URL_GET_ROLE_MANAGER_REQUESTS = "business-manager-invitation/received";
-
 
     // Education
     public static final String URL_GET_ALL_INSTITUTIONS_LIST = "institute/all";
