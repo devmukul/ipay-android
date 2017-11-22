@@ -119,7 +119,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/privileges_header"
                 android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
-                android:layout_marginTop="@dimen/activity_horizontal_margin_card">
+                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                android:nestedScrollingEnabled="false">
 
             </android.support.v7.widget.RecyclerView>
 
