@@ -201,12 +201,14 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
         if (!isSelectable()) {
             return;
         }
-        if (!mBankListValidator.isBankAdded()) {
-            if (getContext() instanceof AppCompatActivity)
-                mBankListValidator.showAddBankDialog(((AppCompatActivity) getContext()), false);
-        } else if (!mBankListValidator.isVerifiedBankAdded()) {
-            if (getContext() instanceof AppCompatActivity)
-                mBankListValidator.showVerifyBankDialog(((AppCompatActivity) getContext()), false);
+        if (!isBankAdded()) {
+            if (getContext() instanceof AppCompatActivity) {
+                showAddBankDialog(false);
+            }
+        } else if (!isVerifiedBankAdded()) {
+            if (getContext() instanceof AppCompatActivity) {
+                showVerifyBankDialog(false);
+            }
         } else {
             CustomSelectorDialogWithIcon bankSelectorDialogWithIcon = new CustomSelectorDialogWithIcon(getContext(), mSelectorDialogTitle, mUserBankList, mBankIconArray);
             bankSelectorDialogWithIcon.setOnResourceSelectedListener(new CustomSelectorDialogWithIcon.OnResourceSelectedListener() {

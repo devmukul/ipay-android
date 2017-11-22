@@ -286,7 +286,7 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
                             mBankSelectorView.setSelectable(true);
                             if (!mBankSelectorView.isBankAdded()) {
                                 mBankSelectorView.showAddBankDialog(true);
-                            } else if (mBankSelectorView.isVerifiedBankAdded()) {
+                            } else if (!mBankSelectorView.isVerifiedBankAdded()) {
                                 mBankSelectorView.showVerifyBankDialog(true);
                             }
                         } catch (Exception e) {
