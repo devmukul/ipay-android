@@ -26,6 +26,8 @@ public class NotificationActivity extends BaseActivity {
             switchToReceivedRequestReviewFragment();
         else if (tag != null && tag.equals(Constants.RECOMMENDATION))
             switchToRecommendationReviewFragment(getIntent().getExtras());
+        else if (tag != null && tag.equals(Constants.RELOAD))
+            switchToNotificationFragment(Constants.RELOAD);
         else
             switchToNotificationFragment();
 
@@ -44,8 +46,20 @@ public class NotificationActivity extends BaseActivity {
     }
 
     public void switchToNotificationFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, HomeActivity.mNotificationFragment).commit();
+        switchToNotificationFragment("");
+    }
+
+    public void switchToNotificationFragment(String tag) {
+        if (tag.equals("")) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, HomeActivity.mNotificationFragment).commit();
+        } else if (tag.equals(Constants.RELOAD)) {
+            Bundle bundle = new Bundle();
+            bundle.putString(Constants.TAG, Constants.RELOAD);
+            HomeActivity.mNotificationFragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    HomeActivity.mNotificationFragment).commit();
+        }
     }
 
     public void switchToReceivedPaymentRequestDetailsFragment(Bundle bundle) {
