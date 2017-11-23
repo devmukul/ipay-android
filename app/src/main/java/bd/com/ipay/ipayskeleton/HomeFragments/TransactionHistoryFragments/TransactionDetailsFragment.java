@@ -155,7 +155,7 @@ public class TransactionDetailsFragment extends BaseFragment {
             } else {
                 mNameView.setText(transactionHistory.getAdditionalInfo().getCardHolderName());
             }
-            if (TextUtils.isEmpty(cardNumber)) {
+            if (!TextUtils.isEmpty(cardNumber)) {
                 mMobileNumberView.setText(cardNumber);
             } else {
                 mMobileNumberView.setText(transactionHistory.getOriginatingMobileNumber());

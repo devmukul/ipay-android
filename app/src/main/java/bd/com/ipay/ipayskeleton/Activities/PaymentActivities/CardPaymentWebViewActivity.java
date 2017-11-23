@@ -143,6 +143,7 @@ public class CardPaymentWebViewActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 handler.cancel();
+                finishWithResult(CARD_TRANSACTION_CANCELED, null);
             }
         });
         final AlertDialog dialog = builder.create();

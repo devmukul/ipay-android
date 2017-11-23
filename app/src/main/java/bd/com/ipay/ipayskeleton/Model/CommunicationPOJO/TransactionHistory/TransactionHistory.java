@@ -410,7 +410,7 @@ public class TransactionHistory implements Parcelable {
                 case (Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK):
                     return "Money Added From Bank";
                 case (Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD):
-                    return "Money Added From Credit/Debit Card";
+                    return "Money Added From Card";
                 case (Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT):
                     return "Add Money Revert";
                 case (Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY):

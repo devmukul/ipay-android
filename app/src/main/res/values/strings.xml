@@ -1064,6 +1064,6 @@
     <string name="ssl_not_yet_valid_message">The certificate is not yet valid.</string>
     <string name="do_you_want_to_continue">Do you want to continue anyway?</string>
     <string name="continue_message">Continue</string>
-    <string name="add_money_from_credit_or_debit_card_cancel_title">Add money from credit/debit card cancel</string>
-    <string name="add_money_from_credit_or_debit_card_failed_title">Add money from credit/debit card failed</string>
+    <string name="add_money_from_credit_or_debit_card_cancel_title">Add money from card cancelled</string>
+    <string name="add_money_from_credit_or_debit_card_failed_title">Add money from card failed</string>
 </resources>
