@@ -207,15 +207,18 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
 
         switch (result.getApiCommand()) {
             case Constants.COMMAND_ADD_MONEY:
+                Gson gson = new GsonBuilder().create();
+                AddMoneyByCreditOrDebitCardResponse mAddMoneyByCreditOrDebitResponse = gson.fromJson(result.getJsonString(), AddMoneyByCreditOrDebitCardResponse.class);
                 switch (result.getStatus()) {
                     case Constants.HTTP_RESPONSE_STATUS_OK:
-                        Gson gson = new GsonBuilder().create();
-                        AddMoneyByCreditOrDebitCardResponse mAddMoneyByCreditOrDebitResponse = gson.fromJson(result.getJsonString(), AddMoneyByCreditOrDebitCardResponse.class);
                         Intent intent = new Intent(getActivity(), CardPaymentWebViewActivity.class);
                         intent.putExtra(Constants.CARD_PAYMENT_URL, mAddMoneyByCreditOrDebitResponse.getForwardUrl());
                         startActivityForResult(intent, CARD_PAYMENT_WEB_VIEW_REQUEST);
-
                         mAddMoneyTask = null;
+                        break;
+                    case Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE:
+                        if (getActivity() != null)
+                            Toaster.makeText(getActivity(), mAddMoneyByCreditOrDebitResponse.getMessage(), Toast.LENGTH_SHORT);
                         break;
                     default:
                         if (getActivity() != null)
