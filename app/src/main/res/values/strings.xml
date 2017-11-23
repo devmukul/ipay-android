@@ -1005,7 +1005,7 @@
     <string name="add_money_from_credit_or_debit_card_title">Add Money from Credit/Debit Card</string>
     <string name="card_transaction_cancel_warning">Your transaction will be cancelled. Are you sure?</string>
     <string name="add_money_from_credit_or_debit_card_cancel_message">You have cancelled your Add Money request from debit/credit card. Please make your add money request again.</string>
-    <string name="add_money_from_credit_or_debit_card_failed_message">Your Add Money request has failed. Please ensure that you have provided accurate information and there is sufficient balance in your card., then try again. If you still face problem after providing accurate information, please write to us at support@ipay.com.bd</string>
+    <string name="add_money_from_credit_or_debit_card_failed_message">Your Add Money request has failed. Please ensure that you have provided accurate information and there is sufficient balance in your card, then try again. If you still face problem after providing accurate information, please write to us at support@ipay.com.bd</string>
     <string name="add_money_card_in_progress_message">Your Add Money request is being processed. The requested amount will be added to your iPay balance shortly. Please write to support@ipay.com.bd or call +880–2–985 2507, +880–2–985 2508, +880–9638 900800 if your request is not processed.</string>
     <string name="add_money_type">Add Money Type</string>
     <string name="add_money_from">Add Money From</string>
