@@ -18,10 +18,11 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
 public class FCMListenerService extends FirebaseMessagingService {
     private FCMNotificationResponse mFcmNotificationResponse;
-    private int serviceId;
     private RemoteMessage.Notification notification;
-    private String from;
+
     private Map data;
+    private String from;
+    private int serviceId;
 
     @Override
     public void onMessageReceived(RemoteMessage message) {
@@ -38,8 +39,10 @@ public class FCMListenerService extends FirebaseMessagingService {
         // Check if message contains a data payload.
         if (data.size() > 0) {
             Logger.logD("Data", "Message data payload: " + data.toString());
-            parseNotificationResponseFromData(data);
+            setNotificationResponseFromData(data);
         }
+
+        serviceId = FCMNotificationParser.parseServiceID(mFcmNotificationResponse);
 
         // Check if message contains a notification payload.
         if (!(AppInstanceUtilities.isUserActive(this)) || serviceId == Constants.SERVICE_ID_BATCH_NOTIFICATION) {
@@ -50,16 +53,15 @@ public class FCMListenerService extends FirebaseMessagingService {
                         notification.getBody(), mFcmNotificationResponse.getIcon());
             }
         } else {
-            FCMNotificationParser.parseInAppNotificationResponse(this, mFcmNotificationResponse);
+            FCMNotificationParser.parseInAppNotification(this, mFcmNotificationResponse);
         }
 
     }
 
-    private void parseNotificationResponseFromData(Map data) {
+    private void setNotificationResponseFromData(Map data) {
         Gson gson = new Gson();
         JsonElement jsonElement = gson.toJsonTree(data);
         mFcmNotificationResponse = gson.fromJson(jsonElement, FCMNotificationResponse.class);
-        serviceId = mFcmNotificationResponse.getServiceId();
     }
 
     private void createNotification(Context context, String title, String message, String imageUrl) {

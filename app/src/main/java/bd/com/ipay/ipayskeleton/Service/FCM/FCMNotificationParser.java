@@ -8,7 +8,11 @@ import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.MultipleBroadCastServiceI
 
 public class FCMNotificationParser {
 
-    public static void parseInAppNotificationResponse(Context context, FCMNotificationResponse fcmNotificationResponse) {
+    public static int parseServiceID(FCMNotificationResponse fcmNotificationResponse){
+        return fcmNotificationResponse.getServiceId();
+    }
+
+    public static void parseInAppNotification(Context context, FCMNotificationResponse fcmNotificationResponse) {
         int serviceID = fcmNotificationResponse.getServiceId();
         boolean isReceiver = fcmNotificationResponse.isReceiver();
 
