@@ -37,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
@@ -207,9 +208,13 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
 
     private boolean isValidAmount() {
         final boolean isValidAmount;
+        final BigDecimal amount = new BigDecimal(SharedPrefManager.getUserBalance());
         if (TextUtils.isEmpty(mAmountEditText.getText())) {
             isValidAmount = false;
             mAmountEditText.setError(getString(R.string.please_enter_amount));
+        } else if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(amount) > 0) {
+            isValidAmount = false;
+            mAmountEditText.setError(getString(R.string.insufficient_balance));
         } else if (Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 && Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
             final String errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),

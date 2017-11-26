@@ -20,6 +20,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="false"
                 android:inputType="text"
+                android:textColorHint="@color/colorGray"
                 android:maxLines="1"
                 android:textIsSelectable="false" />
         </android.support.design.widget.TextInputLayout>
