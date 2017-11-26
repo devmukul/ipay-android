@@ -174,8 +174,8 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
         this.mSelectorDialogTitle = title;
     }
 
+    @SuppressWarnings("unchecked")
     private <T extends View> T findViewByIdAutoCast(@IdRes int viewId) {
-        //noinspection unchecked
         return (T) mChildView.findViewById(viewId);
     }
 
