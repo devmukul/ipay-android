@@ -62,16 +62,17 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
 
     public BankSelectorView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initView(attrs, defStyleAttr);
+        initView(attrs);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @SuppressWarnings("unused")
     public BankSelectorView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        initView(attrs, defStyleAttr);
+        initView(attrs);
     }
 
-    protected void initView(AttributeSet attrs, int defStyleAttr) {
+    protected void initView(AttributeSet attrs) {
         this.setOrientation(VERTICAL);
         this.setGravity(Gravity.CENTER);
         LayoutTransition layoutTransition = new LayoutTransition();
@@ -164,6 +165,7 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
         this.mBankNameTextView.requestFocus();
     }
 
+    @SuppressWarnings("unused")
     public CharSequence getSelectorDialogTitle() {
         return mSelectorDialogTitle;
     }
