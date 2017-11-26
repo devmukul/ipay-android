@@ -7,10 +7,9 @@
         android:id="@+id/hint_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:focusable="false"
         android:fontFamily="sans-serif-light"
+        android:textColorHint="@color/colorGray"
         android:textSize="@dimen/text_size_extra_small"
         android:visibility="gone" />
 
@@ -27,7 +26,6 @@
             android:layout_height="@dimen/value48"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:src="@drawable/ic_bank111"
             android:visibility="gone" />
@@ -42,6 +40,16 @@
             android:paddingTop="@dimen/value10">
 
             <TextView
+                android:id="@+id/bank_name_hint_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:fontFamily="sans-serif-light"
+                android:textColorHint="@color/colorGray"
+                android:textSize="@dimen/text_size_small_medium" />
+
+            <TextView
                 android:id="@+id/bank_name_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -50,7 +58,9 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:fontFamily="sans-serif-light"
-                android:textSize="@dimen/text_size_small_medium" />
+                android:textSize="@dimen/text_size_small_medium"
+                android:visibility="gone" />
+
 
             <TextView
                 android:id="@+id/bank_branch_text_view"

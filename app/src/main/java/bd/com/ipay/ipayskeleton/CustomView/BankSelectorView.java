@@ -36,6 +36,7 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
     private TextView mHintTextView;
     private ImageView mBankIconImageView;
     private TextView mBankNameTextView;
+    private TextView mBankNameHintTextView;
     private TextView mBankBranchTextView;
     private TextView mBankAccountTextView;
 
@@ -62,17 +63,17 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
 
     public BankSelectorView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initView(attrs);
+        initView(attrs, defStyleAttr, 0);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressWarnings("unused")
     public BankSelectorView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        initView(attrs);
+        initView(attrs, defStyleAttr, defStyleRes);
     }
 
-    protected void initView(AttributeSet attrs) {
+    protected final void initView(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         this.setOrientation(VERTICAL);
         this.setGravity(Gravity.CENTER);
         LayoutTransition layoutTransition = new LayoutTransition();
@@ -81,12 +82,13 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
         mChildView = LayoutInflater.from(getContext()).inflate(R.layout.layout_bank_selector_view, this, true);
 
         mBankNameTextView = findViewByIdAutoCast(R.id.bank_name_text_view);
+        mBankNameHintTextView = findViewByIdAutoCast(R.id.bank_name_hint_text_view);
         mHintTextView = findViewByIdAutoCast(R.id.hint_text_view);
         mBankIconImageView = findViewByIdAutoCast(R.id.bank_icon_image_view);
         mBankBranchTextView = findViewByIdAutoCast(R.id.bank_branch_text_view);
         mBankAccountTextView = findViewByIdAutoCast(R.id.bank_account_number_text_view);
 
-        setupCustomAttributes(attrs);
+        setupCustomAttributes(attrs, defStyleAttr, defStyleRes);
         setOnClickListener(this);
         setSelectable(true);
     }
@@ -137,32 +139,32 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
     public void setHint(CharSequence hint) {
         this.mHint = (String) hint;
         mHintTextView.setHint(this.mHint);
-        mBankNameTextView.setHint(this.mHint);
+        mBankNameHintTextView.setHint(this.mHint);
     }
 
     public void setHint(@StringRes int resId) {
         this.mHint = getContext().getString(resId);
         mHintTextView.setHint(this.mHint);
-        mBankNameTextView.setHint(this.mHint);
+        mBankNameHintTextView.setHint(this.mHint);
     }
 
     public CharSequence getError() {
-        return this.mBankNameTextView.getError();
+        return this.mBankNameHintTextView.getError();
     }
 
     public void setError(CharSequence error) {
-        this.mBankNameTextView.setError(error);
-        this.mBankNameTextView.requestFocus();
+        this.mBankNameHintTextView.setError(error);
+        this.mBankNameHintTextView.requestFocus();
     }
 
     public void setError(@StringRes int resId) {
-        this.mBankNameTextView.setError(getContext().getString(resId));
-        this.mBankNameTextView.requestFocus();
+        this.mBankNameHintTextView.setError(getContext().getString(resId));
+        this.mBankNameHintTextView.requestFocus();
     }
 
     public void setError(CharSequence error, Drawable icon) {
-        this.mBankNameTextView.setError(error, icon);
-        this.mBankNameTextView.requestFocus();
+        this.mBankNameHintTextView.setError(error, icon);
+        this.mBankNameHintTextView.requestFocus();
     }
 
     @SuppressWarnings("unused")
@@ -179,11 +181,11 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
         return (T) mChildView.findViewById(viewId);
     }
 
-    protected void setupCustomAttributes(AttributeSet attrs) {
+    protected void setupCustomAttributes(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         if (attrs == null) {
             return;
         }
-        TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(R.styleable.AbstractSelectorView);
+        TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.AbstractSelectorView, defStyleAttr, defStyleRes);
         try {
             final String hint = typedArray.getString(R.styleable.AbstractSelectorView_android_hint);
             final String selectorDialogTitle = typedArray.getString(R.styleable.AbstractSelectorView_selectorDialogTitle);
@@ -235,7 +237,9 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
     }
 
     private void showBankDetails() {
-        mBankNameTextView.setError(null);
+        mBankNameHintTextView.setError(null);
+        mBankNameTextView.setVisibility(View.VISIBLE);
+        mBankNameHintTextView.setVisibility(View.GONE);
         mBankBranchTextView.setVisibility(View.VISIBLE);
         mBankAccountTextView.setVisibility(View.VISIBLE);
         mHintTextView.setVisibility(View.VISIBLE);
