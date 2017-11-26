@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -64,6 +65,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
     private String mPasswordLogin;
     private String mUserNameLogin;
     private ImageView mInfoView;
+    private CheckBox mRememberMeCheckbox;
 
     private ProgressDialog mProgressDialog;
     private boolean tryLogInWithTouchID = false;
@@ -101,6 +103,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         mUserNameEditText = (EditText) v.findViewById(R.id.login_mobile_number);
         mPasswordEditText = (EditText) v.findViewById(R.id.login_password);
         mInfoView = (ImageView) v.findViewById(R.id.login_info);
+        mRememberMeCheckbox = (CheckBox) v.findViewById(R.id.remember_me_checkbox);
 
         if (SharedPrefManager.ifContainsUserID()) {
             mButtonJoinUs.setVisibility(View.GONE);
@@ -484,14 +487,14 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                         ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
                         ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
 
-                        if(!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                        if (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
                                 || !ProfileInfoCacheManager.isBasicInfoAdded()) {
                             ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
-                        }else {
+                        } else {
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                         }
                     } else {
-                        if (getActivity()!= null)
+                        if (getActivity() != null)
                             Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
                     }
 
@@ -508,7 +511,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
 
                 try {
-                    System.out.println("Test "+result.toString());
+                    System.out.println("Test " + result.toString());
 
                     mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
