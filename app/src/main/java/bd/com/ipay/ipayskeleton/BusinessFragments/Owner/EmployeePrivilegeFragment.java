@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,10 +27,10 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRoleDetailsResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessService;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.CreateEmployeeRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.CreateEmployeeResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRoleDetailsResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessService;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
@@ -315,16 +314,16 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
 
         public class EmployeePrivilegeViewHolder extends RecyclerView.ViewHolder {
 
-            private final CheckBox mPrivilegeCheckBox;
+            private final TextView mPrivilegeTextView;
 
             public EmployeePrivilegeViewHolder(View itemView) {
                 super(itemView);
 
-                mPrivilegeCheckBox = (CheckBox) itemView.findViewById(R.id.checkbox_privilege);
+                mPrivilegeTextView = (TextView) itemView.findViewById(R.id.textview_privilege);
             }
 
             public void bindView(final int pos) {
-                mPrivilegeCheckBox.setText(mPrivilegeList.get(pos));
+                mPrivilegeTextView.setText(mPrivilegeList.get(pos));
             }
         }
 

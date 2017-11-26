@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -231,16 +230,16 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
 
         public class EmployeePrivilegeViewHolder extends RecyclerView.ViewHolder {
 
-            private final CheckBox mPrivilegeCheckBox;
+            private final TextView mPrivilegeTextView;
 
             public EmployeePrivilegeViewHolder(View itemView) {
                 super(itemView);
 
-                mPrivilegeCheckBox = (CheckBox) itemView.findViewById(R.id.checkbox_privilege);
+                mPrivilegeTextView = (TextView) itemView.findViewById(R.id.textview_privilege);
             }
 
             public void bindView(final int pos) {
-                mPrivilegeCheckBox.setText(mServiceList.get(pos));
+                mPrivilegeTextView.setText(mServiceList.get(pos));
             }
         }
 

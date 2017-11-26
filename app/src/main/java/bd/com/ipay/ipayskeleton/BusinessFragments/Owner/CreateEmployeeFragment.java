@@ -7,18 +7,22 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
@@ -27,6 +31,8 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRole;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRoleDetailsResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessService;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -43,12 +49,18 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
 
+    private HttpRequestGetAsyncTask mRoleDetailsAsyncTask;
+
     private EditText mMobileNumberEditText;
     private ImageView mSelectMobileNumberFromContactsButton;
     private EditText mRoleEditText;
 
     private String mSelectedRoleName;
-    private long mSelectedRoleID;
+    private String mSelectedMobileNumber;
+    private long mSelectedRoleID = -1;
+    private long mPrevSelectedRoleID;
+    private List<String> mPrivilegeList;
+    private EmployeePrivilegeAdapter mEmployeePrivilegeAdapter;
 
     private Button mContinueButton;
     private long mAssociationId;
@@ -58,6 +70,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
     private boolean isReturnedFromContactPicker = false;
     private HashMap<String, Integer> mIDtoRoleNameMap;
     private ArrayList<BusinessRole> mAllRolesList;
+    private RecyclerView mRecyclerView;
 
     @Nullable
     @Override
@@ -76,10 +89,9 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
         mRoleEditText = (EditText) v.findViewById(R.id.role);
         mRoleEditText.setFocusable(false);
         mRoleEditText.setClickable(true);
-
-
         mSelectMobileNumberFromContactsButton = (ImageView) v.findViewById(R.id.select_mobile_number_from_contacts);
         mContinueButton = (Button) v.findViewById(R.id.button_continue);
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.privilege_list);
         mIDtoRoleNameMap = new HashMap<>();
         createRoleNameToIDMap();
         if (mAssociationId == 0) {
@@ -97,10 +109,10 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
             @Override
             public void onClick(View v) {
                 if (verifyUserInputs()) {
-                    String mobileNumber = ContactEngine.formatMobileNumberBD(
+                    mSelectedMobileNumber = ContactEngine.formatMobileNumberBD(
                             mMobileNumberEditText.getText().toString().trim());
                     Utilities.hideKeyboard(getActivity());
-                    getProfileInfo(mobileNumber);
+                    getProfileInfo(mSelectedMobileNumber);
                 }
             }
         });
@@ -108,24 +120,33 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
 
         mProgressDialog = new ProgressDialog(getActivity());
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        mEmployeePrivilegeAdapter = new EmployeePrivilegeAdapter();
+
+        mRecyclerView.setAdapter(mEmployeePrivilegeAdapter);
+
         return v;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        if (mAssociationId == 0) {
-            mMobileNumberEditText.setEnabled(true);
-            if (!isReturnedFromContactPicker) {
-                mMobileNumberEditText.setText("");
-                mRoleEditText.setText("");
-            } else isReturnedFromContactPicker = false;
-
-        } else {
-            mMobileNumberEditText.setText(getArguments().getString(Constants.MOBILE_NUMBER));
-            mMobileNumberEditText.setEnabled(false);
+        if (mSelectedRoleID != -1) {
+            mRoleEditText.setText(mSelectedRoleName);
+            getDetailsOfSelectedRole();
         }
+        if (mSelectedMobileNumber != null)
+            mMobileNumberEditText.setText(mSelectedMobileNumber);
+    }
+
+    private List<String> getServiceNamesFromBusinessServices(List<BusinessService> businessServicesList) {
+        List<String> serviceNames = new ArrayList<>();
+        for (BusinessService businessService : businessServicesList) {
+            serviceNames.add(businessService.getServiceName());
+        }
+        return serviceNames;
     }
 
     private void setRolesSelectorAdapter(ArrayList<BusinessRole> rolesList) {
@@ -135,8 +156,10 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
             public void onResourceSelected(int id, String name) {
                 mRoleEditText.setText(name);
                 mSelectedRoleName = name;
-                mSelectedRoleID = mIDtoRoleNameMap.get(name);
-
+                if (mIDtoRoleNameMap.get(name) != mSelectedRoleID) {
+                    mSelectedRoleID = mIDtoRoleNameMap.get(name);
+                    getDetailsOfSelectedRole();
+                }
             }
         });
 
@@ -150,9 +173,22 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
 
     private void createRoleNameToIDMap() {
         mAllRolesList = new ArrayList<>();
-         mAllRolesList = ((ManagePeopleActivity) (getActivity())).mAllRoleList;
+        mAllRolesList = ((ManagePeopleActivity) (getActivity())).mAllRoleList;
         for (BusinessRole roles : mAllRolesList)
             mIDtoRoleNameMap.put(roles.getName(), roles.getId());
+    }
+
+    private void getDetailsOfSelectedRole() {
+
+        if (mRoleDetailsAsyncTask != null) return;
+        else {
+            mProgressDialog.setMessage(getString(R.string.preparing));
+            mProgressDialog.show();
+            mRoleDetailsAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DETAILS_OF_BUSINESS_ROLE,
+                    Constants.BASE_URL_MM + Constants.URL_GET_BUSINESS_ROLES_DETAILS + mSelectedRoleID, getActivity());
+            mRoleDetailsAsyncTask.mHttpResponseListener = this;
+            mRoleDetailsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
     private boolean verifyUserInputs() {
@@ -192,12 +228,12 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void launchPrevilegePage(String mobileNumber, String name, String profilePicture, String roleName,long roleID) {
+    private void launchPrevilegePage(String mobileNumber, String name, String profilePicture, String roleName, long roleID) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.MOBILE_NUMBER, mobileNumber);
         bundle.putString(Constants.ROLENAME, roleName);
         bundle.putString(Constants.NAME, name);
-        bundle.putLong(Constants.ROLEID,roleID);
+        bundle.putLong(Constants.ROLEID, roleID);
         bundle.putString(Constants.PROFILE_PICTURE, profilePicture);
         //bundle.putLong(Constants.ASSOCIATION_ID, mAssociationId);
 
@@ -243,7 +279,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
 
                     String mobileNumber = ContactEngine.formatMobileNumberBD(mMobileNumberEditText.getText().toString());
                     String role = mRoleEditText.getText().toString();
-                    launchPrevilegePage(mobileNumber, name, profilePicture, role,mSelectedRoleID);
+                    launchPrevilegePage(mobileNumber, name, profilePicture, role, mSelectedRoleID);
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                     if (getActivity() != null)
@@ -261,6 +297,57 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
             }
 
             mGetProfileInfoTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_DETAILS_OF_BUSINESS_ROLE)) {
+            try {
+                BusinessRoleDetailsResponse businessRoleDetailsResponse = gson.fromJson(result.getJsonString(),
+                        BusinessRoleDetailsResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mPrivilegeList = getServiceNamesFromBusinessServices(businessRoleDetailsResponse.getServiceList());
+                    mEmployeePrivilegeAdapter.notifyDataSetChanged();
+                }
+            } catch (Exception e) {
+                Toaster.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
+            }
+            mRoleDetailsAsyncTask = null;
+        }
+    }
+
+    private class EmployeePrivilegeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        public class EmployeePrivilegeViewHolder extends RecyclerView.ViewHolder {
+
+            private final TextView mPrivilegeTextView;
+
+            public EmployeePrivilegeViewHolder(View itemView) {
+                super(itemView);
+
+                mPrivilegeTextView = (TextView) itemView.findViewById(R.id.textview_privilege);
+            }
+
+            public void bindView(final int pos) {
+                mPrivilegeTextView.setText(mPrivilegeList.get(pos));
+            }
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.list_item_privilege, parent, false);
+            return new EmployeePrivilegeViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            EmployeePrivilegeViewHolder vh = (EmployeePrivilegeViewHolder) holder;
+            vh.bindView(position);
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mPrivilegeList == null)
+                return 0;
+            else
+                return mPrivilegeList.size();
         }
     }
 }

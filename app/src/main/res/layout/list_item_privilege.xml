@@ -3,16 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <CheckBox
-        android:id="@+id/checkbox_privilege"
-        style="@style/TransactionHistoryFilterCheckboxStyle"
+    <TextView
+        android:id="@+id/textview_privilege"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:checked="true"
-        android:enabled="false" />
-
-    <View
-        android:id="@+id/divider"
-        style="@style/Divider"
-        android:layout_below="@+id/checkbox_privilege" />
-
+        android:paddingBottom="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:textSize="@dimen/text_size_button_small" />
 </RelativeLayout>

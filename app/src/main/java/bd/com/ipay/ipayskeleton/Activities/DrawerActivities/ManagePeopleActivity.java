@@ -86,12 +86,13 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
     }
 
     public void switchToEmployeeInformationFragment() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CreateEmployeeFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CreateEmployeeFragment()).addToBackStack(null).commit();
     }
+
     public void switchToEmployeePrivilegeFragment(Bundle bundle) {
-        EmployeePrivilegeFragment employeePrivilegeFragment=new EmployeePrivilegeFragment();
+        EmployeePrivilegeFragment employeePrivilegeFragment = new EmployeePrivilegeFragment();
         employeePrivilegeFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,employeePrivilegeFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, employeePrivilegeFragment).addToBackStack(null).commit();
     }
 
     @Override
@@ -106,7 +107,7 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
         switch (result.getApiCommand()) {
             case Constants.COMMAND_GET_ALL_ROLES:
                 try {
-                    System.out.println("Response "+result.toString());
+                    System.out.println("Response " + result.toString());
                     mGetRolesResponse = gson.fromJson(result.getJsonString(), BusinessRoleResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
