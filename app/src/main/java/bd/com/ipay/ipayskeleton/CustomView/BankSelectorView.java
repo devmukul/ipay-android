@@ -61,17 +61,17 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
     }
 
     public BankSelectorView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, 0);
-
+        super(context, attrs, defStyleAttr);
+        initView(attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public BankSelectorView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        initView(attrs, defStyleAttr, defStyleRes);
+        initView(attrs, defStyleAttr);
     }
 
-    protected void initView(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    protected void initView(AttributeSet attrs, int defStyleAttr) {
         this.setOrientation(VERTICAL);
         this.setGravity(Gravity.CENTER);
         LayoutTransition layoutTransition = new LayoutTransition();
@@ -85,7 +85,7 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
         mBankBranchTextView = findViewByIdAutoCast(R.id.bank_branch_text_view);
         mBankAccountTextView = findViewByIdAutoCast(R.id.bank_account_number_text_view);
 
-        setupCustomAttributes(attrs, defStyleAttr, defStyleRes);
+        setupCustomAttributes(attrs);
         setOnClickListener(this);
         setSelectable(true);
     }
@@ -173,14 +173,15 @@ public class BankSelectorView extends LinearLayout implements View.OnClickListen
     }
 
     private <T extends View> T findViewByIdAutoCast(@IdRes int viewId) {
+        //noinspection unchecked
         return (T) mChildView.findViewById(viewId);
     }
 
-    protected void setupCustomAttributes(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    protected void setupCustomAttributes(AttributeSet attrs) {
         if (attrs == null) {
             return;
         }
-        TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.AbstractSelectorView, defStyleAttr, defStyleRes);
+        TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(R.styleable.AbstractSelectorView);
         try {
             final String hint = typedArray.getString(R.styleable.AbstractSelectorView_android_hint);
             final String selectorDialogTitle = typedArray.getString(R.styleable.AbstractSelectorView_selectorDialogTitle);
