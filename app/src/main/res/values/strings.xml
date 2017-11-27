@@ -800,7 +800,7 @@
     <string name="fetching_employee_details_failed">Failed to fetch details information</string>
     <string name="add_money_from_bank_info">It may take 3–5 business days to complete the operation</string>
     <string name="withdraw_money_to_bank_info">It may take 3–5 business days to complete the operation</string>
-    <string name="add_money_from_credit_or_debit_card_info">Enter the details for add money from credit or debit card</string>
+    <string name="add_money_from_credit_or_debit_card_info">The card has to be e-commerce enabled.</string>
     <string name="prompt_grant_permission">Please grant necessary permissions</string>
     <string name="session">Session</string>
     <string name="student_name">Student Name</string>
