@@ -195,11 +195,12 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (isAdded()) mProgressDialog.dismiss();
+        mAddMoneyTask = null;
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
-            mAddMoneyTask = null;
+
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             return;
@@ -214,8 +215,8 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
                         Intent intent = new Intent(getActivity(), CardPaymentWebViewActivity.class);
                         intent.putExtra(Constants.CARD_PAYMENT_URL, mAddMoneyByCreditOrDebitResponse.getForwardUrl());
                         startActivityForResult(intent, CARD_PAYMENT_WEB_VIEW_REQUEST);
-                        mAddMoneyTask = null;
                         break;
+                    case Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST:
                     case Constants.HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE:
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), mAddMoneyByCreditOrDebitResponse.getMessage(), Toast.LENGTH_SHORT);
