@@ -34,6 +34,7 @@ public class ACLManager {
 
     public static void updateAllowedServiceArray(int[] serviceCodeList) {
         Set<String> serviceIdSet = new HashSet<>();
+        cachedServiceIdSet = null;
         for (int serviceCode : serviceCodeList) {
             serviceIdSet.add(Integer.toString(serviceCode));
         }

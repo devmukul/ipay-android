@@ -2,6 +2,8 @@ package bd.com.ipay.ipayskeleton.Activities.PaymentActivities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
@@ -12,13 +14,17 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddMoneyActivity extends BaseActivity {
 
+    public static final int ADD_MONEY_REVIEW_REQUEST = 101;
+
     public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cash_in);
-        switchToAddMoneyFragment();
+
+        changeFragment(new AddMoneyFragment());
+
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -35,22 +41,18 @@ public class AddMoneyActivity extends BaseActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        Utilities.hideKeyboard(this);
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStack();
-        } else {
-            finish();
-        }
-    }
-
-    @Override
     public Context setContext() {
         return AddMoneyActivity.this;
     }
 
-    public void switchToAddMoneyFragment() {
+    public void changeFragment(Fragment fragment) {
+        changeFragment(fragment, null);
+    }
+
+    public void changeFragment(Fragment fragment, @Nullable Bundle bundle) {
+        fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new AddMoneyFragment()).commit();
+                .add(R.id.fragment_container, fragment).commit();
+
     }
 }

@@ -74,8 +74,8 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     private Button mTopupButton;
 
     private View mServiceCharge;
-    private List<String> mArraypackages;
-    private List<String> mArrayoperators;
+    private List<String> mArrayPackages;
+    private List<String> mArrayOperators;
 
     private TopupRequest mTopupRequestModel;
 
@@ -123,10 +123,10 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
         mAmountView.setText(Utilities.formatTaka(mAmount));
         getProfileInfo(mMobileNumber);
 
-        mArraypackages = Arrays.asList(getResources().getStringArray(R.array.package_type));
-        mArrayoperators = Arrays.asList(getResources().getStringArray(R.array.mobile_operators));
-        mPackageView.setText(mArraypackages.get(mMobileNumberType - 1));
-        mOperatorView.setText(mArrayoperators.get(mOperatorCode - 1));
+        mArrayPackages = Arrays.asList(getResources().getStringArray(R.array.package_type));
+        mArrayOperators = Arrays.asList(getResources().getStringArray(R.array.mobile_operators));
+        mPackageView.setText(mArrayPackages.get(mMobileNumberType - 1));
+        mOperatorView.setText(mArrayOperators.get(mOperatorCode - 1));
         setOperatorIcon();
 
         mTopupButton.setOnClickListener(new View.OnClickListener() {
