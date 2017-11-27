@@ -534,7 +534,7 @@
     <string name="failed_sending_invitation">Invitation sending failed. Please try again</string>
     <string name="failed_asking_recommendation">Failed to place a recommendation request.</string>
     <string name="failed_asking_introduction">Failed to place an introduction request.</string>
-    <string name="invitaiton_limit_exceeded">Maximum invitation limit exceeded</string>
+    <string name="invitation_limit_exceeded">Maximum invitation limit exceeded</string>
     <string name="failed_request">Request failed</string>
     <string name="invitation_sent">Invitation sent</string>
     <string name="ask_for_recommendation_sent">Recommendation request sent</string>

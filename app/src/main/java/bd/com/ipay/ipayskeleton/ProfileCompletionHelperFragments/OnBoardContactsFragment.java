@@ -488,7 +488,7 @@ public class OnBoardContactsFragment extends Fragment implements LoaderManager.L
             if (ContactsHolderFragment.mGetInviteInfoResponse != null && ContactsHolderFragment.mGetInviteInfoResponse.invitees != null) {
                 int numberOfInvitees = ContactsHolderFragment.mGetInviteInfoResponse.invitees.size();
                 if (numberOfInvitees >= ContactsHolderFragment.mGetInviteInfoResponse.totalLimit) {
-                    Toast.makeText(getActivity(), R.string.invitaiton_limit_exceeded,
+                    Toast.makeText(getActivity(), R.string.invitation_limit_exceeded,
                             Toast.LENGTH_LONG).show();
                 } else {
                     mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_sending_invite));
