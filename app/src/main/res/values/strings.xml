@@ -534,7 +534,7 @@
     <string name="failed_sending_invitation">Invitation sending failed. Please try again</string>
     <string name="failed_asking_recommendation">Failed to place a recommendation request.</string>
     <string name="failed_asking_introduction">Failed to place an introduction request.</string>
-    <string name="invitaiton_limit_exceeded">Maximum invitation limit exceeded</string>
+    <string name="invitation_limit_exceeded">Maximum invitation limit exceeded</string>
     <string name="failed_request">Request failed</string>
     <string name="invitation_sent">Invitation sent</string>
     <string name="ask_for_recommendation_sent">Recommendation request sent</string>
@@ -800,7 +800,7 @@
     <string name="fetching_employee_details_failed">Failed to fetch details information</string>
     <string name="add_money_from_bank_info">It may take 3–5 business days to complete the operation</string>
     <string name="withdraw_money_to_bank_info">It may take 3–5 business days to complete the operation</string>
-    <string name="add_money_from_credit_or_debit_card_info">Enter the details for add money from credit or debit card</string>
+    <string name="add_money_from_credit_or_debit_card_info">The card has to be e-commerce enabled.</string>
     <string name="prompt_grant_permission">Please grant necessary permissions</string>
     <string name="session">Session</string>
     <string name="student_name">Student Name</string>
@@ -1003,7 +1003,7 @@
     <string name="card_icon">Card Icon</string>
 
     <string name="add_money_from_credit_or_debit_card_title">Add Money from Credit/Debit Card</string>
-    <string name="card_transaction_cancel_warning">Your transaction will be cancelled. Are you sure?</string>
+    <string name="card_transaction_cancel_warning">Going back will cancel your transaction. Are you sure?</string>
     <string name="add_money_from_credit_or_debit_card_cancel_message">You have cancelled your Add Money request from debit/credit card. Please make your add money request again.</string>
     <string name="add_money_from_credit_or_debit_card_failed_message">Your Add Money request has failed. Please ensure that you have provided accurate information and there is sufficient balance in your card, then try again. If you still face problem after providing accurate information, please write to us at support@ipay.com.bd</string>
     <string name="add_money_card_in_progress_message">Your Add Money request is being processed. The requested amount will be added to your iPay balance shortly. Please write to support@ipay.com.bd or call +880–2–985 2507, +880–2–985 2508, +880–9638 900800 if your request is not processed.</string>

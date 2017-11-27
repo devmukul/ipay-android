@@ -39,13 +39,14 @@ public class CardPaymentWebViewActivity extends AppCompatActivity {
     private static final String TRANSACTION_ID_POSITION = "$2";
 
     private MaterialDialog transactionCancelDialog;
+    private WebView mWebView;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit_or_debit_card_payment_web_view);
-        final WebView mWebView = (WebView) findViewById(R.id.web_view);
+        mWebView = (WebView) findViewById(R.id.web_view);
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
         mWebView.setWebChromeClient(new WebChromeClient() {
@@ -152,22 +153,25 @@ public class CardPaymentWebViewActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (transactionCancelDialog != null && transactionCancelDialog.isShowing()) {
-            return;
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+        } else {
+            if (transactionCancelDialog != null && transactionCancelDialog.isShowing()) {
+                return;
+            }
+            transactionCancelDialog = new MaterialDialog.Builder(this).
+                    content(R.string.card_transaction_cancel_warning).
+                    positiveText(R.string.no).
+                    negativeText(R.string.yes).
+                    onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            finishWithResult(CARD_TRANSACTION_CANCELED, null);
+                            dialog.cancel();
+                        }
+                    }).cancelable(false).build();
+            transactionCancelDialog.show();
         }
-
-        transactionCancelDialog = new MaterialDialog.Builder(this).
-                content(R.string.card_transaction_cancel_warning).
-                positiveText(R.string.continue_message).
-                negativeText(R.string.cancel).
-                onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        finishWithResult(CARD_TRANSACTION_CANCELED, null);
-                        dialog.cancel();
-                    }
-                }).cancelable(false).build();
-        transactionCancelDialog.show();
     }
 
     private void finishWithResult(final int transactionStatusCode, final String transactionId) {

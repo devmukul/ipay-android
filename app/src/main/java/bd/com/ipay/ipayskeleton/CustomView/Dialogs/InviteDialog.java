@@ -13,10 +13,9 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
-import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.HomeFragments.ContactsFragments.ContactsHolderFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.SendInviteResponse;
@@ -176,7 +175,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
 
         if (numberOfInvitees >= ContactsHolderFragment.mGetInviteInfoResponse.totalLimit) {
             mProgressDialog.dismiss();
-            Toast.makeText(context, R.string.invitaiton_limit_exceeded, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.invitation_limit_exceeded, Toast.LENGTH_LONG).show();
         } else {
             mProgressDialog.setMessage(context.getResources().getString(R.string.progress_dialog_sending_invite));
 
