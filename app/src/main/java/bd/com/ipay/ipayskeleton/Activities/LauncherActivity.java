@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class LauncherActivity extends AppCompatActivity {
@@ -32,9 +34,17 @@ public class LauncherActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-            intent = new Intent(LauncherActivity.this, SignupOrLoginActivity.class);
-            intent.putExtra(Constants.TARGET_FRAGMENT, Constants.SIGN_IN);
-            startActivity(intent);
+            boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
+
+            if (SharedPrefManager.isRememberMeActive() && loggedIn) {
+                intent = new Intent(LauncherActivity.this, HomeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            } else {
+                intent = new Intent(LauncherActivity.this, SignupOrLoginActivity.class);
+                intent.putExtra(Constants.TARGET_FRAGMENT, Constants.SIGN_IN);
+                startActivity(intent);
+            }
             finish();
         }
     }
