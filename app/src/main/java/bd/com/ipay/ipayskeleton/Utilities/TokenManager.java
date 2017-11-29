@@ -56,13 +56,13 @@ public class TokenManager {
 
     public static String getToken() {
         if (TextUtils.isEmpty(token)) {
-            token = preferences.getString(getTokenKey(), "");
+            token = new String(Base64.decode(preferences.getString(getTokenKey(), ""), Base64.DEFAULT));
         }
         return token;
     }
 
     public static void invalidateToken() {
-        token = "";
+        setToken("");
     }
 
     public static void setToken(String token) {
