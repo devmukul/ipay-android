@@ -172,6 +172,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
             startActivity(intent);
         }
 
+        SharedPrefManager.setRememberMeActive(false);
         clearTokenAndTimer();
     }
 

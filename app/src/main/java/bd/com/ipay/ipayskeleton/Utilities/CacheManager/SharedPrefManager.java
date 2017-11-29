@@ -19,7 +19,7 @@ public class SharedPrefManager {
     }
 
     public static boolean isRememberMeActive() {
-        return pref.getBoolean(SharedPrefConstants.REMEMBER_ME, true);
+        return pref.getBoolean(SharedPrefConstants.REMEMBER_ME, false);
     }
 
     public static void setRememberMeActive(boolean value) {

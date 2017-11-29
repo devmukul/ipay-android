@@ -56,6 +56,8 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public static long mTypeofBusiness;
     public static long otpDuration;
 
+    public static boolean mRememberMe = true;
+
     public static AddressClass mAddressBusiness;
     public static AddressClass mAddressBusinessHolder;
 

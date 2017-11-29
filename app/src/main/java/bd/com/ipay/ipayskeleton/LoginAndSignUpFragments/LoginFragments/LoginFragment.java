@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -104,6 +105,13 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         mPasswordEditText = (EditText) v.findViewById(R.id.login_password);
         mInfoView = (ImageView) v.findViewById(R.id.login_info);
         mRememberMeCheckbox = (CheckBox) v.findViewById(R.id.remember_me_checkbox);
+
+        mRememberMeCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SignupOrLoginActivity.mRememberMe = isChecked;
+            }
+        });
 
         if (SharedPrefManager.ifContainsUserID()) {
             mButtonJoinUs.setVisibility(View.GONE);
@@ -357,6 +365,11 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                             // Saving the allowed services id for the user
                             if (mLoginResponseModel.getAccessControlList() != null) {
                                 ACLManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
+                            }
+
+                            // Save Remember me in shared preference
+                            if (SignupOrLoginActivity.mRememberMe) {
+                                SharedPrefManager.setRememberMeActive(true);
                             }
 
                             // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.
