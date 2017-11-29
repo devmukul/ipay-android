@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
@@ -60,15 +61,16 @@ public class TokenManager {
             if (TextUtils.isEmpty(encodedToken)) {
                 token = "";
             } else {
-                token = new String(Base64.decode(encodedToken, Base64.DEFAULT));
+                token = new String(Base64.decode(encodedToken, Base64.NO_WRAP));
             }
         }
+        Log.d("TOKEN", token);
         return token;
     }
 
     public static void setToken(String token) {
         TokenManager.token = token;
-        preferences.edit().putString(getTokenPrefKey(), Base64.encodeToString(token.getBytes(), Base64.DEFAULT)).apply();
+        preferences.edit().putString(getTokenPrefKey(), Base64.encodeToString(token.getBytes(), Base64.NO_WRAP)).apply();
     }
 
     public static String getRefreshToken() {
@@ -77,15 +79,16 @@ public class TokenManager {
             if (TextUtils.isEmpty(encodedRefreshToken)) {
                 refreshToken = "";
             } else {
-                refreshToken = new String(Base64.decode(encodedRefreshToken, Base64.DEFAULT));
+                refreshToken = new String(Base64.decode(encodedRefreshToken, Base64.NO_WRAP));
             }
         }
+        Log.d("REFRESH TOKEN", refreshToken);
         return refreshToken;
     }
 
     public static void setRefreshToken(String refreshToken) {
         TokenManager.refreshToken = refreshToken;
-        preferences.edit().putString(getRefreshTokenPrefKey(), Base64.encodeToString(refreshToken.getBytes(), Base64.DEFAULT)).apply();
+        preferences.edit().putString(getRefreshTokenPrefKey(), Base64.encodeToString(refreshToken.getBytes(), Base64.NO_WRAP)).apply();
     }
 
     public static void invalidateToken() {
@@ -134,10 +137,10 @@ public class TokenManager {
     }
 
     public static String getTokenPrefKey() {
-        return Base64.encodeToString(TOKEN.getBytes(), Base64.DEFAULT);
+        return Base64.encodeToString(TOKEN.getBytes(), Base64.NO_WRAP);
     }
 
     public static String getRefreshTokenPrefKey() {
-        return Base64.encodeToString(REFRESH_TOKEN.getBytes(), Base64.DEFAULT);
+        return Base64.encodeToString(REFRESH_TOKEN.getBytes(), Base64.NO_WRAP);
     }
 }
