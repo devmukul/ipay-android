@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
@@ -16,6 +15,9 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 public class TokenManager {
 
     private static final String TOKEN = "TOKEN";
+    private static final String REFRESH_TOKEN = "REFRESH_TOKEN";
+    private static final String REFRESH_TOKEN_FETCH_TIME = "REFRESH_TOKEN_FETCH_TIME";
+    private static final String REMEMBER_ME = "REMEMBER_ME";
     // This field will be set when a personal user switches to an employer's account
     private static String operatingOnAccountId;
 
@@ -25,8 +27,6 @@ public class TokenManager {
     //    private static CountDownTimer tokenTimer;
     private static long iPayTokenTimeInMs = Constants.DEFAULT_TOKEN_TIME;
     private static long tokenWindowOverlapTime = Constants.DEFAULT_TOKEN_OVERLAP_TIME;
-
-    private static long lastRefreshTokenFetchTime = Utilities.currentTime();
 
     private static SharedPreferences preferences;
 
@@ -56,26 +56,44 @@ public class TokenManager {
 
     public static String getToken() {
         if (TextUtils.isEmpty(token)) {
-            token = new String(Base64.decode(preferences.getString(getTokenKey(), ""), Base64.DEFAULT));
+            final String encodedToken = preferences.getString(getTokenPrefKey(), "");
+            if (TextUtils.isEmpty(encodedToken)) {
+                token = "";
+            } else {
+                token = new String(Base64.decode(encodedToken, Base64.DEFAULT));
+            }
         }
         return token;
+    }
+
+    public static void setToken(String token) {
+        TokenManager.token = token;
+        preferences.edit().putString(getTokenPrefKey(), Base64.encodeToString(token.getBytes(), Base64.DEFAULT)).apply();
+    }
+
+    public static String getRefreshToken() {
+        if (TextUtils.isEmpty(refreshToken)) {
+            final String encodedRefreshToken = preferences.getString(getRefreshTokenPrefKey(), "");
+            if (TextUtils.isEmpty(encodedRefreshToken)) {
+                refreshToken = "";
+            } else {
+                refreshToken = new String(Base64.decode(encodedRefreshToken, Base64.DEFAULT));
+            }
+        }
+        return refreshToken;
+    }
+
+    public static void setRefreshToken(String refreshToken) {
+        TokenManager.refreshToken = refreshToken;
+        preferences.edit().putString(getRefreshTokenPrefKey(), Base64.encodeToString(refreshToken.getBytes(), Base64.DEFAULT)).apply();
     }
 
     public static void invalidateToken() {
         setToken("");
     }
 
-    public static void setToken(String token) {
-        TokenManager.token = token;
-        preferences.edit().putString(getTokenKey(), Base64.encodeToString(token.getBytes(), Base64.DEFAULT)).apply();
-    }
-
-    public static String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public static void setRefreshToken(String refreshToken) {
-        TokenManager.refreshToken = refreshToken;
+    public static void invalidateRefreshToken() {
+        setRefreshToken("");
     }
 
     public static long getiPayTokenTimeInMs() {
@@ -99,16 +117,27 @@ public class TokenManager {
         TokenManager.iPayTokenTimeInMs = iPayTokenTimeInMs;
     }
 
-    public static void setLastRefreshTokenFetchTime(long currentTime) {
-        lastRefreshTokenFetchTime = currentTime;
-    }
-
     public static long getLastRefreshTokenFetchTime() {
-        return lastRefreshTokenFetchTime;
+        return preferences.getLong(REFRESH_TOKEN_FETCH_TIME, -1);
     }
 
-    public static String getTokenKey() {
-        Log.d("TOKEN", Base64.encodeToString(TOKEN.getBytes(), Base64.DEFAULT));
+    public static void setLastRefreshTokenFetchTime(long currentTime) {
+        preferences.edit().putLong(REFRESH_TOKEN_FETCH_TIME, currentTime).apply();
+    }
+
+    public static boolean getRememberMe() {
+        return preferences.getBoolean(REMEMBER_ME, false);
+    }
+
+    public static void setRememberMe(boolean shouldRememberLogin) {
+        preferences.edit().putBoolean(REMEMBER_ME, shouldRememberLogin).apply();
+    }
+
+    public static String getTokenPrefKey() {
         return Base64.encodeToString(TOKEN.getBytes(), Base64.DEFAULT);
+    }
+
+    public static String getRefreshTokenPrefKey() {
+        return Base64.encodeToString(REFRESH_TOKEN.getBytes(), Base64.DEFAULT);
     }
 }
