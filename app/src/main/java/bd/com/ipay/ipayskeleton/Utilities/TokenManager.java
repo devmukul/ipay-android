@@ -18,7 +18,7 @@ public class TokenManager {
     private static final String TOKEN = "TOKEN";
     private static final String REFRESH_TOKEN = "REFRESH_TOKEN";
     private static final String REFRESH_TOKEN_FETCH_TIME = "REFRESH_TOKEN_FETCH_TIME";
-    private static final String REMEMBER_ME = "REMEMBER_ME";
+    
     // This field will be set when a personal user switches to an employer's account
     private static String operatingOnAccountId;
 
@@ -126,14 +126,6 @@ public class TokenManager {
 
     public static void setLastRefreshTokenFetchTime(long currentTime) {
         preferences.edit().putLong(REFRESH_TOKEN_FETCH_TIME, currentTime).apply();
-    }
-
-    public static boolean getRememberMe() {
-        return preferences.getBoolean(REMEMBER_ME, false);
-    }
-
-    public static void setRememberMe(boolean shouldRememberLogin) {
-        preferences.edit().putBoolean(REMEMBER_ME, shouldRememberLogin).apply();
     }
 
     public static String getTokenPrefKey() {
