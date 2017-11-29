@@ -231,8 +231,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
         } else if (result.getApiCommand().equals(Constants.COMMAND_REFRESH_TOKEN)) {
             try {
                 if (result.getStatus() != Constants.HTTP_RESPONSE_STATUS_OK)
-                  //  launchLoginPage(getString(R.string.please_log_in_again));
-                    Toast.makeText(getApplicationContext(), R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
+                    launchLoginPage(getString(R.string.please_log_in_again));
 
             } catch (Exception e) {
                 e.printStackTrace();
