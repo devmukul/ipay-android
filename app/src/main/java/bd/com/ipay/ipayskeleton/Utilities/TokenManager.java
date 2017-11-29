@@ -18,7 +18,6 @@ public class TokenManager {
     private static final String TOKEN = "TOKEN";
     private static final String REFRESH_TOKEN = "REFRESH_TOKEN";
     private static final String REFRESH_TOKEN_FETCH_TIME = "REFRESH_TOKEN_FETCH_TIME";
-    
     // This field will be set when a personal user switches to an employer's account
     private static String operatingOnAccountId;
 
