@@ -1,11 +1,11 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney;
 
-public class AddMoneyResponse {
+public class AddMoneyByBankResponse {
 
     private String message;
     private long otpValidFor;
 
-    public AddMoneyResponse() {
+    public AddMoneyByBankResponse() {
 
     }
 

@@ -128,6 +128,7 @@ public class Constants {
     public static final String REQUEST_TYPE = "request_type";
 
     public static final String AMOUNT = "amount";
+    public static final String SELECTED_BANK_ACCOUNT = "selectedBankAccount";
     public static final String BANK_NAME = "bank_name";
     public static final String BANK_BRANCH = "bank_branch";
     public static final String BANK_ACCOUNT_NUMBER = "bank_account_number";
@@ -149,7 +150,7 @@ public class Constants {
     public static final int MIN_AGE_LIMIT = 14;
     public static final int MIN_VALID_NAME_LENGTH = 5;
     public static final int MAX_FILE_ATTACHMENT_LIMIT = 5;
-    public static final int MAX_FILE_MB_LIMIT = 5;
+    public static final int MAX_FILE_MB_SIZE = 3;
     public static final int MINIMUM_REQUIRED_NID_LENGTH = 10;
     public static final int MAXIMUM_REQUIRED_NID_LENGTH = 17;
     public static final int BUSINESS_TIN_LENGTH = 12;
@@ -193,6 +194,7 @@ public class Constants {
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
+    public static final String BASE_URL_CARD;
     public static final String BASE_URL_EDU;
     public static final String BASE_URL_CONTACT;
     public static final String BASE_URL_ADMIN;
@@ -219,11 +221,23 @@ public class Constants {
     public static final String SELECTED_IDENTIFICATION_DOCUMENT = "SELECTED_IDENTIFICATION_DOCUMENT";
     public static final String IMAGE_VALIDATOR_REGEX = "([^\\\\s]+(\\\\.(?i)(jpg|png|gif|bmp))$)";
 
+    public static final String ADD_MONEY_TYPE = "ADD_MONEY_TYPE";
+    public static final String ADD_MONEY_TYPE_BY_CREDIT_OR_DEBIT_CARD = "ADD_MONEY_TYPE_BY_CREDIT_OR_DEBIT_CARD";
+    public static final String ADD_MONEY_TYPE_BY_BANK = "ADD_MONEY_TYPE_BY_BANK";
+    public static final String CARD_PAYMENT_URL = "CARD_PAYMENT_URL";
+    public static final String ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_STATUS = "ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_STATUS";
+
+    public static final String ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE = "Credit/Debit Card";
+    public static final String ADD_MONEY_BY_BANK_TITLE = "Bank";
+    public static final String CARD_TRANSACTION_DATA = "CARD_TRANSACTION_DATA";
+    public static final String VALID_IPAY_BD_ADDRESS = "(http://|https://)?(www|dev|test|stage|internal).ipay.com.bd/(.+)";
+
     static {
         if (SERVER_TYPE == DEV_SERVER) {
 
             BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
+            BASE_URL_CARD = "http://10.10.10.11:2202/api/v1/card/";
             BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_CONTACT = "http://10.10.10.11:4000/external/v1/";
@@ -237,6 +251,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.15.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
+            BASE_URL_CARD = "http://10.15.40.11:2202/api/v1/card/";
             BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_CONTACT = "http://10.15.40.14:4000/external/v1/";
@@ -250,6 +265,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.10.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
+            BASE_URL_CARD = "http://10.10.40.11:2202/api/v1/card/";
             BASE_URL_EDU = "http://10.10.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
             BASE_URL_CONTACT = "http://10.10.40.14:4000/external/v1/";
@@ -263,6 +279,7 @@ public class Constants {
 
             BASE_URL_MM = "https://www.ipay.com.bd/api/v1/";
             BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";
+            BASE_URL_CARD = "https://www.ipay.com.bd/api/v1/card/";
             BASE_URL_EDU = "https://www.ipay.com.bd/api/v1/em/";
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
             BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
@@ -277,6 +294,7 @@ public class Constants {
             BASE_URL_MM = "https://demo.ipay.com.bd/api/v1/";
             BASE_URL_SM = "https://demo.ipay.com.bd/api/v1/money/";
             BASE_URL_EDU = "https://demo.ipay.com.bd/api/v1/em/";
+            BASE_URL_CARD = "https://demo.ipay.com.bd/api/v1/card/";
             BASE_URL_FTP_SERVER = "https://demo.ipay.com.bd";
             BASE_URL_CONTACT = "https://demo.ipay.com.bd/external/v1/";
             BASE_URL_ADMIN = "https://demo.ipay.com.bd/api/v1/support/";
@@ -288,7 +306,8 @@ public class Constants {
         } else {
 
             BASE_URL_MM = "http://192.168.1.105:8085/api/v1/";
-            BASE_URL_SM = "http://192.168.1.106:8085/api/v1/money/";
+            BASE_URL_SM = "http://192.168.1.105:8085/api/v1/money/";
+            BASE_URL_CARD = "http://192.168.1.215:2202/api/v1/card/";
             BASE_URL_EDU = "http://192.168.1.105:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
@@ -324,10 +343,12 @@ public class Constants {
     public static final String URL_VERIFY_WITH_AMOUNT_A_BANK = "bank/";
     // Bank Transaction REST
     public static final String URL_ADD_MONEY = "banktransaction/cashin/v2";
-
     public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout/v2";
     // Bank Verify Rest
     public static final String URL_BANK_VERIFICATION_WITH_AMOUNT = "verify";
+
+    // Card Transaction REST
+    public static final String URL_ADD_MONEY_CREDIT_OR_DEBIT_CARD = "add-money";
 
     // Trusted device CRUD operations
     public static final String URL_ADD_TRUSTED_DEVICE = "device";
@@ -706,7 +727,8 @@ public class Constants {
     public static final int TRANSACTION_HISTORY_OPENING_BALANCE = 1001;
     public static final int TRANSACTION_HISTORY_SEND_MONEY = 1;
     public static final int TRANSACTION_HISTORY_REQUEST_MONEY = 6001;
-    public static final int TRANSACTION_HISTORY_ADD_MONEY = 3001;
+    public static final int TRANSACTION_HISTORY_ADD_MONEY_BY_BANK = 3001;
+    public static final int TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD = 3011;
     public static final int TRANSACTION_HISTORY_ADD_MONEY_REVERT = 963001;
     public static final int TRANSACTION_HISTORY_WITHDRAW_MONEY = 3002;
     public static final int TRANSACTION_HISTORY_TOP_UP = 2001;
@@ -722,11 +744,13 @@ public class Constants {
     public static final int SERVICE_ID_REQUEST_MONEY = 6001;
     public static final int SERVICE_ID_REQUEST_INVOICE = 6003;
     public static final int SERVICE_ID_SEND_MONEY = 1;
-    public static final int SERVICE_ID_ADD_MONEY = 3001;
+    public static final int SERVICE_ID_ADD_MONEY_BY_BANK = 3001;
+    public static final int SERVICE_ID_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD = 3011;
     public static final int SERVICE_ID_WITHDRAW_MONEY = 3002;
     public static final int SERVICE_ID_TOP_UP = 2001;
     public static final int SERVICE_ID_MAKE_PAYMENT = 6002;
     public static final int SERVICE_ID_REQUEST_PAYMENT = 6005;
+    public static final int SERVICE_ID_BATCH_NOTIFICATION = 9003;
 
     public static final String RESULT = "Result";
     public static final String GET_REQUEST = "GET_RESULT: ";
@@ -774,6 +798,10 @@ public class Constants {
 
     public static final String SERVICE_RULE_REQUEST_PAYMENT_MIN_AMOUNT_PER_PAYMENT = "REQUEST_PAYMENT_MIN_AMOUNT_SINGLE";
     public static final String SERVICE_RULE_REQUEST_PAYMENT_MAX_AMOUNT_PER_PAYMENT = "REQUEST_PAYMENT_MAX_AMOUNT_SINGLE";
+
+    public static final String SERVICE_RULE_ADD_CARDMONEY_MIN_AMOUNT_SINGLE = "ADD_CARDMONEY_MIN_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_ADD_CARDMONEY_MAX_AMOUNT_SINGLE = "ADD_CARDMONEY_MAX_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_ADD_CARDMONEY_PINREQUIRED = "ADD_CARDMONEY_PINREQUIRED";
 
     public static final int INVOICE_STATUS_ACCEPTED = 200;
     public static final int INVOICE_STATUS_PROCESSING = 102;
@@ -841,5 +869,9 @@ public class Constants {
     public static final String METHOD_POST = "POST";
     public static final String METHOD_PUT = "PUT";
 
+
+    public static final String VISA_CARD_STARTS_WITH_REGEX = "4(.*)";
+    public static final String AMEX_CARD_STARTS_WITH_REGEX = "3[47](.*)";
+    public static final String MASTER_CARD_STARTS_WITH_REGEX = "5[1-5](.*)";
 
 }

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyler_view__two_factor_auth"
+        android:id="@+id/recyler_view_two_factor_auth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         ></android.support.v7.widget.RecyclerView>

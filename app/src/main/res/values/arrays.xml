@@ -157,4 +157,9 @@
         <item>9</item>
         <item>100</item>
     </string-array>
+
+    <string-array name="add_money_options_title">
+        <item>@string/option_add_money_from_bank</item>
+        <item>@string/option_add_money_from_credit_or_debit_card</item>
+    </string-array>
 </resources>

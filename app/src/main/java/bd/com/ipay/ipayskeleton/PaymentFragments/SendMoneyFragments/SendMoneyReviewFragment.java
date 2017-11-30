@@ -7,13 +7,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +50,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class SendMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSendMoneyTask = null;
-    private SendMoneyResponse mSendMoneyResponse;
 
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
@@ -63,25 +63,31 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     private String mSenderMobileNumber;
     private String mPhotoUri;
     private String mDescription;
-    private String mError_message;
-
     private boolean isInContacts;
 
-    private LinearLayout mLinearLayoutDescriptionHolder;
-    private ProfileImageView mProfileImageView;
-    private TextView mNameView;
-    private TextView mMobileNumberView;
-    private TextView mDescriptionView;
-    private TextView mAmountView;
-    private TextView mServiceChargeView;
-    private TextView mNetAmountView;
-    private Button mSendMoneyButton;
-    private CheckBox mAddInContactsCheckBox;
+    private TextView mServiceChargeTextView;
+    private TextView mNetAmountTextView;
+
     private Tracker mTracker;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mSenderMobileNumber = ProfileInfoCacheManager.getMobileNumber();
+
+        mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
+        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
+        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
+
+        mReceiverName = getArguments().getString(Constants.NAME);
+        mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
+
+        isInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
+
+        mProgressDialog = new ProgressDialog(getContext());
+
         mTracker = Utilities.getTracker(getActivity());
     }
 
@@ -94,73 +100,69 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_send_money_review, container, false);
+        return inflater.inflate(R.layout.fragment_send_money_review, container, false);
+    }
 
-        mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
-        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
-        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        final ProfileImageView receiverProfileImageView = findViewById(R.id.receiver_profile_image_view);
+        final TextView receiverNameTextView = findViewById(R.id.receiver_name_text_view);
+        final TextView receiverMobileNumberTextView = findViewById(R.id.receiver_mobile_number_text_view);
+        final TextView amountTextView = findViewById(R.id.amount_text_view);
+        mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
+        mNetAmountTextView = findViewById(R.id.net_amount_text_view);
+        TextView descriptionTextView = findViewById(R.id.description_text_view);
+        View descriptionViewHolder = findViewById(R.id.description_view_holder);
+        final CheckBox addToContactCheckBox = findViewById(R.id.add_to_contact_check_box);
+        Button sendMoneyButton = findViewById(R.id.send_money_button);
 
-        mReceiverName = getArguments().getString(Constants.NAME);
-        mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
-
-        isInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
-
-        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
-        mNameView = (TextView) v.findViewById(R.id.textview_name);
-        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mLinearLayoutDescriptionHolder = (LinearLayout) v.findViewById(R.id.layout_description_holder);
-        mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
-        mAmountView = (TextView) v.findViewById(R.id.textview_amount);
-        mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
-        mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
-        mSendMoneyButton = (Button) v.findViewById(R.id.button_send_money);
-        mAddInContactsCheckBox = (CheckBox) v.findViewById(R.id.add_in_contacts);
-        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity());
-
-        mProgressDialog = new ProgressDialog(getActivity());
-
-        mSenderMobileNumber = ProfileInfoCacheManager.getMobileNumber();
-
-        mProfileImageView.setProfilePicture(mPhotoUri, false);
-
-        if (mReceiverName == null || mReceiverName.isEmpty()) {
-            mNameView.setVisibility(View.GONE);
-        } else {
-            mNameView.setText(mReceiverName);
+        if (!TextUtils.isEmpty(mPhotoUri)) {
+            receiverProfileImageView.setProfilePicture(mPhotoUri, false);
         }
-
-        mMobileNumberView.setText(mReceiverMobileNumber);
-
-        if (mDescription == null || mDescription.isEmpty()) {
-            mLinearLayoutDescriptionHolder.setVisibility(View.GONE);
+        if (TextUtils.isEmpty(mReceiverName)) {
+            receiverNameTextView.setVisibility(View.GONE);
         } else {
-            mDescriptionView.setText(mDescription);
+            receiverNameTextView.setVisibility(View.VISIBLE);
+            receiverNameTextView.setText(mReceiverName);
         }
+        receiverMobileNumberTextView.setText(mReceiverMobileNumber);
 
-        mAmountView.setText(Utilities.formatTaka(mAmount));
+        amountTextView.setText(Utilities.formatTaka(mAmount));
+        mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
+        mServiceChargeTextView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
 
+        if (TextUtils.isEmpty(mDescription)) {
+            descriptionViewHolder.setVisibility(View.GONE);
+        } else {
+            descriptionViewHolder.setVisibility(View.VISIBLE);
+            descriptionTextView.setText(mDescription);
+        }
         if (!isInContacts) {
-            mAddInContactsCheckBox.setVisibility(View.VISIBLE);
-            mAddInContactsCheckBox.setChecked(true);
+            addToContactCheckBox.setVisibility(View.VISIBLE);
+            addToContactCheckBox.setChecked(true);
         }
 
-        mSendMoneyButton.setOnClickListener(new View.OnClickListener() {
+        sendMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                         && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-                    mError_message = InputValidator.isValidAmount(getActivity(), mAmount,
+                    final String errorMessage = InputValidator.isValidAmount(getActivity(), getAmount(),
                             SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
                             SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
-                    if (mError_message == null) {
+                    if (errorMessage == null) {
                         attemptSendMoneyWithPinCheck();
                     } else {
-                        showErrorDialog();
+                        showErrorDialog(errorMessage);
                     }
                 } else {
                     attemptSendMoneyWithPinCheck();
+                }
+
+                if (addToContactCheckBox.isChecked()) {
+                    addContact(mReceiverName, mReceiverMobileNumber, null);
                 }
             }
         });
@@ -170,13 +172,16 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
             attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
         else
             attemptGetServiceCharge();
-        return v;
+
+    }
+
+    public <T extends View> T findViewById(@IdRes int id) {
+        //noinspection ConstantConditions, unchecked
+        return (T) getView().findViewById(id);
     }
 
     private void attemptSendMoneyWithPinCheck() {
-        if (mAddInContactsCheckBox.isChecked()) {
-            addContact(mReceiverName, mReceiverMobileNumber, null);
-        }
+
         if (SendMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
@@ -233,9 +238,9 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         mSendMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void showErrorDialog() {
+    private void showErrorDialog(final String errorMessage) {
         new AlertDialog.Builder(getContext())
-                .setMessage(mError_message)
+                .setMessage(errorMessage)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         getActivity().finish();
@@ -257,40 +262,13 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
+        mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
     }
 
     @Override
     public void onPinLoadFinished(boolean isPinRequired) {
         SendMoneyActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
-    }
-
-    private void responseProcesseor(int status) {
-        if (status == Constants.HTTP_RESPONSE_STATUS_OK) {
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
-            launchHomeActivity();
-
-            //Google Analytic event
-            Utilities.sendSuccessEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
-        } else if (status == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
-            if (getActivity() != null)
-                ((MyApplication) getActivity().getApplication()).launchLoginPage(mSendMoneyResponse.getMessage());
-            Utilities.sendBlockedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
-        } else if (status == Constants.HTTP_RESPONSE_STATUS_ACCEPTED ||
-                status == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-            Toast.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
-            SecuritySettingsActivity.otpDuration = mSendMoneyResponse.getOtpValidFor();
-            launchOTPVerification();
-        } else {
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
-
-            //Google Analytic event
-            Utilities.sendFailedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(),
-                    mSendMoneyResponse.getMessage(), mAmount.longValue());
-        }
     }
 
     @Override
@@ -311,7 +289,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         if (result.getApiCommand().equals(Constants.COMMAND_SEND_MONEY)) {
 
             try {
-                mSendMoneyResponse = gson.fromJson(result.getJsonString(), SendMoneyResponse.class);
+                SendMoneyResponse mSendMoneyResponse = gson.fromJson(result.getJsonString(), SendMoneyResponse.class);
                 switch (result.getStatus()) {
                     case Constants.HTTP_RESPONSE_STATUS_OK:
                         if (getActivity() != null)
