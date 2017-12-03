@@ -16,7 +16,8 @@ public class BusinessRoleManagerInvitation implements Notification {
 
     @Override
     public String getNotificationTitle() {
-        return getBusinessName() + " Added you as a manager";
+        return "<b>" + "<font color='#000000'>" + getBusinessName() + "</b>" + "</font>" + " Has made you an  <b><font color='#000000'>" +
+                "Admin</b></font> of their business account";
     }
 
     @Override

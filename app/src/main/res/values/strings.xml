@@ -1072,6 +1072,6 @@
     <string name="continue_message">Continue</string>
     <string name="add_money_from_credit_or_debit_card_cancel_title">Money add cancelled</string>
     <string name="add_money_from_credit_or_debit_card_failed_title">Money add failed</string>
-    <string name="role">Role</string>
+    <string name="you_can_do_following_things">You can do following things</string>
     <string name="select_a_role">Select a Role</string>
 </resources>

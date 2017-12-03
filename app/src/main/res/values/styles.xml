@@ -770,6 +770,20 @@
     <item name="android:textSize">14sp</item>
     <item name="android:textColor">@color/colorTextPrimary</item>
 </style>
+    <!-- Transaction History --><style name="BusinessRolePrivilegeCheckboxStyle">
+
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+    <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+    <item name="android:paddingTop">@dimen/activity_horizontal_margin_card</item>
+    <item name="android:paddingBottom">@dimen/activity_horizontal_margin_card</item>
+    <item name="android:drawableLeft">@drawable/round_checkbox_for_filter</item>
+    <item name="android:drawablePadding">@dimen/value20</item>
+    <item name="android:button">@null</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:textColor">@color/colorTextPrimary</item>
+</style>
 
     <style name="TransactionHistoryLeftTextViewStyle">
         <item name="android:maxLines">1</item>

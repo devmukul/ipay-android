@@ -10,10 +10,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,9 +46,7 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
     private ProfileImageView mProfileImageView;
     private Button mAcceptButton;
     private Button mRejectButton;
-    private TextView mNameTextView;
-    private TextView mMobileNumberTextView;
-    private TextView mRoleNameTextView;
+    private TextView mTitleTextView;
 
     private RecyclerView mPrevilegesRecyclerView;
     private EmployeeDetailsAdapter mEmployeeDetailsAdapter;
@@ -65,7 +65,7 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_business_role_review, container, false);
+        View v = inflater.inflate(R.layout.fragment_business_role_review_new, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.loading));
         mProgressDialog.show();
@@ -76,10 +76,8 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
     public void setUpViews(View v) {
         mAcceptButton = (Button) v.findViewById(R.id.button_accept);
         mRejectButton = (Button) v.findViewById(R.id.button_reject);
-        mNameTextView = (TextView) v.findViewById(R.id.textview_name);
-        mMobileNumberTextView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mRoleNameTextView = (TextView) v.findViewById(R.id.role);
-        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
+        mTitleTextView = (TextView) v.findViewById(R.id.title_text_view);
+        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_image_view);
         mPrevilegesRecyclerView = (RecyclerView) v.findViewById(R.id.privilege_list);
 
         if (getArguments() != null) {
@@ -90,9 +88,7 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
 
             mImageUri = Constants.BASE_URL_FTP_SERVER + mBusinessRoleManagerInvitation.getImageUrl();
             mProfileImageView.setProfilePicture(mImageUri, false);
-
-            mNameTextView.setText(mBusinessRoleManagerInvitation.getBusinessName());
-            mRoleNameTextView.setText(mBusinessRoleManagerInvitation.getRoleName());
+            mTitleTextView.setText(Html.fromHtml(mBusinessRoleManagerInvitation.getNotificationTitle()));
 
             mID = mBusinessRoleManagerInvitation.getId();
             getDetailsOfInvitedRole();
@@ -230,16 +226,16 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
 
         public class EmployeePrivilegeViewHolder extends RecyclerView.ViewHolder {
 
-            private final TextView mPrivilegeTextView;
+            private final CheckBox mPrivilegeCheckBox;
 
             public EmployeePrivilegeViewHolder(View itemView) {
                 super(itemView);
 
-                mPrivilegeTextView = (TextView) itemView.findViewById(R.id.textview_privilege);
+                mPrivilegeCheckBox = (CheckBox) itemView.findViewById(R.id.checkbox_privilege);
             }
 
             public void bindView(final int pos) {
-                mPrivilegeTextView.setText(mServiceList.get(pos));
+                mPrivilegeCheckBox.setText(mServiceList.get(pos));
             }
         }
 

@@ -13,9 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -316,16 +316,16 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
 
         public class EmployeePrivilegeViewHolder extends RecyclerView.ViewHolder {
 
-            private final TextView mPrivilegeTextView;
+            private final CheckBox mPrivilegeCheckbox;
 
             public EmployeePrivilegeViewHolder(View itemView) {
                 super(itemView);
 
-                mPrivilegeTextView = (TextView) itemView.findViewById(R.id.textview_privilege);
+                mPrivilegeCheckbox = (CheckBox) itemView.findViewById(R.id.checkbox_privilege);
             }
 
             public void bindView(final int pos) {
-                mPrivilegeTextView.setText(mPrivilegeList.get(pos));
+                mPrivilegeCheckbox.setText(mPrivilegeList.get(pos));
             }
         }
 

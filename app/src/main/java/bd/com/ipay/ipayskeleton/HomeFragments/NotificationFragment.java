@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -602,18 +603,23 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             public void bindView(int pos) {
 
                 Notification notification = mNotifications.get(pos);
+                if (!(notification instanceof BusinessRoleManagerInvitation)){
 
-                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + notification.getImageUrl(), false);
-                mNameView.setText(notification.getName());
+                    mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + notification.getImageUrl(), false);
+                    mNameView.setText(notification.getName());
 
-                mTimeView.setText(Utilities.formatDateWithTime(notification.getTime()));
+                    mTimeView.setText(Utilities.formatDateWithTime(notification.getTime()));
 
-                if (notification.getNotificationTitle() != null && !notification.getNotificationTitle().equals("")) {
-                    mTitleView.setVisibility(View.VISIBLE);
-                    mTitleView.setText(notification.getNotificationTitle());
+                    if (notification.getNotificationTitle() != null && !notification.getNotificationTitle().equals("")) {
+                        mTitleView.setVisibility(View.VISIBLE);
+                        if (notification instanceof BusinessRoleManagerInvitation)
+                            mTitleView.setText(Html.fromHtml(notification.getNotificationTitle()));
+                        else
+                            mTitleView.setText(notification.getNotificationTitle());
 
-                } else {
-                    mTitleView.setVisibility(View.GONE);
+                    } else {
+                        mTitleView.setVisibility(View.GONE);
+                    }
                 }
 
             }
@@ -695,8 +701,13 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         public class BusinessRoleManagerViewHolder extends NotificationViewHolder {
 
+            private ProfileImageView mProfileImageView;
+            private TextView mTitleTextView;
+
             public BusinessRoleManagerViewHolder(final View itemView) {
                 super(itemView);
+                mProfileImageView=(ProfileImageView)itemView.findViewById(R.id.profile_image_view);
+                mTitleTextView=(TextView)itemView.findViewById(R.id.title_text_view);
             }
 
             @Override
@@ -704,7 +715,10 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 super.bindView(pos);
                 final int position = pos;
                 BusinessRoleManagerInvitation businessRoleManagerInvitation = (BusinessRoleManagerInvitation) mNotifications.get(pos);
-                String businessName = businessRoleManagerInvitation.getBusinessName();
+                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
+                        businessRoleManagerInvitation.getImageUrl(), false);
+                mTitleTextView.setText(Html.fromHtml(businessRoleManagerInvitation.getNotificationTitle()));
+
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -760,7 +774,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_requests_notification, parent, false);
                 return new PendingIntroductionListViewHolder(v);
             } else if (viewType == Constants.NOTIFICATION_TYPE_PENDING_ROLE_MANAGER_REQUEST) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_business_role_manager_requests_notification,
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_business_role_manager_requests_notification_new,
                         parent, false);
                 return new BusinessRoleManagerViewHolder(v);
             } else {

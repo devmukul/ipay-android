@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -238,6 +239,10 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
                         if (getActivity() != null) {
                             Toaster.makeText(getActivity(), businessRoleDetailsResponse.getMessage(), Toast.LENGTH_LONG);
                         }
+                    } else {
+                        if (getActivity() != null) {
+                            Toaster.makeText(getActivity(), businessRoleDetailsResponse.getMessage(), Toast.LENGTH_LONG);
+                        }
                     }
                 } catch (Exception e) {
                     Toaster.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
@@ -314,16 +319,16 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
 
         public class EmployeePrivilegeViewHolder extends RecyclerView.ViewHolder {
 
-            private final TextView mPrivilegeTextView;
+            private final TextView mPrivilegeCheckbox;
 
             public EmployeePrivilegeViewHolder(View itemView) {
                 super(itemView);
 
-                mPrivilegeTextView = (TextView) itemView.findViewById(R.id.textview_privilege);
+                mPrivilegeCheckbox= (CheckBox) itemView.findViewById(R.id.checkbox_privilege);
             }
 
             public void bindView(final int pos) {
-                mPrivilegeTextView.setText(mPrivilegeList.get(pos));
+                mPrivilegeCheckbox.setText(mPrivilegeList.get(pos));
             }
         }
 
