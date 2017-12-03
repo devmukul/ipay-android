@@ -1,15 +1,14 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -18,11 +17,13 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.CustomHorizontalScrollView;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.TrendingBusiness;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.TrendingBusinessResponse;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -31,9 +32,7 @@ public class PayDashBoardNewFragment extends BaseFragment implements HttpRespons
     private HttpRequestGetAsyncTask mGetTrendingBusinessListTask = null;
     TrendingBusinessResponse mTrendingBusinessResponse;
     List<TrendingBusiness> mTrendingBusinessList;
-    private Context context;
-
-    private Tracker mTracker;
+    private LinearLayout mScrollViewHolder;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,6 +50,7 @@ public class PayDashBoardNewFragment extends BaseFragment implements HttpRespons
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_pay_dashboard_new, container, false);
+        mScrollViewHolder = (LinearLayout) v.findViewById(R.id.scrollViewHolder);
         getActivity().setTitle(R.string.bank_list);
         getTrendingBusinessList();
 
@@ -78,8 +78,8 @@ public class PayDashBoardNewFragment extends BaseFragment implements HttpRespons
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            if (context != null) {
-                Toast.makeText(context, R.string.business_contacts_sync_failed, Toast.LENGTH_LONG).show();
+            if (getActivity() != null) {
+                Toast.makeText(getActivity(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG).show();
                 return;
             }
         }
@@ -90,23 +90,27 @@ public class PayDashBoardNewFragment extends BaseFragment implements HttpRespons
                 mTrendingBusinessList = mTrendingBusinessResponse.getTrendingBusinessList();
                 for (TrendingBusiness trendingBusiness : mTrendingBusinessList) {
                     String mBusinessType = trendingBusiness.getBusinessType();
-                    // TODO add a horizontal view with business type
+
+                    CustomHorizontalScrollView customHorizontalScrollView = new CustomHorizontalScrollView(this.getContext());
+                    customHorizontalScrollView.addHorizontalScrollView(mScrollViewHolder, mBusinessType);
+
                     List<BusinessAccountEntry> mBusinessAccountEntryList = trendingBusiness.getBusinessProfile();
                     for (BusinessAccountEntry businessAccountEntry : mBusinessAccountEntryList) {
-                        // TODO generate horizontal list items for each business
+                        customHorizontalScrollView.addBusinessEntryView(businessAccountEntry);
+                        Logger.logD("trend", businessAccountEntry.getBusinessName());
                     }
                 }
 
             } else {
-                if (context != null) {
-                    Toaster.makeText(context, R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
+                if (getActivity() != null) {
+                    Toaster.makeText(getActivity(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
 
-            if (context != null) {
-                Toaster.makeText(context, R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
+            if (getActivity() != null) {
+                Toaster.makeText(getActivity(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
             }
         }
 
