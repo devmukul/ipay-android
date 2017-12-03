@@ -7,11 +7,11 @@ import android.widget.LinearLayout;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class CustomHorizontalScrollView {
+public class PayDashBoardHorizontalScrollView {
     HorizontalScrollView horizontalScrollView;
     Context context;
 
-    public CustomHorizontalScrollView(final Context context) {
+    public PayDashBoardHorizontalScrollView(final Context context) {
         this.context = context;
         initScrollView();
     }
@@ -20,12 +20,9 @@ public class CustomHorizontalScrollView {
         horizontalScrollView = new HorizontalScrollView(context);
         HorizontalScrollView.LayoutParams params = new HorizontalScrollView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         horizontalScrollView.setLayoutParams(params);
-
     }
 
-
     public LinearLayout addHorizontalScrollView(LinearLayout linearLayout, String title) {
-
         linearLayout.addView(getHorizontalScrollViewTitle(title));
         linearLayout.addView(horizontalScrollView);
 
@@ -38,17 +35,13 @@ public class CustomHorizontalScrollView {
         return customDashBoardTitleView;
     }
 
-    public void addBusinessEntryView(BusinessAccountEntry businessAccountEntry) {
-
-        LinearLayout linearLayout = new LinearLayout(context);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        linearLayout.setLayoutParams(params);
-
+    public CustomDashboardItemView addBusinessEntryView(final BusinessAccountEntry businessAccountEntry) {
         CustomDashboardItemView customDashboardItemView = new CustomDashboardItemView(context);
         customDashboardItemView.setNameView(businessAccountEntry.getBusinessName());
         customDashboardItemView.setImageView(Constants.BASE_URL_FTP_SERVER + businessAccountEntry.getProfilePictureUrl(), true);
 
-
         horizontalScrollView.addView(customDashboardItemView);
+
+        return customDashboardItemView;
     }
 }

@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.HomeFragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,16 +14,24 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
-import bd.com.ipay.ipayskeleton.CustomView.CustomHorizontalScrollView;
+import bd.com.ipay.ipayskeleton.CustomView.CustomDashboardItemView;
+import bd.com.ipay.ipayskeleton.CustomView.PayDashBoardHorizontalScrollView;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.TrendingBusiness;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.TrendingBusinessResponse;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -33,6 +42,10 @@ public class PayDashBoardNewFragment extends BaseFragment implements HttpRespons
     TrendingBusinessResponse mTrendingBusinessResponse;
     List<TrendingBusiness> mTrendingBusinessList;
     private LinearLayout mScrollViewHolder;
+    private View mTopUpView;
+    private View mPayByQCView;
+
+    private PinChecker pinChecker;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,7 +56,6 @@ public class PayDashBoardNewFragment extends BaseFragment implements HttpRespons
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     @Override
@@ -51,8 +63,44 @@ public class PayDashBoardNewFragment extends BaseFragment implements HttpRespons
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_pay_dashboard_new, container, false);
         mScrollViewHolder = (LinearLayout) v.findViewById(R.id.scrollViewHolder);
-        getActivity().setTitle(R.string.bank_list);
+        mTopUpView = v.findViewById(R.id.topUpView);
+        mPayByQCView = v.findViewById(R.id.payByQCView);
+
+        getActivity().setTitle(R.string.pay);
         getTrendingBusinessList();
+
+        mTopUpView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.TOP_UP)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), TopUpActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+
+        mPayByQCView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent;
+                        intent = new Intent(getActivity(), QRCodePaymentActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
 
         return v;
     }
@@ -60,7 +108,6 @@ public class PayDashBoardNewFragment extends BaseFragment implements HttpRespons
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
     }
 
     private void getTrendingBusinessList() {
@@ -91,12 +138,27 @@ public class PayDashBoardNewFragment extends BaseFragment implements HttpRespons
                 for (TrendingBusiness trendingBusiness : mTrendingBusinessList) {
                     String mBusinessType = trendingBusiness.getBusinessType();
 
-                    CustomHorizontalScrollView customHorizontalScrollView = new CustomHorizontalScrollView(this.getContext());
-                    customHorizontalScrollView.addHorizontalScrollView(mScrollViewHolder, mBusinessType);
+                    PayDashBoardHorizontalScrollView payDashBoardHorizontalScrollView = new PayDashBoardHorizontalScrollView(this.getContext());
+                    payDashBoardHorizontalScrollView.addHorizontalScrollView(mScrollViewHolder, mBusinessType);
 
                     List<BusinessAccountEntry> mBusinessAccountEntryList = trendingBusiness.getBusinessProfile();
-                    for (BusinessAccountEntry businessAccountEntry : mBusinessAccountEntryList) {
-                        customHorizontalScrollView.addBusinessEntryView(businessAccountEntry);
+                    for (final BusinessAccountEntry businessAccountEntry : mBusinessAccountEntryList) {
+                        CustomDashboardItemView customDashboardItemView = payDashBoardHorizontalScrollView.addBusinessEntryView(businessAccountEntry);
+                        customDashboardItemView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                pinChecker = new PinChecker(getContext(), new PinChecker.PinCheckerListener() {
+                                    @Override
+                                    public void ifPinAdded() {
+                                        Intent intent;
+                                        intent = new Intent(getActivity(), PaymentActivity.class);
+                                        intent.putExtra(Constants.MOBILE_NUMBER, businessAccountEntry.getMobileNumber());
+                                        getContext().startActivity(intent);
+                                    }
+                                });
+                                pinChecker.execute();
+                            }
+                        });
                         Logger.logD("trend", businessAccountEntry.getBusinessName());
                     }
                 }
