@@ -5,9 +5,9 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
@@ -16,22 +16,23 @@ import com.bumptech.glide.signature.StringSignature;
 
 import bd.com.ipay.ipayskeleton.R;
 
-public class CustomDashboardItemView extends FrameLayout {
+public class CustomDashboardItemView extends LinearLayout {
     private Context context;
 
-    private ImageView mAttachmentView;
+    private ImageView mImageView;
+    private TextView mTextView;
 
-    public AttachmentView(Context context, AttributeSet attrs, int defStyle) {
+    public CustomDashboardItemView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView(context);
     }
 
-    public AttachmentView(Context context, AttributeSet attrs) {
+    public CustomDashboardItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView(context);
     }
 
-    public AttachmentView(Context context) {
+    public CustomDashboardItemView(Context context) {
         super(context);
         initView(context);
     }
@@ -39,29 +40,25 @@ public class CustomDashboardItemView extends FrameLayout {
     private void initView(Context context) {
         this.context = context;
 
-        View v = inflate(context, R.layout.attachment_view, null);
+        View v = inflate(context, R.layout.dashboard_item_view, null);
 
-        mAttachmentView = (ImageView) v.findViewById(R.id.attachment);
+        mImageView = (ImageView) v.findViewById(R.id.imageView);
+        mTextView = (TextView) v.findViewById(R.id.nameView);
 
         addView(v);
     }
 
-    public void setAttachment(int photoResourceId) {
+    public void setImageView(int photoResourceId) {
         Drawable drawable = context.getResources().getDrawable(photoResourceId);
-        mAttachmentView.setImageDrawable(drawable);
+        mImageView.setImageDrawable(drawable);
     }
 
-    public void setLayoutParams(boolean isAlignedRight) {
-        LinearLayout.LayoutParams attachmentViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        if (isAlignedRight)
-            attachmentViewParams.gravity = Gravity.RIGHT;
-        else
-            attachmentViewParams.gravity = Gravity.LEFT;
+    public void setNameView(String name) {
 
-        this.setLayoutParams(attachmentViewParams);
+        mTextView.setText(name);
     }
 
-    public void setAttachment(String attachmentUri, boolean forceLoad) {
+    public void setImageView(String attachmentUri, boolean forceLoad) {
         try {
             final DrawableTypeRequest<String> glide = Glide.with(context).load(attachmentUri);
 
@@ -73,24 +70,14 @@ public class CustomDashboardItemView extends FrameLayout {
                         .signature(new StringSignature(String.valueOf(System.currentTimeMillis())));
             }
 
-            if (attachmentUri.contains(getResources().getString(R.string.pdf))) {
-                glide
-                        .placeholder(R.drawable.icon_pdf)
-                        .error(R.drawable.icon_pdf)
-                        .crossFade()
-                        .dontAnimate()
-                        .override(100, 80)
-                        .into(mAttachmentView);
-            } else {
-                glide
-                        .placeholder(R.drawable.ic_image)
-                        .error(R.drawable.ic_image)
-                        .crossFade()
-                        .dontAnimate()
-                        .fitCenter()
-                        .override(300, 300)
-                        .into(mAttachmentView);
-            }
+            glide
+                    .placeholder(R.drawable.ic_image)
+                    .error(R.drawable.ic_image)
+                    .crossFade()
+                    .dontAnimate()
+                    .fitCenter()
+                    .into(mImageView);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

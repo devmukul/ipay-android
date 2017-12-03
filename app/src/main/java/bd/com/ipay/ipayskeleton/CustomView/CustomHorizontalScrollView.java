@@ -1,19 +1,11 @@
 package bd.com.ipay.ipayskeleton.CustomView;
 
 import android.content.Context;
-import android.content.Intent;
-import android.view.Gravity;
-import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import java.util.List;
-
-import bd.com.ipay.ipayskeleton.Activities.DocumentPreviewActivity;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CustomHorizontalScrollView {
     HorizontalScrollView horizontalScrollView;
@@ -40,10 +32,10 @@ public class CustomHorizontalScrollView {
         return linearLayout;
     }
 
-    private TextView getHorizontalScrollViewTitle(String title) {
-        TextView textView = new TextView(context);
-        textView.setText(title);
-        return textView;
+    private CustomDashBoardTitleView getHorizontalScrollViewTitle(String title) {
+        CustomDashBoardTitleView customDashBoardTitleView = new CustomDashBoardTitleView(context);
+        customDashBoardTitleView.setTitleView(title);
+        return customDashBoardTitleView;
     }
 
     public void addBusinessEntryView(BusinessAccountEntry businessAccountEntry) {
@@ -52,39 +44,11 @@ public class CustomHorizontalScrollView {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         linearLayout.setLayoutParams(params);
 
-        TextView textView = new TextView(context);
-        textView.setText(businessAccountEntry.getBusinessName());
+        CustomDashboardItemView customDashboardItemView = new CustomDashboardItemView(context);
+        customDashboardItemView.setNameView(businessAccountEntry.getBusinessName());
+        customDashboardItemView.setImageView(Constants.BASE_URL_FTP_SERVER + businessAccountEntry.getProfilePictureUrl(), true);
 
-        linearLayout.addView(textView);
-        horizontalScrollView.addView(linearLayout);
-    }
 
-    public static LinearLayout getCustomTicketAttachmentLayout(final Context context, boolean isRightAligned, LinearLayout linearLayout, List<String> contents) {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        if (isRightAligned)
-            params.gravity = Gravity.RIGHT;
-        else
-            params.gravity = Gravity.LEFT;
-
-        linearLayout.setLayoutParams(params);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-
-        for (final String content : contents) {
-            AttachmentView attachmentview = new AttachmentView(context);
-            attachmentview.setAttachment(content, false);
-            attachmentview.setLayoutParams(isRightAligned);
-            attachmentview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    Intent intent = new Intent(context, DocumentPreviewActivity.class);
-                    intent.putExtra(Constants.FILE_EXTENSION, Utilities.getExtension(content));
-                    intent.putExtra(Constants.DOCUMENT_URL, content);
-                    context.startActivity(intent);
-                }
-            });
-            linearLayout.addView(attachmentview);
-        }
-        return linearLayout;
+        horizontalScrollView.addView(customDashboardItemView);
     }
 }

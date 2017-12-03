@@ -12,18 +12,28 @@
         android:background="@color/divider_gray"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/value5"
+            android:paddingTop="@dimen/activity_horizontal_margin"
+            android:text="@string/top"
+            android:textSize="@dimen/text_size_small_medium_value18" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:id="@+id/button_send_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:background="@color/colorWhite"
                 android:elevation="@dimen/value2"
                 android:orientation="vertical">
@@ -32,9 +42,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
                     android:padding="@dimen/activity_horizontal_margin_card"
-                    android:src="@drawable/background_icon_topup"
-                    android:layout_marginTop="@dimen/activity_horizontal_margin"/>
+                    android:src="@drawable/background_icon_topup" />
 
                 <View
                     android:layout_width="match_parent"
@@ -44,6 +55,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
                     android:ellipsize="marquee"
                     android:maxLines="1"
                     android:paddingLeft="@dimen/value5"
@@ -55,9 +67,9 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                 android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:background="@color/colorWhite"
                 android:elevation="@dimen/value2"
                 android:orientation="vertical">
@@ -66,9 +78,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
                     android:padding="@dimen/activity_horizontal_margin_card"
-                    android:src="@drawable/background_icon_pay_by_qc"
-                    android:layout_marginTop="@dimen/activity_horizontal_margin"/>
+                    android:src="@drawable/background_icon_pay_by_qc" />
 
                 <View
                     android:layout_width="match_parent"
@@ -78,6 +91,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
                     android:ellipsize="marquee"
                     android:maxLines="1"
                     android:paddingLeft="@dimen/value5"
