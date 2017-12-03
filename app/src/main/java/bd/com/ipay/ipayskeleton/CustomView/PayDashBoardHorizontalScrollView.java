@@ -9,6 +9,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class PayDashBoardHorizontalScrollView {
     HorizontalScrollView horizontalScrollView;
+    LinearLayout linearLayout;
     Context context;
 
     public PayDashBoardHorizontalScrollView(final Context context) {
@@ -20,6 +21,12 @@ public class PayDashBoardHorizontalScrollView {
         horizontalScrollView = new HorizontalScrollView(context);
         HorizontalScrollView.LayoutParams params = new HorizontalScrollView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         horizontalScrollView.setLayoutParams(params);
+
+        linearLayout = new LinearLayout(context);
+        LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        linearLayout.setLayoutParams(linearLayoutParams);
+
+        horizontalScrollView.addView(linearLayout);
     }
 
     public LinearLayout addHorizontalScrollView(LinearLayout linearLayout, String title) {
@@ -40,7 +47,7 @@ public class PayDashBoardHorizontalScrollView {
         customDashboardItemView.setNameView(businessAccountEntry.getBusinessName());
         customDashboardItemView.setImageView(Constants.BASE_URL_FTP_SERVER + businessAccountEntry.getProfilePictureUrl(), true);
 
-        horizontalScrollView.addView(customDashboardItemView);
+        linearLayout.addView(customDashboardItemView);
 
         return customDashboardItemView;
     }

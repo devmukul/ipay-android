@@ -4,8 +4,8 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/value140"
+        android:layout_height="@dimen/value140"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin_card"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
