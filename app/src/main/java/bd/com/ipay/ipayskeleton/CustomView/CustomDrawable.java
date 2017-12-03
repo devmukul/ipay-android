@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.Utilities;
+package bd.com.ipay.ipayskeleton.CustomView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,8 @@ import java.util.List;
 import bd.com.ipay.ipayskeleton.Activities.DocumentPreviewActivity;
 import bd.com.ipay.ipayskeleton.CustomView.AttachmentView;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class CustomDrawable {
 
