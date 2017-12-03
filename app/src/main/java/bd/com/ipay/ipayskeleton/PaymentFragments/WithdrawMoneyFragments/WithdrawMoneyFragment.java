@@ -3,9 +3,10 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.WithdrawMoneyFragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,8 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -31,8 +30,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
-import bd.com.ipay.ipayskeleton.CustomView.BankListValidator;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialogWithIcon;
+import bd.com.ipay.ipayskeleton.CustomView.BankSelectorView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
@@ -45,6 +43,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseListener {
@@ -52,55 +51,47 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
     private static final int WITHDRAW_MONEY_REVIEW_REQUEST = 101;
 
     private HttpRequestGetAsyncTask mGetBankTask = null;
-    private GetBankListResponse mBankListResponse;
+    private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
-    private Button buttonWithdrawMoney;
-    private TextView mBankNameTextView;
-    private TextView mBankBranchTextView;
-    private TextView mBankAccountTextView;
-    private TextView mBankAccountNumberHintTextView;
-    private EditText mDescriptionEditText;
+    private BankSelectorView mBankSelectorView;
+    private EditText mNoteEditText;
     private EditText mAmountEditText;
-    private TextView mLinkABankNoteTextView;
-    private ImageView mBankIcon;
 
     private List<UserBankClass> mListUserBankClasses;
-    private ArrayList<String> mUserBankNameList;
-    private ArrayList<String> mUserBankAccountNumberList;
-    private ArrayList<String> mUserBankList;
-    private int[] mBankIconArray;
-    private int selectedBankPosition = 0;
 
     private ProgressDialog mProgressDialog;
 
-    private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_withdraw_money, container, false);
-        mBankNameTextView = (TextView) v.findViewById(R.id.bank_name);
-        mBankBranchTextView = (TextView) v.findViewById(R.id.bank_branch);
-        mBankAccountTextView = (TextView) v.findViewById(R.id.bank_account_number);
-        mBankAccountNumberHintTextView = (TextView) v.findViewById(R.id.bank_account_number_hint);
-        mDescriptionEditText = (EditText) v.findViewById(R.id.description);
-        mAmountEditText = (EditText) v.findViewById(R.id.amount);
-        buttonWithdrawMoney = (Button) v.findViewById(R.id.button_cash_out);
-        mLinkABankNoteTextView = (TextView) v.findViewById(R.id.link_a_bank_note);
-        mBankIcon = (ImageView) v.findViewById(R.id.portrait);
-
-        // Allow user to write not more than two digits after decimal point for an input of an amount
-        mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
-
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage(getString(R.string.progress_dialog_add_money_in_progress));
-        mUserBankNameList = new ArrayList<>();
-        mUserBankAccountNumberList = new ArrayList<>();
-        mUserBankList = new ArrayList<>();
+
+        // Get business rule
+        attemptGetBusinessRule(Constants.SERVICE_ID_WITHDRAW_MONEY);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_withdraw_money, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mBankSelectorView = findViewById(R.id.bank_selector_view);
+        mAmountEditText = findViewById(R.id.amount);
+        mNoteEditText = findViewById(R.id.description);
+        Button buttonWithdrawMoney = findViewById(R.id.button_cash_out);
 
         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BANK_ACCOUNTS)) {
             getBankInformation();
         }
+
+        // Allow user to write not more than two digits after decimal point for an input of an amount
+        mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
         buttonWithdrawMoney.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,41 +105,11 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
         });
+    }
 
-        mBankNameTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.SEE_BANK_ACCOUNTS)
-            public void onClick(View v) {
-                showBankListAlertDialogue();
-            }
-        });
-        mBankIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.SEE_BANK_ACCOUNTS)
-            public void onClick(View v) {
-                showBankListAlertDialogue();
-            }
-        });
-
-        mBankBranchTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.SEE_BANK_ACCOUNTS)
-            public void onClick(View v) {
-                showBankListAlertDialogue();
-            }
-        });
-        mBankAccountTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @ValidateAccess(ServiceIdConstants.SEE_BANK_ACCOUNTS)
-            public void onClick(View v) {
-                showBankListAlertDialogue();
-            }
-        });
-
-        // Get business rule
-        attemptGetBusinessRule(Constants.SERVICE_ID_WITHDRAW_MONEY);
-
-        return v;
+    private <T extends View> T findViewById(@IdRes int viewId) {
+        //noinspection unchecked,ConstantConditions
+        return (T) getView().findViewById(viewId);
     }
 
     private void getBankInformation() {
@@ -160,6 +121,7 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
         } else {
             attemptRefreshAvailableBankNames();
         }
+        mBankSelectorView.setSelectable(false);
     }
 
     @Override
@@ -218,86 +180,74 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
     }
 
     private boolean verifyUserInputs() {
-        mAmountEditText.setError(null);
+        final boolean shouldProceed;
+        final View focusView;
+        clearAllErrorMessage();
 
-        boolean cancel = false;
-        View focusView = null;
-        String errorMessage = null;
+        if (!isValidAmount()) {
+            focusView = mAmountEditText;
+            shouldProceed = false;
+        } else if (mBankSelectorView.getSelectedItemPosition() == -1) {
+            focusView = null;
+            mBankSelectorView.setError(R.string.select_a_bank);
+            shouldProceed = false;
+        } else if (TextUtils.isEmpty(mNoteEditText.getText().toString().trim())) {
+            focusView = mNoteEditText;
+            mNoteEditText.setError(getString(R.string.please_write_note));
+            shouldProceed = false;
+        } else {
+            focusView = null;
+            shouldProceed = true;
+        }
 
-        if (SharedPrefManager.ifContainsUserBalance()) {
-            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
+        if (focusView != null) {
+            focusView.requestFocus();
+        }
+        return shouldProceed;
+    }
 
-            if (TextUtils.isEmpty(mAmountEditText.getText())) {
-                errorMessage = getString(R.string.please_enter_amount);
-                focusView = mAmountEditText;
-                cancel = true;
-
+    private boolean isValidAmount() {
+        final boolean isValidAmount;
+        final BigDecimal amount = new BigDecimal(SharedPrefManager.getUserBalance());
+        if (TextUtils.isEmpty(mAmountEditText.getText())) {
+            isValidAmount = false;
+            mAmountEditText.setError(getString(R.string.please_enter_amount));
+        } else if (new BigDecimal(mAmountEditText.getText().toString()).compareTo(amount) > 0) {
+            isValidAmount = false;
+            mAmountEditText.setError(getString(R.string.insufficient_balance));
+        } else if (Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                && Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+            final String errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+                    WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                    WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+            if (errorMessage != null) {
+                isValidAmount = false;
+                mAmountEditText.setError(errorMessage);
             } else {
-                final BigDecimal withdrawMoneyAmount = new BigDecimal(mAmountEditText.getText().toString());
-                if (withdrawMoneyAmount.compareTo(balance) > 0) {
-                    errorMessage = getString(R.string.insufficient_balance);
-                }
-                if (Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                        && Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-
-                    final BigDecimal minimumWithdrawAmount = WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
-                    final BigDecimal maximumWithdrawAmount = WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
-
-                    errorMessage = InputValidator.isValidAmount(getActivity(), withdrawMoneyAmount, minimumWithdrawAmount, maximumWithdrawAmount);
-                }
+                isValidAmount = true;
             }
         } else {
-            focusView = mAmountEditText;
-            errorMessage = getString(R.string.balance_not_available);
-            cancel = true;
+            isValidAmount = true;
         }
+        return isValidAmount;
+    }
 
-        if (errorMessage != null) {
-            focusView = mAmountEditText;
-            mAmountEditText.setError(errorMessage);
-            cancel = true;
-        }
-
-        if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
-            focusView = mDescriptionEditText;
-            mDescriptionEditText.setError(getString(R.string.please_write_note));
-            cancel = true;
-
-        }
-
-        if (!(mBankNameTextView.getText().toString().trim().length() > 0)) {
-            focusView = mBankNameTextView;
-            mBankNameTextView.setError(getString(R.string.select_a_bank));
-            cancel = true;
-        }
-
-        if (cancel) {
-            focusView.requestFocus();
-            return false;
-        } else {
-            return true;
-        }
-
+    private void clearAllErrorMessage() {
+        mAmountEditText.setError(null);
+        mBankSelectorView.setError(null);
+        mNoteEditText.setError(null);
     }
 
     private void launchReviewPage() {
         final String amount = mAmountEditText.getText().toString().trim();
-        final String description = mDescriptionEditText.getText().toString().trim();
-
-        UserBankClass selectedBankAccount = mListUserBankClasses.get(selectedBankPosition);
-        long bankAccountId = selectedBankAccount.getBankAccountId();
-        String bankName = selectedBankAccount.getBankName();
-        String accountNumber = selectedBankAccount.getAccountNumber();
-        int bankCode = selectedBankAccount.getBankIcon(getActivity());
+        final String description = mNoteEditText.getText().toString().trim();
 
         Intent intent = new Intent(getActivity(), WithdrawMoneyReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, Double.parseDouble(amount));
-        intent.putExtra(Constants.BANK_NAME, bankName);
-        intent.putExtra(Constants.BANK_ACCOUNT_ID, bankAccountId);
-        intent.putExtra(Constants.BANK_ACCOUNT_NUMBER, accountNumber);
         intent.putExtra(Constants.DESCRIPTION_TAG, description);
-        intent.putExtra(Constants.BANK_CODE, bankCode);
 
+        UserBankClass selectedBankAccount = mListUserBankClasses.get(mBankSelectorView.getSelectedItemPosition());
+        intent.putExtra(Constants.SELECTED_BANK_ACCOUNT, selectedBankAccount);
         startActivityForResult(intent, WITHDRAW_MONEY_REVIEW_REQUEST);
     }
 
@@ -309,36 +259,11 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
         }
     }
 
-
-    private void showBankListAlertDialogue() {
-        CustomSelectorDialogWithIcon bankSelectorDialogWithIcon = new CustomSelectorDialogWithIcon(getActivity(), getString(R.string.select_a_bank), mUserBankList, mBankIconArray);
-        bankSelectorDialogWithIcon.setOnResourceSelectedListener(new CustomSelectorDialogWithIcon.OnResourceSelectedListener() {
-            @Override
-            public void onResourceSelected(int id, String name) {
-                selectedBankPosition = id;
-                mBankNameTextView.setError(null);
-                mBankBranchTextView.setVisibility(View.VISIBLE);
-                mBankAccountTextView.setVisibility(View.VISIBLE);
-                mBankAccountNumberHintTextView.setVisibility(View.VISIBLE);
-                mBankIcon.setVisibility(View.VISIBLE);
-                Drawable icon = getResources().getDrawable(mListUserBankClasses.get(selectedBankPosition).getBankIcon(getActivity()));
-                mBankIcon.setImageDrawable(icon);
-
-                mBankNameTextView.setText(mListUserBankClasses.get(selectedBankPosition).getBankName());
-                mBankBranchTextView.setText(mListUserBankClasses.get(selectedBankPosition).getBranchName());
-                mBankAccountTextView.setText(mListUserBankClasses.get(selectedBankPosition).getAccountNumber());
-
-            }
-        });
-
-        bankSelectorDialogWithIcon.show();
-    }
-
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.show();
+            mProgressDialog.cancel();
             mGetBankTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
@@ -347,91 +272,73 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
 
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_BANK_LIST)) {
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+        switch (result.getApiCommand()) {
+            case Constants.COMMAND_GET_BANK_LIST:
+                mProgressDialog.cancel();
+                GetBankListResponse mBankListResponse;
+                switch (result.getStatus()) {
+                    case Constants.HTTP_RESPONSE_STATUS_OK:
+                        try {
+                            mBankListResponse = gson.fromJson(result.getJsonString(), GetBankListResponse.class);
+                            mListUserBankClasses = new ArrayList<>();
 
-                try {
-                    mBankListResponse = gson.fromJson(result.getJsonString(), GetBankListResponse.class);
-
-                    mListUserBankClasses = new ArrayList<>();
-
-                    for (UserBankClass bank : mBankListResponse.getBanks()) {
-                        if (bank.getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
-                            mListUserBankClasses.add(bank);
+                            for (UserBankClass bank : mBankListResponse.getBanks()) {
+                                if (bank.getVerificationStatus().equals(Constants.BANK_ACCOUNT_STATUS_VERIFIED)) {
+                                    mListUserBankClasses.add(bank);
+                                }
+                            }
+                            mBankSelectorView.setItems(mListUserBankClasses);
+                            mBankSelectorView.setSelectable(true);
+                            if (!mBankSelectorView.isBankAdded()) {
+                                mBankSelectorView.showAddBankDialog(true);
+                            } else if (!mBankSelectorView.isVerifiedBankAdded()) {
+                                mBankSelectorView.showVerifyBankDialog(true);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            if (getActivity() != null)
+                                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
                         }
-                    }
-
-                    BankListValidator bankListValidator = new BankListValidator(mBankListResponse.getBanks());
-                    if (!bankListValidator.isBankAdded()) {
-                        bankListValidator.showAddBankDialog(getActivity());
-                    } else if (!bankListValidator.isVerifiedBankAdded()) {
-                        bankListValidator.showVerifyBankDialog(getActivity());
-                    } else {
-                        mLinkABankNoteTextView.setVisibility(View.GONE);
-                        mBankIconArray = new int[mListUserBankClasses.size()];
-
-                        for (int i = 0; i < mListUserBankClasses.size(); i++) {
-                            mUserBankNameList.add(mListUserBankClasses.get(i).getBankName());
-                            mUserBankAccountNumberList.add(mListUserBankClasses.get(i).getAccountNumber());
-                            mUserBankList.add(mListUserBankClasses.get(i).getBankName() + "\n" + mListUserBankClasses.get(i).getBranchName() + "\n" + mListUserBankClasses.get(i).getAccountNumber());
-                            int icon = mListUserBankClasses.get(i).getBankIcon(getActivity());
-                            mBankIconArray[i] = icon;
-                        }
-                    }
-
-                    if (mUserBankNameList.size() == 1) {
-                        mBankBranchTextView.setVisibility(View.VISIBLE);
-                        mBankAccountTextView.setVisibility(View.VISIBLE);
-                        mBankAccountNumberHintTextView.setVisibility(View.VISIBLE);
-                        mBankIcon.setVisibility(View.VISIBLE);
-                        Drawable icon = getResources().getDrawable(mListUserBankClasses.get(selectedBankPosition).getBankIcon(getActivity()));
-                        mBankIcon.setImageDrawable(icon);
-
-                        mBankNameTextView.setText(mListUserBankClasses.get(selectedBankPosition).getBankName());
-                        mBankBranchTextView.setText(mListUserBankClasses.get(selectedBankPosition).getBranchName());
-                        mBankAccountTextView.setText(mListUserBankClasses.get(selectedBankPosition).getAccountNumber());
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+                        break;
+                    default:
+                        if (getActivity() != null)
+                            Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
+                        break;
                 }
+                break;
+            case Constants.COMMAND_GET_BUSINESS_RULE:
+                switch (result.getStatus()) {
+                    case Constants.HTTP_RESPONSE_STATUS_OK:
+                        try {
+                            gson = new Gson();
 
-                mProgressDialog.dismiss();
-                mGetBankTask = null;
+                            BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
 
-            }
-        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
+                            for (BusinessRule rule : businessRuleArray) {
+                                if (rule.getRuleID().equals(Constants.SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
+                                    WithdrawMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
 
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                                } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
+                                    WithdrawMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                }
 
-                try {
-                    gson = new Gson();
+                            }
 
-                    BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
-
-                    for (BusinessRule rule : businessRuleArray) {
-                        if (rule.getRuleID().equals(Constants.SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
-                            WithdrawMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-
-                        } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
-                            WithdrawMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            if (getActivity() != null)
+                                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                         }
-
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getActivity() != null)
-                        Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
+                        break;
+                    default:
+                        if (getActivity() != null)
+                            Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
+                        break;
                 }
-
-            } else {
+                break;
+            default:
                 if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
-            }
-
-            mGetBusinessRuleTask = null;
-
         }
     }
 }

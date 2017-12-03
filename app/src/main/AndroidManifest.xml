@@ -292,6 +292,13 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
+        <activity
+            android:name=".Activities.PaymentActivities.CardPaymentWebViewActivity"
+            android:label="@string/card_payment_web_view_title"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ActionBarNoElevation"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <!-- FCM-->
         <service android:name=".Service.FCM.FCMListenerService">
             <intent-filter>

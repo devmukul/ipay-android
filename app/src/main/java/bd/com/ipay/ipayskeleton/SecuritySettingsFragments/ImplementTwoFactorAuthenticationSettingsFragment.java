@@ -3,10 +3,12 @@ package bd.com.ipay.ipayskeleton.SecuritySettingsFragments;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +18,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
@@ -40,12 +42,9 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment implements HttpResponseListener {
 
     private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLinearLayoutManager;
     private ProgressDialog mProgressDialog;
 
-    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
-
-    private HttpRequestGetAsyncTask mGetTwoFactorAuthSettingsAsynctask;
+    private HttpRequestGetAsyncTask mGetTwoFactorAuthSettingsAsyncTask;
     private TwoFactorAuthServicesListResponse mTwoFaServiceResponse;
 
     private HttpRequestPutAsyncTask mPutTwoFactorAuthSettingsAsyncTask;
@@ -60,47 +59,45 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
     private String mUri;
     private String mJsonString;
 
-
-    HashMap<Integer, TwoFactorAuthService> mPositionToServiceIDMap = new HashMap<Integer, TwoFactorAuthService>();
+    private SparseArray<TwoFactorAuthService> mServiceIDMap = new SparseArray<>();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_2fa_implement, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setMessage(getString(R.string.please_wait));
         getTwoFactorAuthSettings();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyler_view__two_factor_auth);
-        mLinearLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyler_view_two_factor_auth);
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mChangedList = new ArrayList<>();
+        getActivity().setTitle(R.string.two_fa_settings);
         return view;
     }
 
     private void getTwoFactorAuthSettings() {
+        if (mGetTwoFactorAuthSettingsAsyncTask != null) {
+            return;
+        }
         String API_COMMAND = Constants.COMMAND_GET_TWO_FACTOR_AUTH_SETTINGS;
         String mUri = Constants.BASE_URL_MM + Constants.URL_TWO_FACTOR_AUTH_SETTINGS;
-        mGetTwoFactorAuthSettingsAsynctask = new HttpRequestGetAsyncTask(API_COMMAND, mUri, getActivity());
-        mGetTwoFactorAuthSettingsAsynctask.mHttpResponseListener = this;
-        try {
-            mGetTwoFactorAuthSettingsAsynctask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } catch (Exception e) {
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+        mGetTwoFactorAuthSettingsAsyncTask = new HttpRequestGetAsyncTask(API_COMMAND, mUri, getActivity());
+        mGetTwoFactorAuthSettingsAsyncTask.mHttpResponseListener = this;
+        mGetTwoFactorAuthSettingsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mProgressDialog.show();
     }
 
     int setBit(int N, int pos) {
-        return N = N | (1 << pos);
+        return N | (1 << pos);
     }
 
     int resetBit(int N, int pos) {
-        return N = N & ~(1 << pos);
+        return N & ~(1 << pos);
     }
 
     boolean check(int N, int pos) {
-        if ((N & (1 << pos)) != 0)
-            return true;
-        else
-            return false;
+        return (N & (1 << pos)) != 0;
     }
 
     private void setCurrentSettings() {
@@ -108,11 +105,11 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
         for (int i = 0; i < mTwoFaServiceList.size(); i++) {
             for (int j = 0; j < mTwoFaServiceList.get(i).getServices().size(); j++) {
                 if (mTwoFaServiceList.get(i).getServices().get(j).getIsEnabled()) {
-                    mPositionToServiceIDMap.put(pos, mTwoFaServiceList.get(i).getServices().get(j));
+                    mServiceIDMap.put(pos, mTwoFaServiceList.get(i).getServices().get(j));
                     mCurrentSettings = setBit(mCurrentSettings, pos);
                     pos++;
                 } else {
-                    mPositionToServiceIDMap.put(pos, mTwoFaServiceList.get(i).getServices().get(j));
+                    mServiceIDMap.put(pos, mTwoFaServiceList.get(i).getServices().get(j));
                     mCurrentSettings = resetBit(mCurrentSettings, pos);
                     pos++;
                 }
@@ -150,6 +147,8 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
         mPutTwoFactorAuthSettingsAsyncTask = new HttpRequestPutAsyncTask(API_COMMAND, mUri, mJsonString, getActivity());
         mPutTwoFactorAuthSettingsAsyncTask.mHttpResponseListener = this;
         mPutTwoFactorAuthSettingsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        mProgressDialog.show();
     }
 
     @Override
@@ -157,9 +156,10 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
         Gson gson = new Gson();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mGetTwoFactorAuthSettingsAsynctask = null;
+            mGetTwoFactorAuthSettingsAsyncTask = null;
+            mPutTwoFactorAuthSettingsAsyncTask = null;
             if (getActivity() != null)
-                return;
+                Toaster.makeText(getContext(), R.string.service_not_available, Toast.LENGTH_SHORT);
         } else {
             if (result.getApiCommand().equals(Constants.COMMAND_GET_TWO_FACTOR_AUTH_SETTINGS)) {
                 try {
@@ -180,9 +180,8 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
                 } catch (Exception e) {
                     Toaster.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG);
                 }
-                mGetTwoFactorAuthSettingsAsynctask = null;
-                if (mProgressDialog.isShowing())
-                    mProgressDialog.dismiss();
+                mGetTwoFactorAuthSettingsAsyncTask = null;
+                mProgressDialog.dismiss();
 
             } else if (result.getApiCommand().equals(Constants.COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS)) {
                 TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse = gson.fromJson(result.getJsonString(), TwoFactorAuthSettingsSaveResponse.class);
@@ -195,7 +194,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
                         if (getActivity() != null) {
                             SecuritySettingsActivity.otpDuration = twoFactorAuthSettingsSaveResponse.getOtpValidFor();
                             Toaster.makeText(getActivity(), twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
-                            mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), mJsonString,
+                            OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), mJsonString,
                                     Constants.COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS, mUri, Constants.METHOD_PUT);
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
                         }
@@ -206,13 +205,12 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
                     Toaster.makeText(getActivity(), twoFactorAuthSettingsSaveResponse.getMessage(), Toast.LENGTH_LONG);
                 }
                 mPutTwoFactorAuthSettingsAsyncTask = null;
-                if (mProgressDialog.isShowing())
-                    mProgressDialog.dismiss();
+                mProgressDialog.dismiss();
             }
         }
     }
 
-    public class ImplementTwoFactorAuthAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public class ImplementTwoFactorAuthAdapter extends RecyclerView.Adapter<ImplementTwoFactorAuthAdapter.ViewHolder> {
         private static final int IMPLEMENT_TWO_FACTOR_AUTH_HEADER_VIEW = 1;
         private static final int IMPLEMENT_TWO_FACTOR_AUTH_ITEM_VIEW = 2;
         private static final int FOOTER_VIEW = 3;
@@ -222,7 +220,7 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
         private int footerPosition;
         private int itemCount;
 
-        public ImplementTwoFactorAuthAdapter(List<TwoFactorAuthServiceGroup> twoFactorAuthServiceGroupList) {
+        ImplementTwoFactorAuthAdapter(List<TwoFactorAuthServiceGroup> twoFactorAuthServiceGroupList) {
             this.mTwoFactorAuthServiceGroupList = twoFactorAuthServiceGroupList;
             this.headerPositionList = new ArrayList<>();
             footerPosition = 0;
@@ -242,27 +240,51 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
             itemCount++;
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView mHeaderTextView;
-            private TextView mDescriptionTextView;
-            private Switch mSwitch;
-            private Button mButtonSave;
-            private View mMargin;
-            private int twoFactorAuthSettingsGroupIndex = 0;
-            private int selectedHeaderPosition = 0;
-            private int desiredPositon = 0;
+        public abstract class ViewHolder extends RecyclerView.ViewHolder {
 
             public ViewHolder(final View itemView) {
                 super(itemView);
-                mHeaderTextView = (TextView) itemView.findViewById(R.id.header_text_view);
-                mDescriptionTextView = (TextView) itemView.findViewById(R.id.description_text_view);
-                mSwitch = (Switch) itemView.findViewById(R.id.switch_list_item);
-                mButtonSave = (Button) itemView.findViewById(R.id.button_footer_save);
-                mMargin = itemView.findViewById(R.id.divider_below);
+
             }
 
-            public void bindViewListItem(int position) {
+            public <T extends View> T findViewById(@IdRes int id) {
+                //noinspection unchecked
+                return (T) itemView.findViewById(id);
+            }
 
+            public abstract void bindView(int position);
+        }
+
+        class HeaderViewHolder extends ViewHolder {
+            private TextView mHeaderTextView;
+
+            HeaderViewHolder(View itemView) {
+                super(itemView);
+                mHeaderTextView = findViewById(R.id.header_text_view);
+            }
+
+            @Override
+            public void bindView(int position) {
+                mHeaderTextView.setText(mTwoFactorAuthServiceGroupList.get(headerPositionList.indexOf(position)).getGroupName());
+            }
+        }
+
+        class ItemViewHolder extends ViewHolder {
+            private TextView mDescriptionTextView;
+            private Switch mSwitch;
+
+            int twoFactorAuthSettingsGroupIndex = 0;
+            int selectedHeaderPosition = 0;
+            int desiredPosition = 0;
+
+            ItemViewHolder(View itemView) {
+                super(itemView);
+                mDescriptionTextView = findViewById(R.id.description_text_view);
+                mSwitch = findViewById(R.id.switch_list_item);
+            }
+
+            @Override
+            public void bindView(int position) {
                 for (int i = 0; i < headerPositionList.size(); i++) {
                     if (position > headerPositionList.get(i)) {
                         if (i < headerPositionList.size() - 1) {
@@ -279,23 +301,30 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
                     }
                 }
                 final TwoFactorAuthService twoFactorAuthService = mTwoFactorAuthServiceGroupList.get(twoFactorAuthSettingsGroupIndex).getServices().get(position - selectedHeaderPosition - 1);
-                desiredPositon = position - selectedHeaderPosition - 1;
+                desiredPosition = position - selectedHeaderPosition - 1;
                 mDescriptionTextView.setText(twoFactorAuthService.getServiceName());
                 mSwitch.setChecked(twoFactorAuthService.getIsEnabled());
 
                 mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        mTwoFactorAuthServiceGroupList.get(twoFactorAuthSettingsGroupIndex).getServices().get(desiredPositon).setIsEnabled(mSwitch.isChecked());
+                        mTwoFactorAuthServiceGroupList.get(twoFactorAuthSettingsGroupIndex).getServices().get(desiredPosition).setIsEnabled(mSwitch.isChecked());
                     }
                 });
             }
+        }
 
-            public void bindHeader(int position) {
-                mHeaderTextView.setText(mTwoFactorAuthServiceGroupList.get(headerPositionList.indexOf(position)).getGroupName());
+        class FooterViewHolder extends ViewHolder {
+            private Button mButtonSave;
+
+            FooterViewHolder(View itemView) {
+                super(itemView);
+                mButtonSave = findViewById(R.id.button_footer_save);
             }
 
-            public void bindFooter() {
+
+            @Override
+            public void bindView(int position) {
                 mButtonSave.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -304,60 +333,39 @@ public class ImplementTwoFactorAuthenticationSettingsFragment extends Fragment i
                         if (mChangedSettings != mCurrentSettings) {
                             for (int i = 0; i < mTotalServices; i++) {
                                 if ((check(mChangedSettings, i) && !check(mCurrentSettings, i)) || !check(mChangedSettings, i) && check(mCurrentSettings, i)) {
-                                    mChangedList.add(mPositionToServiceIDMap.get(i));
+                                    mChangedList.add(mServiceIDMap.get(i));
                                 }
                             }
                             attemptSaveTwoFactorAuthSettings(mChangedList);
+                        } else {
+                            MaterialDialog materialDialog = new MaterialDialog.Builder(getContext())
+                                    .content(R.string.settings_not_changed)
+                                    .negativeText(R.string.cancel)
+                                    .build();
+                            materialDialog.show();
                         }
                     }
                 });
             }
         }
 
-        public class ServiceListViewHolder extends ViewHolder {
-            public ServiceListViewHolder(View itemView) {
-                super(itemView);
-            }
-        }
-
-        public class ServiceHeaderViewHolder extends ViewHolder {
-            public ServiceHeaderViewHolder(View itemView) {
-                super(itemView);
-            }
-        }
-
-        public class ServiceFooterViewHolder extends ViewHolder {
-            public ServiceFooterViewHolder(View itemView) {
-                super(itemView);
-            }
-        }
-
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             switch (viewType) {
                 case IMPLEMENT_TWO_FACTOR_AUTH_HEADER_VIEW:
-                    return new ServiceHeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_header_2fa, parent, false));
+                    return new HeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_header_2fa, parent, false));
                 case IMPLEMENT_TWO_FACTOR_AUTH_ITEM_VIEW:
-                    return new ServiceListViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_2fa, parent, false));
+                    return new ItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_2fa, parent, false));
                 case FOOTER_VIEW:
-                    return new ServiceFooterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_button_two_fa_footer, parent, false));
+                    return new FooterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_button_two_fa_footer, parent, false));
                 default:
                     return null;
             }
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            if (holder instanceof ServiceHeaderViewHolder) {
-                ServiceHeaderViewHolder vh = (ServiceHeaderViewHolder) holder;
-                vh.bindHeader(position);
-            } else if (holder instanceof ServiceListViewHolder) {
-                ServiceListViewHolder vh = (ServiceListViewHolder) holder;
-                vh.bindViewListItem(position);
-            } else if (holder instanceof ServiceFooterViewHolder) {
-                ServiceFooterViewHolder vh = (ServiceFooterViewHolder) holder;
-                vh.bindFooter();
-            }
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.bindView(position);
         }
 
         @Override

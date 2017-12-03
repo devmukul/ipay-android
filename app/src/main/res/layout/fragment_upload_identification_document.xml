@@ -200,8 +200,8 @@
                 style="@style/ButtonPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/upload_document"
-                android:layout_marginTop="@dimen/activity_horizontal_margin_semi_double"/>
+                android:layout_marginTop="@dimen/activity_horizontal_margin_semi_double"
+                android:text="@string/upload_document" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
