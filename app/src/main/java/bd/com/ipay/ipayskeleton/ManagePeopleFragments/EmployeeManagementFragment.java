@@ -59,15 +59,6 @@
 //        View v = inflater.inflate(R.layout.fragment_employee_management, container, false);
 //        getActivity().setTitle(R.string.manage_people);
 //
-//        mFabAddNewEmployee = (FloatingActionButton) v.findViewById(R.id.fab_add_employee);
-//        mFabAddNewEmployee.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ((ManagePeopleActivity) getActivity()).switchToEmployeeInformationFragment();
-//            }
-//        });
-//
-//
 //        mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
 //        mEmployeeListView = (RecyclerView) v.findViewById(R.id.list_employee);
 //        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());

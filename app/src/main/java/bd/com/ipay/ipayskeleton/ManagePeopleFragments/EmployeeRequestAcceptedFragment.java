@@ -26,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.EditBusinessManagerDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -37,10 +38,10 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EmployeeRequestAcceptedFragment extends ProgressFragment implements HttpResponseListener {
+public class EmployeeRequestAcceptedFragment extends BaseFragment implements HttpResponseListener {
 
 
-    private List<ManagerList> mEmployeeList;
+    //private List<ManagerList> mEmployeeList;
     private TextView mEmptyListTextView;
 
     private HttpRequestGetAsyncTask mGetAllEmployeeAsyncTask;
@@ -78,8 +79,12 @@ public class EmployeeRequestAcceptedFragment extends ProgressFragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getEmployeeList();
-        setContentShown(false);
+        adapter.notifyDataSetChanged();
+        if (EmployeeRequestHolderFragment.mAcceptedEmployeeList != null && EmployeeRequestHolderFragment.mAcceptedEmployeeList.size() == 0) {
+            mEmptyListTextView.setVisibility(View.VISIBLE);
+        } else mEmptyListTextView.setVisibility(View.GONE);
+        //getEmployeeList();
+        //setContentShown(false);
     }
 
 
@@ -102,7 +107,7 @@ public class EmployeeRequestAcceptedFragment extends ProgressFragment implements
         if (mGetAllEmployeeAsyncTask != null)
             return;
 
-        mGetAllEmployeeAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_EMPLOYEE_LIST,
+        mGetAllEmployeeAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ACCEPTED_EMPLOYEE_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_EMPLOYEE_LIST, getActivity(), this);
         mGetAllEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -128,16 +133,13 @@ public class EmployeeRequestAcceptedFragment extends ProgressFragment implements
         }
 
         Gson gson = new Gson();
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_EMPLOYEE_LIST)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_ACCEPTED_EMPLOYEE_LIST)) {
             try {
                 mGetAllEmployeesResponse = gson.fromJson(result.getJsonString(), ManagerListResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mEmployeeList = mGetAllEmployeesResponse.getManagerList();
-
+                    EmployeeRequestHolderFragment.mAcceptedEmployeeList = mGetAllEmployeesResponse.getManagerList();
                     adapter.notifyDataSetChanged();
-                    if (isAdded())
-                        setContentShown(true);
                 } else {
                     if (getActivity() != null) {
                         Toaster.makeText(getActivity(), "Failed to fetch manager list", Toast.LENGTH_LONG);
@@ -181,7 +183,7 @@ public class EmployeeRequestAcceptedFragment extends ProgressFragment implements
             mRemoveAnEmployeeAsyncTask = null;
         }
 
-        if (mEmployeeList != null && mEmployeeList.size() == 0) {
+        if (EmployeeRequestHolderFragment.mAcceptedEmployeeList != null && EmployeeRequestHolderFragment.mAcceptedEmployeeList.size() == 0) {
             mEmptyListTextView.setVisibility(View.VISIBLE);
         } else mEmptyListTextView.setVisibility(View.GONE);
     }
@@ -215,8 +217,8 @@ public class EmployeeRequestAcceptedFragment extends ProgressFragment implements
             }
 
             public void bindView(final int pos) {
-                if (pos == mEmployeeList.size() - 1) divider.setVisibility(View.GONE);
-                final ManagerList employee = mEmployeeList.get(pos);
+                if (pos == EmployeeRequestHolderFragment.mAcceptedEmployeeList.size() - 1) divider.setVisibility(View.GONE);
+                final ManagerList employee = EmployeeRequestHolderFragment.mAcceptedEmployeeList.get(pos);
                 mEmployee_manage_ActionList = Arrays.asList(getResources().getStringArray(R.array.employee_management_action));
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + employee.getProfilePictures().get(0).getUrl(),
@@ -300,8 +302,8 @@ public class EmployeeRequestAcceptedFragment extends ProgressFragment implements
 
         @Override
         public int getItemCount() {
-            if (mEmployeeList != null)
-                return mEmployeeList.size();
+            if (EmployeeRequestHolderFragment.mAcceptedEmployeeList != null)
+                return EmployeeRequestHolderFragment.mAcceptedEmployeeList.size();
             else
                 return 0;
         }
