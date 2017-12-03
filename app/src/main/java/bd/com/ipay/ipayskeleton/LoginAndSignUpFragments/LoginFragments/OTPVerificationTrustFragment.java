@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrust
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
@@ -243,6 +244,8 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                             new RegisterFCMTokenToServerAsyncTask(getContext());
                         }
 
+                        SharedPrefManager.setUserCountry(SignupOrLoginActivity.mCountryCode);
+
                         // Saving the allowed services id for the user
                         if (mLoginResponseModel.getAccessControlList() != null) {
                             ACLManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
@@ -350,14 +353,14 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                         ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
                         ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
 
-                        if(!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                        if (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
                                 || !ProfileInfoCacheManager.isBasicInfoAdded()) {
                             ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
-                        }else {
+                        } else {
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                         }
                     } else {
-                        if (getActivity()!= null)
+                        if (getActivity() != null)
                             Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
                     }
 

@@ -159,7 +159,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (ContactEngine.isValidNumber(result)) {
+                        if (InputValidator.isValidNumber(result)) {
                             mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
                         } else if (getActivity() != null)
                             Toaster.makeText(getActivity(), getResources().getString(
@@ -216,7 +216,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             focusView = mDescriptionEditText;
             mDescriptionEditText.setError(getString(R.string.please_write_note));
             cancel = true;
-        } else if (!ContactEngine.isValidNumber(mobileNumber)) {
+        } else if (!InputValidator.isValidNumber(mobileNumber)) {
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             cancel = true;

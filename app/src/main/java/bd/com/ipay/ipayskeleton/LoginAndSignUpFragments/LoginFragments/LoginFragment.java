@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
+import com.hbb20.CountryCodePicker;
 
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -55,6 +56,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
     private AddToTrustedDeviceResponse mAddToTrustedDeviceResponse;
     private HttpRequestPostAsyncTask mAddTrustedDeviceTask = null;
 
+    private CountryCodePicker mCountryCodePicker;
     private ProfileImageView mProfileImageView;
     private EditText mUserNameEditText;
     private EditText mPasswordEditText;
@@ -100,7 +102,10 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mUserNameEditText = (EditText) v.findViewById(R.id.login_mobile_number);
         mPasswordEditText = (EditText) v.findViewById(R.id.login_password);
+        mCountryCodePicker = (CountryCodePicker) v.findViewById(R.id.ccp);
         mInfoView = (ImageView) v.findViewById(R.id.login_info);
+
+        mCountryCodePicker.registerCarrierNumberEditText(mUserNameEditText);
 
         if (SharedPrefManager.ifContainsUserID()) {
             mButtonJoinUs.setVisibility(View.GONE);
@@ -193,9 +198,15 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         if (SharedPrefManager.ifContainsUUID()) {
             mPasswordEditText.setText("");
             mPasswordEditText.requestFocus();
+
+            mCountryCodePicker.setCcpClickable(false);
+
+            mCountryCodePicker.setCountryForNameCode(SharedPrefManager.getUserCountry());
+
             mUserNameEditText.setEnabled(false);
             mInfoView.setVisibility(View.VISIBLE);
-            String mobileNumber = ContactEngine.formatMobileNumberBD(ProfileInfoCacheManager.getMobileNumber());
+
+            String mobileNumber = ContactEngine.formatLocalMobileNumber(ProfileInfoCacheManager.getMobileNumber());
             mUserNameEditText.setText(mobileNumber);
             mButtonJoinUs.setVisibility(View.GONE);
 
@@ -265,8 +276,10 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         mPasswordEditText.setError(null);
 
         // Store values at the time of the login attempt.
+        String countryCode = mCountryCodePicker.getSelectedCountryNameCode();
+        String mobileNumber = mUserNameEditText.getText().toString().trim();
 
-        mUserNameLogin = ContactEngine.formatMobileNumberBD(mUserNameEditText.getText().toString().trim());
+        mUserNameLogin = ContactEngine.formatMobileNumberInternational(mobileNumber, countryCode);
         if (!tryLogInWithTouchID)
             mPasswordLogin = mPasswordEditText.getText().toString().trim();
 
@@ -281,7 +294,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             cancel = true;
         }
 
-        if (!ContactEngine.isValidNumber(mUserNameLogin)) {
+        if (!InputValidator.isValidMobileNumberWithCountryCode(mUserNameEditText.getText().toString().trim(), countryCode)) {
             mUserNameEditText.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mUserNameEditText;
             cancel = true;
@@ -299,6 +312,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             SignupOrLoginActivity.mPassword = mPasswordLogin;
             SignupOrLoginActivity.mMobileNumberBusiness = mUserNameLogin;
             SignupOrLoginActivity.mPasswordBusiness = mPasswordLogin;
+            SignupOrLoginActivity.mCountryCode = mCountryCodePicker.getSelectedCountryNameCode();
 
             mProgressDialog.setMessage(getString(R.string.progress_dialog_text_logging_in));
             mProgressDialog.show();
@@ -348,6 +362,8 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
 
                             ProfileInfoCacheManager.setMobileNumber(mUserNameLogin);
                             ProfileInfoCacheManager.setAccountType(mLoginResponseModel.getAccountType());
+                            SharedPrefManager.setUserCountry(SignupOrLoginActivity.mCountryCode);
+
                             // When user logs in, we want that by default he would log in to his default account
                             TokenManager.deactivateEmployerAccount();
 
@@ -484,14 +500,14 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                         ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
                         ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
 
-                        if(!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                        if (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
                                 || !ProfileInfoCacheManager.isBasicInfoAdded()) {
                             ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
-                        }else {
+                        } else {
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                         }
                     } else {
-                        if (getActivity()!= null)
+                        if (getActivity() != null)
                             Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
                     }
 
@@ -508,7 +524,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
 
                 try {
-                    System.out.println("Test "+result.toString());
+                    System.out.println("Test " + result.toString());
 
                     mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {

@@ -326,8 +326,9 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         ProfileInfoCacheManager.setName(SignupOrLoginActivity.mName);
                         ProfileInfoCacheManager.setBirthday(SignupOrLoginActivity.mBirthday);
                         ProfileInfoCacheManager.setGender(SignupOrLoginActivity.mGender);
-                        SharedPrefManager.serUserCountry("Bangladesh");
+                        SharedPrefManager.setUserCountry(SignupOrLoginActivity.mCountryCode);
                         ProfileInfoCacheManager.setAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
+
                         String UUID = mAddToTrustedDeviceResponse.getUUID();
                         ProfileInfoCacheManager.setUUID(UUID);
                         ProfileInfoCacheManager.uploadProfilePicture(false);
