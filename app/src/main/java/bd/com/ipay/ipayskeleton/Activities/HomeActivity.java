@@ -46,6 +46,7 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.HelpAndSupportActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.InviteActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
@@ -140,6 +141,9 @@ public class HomeActivity extends BaseActivity
 
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 
+        Menu menu = mNavigationView.getMenu();
+        if (!ProfileInfoCacheManager.isBusinessAccount())
+            menu.findItem(R.id.nav_manage_account).setVisible(false);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -267,7 +271,6 @@ public class HomeActivity extends BaseActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.home_activity, menu);
         mOptionsMenu = menu;
-
         // If the menu is recreated, then restore the previous badge count
         updateNotificationBadgeCount(mBadgeCount);
         return true;
@@ -389,7 +392,6 @@ public class HomeActivity extends BaseActivity
 
     private void gotoDrawerItem(MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.nav_home) {
 
             switchToDashBoard();
@@ -421,6 +423,10 @@ public class HomeActivity extends BaseActivity
             startActivity(intent);
             switchedToHomeFragment = true;
 
+        } else if (id == R.id.nav_manage_account) {
+            Intent intent = new Intent(HomeActivity.this, ManagePeopleActivity.class);
+            startActivity(intent);
+            switchedToHomeFragment = false;
         } else if (id == R.id.nav_live_chat) {
             if (isProfileInfoAvailable()) {
                 Utilities.initIntercomLogin();
