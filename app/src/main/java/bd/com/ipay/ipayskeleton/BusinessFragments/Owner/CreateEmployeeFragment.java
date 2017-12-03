@@ -135,7 +135,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
         super.onResume();
         if (mSelectedRoleID != -1) {
             mRoleEditText.setText(mSelectedRoleName);
-            getDetailsOfSelectedRole();
+            //getDetailsOfSelectedRole();
         }
         if (mSelectedMobileNumber != null)
             mMobileNumberEditText.setText(mSelectedMobileNumber);
@@ -228,13 +228,14 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void launchPrevilegePage(String mobileNumber, String name, String profilePicture, String roleName, long roleID) {
+    private void launchPrevilegePage(String mobileNumber, String name, String profilePicture, String roleName, long roleID,ArrayList<String>privileges) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.MOBILE_NUMBER, mobileNumber);
         bundle.putString(Constants.ROLENAME, roleName);
         bundle.putString(Constants.NAME, name);
         bundle.putLong(Constants.ROLEID, roleID);
         bundle.putString(Constants.PROFILE_PICTURE, profilePicture);
+        bundle.putStringArrayList(Constants.PRIVILEGES,privileges);
         //bundle.putLong(Constants.ASSOCIATION_ID, mAssociationId);
 
         ((ManagePeopleActivity) getActivity()).switchToEmployeePrivilegeFragment(bundle);
@@ -279,7 +280,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
 
                     String mobileNumber = ContactEngine.formatMobileNumberBD(mMobileNumberEditText.getText().toString());
                     String role = mRoleEditText.getText().toString();
-                    launchPrevilegePage(mobileNumber, name, profilePicture, role, mSelectedRoleID);
+                    launchPrevilegePage(mobileNumber, name, profilePicture, role, mSelectedRoleID,(ArrayList<String>) mPrivilegeList);
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                     if (getActivity() != null)

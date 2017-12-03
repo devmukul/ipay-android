@@ -101,6 +101,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
             mMobileNumber = getArguments().getString(Constants.MOBILE_NUMBER);
             mRoleName = getArguments().getString(Constants.ROLENAME);
             mRoleID = getArguments().getLong(Constants.ROLEID);
+            mPrivilegeList = getArguments().getStringArrayList(Constants.PRIVILEGES);
         }
 
         mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture, false);
@@ -108,7 +109,6 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
         mMobileNumberView.setText(mMobileNumber);
         if (!mRoleName.equals("")) mRoleView.setText(mRoleName);
         else mRoleView.setVisibility(View.GONE);
-        getDetailsOfSelectedRole();
 
         mAddEmployeeOrSavePermissionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -324,7 +324,7 @@ public class EmployeePrivilegeFragment extends Fragment implements HttpResponseL
             public EmployeePrivilegeViewHolder(View itemView) {
                 super(itemView);
 
-                mPrivilegeCheckbox= (CheckBox) itemView.findViewById(R.id.checkbox_privilege);
+                mPrivilegeCheckbox = (CheckBox) itemView.findViewById(R.id.checkbox_privilege);
             }
 
             public void bindView(final int pos) {
