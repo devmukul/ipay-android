@@ -48,6 +48,8 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
     }
 
     public void switchToEmployeeManagementFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStackImmediate();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new EmployeeRequestHolderFragment()).commit();
 
@@ -86,10 +88,14 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
     }
 
     public void switchToEmployeeInformationFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 1)
+            getSupportFragmentManager().popBackStack();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CreateEmployeeFragment()).addToBackStack(null).commit();
     }
 
     public void switchToEmployeePrivilegeFragment(Bundle bundle) {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 2)
+            getSupportFragmentManager().popBackStack();
         EmployeePrivilegeFragment employeePrivilegeFragment = new EmployeePrivilegeFragment();
         employeePrivilegeFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, employeePrivilegeFragment).addToBackStack(null).commit();
