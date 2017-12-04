@@ -112,7 +112,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         mRememberMeCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SignupOrLoginActivity.mRememberMe = isChecked;
+                SignupOrLoginActivity.isRememberMe = isChecked;
             }
         });
 
@@ -334,7 +334,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             }
 
             LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
-                    Constants.MOBILE_ANDROID + mDeviceID, UUID, null, null, null);
+                    Constants.MOBILE_ANDROID + mDeviceID, UUID, null, null, null, SignupOrLoginActivity.isRememberMe);
             Gson gson = new Gson();
             String json = gson.toJson(mLoginModel);
             mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
@@ -384,8 +384,8 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                             }
 
                             // Save Remember me in shared preference
-                            if (SignupOrLoginActivity.mRememberMe) {
-                                SharedPrefManager.setRememberMeActive(true);
+                            if (SignupOrLoginActivity.isRememberMe) {
+                                SharedPrefManager.setRememberMeActive(SignupOrLoginActivity.isRememberMe);
                             }
 
                             // Preference should contain UUID if user logged in before. If not, then launch the DeviceTrust Activity.

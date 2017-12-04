@@ -199,7 +199,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
             mProgressDialog.show();
 
             LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
-                    Constants.MOBILE_ANDROID + mDeviceID, null, otp, null, null);
+                    Constants.MOBILE_ANDROID + mDeviceID, null, otp, null, null, SignupOrLoginActivity.isRememberMe);
             Gson gson = new Gson();
             String json = gson.toJson(mLoginModel);
             mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
@@ -252,8 +252,8 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                         }
 
                         // Save Remember me in shared preference
-                        if (SignupOrLoginActivity.mRememberMe) {
-                            SharedPrefManager.setRememberMeActive(true);
+                        if (SignupOrLoginActivity.isRememberMe) {
+                            SharedPrefManager.setRememberMeActive(SignupOrLoginActivity.isRememberMe);
                         }
 
                         attemptTrustedDeviceAdd();
