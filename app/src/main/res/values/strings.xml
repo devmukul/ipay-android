@@ -1075,4 +1075,6 @@
     <string name="you_can_do_following_things">You can do following things</string>
     <string name="select_a_role">Select a Role</string>
     <string name="manage_account">Manage Account</string>
+    <string name="your_assignee_can_do">Your assignee can do the following things</string>
+    <string name="please_select_a_role">Please select a role</string>
 </resources>

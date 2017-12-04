@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentRequestReceivedDetailsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.SentReceivedRequestReviewFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.BusinessRoleReviewFragment;
@@ -28,6 +29,8 @@ public class NotificationActivity extends BaseActivity {
             switchToRecommendationReviewFragment(getIntent().getExtras());
         else if (tag != null && tag.equals(Constants.RELOAD))
             switchToNotificationFragment(Constants.RELOAD);
+        else if(tag!=null && tag.equals("Business"))
+            switchToBusinessRoleReviewFragment(getIntent().getExtras());
         else
             switchToNotificationFragment();
 
@@ -54,6 +57,7 @@ public class NotificationActivity extends BaseActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, HomeActivity.mNotificationFragment).commit();
         } else if (tag.equals(Constants.RELOAD)) {
+            HomeActivity.mNotificationFragment = new NotificationFragment();
             Bundle bundle = new Bundle();
             bundle.putString(Constants.TAG, Constants.RELOAD);
             HomeActivity.mNotificationFragment.setArguments(bundle);

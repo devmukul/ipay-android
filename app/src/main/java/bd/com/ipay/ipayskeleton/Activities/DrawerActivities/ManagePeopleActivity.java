@@ -16,7 +16,6 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.CreateEmployeeFragment;
-import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EmployeePrivilegeFragment;
 import bd.com.ipay.ipayskeleton.ManagePeopleFragments.EmployeeRequestHolderFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRole;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRoleResponse;
@@ -91,14 +90,6 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
         while (getSupportFragmentManager().getBackStackEntryCount() > 1)
             getSupportFragmentManager().popBackStack();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CreateEmployeeFragment()).addToBackStack(null).commit();
-    }
-
-    public void switchToEmployeePrivilegeFragment(Bundle bundle) {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 2)
-            getSupportFragmentManager().popBackStack();
-        EmployeePrivilegeFragment employeePrivilegeFragment = new EmployeePrivilegeFragment();
-        employeePrivilegeFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, employeePrivilegeFragment).addToBackStack(null).commit();
     }
 
     @Override

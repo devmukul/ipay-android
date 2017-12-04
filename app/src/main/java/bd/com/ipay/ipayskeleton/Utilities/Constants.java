@@ -232,6 +232,7 @@ public class Constants {
     public static final String ADD_MONEY_BY_BANK_TITLE = "Bank";
     public static final String CARD_TRANSACTION_DATA = "CARD_TRANSACTION_DATA";
     public static final String VALID_IPAY_BD_ADDRESS = "(http://|https://)?(www|dev|test|stage|internal).ipay.com.bd/(.+)";
+    public static String Business_role = "BUSINESS_ROLE";
 
     static {
         if (SERVER_TYPE == DEV_SERVER) {

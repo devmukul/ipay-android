@@ -442,8 +442,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         Gson gson = new Gson();
         String jsonString = gson.toJson(businessRoleManagerInvitation);
         bundle.putString(Constants.BUSINESS_ROLE_REQUEST, jsonString);
-        ((NotificationActivity) getActivity()).switchToBusinessRoleReviewFragment(bundle);
-
+        ((NotificationActivity)getActivity()).switchToBusinessRoleReviewFragment(bundle);
     }
 
     public interface OnNotificationUpdateListener {
