@@ -58,6 +58,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
         SharedPrefManager.initialize(getApplicationContext());
         ProfileInfoCacheManager.initialize(getApplicationContext());
         ACLManager.initialize(this);
+        TokenManager.initialize(this);
         Intercom.initialize(this, Constants.INTERCOM_ANDROID_SDK_KEY, Constants.INTERCOM_API_KEY);
         Utilities.resetIntercomInformation();
 
@@ -129,7 +130,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
         }
     }
 
-    private void refreshToken() {
+    public void refreshToken() {
         Logger.logW("Token_Timer", "Refresh token called");
 
         if (mRefreshTokenAsyncTask != null) {
@@ -171,6 +172,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
             startActivity(intent);
         }
 
+        SharedPrefManager.setRememberMeActive(false);
         clearTokenAndTimer();
     }
 
@@ -230,6 +232,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
             try {
                 if (result.getStatus() != Constants.HTTP_RESPONSE_STATUS_OK)
                     launchLoginPage(getString(R.string.please_log_in_again));
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

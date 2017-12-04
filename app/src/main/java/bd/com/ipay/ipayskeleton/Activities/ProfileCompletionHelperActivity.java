@@ -75,12 +75,16 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
                     .setMessage(R.string.are_you_sure_to_exit)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            if (Utilities.isConnectionAvailable(ProfileCompletionHelperActivity.this)) {
-                                attemptLogout();
-                            } else {
-                                ProfileInfoCacheManager.setLoggedInStatus(false);
-                                ((MyApplication) ProfileCompletionHelperActivity.this.getApplication()).clearTokenAndTimer();
+                            if (SharedPrefManager.isRememberMeActive()) {
                                 finish();
+                            } else {
+                                if (Utilities.isConnectionAvailable(ProfileCompletionHelperActivity.this)) {
+                                    attemptLogout();
+                                } else {
+                                    ProfileInfoCacheManager.setLoggedInStatus(false);
+                                    ((MyApplication) ProfileCompletionHelperActivity.this.getApplication()).clearTokenAndTimer();
+                                    finish();
+                                }
                             }
                         }
                     })

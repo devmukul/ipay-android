@@ -472,13 +472,17 @@ public class HomeActivity extends BaseActivity
                     .setMessage(R.string.are_you_sure_to_exit)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            if (Utilities.isConnectionAvailable(HomeActivity.this)) {
-                                exitFromApplication = true;
-                                attemptLogout();
-                            } else {
-                                ProfileInfoCacheManager.setLoggedInStatus(false);
-                                ((MyApplication) HomeActivity.this.getApplication()).clearTokenAndTimer();
+                            if (SharedPrefManager.isRememberMeActive()) {
                                 finish();
+                            } else {
+                                if (Utilities.isConnectionAvailable(HomeActivity.this)) {
+                                    exitFromApplication = true;
+                                    attemptLogout();
+                                } else {
+                                    ProfileInfoCacheManager.setLoggedInStatus(false);
+                                    ((MyApplication) HomeActivity.this.getApplication()).clearTokenAndTimer();
+                                    finish();
+                                }
                             }
                         }
                     })

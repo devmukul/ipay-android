@@ -251,6 +251,11 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                             ACLManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
                         }
 
+                        // Save Remember me in shared preference
+                        if (SignupOrLoginActivity.mRememberMe) {
+                            SharedPrefManager.setRememberMeActive(true);
+                        }
+
                         attemptTrustedDeviceAdd();
                     } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                         hideProgressDialog();

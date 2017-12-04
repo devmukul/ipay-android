@@ -18,6 +18,14 @@ public class SharedPrefManager {
         return pref.getBoolean(SharedPrefConstants.FIRST_LAUNCH, defaultValue);
     }
 
+    public static boolean isRememberMeActive() {
+        return pref.getBoolean(SharedPrefConstants.REMEMBER_ME, false);
+    }
+
+    public static void setRememberMeActive(boolean value) {
+        pref.edit().putBoolean(SharedPrefConstants.REMEMBER_ME, value).apply();
+    }
+
     public static String getUserBalance() {
         return pref.getString(SharedPrefConstants.USER_BALANCE, "0.0");
     }

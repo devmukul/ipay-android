@@ -97,12 +97,22 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <CheckBox
+                android:id="@+id/remember_me_checkbox"
+                style="@style/my_checkbox_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin_card"
+                android:checked="true"
+                android:text="Remember me"
+                android:textColor="@android:color/white" />
+
             <Button
                 android:id="@+id/login_button"
                 style="@style/ButtonSecondary_No_Border"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin_card"
                 android:text="@string/log_in" />
 
             <RelativeLayout
