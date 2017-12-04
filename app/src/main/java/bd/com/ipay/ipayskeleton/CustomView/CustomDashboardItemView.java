@@ -39,7 +39,7 @@ public class CustomDashboardItemView extends LinearLayout {
     private void initView(Context context) {
         this.context = context;
 
-        View v = inflate(context, R.layout.dashboard_item_view, null);
+        View v = inflate(context, R.layout.view_dashboard_item, null);
 
         mImageView = (ImageView) v.findViewById(R.id.imageView);
         mTextView = (TextView) v.findViewById(R.id.nameView);

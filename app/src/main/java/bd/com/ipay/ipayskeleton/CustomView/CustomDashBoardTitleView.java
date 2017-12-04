@@ -30,7 +30,7 @@ public class CustomDashBoardTitleView extends LinearLayout {
     private void initView(Context context) {
         this.context = context;
 
-        View v = inflate(context, R.layout.dashboard_title_view, null);
+        View v = inflate(context, R.layout.view_dashboard_title, null);
         mTextView = (TextView) v.findViewById(R.id.titleView);
 
         addView(v);
