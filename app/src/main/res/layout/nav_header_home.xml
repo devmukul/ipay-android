@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:text="@string/app_name"
             android:textColor="@android:color/white"
+            android:drawableRight="@drawable/dropdown_arrow"
             android:textStyle="bold" />
 
         <bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView

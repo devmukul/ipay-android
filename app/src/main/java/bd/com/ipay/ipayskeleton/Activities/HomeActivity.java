@@ -8,6 +8,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -178,6 +182,7 @@ public class HomeActivity extends BaseActivity
 
         mMobileNumberView = (AutoResizeTextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_mobile_number);
         mNameView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_name);
+        setDropdown();
         mProfileImageView = (ProfileImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_picture);
         mMobileNumberView.setText(mUserID);
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -264,6 +269,13 @@ public class HomeActivity extends BaseActivity
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             getBusinessInformation();
         }
+    }
+    private  void setDropdown(){
+        Drawable drawable = getResources().getDrawable(R.drawable.dropdown_arrow);
+        drawable.setBounds(0, 0, 30, 20);
+        ColorFilter colorFilter=new LightingColorFilter(Color.WHITE,Color.WHITE);
+        drawable.setColorFilter(colorFilter);
+        mNameView.setCompoundDrawables(null, null, drawable, null);
     }
 
     @Override
