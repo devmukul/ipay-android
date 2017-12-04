@@ -3,7 +3,6 @@ package bd.com.ipay.ipayskeleton.CustomView;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -71,8 +70,8 @@ public class CustomDashboardItemView extends LinearLayout {
             }
 
             glide
-                    .placeholder(R.drawable.ic_image)
-                    .error(R.drawable.ic_image)
+                    .placeholder(R.drawable.background_icon_make_payment)
+                    .error(R.drawable.background_icon_make_payment)
                     .crossFade()
                     .dontAnimate()
                     .fitCenter()
