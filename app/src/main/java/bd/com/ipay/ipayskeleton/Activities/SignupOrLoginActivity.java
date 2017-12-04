@@ -23,6 +23,13 @@ import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.PersonalSignUpFragments.SignupPersonalStepOneFragment;
 import bd.com.ipay.ipayskeleton.LoginAndSignUpFragments.SelectAccountTypeFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBankFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBankHelperFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoHelperFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardConsentAgreementForBankFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardPhotoIdUploadHelperFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardProfilePictureUploadHelperFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -46,6 +53,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public static String mEmailBusiness;
     public static String mBirthdayBusinessHolder;
     public static String mMobileNumberPersonal;
+    public static String mCountryCode;
     public static long mTypeofBusiness;
     public static long otpDuration;
 
@@ -204,6 +212,13 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         }
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SignupBusinessStepThreeFragment()).addToBackStack(null).commit();
+    }
+
+    public void switchToProfileCompletionHelperActivity() {
+        Intent intent = new Intent(SignupOrLoginActivity.this, ProfileCompletionHelperActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        this.finish();
     }
 
     @Override

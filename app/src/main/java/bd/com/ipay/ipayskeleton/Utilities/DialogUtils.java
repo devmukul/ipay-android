@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.R;
 
@@ -40,6 +41,21 @@ public class DialogUtils {
 
         dialog.show();
     }
+    public static void showChangePasswordSuccessDialog(final Context context) {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
+        dialog
+                .title(R.string.change_password_success)
+                .content(R.string.change_password_success_message)
+                .cancelable(false)
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        ((MyApplication) (((SecuritySettingsActivity) context).getApplication())).launchLoginPage(null);
+                    }
+                })
+                .show();
+    }
 
     public static void showServiceNotAllowedDialog(final Context context) {
         showAlertDialog(context, context.getString(R.string.contact_support_message));
@@ -50,6 +66,7 @@ public class DialogUtils {
                 .cancelable(false)
                 .content(message)
                 .negativeText(R.string.cancel)
+
                 .show();
         dialog.show();
     }
@@ -73,4 +90,12 @@ public class DialogUtils {
         materialDialog.show();
     }
 
+    public static void showDialogForCountyNotSupported(final Context context) {
+        MaterialDialog dialog = new MaterialDialog.Builder(context)
+                .cancelable(false)
+                .content(context.getString(R.string.country_not_support_message))
+                .positiveText(R.string.ok)
+                .show();
+        dialog.show();
+    }
 }

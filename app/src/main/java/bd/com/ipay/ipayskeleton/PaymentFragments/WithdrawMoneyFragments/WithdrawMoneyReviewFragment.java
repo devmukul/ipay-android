@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,13 +22,16 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.WithdrawMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -41,33 +44,30 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mWithdrawMoneyTask = null;
-    private WithdrawMoneyResponse mWithdrawMoneyResponse;
+    private WithdrawMoneyRequest mWithdrawMoneyRequest;
 
     private ProgressDialog mProgressDialog;
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private double mAmount;
     private String mDescription;
-    private long mBankAccountId;
-    private String mBankName;
-    private String mBankAccountNumber;
-    private String mError_message;
-    private int mBankCode;
+    private UserBankClass mSelectedBank;
 
-    private LinearLayout mLinearLayoutDescriptionHolder;
-    private TextView mBankNameView;
-    private TextView mBankAccountNumberView;
-    private TextView mDescriptionView;
-    private View mDescriptionHolder;
-    private TextView mAmountView;
-    private TextView mServiceChargeView;
-    private TextView mTotalView;
-    private Button mWithdrawMoneyButton;
-    private ImageView mBankIcon;
+    private TextView mServiceChargeTextView;
+    private TextView mNetAmountTextView;
+
     private Tracker mTracker;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mAmount = getActivity().getIntent().getDoubleExtra(Constants.AMOUNT, 0);
+
+        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
+        mSelectedBank = getActivity().getIntent().getParcelableExtra(Constants.SELECTED_BANK_ACCOUNT);
+
+        mProgressDialog = new ProgressDialog(getActivity());
         mTracker = Utilities.getTracker(getActivity());
     }
 
@@ -79,58 +79,56 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_withdraw_money_review, container, false);
+        return inflater.inflate(R.layout.fragment_withdraw_money_review, container, false);
+    }
 
-        mAmount = getActivity().getIntent().getDoubleExtra(Constants.AMOUNT, 0);
-        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
-        mBankAccountId = getActivity().getIntent().getLongExtra(Constants.BANK_ACCOUNT_ID, -1);
-        mBankName = getActivity().getIntent().getStringExtra(Constants.BANK_NAME);
-        mBankAccountNumber = getActivity().getIntent().getStringExtra(Constants.BANK_ACCOUNT_NUMBER);
-        mBankCode = getActivity().getIntent().getIntExtra(Constants.BANK_CODE, 0);
-        Drawable bankIcon = getResources().getDrawable(mBankCode);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        final ImageView bankIconImageView = findViewById(R.id.bank_icon_image_view);
+        final TextView bankNameTextView = findViewById(R.id.bank_name_text_view);
+        final TextView bankAccountNumberTextView = findViewById(R.id.bank_account_number_text_view);
+        final TextView amountTextView = findViewById(R.id.amount_text_view);
+        mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
+        mNetAmountTextView = findViewById(R.id.net_amount_text_view);
+        final LinearLayout descriptionViewHolder = findViewById(R.id.description_view_holder);
+        final TextView descriptionTextView = findViewById(R.id.description_text_view);
+        final Button withdrawMoneyButton = findViewById(R.id.withdraw_money_button);
 
-        mAmountView = (TextView) v.findViewById(R.id.textview_amount);
-        mLinearLayoutDescriptionHolder = (LinearLayout) v.findViewById(R.id.layout_description_holder);
-        mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
-        mDescriptionHolder = v.findViewById(R.id.description_holder);
-        mBankNameView = (TextView) v.findViewById(R.id.textview_bank_name);
-        mBankAccountNumberView = (TextView) v.findViewById(R.id.textview_account_number);
-        mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
-        mTotalView = (TextView) v.findViewById(R.id.textview_total);
-        mWithdrawMoneyButton = (Button) v.findViewById(R.id.button_withdraw_money);
-        mBankIcon = (ImageView) v.findViewById(R.id.portrait);
+        bankIconImageView.setImageResource(mSelectedBank.getBankIcon(getContext()));
+        bankNameTextView.setText(mSelectedBank.getBankName());
+        bankAccountNumberTextView.setText(mSelectedBank.getAccountNumber());
 
-        mProgressDialog = new ProgressDialog(getActivity());
-
-        mBankIcon.setImageDrawable(bankIcon);
-        mBankNameView.setText(mBankName);
-        mBankAccountNumberView.setText(mBankAccountNumber);
-        mAmountView.setText(Utilities.formatTaka(mAmount));
+        amountTextView.setText(Utilities.formatTaka(getAmount()));
+        mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
+        mNetAmountTextView.setText(Utilities.formatTaka(getAmount().subtract(new BigDecimal(0.0))));
 
         if (mDescription == null || mDescription.isEmpty()) {
-            mLinearLayoutDescriptionHolder.setVisibility(View.GONE);
+            descriptionViewHolder.setVisibility(View.GONE);
         } else {
-            mDescriptionView.setText(mDescription);
+            descriptionViewHolder.setVisibility(View.VISIBLE);
+            descriptionTextView.setText(mDescription);
         }
 
-        mWithdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
+        withdrawMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                         && Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-                    mError_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
+                    String errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
                             WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
                             WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
-                    if (mError_message == null) {
-                        attemptAddMoneyWithPinCheck();
+                    if (errorMessage == null) {
+                        attemptWithdrawMoneyWithPinCheck();
 
                     } else {
-                        showErrorDialog();
+                        showErrorDialog(errorMessage);
                     }
                 } else
-                    attemptAddMoneyWithPinCheck();
+                    attemptWithdrawMoneyWithPinCheck();
+                ;
 
             }
         });
@@ -141,11 +139,14 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
             attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_WITHDRAW_MONEY);
         else
             attemptGetServiceCharge();
-
-        return v;
     }
 
-    private void attemptAddMoneyWithPinCheck() {
+    public <T extends View> T findViewById(@IdRes int id) {
+        //noinspection unchecked,ConstantConditions
+        return (T) getView().findViewById(id);
+    }
+
+    private void attemptWithdrawMoneyWithPinCheck() {
         if (WithdrawMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
@@ -166,9 +167,9 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         mProgressDialog.setMessage(getString(R.string.progress_dialog_withdraw_money_in_progress));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        WithdrawMoneyRequest mAddMoneyRequest = new WithdrawMoneyRequest(mBankAccountId, mAmount, mDescription, pin);
+        mWithdrawMoneyRequest = new WithdrawMoneyRequest(mSelectedBank.getBankAccountId(), mAmount, mDescription, pin);
         Gson gson = new Gson();
-        String json = gson.toJson(mAddMoneyRequest);
+        String json = gson.toJson(mWithdrawMoneyRequest);
         mWithdrawMoneyTask = new HttpRequestPostAsyncTask(Constants.COMMAND_WITHDRAW_MONEY,
                 Constants.BASE_URL_SM + Constants.URL_WITHDRAW_MONEY, json, getActivity());
         mWithdrawMoneyTask.mHttpResponseListener = this;
@@ -176,9 +177,9 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         mWithdrawMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void showErrorDialog() {
+    private void showErrorDialog(final String errorMessage) {
         new AlertDialog.Builder(getContext())
-                .setMessage(mError_message)
+                .setMessage(errorMessage)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         getActivity().finish();
@@ -201,13 +202,20 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
+        mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
+        mNetAmountTextView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
     }
 
     @Override
     public void onPinLoadFinished(boolean isPinRequired) {
         WithdrawMoneyActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
+    }
+
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mWithdrawMoneyRequest);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_WITHDRAW_MONEY,
+                Constants.BASE_URL_SM + Constants.URL_WITHDRAW_MONEY, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
     @Override
@@ -228,7 +236,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         if (result.getApiCommand().equals(Constants.COMMAND_WITHDRAW_MONEY)) {
 
             try {
-                mWithdrawMoneyResponse = gson.fromJson(result.getJsonString(), WithdrawMoneyResponse.class);
+                WithdrawMoneyResponse mWithdrawMoneyResponse = gson.fromJson(result.getJsonString(), WithdrawMoneyResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
@@ -244,6 +252,15 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
                     Utilities.sendBlockedEventTracker(mTracker, "Withdraw Money", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
 
 
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                    Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    SecuritySettingsActivity.otpDuration = mWithdrawMoneyResponse.getOtpValidFor();
+                    launchOTPVerification();
+
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    SecuritySettingsActivity.otpDuration = mWithdrawMoneyResponse.getOtpValidFor();
+                    launchOTPVerification();
                 } else {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();

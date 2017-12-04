@@ -33,6 +33,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -149,7 +150,7 @@ public class AddTrustedPersonFragment extends BaseFragment implements HttpRespon
             focusView = mEditTextName;
             mEditTextName.setError(getString(R.string.error_invalid_name));
             cancel = true;
-        } else if (!ContactEngine.isValidNumber(mMobileNumber)) {
+        } else if (!InputValidator.isValidNumber(mMobileNumber)) {
 
             focusView = mEditTextMobileNumber;
             mEditTextMobileNumber.setError(getString(R.string.please_enter_valid_mobile_number));

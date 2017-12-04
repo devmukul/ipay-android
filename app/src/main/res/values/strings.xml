@@ -149,6 +149,7 @@
     <string name="from_date">From Date</string>
     <string name="service_not_available">Service Currently Not Available</string>
     <string name="contact_support_message">This service is unavailable right now for you. Please contact support for more info.</string>
+    <string name="country_not_support_message">iPay is not officially supported in your country, some features may not work properly.</string>
     <string name="please_wait">Please wait. Loading…</string>
     <string name="loading">Loading…</string>
     <string name="load_more">Load more…</string>
@@ -241,7 +242,7 @@
     <string name="sending_otp">Sending OTP in your mobile…</string>
     <string name="change_pass_failed">Failed to change password</string>
     <string name="otp_going_to_send">We have sent you a code via sms, please enter it below and press verify</string>
-    <string name="otp_going_to_send_sign_up">We have sent you a code via sms, please enter it below and press done</string>
+    <string name="otp_going_to_send_sign_up">We have sent you a code via sms, please enter it below and press continue</string>
     <string name="done">Done</string>
     <string name="verify">Verify</string>
     <string name="verify_email">Verify Email</string>
@@ -470,6 +471,7 @@
     <string name="select_a_bank">Select Bank</string>
     <string name="remove_bank_title">Remove this account?</string>
     <string name="blocked_bank_title">Blocked!</string>
+    <string name="block_account_message">Your Account has been blocked. Please contact our customer support</string>
     <string name="bank_name">Bank Name</string>
     <string name="saving_profile_information">Saving profile information</string>
     <string name="saving_parent_information">Saving parent information</string>
@@ -488,6 +490,7 @@
     <string name="question">Question</string>
     <string name="answer">Answer</string>
     <string name="set_security_answer">Saving answers</string>
+    <string name="two_factor_auth_settings">Two Factor Authentication</string>
 
     <!-- Finger Print Auth -->
     <string name="use_fingerprint_for_login">Use Fingerprint for Login</string>
@@ -532,7 +535,7 @@
     <string name="failed_sending_invitation">Invitation sending failed. Please try again</string>
     <string name="failed_asking_recommendation">Failed to place a recommendation request.</string>
     <string name="failed_asking_introduction">Failed to place an introduction request.</string>
-    <string name="invitaiton_limit_exceeded">Maximum invitation limit exceeded</string>
+    <string name="invitation_limit_exceeded">Maximum invitation limit exceeded</string>
     <string name="failed_request">Request failed</string>
     <string name="invitation_sent">Invitation sent</string>
     <string name="ask_for_recommendation_sent">Recommendation request sent</string>
@@ -543,7 +546,8 @@
     <string name="action_search">Search</string>
     <string name="filter_send_money">Money Sent/Received</string>
     <string name="filter_request_money">Request Money</string>
-    <string name="filter_add_money">Money Added</string>
+    <string name="filter_add_money_from_bank">Money Added(Bank)</string>
+    <string name="filter_add_money_from_credit_or_debit_card">Money Added(Credit/Debit Card)</string>
     <string name="filter_withdraw_money">Money Withdrawn</string>
     <string name="filter_top_up">Top Up</string>
     <string name="filter_payment">Payment</string>
@@ -562,9 +566,11 @@
     <string name="passport_id">Passport ID</string>
     <string name="driving_license">Driving License</string>
     <string name="driving_license_id">Driving License ID</string>
-    <string name="birth_certificate">Birth Cirtificate</string>
-    <string name="birth_certificate_id">Birth Cirtificate ID</string>
+    <string name="birth_certificate">Birth Certificate</string>
+    <string name="birth_certificate_id">Birth Certificate ID</string>
     <string name="tin">e-Tin (Personal)</string>
+    <string name="personal_tin">e-Tin (Personal)</string>
+    <string name="personal_tin_id">e-Tin (Personal) ID</string>
     <string name="business_tin_id">Business TIN ID</string>
     <string name="trade_license">Trade License</string>
     <string name="trade_license_id">Trade License ID</string>
@@ -599,6 +605,7 @@
     <string name="request_money_description_info">Enter the details of the recipient to request money</string>
     <string name="make_payment_description_info">Enter the details of the recipient to make payment</string>
     <string name="total_amount">Total Amount</string>
+    <string name="total_amount_in_tk">Total Amount (Tk)</string>
     <string name="review_and_create_invoice"><![CDATA[Review & Create Invoice]]></string>
     <string name="amount">Amount</string>
     <string name="payment_amount">amount</string>
@@ -616,17 +623,19 @@
     <string name="got_it">GOT IT</string>
     <string name="try_again">Try Again</string>
     <string name="confirm_ipay_invitation">Invite him/her to iPay?</string>
-    <string name="amount_to_transfer">Amount to Transfer</string>
+    <string name="amount_to_transfer">Amount to Transfer (Tk)</string>
     <string name="total_received">Total Received</string>
     <string name="vat">(+) Vat</string>
     <string name="quantity">Quantity</string>
     <string name="rate">Rate</string>
     <string name="AMOUNT">Amount</string>
+    <string name="amount_in_tk">Amount (Tk)</string>
     <string name="TOTAL">Total</string>
     <string name="date_of_birth">Date of Birth</string>
     <string name="fathers_name">Father\'s Name</string>
     <string name="mothers_name">Mother\'s Name</string>
     <string name="other">Other</string>
+    <string name="other_id">Document ID</string>
     <string name="id">ID</string>
     <string name="document_name">Document Name</string>
     <string name="mobile">Mobile No.</string>
@@ -650,6 +659,7 @@
     <string name="failed_make_primary">Failed to make this primary email</string>
     <string name="confirmation_remove_email_address">Remove this email address?</string>
     <string name="confirmation_add_to_contacts">Add this number to contacts?</string>
+    <string name="link_bank">Link Bank</string>
     <string name="bank_consent_agreement">Bank consent agreement</string>
     <string name="progress_dialog_if_pin_exists">Preparing. Please wait…</string>
     <string name="failed_loading_pin">Failed loading PIN</string>
@@ -790,12 +800,14 @@
     <string name="see_profile_completion">See profile completeness</string>
     <string name="privileges">Privileges</string>
     <string name="fetching_employee_details_failed">Failed to fetch details information</string>
-    <string name="add_money_info">It may take 3–5 business days to complete the operation </string>
+    <string name="add_money_from_bank_info">It may take 3–5 business days to complete the operation</string>
+    <string name="withdraw_money_to_bank_info">It may take 3–5 business days to complete the operation</string>
+    <string name="add_money_from_credit_or_debit_card_info">The card has to be e-commerce enabled.</string>
     <string name="prompt_grant_permission">Please grant necessary permissions</string>
     <string name="session">Session</string>
     <string name="student_name">Student Name</string>
-    <string name="net_amount">Net Amount</string>
-    <string name="recipient_net_amount">Recipient will get</string>
+    <string name="net_amount">Net Amount (Tk)</string>
+    <string name="recipient_net_amount">Recipient will get (Tk)</string>
     <string name="status">Status</string>
     <string name="time">Time</string>
     <string name="topup_rollback">TopUp Rollback</string>
@@ -818,7 +830,7 @@
     <string name="creating_ticket">Creating ticket…</string>
     <string name="select_category">Select a category</string>
     <string name="no_email_added">No Email Added</string>
-    <string name="can_not_add_money_if_not_verified">You can not add money until your iPay account gets verified by our system. After submitting your documents and other information it might take a while for verification.</string>
+    <string name="can_not_add_money_from_bank_if_not_verified">You can not add money from bank until your iPay account gets verified by our system. After submitting your documents and other information it might take a while for verification.</string>
     <string name="bank_list_empty_text">You don’t have any active bank account. Tap + to add one.</string>
     <string name="dialog_add_new_email">You need to set up your primary email to use the support system. Add an email now?</string>
     <string name="ticket_created_dialog_text">Request to create a ticket for your issue has been placed successfully. It may take a little while to show up in your ticket list.</string>
@@ -860,6 +872,7 @@
     <string name="qr_code_unavailable">Unable to Generate your QR Code. Please Try again later.</string>
     <string name="file_save_failed">Unable to save file.</string>
     <string name="add_contact_dialog_not_available">Can\'t add a contact now. Please try again later.</string>
+    <string name="choose_add_money_option">Choose an option to Add Money</string>
     <string name="get_started">Sign up to get started now!</string>
 
     <string name="welcome_to_ipay">Welcome to iPay</string>
@@ -877,11 +890,14 @@
     <string name="scan_this_qr_code_prompt">Please scan this QR code to pay</string>
     <string name="scan_this_qr_code_prompt_continue">using iPay app</string>
     <string name="ipay_qr_code_title">iPay pay by QR code</string>
+    <string name="qr_code_helper_text_upper">scan me</string>
+    <string name="qr_code_helper_text_lower">to pay me</string>
 
     <string name="select_from_gallery_message">Select from gallery</string>
     <string name="take_a_picture_message">Take a picture</string>
     <string name="select_a_pdf_message">Select a PDF</string>
     <string name="view_uploaded_document_message">View uploaded document</string>
+    <string name="profile_picture_temp_file">profile_picture.jpg</string>
 
     <string name="grameenphone">Grameenphone</string>
     <string name="robi">Robi</string>
@@ -893,7 +909,6 @@
     <string name="post_paid">Post-paid</string>
 
     <!--All Screen Name for Google Analytic .... Can be optimized later-->
-
     <string name="screen_name_home">Wallet Page</string>
     <string name="screen_name_withdraw_money_review">Withdraw Money Confirmation Page</string>
     <string name="screen_name_withdraw_money">Withdraw Money Page</string>
@@ -984,7 +999,73 @@
     <string name="no_browser_map_app_found_error_message">No default browser or google maps app found to open. Please install Google Maps/Browser or enable your browser.</string>
     <string name="please_enter_a_document_name">Please Enter a Document Name</string>
     <string name="search_transaction">Search transaction</string>
-    <string name="complete_transaction_list">Complete transaction list</string>
+    <string name="completed_transaction_list">Completed transaction list</string>
     <string name="pending_transaction_list">Pending transaction list</string>
+    <string name="bank_icon">Bank Icon</string>
+    <string name="card_icon">Card Icon</string>
 
+    <string name="add_money_from_credit_or_debit_card_title">Add Money from Credit/Debit Card</string>
+    <string name="card_transaction_cancel_warning">Going back will cancel your transaction. Are you sure?</string>
+    <string name="add_money_from_credit_or_debit_card_cancel_message">You have cancelled your Add Money request from debit/credit card. Please make your add money request again.</string>
+    <string name="add_money_from_credit_or_debit_card_failed_message">Your Add Money request has failed. Please ensure that you have provided accurate information and there is sufficient balance in your card, then try again. If you still face problem after providing accurate information, please write to us at support@ipay.com.bd</string>
+    <string name="add_money_card_in_progress_message">Your Add Money request is being processed. The requested amount will be added to your iPay balance shortly. Please write to support@ipay.com.bd or call +880–2–985 2507, +880–2–985 2508, +880–9638 900800 if your request is not processed.</string>
+    <string name="add_money_type">Add Money Type</string>
+    <string name="add_money_from">Add Money From</string>
+    <string name="option_add_money_from_bank">Bank</string>
+    <string name="option_add_money_from_credit_or_debit_card">Credit/Debit Card</string>
+    <string name="card_payment_web_view_title">Add Money</string>
+
+    <string name="verification_icon">Verification Icon</string>
+    <string name="document_front_side">Document Front Side/First Page</string>
+    <string name="upload_front_page">Upload first/front page</string>
+    <string name="upload_back_page">Upload second/back page</string>
+    <string name="choose_file">Choose file</string>
+    <string name="maximum_file_size_message">Maximum file size is 3 MB. JPG or PNG format only.</string>
+    <string name="upload_document">Upload Document</string>
+    <string name="select_photo">Select photo</string>
+    <string name="upload_photo">Confirm photo</string>
+    <string name="upload_photo_id">Upload photo id</string>
+    <string name="add_basic_info">Add basic info</string>
+    <string name="ask_for_introduction_onboard">Ask for Introduction</string>
+    <string name="add_bank_onboard">Add bank info</string>
+    <string name="skip_now">Skip now</string>
+
+    <string name="onboard_step_one_title">Great! you\'re almost done</string>
+    <string name="onboard_photo_id_upload_title">Upload photo id</string>
+    <string name="onboard_document_title">Documents</string>
+    <string name="onboard_upload_document_title">Upload document</string>
+    <string name="onboard_nice_profile_photo">Nice profile photo</string>
+    <string name="onboard_photo_upload_title">Upload profile photo</string>
+    <string name="onboard_profile_info_update_title">Basic information</string>
+    <string name="onboard_add_bank_title">Add bank information</string>
+    <string name="onboard_get_introduced_upload_title">Ask for introduction</string>
+    <string name="onboard_profile_info_update_page_title">Add basic information</string>
+
+    <string name="onboard_upload_photo_text">Upload your profile photo. Face the camera straight on, photo must be in focus and not blurry.</string>
+    <string name="onboard_upload_photo_id_text">Upload a copy of photo ID.\nLike: National ID, Driving License, Passport etc. Make sure all information is clearly readable and that it is fully in frame.</string>
+    <string name="onboard_upload_prifile_info_text">Add your basic information and present address to send some goodies or official doc.</string>
+    <string name="onboard_add_bank_text">Update your bank info to add money from your account to shop, send money or transfer.</string>
+    <string name="onboard_ask_for_introduction_text">Find an iPay user from your contact list and send request to introduce you.</string>
+    <string name="upload_profile_photo_again">Do you want to upload a profile photo again? You have already uploaded once</string>
+    <string name="upload_identification_document_again">Do you want to upload a identification document again? You have already uploaded once</string>
+
+    <string name="file_size_large">Your file size is too large. Please select another.</string>
+    <string name="change_two_fa_settings">Changing 2FA Settings</string>
+    <string name="accepting_send_money_request">Accepting Money Request</string>
+    <string name="two_fa_settings">Two Factor Authentication</string>
+
+    <string name="please_enter_a_document_id">Please enter your document ID</string>
+    <string name="alpha_numeric">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
+    <string name="please_select_max_file_size_message">Please select a file with max size %d MB</string>
+    <string name="settings_not_changed">No change in settings.</string>
+    <string name="credit_or_debit_card_transaction_default_header">Money Added from Credit/Debit Card</string>
+    <string name="ssl_error_title">SSL Certificate Error</string>
+    <string name="ssl_untrustred_message">The certificate authority is not trusted.</string>
+    <string name="ssl_expired_message">The certificate has expired.</string>
+    <string name="ssl_id_mismatch_message">The certificate Hostname mismatch.</string>
+    <string name="ssl_not_yet_valid_message">The certificate is not yet valid.</string>
+    <string name="do_you_want_to_continue">Do you want to continue anyway?</string>
+    <string name="continue_message">Continue</string>
+    <string name="add_money_from_credit_or_debit_card_cancel_title">Money add cancelled</string>
+    <string name="add_money_from_credit_or_debit_card_failed_title">Money add failed</string>
 </resources>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:layout_above="@+id/button_layout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/profile_pic_upload_helper_title"
+                style="@style/OnBoardPageTitleStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/onboard_photo_upload_title"
+                android:layout_marginTop="@dimen/onboard_page_vertical_margin"/>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/onboard_page_vertical_margin">
+
+                <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                    android:id="@+id/profile_image_view"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:src="@drawable/ic_onboard_profile_pic_upload_helper"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_camera_upload_photo"
+                    android:layout_gravity="right|bottom"
+                    android:layout_marginRight="@dimen/value5"
+                    android:layout_marginBottom="@dimen/value5"/>
+
+            </FrameLayout>
+
+
+            <TextView
+                android:id="@+id/onboard_photo_upload_helper_text"
+                style="@style/OnBoardPageDescriptionTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/onboard_upload_photo_text"
+                android:layout_marginTop="@dimen/onboard_page_vertical_margin"
+                android:layout_marginLeft="@dimen/onboard_page_description_horizontal_margin"
+                android:layout_marginRight="@dimen/onboard_page_description_horizontal_margin"
+                android:gravity="top|center_horizontal"
+                android:minLines="4" />
+
+
+            <Button
+                android:id="@+id/button_upload_profile_pic"
+                style="@style/ButtonPrimaryOnBoard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/upload_photo"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/button_select_profile_pic"
+                style="@style/ButtonPrimaryOnBoard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/select_photo" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
+

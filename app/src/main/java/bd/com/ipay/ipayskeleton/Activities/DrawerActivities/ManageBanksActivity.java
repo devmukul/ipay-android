@@ -9,9 +9,9 @@ import android.view.View;
 import java.util.ArrayList;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.ManageBanksFragments.AddBankFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.BankAccountsFragment;
 import bd.com.ipay.ipayskeleton.ManageBanksFragments.ConsentAgreementForBankFragment;
-import bd.com.ipay.ipayskeleton.ManageBanksFragments.AddBankFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BankBranch;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;

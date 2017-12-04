@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -95,6 +97,7 @@ public class TransactionDetailsFragment extends BaseFragment {
         String bankAccountNumber = transactionHistory.getAdditionalInfo().getBankAccountNumber();
         int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
         String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
+        String cardNumber = transactionHistory.getAdditionalInfo().getCardNumber();
 
         final String receiver = transactionHistory.getReceiver();
         final String otherProfilePicture = transactionHistory.getAdditionalInfo().getUserProfilePic();
@@ -138,7 +141,7 @@ public class TransactionDetailsFragment extends BaseFragment {
             purposeLayout.setVisibility(View.GONE);
         }
 
-        if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY
+        if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK
                 || serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT) {
             mNameView.setText(bankName);
             mMobileNumberView.setText(bankAccountNumber);
@@ -147,6 +150,20 @@ public class TransactionDetailsFragment extends BaseFragment {
             if (bankCode != null) otherImageView.setImageResource(bankIcon);
             else otherImageView.setImageResource(R.drawable.ic_tran_add);
 
+        } else if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD) {
+            if (TextUtils.isEmpty(transactionHistory.getAdditionalInfo().getCardHolderName())) {
+                mNameView.setText(R.string.credit_or_debit_card_transaction_default_header);
+            } else {
+                mNameView.setText(transactionHistory.getAdditionalInfo().getCardHolderName());
+            }
+            if (!TextUtils.isEmpty(cardNumber)) {
+                mMobileNumberView.setText(cardNumber);
+            } else {
+                mMobileNumberView.setText(transactionHistory.getOriginatingMobileNumber());
+            }
+            mProfileImageView.setVisibility(View.GONE);
+            otherImageView.setVisibility(View.VISIBLE);
+            otherImageView.setImageResource(transactionHistory.getAdditionalInfo().getCardIcon());
         } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
                 || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT
                 || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK) {
@@ -182,7 +199,7 @@ public class TransactionDetailsFragment extends BaseFragment {
             mMobileNumberView.setText(receiver);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            if (ContactEngine.isValidNumber(receiver)) {
+            if (InputValidator.isValidNumber(receiver)) {
                 int mIcon = getOperatorIcon(receiver);
                 otherImageView.setImageResource(mIcon);
             } else
@@ -192,7 +209,7 @@ public class TransactionDetailsFragment extends BaseFragment {
             mMobileNumberView.setText(receiver);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            if (ContactEngine.isValidNumber(receiver)) {
+            if (InputValidator.isValidNumber(receiver)) {
                 int mIcon = getOperatorIcon(receiver);
                 otherImageView.setImageResource(mIcon);
             } else
@@ -228,7 +245,7 @@ public class TransactionDetailsFragment extends BaseFragment {
         } else {
             if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP
                     && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
-                    && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY) {
+                    && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK) {
                 balanceTextView.setText(getString(R.string.not_applicable));
             }
             statusTextView.setTextColor(getResources().getColor(R.color.background_red));
@@ -240,7 +257,7 @@ public class TransactionDetailsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_transaction_details) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_transaction_details));
     }
 
     @ValidateAccess

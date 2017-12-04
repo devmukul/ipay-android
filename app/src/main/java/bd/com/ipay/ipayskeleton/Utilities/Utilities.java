@@ -69,7 +69,9 @@ import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
+import bd.com.ipay.ipayskeleton.Model.Service.IpayService;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import io.intercom.android.sdk.Intercom;
@@ -95,12 +97,12 @@ public class Utilities {
     }
 
     public static void setAppropriateKeyboard(Context c, String documentType, EditText editText) {
-        if (documentType.equals(Constants.DOCUMENT_TYPE_NATIONAL_ID) ||
-                documentType.equals(Constants.DOCUMENT_TYPE_BUSINESS_TIN) ||
-                documentType.equals(Constants.DOCUMENT_TYPE_VAT_REG_CERT) ||
-                documentType.equals(Constants.DOCUMENT_TYPE_TRADE_LICENSE)) {
+        if (documentType.equals(IdentificationDocumentConstants.DOCUMENT_TYPE_NATIONAL_ID) ||
+                documentType.equals(IdentificationDocumentConstants.DOCUMENT_TYPE_BUSINESS_TIN) ||
+                documentType.equals(IdentificationDocumentConstants.DOCUMENT_TYPE_VAT_REG_CERT) ||
+                documentType.equals(IdentificationDocumentConstants.DOCUMENT_TYPE_TRADE_LICENSE)) {
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-        } else editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        }
     }
 
     public static boolean isTabletDevice(Context context) {
@@ -875,4 +877,20 @@ public class Utilities {
                 .build());
     }
 
+    public static long getBytesToMegaBytes(long length) {
+        return length / 1000000;
+    }
+    private static final int[] ADD_MONEY_OPTION_SERVICE_ID = {ServiceIdConstants.ADD_MONEY_BY_BANK, ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
+    private static final String[] ADD_MONEY_OPTION_TITLE = {Constants.ADD_MONEY_BY_BANK_TITLE, Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE};
+    private static final int[] ADD_MONEY_OPTION_ICON = {R.drawable.ic_bank111, R.drawable.basic_card};
+
+    public static List<IpayService> getAvailableAddMoneyOptions() {
+        List<IpayService> ipayServiceList = new ArrayList<>();
+        for (int i = 0; i < ADD_MONEY_OPTION_SERVICE_ID.length; i++) {
+            if (ACLManager.hasServicesAccessibility(ADD_MONEY_OPTION_SERVICE_ID[i])) {
+                ipayServiceList.add(new IpayService(ADD_MONEY_OPTION_SERVICE_ID[i], ADD_MONEY_OPTION_ICON[i], ADD_MONEY_OPTION_TITLE[i]));
+            }
+        }
+        return ipayServiceList;
+    }
 }

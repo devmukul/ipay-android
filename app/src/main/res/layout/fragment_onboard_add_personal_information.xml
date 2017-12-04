@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
+
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/left_arrow"
+        android:paddingLeft="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_vertical_margin"
+        android:paddingTop="@dimen/activity_horizontal_margin_semi_double"
+        android:paddingBottom="@dimen/activity_horizontal_margin_semi_double"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:layout_above="@+id/button_layout"
+        android:layout_below="@+id/back">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/profile_pic_upload_helper_title"
+                style="@style/OnBoardPageTitleStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/onboard_profile_info_update_title"/>
+
+            <ImageView
+                android:id="@+id/document_id_helper_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/onboard_page_vertical_margin"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_onboard_basic_info_upload_helper"/>
+
+            <TextView
+                android:id="@+id/onboard_profile_info_upload_helper_text"
+                style="@style/OnBoardPageDescriptionTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/onboard_upload_prifile_info_text"
+                android:layout_marginTop="@dimen/onboard_page_vertical_margin"
+                android:layout_marginLeft="@dimen/onboard_page_description_horizontal_margin"
+                android:layout_marginRight="@dimen/onboard_page_description_horizontal_margin"
+                android:gravity="top|center_horizontal"
+                android:minLines="4" />
+
+
+            <Button
+                android:id="@+id/button_add_basic_info"
+                style="@style/ButtonPrimaryOnBoard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_basic_info" />
+
+            <Button
+                android:id="@+id/button_skip"
+                style="@style/ButtonSkipOnBoard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/skip_now" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
+
+

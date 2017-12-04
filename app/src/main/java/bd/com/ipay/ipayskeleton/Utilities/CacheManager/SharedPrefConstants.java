@@ -23,4 +23,12 @@ public class SharedPrefConstants {
 
     public static final String KEY_PASSWORD = "encrypted_password";
     public static final String KEY_PASSWORD_IV = "encrypted_password_IV";
+
+    public static final String SWITCHED_FROM_SIGNUP = "SWITCHED_FROM_SIGNUP";
+    public static final String ON_BOARD_STEPS_DONE = "ON_BOARD_ALL_STEPS_DONE";
+    public static final String PROFILE_PICTURE_UPLOADED = "PROFILE_PICTURE_UPLOADED";
+    public static final String IDENTIFICATION_DOCUMENT_UPLOADED = "IDENTIFICATION_DOCUMENT_UPLOADED";
+    public static final String BASIC_INFO_ADDED = "BASIC_INFO_ADDED";
+    public static final String BANK_INFO_ADDED = "BANK_INFO_ADDED";
+    public static final String INTRODUCTION_ASKED = "INTRODUCTION_ASKED";
 }

@@ -14,6 +14,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -239,12 +240,12 @@ public class HomeActivity extends BaseActivity
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (Utilities.isNecessaryPermissionExists(this, Constants.LOCATION_PERMISSIONS) && mLocationManager != null) {
             final String locationProvider;
-            if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                locationProvider = LocationManager.GPS_PROVIDER;
-            } else {
+            if (mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                 locationProvider = LocationManager.NETWORK_PROVIDER;
+            } else {
+                locationProvider = LocationManager.GPS_PROVIDER;
             }
-            mLocationManager.requestSingleUpdate(locationProvider, this, null);
+            mLocationManager.requestSingleUpdate(locationProvider, this, Looper.myLooper());
         }
     }
 
@@ -300,12 +301,12 @@ public class HomeActivity extends BaseActivity
     private void updateProfileData() {
         mNameView.setText(ProfileInfoCacheManager.getUserName());
         mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
-        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
+        mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
                 ProfileInfoCacheManager.getProfileImageUrl(), false);
     }
 
     private void attemptRequestForPermission() {
-        String[] requiredPermissions = {Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        String[] requiredPermissions = {Manifest.permission.READ_CONTACTS, Manifest.permission.ACCESS_FINE_LOCATION};
 
         List<String> permissionsToRequest = new ArrayList<>();
         for (String permission : requiredPermissions) {
@@ -339,7 +340,7 @@ public class HomeActivity extends BaseActivity
                             if (ACLManager.hasServicesAccessibility(ServiceIdConstants.GET_CONTACTS))
                                 new GetContactsAsyncTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
-                    } else if (permissions[i].equals(Manifest.permission.ACCESS_COARSE_LOCATION) || permissions[i].equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    } else if (permissions[i].equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
                         startLocationCollection();
                     }
                 }
@@ -624,7 +625,7 @@ public class HomeActivity extends BaseActivity
                         //saving user info in shared preference
                         ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
 
-                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+                        mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
                     } else {
                         Toaster.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
@@ -648,7 +649,7 @@ public class HomeActivity extends BaseActivity
 
                         //saving user info in shared preference
                         ProfileInfoCacheManager.updateBusinessInfoCache(mGetBusinessInformationResponse);
-                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+                        mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                     } else {
                         Toaster.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);
 
@@ -719,7 +720,7 @@ public class HomeActivity extends BaseActivity
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
             Logger.logD("Broadcast home activity", newProfilePicture);
 
-            mProfileImageView.setProfilePicture(newProfilePicture, true);
+            mProfileImageView.setAccountPhoto(newProfilePicture, true);
 
             // We need to update the profile picture url in ProfileInfoCacheManager. Ideally,
             // we should have received a push from the server and FcmListenerService should have

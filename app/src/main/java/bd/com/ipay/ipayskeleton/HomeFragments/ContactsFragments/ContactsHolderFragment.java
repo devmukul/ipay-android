@@ -48,6 +48,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -278,7 +279,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (ContactEngine.isValidNumber(result)) {
+                        if (InputValidator.isValidNumber(result)) {
                             if (isAddContactDialogOpen)
                                 mobileNumberView.setText(ContactEngine.formatMobileNumberBD(result));
                         } else if (getActivity() != null)
@@ -302,7 +303,7 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
             error = true;
         }
 
-        if (!ContactEngine.isValidNumber(mobileNumber)) {
+        if (!InputValidator.isValidNumber(mobileNumber)) {
             mobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
             error = true;
         }

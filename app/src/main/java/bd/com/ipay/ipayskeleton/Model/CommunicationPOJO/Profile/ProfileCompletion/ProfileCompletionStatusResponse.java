@@ -5,7 +5,18 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.*;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BASIC_PROFILE;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PERSONAL_ADDRESS;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROPERTY_NAME_TO_ACTION_NAME_MAP;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROPERTY_NAME_TO_ICON_MAP;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROPERTY_NAME_TO_TITLE_MAP;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_ADD_BANK;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_BASIC_INFO;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_BUSINESS_ADDRESS;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_BUSINESS_DOCUMENTS;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_BUSINESS_INFO;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_IDENTIFICATION;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_PERSONAL_ADDRESS;
 
 public class ProfileCompletionStatusResponse {
 
@@ -35,6 +46,8 @@ public class ProfileCompletionStatusResponse {
     public String getMessage() {
         return message;
     }
+
+
 
     public List<PropertyDetails> getBasicInfoCompletionDetails() {
         return basicInfoCompletionDetails;
@@ -165,6 +178,53 @@ public class ProfileCompletionStatusResponse {
             }
         }
     }
+
+    public boolean isPhotoIdUpdated() {
+        for (CompletionStatus mCompletionStatus : completionStatusList) {
+            if (mCompletionStatus.getProperty().equals("VERIFICATION_DOCUMENT")) {
+                if(mCompletionStatus.getValue()>0)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isPhotoUpdated() {
+        for (CompletionStatus mCompletionStatus : completionStatusList) {
+            if (mCompletionStatus.getProperty().equals("PROFILE_PICTURE")) {
+                if(mCompletionStatus.getValue()>0)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isAddressUpdated() {
+        for (CompletionStatus mCompletionStatus : completionStatusList) {
+            if (mCompletionStatus.getProperty().equals("PERSONAL_ADDRESS")) {
+                if(mCompletionStatus.getValue()>0)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isBasicProfileUpdated() {
+        for (CompletionStatus mCompletionStatus : completionStatusList) {
+            if (mCompletionStatus.getProperty().equals("BASIC_PROFILE")) {
+                if(mCompletionStatus.getValue()>0)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isOnboardBasicInfoUpdated() {
+        if(isAddressUpdated() || isBasicProfileUpdated())
+                return true;
+        return false;
+    }
+
 
     public class PropertyDetails implements Comparable<PropertyDetails>{
         private final String propertyName;

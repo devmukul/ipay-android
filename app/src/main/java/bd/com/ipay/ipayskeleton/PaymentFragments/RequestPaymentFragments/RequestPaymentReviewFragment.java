@@ -6,7 +6,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +21,12 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequestSentResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.SendNewPaymentRequest;
@@ -36,9 +40,11 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class RequestPaymentReviewFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSendPaymentRequestTask = null;
-    private PaymentRequestSentResponse mPaymentRequestSentResponse;
+
+    private SendNewPaymentRequest mSendNewPaymentRequest;
 
     private ProgressDialog mProgressDialog;
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private String mReceiverMobileNumber;
     private String mDescription;
@@ -48,36 +54,15 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
 
     private String mReceiverName;
     private String mPhotoUri;
-    private String mError_message;
 
-    private ProfileImageView mProfileImageView;
-    private TextView mNameView;
-    private TextView mMobileNumberView;
-    private TextView mAmountView;
-    private TextView mVatView;
-    private TextView mTotalView;
-    private TextView mServiceChargeView;
-    private TextView mNetAmountView;
+    private TextView serviceChargeTextView;
+    private TextView netAmountTextView;
 
-    private TextView mDescriptionView;
-    private Button mCreateNewPaymentRequestButton;
     private Tracker mTracker;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTracker = Utilities.getTracker(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_request_payment_review) );
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_request_payment_review, container, false);
 
         mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
         mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
@@ -87,55 +72,84 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
             mVat = new BigDecimal(0);
         else mVat = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.VAT));
 
+        mVat = mAmount.multiply(mVat.divide(new BigDecimal(100), BigDecimal.ROUND_CEILING));
+        mTotal = mAmount.add(mVat);
+
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
 
-        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
-        mNameView = (TextView) v.findViewById(R.id.textview_name);
-        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mAmountView = (TextView) v.findViewById(R.id.textview_amount);
-        mVatView = (TextView) v.findViewById(R.id.textview_vat);
-        mTotalView = (TextView) v.findViewById(R.id.textview_total);
-        mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
-        mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
-
-        mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
-        mCreateNewPaymentRequestButton = (Button) v.findViewById(R.id.button_create_payment_request);
-
         mProgressDialog = new ProgressDialog(getActivity());
 
-        mProfileImageView.setProfilePicture(mPhotoUri, false);
+        mTracker = Utilities.getTracker(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_request_payment_review));
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_request_payment_review, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        final ProfileImageView receiverProfileImageView = findViewById(R.id.receiver_profile_image_view);
+        final TextView receiverNameTextView = findViewById(R.id.receiver_name_text_view);
+        final TextView receiverMobileNumberTextView = findViewById(R.id.receiver_mobile_number_text_view);
+        final TextView amountTextView = findViewById(R.id.amount_text_view);
+        final TextView vatTextView = findViewById(R.id.vat_text_view);
+        final TextView totalTextView = findViewById(R.id.total_text_view);
+        final View descriptionViewHolder = findViewById(R.id.description_view_holder);
+        final TextView descriptionTextView = findViewById(R.id.description_text_view);
+        final Button paymentRequestButton = findViewById(R.id.payment_request_button);
+
+        serviceChargeTextView = findViewById(R.id.service_charge_text_view);
+        netAmountTextView = findViewById(R.id.net_amount_text_view);
+
+        receiverProfileImageView.setProfilePicture(mPhotoUri, false);
 
         if (mReceiverName == null || mReceiverName.isEmpty()) {
-            mNameView.setVisibility(View.GONE);
+            receiverNameTextView.setVisibility(View.GONE);
         } else {
-            mNameView.setText(mReceiverName);
+            receiverNameTextView.setVisibility(View.VISIBLE);
+            receiverNameTextView.setText(mReceiverName);
+        }
+        receiverMobileNumberTextView.setText(mReceiverMobileNumber);
+
+        amountTextView.setText(Utilities.formatTaka(mAmount));
+        vatTextView.setText(Utilities.formatTaka(mVat));
+        totalTextView.setText(Utilities.formatTaka(mTotal));
+        serviceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
+        netAmountTextView.setText(Utilities.formatTaka(mTotal.subtract(new BigDecimal(0.0))));
+
+
+        if (TextUtils.isEmpty(mDescription)) {
+            descriptionViewHolder.setVisibility(View.GONE);
+        } else {
+            descriptionViewHolder.setVisibility(View.VISIBLE);
+            descriptionTextView.setText(mDescription);
         }
 
-        BigDecimal Vat = mAmount.multiply(mVat.divide(new BigDecimal(100)));
-        mNameView.setText(mReceiverName);
-        mMobileNumberView.setText(mReceiverMobileNumber);
-        mAmountView.setText(Utilities.formatTaka(mAmount));
-        mVatView.setText(Utilities.formatTaka(Vat));
-
-        mTotalView.setText(Utilities.formatTaka(mTotal));
-        mDescriptionView.setText(mDescription);
-
-        mCreateNewPaymentRequestButton.setOnClickListener(new View.OnClickListener() {
+        paymentRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                         && Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-                    mError_message = InputValidator.isValidAmount(getActivity(), mTotal,
+                    final String errorMessage = InputValidator.isValidAmount(getActivity(), mTotal,
                             RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
                             RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
-                    if (mError_message == null) {
+                    if (errorMessage == null) {
                         attemptSendPaymentRequest();
 
                     } else {
-                        showErrorDialog();
+                        showErrorDialog(errorMessage.replace(getString(R.string.payment_amount), getString(R.string.payment_total_amount)));
                     }
                 }
             }
@@ -147,14 +161,17 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
             attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_REQUEST_PAYMENT);
         else
             attemptGetServiceCharge();
-        return v;
     }
 
-    private void showErrorDialog() {
-        mError_message = mError_message.replace(getString(R.string.payment_amount), getString(R.string.payment_total_amount));
+    public <T extends View> T findViewById(@IdRes int id) {
+        //noinspection unchecked,ConstantConditions
+        return (T) getView().findViewById(id);
+    }
+
+    private void showErrorDialog(final String errorMessage) {
 
         new AlertDialog.Builder(getContext())
-                .setMessage(mError_message)
+                .setMessage(errorMessage)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         getActivity().finish();
@@ -172,13 +189,20 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         mProgressDialog.setMessage(getString(R.string.progress_dialog_sending_payment_request));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        SendNewPaymentRequest sendNewPaymentRequest = new SendNewPaymentRequest(mAmount, mReceiverMobileNumber, mDescription, null, mVat);
+        mSendNewPaymentRequest = new SendNewPaymentRequest(mAmount, mReceiverMobileNumber, mDescription, null, mVat);
         Gson gson = new Gson();
-        String json = gson.toJson(sendNewPaymentRequest);
+        String json = gson.toJson(mSendNewPaymentRequest);
         mSendPaymentRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_PAYMENT_REQUEST,
                 Constants.BASE_URL_SM + Constants.URL_SEND_PAYMENT_REQUEST, json, getActivity());
         mSendPaymentRequestTask.mHttpResponseListener = this;
         mSendPaymentRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mSendNewPaymentRequest);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_SEND_PAYMENT_REQUEST,
+                Constants.BASE_URL_SM + Constants.URL_SEND_PAYMENT_REQUEST, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
     @Override
@@ -193,8 +217,8 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mNetAmountView.setText(Utilities.formatTaka(mTotal.subtract(serviceCharge)));
+        serviceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
+        netAmountTextView.setText(Utilities.formatTaka(mTotal.subtract(serviceCharge)));
     }
 
     @Override
@@ -218,13 +242,17 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         if (result.getApiCommand().equals(Constants.COMMAND_SEND_PAYMENT_REQUEST)) {
 
             try {
-                mPaymentRequestSentResponse = gson.fromJson(result.getJsonString(), PaymentRequestSentResponse.class);
+                PaymentRequestSentResponse mPaymentRequestSentResponse = gson.fromJson(result.getJsonString(), PaymentRequestSentResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     getActivity().setResult(Activity.RESULT_OK);
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mPaymentRequestSentResponse.getMessage(), Toast.LENGTH_LONG);
                     getActivity().finish();
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    Toast.makeText(getActivity(), mPaymentRequestSentResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    SecuritySettingsActivity.otpDuration = mPaymentRequestSentResponse.getOtpValidFor();
+                    launchOTPVerification();
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mPaymentRequestSentResponse.getMessage(), Toast.LENGTH_SHORT);

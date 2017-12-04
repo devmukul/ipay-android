@@ -48,6 +48,13 @@ public class PaymentActivity extends BaseActivity {
             }
         });
 
+        if (getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
+            switchToMakePaymentFragment();
+        } else if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false))
+            switchToMakePaymentFragment();
+        else
+            switchToReceivedPaymentRequestsFragment();
+
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

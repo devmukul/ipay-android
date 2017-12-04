@@ -19,50 +19,49 @@
 
 
         <TextView
+            android:id="@+id/filter_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/filter_title"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_toLeftOf="@+id/filter_clear"
-            android:text="@string/complete_transaction_list"/>
+            android:text="@string/completed_transaction_list" />
 
         <Button
             android:id="@+id/filter_clear"
             style="@style/ButtonStyleSmallRect"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:text="@string/clear_filter"
-            android:layout_alignParentRight="true"
-            android:visibility="invisible"
-            android:layout_centerVertical="true"/>
+            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/filter_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:src="@drawable/transaction_more"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="10dp"
+            android:src="@drawable/transaction_more" />
 
         <ImageView
             android:id="@+id/cancel_filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:src="@drawable/cancel_filter"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:visibility="invisible"/>
-
+            android:src="@drawable/cancel_filter"
+            android:visibility="invisible" />
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorGrayDevider"
-            android:layout_below="@id/simpleSearchView">
+            android:layout_below="@id/simpleSearchView"
+            android:background="@color/colorGrayDevider">
 
         </LinearLayout>
     </RelativeLayout>
@@ -70,8 +69,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_below="@+id/transection_serch_view">
+        android:layout_below="@+id/transection_serch_view"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -182,7 +181,6 @@
             </LinearLayout>
 
 
-
             <LinearLayout
                 android:id="@+id/service_filters_layout"
                 android:layout_width="match_parent"
@@ -238,14 +236,25 @@
                             android:background="@color/colorDivider" />
 
                         <CheckBox
-                            android:id="@+id/filter_add_money"
+                            android:id="@+id/filter_add_money_by_bank"
                             style="@style/TransactionHistoryFilterCheckboxStyle"
-                            android:text="@string/filter_add_money" />
+                            android:text="@string/filter_add_money_from_bank" />
 
                         <View
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/divider_space"
                             android:background="@color/colorDivider" />
+
+                        <CheckBox
+                            android:id="@+id/filter_add_money_by_credit_or_debit_card"
+                            style="@style/TransactionHistoryFilterCheckboxStyle"
+                            android:text="@string/filter_add_money_from_credit_or_debit_card" />
+
+                        <View
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/divider_space"
+                            android:background="@color/colorDivider" />
+
 
                         <CheckBox
                             android:id="@+id/filter_withdraw_money"
@@ -312,9 +321,9 @@
                             style="@style/ButtonPrimaryWithNote"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/clear_filter"
                             android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                            android:layout_marginRight="@dimen/activity_horizontal_margin_card"/>
+                            android:layout_marginRight="@dimen/activity_horizontal_margin_card"
+                            android:text="@string/clear_filter" />
 
                         <View
                             android:layout_width="wrap_content"
@@ -324,8 +333,6 @@
                     </LinearLayout>
 
                 </ScrollView>
-
-
 
 
             </LinearLayout>

@@ -59,6 +59,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -78,7 +79,8 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private LinearLayout dateFilterLayout;
 
     private CheckBox mFilterRequestMoney;
-    private CheckBox mFilterAddMoney;
+    private CheckBox mFilterAddMoneyByBank;
+    private CheckBox mFilterAddMoneyByCreditOrDebitCard;
     private CheckBox mFilterWithdrawMoney;
     private CheckBox mFilterTopUp;
     private CheckBox mFilterRequestPayment;
@@ -312,7 +314,8 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         mClearServiceFilterButton = (Button) view.findViewById(R.id.button_clear_filter_service);
 
         mFilterRequestMoney = (CheckBox) view.findViewById(R.id.filter_request_money);
-        mFilterAddMoney = (CheckBox) view.findViewById(R.id.filter_add_money);
+        mFilterAddMoneyByBank = (CheckBox) view.findViewById(R.id.filter_add_money_by_bank);
+        mFilterAddMoneyByCreditOrDebitCard = (CheckBox) view.findViewById(R.id.filter_add_money_by_credit_or_debit_card);
         mFilterWithdrawMoney = (CheckBox) view.findViewById(R.id.filter_withdraw_money);
         mFilterTopUp = (CheckBox) view.findViewById(R.id.filter_top_up);
         mFilterRequestPayment = (CheckBox) view.findViewById(R.id.filter_request_payment);
@@ -346,7 +349,8 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private void setupCheckboxTypeMap() {
         mCheckBoxTypeMap = new HashMap<>();
         mCheckBoxTypeMap.put(mFilterRequestMoney, Constants.TRANSACTION_HISTORY_REQUEST_MONEY);
-        mCheckBoxTypeMap.put(mFilterAddMoney, Constants.TRANSACTION_HISTORY_ADD_MONEY);
+        mCheckBoxTypeMap.put(mFilterAddMoneyByBank, Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK);
+        mCheckBoxTypeMap.put(mFilterAddMoneyByCreditOrDebitCard, Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD);
         mCheckBoxTypeMap.put(mFilterWithdrawMoney, Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY);
         mCheckBoxTypeMap.put(mFilterTopUp, Constants.TRANSACTION_HISTORY_TOP_UP);
         mCheckBoxTypeMap.put(mFilterRequestPayment, Constants.TRANSACTION_HISTORY_REQUEST_PAYMENT);
@@ -700,11 +704,15 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 mNetAmountView.setText(netAmountWithSign);
                 mTimeView.setText(responseTime);
 
-                if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY) {
+                if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
                     if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
                     else mOtherImageView.setImageResource(R.drawable.ic_tran_add);
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD) {
+                    mProfileImageView.setVisibility(View.INVISIBLE);
+                    mOtherImageView.setVisibility(View.VISIBLE);
+                    mOtherImageView.setImageResource(transactionHistory.getAdditionalInfo().getCardIcon());
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
@@ -713,7 +721,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
-                    if (ContactEngine.isValidNumber(receiver)) {
+                    if (InputValidator.isValidNumber(receiver)) {
                         int mIcon = getOperatorIcon(receiver);
                         mOtherImageView.setImageResource(mIcon);
                     } else mOtherImageView.setImageResource(R.drawable.ic_top_up);

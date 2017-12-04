@@ -110,6 +110,7 @@
                         android:id="@+id/edit_text_document_id"
                         style="@style/CustomEditText"
                         android:layout_width="match_parent"
+                        android:digits="@string/alpha_numeric"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal">
 

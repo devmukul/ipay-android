@@ -204,7 +204,7 @@ public class RequestPaymentFragment extends BaseFragment implements HttpResponse
             cancel = true;
         }
 
-        if (!ContactEngine.isValidNumber(receiver)) {
+        if (!InputValidator.isValidNumber(receiver)) {
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             cancel = true;

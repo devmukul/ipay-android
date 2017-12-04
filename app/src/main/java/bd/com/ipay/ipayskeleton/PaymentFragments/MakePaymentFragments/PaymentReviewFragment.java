@@ -6,7 +6,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +21,13 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentResponse;
@@ -40,36 +44,41 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class PaymentReviewFragment extends ReviewFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mPaymentTask = null;
-    private PaymentResponse mPaymentResponse;
+
+    private PaymentRequest mPaymentRequest;
 
     private ProgressDialog mProgressDialog;
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private BigDecimal mAmount;
-    private String mReceiverName;
-    private String mReceiverMobileNumber;
+    private String mReceiverBusinessName;
+    private String mReceiverBusinessMobileNumber;
     private String mPhotoUri;
     private String mDescription;
     private String mReferenceNumber;
-    private String mError_message;
 
-    private ProfileImageView mProfileImageView;
-    private TextView mNameView;
-    private TextView mMobileNumberView;
-    private TextView mDescriptionView;
-    private TextView mAmountView;
-    private TextView mServiceChargeView;
-    private TextView mNetAmountView;
-    private TextView mRefNumberView;
+    private TextView mServiceChargeTextView;
+    private TextView mNetAmountTextView;
 
-    private View mLinearLayoutDescriptionHolder;
-    private View mLinearLayoutRefNumberHolder;
-    private View mRefNumberDivider;
-    private Button mPaymentButton;
     private Tracker mTracker;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
+        mReceiverBusinessMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
+        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
+        mReferenceNumber = getActivity().getIntent().getStringExtra(Constants.REFERENCE_NUMBER);
+
+        if (getArguments() != null) {
+            mReceiverBusinessName = getArguments().getString(Constants.NAME);
+            mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
+
+        }
+
+        mProgressDialog = new ProgressDialog(getActivity());
+
         mTracker = Utilities.getTracker(getActivity());
     }
 
@@ -82,74 +91,71 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_payment_review, container, false);
+        return inflater.inflate(R.layout.fragment_payment_review, container, false);
+    }
 
-        mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
-        mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
-        mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
-        mReferenceNumber = getActivity().getIntent().getStringExtra(Constants.REFERENCE_NUMBER);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        mReceiverName = getArguments().getString(Constants.NAME);
-        mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
+        final ProfileImageView businessProfileImageView = findViewById(R.id.business_profile_image_view);
+        final TextView businessNameTextView = findViewById(R.id.business_name_text_view);
+        final TextView businessMobileNumberTextView = findViewById(R.id.business_mobile_number_text_view);
+        final TextView amountTextView = findViewById(R.id.amount_text_view);
+        final View referenceNumberViewHolder = findViewById(R.id.reference_number_view_holder);
+        final TextView referenceNumberTextView = findViewById(R.id.reference_number_text_view);
+        final View descriptionViewHolder = findViewById(R.id.description_view_holder);
+        final TextView descriptionTextView = findViewById(R.id.description_text_view);
+        final Button makePaymentButton = findViewById(R.id.make_payment_button);
 
-        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
-        mNameView = (TextView) v.findViewById(R.id.textview_name);
-        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
-        mLinearLayoutDescriptionHolder = v.findViewById(R.id.layout_description_holder);
-        mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
-        mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
-        mAmountView = (TextView) v.findViewById(R.id.textview_amount);
-        mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
-        mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
-        mRefNumberView = (TextView) v.findViewById(R.id.textview_reference_number);
-        mLinearLayoutRefNumberHolder = v.findViewById(R.id.reference_number_holder);
-        mRefNumberDivider = v.findViewById(R.id.reference_number_divider);
-        mPaymentButton = (Button) v.findViewById(R.id.button_payment);
+        mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
+        mNetAmountTextView = findViewById(R.id.net_amount_text_view);
 
-        mProgressDialog = new ProgressDialog(getActivity());
-
-        mProfileImageView.setProfilePicture(mPhotoUri, false);
-
-        if (mReceiverName == null || mReceiverName.isEmpty()) {
-            mNameView.setVisibility(View.GONE);
+        if (!TextUtils.isEmpty(mPhotoUri)) {
+            businessProfileImageView.setProfilePicture(mPhotoUri, false);
+        }
+        if (TextUtils.isEmpty(mReceiverBusinessName)) {
+            businessNameTextView.setVisibility(View.GONE);
         } else {
-            mNameView.setText(mReceiverName);
+            businessNameTextView.setVisibility(View.VISIBLE);
+            businessNameTextView.setText(mReceiverBusinessName);
+        }
+        businessMobileNumberTextView.setText(mReceiverBusinessMobileNumber);
+
+        amountTextView.setText(Utilities.formatTaka(mAmount));
+        mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
+        mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
+
+
+        if (TextUtils.isEmpty(mReferenceNumber)) {
+            referenceNumberViewHolder.setVisibility(View.GONE);
+        } else {
+            referenceNumberViewHolder.setVisibility(View.VISIBLE);
+            referenceNumberTextView.setText(mReferenceNumber);
         }
 
-        mMobileNumberView.setText(mReceiverMobileNumber);
-
-        if (mDescription == null || mDescription.isEmpty()) {
-            mLinearLayoutDescriptionHolder.setVisibility(View.GONE);
+        if (TextUtils.isEmpty(mDescription)) {
+            descriptionViewHolder.setVisibility(View.GONE);
         } else {
-            mDescriptionView.setText(mDescription);
+            descriptionViewHolder.setVisibility(View.VISIBLE);
+            descriptionTextView.setText(mDescription);
         }
 
-        mAmountView.setText(Utilities.formatTaka(mAmount));
-
-        if (mReferenceNumber.isEmpty()) {
-            mLinearLayoutRefNumberHolder.setVisibility(View.GONE);
-            mRefNumberDivider.setVisibility(View.GONE);
-        } else {
-            mLinearLayoutRefNumberHolder.setVisibility(View.VISIBLE);
-            mRefNumberDivider.setVisibility(View.VISIBLE);
-            mRefNumberView.setText(mReferenceNumber);
-        }
-
-        mPaymentButton.setOnClickListener(new View.OnClickListener() {
+        makePaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                         && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-                    mError_message = InputValidator.isValidAmount(getActivity(), mAmount,
+                    final String errorMessage = InputValidator.isValidAmount(getActivity(), mAmount,
                             PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
                             PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
-                    if (mError_message == null) {
+                    if (errorMessage == null) {
                         attemptPaymentWithPinCheck();
 
                     } else {
-                        showErrorDialog();
+                        showErrorDialog(errorMessage);
                     }
                 } else {
                     attemptPaymentWithPinCheck();
@@ -163,7 +169,11 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
             attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_MAKE_PAYMENT);
         else
             attemptGetServiceCharge();
-        return v;
+    }
+
+    public <T extends View> T findViewById(@IdRes int id) {
+        //noinspection unchecked,ConstantConditions
+        return (T) getView().findViewById(id);
     }
 
     private void attemptPaymentWithPinCheck() {
@@ -188,7 +198,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
         PaymentRequest mPaymentRequest = new PaymentRequest(
-                ContactEngine.formatMobileNumberBD(mReceiverMobileNumber),
+                ContactEngine.formatMobileNumberBD(mReceiverBusinessMobileNumber),
                 mAmount.toString(), mDescription, pin, mReferenceNumber);
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentRequest);
@@ -198,9 +208,9 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void showErrorDialog() {
+    private void showErrorDialog(final String errorMessage) {
         new AlertDialog.Builder(getContext())
-                .setMessage(mError_message)
+                .setMessage(errorMessage)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         getActivity().finish();
@@ -222,14 +232,22 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
+        mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
     }
 
     @Override
     public void onPinLoadFinished(boolean isPinRequired) {
         PaymentActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
     }
+
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mPaymentRequest);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_PAYMENT,
+                Constants.BASE_URL_SM + Constants.URL_PAYMENT, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
+    }
+
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
@@ -249,7 +267,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         if (result.getApiCommand().equals(Constants.COMMAND_PAYMENT)) {
 
             try {
-                mPaymentResponse = gson.fromJson(result.getJsonString(), PaymentResponse.class);
+                PaymentResponse mPaymentResponse = gson.fromJson(result.getJsonString(), PaymentResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
@@ -264,6 +282,10 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                     ((MyApplication) getActivity().getApplication()).launchLoginPage(mPaymentResponse.getMessage());
                     Utilities.sendBlockedEventTracker(mTracker, "Make Payment", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
 
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    Toast.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    SecuritySettingsActivity.otpDuration = mPaymentResponse.getOtpValidFor();
+                    launchOTPVerification();
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG);

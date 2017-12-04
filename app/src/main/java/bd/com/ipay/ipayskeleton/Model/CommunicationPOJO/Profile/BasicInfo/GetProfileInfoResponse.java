@@ -17,6 +17,7 @@ public class GetProfileInfoResponse {
     private int occupation;
     private int accountType;
     private List<UserProfilePictureClass> profilePictures;
+    private List<UserProfilePictureClass> businessOwnerPictures;
     private String verificationStatus;
     private int verifiedByCount;
     private long signupTime;
@@ -64,6 +65,11 @@ public class GetProfileInfoResponse {
     public List<UserProfilePictureClass> getProfilePictures() {
         return profilePictures;
     }
+
+    public List<UserProfilePictureClass> getBusinessContactProfilePictures() {
+        return businessOwnerPictures;
+    }
+
 
     public String getVerificationStatus() {
         return verificationStatus;

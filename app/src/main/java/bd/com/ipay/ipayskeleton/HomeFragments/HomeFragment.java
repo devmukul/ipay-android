@@ -55,6 +55,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
@@ -92,7 +93,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         public void onReceive(Context context, Intent intent) {
             String newProfilePicture = intent.getStringExtra(Constants.PROFILE_PICTURE);
             Logger.logD("Broadcast home fragment", newProfilePicture);
-            mProfilePictureView.setProfilePicture(newProfilePicture, true);
+            mProfilePictureView.setAccountPhoto(newProfilePicture, true);
         }
     };
     private View mProfileInfo;
@@ -161,7 +162,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            @ValidateAccess({ServiceIdConstants.ADD_MONEY})
             public void onClick(View v) {
                 PinChecker addMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                     @Override
@@ -266,7 +266,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                 Intent intent = new Intent(getActivity(), QRCodeViewerActivity.class);
 
                 intent.putExtra(Constants.STRING_TO_ENCODE, ProfileInfoCacheManager.getMobileNumber());
-                intent.putExtra(Constants.ACTIVITY_TITLE, "QR Code to Share");
+                intent.putExtra(Constants.ACTIVITY_TITLE, "My QR Code to Share");
                 startActivity(intent);
             }
         });
@@ -277,6 +277,10 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         }
 
         updateProfileData();
+
+        if(!SharedPrefManager.getUserCountry().equals("BD")){
+            DialogUtils.showDialogForCountyNotSupported(getContext());
+        }
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mProfileInfoUpdateBroadcastReceiver,
                 new IntentFilter(Constants.PROFILE_INFO_UPDATE_BROADCAST));
@@ -329,7 +333,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private void updateProfileData() {
         mNameView.setText(ProfileInfoCacheManager.getUserName());
         mMobileNumberView.setText(ProfileInfoCacheManager.getMobileNumber());
-        mProfilePictureView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
+        mProfilePictureView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER +
                 ProfileInfoCacheManager.getProfileImageUrl(), false);
 
         try {

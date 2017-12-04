@@ -263,9 +263,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
                         ((MyApplication) ((Activity) (getContext())).getApplication()).launchLoginPage(mChangePasswordWithOTPResponse.getMessage());
                         if (getContext() instanceof AppCompatActivity) {
                             Utilities.sendBlockedEventTracker(Utilities.getTracker(((AppCompatActivity) getContext())), "Add Money", ProfileInfoCacheManager.getAccountId());
-
                         }
-
                     }
                 } else {
                     if (context != null)

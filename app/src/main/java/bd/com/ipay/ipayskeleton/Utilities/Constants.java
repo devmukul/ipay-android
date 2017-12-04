@@ -121,6 +121,7 @@ public class Constants {
     public static final String REQUEST_TYPE = "request_type";
 
     public static final String AMOUNT = "amount";
+    public static final String SELECTED_BANK_ACCOUNT = "selectedBankAccount";
     public static final String BANK_NAME = "bank_name";
     public static final String BANK_BRANCH = "bank_branch";
     public static final String BANK_ACCOUNT_NUMBER = "bank_account_number";
@@ -142,6 +143,7 @@ public class Constants {
     public static final int MIN_AGE_LIMIT = 14;
     public static final int MIN_VALID_NAME_LENGTH = 5;
     public static final int MAX_FILE_ATTACHMENT_LIMIT = 5;
+    public static final int MAX_FILE_MB_SIZE = 3;
     public static final int MINIMUM_REQUIRED_NID_LENGTH = 10;
     public static final int MAXIMUM_REQUIRED_NID_LENGTH = 17;
     public static final int BUSINESS_TIN_LENGTH = 12;
@@ -154,6 +156,8 @@ public class Constants {
     public static final int STARTING_MONTH = 01;
     public static final int STARTING_YEAR = 2016;
     public static final int DEFAULT_USER_CLASS = 1;
+
+    public static final int PHOTO_ID_FILE_MAX_SIZE = 5;
 
     public static final String IS_FINGERPRINT_AUTHENTICATION_ON = "LOGIN_WITH_FINGERPRINT";
     public static final String KEY_NAME = "key_name";
@@ -183,6 +187,7 @@ public class Constants {
 
     public static final String BASE_URL_MM;
     public static final String BASE_URL_SM;
+    public static final String BASE_URL_CARD;
     public static final String BASE_URL_EDU;
     public static final String BASE_URL_CONTACT;
     public static final String BASE_URL_ADMIN;
@@ -205,12 +210,27 @@ public class Constants {
     public static final String NAVIGATION_MENU_SERVICE_ACCESS_SET = "NAVIGATION_MENU_SERVICE_ACCESS_SET";
     public static final String FRAGMENT_SERVICE_ACCESS_SET = "FRAGMENT_SERVICE_ACCESS_SET";
     public static final String MOBILE_NUMBER_REGEX = "^(((\\+)?880)?|(0)?)(1[356789][\\d]{8})$";
+    public static final String TWO_FACTOR_AUTH_SETTINGS = "TWO_FACTOR_AUTH_SETTINGS";
+    public static final String SELECTED_IDENTIFICATION_DOCUMENT = "SELECTED_IDENTIFICATION_DOCUMENT";
+    public static final String IMAGE_VALIDATOR_REGEX = "([^\\\\s]+(\\\\.(?i)(jpg|png|gif|bmp))$)";
+
+    public static final String ADD_MONEY_TYPE = "ADD_MONEY_TYPE";
+    public static final String ADD_MONEY_TYPE_BY_CREDIT_OR_DEBIT_CARD = "ADD_MONEY_TYPE_BY_CREDIT_OR_DEBIT_CARD";
+    public static final String ADD_MONEY_TYPE_BY_BANK = "ADD_MONEY_TYPE_BY_BANK";
+    public static final String CARD_PAYMENT_URL = "CARD_PAYMENT_URL";
+    public static final String ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_STATUS = "ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_STATUS";
+
+    public static final String ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE = "Credit/Debit Card";
+    public static final String ADD_MONEY_BY_BANK_TITLE = "Bank";
+    public static final String CARD_TRANSACTION_DATA = "CARD_TRANSACTION_DATA";
+    public static final String VALID_IPAY_BD_ADDRESS = "(http://|https://)?(www|dev|test|stage|internal).ipay.com.bd/(.+)";
 
     static {
         if (SERVER_TYPE == DEV_SERVER) {
 
             BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
+            BASE_URL_CARD = "http://10.10.10.11:2202/api/v1/card/";
             BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_CONTACT = "http://10.10.10.11:4000/external/v1/";
@@ -224,6 +244,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.15.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.15.40.11:8085/api/v1/money/";
+            BASE_URL_CARD = "http://10.15.40.11:2202/api/v1/card/";
             BASE_URL_EDU = "http://10.15.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.15.40.14";
             BASE_URL_CONTACT = "http://10.15.40.14:4000/external/v1/";
@@ -237,6 +258,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.10.40.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.40.11:8085/api/v1/money/";
+            BASE_URL_CARD = "http://10.10.40.11:2202/api/v1/card/";
             BASE_URL_EDU = "http://10.10.40.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.40.14";
             BASE_URL_CONTACT = "http://10.10.40.14:4000/external/v1/";
@@ -250,6 +272,7 @@ public class Constants {
 
             BASE_URL_MM = "https://www.ipay.com.bd/api/v1/";
             BASE_URL_SM = "https://www.ipay.com.bd/api/v1/money/";
+            BASE_URL_CARD = "https://www.ipay.com.bd/api/v1/card/";
             BASE_URL_EDU = "https://www.ipay.com.bd/api/v1/em/";
             BASE_URL_FTP_SERVER = "https://www.ipay.com.bd";
             BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
@@ -264,6 +287,7 @@ public class Constants {
             BASE_URL_MM = "https://demo.ipay.com.bd/api/v1/";
             BASE_URL_SM = "https://demo.ipay.com.bd/api/v1/money/";
             BASE_URL_EDU = "https://demo.ipay.com.bd/api/v1/em/";
+            BASE_URL_CARD = "https://demo.ipay.com.bd/api/v1/card/";
             BASE_URL_FTP_SERVER = "https://demo.ipay.com.bd";
             BASE_URL_CONTACT = "https://demo.ipay.com.bd/external/v1/";
             BASE_URL_ADMIN = "https://demo.ipay.com.bd/api/v1/support/";
@@ -275,7 +299,8 @@ public class Constants {
         } else {
 
             BASE_URL_MM = "http://192.168.1.105:8085/api/v1/";
-            BASE_URL_SM = "http://192.168.1.106:8085/api/v1/money/";
+            BASE_URL_SM = "http://192.168.1.105:8085/api/v1/money/";
+            BASE_URL_CARD = "http://192.168.1.215:2202/api/v1/card/";
             BASE_URL_EDU = "http://192.168.1.105:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_CONTACT = "https://www.ipay.com.bd/cm/api/v1/";
@@ -310,11 +335,13 @@ public class Constants {
     public static final String URL_REMOVE_A_BANK = "bank/";
     public static final String URL_VERIFY_WITH_AMOUNT_A_BANK = "bank/";
     // Bank Transaction REST
-    public static final String URL_ADD_MONEY = "banktransaction/cashin";
-
-    public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout";
+    public static final String URL_ADD_MONEY = "banktransaction/cashin/v2";
+    public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout/v2";
     // Bank Verify Rest
     public static final String URL_BANK_VERIFICATION_WITH_AMOUNT = "verify";
+
+    // Card Transaction REST
+    public static final String URL_ADD_MONEY_CREDIT_OR_DEBIT_CARD = "add-money";
 
     // Trusted device CRUD operations
     public static final String URL_ADD_TRUSTED_DEVICE = "device";
@@ -323,10 +350,14 @@ public class Constants {
     public static final String URL_REMOVE_TRUSTED_DEVICE = "device/";
     // Documents Rest
     public static final String URL_GET_DOCUMENTS = "docs/identification/documents";
-
+    public static final String URL_GET_DOCUMENTS_v2 = "docs/identification/documents/v2";
     public static final String URL_GET_BUSINESS_DOCUMENTS = "docs/identification/documents/business";
+    public static final String URL_GET_BUSINESS_DOCUMENTS_v2 = "docs/identification/documents/business/v2";
+
     public static final String URL_UPLOAD_DOCUMENTS = "docs/identification/documents";
+    public static final String URL_UPLOAD_DOCUMENTS_V2 = "docs/identification/documents/v2";
     public static final String URL_UPLOAD_BUSINESS_DOCUMENTS = "docs/identification/documents/business";
+    public static final String URL_UPLOAD_BUSINESS_DOCUMENTS_V2 = "docs/identification/documents/business/v2";
     public static final String URL_GET_DOCUMENT_ACCESS_TOKEN = "user/contentAccessToken";
 
     // Fee Charge REST
@@ -356,7 +387,7 @@ public class Constants {
 
 
     // Mobile Topup Request REST
-    public static final String URL_TOPUP_REQUEST = "topup/dotopup";
+    public static final String URL_TOPUP_REQUEST = "topup/dotopup/v2";
 
     // Money Request REST
     public static final String URL_REQUEST_MONEY = "requestmoney";
@@ -369,41 +400,41 @@ public class Constants {
     public static final String URL_GET_All_NOTIFICATIONS = "requests/received/all-list";
     public static final String URL_GET_NOTIFICATIONS = "requests/received";
     public static final String URL_GET_SENT_REQUESTS = "requests/sent";
-    public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept";
+    public static final String URL_ACCEPT_NOTIFICATION_REQUEST = "requests/accept/v2";
     public static final String URL_CANCEL_NOTIFICATION_REQUEST = "requests/cancel";
     public static final String URL_REJECT_NOTIFICATION_REQUEST = "requests/reject";
 
     // Settings REST
-    public static final String URL_CHANGE_PASSWORD = "settings/password";
+    public static final String URL_CHANGE_PASSWORD = "settings/password/v2";
     public static final String URL_GET_SECURITY_ALL_QUESTIONS = "settings/security/allquestions/";
     public static final String URL_GET_SECURITY_QUESTIONS = "settings/security/questions";
     public static final String URL_SET_SECURITY_ANSWERS = "settings/security/answers";
     public static final String URL_FORGET_PASSWORD = "/forgot-password";
-
+    public static final String URL_TWO_FACTOR_AUTH_SETTINGS = "settings/2fa/preference";
     public static final String URL_GET_PIN_INFO = "settings/pin";
-    public static final String URL_SET_PIN = "settings/pin";
+    public static final String URL_SET_PIN = "settings/pin/v2";
 
     // Sign in Rest
     public static final String URL_GET_REFRESH_TOKEN = "signin/refreshToken";
-    public static final String URL_LOGIN = "signin";
+    public static final String URL_LOGIN = "signin/v2";
 
     // Sign out Rest
     public static final String URL_LOG_OUT = "signout";
     public static final String URL_LOG_OUT_from_all_device = "signout/formAllDevice";
 
     // Sign up Rest
-    public static final String URL_SIGN_UP = "signup/activation";
-    public static final String URL_SIGN_UP_BUSINESS = "signup/business/activation";
-    public static final String URL_OTP_REQUEST = "signup";
+    public static final String URL_SIGN_UP = "signup/activation/v2";
+    public static final String URL_SIGN_UP_BUSINESS = "signup/business/activation/v2";
+    public static final String URL_OTP_REQUEST = "signup/v2";
     public static final String URL_CHECK_IF_USER_EXISTS = "signup/check/";
-    public static final String URL_OTP_REQUEST_BUSINESS = "signup/business";
+    public static final String URL_OTP_REQUEST_BUSINESS = "signup/business/v2";
 
     // SM Payment REST
     public static final String URL_SEND_PAYMENT_REQUEST = "payment/invoice/send";
     public static final String URL_PAYMENT_GET_INVOICE = "payment/invoice/get/";
 
 
-    public static final String URL_PAYMENT = "payment";
+    public static final String URL_PAYMENT = "payment/v2";
 
     // SM Reports REST
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";
@@ -418,7 +449,7 @@ public class Constants {
     public static final String URL_RESOURCE = "resource";
 
     // Transaction REST
-    public static final String URL_SEND_MONEY = "transaction/send";
+    public static final String URL_SEND_MONEY = "transaction/send/v2";
 
     // Trusted Network REST
     public static final String URL_GET_TRUSTED_PERSONS = "trustednetwork/trustedpersons/";
@@ -429,7 +460,7 @@ public class Constants {
     public static final String URL_GET_USER_INFO = "user/userinfo";
     public static final String URL_GET_PARENT_INFO_REQUEST = "user/parent";
     public static final String URL_SET_PARENT_INFO_REQUEST = "user/parent";
-    public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile";
+    public static final String URL_GET_PROFILE_INFO_REQUEST = "user/profile/v1";
     public static final String URL_SET_PROFILE_INFO_REQUEST = "user/profile";
 
     // User Rest (Profile Completion)
@@ -440,6 +471,9 @@ public class Constants {
 
     // User Rest (Profile Picture)
     public static final String URL_SET_PROFILE_PICTURE = "user/profile/profilepicture/";
+
+    // User Rest (Business Contact Profile Picture)
+    public static final String URL_SET_BUSINESS_CONTACT_PROFILE_PICTURE = "user/profile/business-owner/picture";
 
     // User Rest (Address)
     public static final String URL_GET_USER_ADDRESS_REQUEST = "user/profile/address";
@@ -489,13 +523,14 @@ public class Constants {
     public static final String URL_ENDPOINT_LOCATION_COLLECTOR = "location";
 
     public static final int HTTP_RESPONSE_STATUS_NOT_ACCEPTABLE = 406;
+    public static final int HTTP_RESPONSE_STATUS_NOT_EXPIRED = 452;
     public static final int HTTP_RESPONSE_STATUS_NOT_FOUND = 404;
     public static final int HTTP_RESPONSE_STATUS_PAYMENT_REQUIRED = 402;
     public static final int HTTP_RESPONSE_STATUS_OK = 200;
     public static final int HTTP_RESPONSE_STATUS_PROCESSING = 102;
     public static final int HTTP_RESPONSE_STATUS_UNAUTHORIZED = 401;
     public static final int HTTP_RESPONSE_STATUS_BAD_REQUEST = 400;
-    public static final int HTTP_RESPONSE_STATUS_ACCEPTED = 202;
+    public static final int HTTP_RESPONSE_STATUS_ACCEPTED = 428;
     public static final int HTTP_RESPONSE_STATUS_INTERNAL_ERROR = 500;
     public static final int HTTP_RESPONSE_STATUS_BLOCKED = 403;
 
@@ -544,6 +579,7 @@ public class Constants {
     public static final String COMMAND_SEND_PAYMENT_REQUEST = "COMMAND_SEND_PAYMENT_REQUEST";
     public static final String COMMAND_GET_SINGLE_INVOICE = "COMMAND_GET_SINGLE_INVOICE";
     public static final String COMMAND_SET_PROFILE_PICTURE = "COMMAND_SET_PROFILE_PICTURE";
+    public static final String COMMAND_SET_BUSINESS_CONTACT_PROFILE_PICTURE = "COMMAND_SET_BUSINESS_CONTACT_PROFILE_PICTURE";
     public static final String COMMAND_ADD_A_BANK = "COMMAND_ADD_A_BANK";
     public static final String COMMAND_VERIFICATION_BANK_WITH_AMOUNT = "COMMAND_VERIFICATION_BANK_WITH_AMOUNT";
     public static final String COMMAND_REMOVE_A_BANK = "COMMAND_REMOVE_A_BANK";
@@ -630,6 +666,10 @@ public class Constants {
     public static final String COMMAND_GET_STUDENT_INFO_BY_STUDENT_ID = "COMMAND_GET_STUDENT_INFO_BY_STUDENT_ID";
     public static final String COMMAND_MAKE_PAYMENT_EDUCATION = "COMMAND_MAKE_PAYMENT_EDUCATION";
 
+    //Two FA
+    public static final String COMMAND_GET_TWO_FACTOR_AUTH_SETTINGS = "COMMAND_GET_TWO_FACTOR_AUTH_SETTINGS";
+    public static final String COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS = "COMMAND_PUT_TWO_FACTOR_AUTH_SETTINGS";
+
     //Data Collector
     public static final String COMMAND_POST_USER_LOCATION = "COMMAND_POST_USER_LOCATION";
 
@@ -659,7 +699,8 @@ public class Constants {
     public static final int TRANSACTION_HISTORY_OPENING_BALANCE = 1001;
     public static final int TRANSACTION_HISTORY_SEND_MONEY = 1;
     public static final int TRANSACTION_HISTORY_REQUEST_MONEY = 6001;
-    public static final int TRANSACTION_HISTORY_ADD_MONEY = 3001;
+    public static final int TRANSACTION_HISTORY_ADD_MONEY_BY_BANK = 3001;
+    public static final int TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD = 3011;
     public static final int TRANSACTION_HISTORY_ADD_MONEY_REVERT = 963001;
     public static final int TRANSACTION_HISTORY_WITHDRAW_MONEY = 3002;
     public static final int TRANSACTION_HISTORY_TOP_UP = 2001;
@@ -675,11 +716,13 @@ public class Constants {
     public static final int SERVICE_ID_REQUEST_MONEY = 6001;
     public static final int SERVICE_ID_REQUEST_INVOICE = 6003;
     public static final int SERVICE_ID_SEND_MONEY = 1;
-    public static final int SERVICE_ID_ADD_MONEY = 3001;
+    public static final int SERVICE_ID_ADD_MONEY_BY_BANK = 3001;
+    public static final int SERVICE_ID_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD = 3011;
     public static final int SERVICE_ID_WITHDRAW_MONEY = 3002;
     public static final int SERVICE_ID_TOP_UP = 2001;
     public static final int SERVICE_ID_MAKE_PAYMENT = 6002;
     public static final int SERVICE_ID_REQUEST_PAYMENT = 6005;
+    public static final int SERVICE_ID_BATCH_NOTIFICATION = 9003;
 
     public static final String RESULT = "Result";
     public static final String GET_REQUEST = "GET_RESULT: ";
@@ -687,16 +730,6 @@ public class Constants {
     public static final String DELETE_URL = "DELETE_URL: ";
 
     public static final String PARSED_TOKEN = "Parsed Token: ";
-
-    public static final String DOCUMENT_TYPE_NATIONAL_ID = "national_id";
-    public static final String DOCUMENT_TYPE_PASSPORT = "passport";
-    public static String DOCUMENT_TYPE_OTHER = "Other";
-    public static final String DOCUMENT_TYPE_DRIVING_LICENSE = "driving_license";
-    public static final String DOCUMENT_TYPE_BIRTH_CERTIFICATE = "birth_certificate";
-    public static final String DOCUMENT_TYPE_TIN = "tin";
-    public static final String DOCUMENT_TYPE_BUSINESS_TIN = "business_tin";
-    public static final String DOCUMENT_TYPE_TRADE_LICENSE = "trade_license";
-    public static final String DOCUMENT_TYPE_VAT_REG_CERT = "vat_reg_certificate";
 
     public static final String DOCUMENT_ID_NUMBER = "documentIdNumber";
     public static final String DOCUMENT_TYPE = "documentType";
@@ -736,6 +769,10 @@ public class Constants {
 
     public static final String SERVICE_RULE_REQUEST_PAYMENT_MIN_AMOUNT_PER_PAYMENT = "REQUEST_PAYMENT_MIN_AMOUNT_SINGLE";
     public static final String SERVICE_RULE_REQUEST_PAYMENT_MAX_AMOUNT_PER_PAYMENT = "REQUEST_PAYMENT_MAX_AMOUNT_SINGLE";
+
+    public static final String SERVICE_RULE_ADD_CARDMONEY_MIN_AMOUNT_SINGLE = "ADD_CARDMONEY_MIN_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_ADD_CARDMONEY_MAX_AMOUNT_SINGLE = "ADD_CARDMONEY_MAX_AMOUNT_SINGLE";
+    public static final String SERVICE_RULE_ADD_CARDMONEY_PINREQUIRED = "ADD_CARDMONEY_PINREQUIRED";
 
     public static final int INVOICE_STATUS_ACCEPTED = 200;
     public static final int INVOICE_STATUS_PROCESSING = 102;
@@ -784,6 +821,9 @@ public class Constants {
     public static final int REQUEST_TYPE_RECEIVED_REQUEST = 1;
     public static final int REQUEST_TYPE_SENT_REQUEST = 2;
 
+    public static final int TYPE_PROFILE_PICTURE = 1;
+    public static final int TYPE_BUSINESS_LOGO = 2;
+
     public static final int INVALID_ACCOUNT_ID = -1;
 
     // API Version Checker
@@ -792,6 +832,16 @@ public class Constants {
     // Format
     public static final String DATE_FORMAT = "%02d/%02d/%4d";
 
-    public static final String[] LOCATION_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+    public static final String[] LOCATION_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION};
+
+    public static final String PROFILE_PHOTO_PATH = "profile_photo_path";
+
+    public static final String METHOD_POST = "POST";
+    public static final String METHOD_PUT = "PUT";
+
+
+    public static final String VISA_CARD_STARTS_WITH_REGEX = "4(.*)";
+    public static final String AMEX_CARD_STARTS_WITH_REGEX = "3[47](.*)";
+    public static final String MASTER_CARD_STARTS_WITH_REGEX = "5[1-5](.*)";
 
 }
