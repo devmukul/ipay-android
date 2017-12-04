@@ -53,6 +53,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public static String mEmailBusiness;
     public static String mBirthdayBusinessHolder;
     public static String mMobileNumberPersonal;
+    public static String mCountryCode;
     public static long mTypeofBusiness;
     public static long otpDuration;
 
@@ -220,49 +221,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         this.finish();
-    }
-
-
-    public void switchToProfilePictureFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new OnBoardProfilePictureUploadHelperFragment()).commit();
-    }
-
-    public void switchToIdentificationDocumentFragment(String profileImagePath) {
-        System.out.println("Test Path "+profileImagePath);
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.PROFILE_PHOTO_PATH, profileImagePath);
-
-        OnBoardPhotoIdUploadHelperFragment onBoardIcdentificationFragment = new OnBoardPhotoIdUploadHelperFragment();
-        onBoardIcdentificationFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, onBoardIcdentificationFragment).addToBackStack(null).commit();
-    }
-
-    public void switchToAddressFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new OnBoardAddBasicInfoHelperFragment()).addToBackStack(null).commit();
-    }
-
-    public void switchToEditBasicFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new OnBoardAddBasicInfoFragment()).addToBackStack(null).commit();
-    }
-
-    public void switchToAddNewBankHelperFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new OnBoardAddBankHelperFragment()).commit();
-    }
-
-    public void switchToAddNewBankFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new OnBoardAddBankFragment()).commit();
-    }
-
-    public void switchToAddBankAgreementFragment(Bundle bundle) {
-        OnBoardConsentAgreementForBankFragment consentAgreementForBankFragment = new OnBoardConsentAgreementForBankFragment();
-        consentAgreementForBankFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, consentAgreementForBankFragment).addToBackStack(null).commit();
     }
 
     @Override

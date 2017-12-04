@@ -720,6 +720,7 @@ public class Constants {
     public static final int SERVICE_ID_TOP_UP = 2001;
     public static final int SERVICE_ID_MAKE_PAYMENT = 6002;
     public static final int SERVICE_ID_REQUEST_PAYMENT = 6005;
+    public static final int SERVICE_ID_BATCH_NOTIFICATION = 9003;
 
     public static final String RESULT = "Result";
     public static final String GET_REQUEST = "GET_RESULT: ";

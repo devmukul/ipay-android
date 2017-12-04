@@ -205,7 +205,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (ContactEngine.isValidNumber(result)) {
+                        if (InputValidator.isValidNumber(result)) {
                             mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
                         } else if (getActivity() != null)
                             Toast.makeText(getActivity(), getResources().getString(
@@ -272,7 +272,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
             cancel = true;
         }
 
-        if (!ContactEngine.isValidNumber(mobileNumber)) {
+        if (!InputValidator.isValidNumber(mobileNumber)) {
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             cancel = true;

@@ -112,7 +112,7 @@ public class SignupBusinessStepOneFragment extends BaseFragment implements HttpR
         // Check for a valid password, if the user entered one.
         String passwordValidationMsg = InputValidator.isPasswordValid(SignupOrLoginActivity.mPasswordBusiness);
 
-        if (!ContactEngine.isValidNumber(SignupOrLoginActivity.mMobileNumberBusiness)) {
+        if (!InputValidator.isValidNumber(SignupOrLoginActivity.mMobileNumberBusiness)) {
             mBusinessMobileNumberView.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mBusinessMobileNumberView;
             cancel = true;

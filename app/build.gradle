@@ -149,6 +149,9 @@ dependencies {
     compile 'io.intercom.android:intercom-sdk-base:3.+'
     compile 'io.intercom.android:intercom-sdk-fcm:3.+'
 
+    // Singapore
+    compile 'com.hbb20:ccp:1.7.8'
+
     testCompile 'junit:junit:4.12'
 }
 
