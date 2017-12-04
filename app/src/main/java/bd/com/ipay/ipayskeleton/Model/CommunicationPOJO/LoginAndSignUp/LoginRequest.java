@@ -1,7 +1,5 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp;
 
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
-
 public class LoginRequest {
 
     private final String mobileNumber;
@@ -14,7 +12,7 @@ public class LoginRequest {
     private final boolean isRemember;
 
     public LoginRequest(String mobileNumber, String password, String deviceId,
-                        String uuid, String otp, String pushRegistrationId, String captcha) {
+                        String uuid, String otp, String pushRegistrationId, String captcha, boolean isRemember) {
         this.mobileNumber = mobileNumber;
         this.password = password;
         this.deviceId = deviceId;
@@ -22,6 +20,6 @@ public class LoginRequest {
         this.otp = otp;
         this.pushRegistrationId = pushRegistrationId;
         this.captcha = captcha;
-        this.isRemember = SharedPrefManager.isRememberMeActive();
+        this.isRemember = isRemember;
     }
 }
