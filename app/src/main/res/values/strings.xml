@@ -1077,4 +1077,6 @@
     <string name="manage_account">Manage Account</string>
     <string name="your_assignee_can_do">Your assignee can do the following things</string>
     <string name="please_select_a_role">Please select a role</string>
+    <string name="switching">Switching</string>
+    <string name="cant_switch">Cant Switch Account Now</string>
 </resources>

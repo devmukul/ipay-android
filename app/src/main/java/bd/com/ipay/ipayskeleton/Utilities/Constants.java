@@ -65,7 +65,7 @@ public class Constants {
     public static final String TOKEN = "token";
     public static final String REFRESH_TOKEN = "refresh-token";
     public static final String RESOURCE_TOKEN = "resource-token";
-    public static final String OPERATING_ON_ACCOUNT_ID = "operatingOnAccountId";
+    public static final String OPERATING_ON_ACCOUNT_ID = "onAccountId";
 
     public static final int CAMERA_REAR = CameraSource.CAMERA_FACING_BACK;
     public static final int CAMERA_FRONT = CameraSource.CAMERA_FACING_FRONT;
@@ -375,6 +375,7 @@ public class Constants {
     //business rule Rest
     //business rule Rest
     public static final String URL_BUSINESS_RULE = "business-rule";
+    public static final String URL_SWITCH_ACCOUNT = "business-manager/businesses/";
 
     public static final String URL_BUSINESS_RULE_WITH_SERVICE_CHARGE = "rules-charge";
 
@@ -579,6 +580,7 @@ public class Constants {
     public static final String COMMAND_LOG_OUT = "COMMAND_LOG_OUT";
     public static final String COMMAND_SEND_MONEY = "COMMAND_SEND_MONEY";
     public static final String COMMAND_PAYMENT = "COMMAND_PAYMENT";
+    public static final String COMMAND_SWITCH_ACCOUNT = "COMMAND_SWITCH_ACCOUNT";
     public static final String COMMAND_GET_SERVICE_CHARGE = "COMMAND_GET_SERVICE_CHARGE";
     public static final String COMMAND_REFRESH_BALANCE = "COMMAND_REFRESH_BALANCE";
     public static final String COMMAND_GET_USER_ACTIVITIES = "COMMAND_GET_USER_ACTIVITIES";
@@ -592,6 +594,7 @@ public class Constants {
     public static final String COMMAND_CANCEL_REQUESTS_MONEY = "COMMAND_CANCEL_REQUESTS_MONEY";
     public static final String COMMAND_ACCEPT_REQUESTS_MONEY = "COMMAND_ACCEPT_REQUESTS_MONEY";
     public static final String COMMAND_REJECT_REQUESTS_MONEY = "COMMAND_REJECT_REQUESTS_MONEY";
+    public static final String COMMAND_GET_MANAGED_BUSINESS_ACCOUNTS = "COMMAND_GET_MANAGED_BUSINESS_ACCOUNTS";
     public static final String COMMAND_CANCEL_PAYMENT_REQUEST = "COMMAND_CANCEL_PAYMENT_REQUEST";
     public static final String COMMAND_ACCEPT_PAYMENT_REQUEST = "COMMAND_ACCEPT_PAYMENT_REQUEST";
     public static final String COMMAND_GET_PENDING_REQUESTS_ME = "COMMAND_GET_PENDING_REQUESTS_ME";

@@ -10,7 +10,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 public class TokenManager {
 
     // This field will be set when a personal user switches to an employer's account
-    private static String operatingOnAccountId;
+    private static String onAccountId;
 
     private static String token = "";
     private static String refreshToken = "";
@@ -19,20 +19,20 @@ public class TokenManager {
     private static long iPayTokenTimeInMs = Constants.DEFAULT_TOKEN_TIME;
     private static long tokenWindowOverlapTime = Constants.DEFAULT_TOKEN_OVERLAP_TIME;
 
-    public static String getOperatingOnAccountId() {
-        return operatingOnAccountId;
+    public static String getOnAccountId() {
+        return onAccountId;
     }
 
-    public static void setOperatingOnAccountId(String operatingOnAccountId) {
-        TokenManager.operatingOnAccountId = operatingOnAccountId;
+    public static void setOnAccountId(String onAccountId) {
+        TokenManager.onAccountId = onAccountId;
     }
 
     public static boolean isEmployerAccountActive() {
-        return operatingOnAccountId != null && !operatingOnAccountId.isEmpty();
+        return onAccountId != null && !onAccountId.isEmpty();
     }
 
     public static void deactivateEmployerAccount() {
-        operatingOnAccountId = null;
+        onAccountId = null;
     }
 
     public static boolean isTokenExists() {

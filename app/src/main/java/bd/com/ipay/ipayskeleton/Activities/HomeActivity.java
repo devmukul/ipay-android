@@ -52,7 +52,6 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.InviteActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
-import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -71,6 +70,7 @@ import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.GetManagedBusinessAccountsResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notification;
@@ -79,6 +79,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletio
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessAccountSwitch;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -98,6 +99,9 @@ public class HomeActivity extends BaseActivity
     private static final int REQUEST_CODE_PERMISSION = 1001;
 
     private HttpRequestPostAsyncTask mLocationUpdateRequestAsyncTask;
+
+    private HttpRequestGetAsyncTask mGetBusinessAccountsAsyncTask;
+    private GetManagedBusinessAccountsResponse mGetManagedBusinessAccountsResponse;
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
@@ -258,6 +262,12 @@ public class HomeActivity extends BaseActivity
         }
     }
 
+    private void getManagedBusinessAccountList() {
+        mGetBusinessAccountsAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_MANAGED_BUSINESS_ACCOUNTS,
+                Constants.BASE_URL_MM + Constants.URL_SWITCH_ACCOUNT, this, this);
+        mGetBusinessAccountsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     /**
      * update Profile info fetches from the Profile Information API.
      * If the account type is business then, an additional task is done by calling the
@@ -270,10 +280,11 @@ public class HomeActivity extends BaseActivity
             getBusinessInformation();
         }
     }
-    private  void setDropdown(){
+
+    private void setDropdown() {
         Drawable drawable = getResources().getDrawable(R.drawable.dropdown_arrow);
         drawable.setBounds(0, 0, 30, 20);
-        ColorFilter colorFilter=new LightingColorFilter(Color.WHITE,Color.WHITE);
+        ColorFilter colorFilter = new LightingColorFilter(Color.WHITE, Color.WHITE);
         drawable.setColorFilter(colorFilter);
         mNameView.setCompoundDrawables(null, null, drawable, null);
     }
@@ -425,9 +436,10 @@ public class HomeActivity extends BaseActivity
 
         } else if (id == R.id.nav_security_settings) {
 
-            Intent intent = new Intent(HomeActivity.this, SecuritySettingsActivity.class);
+            /*Intent intent = new Intent(HomeActivity.this, SecuritySettingsActivity.class);
             startActivity(intent);
-            switchedToHomeFragment = false;
+            switchedToHomeFragment = false;*/
+            getManagedBusinessAccountList();
 
         } else if (id == R.id.nav_invite) {
 
@@ -677,12 +689,26 @@ public class HomeActivity extends BaseActivity
                     Toaster.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);
 
                 }
-
                 mGetBusinessInformationAsyncTask = null;
                 break;
             case Constants.COMMAND_POST_USER_LOCATION:
                 mLocationUpdateRequestAsyncTask = null;
                 break;
+
+            case Constants.COMMAND_GET_MANAGED_BUSINESS_ACCOUNTS:
+                try {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mGetManagedBusinessAccountsResponse = gson.fromJson(result.getJsonString(), GetManagedBusinessAccountsResponse.class);
+                        if(mGetManagedBusinessAccountsResponse.getBusinessList().size()>0) {
+                            BusinessAccountSwitch businessAccountSwitch = new BusinessAccountSwitch(
+                                    (int) mGetManagedBusinessAccountsResponse.getBusinessList().get(0).
+                                            getBusinessAccountId(), this);
+                            businessAccountSwitch.requestSwitchAccount();
+                        }
+                    }
+                } catch (Exception e) {
+
+                }
         }
     }
 
