@@ -439,6 +439,7 @@ public class Constants {
     public static final String URL_OTP_REQUEST = "signup/v2";
     public static final String URL_CHECK_IF_USER_EXISTS = "signup/check/";
     public static final String URL_OTP_REQUEST_BUSINESS = "signup/business/v2";
+    public static final String URL_GET_ACCESS_CONTROL_LIST = "acl/services";
 
     // SM Payment REST
     public static final String URL_SEND_PAYMENT_REQUEST = "payment/invoice/send";
@@ -567,6 +568,7 @@ public class Constants {
 
     public static final long DEFAULT_TOKEN_TIME = 60000;   // By default token time is one minute
     public static final long DEFAULT_TOKEN_OVERLAP_TIME = 15000;   // By default token time is one minute
+    public static final long MIN_REQUIRED_REFRESH_TOKEN_TIME = 24 * 60 * 60 * 1000;   // Refresh token should be called at least after 24 hours
 
     public static final String COMMAND_OTP_VERIFICATION = "COMMAND_OTP_VERIFICATION";
     public static final String COMMAND_RESEND_OTP = "COMMAND_RESEND_OTP";
@@ -647,6 +649,7 @@ public class Constants {
     public static final String COMMAND_GET_SELECTED_SECURITY_QUESTIONS = "COMMAND_GET_SELECTED_SECURITY_QUESTIONS";
     public static final String COMMAND_SET_SECURITY_ANSWERS = "COMMAND_SET_SECURITY_ANSWERS";
     public static final String COMMAND_UPDATE_SECURITY_ANSWERS = "COMMAND_UPDATE_SECURITY_ANSWERS";
+    public static final String COMMAND_GET_ACCESS_CONTROL_LIST = "COMMAND_GET_ACCESS_CONTROL_LIST";
 
     // Ticket
     public static final String COMMAND_CREATE_TICKET = "COMMAND_CREATE_TICKET";

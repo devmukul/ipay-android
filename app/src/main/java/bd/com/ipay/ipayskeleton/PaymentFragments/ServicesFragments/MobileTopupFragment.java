@@ -262,7 +262,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
-        if (!mobileNumber.matches(Constants.MOBILE_NUMBER_REGEX)) {
+        if (!mobileNumber.matches(InputValidator.MOBILE_NUMBER_REGEX)) {
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             focusView = mMobileNumberEditText;
             cancel = true;

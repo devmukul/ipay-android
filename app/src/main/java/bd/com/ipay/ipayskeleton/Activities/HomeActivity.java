@@ -69,6 +69,7 @@ import bd.com.ipay.ipayskeleton.DataCollectors.Model.UserLocation;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AccessControl.GetAccessControlResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.GetManagedBusinessAccountsResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
@@ -107,6 +108,9 @@ public class HomeActivity extends BaseActivity
     private LogoutResponse mLogOutResponse;
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetProfileInfoResponse mGetProfileInfoResponse;
+
+    private HttpRequestGetAsyncTask mGetAccessControlTask = null;
+    private GetAccessControlResponse mGetAccessControlResponse;
 
     private HttpRequestGetAsyncTask mGetBusinessInformationAsyncTask;
     private GetBusinessInformationResponse mGetBusinessInformationResponse;
@@ -230,6 +234,10 @@ public class HomeActivity extends BaseActivity
 
         // Fetch available relationship list
         getRelationshipList();
+
+        // Fetch ACL List
+        if (SharedPrefManager.isRememberMeActive())
+            getAccessControlList();
 
         // Check if important permissions (e.g. Contacts permission) is given. If not,
         // request user for permission.
@@ -502,13 +510,17 @@ public class HomeActivity extends BaseActivity
                     .setMessage(R.string.are_you_sure_to_exit)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            if (Utilities.isConnectionAvailable(HomeActivity.this)) {
-                                exitFromApplication = true;
-                                attemptLogout();
-                            } else {
-                                ProfileInfoCacheManager.setLoggedInStatus(false);
-                                ((MyApplication) HomeActivity.this.getApplication()).clearTokenAndTimer();
+                            if (SharedPrefManager.isRememberMeActive()) {
                                 finish();
+                            } else {
+                                if (Utilities.isConnectionAvailable(HomeActivity.this)) {
+                                    exitFromApplication = true;
+                                    attemptLogout();
+                                } else {
+                                    ProfileInfoCacheManager.setLoggedInStatus(false);
+                                    ((MyApplication) HomeActivity.this.getApplication()).clearTokenAndTimer();
+                                    finish();
+                                }
                             }
                         }
                     })
@@ -598,6 +610,16 @@ public class HomeActivity extends BaseActivity
         mGetRelationshipListAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getAccessControlList() {
+        if (mGetAccessControlTask != null || this == null)
+            return;
+
+        mGetAccessControlTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ACCESS_CONTROL_LIST,
+                Constants.BASE_URL_MM + Constants.URL_GET_ACCESS_CONTROL_LIST, HomeActivity.this);
+        mGetAccessControlTask.mHttpResponseListener = this;
+        mGetAccessControlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -666,6 +688,24 @@ public class HomeActivity extends BaseActivity
                 }
 
                 mGetProfileInfoTask = null;
+
+                break;
+            case Constants.COMMAND_GET_ACCESS_CONTROL_LIST:
+
+                try {
+                    mGetAccessControlResponse = gson.fromJson(result.getJsonString(), GetAccessControlResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                        // Saving the allowed services id for the user
+                        if (mGetAccessControlResponse.getAccessControlList() != null) {
+                            ACLManager.updateAllowedServiceArray(mGetAccessControlResponse.getAccessControlList());
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                mGetAccessControlTask = null;
 
                 break;
             case Constants.COMMAND_GET_BUSINESS_INFORMATION:

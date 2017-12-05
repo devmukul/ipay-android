@@ -28,6 +28,15 @@
         <item name="elevation">0dp</item>
     </style>
 
+    <style name="AppTheme.Light" parent="Theme.AppCompat">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@android:color/white</item>
+    </style>
+
+    <style name="my_checkbox_style">
+        <item name="buttonTint">@color/colorWhite</item>
+    </style>
+
     <style name="HomeBalanceButtonBackground">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>

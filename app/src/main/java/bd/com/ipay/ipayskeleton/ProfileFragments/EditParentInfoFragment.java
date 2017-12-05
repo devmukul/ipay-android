@@ -167,14 +167,14 @@ public class EditParentInfoFragment extends BaseFragment implements HttpResponse
         }
 
         if (mFathersMobile.isEmpty()) mFathersMobile = null;
-        else if (!ContactEngine.isValidNumber(mFathersMobile)) {
+        else if (!InputValidator.isValidNumber(mFathersMobile)) {
             mFathersMobileEditText.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mFathersMobileEditText;
             cancel = true;
         }
 
         if (mMothersMobile.isEmpty()) mMothersMobile = null;
-        else if (!ContactEngine.isValidNumber(mMothersMobile)) {
+        else if (!InputValidator.isValidNumber(mMothersMobile)) {
             mMothersMobileEditText.setError(getString(R.string.error_invalid_mobile_number));
             focusView = mMothersMobileEditText;
             cancel = true;

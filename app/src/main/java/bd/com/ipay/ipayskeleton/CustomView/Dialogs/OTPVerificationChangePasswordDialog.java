@@ -29,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.Change
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.ChangePasswordWithOTPResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -197,6 +198,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
     private void switchToLoginPage() {
         ((MyApplication) context.getApplication()).launchLoginPage(null);
         ((MyApplication) context.getApplication()).clearTokenAndTimer();
+        SharedPrefManager.setRememberMeActive(false);
         ProfileInfoCacheManager.setLoggedInStatus(false);
         mOTPInputDialog.cancel();
     }

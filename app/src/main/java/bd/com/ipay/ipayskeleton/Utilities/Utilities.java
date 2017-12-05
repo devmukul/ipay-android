@@ -782,6 +782,16 @@ public class Utilities {
         ActivityCompat.requestPermissions(activity, requiredPermissions.toArray(new String[requiredPermissions.size()]), permissionCode);
     }
 
+    public static boolean isValidTokenWindowTime() {
+        if (currentTime() - TokenManager.getLastRefreshTokenFetchTime() > Constants.MIN_REQUIRED_REFRESH_TOKEN_TIME)
+            return true;
+        return false;
+    }
+
+    public static long currentTime() {
+        return System.currentTimeMillis();
+    }
+
     public static Tracker getTracker(Activity activity) {
         Tracker mTracker;
         MyApplication application = (MyApplication) activity.getApplication();

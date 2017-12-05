@@ -25,6 +25,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -146,7 +147,7 @@ public class InviteDialog extends MaterialDialog.Builder implements HttpResponse
             error = true;
         }
 
-        if (!ContactEngine.isValidNumber(mobileNumber)) {
+        if (!InputValidator.isValidNumber(mobileNumber)) {
             mEditTextMobileNumber.setError(context.getResources().getString(R.string.error_invalid_mobile_number));
             error = true;
         }

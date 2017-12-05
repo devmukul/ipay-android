@@ -38,6 +38,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrust
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.CustomCountDownTimer;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
@@ -198,7 +199,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
             mProgressDialog.show();
 
             LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
-                    Constants.MOBILE_ANDROID + mDeviceID, null, otp, null, null);
+                    Constants.MOBILE_ANDROID + mDeviceID, null, otp, null, null, SignupOrLoginActivity.isRememberMe);
             Gson gson = new Gson();
             String json = gson.toJson(mLoginModel);
             mLoginTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_IN,
@@ -243,9 +244,16 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                             new RegisterFCMTokenToServerAsyncTask(getContext());
                         }
 
+                        SharedPrefManager.setUserCountry(SignupOrLoginActivity.mCountryCode);
+
                         // Saving the allowed services id for the user
                         if (mLoginResponseModel.getAccessControlList() != null) {
                             ACLManager.updateAllowedServiceArray(mLoginResponseModel.getAccessControlList());
+                        }
+
+                        // Save Remember me in shared preference
+                        if (SignupOrLoginActivity.isRememberMe) {
+                            SharedPrefManager.setRememberMeActive(SignupOrLoginActivity.isRememberMe);
                         }
 
                         attemptTrustedDeviceAdd();
@@ -350,14 +358,14 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                         ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
                         ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
 
-                        if(!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                        if (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
                                 || !ProfileInfoCacheManager.isBasicInfoAdded()) {
                             ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
-                        }else {
+                        } else {
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                         }
                     } else {
-                        if (getActivity()!= null)
+                        if (getActivity() != null)
                             Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
                     }
 

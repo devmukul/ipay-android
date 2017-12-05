@@ -32,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -82,7 +83,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (ContactEngine.isValidNumber(result)) {
+                        if (InputValidator.isValidNumber(result)) {
                             if (Utilities.isConnectionAvailable(getActivity())) {
                                 mobileNumber = ContactEngine.formatMobileNumberBD(result);
                                 GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);

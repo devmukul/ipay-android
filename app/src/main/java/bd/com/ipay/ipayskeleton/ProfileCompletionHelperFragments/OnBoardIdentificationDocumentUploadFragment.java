@@ -41,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.Identi
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.UploadDocumentResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DocumentPicker;
 import bd.com.ipay.ipayskeleton.Utilities.IdentificationDocumentConstants;
@@ -348,10 +349,10 @@ public class OnBoardIdentificationDocumentUploadFragment extends BaseFragment im
                         getActivity().getSupportFragmentManager().popBackStack();
                         getActivity().getSupportFragmentManager().popBackStack();
 
-                        if (ProfileInfoCacheManager.isSwitchedFromSignup()) {
+                        if (ProfileInfoCacheManager.isSwitchedFromSignup() && SharedPrefManager.isBangladesh()) {
                             ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
                         } else {
-                            if (!ProfileInfoCacheManager.isBasicInfoAdded()) {
+                            if (!ProfileInfoCacheManager.isBasicInfoAdded() && SharedPrefManager.isBangladesh()) {
                                 ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
                             } else {
                                 ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();

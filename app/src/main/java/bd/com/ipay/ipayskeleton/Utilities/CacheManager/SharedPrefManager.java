@@ -18,6 +18,14 @@ public class SharedPrefManager {
         return pref.getBoolean(SharedPrefConstants.FIRST_LAUNCH, defaultValue);
     }
 
+    public static boolean isRememberMeActive() {
+        return pref.getBoolean(SharedPrefConstants.REMEMBER_ME, false);
+    }
+
+    public static void setRememberMeActive(boolean value) {
+        pref.edit().putBoolean(SharedPrefConstants.REMEMBER_ME, value).apply();
+    }
+
     public static String getUserBalance() {
         return pref.getString(SharedPrefConstants.USER_BALANCE, "0.0");
     }
@@ -46,8 +54,12 @@ public class SharedPrefManager {
         pref.edit().putInt(SharedPrefConstants.MOBILE_NUMBER_TYPE, value).apply();
     }
 
-    public static void serUserCountry(String value) {
+    public static void setUserCountry(String value) {
         pref.edit().putString(SharedPrefConstants.USERCOUNTRY, value).apply();
+    }
+
+    public static String getUserCountry() {
+        return pref.getString(SharedPrefConstants.USERCOUNTRY, "BD");
     }
 
     public static String getKeyPassword(String defaultValue) {
@@ -76,5 +88,9 @@ public class SharedPrefManager {
 
     public static boolean ifContainsUserID() {
         return (pref.contains(SharedPrefConstants.USERID));
+    }
+
+    public static boolean isBangladesh() {
+        return getUserCountry().equalsIgnoreCase("BD");
     }
 }
