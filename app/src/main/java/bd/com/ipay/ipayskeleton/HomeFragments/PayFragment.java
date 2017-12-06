@@ -67,7 +67,6 @@ public class PayFragment extends BaseFragment {
         }
         mServiceActionList.add(new ServiceAction(getString(R.string.pay_by_QR_code)));
         mServiceActionList.add(new ServiceAction(getString(R.string.mobile_topup)));
-        // mServiceActionList.add(new ServiceAction(getString(R.string.education_payment)));
 
         mServiceActionListView = (ListView) v.findViewById(R.id.list_services);
         mServiceActionListAdapter = new WalletActionListAdapter(getActivity(), R.layout.list_item_services, mServiceActionList);
@@ -216,16 +215,6 @@ public class PayFragment extends BaseFragment {
                                 });
                                 pinChecker.execute();
                                 break;
-                            /*case Constants.SERVICE_ACTION_EDUCATION_PAYMENT:
-                                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                                    @Override
-                                    public void ifPinAdded() {
-                                        Intent intent = new Intent(getActivity(), EducationPaymentActivity.class);
-                                        startActivity(intent);
-                                    }
-                                });
-                                pinChecker.execute();
-                                break;*/
                             case Constants.SERVICE_ACTION_PAY_BY_QR_CODE:
                                 pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
                                     @Override
