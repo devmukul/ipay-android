@@ -191,16 +191,18 @@ public class ProfileInfoCacheManager {
     public static void updateProfileInfoCache(GetProfileInfoResponse profileInfo) {
         // For Business Account It contains the name of the contact person rather than the name of the business.
         // So We have to check if the Account Type is Personal or not to save this information
-        if (!ProfileInfoCacheManager.isBusinessAccount())
-            setUserName(profileInfo.getName());
+        if (profileInfo != null) {
+            if (!ProfileInfoCacheManager.isBusinessAccount())
+                setUserName(profileInfo.getName());
 
-        setProfilePictureUrl(Utilities.getImage(profileInfo.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH));
-        setVerificationStatus(profileInfo.getVerificationStatus());
-        setPrimaryEmail(profileInfo.getPrimaryEmail());
-        setAccountId(profileInfo.getAccountId());
-        setSignupTime(profileInfo.getSignupTime());
-        setGender(profileInfo.getGender());
-        setBirthday(profileInfo.getDob());
+            setProfilePictureUrl(Utilities.getImage(profileInfo.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH));
+            setVerificationStatus(profileInfo.getVerificationStatus());
+            setPrimaryEmail(profileInfo.getPrimaryEmail());
+            setAccountId(profileInfo.getAccountId());
+            setSignupTime(profileInfo.getSignupTime());
+            setGender(profileInfo.getGender());
+            setBirthday(profileInfo.getDob());
+        }
 
         BroadcastServiceIntent.sendBroadcast(context, Constants.PROFILE_INFO_UPDATE_BROADCAST);
     }

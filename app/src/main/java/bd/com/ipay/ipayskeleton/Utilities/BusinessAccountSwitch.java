@@ -73,10 +73,10 @@ public class BusinessAccountSwitch implements HttpResponseListener {
                             mBusinessAccoutnDetails = gson.fromJson(result.getJsonString(), BusinessAccountDetails.class);
                             TokenManager.setOnAccountId(null);
                             TokenManager.setOnAccountId(Long.toString(mBusinessAccoutnDetails.getBusinessAccountId()));
-                            String l = TokenManager.getOnAccountId();
                             ACLManager.updateAllowedServiceArray
                                     (getServiceIDsFromServiceList(mBusinessAccoutnDetails.getServiceList()));
                             ProfileInfoCacheManager.setAccountType(Constants.BUSINESS_ACCOUNT_TYPE);
+                            ProfileInfoCacheManager.updateProfileInfoCache(null);
                             Intent intent = new Intent(context, HomeActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             context.startActivity(intent);

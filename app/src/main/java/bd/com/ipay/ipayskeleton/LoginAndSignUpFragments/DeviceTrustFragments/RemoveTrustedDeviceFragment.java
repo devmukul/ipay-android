@@ -86,7 +86,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_remove_trusted_device) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_remove_trusted_device));
     }
 
     @Override
@@ -186,7 +186,6 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         if (mLogoutTask != null) {
             return;
         }
-
         mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
         mProgressDialog.show();
         LogoutRequest mLogoutModel = new LogoutRequest(ProfileInfoCacheManager.getMobileNumber());

@@ -544,7 +544,7 @@ public class HomeActivity extends BaseActivity
         if (mLogoutTask != null) {
             return;
         }
-
+        TokenManager.setOnAccountId(null);
         mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
         mProgressDialog.show();
         LogoutRequest mLogoutModel = new LogoutRequest(ProfileInfoCacheManager.getMobileNumber());
