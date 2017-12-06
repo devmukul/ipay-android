@@ -161,7 +161,11 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
         // If the user is not logged in already, no need to launch the Login page.
         // Return from here
         if (!loggedIn) return;
-
+        if(ProfileInfoCacheManager.isAccountSwitched()){
+            TokenManager.setOnAccountId(null);
+            ProfileInfoCacheManager.updateBusinessInfoCache(null);
+            ProfileInfoCacheManager.updateProfileInfoCache(ProfileInfoCacheManager.getMainUserProfileInfo());
+        }
         if (!isAppInBackground) {
             ProfileInfoCacheManager.setLoggedInStatus(false);
 

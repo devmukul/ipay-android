@@ -136,6 +136,9 @@ public class HomeActivity extends BaseActivity
     private static boolean switchedToHomeFragment = true;
     private boolean exitFromApplication = false;
 
+    private String onAccountID = null;
+
+
     private LocationManager mLocationManager;
 
     @Override
@@ -544,10 +547,15 @@ public class HomeActivity extends BaseActivity
         if (mLogoutTask != null) {
             return;
         }
+        if (ProfileInfoCacheManager.isAccountSwitched()) {
+            //saving the onAccount id in case of unsuccessful logout
+            onAccountID = TokenManager.getOnAccountId();
+            TokenManager.setOnAccountId(null);
+        }
         TokenManager.setOnAccountId(null);
         mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
         mProgressDialog.show();
-        LogoutRequest mLogoutModel = new LogoutRequest(ProfileInfoCacheManager.getMobileNumber());
+        LogoutRequest mLogoutModel = new LogoutRequest(ProfileInfoCacheManager.getMainUserProfileInfo().getMobileNumber());
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
 
@@ -641,6 +649,11 @@ public class HomeActivity extends BaseActivity
                     mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (ProfileInfoCacheManager.isAccountSwitched()) {
+                            ProfileInfoCacheManager.updateBusinessInfoCache(null);
+                            ProfileInfoCacheManager.updateProfileInfoCache(ProfileInfoCacheManager.getMainUserProfileInfo());
+                            ProfileInfoCacheManager.setSwitchAccount(false);
+                        }
                         Utilities.resetIntercomInformation();
                         if (!exitFromApplication) {
                             ((MyApplication) this.getApplication()).launchLoginPage(null);
@@ -650,10 +663,15 @@ public class HomeActivity extends BaseActivity
                             finish();
                         }
                     } else {
+                        if (ProfileInfoCacheManager.isAccountSwitched())
+                            TokenManager.setOnAccountId(onAccountID);
+
                         Toast.makeText(HomeActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
 
                 } catch (Exception e) {
+                    if(ProfileInfoCacheManager.isAccountSwitched())
+                        TokenManager.setOnAccountId(onAccountID);
                     e.printStackTrace();
                     Toast.makeText(HomeActivity.this, R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
                 }
@@ -739,7 +757,7 @@ public class HomeActivity extends BaseActivity
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mGetManagedBusinessAccountsResponse = gson.fromJson(result.getJsonString(), GetManagedBusinessAccountsResponse.class);
-                        if(mGetManagedBusinessAccountsResponse.getBusinessList().size()>0) {
+                        if (mGetManagedBusinessAccountsResponse.getBusinessList().size() > 0) {
                             BusinessAccountSwitch businessAccountSwitch = new BusinessAccountSwitch(
                                     (int) mGetManagedBusinessAccountsResponse.getBusinessList().get(0).
                                             getBusinessAccountId(), this);

@@ -76,7 +76,7 @@ public class BusinessAccountSwitch implements HttpResponseListener {
                             ACLManager.updateAllowedServiceArray
                                     (getServiceIDsFromServiceList(mBusinessAccoutnDetails.getServiceList()));
                             ProfileInfoCacheManager.setAccountType(Constants.BUSINESS_ACCOUNT_TYPE);
-                            ProfileInfoCacheManager.updateProfileInfoCache(null);
+                            ProfileInfoCacheManager.setSwitchAccount(true);
                             Intent intent = new Intent(context, HomeActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             context.startActivity(intent);

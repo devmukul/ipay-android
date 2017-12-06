@@ -332,7 +332,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             if (SharedPrefManager.ifContainsUUID()) {
                 UUID = ProfileInfoCacheManager.getUUID();
             }
-
+            TokenManager.setOnAccountId(null);
             LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
                     Constants.MOBILE_ANDROID + mDeviceID, UUID, null, null, null, SignupOrLoginActivity.isRememberMe);
             Gson gson = new Gson();
@@ -545,6 +545,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                     mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
+                        ProfileInfoCacheManager.saveMainUserProfileInfo(mGetProfileInfoResponse);
                         getProfileCompletionStatus();
 
                     } else {

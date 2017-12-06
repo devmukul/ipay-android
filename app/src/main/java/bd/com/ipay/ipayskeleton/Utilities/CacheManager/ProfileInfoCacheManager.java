@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
+
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
@@ -202,15 +204,23 @@ public class ProfileInfoCacheManager {
             setSignupTime(profileInfo.getSignupTime());
             setGender(profileInfo.getGender());
             setBirthday(profileInfo.getDob());
+            setMobileNumber(profileInfo.getMobileNumber());
         }
 
         BroadcastServiceIntent.sendBroadcast(context, Constants.PROFILE_INFO_UPDATE_BROADCAST);
     }
 
     public static void updateBusinessInfoCache(GetBusinessInformationResponse businessInfo) {
-        setUserName(businessInfo.getBusinessName());
-        setProfilePictureUrl(Utilities.getImage(businessInfo.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH));
-        setVerificationStatus(businessInfo.getVerificationStatus());
+        if (businessInfo != null) {
+            setUserName(businessInfo.getBusinessName());
+            setProfilePictureUrl(Utilities.getImage(businessInfo.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH));
+            setVerificationStatus(businessInfo.getVerificationStatus());
+        }
+        else{
+            setUserName("");
+            setProfilePictureUrl("");
+            setVerificationStatus("");
+        }
 
         BroadcastServiceIntent.sendBroadcast(context, Constants.PROFILE_INFO_UPDATE_BROADCAST);
     }
@@ -276,6 +286,29 @@ public class ProfileInfoCacheManager {
 
     public static boolean isSwitchedFromSignup() {
         return pref.getBoolean(SharedPrefConstants.SWITCHED_FROM_SIGNUP, false);
+    }
+
+    public static boolean isAccountSwitched() {
+        return pref.getBoolean(SharedPrefConstants.IS_ACCOUNT_SWITCHED, false);
+    }
+
+    public static void setSwitchAccount(boolean accountSwitch) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(SharedPrefConstants.IS_ACCOUNT_SWITCHED, accountSwitch).apply();
+    }
+
+    public static void saveMainUserProfileInfo(GetProfileInfoResponse profileInfo) {
+        Gson gson = new Gson();
+        String profileInfoJson = gson.toJson(profileInfo);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(SharedPrefConstants.PROFILE_INFO, profileInfoJson).apply();
+    }
+
+    public static GetProfileInfoResponse getMainUserProfileInfo() {
+        Gson gson = new Gson();
+        GetProfileInfoResponse getProfileInfoResponse = gson.fromJson(pref.getString(SharedPrefConstants.PROFILE_INFO
+                , null), GetProfileInfoResponse.class);
+        return getProfileInfoResponse;
     }
 
 }
