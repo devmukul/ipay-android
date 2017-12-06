@@ -35,7 +35,10 @@ public class PaymentActivity extends BaseActivity {
         setContentView(R.layout.activity_payment);
         mFabMakingPayment = (FloatingActionButton) findViewById(R.id.fab_payment_making);
 
-        switchToReceivedPaymentRequestsFragment();
+        if (getIntent().hasExtra(Constants.MOBILE_NUMBER) || getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
+            switchToMakePaymentFragment();
+        } else
+            switchToReceivedPaymentRequestsFragment();
 
         mFabMakingPayment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,13 +47,6 @@ public class PaymentActivity extends BaseActivity {
                 switchToMakePaymentFragment();
             }
         });
-
-        if (getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
-            switchToMakePaymentFragment();
-        } else if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false))
-            switchToMakePaymentFragment();
-        else
-            switchToReceivedPaymentRequestsFragment();
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -62,7 +58,7 @@ public class PaymentActivity extends BaseActivity {
         if (item.getItemId() == android.R.id.home) {
             if (switchedToPendingList) {
                 super.onBackPressed();
-            } else if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
+            } if (getIntent().hasExtra(Constants.MOBILE_NUMBER) || getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false))  {
                 super.onBackPressed();
             } else {
                 switchToReceivedPaymentRequestsFragment();
@@ -74,7 +70,7 @@ public class PaymentActivity extends BaseActivity {
     }
 
     public void onBackPressed() {
-        if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
+        if (getIntent().hasExtra(Constants.MOBILE_NUMBER) || getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
             finish();
         } else if (switchedToPendingList) {
             super.onBackPressed();
