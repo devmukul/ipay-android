@@ -147,16 +147,20 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                         customDashboardItemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                pinChecker = new PinChecker(getContext(), new PinChecker.PinCheckerListener() {
-                                    @Override
-                                    public void ifPinAdded() {
-                                        Intent intent;
-                                        intent = new Intent(getActivity(), PaymentActivity.class);
-                                        intent.putExtra(Constants.MOBILE_NUMBER, businessAccountEntry.getMobileNumber());
-                                        getContext().startActivity(intent);
-                                    }
-                                });
-                                pinChecker.execute();
+                                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
+                                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                                } else {
+                                    pinChecker = new PinChecker(getContext(), new PinChecker.PinCheckerListener() {
+                                        @Override
+                                        public void ifPinAdded() {
+                                            Intent intent;
+                                            intent = new Intent(getActivity(), PaymentActivity.class);
+                                            intent.putExtra(Constants.MOBILE_NUMBER, businessAccountEntry.getMobileNumber());
+                                            getContext().startActivity(intent);
+                                        }
+                                    });
+                                    pinChecker.execute();
+                                }
                             }
                         });
                         Logger.logD("trend", businessAccountEntry.getBusinessName());
