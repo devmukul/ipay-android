@@ -7,11 +7,13 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.Contact.ContactNode;
 import bd.com.ipay.ipayskeleton.Model.Contact.GetContactsResponse;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class GetContactsAsyncTask extends HttpRequestGetAsyncTask implements HttpResponseListener {
@@ -40,10 +42,21 @@ public class GetContactsAsyncTask extends HttpRequestGetAsyncTask implements Htt
                 Gson gson = new Gson();
                 mGetContactsResponse = gson.fromJson(result.getJsonString(), GetContactsResponse.class);
 
-                List<ContactNode> mGetAllContactsResponse = mGetContactsResponse.getContactList();
+                final List<ContactNode> mGetAllContactsResponse = mGetContactsResponse.getContactList();
+                if (ProfileInfoCacheManager.isAccountSwitched()) {
+                    new AsyncTask<Void,Void,Void>(){
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            DataHelper dataHelper = DataHelper.getInstance(context);
+                            dataHelper.createBusinessContacts(mGetAllContactsResponse);
+                            return null;
+                        }
+                    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-                SyncContactsAsyncTask syncContactsAsyncTask = new SyncContactsAsyncTask(context, mGetAllContactsResponse);
-                syncContactsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                } else {
+                    SyncContactsAsyncTask syncContactsAsyncTask = new SyncContactsAsyncTask(context, mGetAllContactsResponse);
+                    syncContactsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

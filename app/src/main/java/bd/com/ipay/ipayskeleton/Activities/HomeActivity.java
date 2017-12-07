@@ -795,7 +795,7 @@ public class HomeActivity extends BaseActivity
                         mGetManagedBusinessAccountsResponse = gson.fromJson(result.getJsonString(), GetManagedBusinessAccountsResponse.class);
                         if (mGetManagedBusinessAccountsResponse.getBusinessList().size() > 0) {
                             BusinessAccountSwitch businessAccountSwitch = new BusinessAccountSwitch(
-                                    (int) mGetManagedBusinessAccountsResponse.getBusinessList().get(0).
+                                    (int) mGetManagedBusinessAccountsResponse.getBusinessList().get(1).
                                             getBusinessAccountId(), this);
                             businessAccountSwitch.requestSwitchAccount();
                         }
