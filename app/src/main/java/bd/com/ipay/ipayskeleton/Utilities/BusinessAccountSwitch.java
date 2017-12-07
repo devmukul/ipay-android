@@ -47,6 +47,8 @@ public class BusinessAccountSwitch implements HttpResponseListener {
 
     private int[] getServiceIDsFromServiceList(List<BusinessService> businessServiceList) {
         List<Long> serviceIDs = new ArrayList<>();
+        //adding the logout service by default
+        serviceIDs.add((long)8026);
         for (BusinessService businessService : businessServiceList) {
             serviceIDs.add(businessService.getServiceCode());
         }
@@ -73,10 +75,13 @@ public class BusinessAccountSwitch implements HttpResponseListener {
                             mBusinessAccoutnDetails = gson.fromJson(result.getJsonString(), BusinessAccountDetails.class);
                             TokenManager.setOnAccountId(null);
                             TokenManager.setOnAccountId(Long.toString(mBusinessAccoutnDetails.getBusinessAccountId()));
+                            ProfileInfoCacheManager.setOnAccountId(Long.toString(mBusinessAccoutnDetails.getBusinessAccountId()));
                             ACLManager.updateAllowedServiceArray
                                     (getServiceIDsFromServiceList(mBusinessAccoutnDetails.getServiceList()));
                             ProfileInfoCacheManager.setAccountType(Constants.BUSINESS_ACCOUNT_TYPE);
+                            ProfileInfoCacheManager.setUserName(mBusinessAccoutnDetails.getBusinessName());
                             ProfileInfoCacheManager.setSwitchAccount(true);
+                            ProfileInfoCacheManager.setProfilePictureUrl(mBusinessAccoutnDetails.getBusinessProfilePictureUrl());
                             Intent intent = new Intent(context, HomeActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             context.startActivity(intent);

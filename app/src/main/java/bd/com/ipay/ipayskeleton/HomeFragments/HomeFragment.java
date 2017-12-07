@@ -73,7 +73,9 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private final BroadcastReceiver mProfileCompletionInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            getProfileCompletionStatus();
+            if (!ProfileInfoCacheManager.isAccountSwitched()) {
+                getProfileCompletionStatus();
+            }
         }
     };
     private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
@@ -273,12 +275,13 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
         // Refresh balance each time home_activity page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
-            getProfileCompletionStatus();
+            if (!ProfileInfoCacheManager.isAccountSwitched())
+                getProfileCompletionStatus();
         }
 
         updateProfileData();
 
-        if(!SharedPrefManager.getUserCountry().equals("BD")){
+        if (!SharedPrefManager.getUserCountry().equals("BD")) {
             DialogUtils.showDialogForCountyNotSupported(getContext());
         }
 

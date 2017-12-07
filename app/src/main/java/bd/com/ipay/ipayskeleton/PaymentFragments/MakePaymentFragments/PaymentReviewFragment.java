@@ -197,7 +197,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mProgressDialog.setMessage(getString(R.string.progress_dialog_text_payment));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        PaymentRequest mPaymentRequest = new PaymentRequest(
+         mPaymentRequest = new PaymentRequest(
                 ContactEngine.formatMobileNumberBD(mReceiverBusinessMobileNumber),
                 mAmount.toString(), mDescription, pin, mReferenceNumber);
         Gson gson = new Gson();

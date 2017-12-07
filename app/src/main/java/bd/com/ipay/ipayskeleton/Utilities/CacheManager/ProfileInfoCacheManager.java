@@ -215,8 +215,7 @@ public class ProfileInfoCacheManager {
             setUserName(businessInfo.getBusinessName());
             setProfilePictureUrl(Utilities.getImage(businessInfo.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH));
             setVerificationStatus(businessInfo.getVerificationStatus());
-        }
-        else{
+        } else {
             setUserName("");
             setProfilePictureUrl("");
             setVerificationStatus("");
@@ -309,6 +308,15 @@ public class ProfileInfoCacheManager {
         GetProfileInfoResponse getProfileInfoResponse = gson.fromJson(pref.getString(SharedPrefConstants.PROFILE_INFO
                 , null), GetProfileInfoResponse.class);
         return getProfileInfoResponse;
+    }
+
+    public static void setOnAccountId(String onAccountId) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(Constants.OPERATING_ON_ACCOUNT_ID, onAccountId).apply();
+    }
+
+    public static String getOnAccountId() {
+        return pref.getString(Constants.OPERATING_ON_ACCOUNT_ID, "");
     }
 
 }

@@ -9,6 +9,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 
 public class LauncherActivity extends AppCompatActivity {
 
@@ -37,6 +38,9 @@ public class LauncherActivity extends AppCompatActivity {
             boolean loggedIn = ProfileInfoCacheManager.getLoggedInStatus(true);
 
             if (SharedPrefManager.isRememberMeActive() && loggedIn) {
+                if (ProfileInfoCacheManager.isAccountSwitched()) {
+                    TokenManager.setOnAccountId(ProfileInfoCacheManager.getOnAccountId());
+                }
                 intent = new Intent(LauncherActivity.this, HomeActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

@@ -8,10 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.LightingColorFilter;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -52,6 +48,7 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.InviteActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -193,7 +190,6 @@ public class HomeActivity extends BaseActivity
 
         mMobileNumberView = (AutoResizeTextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_mobile_number);
         mNameView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.textview_name);
-        setDropdown();
         mProfileImageView = (ProfileImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_picture);
         mMobileNumberView.setText(mUserID);
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -239,7 +235,7 @@ public class HomeActivity extends BaseActivity
         getRelationshipList();
 
         // Fetch ACL List
-        if (SharedPrefManager.isRememberMeActive())
+        if (SharedPrefManager.isRememberMeActive() && !ProfileInfoCacheManager.isAccountSwitched())
             getAccessControlList();
 
         // Check if important permissions (e.g. Contacts permission) is given. If not,
@@ -290,14 +286,6 @@ public class HomeActivity extends BaseActivity
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             getBusinessInformation();
         }
-    }
-
-    private void setDropdown() {
-        Drawable drawable = getResources().getDrawable(R.drawable.dropdown_arrow);
-        drawable.setBounds(0, 0, 30, 20);
-        ColorFilter colorFilter = new LightingColorFilter(Color.WHITE, Color.WHITE);
-        drawable.setColorFilter(colorFilter);
-        mNameView.setCompoundDrawables(null, null, drawable, null);
     }
 
     @Override
@@ -386,6 +374,7 @@ public class HomeActivity extends BaseActivity
         }
     }
 
+    @ValidateAccess
     public void switchToDashBoard() {
         mNavigationView.getMenu().getItem(0).setChecked(true);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new DashBoardFragment()).commit();
@@ -402,6 +391,64 @@ public class HomeActivity extends BaseActivity
             } else {
                 ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, null);
             }
+        }
+    }
+
+    @ValidateAccess
+    public void switchToManageBanksActivity() {
+        Intent intent = new Intent(HomeActivity.this, ManageBanksActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
+    @ValidateAccess
+    public void switchToActivityLogActivity() {
+        Intent intent = new Intent(HomeActivity.this, ActivityLogActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
+    @ValidateAccess
+    public void switchToSecuritySettingsActivity() {
+        Intent intent = new Intent(HomeActivity.this, SecuritySettingsActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
+    @ValidateAccess
+    public void switchToManageAccountsActivity() {
+        Intent intent = new Intent(HomeActivity.this, ManagePeopleActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
+    @ValidateAccess
+    public void switchToAboutActivity() {
+        Intent intent = new Intent(HomeActivity.this, AboutActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
+    @ValidateAccess
+    public void switchToHelpActivity() {
+        Intent intent = new Intent(HomeActivity.this, HelpAndSupportActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
+    @ValidateAccess
+    public void switchToInviteActivity() {
+        Intent intent = new Intent(HomeActivity.this, InviteActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
+    @ValidateAccess
+    public void attemptLiveChat() {
+        if (isProfileInfoAvailable()) {
+            Utilities.initIntercomLogin();
+        } else {
+            DialogUtils.showAlertDialog(this, getString(R.string.live_chat_not_available));
         }
     }
 
@@ -435,50 +482,37 @@ public class HomeActivity extends BaseActivity
             launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_INFO, new Bundle());
         } else if (id == R.id.nav_bank_account) {
 
-            Intent intent = new Intent(HomeActivity.this, ManageBanksActivity.class);
-            startActivity(intent);
-            switchedToHomeFragment = false;
+            switchToManageBanksActivity();
 
         } else if (id == R.id.nav_user_activity) {
-
-            Intent intent = new Intent(HomeActivity.this, ActivityLogActivity.class);
-            startActivity(intent);
-            switchedToHomeFragment = false;
+            switchToActivityLogActivity();
 
         } else if (id == R.id.nav_security_settings) {
 
-            /*Intent intent = new Intent(HomeActivity.this, SecuritySettingsActivity.class);
+           /* Intent intent = new Intent(HomeActivity.this, SecuritySettingsActivity.class);
             startActivity(intent);
             switchedToHomeFragment = false;*/
             getManagedBusinessAccountList();
 
         } else if (id == R.id.nav_invite) {
 
-            Intent intent = new Intent(this, InviteActivity.class);
-            startActivity(intent);
-            switchedToHomeFragment = true;
+            switchToInviteActivity();
 
         } else if (id == R.id.nav_manage_account) {
-            Intent intent = new Intent(HomeActivity.this, ManagePeopleActivity.class);
-            startActivity(intent);
-            switchedToHomeFragment = false;
+
+            switchToManageAccountsActivity();
+
         } else if (id == R.id.nav_live_chat) {
-            if (isProfileInfoAvailable()) {
-                Utilities.initIntercomLogin();
-            } else {
-                DialogUtils.showAlertDialog(this, getString(R.string.live_chat_not_available));
-            }
+
+            attemptLiveChat();
+
         } else if (id == R.id.nav_help) {
 
-            Intent intent = new Intent(this, HelpAndSupportActivity.class);
-            startActivity(intent);
-            switchedToHomeFragment = false;
+            switchToHelpActivity();
 
         } else if (id == R.id.nav_about) {
 
-            Intent intent = new Intent(HomeActivity.this, AboutActivity.class);
-            startActivity(intent);
-            switchedToHomeFragment = false;
+            switchToAboutActivity();
 
         } else if (id == R.id.nav_logout) {
             if (Utilities.isConnectionAvailable(HomeActivity.this)) {
@@ -536,6 +570,7 @@ public class HomeActivity extends BaseActivity
         }
     }
 
+    @ValidateAccess
     private void launchEditProfileActivity(String type, Bundle bundle) {
         Intent intent = new Intent(this, ProfileActivity.class);
         intent.putExtra(Constants.TARGET_FRAGMENT, type);
@@ -650,6 +685,7 @@ public class HomeActivity extends BaseActivity
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (ProfileInfoCacheManager.isAccountSwitched()) {
+                            ProfileInfoCacheManager.setAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
                             ProfileInfoCacheManager.updateBusinessInfoCache(null);
                             ProfileInfoCacheManager.updateProfileInfoCache(ProfileInfoCacheManager.getMainUserProfileInfo());
                             ProfileInfoCacheManager.setSwitchAccount(false);
@@ -670,7 +706,7 @@ public class HomeActivity extends BaseActivity
                     }
 
                 } catch (Exception e) {
-                    if(ProfileInfoCacheManager.isAccountSwitched())
+                    if (ProfileInfoCacheManager.isAccountSwitched())
                         TokenManager.setOnAccountId(onAccountID);
                     e.printStackTrace();
                     Toast.makeText(HomeActivity.this, R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
