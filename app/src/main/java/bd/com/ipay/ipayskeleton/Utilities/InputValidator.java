@@ -166,11 +166,6 @@ public class InputValidator {
                 if (documentID.length() != Constants.BUSINESS_TIN_LENGTH)
                     errorMessage = context.getString(R.string.invalid_business_tin_wrong_length);
                 break;
-            case IdentificationDocumentConstants.DOCUMENT_TYPE_TRADE_LICENSE:
-                if (documentID.length() != Constants.TRADE_LICENSE_ID_LENGTH)
-                    errorMessage = context.getString(R.string.invalid_trade_license_ID_wrong_length);
-                break;
-
             case IdentificationDocumentConstants.DOCUMENT_TYPE_VAT_REG_CERT:
                 if (documentID.length() != Constants.VAT_REG_CERT_ID_LENGTH)
                     errorMessage = context.getString(R.string.invalid_vat_reg_cert_ID_wrong_length);
