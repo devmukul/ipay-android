@@ -286,9 +286,10 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                     SignupOrLoginActivity.otpDuration = mOTPResponseTrustedDevice.getOtpValidFor();
                     String message = mOTPResponseTrustedDevice.getMessage();
 
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED) {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED ||
+                            result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.otp_sent, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
                         // Start timer again
                         mTimerTextView.setVisibility(View.VISIBLE);
