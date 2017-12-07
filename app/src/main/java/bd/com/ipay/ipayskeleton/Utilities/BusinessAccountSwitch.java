@@ -81,7 +81,7 @@ public class BusinessAccountSwitch implements HttpResponseListener {
                             ProfileInfoCacheManager.setAccountType(Constants.BUSINESS_ACCOUNT_TYPE);
                             ProfileInfoCacheManager.setUserName(mBusinessAccoutnDetails.getBusinessName());
                             ProfileInfoCacheManager.setSwitchAccount(true);
-                            ProfileInfoCacheManager.setProfilePictureUrl(mBusinessAccoutnDetails.getBusinessProfilePictureUrl());
+                            ProfileInfoCacheManager.setProfilePictureUrl(mBusinessAccoutnDetails.getProfilePictures().get(0).getUrl());
                             Intent intent = new Intent(context, HomeActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             context.startActivity(intent);

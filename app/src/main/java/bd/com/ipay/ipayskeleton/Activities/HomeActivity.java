@@ -24,12 +24,19 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +56,7 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -65,9 +73,11 @@ import bd.com.ipay.ipayskeleton.DataCollectors.Model.LocationCollector;
 import bd.com.ipay.ipayskeleton.DataCollectors.Model.UserLocation;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
+import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionHistoryCompletedFragment;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AccessControl.GetAccessControlResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessAccountDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.GetManagedBusinessAccountsResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
@@ -76,14 +86,17 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetPro
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessAccountSwitch;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
@@ -138,6 +151,12 @@ public class HomeActivity extends BaseActivity
 
     private LocationManager mLocationManager;
 
+    RecyclerView managedBusinessList;
+
+
+    private HttpRequestGetAsyncTask mSwitchAccountAsyncTask = null;
+    private List<BusinessAccountDetails> mBusinessAccoutnList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,6 +171,41 @@ public class HomeActivity extends BaseActivity
         getSupportActionBar().setLogo(R.drawable.logo_ipay);
 
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        managedBusinessList = (RecyclerView) mNavigationView.getHeaderView(0).findViewById(R.id.textRe);
+        final ImageView down = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.drop_arrow);
+        down.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (managedBusinessList.getVisibility() == View.VISIBLE) {
+
+                    down.animate().rotation(0).start();
+                    managedBusinessList.setVisibility(View.GONE);
+//                    managedBusinessList.animate()
+//                        .translationY(0)
+//                        .alpha(0.0f)
+//                        .setListener(new AnimatorListenerAdapter() {
+//                            @Override
+//                            public void onAnimationEnd(Animator animation) {
+//                                super.onAnimationEnd(animation);
+//                                managedBusinessList.setVisibility(View.GONE);
+//                            }
+//                        });
+
+                } else {
+                    down.animate().rotation(180).start();
+                    managedBusinessList.setVisibility(View.VISIBLE);
+//                    managedBusinessList.setAlpha(0.0f);
+//                    managedBusinessList.animate()
+//                            .translationY(managedBusinessList.getHeight())
+//                            .alpha(1.0f)
+//                            .setListener(null);
+
+                }
+
+
+            }
+        });
 
         Menu menu = mNavigationView.getMenu();
         if (!ProfileInfoCacheManager.isBusinessAccount())
@@ -168,6 +222,14 @@ public class HomeActivity extends BaseActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 Utilities.hideKeyboard(HomeActivity.this);
+
+                managedBusinessList.setHasFixedSize(true);
+                managedBusinessList.setAdapter(new ContentAdapter(mBusinessAccoutnList));
+                managedBusinessList.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
+                managedBusinessList.setItemAnimator(new DefaultItemAnimator());
+                managedBusinessList.setVisibility(View.GONE);
+
+
             }
 
             @Override
@@ -246,6 +308,7 @@ public class HomeActivity extends BaseActivity
         }
 
         getAllBusinessAccountsList();
+        getManagedBusinessAccountList();
 
         // If profile picture gets updated, we need to refresh the profile picture in the drawer.
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
@@ -489,10 +552,10 @@ public class HomeActivity extends BaseActivity
 
         } else if (id == R.id.nav_security_settings) {
 
-           /* Intent intent = new Intent(HomeActivity.this, SecuritySettingsActivity.class);
+            Intent intent = new Intent(HomeActivity.this, SecuritySettingsActivity.class);
             startActivity(intent);
-            switchedToHomeFragment = false;*/
-            getManagedBusinessAccountList();
+            switchedToHomeFragment = false;
+            //getManagedBusinessAccountList();
 
         } else if (id == R.id.nav_invite) {
 
@@ -793,12 +856,7 @@ public class HomeActivity extends BaseActivity
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mGetManagedBusinessAccountsResponse = gson.fromJson(result.getJsonString(), GetManagedBusinessAccountsResponse.class);
-                        if (mGetManagedBusinessAccountsResponse.getBusinessList().size() > 0) {
-                            BusinessAccountSwitch businessAccountSwitch = new BusinessAccountSwitch(
-                                    (int) mGetManagedBusinessAccountsResponse.getBusinessList().get(1).
-                                            getBusinessAccountId(), this);
-                            businessAccountSwitch.requestSwitchAccount();
-                        }
+                        mBusinessAccoutnList = mGetManagedBusinessAccountsResponse.getBusinessList();
                     }
                 } catch (Exception e) {
 
@@ -873,4 +931,82 @@ public class HomeActivity extends BaseActivity
             updateProfileData();
         }
     };
+
+    private class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ViewHolder> {
+        private final List<BusinessAccountDetails> items;
+
+        public ContentAdapter(List<BusinessAccountDetails> items) {
+            this.items = items;
+        }
+
+        @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_manage_business_drawer, parent, false);
+            return new ViewHolder(v);
+        }
+
+        @Override public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.bind(items.get(position));
+        }
+
+        @Override public int getItemCount() {
+            return items.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private TextView text;
+            private ProfileImageView imageView;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                text = (TextView) itemView.findViewById(R.id.title_text_view);
+                imageView = (ProfileImageView) itemView.findViewById(R.id.profile_image_view);
+            }
+
+            public void bind(final BusinessAccountDetails item) {
+                text.setText(item.getBusinessName());
+                System.out.println("FTEST "+Constants.BASE_URL_FTP_SERVER+item.getProfilePictures().get(0).getUrl());
+                imageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER+item.getProfilePictures().get(0).getUrl(), false);
+
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override public void onClick(View v) {
+                        BusinessAccountSwitch businessAccountSwitch = new BusinessAccountSwitch(
+                                (int) item.getBusinessAccountId(), HomeActivity.this);
+                        businessAccountSwitch.requestSwitchAccount();
+                    }
+                });
+            }
+        }
+    }
+
+
+
+//    public class MyRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+//        private List<BusinessAccountDetails> items;
+//
+//        public MyRecyclerAdapter(List<BusinessAccountDetails> items) {
+//            this.items = items;
+//        }
+//
+//
+//        @Override
+//        public void onBindViewHolder(ViewHolder holder, int position) {
+//            holder.text.setText(items.get(position).getBusinessName());
+//            System.out.println("FTEST "+Constants.BASE_URL_FTP_SERVER+items.get(position).getProfilePictures().get(0).getUrl());
+//            holder.imageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER+items.get(position).getProfilePictures().get(0).getUrl(), false);
+//
+//        }
+//
+//
+//
+//        public class ViewHolder extends RecyclerView.ViewHolder {
+//            public TextView text;
+//            public ProfileImageView imageView;
+//            public ViewHolder(View itemView) {
+//                super(itemView);
+//                text = (TextView) itemView.findViewById(R.id.title_text_view);
+//                imageView = (ProfileImageView) itemView.findViewById(R.id.profile_image_view);
+//            }
+//        }
+//    }
 }

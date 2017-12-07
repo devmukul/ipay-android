@@ -2,12 +2,14 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles;
 
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.ProfilePicture;
+
 public class BusinessAccountDetails {
     private String message;
     private long id;
     private long businessAccountId;
     private String businessName;
-    private String businessProfilePictureUrl;
+    private List<ProfilePicture> profilePictures = null;
     private String roleName;
     private long createdAt;
     private List<BusinessService> serviceList;
@@ -19,8 +21,6 @@ public class BusinessAccountDetails {
     public String getMessage() {
         return message;
     }
-
-
 
     public String getBusinessName() {
         return businessName;
@@ -34,8 +34,8 @@ public class BusinessAccountDetails {
         return createdAt;
     }
 
-    public String getBusinessProfilePictureUrl() {
-        return businessProfilePictureUrl;
+    public List<ProfilePicture> getProfilePictures() {
+        return profilePictures;
     }
 
     public String getRoleName() {
