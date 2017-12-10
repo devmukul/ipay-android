@@ -43,6 +43,8 @@ public class BusinessAccountSwitch implements HttpResponseListener {
             ProfileInfoCacheManager.setSwitchAccount(false);
             ProfileInfoCacheManager.updateProfileInfoCache(ProfileInfoCacheManager.getMainUserProfileInfo());
             TokenManager.setOnAccountId(null);
+            Intent intent=new Intent(context,HomeActivity.class);
+            context.startActivity(intent);
         } else {
             mSwitchAccountAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_SWITCH_ACCOUNT, Constants.BASE_URL_MM +
                     Constants.URL_SWITCH_ACCOUNT + Integer.toString(businessAccountId), context, this);
