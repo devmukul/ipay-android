@@ -14,8 +14,12 @@ public class SharedPrefManager {
         pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
     }
 
-    public static boolean getFirstLaunch(boolean defaultValue) {
-        return pref.getBoolean(SharedPrefConstants.FIRST_LAUNCH, defaultValue);
+    public static boolean getFirstLaunch() {
+        return pref.getBoolean(SharedPrefConstants.FIRST_LAUNCH, true);
+    }
+
+    public static void setFirstLaunch(boolean value) {
+        pref.edit().putBoolean(SharedPrefConstants.FIRST_LAUNCH, value).apply();
     }
 
     public static boolean isRememberMeActive() {
@@ -40,10 +44,6 @@ public class SharedPrefManager {
 
     public static int getMobileNumberType(int defaultValue) {
         return pref.getInt(SharedPrefConstants.MOBILE_NUMBER_TYPE, defaultValue);
-    }
-
-    public static void setFirstLaunch(boolean defaultValue) {
-        pref.edit().putBoolean(SharedPrefConstants.FIRST_LAUNCH, defaultValue).apply();
     }
 
     public static void setPinAdded(boolean value) {
