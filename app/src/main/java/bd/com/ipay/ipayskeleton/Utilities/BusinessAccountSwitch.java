@@ -37,18 +37,26 @@ public class BusinessAccountSwitch implements HttpResponseListener {
     }
 
     public void requestSwitchAccount() {
-        mSwitchAccountAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_SWITCH_ACCOUNT, Constants.BASE_URL_MM +
-                Constants.URL_SWITCH_ACCOUNT + Integer.toString(businessAccountId), context, this);
+        if (ProfileInfoCacheManager.isAccountSwitched()) {
+            ProfileInfoCacheManager.setOnAccountId(null);
+            ProfileInfoCacheManager.setAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
+            ProfileInfoCacheManager.setSwitchAccount(false);
+            ProfileInfoCacheManager.updateProfileInfoCache(ProfileInfoCacheManager.getMainUserProfileInfo());
+            TokenManager.setOnAccountId(null);
+        } else {
+            mSwitchAccountAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_SWITCH_ACCOUNT, Constants.BASE_URL_MM +
+                    Constants.URL_SWITCH_ACCOUNT + Integer.toString(businessAccountId), context, this);
 
-        mSwitchAccountAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        mProgressDialog.setMessage(context.getResources().getString(R.string.switching));
-        mProgressDialog.show();
+            mSwitchAccountAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            mProgressDialog.setMessage(context.getResources().getString(R.string.switching));
+            mProgressDialog.show();
+        }
     }
 
     private int[] getServiceIDsFromServiceList(List<BusinessService> businessServiceList) {
         List<Long> serviceIDs = new ArrayList<>();
         //adding the logout service by default
-        serviceIDs.add((long)8026);
+        serviceIDs.add((long) 8026);
         for (BusinessService businessService : businessServiceList) {
             serviceIDs.add(businessService.getServiceCode());
         }
