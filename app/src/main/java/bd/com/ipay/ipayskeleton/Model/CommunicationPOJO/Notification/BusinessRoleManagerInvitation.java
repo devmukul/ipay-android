@@ -3,7 +3,7 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.ProfilePicture;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class BusinessRoleManagerInvitation implements Notification {
@@ -12,7 +12,7 @@ public class BusinessRoleManagerInvitation implements Notification {
     private String businessName;
     private String roleName;
     private long createdAt;
-    private List<ProfilePicture> profilePictures;
+    private List<UserProfilePictureClass> profilePictures;
 
     @Override
     public String getNotificationTitle() {
@@ -50,7 +50,7 @@ public class BusinessRoleManagerInvitation implements Notification {
         return createdAt;
     }
 
-    public List<ProfilePicture> getProflePictures() {
+    public List<UserProfilePictureClass> getProflePictures() {
         return profilePictures;
     }
 

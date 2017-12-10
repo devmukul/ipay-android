@@ -5,6 +5,8 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
+
 public class PendingInvitationList {
 
     @SerializedName("id")
@@ -27,7 +29,7 @@ public class PendingInvitationList {
     private long createdAt;
     @SerializedName("profilePictures")
     @Expose
-    private List<ProfilePicture> profilePictures = null;
+    private List<UserProfilePictureClass> profilePictures = null;
 
     public long getId() {
         return id;
@@ -77,11 +79,11 @@ public class PendingInvitationList {
         this.createdAt = createdAt;
     }
 
-    public List<ProfilePicture> getProfilePictures() {
+    public List<UserProfilePictureClass> getProfilePictures() {
         return profilePictures;
     }
 
-    public void setProfilePictures(List<ProfilePicture> profilePictures) {
+    public void setProfilePictures(List<UserProfilePictureClass> profilePictures) {
         this.profilePictures = profilePictures;
     }
 

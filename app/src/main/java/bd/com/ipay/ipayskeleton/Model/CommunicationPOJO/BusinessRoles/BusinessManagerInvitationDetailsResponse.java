@@ -2,7 +2,8 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.ProfilePicture;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
+
 
 public class BusinessManagerInvitationDetailsResponse {
     private String message;
@@ -10,10 +11,10 @@ public class BusinessManagerInvitationDetailsResponse {
     private String businessName;
     private String roleName;
     private long createdAt;
-    private List<ProfilePicture> profilePictures;
+    private List<UserProfilePictureClass> profilePictures;
     private List<BusinessService> serviceList;
 
-    public BusinessManagerInvitationDetailsResponse(String message, long id, String businessName, String roleName, long createdAt, List<ProfilePicture> profilePictures, List<BusinessService> serviceList) {
+    public BusinessManagerInvitationDetailsResponse(String message, long id, String businessName, String roleName, long createdAt, List<UserProfilePictureClass> profilePictures, List<BusinessService> serviceList) {
         this.message = message;
         this.id = id;
         this.businessName = businessName;
@@ -39,7 +40,7 @@ public class BusinessManagerInvitationDetailsResponse {
         return createdAt;
     }
 
-    public List<ProfilePicture> getProfilePictures() {
+    public List<UserProfilePictureClass> getProfilePictures() {
         return profilePictures;
     }
 

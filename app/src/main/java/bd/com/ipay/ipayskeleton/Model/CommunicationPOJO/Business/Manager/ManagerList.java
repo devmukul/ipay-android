@@ -5,6 +5,8 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
+
 public class ManagerList {
 
     @SerializedName("id")
@@ -20,7 +22,7 @@ public class ManagerList {
     @SerializedName("createdAt")
     private long createdAt;
     @SerializedName("profilePictures")
-    private List<ProfilePicture> profilePictures = null;
+    private List<UserProfilePictureClass> profilePictures = null;
 
     public int getId() {
         return id;
@@ -70,11 +72,11 @@ public class ManagerList {
         this.createdAt = createdAt;
     }
 
-    public List<ProfilePicture> getProfilePictures() {
+    public List<UserProfilePictureClass> getProfilePictures() {
         return profilePictures;
     }
 
-    public void setProfilePictures(List<ProfilePicture> profilePictures) {
+    public void setProfilePictures(List<UserProfilePictureClass> profilePictures) {
         this.profilePictures = profilePictures;
     }
 

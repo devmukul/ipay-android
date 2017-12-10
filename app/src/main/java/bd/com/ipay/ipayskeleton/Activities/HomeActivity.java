@@ -148,14 +148,13 @@ public class HomeActivity extends BaseActivity
 
     private String onAccountID = null;
 
-
     private LocationManager mLocationManager;
 
     RecyclerView managedBusinessList;
 
-
     private HttpRequestGetAsyncTask mSwitchAccountAsyncTask = null;
     private List<BusinessAccountDetails> mBusinessAccoutnList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,26 +180,10 @@ public class HomeActivity extends BaseActivity
 
                     down.animate().rotation(0).start();
                     managedBusinessList.setVisibility(View.GONE);
-//                    managedBusinessList.animate()
-//                        .translationY(0)
-//                        .alpha(0.0f)
-//                        .setListener(new AnimatorListenerAdapter() {
-//                            @Override
-//                            public void onAnimationEnd(Animator animation) {
-//                                super.onAnimationEnd(animation);
-//                                managedBusinessList.setVisibility(View.GONE);
-//                            }
-//                        });
 
                 } else {
                     down.animate().rotation(180).start();
                     managedBusinessList.setVisibility(View.VISIBLE);
-//                    managedBusinessList.setAlpha(0.0f);
-//                    managedBusinessList.animate()
-//                            .translationY(managedBusinessList.getHeight())
-//                            .alpha(1.0f)
-//                            .setListener(null);
-
                 }
 
 
@@ -308,7 +291,17 @@ public class HomeActivity extends BaseActivity
         }
 
         getAllBusinessAccountsList();
-        getManagedBusinessAccountList();
+
+        if(!ProfileInfoCacheManager.isAccountSwitched()) {
+           getManagedBusinessAccountList();
+        }
+        else {
+            mBusinessAccoutnList = new ArrayList<>();
+            BusinessAccountDetails tempProfileInfo= new BusinessAccountDetails(ProfileInfoCacheManager.getMainUserProfileInfo().getAccountId(),
+                    ProfileInfoCacheManager.getMainUserProfileInfo().getName(),ProfileInfoCacheManager.getMainUserProfileInfo().getProfilePictures());
+
+            mBusinessAccoutnList.add(tempProfileInfo);
+        }
 
         // If profile picture gets updated, we need to refresh the profile picture in the drawer.
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
@@ -964,8 +957,10 @@ public class HomeActivity extends BaseActivity
 
             public void bind(final BusinessAccountDetails item) {
                 text.setText(item.getBusinessName());
-                System.out.println("FTEST "+Constants.BASE_URL_FTP_SERVER+item.getProfilePictures().get(0).getUrl());
-                imageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER+item.getProfilePictures().get(0).getUrl(), false);
+                if (!ProfileInfoCacheManager.isAccountSwitched())
+                    imageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER+item.getProfilePictures().get(0).getUrl(), false);
+                else
+                    imageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER+item.getProfilePictures().get(0).getUrl(), false);
 
 
                 itemView.setOnClickListener(new View.OnClickListener() {
@@ -980,33 +975,4 @@ public class HomeActivity extends BaseActivity
     }
 
 
-
-//    public class MyRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-//        private List<BusinessAccountDetails> items;
-//
-//        public MyRecyclerAdapter(List<BusinessAccountDetails> items) {
-//            this.items = items;
-//        }
-//
-//
-//        @Override
-//        public void onBindViewHolder(ViewHolder holder, int position) {
-//            holder.text.setText(items.get(position).getBusinessName());
-//            System.out.println("FTEST "+Constants.BASE_URL_FTP_SERVER+items.get(position).getProfilePictures().get(0).getUrl());
-//            holder.imageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER+items.get(position).getProfilePictures().get(0).getUrl(), false);
-//
-//        }
-//
-//
-//
-//        public class ViewHolder extends RecyclerView.ViewHolder {
-//            public TextView text;
-//            public ProfileImageView imageView;
-//            public ViewHolder(View itemView) {
-//                super(itemView);
-//                text = (TextView) itemView.findViewById(R.id.title_text_view);
-//                imageView = (ProfileImageView) itemView.findViewById(R.id.profile_image_view);
-//            }
-//        }
-//    }
 }

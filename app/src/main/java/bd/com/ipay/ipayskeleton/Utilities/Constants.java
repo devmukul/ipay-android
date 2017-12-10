@@ -4,7 +4,11 @@ import android.Manifest;
 
 import com.google.android.gms.vision.CameraSource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import bd.com.ipay.ipayskeleton.BuildConfig;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessAccountDetails;
 
 public class Constants {
     public static final String ApplicationTag = "iPay";
@@ -886,5 +890,6 @@ public class Constants {
     public static final String VISA_CARD_STARTS_WITH_REGEX = "4(.*)";
     public static final String AMEX_CARD_STARTS_WITH_REGEX = "3[47](.*)";
     public static final String MASTER_CARD_STARTS_WITH_REGEX = "5[1-5](.*)";
+
 
 }
