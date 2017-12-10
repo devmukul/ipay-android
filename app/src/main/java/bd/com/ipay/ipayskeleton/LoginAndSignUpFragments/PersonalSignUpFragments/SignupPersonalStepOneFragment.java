@@ -142,6 +142,12 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
         mProgressDialog = new ProgressDialog(getActivity());
 
         mCountryCodePicker.registerCarrierNumberEditText(mMobileNumberView);
+        mCountryCodePicker.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
+            @Override
+            public void onCountrySelected() {
+                mMobileNumberView.requestFocus();
+            }
+        });
 
         mNameView.requestFocus();
         // Enable hyperlinked

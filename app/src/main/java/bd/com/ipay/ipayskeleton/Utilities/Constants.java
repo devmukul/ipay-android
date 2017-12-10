@@ -511,6 +511,8 @@ public class Constants {
     // Business Information (Employee)
     public static final String URL_GET_BUSINESS_LIST_ALL = "business/list/all";
 
+    public static final String URL_GET_BUSINESS_LIST_TRENDING = "trending";
+
     // Business Information (Owner)
     public static final String URL_CREATE_EMPLOYEE = "business-manager-invitation";
     public static final String URL_UPDATE_EMPLOYEE = "business/user";
@@ -646,6 +648,7 @@ public class Constants {
     public static final String COMMAND_UPDATE_BUSINESS_ROLE_INVITATION = "COMMAND_UPDATE_BUSINESS_ROLE_INVITATION";
     public static final String COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE = "COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE";
     public static final String COMMAND_GET_ALL_BUSINESS_LIST = "COMMAND_GET_ALL_BUSINESS_LIST";
+    public static final String COMMAND_GET_TRENDING_BUSINESS_LIST = "COMMAND_GET_TRENDING_BUSINESS_LIST";
     public static final String COMMAND_GET_ALL_SECURITY_QUESTIONS = "COMMAND_GET_ALL_SECURITY_QUESTIONS";
     public static final String COMMAND_GET_SELECTED_SECURITY_QUESTIONS = "COMMAND_GET_SELECTED_SECURITY_QUESTIONS";
     public static final String COMMAND_SET_SECURITY_ANSWERS = "COMMAND_SET_SECURITY_ANSWERS";
