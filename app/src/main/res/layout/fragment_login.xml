@@ -33,13 +33,25 @@
                 android:background="@android:color/white"
                 android:paddingBottom="@dimen/value5">
 
+                <ImageView
+                    android:id="@+id/login_info"
+                    style="@style/ButtonStyleWithIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_info_outline"
+                    android:padding="@dimen/value2"
+                    android:visibility="gone"/>
+
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/mobile_number_with_country_code"
-                    style="@style/CustomTextInputLayoutWithMargin"
+                    style="@style/CustomTextInputLayoutWithEqualMargin"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/value2"
+                    android:layout_toLeftOf="@+id/login_info"
                     android:text="@string/mobile_number">
 
                     <RelativeLayout
@@ -52,7 +64,7 @@
                             android:id="@+id/ccp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:defaultNameCode="bd"/>
+                            app:defaultNameCode="bd" />
 
                         <EditText
                             android:id="@+id/login_mobile_number"
@@ -66,16 +78,6 @@
                     </RelativeLayout>
 
                 </android.support.design.widget.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/login_info"
-                    style="@style/ButtonStyleWithIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_info_outline"
-                    android:visibility="gone" />
             </RelativeLayout>
 
             <View style="@style/DividerOnly" />
@@ -102,6 +104,8 @@
                 style="@style/my_checkbox_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_vertical_margin_card"
                 android:checked="true"
                 android:text="Remember me"
