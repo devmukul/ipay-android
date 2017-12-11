@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="bank_account_number_max_length">17</integer>
+    <integer name="document_name_max_length">50</integer>
+    <integer name="document_id_max_length">200</integer>
 </resources>
