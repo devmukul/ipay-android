@@ -35,4 +35,5 @@ public class SharedPrefConstants {
     public static final String INTRODUCTION_ASKED = "INTRODUCTION_ASKED";
     public static final String IS_ACCOUNT_SWITCHED = "IS_ACCOUNT_SWITCHED";
     public static final String PROFILE_INFO = "PROFILE_INFO";
+    public static String Id = "Id";
 }

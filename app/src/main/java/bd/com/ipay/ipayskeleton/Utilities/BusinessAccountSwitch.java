@@ -30,6 +30,11 @@ public class BusinessAccountSwitch implements HttpResponseListener {
     private BusinessAccountDetails mBusinessAccoutnDetails;
     private Context context;
 
+    public BusinessAccountSwitch(Context context) {
+        this.context = context;
+        mProgressDialog = new ProgressDialog(context);
+    }
+
     public BusinessAccountSwitch(int businessAccountId, Context context) {
         this.businessAccountId = businessAccountId;
         this.context = context;
@@ -39,11 +44,12 @@ public class BusinessAccountSwitch implements HttpResponseListener {
     public void requestSwitchAccount() {
         if (ProfileInfoCacheManager.isAccountSwitched()) {
             ProfileInfoCacheManager.setOnAccountId(null);
+            ProfileInfoCacheManager.setId(-1);
             ProfileInfoCacheManager.setAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
             ProfileInfoCacheManager.setSwitchAccount(false);
             ProfileInfoCacheManager.updateProfileInfoCache(ProfileInfoCacheManager.getMainUserProfileInfo());
             TokenManager.setOnAccountId(null);
-            Intent intent=new Intent(context,HomeActivity.class);
+            Intent intent = new Intent(context, HomeActivity.class);
             context.startActivity(intent);
         } else {
             mSwitchAccountAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_SWITCH_ACCOUNT, Constants.BASE_URL_MM +
@@ -86,6 +92,7 @@ public class BusinessAccountSwitch implements HttpResponseListener {
                             TokenManager.setOnAccountId(null);
                             TokenManager.setOnAccountId(Long.toString(mBusinessAccoutnDetails.getBusinessAccountId()));
                             ProfileInfoCacheManager.setOnAccountId(Long.toString(mBusinessAccoutnDetails.getBusinessAccountId()));
+                            ProfileInfoCacheManager.setId(mBusinessAccoutnDetails.getId());
                             ACLManager.updateAllowedServiceArray
                                     (getServiceIDsFromServiceList(mBusinessAccoutnDetails.getServiceList()));
                             ProfileInfoCacheManager.setAccountType(Constants.BUSINESS_ACCOUNT_TYPE);

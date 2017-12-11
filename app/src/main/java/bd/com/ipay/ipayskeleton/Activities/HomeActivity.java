@@ -56,6 +56,7 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -149,6 +150,8 @@ public class HomeActivity extends BaseActivity
     private HttpRequestGetAsyncTask mSwitchAccountAsyncTask = null;
     private List<BusinessAccountDetails> mBusinessAccoutnList = new ArrayList<>();
 
+    private HttpRequestDeleteAsyncTask mRemoveAccountAsyncTask;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,6 +190,9 @@ public class HomeActivity extends BaseActivity
         Menu menu = mNavigationView.getMenu();
         if (!ProfileInfoCacheManager.isBusinessAccount())
             menu.findItem(R.id.nav_manage_account).setVisible(false);
+        if (!ProfileInfoCacheManager.isAccountSwitched()) {
+            menu.findItem(R.id.nav_leave_account).setVisible(false);
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -286,13 +292,12 @@ public class HomeActivity extends BaseActivity
 
         getAllBusinessAccountsList();
 
-        if(!ProfileInfoCacheManager.isAccountSwitched()) {
-           getManagedBusinessAccountList();
-        }
-        else {
+        if (!ProfileInfoCacheManager.isAccountSwitched()) {
+            getManagedBusinessAccountList();
+        } else {
             mBusinessAccoutnList = new ArrayList<>();
-            BusinessAccountDetails tempProfileInfo= new BusinessAccountDetails(ProfileInfoCacheManager.getMainUserProfileInfo().getAccountId(),
-                    ProfileInfoCacheManager.getMainUserProfileInfo().getName(),ProfileInfoCacheManager.getMainUserProfileInfo().getProfilePictures());
+            BusinessAccountDetails tempProfileInfo = new BusinessAccountDetails(ProfileInfoCacheManager.getMainUserProfileInfo().getAccountId(),
+                    ProfileInfoCacheManager.getMainUserProfileInfo().getName(), ProfileInfoCacheManager.getMainUserProfileInfo().getProfilePictures());
 
             mBusinessAccoutnList.add(tempProfileInfo);
         }
@@ -502,6 +507,16 @@ public class HomeActivity extends BaseActivity
         }
     }
 
+    @ValidateAccess
+    private void attemptLeaveAccount() {
+        if (mRemoveAccountAsyncTask != null)
+            return;
+
+        mRemoveAccountAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_AN_EMPLOYEE_FIRST_PART + ProfileInfoCacheManager.getId(), this, this);
+        mRemoveAccountAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     @ValidateAccess
     public boolean onNavigationItemSelected(final MenuItem item) {
@@ -556,6 +571,15 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_help) {
 
             switchToHelpActivity();
+
+        } else if (id == R.id.nav_leave_account) {
+            new AlertDialog.Builder(HomeActivity.this)
+                    .setMessage(R.string.do_you_want_to_leave)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            attemptLeaveAccount();
+                        }
+                    }).show();
 
         } else if (id == R.id.nav_about) {
 
@@ -846,6 +870,20 @@ public class HomeActivity extends BaseActivity
                 } catch (Exception e) {
 
                 }
+                mGetBusinessAccountsAsyncTask = null;
+                break;
+            case Constants.COMMAND_REMOVE_AN_EMPLOYEE:
+                try {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        BusinessAccountSwitch businessAccountSwitch = new BusinessAccountSwitch(this);
+                        businessAccountSwitch.requestSwitchAccount();
+                    }
+                } catch (Exception e) {
+
+
+                }
+                mRemoveAccountAsyncTask = null;
+                break;
         }
     }
 
@@ -924,16 +962,19 @@ public class HomeActivity extends BaseActivity
             this.items = items;
         }
 
-        @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_manage_business_drawer, parent, false);
             return new ViewHolder(v);
         }
 
-        @Override public void onBindViewHolder(ViewHolder holder, int position) {
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
             holder.bind(items.get(position));
         }
 
-        @Override public int getItemCount() {
+        @Override
+        public int getItemCount() {
             return items.size();
         }
 
@@ -950,13 +991,14 @@ public class HomeActivity extends BaseActivity
             public void bind(final BusinessAccountDetails item) {
                 text.setText(item.getBusinessName());
                 if (!ProfileInfoCacheManager.isAccountSwitched())
-                    imageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER+item.getProfilePictures().get(0).getUrl(), false);
+                    imageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getProfilePictures().get(0).getUrl(), false);
                 else
-                    imageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER+item.getProfilePictures().get(0).getUrl(), false);
+                    imageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getProfilePictures().get(0).getUrl(), false);
 
 
                 itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override public void onClick(View v) {
+                    @Override
+                    public void onClick(View v) {
                         BusinessAccountSwitch businessAccountSwitch = new BusinessAccountSwitch(
                                 (int) item.getBusinessAccountId(), HomeActivity.this);
                         businessAccountSwitch.requestSwitchAccount();

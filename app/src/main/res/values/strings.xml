@@ -1081,4 +1081,6 @@
     <string name="please_select_a_role">Please select a role</string>
     <string name="switching">Switching</string>
     <string name="cant_switch">Cant Switch Account Now</string>
+    <string name="leave_account">Leave Account</string>
+    <string name="do_you_want_to_leave">Do you want to leave this account permanently? You can\'t switch to this account in the future</string>
 </resources>

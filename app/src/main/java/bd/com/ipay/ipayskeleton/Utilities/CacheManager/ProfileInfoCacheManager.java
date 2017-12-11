@@ -319,5 +319,13 @@ public class ProfileInfoCacheManager {
         return pref.getString(Constants.OPERATING_ON_ACCOUNT_ID, "");
     }
 
+    public static void setId(long id) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putLong(SharedPrefConstants.Id, id).apply();
+    }
+
+    public static long getId() {
+        return pref.getLong(SharedPrefConstants.Id, 0);
+    }
 }
 

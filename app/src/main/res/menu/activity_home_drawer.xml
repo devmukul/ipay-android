@@ -43,6 +43,8 @@
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_drawer_about"
             android:title="@string/about" />
+        <item android:id="@+id/nav_leave_account"
+            android:title="@string/leave_account"></item>
     </group>
     <item
         android:id="@+id/nav_logout"
