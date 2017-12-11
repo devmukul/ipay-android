@@ -18,6 +18,16 @@ public class AppInstanceUtilities {
         return componentInfo.getPackageName().equals(Constants.ApplicationPackage);
     }
 
+    public static boolean isAppAlreadyLaunched(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (manager != null) {
+            List<ActivityManager.RunningTaskInfo> runningTaskInfo = manager.getRunningTasks(1);
+            return runningTaskInfo.get(0).numActivities > 1;
+        } else {
+            return false;
+        }
+    }
+
     private static boolean isLoggedIn() {
         return ProfileInfoCacheManager.getLoggedInStatus(false);
     }
