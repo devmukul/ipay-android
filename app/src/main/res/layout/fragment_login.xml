@@ -46,7 +46,7 @@
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/mobile_number_with_country_code"
-                    style="@style/CustomTextInputLayoutWithMargin"
+                    style="@style/CustomTextInputLayoutWithEqualMargin"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
