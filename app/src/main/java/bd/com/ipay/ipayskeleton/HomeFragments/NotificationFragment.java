@@ -442,7 +442,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         Gson gson = new Gson();
         String jsonString = gson.toJson(businessRoleManagerInvitation);
         bundle.putString(Constants.BUSINESS_ROLE_REQUEST, jsonString);
-        ((NotificationActivity)getActivity()).switchToBusinessRoleReviewFragment(bundle);
+        ((NotificationActivity) getActivity()).switchToBusinessRoleReviewFragment(bundle);
     }
 
     public interface OnNotificationUpdateListener {
@@ -602,7 +602,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             public void bindView(int pos) {
 
                 Notification notification = mNotifications.get(pos);
-                if (!(notification instanceof BusinessRoleManagerInvitation)){
+                if (!(notification instanceof BusinessRoleManagerInvitation)) {
 
                     mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + notification.getImageUrl(), false);
                     mNameView.setText(notification.getName());
@@ -705,8 +705,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
             public BusinessRoleManagerViewHolder(final View itemView) {
                 super(itemView);
-                mProfileImageView=(ProfileImageView)itemView.findViewById(R.id.profile_image_view);
-                mTitleTextView=(TextView)itemView.findViewById(R.id.title_text_view);
+                mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_image_view);
+                mTitleTextView = (TextView) itemView.findViewById(R.id.title_text_view);
             }
 
             @Override
@@ -716,7 +716,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 BusinessRoleManagerInvitation businessRoleManagerInvitation = (BusinessRoleManagerInvitation) mNotifications.get(pos);
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
                         businessRoleManagerInvitation.getImageUrl(), false);
-                mTitleTextView.setText(Html.fromHtml(businessRoleManagerInvitation.getNotificationTitle()));
+                String notificationTitle = businessRoleManagerInvitation.getNotificationTitle();
+                notificationTitle = notificationTitle.replace("Admin", businessRoleManagerInvitation.getRoleName() + " Manager");
+                mTitleTextView.setText(Html.fromHtml(notificationTitle));
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

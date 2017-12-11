@@ -97,11 +97,11 @@ public class BusinessAccountSwitch implements HttpResponseListener {
                             context.startActivity(intent);
                             break;
                         default:
-                            Toaster.makeText(context, context.getString(R.string.cant_switch), Toast.LENGTH_LONG);
+                            Toaster.makeText(context, mBusinessAccoutnDetails.getMessage(), Toast.LENGTH_LONG);
                     }
                 }
             } catch (Exception e) {
-                Toaster.makeText(context, context.getString(R.string.cant_switch), Toast.LENGTH_LONG);
+                Toaster.makeText(context, mBusinessAccoutnDetails.getMessage(), Toast.LENGTH_LONG);
             }
         }
     }
