@@ -950,7 +950,7 @@ public class HomeActivity extends BaseActivity
             public void bind(final BusinessAccountDetails item) {
                 text.setText(item.getBusinessName());
                 if (!ProfileInfoCacheManager.isAccountSwitched())
-                    imageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER+item.getProfilePictures().get(0).getUrl(), false);
+                    imageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER+item.getProfilePictures().get(0).getUrl(), false);
                 else
                     imageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER+item.getProfilePictures().get(0).getUrl(), false);
 
