@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:paddingBottom="@dimen/activity_horizontal_margin_double">
 
         <RelativeLayout
             android:layout_width="match_parent"
