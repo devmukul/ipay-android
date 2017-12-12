@@ -132,8 +132,8 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         });
 
         mProgressDialog = new ProgressDialog(getActivity());
-
-        getInviteInfo();
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_INVITATIONS))
+            getInviteInfo();
 
         return v;
     }

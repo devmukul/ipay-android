@@ -295,7 +295,7 @@ public class HomeActivity extends BaseActivity
 
         getAllBusinessAccountsList();
 
-        if (!ProfileInfoCacheManager.isAccountSwitched()) {
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS)) {
             getManagedBusinessAccountList();
         } else {
             mBusinessAccoutnList = new ArrayList<>();
@@ -709,6 +709,7 @@ public class HomeActivity extends BaseActivity
         mGetBusinessTypesAsyncTask = new GetBusinessTypesAsyncTask(this, new GetBusinessTypesAsyncTask.BusinessTypeLoadListener() {
             @Override
             public void onLoadSuccess(List<BusinessType> businessTypes) {
+
             }
 
             @Override
