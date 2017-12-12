@@ -22,7 +22,9 @@ import bd.com.ipay.ipayskeleton.DatabaseHelper.DBConstants;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.Contact.DBContactNode;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 
 public class ContactsSearchView extends FrameLayout {
 
@@ -136,8 +138,14 @@ public class ContactsSearchView extends FrameLayout {
     private void readContactsFromDB() {
         Cursor mCursor;
         DataHelper dataHelper = DataHelper.getInstance(mContext);
-        mCursor = dataHelper.searchContacts(mQuery, mFilterByiPayMembersOnly, mFilterByBusinessMembersOnly, false,
-                mFilterByVerifiedUsersOnly, false, false, null);
+        if(!ProfileInfoCacheManager.isAccountSwitched()) {
+            mCursor = dataHelper.searchContacts(mQuery, mFilterByiPayMembersOnly, mFilterByBusinessMembersOnly, false,
+                    mFilterByVerifiedUsersOnly, false, false, null);
+        }
+        else{
+            mCursor=dataHelper.searchBusinessContacts(mQuery,mFilterByiPayMembersOnly, mFilterByBusinessMembersOnly, false,
+                    mFilterByVerifiedUsersOnly, false, false, null, Long.parseLong(TokenManager.getOnAccountId()));
+        }
 
         try {
             if (mCursor != null) {

@@ -43,6 +43,9 @@ public class BusinessAccountSwitch implements HttpResponseListener {
 
     public void requestSwitchAccount() {
         if (ProfileInfoCacheManager.isAccountSwitched()) {
+            HomeActivity.mProgressDialog=new ProgressDialog(context);
+            mProgressDialog.setMessage(context.getString(R.string.switching));
+            mProgressDialog.show();
             ProfileInfoCacheManager.setOnAccountId(null);
             ProfileInfoCacheManager.setId(-1);
             ProfileInfoCacheManager.setAccountType(Constants.PERSONAL_ACCOUNT_TYPE);

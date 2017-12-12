@@ -130,7 +130,7 @@ public class HomeActivity extends BaseActivity
     private String mUserID;
     private String mDeviceID;
 
-    private ProgressDialog mProgressDialog;
+    public static ProgressDialog mProgressDialog;
     private NavigationView mNavigationView;
 
     public static NotificationFragment mNotificationFragment;
@@ -158,8 +158,11 @@ public class HomeActivity extends BaseActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
-
-        mProgressDialog = new ProgressDialog(HomeActivity.this);
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+            mProgressDialog = new ProgressDialog(HomeActivity.this);
+        } else
+            mProgressDialog = new ProgressDialog(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -336,9 +339,11 @@ public class HomeActivity extends BaseActivity
      * Business Information API as the Profile API doesn't provide us the Business Name
      */
     private void updateProfileInfo() {
-        getProfileInfo();
-
-        if (ProfileInfoCacheManager.isBusinessAccount()) {
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE)) {
+            getProfileInfo();
+        }
+        if (ProfileInfoCacheManager.isBusinessAccount() &&
+                ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO)) {
             getBusinessInformation();
         }
     }
@@ -511,7 +516,10 @@ public class HomeActivity extends BaseActivity
     private void attemptLeaveAccount() {
         if (mRemoveAccountAsyncTask != null)
             return;
-
+        if (mProgressDialog != null) {
+            mProgressDialog.setMessage(getString(R.string.leaving));
+            mProgressDialog.show();
+        }
         mRemoveAccountAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
                 Constants.BASE_URL_MM + Constants.URL_REMOVE_AN_EMPLOYEE_FIRST_PART + ProfileInfoCacheManager.getId(), this, this);
         mRemoveAccountAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
