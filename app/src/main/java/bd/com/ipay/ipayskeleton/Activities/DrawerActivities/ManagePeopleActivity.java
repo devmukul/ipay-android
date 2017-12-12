@@ -20,7 +20,10 @@ import bd.com.ipay.ipayskeleton.ManagePeopleFragments.EmployeeRequestHolderFragm
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRole;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRoleResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -40,8 +43,11 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
 
         mAllRoleList = new ArrayList<>();
         mRolePrivilegeMap = new HashMap<>();
-        getAllRoles();
-        switchToEmployeeManagementFragment();
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_ROLES)) {
+            getAllRoles();
+            switchToEmployeeManagementFragment();
+        } else
+            DialogUtils.showServiceNotAllowedDialog(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

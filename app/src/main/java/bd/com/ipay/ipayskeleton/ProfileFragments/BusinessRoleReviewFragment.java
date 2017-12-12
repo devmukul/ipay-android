@@ -37,7 +37,10 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.UpdateBusi
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.UpdateInvitationRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.BusinessRoleManagerInvitation;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class BusinessRoleReviewFragment extends Fragment implements HttpResponseListener {
@@ -113,38 +116,46 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
         mAcceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
-                        .setMessage(R.string.accept_invitation_request)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mProgressDialog.setMessage(getString(R.string.accepting_business_role_manager_request));
-                                mProgressDialog.show();
-                                updateBusinessRoleRequest(Constants.ACCEPTED);
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null);
+                if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ACCEPT_REJECT_BUSINESS_MANAGER_INVITATION)) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
+                            .setMessage(R.string.accept_invitation_request)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    mProgressDialog.setMessage(getString(R.string.accepting_business_role_manager_request));
+                                    mProgressDialog.show();
+                                    updateBusinessRoleRequest(Constants.ACCEPTED);
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, null);
 
-                dialog.show();
+                    dialog.show();
+                }
+                else
+                    DialogUtils.showServiceNotAllowedDialog(getActivity());
             }
         });
 
         mRejectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
-                        .setMessage(R.string.reject_invitation_request)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mProgressDialog.setMessage(getString(R.string.rejecting_business_role_manager_request));
-                                mProgressDialog.show();
-                                updateBusinessRoleRequest(Constants.REJECTED);
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null);
+                if(ACLManager.hasServicesAccessibility(ServiceIdConstants.ACCEPT_REJECT_BUSINESS_MANAGER_INVITATION)) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
+                            .setMessage(R.string.reject_invitation_request)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    mProgressDialog.setMessage(getString(R.string.rejecting_business_role_manager_request));
+                                    mProgressDialog.show();
+                                    updateBusinessRoleRequest(Constants.REJECTED);
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, null);
 
-                dialog.show();
+                    dialog.show();
+                }
+                else
+                    DialogUtils.showServiceNotAllowedDialog(getActivity());
             }
         });
     }
@@ -211,7 +222,7 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
                     case Constants.HTTP_RESPONSE_STATUS_OK:
                         Toast.makeText(getActivity(), updateInvitationRequestResponse.getMessage(), Toast.LENGTH_LONG).show();
                         getActivity().onBackPressed();
-                        Intent intent=new Intent(getActivity(), HomeActivity.class);
+                        Intent intent = new Intent(getActivity(), HomeActivity.class);
                         getActivity().startActivity(intent);
                         break;
                     default:

@@ -43,9 +43,12 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRo
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessService;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -150,7 +153,10 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
                     mSelectedMobileNumber = ContactEngine.formatMobileNumberBD(
                             mMobileNumberEditText.getText().toString().trim());
                     Utilities.hideKeyboard(getActivity());
-                    createEmployee(getString(R.string.create_new_employee));
+                    if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEND_BUSINESS_MANAGER_INVITATION))
+                        createEmployee(getString(R.string.create_new_employee));
+                    else
+                        DialogUtils.showServiceNotAllowedDialog(getActivity());
                 }
             }
         });
@@ -181,7 +187,7 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
             mMobileNumberEditText.setText(mSelectedMobileNumber);
     }
 
-    private void createEmployee(String progressMessage) {
+    public void createEmployee(String progressMessage) {
         if (mCreateEmployeeAsyncTask != null)
             return;
 

@@ -470,7 +470,7 @@ public class HomeActivity extends BaseActivity
         switchedToHomeFragment = false;
     }
 
-    @ValidateAccess
+    @ValidateAccess(ServiceIdConstants.SEE_MANAGERS)
     public void switchToManageAccountsActivity() {
         Intent intent = new Intent(HomeActivity.this, ManagePeopleActivity.class);
         startActivity(intent);

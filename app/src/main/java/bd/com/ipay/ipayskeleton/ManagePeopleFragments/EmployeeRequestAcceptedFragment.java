@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,13 +14,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -34,7 +31,10 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.Manager
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.ManagerListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.RemoveEmployeeResponse;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -117,7 +117,7 @@ public class EmployeeRequestAcceptedFragment extends BaseFragment implements Htt
             return;
 
         mRemoveAnEmployeeAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
-                Constants.BASE_URL_MM + Constants.URL_REMOVE_AN_EMPLOYEE_FIRST_PART + associationId , getContext(), this);
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_AN_EMPLOYEE_FIRST_PART + associationId, getContext(), this);
         mRemoveAnEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -155,8 +155,7 @@ public class EmployeeRequestAcceptedFragment extends BaseFragment implements Htt
             }
 
             mGetAllEmployeeAsyncTask = null;
-        }
-        else if (result.getApiCommand().equals(Constants.COMMAND_REMOVE_AN_EMPLOYEE)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_REMOVE_AN_EMPLOYEE)) {
 
             try {
                 mRemoveAnEmployeeResponse = gson.fromJson(result.getJsonString(), RemoveEmployeeResponse.class);
@@ -217,7 +216,8 @@ public class EmployeeRequestAcceptedFragment extends BaseFragment implements Htt
             }
 
             public void bindView(final int pos) {
-                if (pos == EmployeeRequestHolderFragment.mAcceptedEmployeeList.size() - 1) divider.setVisibility(View.GONE);
+                if (pos == EmployeeRequestHolderFragment.mAcceptedEmployeeList.size() - 1)
+                    divider.setVisibility(View.GONE);
                 final ManagerList employee = EmployeeRequestHolderFragment.mAcceptedEmployeeList.get(pos);
                 mEmployee_manage_ActionList = Arrays.asList(getResources().getStringArray(R.array.employee_management_action));
 
@@ -263,18 +263,25 @@ public class EmployeeRequestAcceptedFragment extends BaseFragment implements Htt
                 mDeleteView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showDeleteEmployeeConfirmationDialog(employee);
+                        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.REMOVE_BUSINESS_MANAGER))
+                            showDeleteEmployeeConfirmationDialog(employee);
+                        else
+                            DialogUtils.showServiceNotAllowedDialog(getActivity());
                     }
                 });
 
                 mEditView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        System.out.println("Test  "+employee.getId()+" "+employee.getManagerAccountId()
-                                +" "+employee.getCreatedAt());
+                        System.out.println("Test  " + employee.getId() + " " + employee.getManagerAccountId()
+                                + " " + employee.getCreatedAt());
 
-                        editBusinessManagerDialog = new EditBusinessManagerDialog(getActivity(), "Edit Account", employee.getManagerName(), employee.getManagerAccountId(),employee.getRoleName(), employee.getProfilePictures().get(0).getUrl());
-                        editBusinessManagerDialog.show();
+                        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.UPDATE_BUSINESS_MANAGER_ROLE)) {
+                            editBusinessManagerDialog = new EditBusinessManagerDialog(getActivity(), "Edit Account", employee.getManagerName(), employee.getManagerAccountId(), employee.getRoleName(), employee.getProfilePictures().get(0).getUrl());
+                            editBusinessManagerDialog.show();
+                        }
+                        else
+                            DialogUtils.showServiceNotAllowedDialog(getActivity());
                     }
                 });
             }
