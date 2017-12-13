@@ -16,7 +16,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.CreateEmployeeFragment;
-import bd.com.ipay.ipayskeleton.ManagePeopleFragments.EmployeeRequestHolderFragment;
+import bd.com.ipay.ipayskeleton.BusinessFragments.ManagePeopleFragments.ManagerRequestHolderFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRole;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRoleResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -56,7 +56,7 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
         while (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStackImmediate();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new EmployeeRequestHolderFragment()).commit();
+                new ManagerRequestHolderFragment()).commit();
 
     }
 

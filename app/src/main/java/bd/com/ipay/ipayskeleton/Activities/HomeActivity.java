@@ -104,9 +104,11 @@ public class HomeActivity extends BaseActivity
     private static final int REQUEST_CODE_PERMISSION = 1001;
 
     private HttpRequestPostAsyncTask mLocationUpdateRequestAsyncTask;
+    private HttpRequestDeleteAsyncTask mRemoveAccountAsyncTask;
 
     private HttpRequestGetAsyncTask mGetBusinessAccountsAsyncTask;
     private GetManagedBusinessAccountsResponse mGetManagedBusinessAccountsResponse;
+    private List<BusinessAccountDetails> mManagedBusinessAccoutnList = new ArrayList<>();
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
@@ -125,31 +127,24 @@ public class HomeActivity extends BaseActivity
     private AutoResizeTextView mMobileNumberView;
     private TextView mNameView;
     private ProfileImageView mProfileImageView;
+    private NavigationView mNavigationView;
+    private RecyclerView mManagedBusinessListRecyclerView;
+    private ImageView mMoreBusinessListImageView;
 
     private String mUserID;
     private String mDeviceID;
 
     public static ProgressDialog mProgressDialog;
-    private NavigationView mNavigationView;
-
     public static NotificationFragment mNotificationFragment;
     private Menu mOptionsMenu;
-
+    private Menu mNavigationMenu;
     private int mBadgeCount = 0;
 
     private static boolean switchedToHomeFragment = true;
     private boolean exitFromApplication = false;
 
     private String onAccountID = null;
-
     private LocationManager mLocationManager;
-
-    RecyclerView managedBusinessList;
-
-    private HttpRequestGetAsyncTask mSwitchAccountAsyncTask = null;
-    private List<BusinessAccountDetails> mBusinessAccoutnList = new ArrayList<>();
-
-    private HttpRequestDeleteAsyncTask mRemoveAccountAsyncTask;
 
 
     @Override
@@ -169,52 +164,45 @@ public class HomeActivity extends BaseActivity
         getSupportActionBar().setLogo(R.drawable.logo_ipay);
 
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mManagedBusinessListRecyclerView = (RecyclerView) mNavigationView.getHeaderView(0).findViewById(R.id.managed_business_list);
+        mMoreBusinessListImageView = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.drop_arrow);
+        mNavigationMenu = mNavigationView.getMenu();
 
-        managedBusinessList = (RecyclerView) mNavigationView.getHeaderView(0).findViewById(R.id.textRe);
-        final ImageView down = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.drop_arrow);
-        down.setOnClickListener(new View.OnClickListener() {
+        mMoreBusinessListImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (managedBusinessList.getVisibility() == View.VISIBLE) {
-
-                    down.animate().rotation(0).start();
-                    managedBusinessList.setVisibility(View.GONE);
-
+                if (mManagedBusinessListRecyclerView.getVisibility() == View.VISIBLE) {
+                    mMoreBusinessListImageView.animate().rotation(0).start();
+                    mManagedBusinessListRecyclerView.setVisibility(View.GONE);
                 } else {
-                    down.animate().rotation(180).start();
-                    managedBusinessList.setVisibility(View.VISIBLE);
+                    mMoreBusinessListImageView.animate().rotation(180).start();
+                    mManagedBusinessListRecyclerView.setVisibility(View.VISIBLE);
                 }
-
-
             }
         });
 
-        Menu menu = mNavigationView.getMenu();
         if (!ProfileInfoCacheManager.isBusinessAccount())
-            menu.findItem(R.id.nav_manage_account).setVisible(false);
+            mNavigationMenu.findItem(R.id.nav_manage_account).setVisible(false);
         if (!ProfileInfoCacheManager.isAccountSwitched()) {
-            menu.findItem(R.id.nav_leave_account).setVisible(false);
+            mNavigationMenu.findItem(R.id.nav_leave_account).setVisible(false);
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 Utilities.hideKeyboard(HomeActivity.this);
-
-                managedBusinessList.setHasFixedSize(true);
-                managedBusinessList.setAdapter(new ContentAdapter(mBusinessAccoutnList));
-                managedBusinessList.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
-                managedBusinessList.setItemAnimator(new DefaultItemAnimator());
-                managedBusinessList.setVisibility(View.GONE);
-
-
+                mManagedBusinessListRecyclerView.setHasFixedSize(true);
+                mManagedBusinessListRecyclerView.setAdapter(new ManagedBusinessAcountAdapter(mManagedBusinessAccoutnList));
+                mManagedBusinessListRecyclerView.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
+                mManagedBusinessListRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                mManagedBusinessListRecyclerView.setVisibility(View.GONE);
             }
 
             @Override
@@ -297,11 +285,10 @@ public class HomeActivity extends BaseActivity
         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS)) {
             getManagedBusinessAccountList();
         } else {
-            mBusinessAccoutnList = new ArrayList<>();
+            mManagedBusinessAccoutnList = new ArrayList<>();
             BusinessAccountDetails tempProfileInfo = new BusinessAccountDetails(ProfileInfoCacheManager.getMainUserProfileInfo().getAccountId(),
                     ProfileInfoCacheManager.getMainUserProfileInfo().getName(), ProfileInfoCacheManager.getMainUserProfileInfo().getProfilePictures());
-
-            mBusinessAccoutnList.add(tempProfileInfo);
+            mManagedBusinessAccoutnList.add(tempProfileInfo);
         }
 
         // If profile picture gets updated, we need to refresh the profile picture in the drawer.
@@ -866,10 +853,9 @@ public class HomeActivity extends BaseActivity
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mGetManagedBusinessAccountsResponse = gson.fromJson(result.getJsonString(), GetManagedBusinessAccountsResponse.class);
-                        mBusinessAccoutnList = mGetManagedBusinessAccountsResponse.getBusinessList();
+                        mManagedBusinessAccoutnList = mGetManagedBusinessAccountsResponse.getBusinessList();
                     }
                 } catch (Exception e) {
-
                 }
                 mGetBusinessAccountsAsyncTask = null;
                 break;
@@ -880,8 +866,6 @@ public class HomeActivity extends BaseActivity
                         businessAccountSwitch.requestSwitchAccount();
                     }
                 } catch (Exception e) {
-
-
                 }
                 mRemoveAccountAsyncTask = null;
                 break;
@@ -956,10 +940,10 @@ public class HomeActivity extends BaseActivity
         }
     };
 
-    private class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ViewHolder> {
+    private class ManagedBusinessAcountAdapter extends RecyclerView.Adapter<ManagedBusinessAcountAdapter.ViewHolder> {
         private final List<BusinessAccountDetails> items;
 
-        public ContentAdapter(List<BusinessAccountDetails> items) {
+        public ManagedBusinessAcountAdapter(List<BusinessAccountDetails> items) {
             this.items = items;
         }
 
@@ -980,21 +964,21 @@ public class HomeActivity extends BaseActivity
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView text;
-            private ProfileImageView imageView;
+            private TextView nameTextView;
+            private ProfileImageView profileImageView;
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                text = (TextView) itemView.findViewById(R.id.title_text_view);
-                imageView = (ProfileImageView) itemView.findViewById(R.id.profile_image_view);
+                nameTextView = (TextView) itemView.findViewById(R.id.title_text_view);
+                profileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_image_view);
             }
 
             public void bind(final BusinessAccountDetails item) {
-                text.setText(item.getBusinessName());
+                nameTextView.setText(item.getBusinessName());
                 if (!ProfileInfoCacheManager.isAccountSwitched())
-                    imageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getProfilePictures().get(0).getUrl(), false);
+                    profileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getProfilePictures().get(0).getUrl(), false);
                 else
-                    imageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getProfilePictures().get(0).getUrl(), false);
+                    profileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getProfilePictures().get(0).getUrl(), false);
 
 
                 itemView.setOnClickListener(new View.OnClickListener() {

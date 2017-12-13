@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.ManagePeopleFragments;
+package bd.com.ipay.ipayskeleton.BusinessFragments.ManagePeopleFragments;
 
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -38,22 +38,19 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EmployeeRequestAcceptedFragment extends BaseFragment implements HttpResponseListener {
+public class ManagerRequestAcceptedFragment extends BaseFragment implements HttpResponseListener {
 
+    private HttpRequestGetAsyncTask mGetAllManagerAsyncTask;
+    private ManagerListResponse mGetAllManagerResponse;
 
-    //private List<ManagerList> mEmployeeList;
-    private TextView mEmptyListTextView;
-
-    private HttpRequestGetAsyncTask mGetAllEmployeeAsyncTask;
-    private ManagerListResponse mGetAllEmployeesResponse;
-
-    private HttpRequestDeleteAsyncTask mRemoveAnEmployeeAsyncTask;
-    private RemoveEmployeeResponse mRemoveAnEmployeeResponse;
+    private HttpRequestDeleteAsyncTask mRemoveAnManagerAsyncTask;
+    private RemoveEmployeeResponse mRemoveAnManagerResponse;
 
     private EmployeeListAdapter adapter;
+    private LinearLayoutManager layoutManager;
 
-    private RecyclerView mEmployeeListView;
-
+    private RecyclerView mManagerListRecyclerView;
+    private TextView mEmptyListTextView;
 
     @Nullable
     @Override
@@ -61,11 +58,11 @@ public class EmployeeRequestAcceptedFragment extends BaseFragment implements Htt
         View v = inflater.inflate(R.layout.fragment_employee_management, container, false);
 
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
-        mEmployeeListView = (RecyclerView) v.findViewById(R.id.list_employee);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mEmployeeListView.setLayoutManager(layoutManager);
+        mManagerListRecyclerView = (RecyclerView) v.findViewById(R.id.list_manager);
+        layoutManager = new LinearLayoutManager(getActivity());
+        mManagerListRecyclerView.setLayoutManager(layoutManager);
         adapter = new EmployeeListAdapter();
-        mEmployeeListView.setAdapter(adapter);
+        mManagerListRecyclerView.setAdapter(adapter);
 
         return v;
     }
@@ -80,11 +77,9 @@ public class EmployeeRequestAcceptedFragment extends BaseFragment implements Htt
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         adapter.notifyDataSetChanged();
-        if (EmployeeRequestHolderFragment.mAcceptedEmployeeList != null && EmployeeRequestHolderFragment.mAcceptedEmployeeList.size() == 0) {
+        if (ManagerRequestHolderFragment.mAcceptedEmployeeList != null && ManagerRequestHolderFragment.mAcceptedEmployeeList.size() == 0) {
             mEmptyListTextView.setVisibility(View.VISIBLE);
         } else mEmptyListTextView.setVisibility(View.GONE);
-        //getEmployeeList();
-        //setContentShown(false);
     }
 
 
@@ -104,28 +99,28 @@ public class EmployeeRequestAcceptedFragment extends BaseFragment implements Htt
 
 
     private void getEmployeeList() {
-        if (mGetAllEmployeeAsyncTask != null)
+        if (mGetAllManagerAsyncTask != null)
             return;
 
-        mGetAllEmployeeAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ACCEPTED_EMPLOYEE_LIST,
+        mGetAllManagerAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ACCEPTED_EMPLOYEE_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_EMPLOYEE_LIST, getActivity(), this);
-        mGetAllEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mGetAllManagerAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void removeAnEmployee(long associationId) {
-        if (mRemoveAnEmployeeAsyncTask != null)
+        if (mRemoveAnManagerAsyncTask != null)
             return;
 
-        mRemoveAnEmployeeAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
+        mRemoveAnManagerAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
                 Constants.BASE_URL_MM + Constants.URL_REMOVE_AN_EMPLOYEE_FIRST_PART + associationId, getContext(), this);
-        mRemoveAnEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mRemoveAnManagerAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mGetAllEmployeeAsyncTask = null;
+            mGetAllManagerAsyncTask = null;
 
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
@@ -135,42 +130,41 @@ public class EmployeeRequestAcceptedFragment extends BaseFragment implements Htt
         Gson gson = new Gson();
         if (result.getApiCommand().equals(Constants.COMMAND_GET_ACCEPTED_EMPLOYEE_LIST)) {
             try {
-                mGetAllEmployeesResponse = gson.fromJson(result.getJsonString(), ManagerListResponse.class);
+                mGetAllManagerResponse = gson.fromJson(result.getJsonString(), ManagerListResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    EmployeeRequestHolderFragment.mAcceptedEmployeeList = mGetAllEmployeesResponse.getManagerList();
+                    ManagerRequestHolderFragment.mAcceptedEmployeeList = mGetAllManagerResponse.getManagerList();
                     adapter.notifyDataSetChanged();
                 } else {
                     if (getActivity() != null) {
-                        Toaster.makeText(getActivity(), "Failed to fetch manager list", Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.failed_loading_manager_list, Toast.LENGTH_LONG);
                         getActivity().onBackPressed();
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null) {
-                    Toaster.makeText(getActivity(), R.string.failed_loading_employee_list, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.failed_loading_manager_list, Toast.LENGTH_LONG);
                     getActivity().onBackPressed();
                 }
             }
 
-            mGetAllEmployeeAsyncTask = null;
+            mGetAllManagerAsyncTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_REMOVE_AN_EMPLOYEE)) {
 
             try {
-                mRemoveAnEmployeeResponse = gson.fromJson(result.getJsonString(), RemoveEmployeeResponse.class);
+                mRemoveAnManagerResponse = gson.fromJson(result.getJsonString(), RemoveEmployeeResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String message = mRemoveAnEmployeeResponse.getMessage();
+                    String message = mRemoveAnManagerResponse.getMessage();
 
                     if (getActivity() != null) {
-
                         Toaster.makeText(getActivity(), message, Toast.LENGTH_LONG);
                         getEmployeeList();
                     }
 
                 } else {
                     if (getActivity() != null)
-                        Toaster.makeText(getActivity(), mRemoveAnEmployeeResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), mRemoveAnManagerResponse.getMessage(), Toast.LENGTH_LONG);
                 }
 
             } catch (Exception e) {
@@ -179,10 +173,10 @@ public class EmployeeRequestAcceptedFragment extends BaseFragment implements Htt
                     Toaster.makeText(getActivity(), R.string.could_not_remove_employee, Toast.LENGTH_LONG);
             }
 
-            mRemoveAnEmployeeAsyncTask = null;
+            mRemoveAnManagerAsyncTask = null;
         }
 
-        if (EmployeeRequestHolderFragment.mAcceptedEmployeeList != null && EmployeeRequestHolderFragment.mAcceptedEmployeeList.size() == 0) {
+        if (ManagerRequestHolderFragment.mAcceptedEmployeeList != null && ManagerRequestHolderFragment.mAcceptedEmployeeList.size() == 0) {
             mEmptyListTextView.setVisibility(View.VISIBLE);
         } else mEmptyListTextView.setVisibility(View.GONE);
     }
@@ -216,9 +210,9 @@ public class EmployeeRequestAcceptedFragment extends BaseFragment implements Htt
             }
 
             public void bindView(final int pos) {
-                if (pos == EmployeeRequestHolderFragment.mAcceptedEmployeeList.size() - 1)
+                if (pos == ManagerRequestHolderFragment.mAcceptedEmployeeList.size() - 1)
                     divider.setVisibility(View.GONE);
-                final ManagerList employee = EmployeeRequestHolderFragment.mAcceptedEmployeeList.get(pos);
+                final ManagerList employee = ManagerRequestHolderFragment.mAcceptedEmployeeList.get(pos);
                 mEmployee_manage_ActionList = Arrays.asList(getResources().getStringArray(R.array.employee_management_action));
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + employee.getProfilePictures().get(0).getUrl(),
@@ -236,27 +230,6 @@ public class EmployeeRequestAcceptedFragment extends BaseFragment implements Htt
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-//                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), employee.getManagerName(), mEmployee_manage_ActionList);
-//                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
-//                            @Override
-//                            public void onResourceSelected(int selectedIndex, String action) {
-//                                if (Constants.ACTION_TYPE_REMOVE.equals(action)) {
-//                                    showDeleteEmployeeConfirmationDialog(employee);
-//                                } else if (Constants.ACTION_TYPE_VIEW.equals(action)) {
-//                                    Bundle bundle = new Bundle();
-//                                    bundle.putLong(Constants.ASSOCIATION_ID, employee.getId());
-//                                    ((ManagePeopleActivity) getActivity()).switchToEmployeeInformationDetailsFragment(bundle);
-//                                } else if (Constants.ACTION_TYPE_EDIT.equals(action)) {
-//                                    Bundle bundle = new Bundle();
-//                                    bundle.putLong(Constants.ASSOCIATION_ID, employee.getId());
-//                                    bundle.putString(Constants.MOBILE_NUMBER, employee.getMobileNumber());
-//                                    bundle.putString(Constants.DESIGNATION, employee.getDesignation());
-//                                    ((ManagePeopleActivity) getActivity()).switchToEditEmployeeInformationFragment(bundle);
-//                                }
-//                            }
-//                        });
-//                        mCustomSelectorDialog.show();
                     }
                 });
 
@@ -273,9 +246,6 @@ public class EmployeeRequestAcceptedFragment extends BaseFragment implements Htt
                 mEditView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        System.out.println("Test  " + employee.getId() + " " + employee.getManagerAccountId()
-                                + " " + employee.getCreatedAt());
-
                         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.UPDATE_BUSINESS_MANAGER_ROLE)) {
                             editBusinessManagerDialog = new EditBusinessManagerDialog(getActivity(), "Edit Account", employee.getManagerName(), employee.getManagerAccountId(), employee.getRoleName(), employee.getProfilePictures().get(0).getUrl());
                             editBusinessManagerDialog.show();
@@ -309,8 +279,8 @@ public class EmployeeRequestAcceptedFragment extends BaseFragment implements Htt
 
         @Override
         public int getItemCount() {
-            if (EmployeeRequestHolderFragment.mAcceptedEmployeeList != null)
-                return EmployeeRequestHolderFragment.mAcceptedEmployeeList.size();
+            if (ManagerRequestHolderFragment.mAcceptedEmployeeList != null)
+                return ManagerRequestHolderFragment.mAcceptedEmployeeList.size();
             else
                 return 0;
         }

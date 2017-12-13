@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/value20"
                 android:id="@+id/info_text"
-                android:text="You have not added any member yet. Invite more people to manage this business account."
+                android:text="@string/invite_manager_info_text"
                 android:gravity="center"/>
 
             <Button
@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/ButtonPrimaryWithNote"
-                android:text="INVITE PEOPLE"
+                android:text="@string/invite_people"
                 android:layout_below="@+id/info_text"/>
 
 
@@ -121,7 +121,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:text="INVITE PEOPLE"/>
+                android:text="@string/invite_people"/>
 
         </RelativeLayout>
 

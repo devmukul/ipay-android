@@ -1,4 +1,4 @@
-package bd.com.ipay.ipayskeleton.ManagePeopleFragments;
+package bd.com.ipay.ipayskeleton.BusinessFragments.ManagePeopleFragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,7 +30,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
-public class EmployeeRequestHolderFragment extends Fragment implements HttpResponseListener{
+public class ManagerRequestHolderFragment extends Fragment implements HttpResponseListener{
 
     private RadioButton mPendingTransactionRadioButton;
     private RadioButton mCompletedTransactionRadioButton;
@@ -41,13 +41,13 @@ public class EmployeeRequestHolderFragment extends Fragment implements HttpRespo
     private RelativeLayout mBlankLayout;
     private RelativeLayout mEmployeeListLayout;
 
-    public static List<ManagerList> mAcceptedEmployeeList;
     private HttpRequestGetAsyncTask mGetAllAcceptedEmployeeAsyncTask;
     private ManagerListResponse mGetAllAcceptedEmployeesResponse;
+    public static List<ManagerList> mAcceptedEmployeeList;
 
-    public static List<PendingInvitationList> mPendingEmployeeList;
     private HttpRequestGetAsyncTask mGetAllPendingEmployeeAsyncTask;
     private PendingManagerListResponse mGetAllPendingEmployeesResponse;
+    public static List<PendingInvitationList> mPendingEmployeeList;
 
 
     @Override
@@ -91,8 +91,6 @@ public class EmployeeRequestHolderFragment extends Fragment implements HttpRespo
             @ValidateAccess
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-                System.out.println("FTEST   "+checkedId +" "+R.id.radio_button_pending+" "+R.id.radio_button_accepted);
-
                 switch (checkedId) {
                     case R.id.radio_button_pending:
                         switchToPendingTransactionsFragment();
@@ -134,12 +132,12 @@ public class EmployeeRequestHolderFragment extends Fragment implements HttpRespo
     }
 
     private void switchToProcessedTransactionsFragment() {
-        EmployeeRequestAcceptedFragment mProcessedTransactionHistoryCompletedFragment = new EmployeeRequestAcceptedFragment();
+        ManagerRequestAcceptedFragment mProcessedTransactionHistoryCompletedFragment = new ManagerRequestAcceptedFragment();
         getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mProcessedTransactionHistoryCompletedFragment).commit();
     }
 
     private void switchToPendingTransactionsFragment() {
-        EmployeeRequestPendingFragment mPendingTransactionHistoryFragment = new EmployeeRequestPendingFragment();
+        ManagerRequestPendingFragment mPendingTransactionHistoryFragment = new ManagerRequestPendingFragment();
         getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_transaction_history, mPendingTransactionHistoryFragment).commit();
     }
 
@@ -162,18 +160,17 @@ public class EmployeeRequestHolderFragment extends Fragment implements HttpRespo
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mAcceptedEmployeeList = mGetAllAcceptedEmployeesResponse.getManagerList();
-                    System.out.println("FTEST " + mAcceptedEmployeeList.size());
                     getPendingEmployeeList();
                 } else {
                     if (getActivity() != null) {
-                        Toaster.makeText(getActivity(), "Failed to fetch manager list", Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.failed_loading_manager_list, Toast.LENGTH_LONG);
                         getActivity().onBackPressed();
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null) {
-                    Toaster.makeText(getActivity(), R.string.failed_loading_employee_list, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.failed_loading_manager_list, Toast.LENGTH_LONG);
                     getActivity().onBackPressed();
                 }
             }
@@ -186,22 +183,15 @@ public class EmployeeRequestHolderFragment extends Fragment implements HttpRespo
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mPendingEmployeeList = mGetAllPendingEmployeesResponse.getPendingInvitationList();
 
-
-                    System.out.println("FTEST " + mPendingEmployeeList.size());
-
-
                     if (mAcceptedEmployeeList.size()>0) {
                         mLoadingLayout.setVisibility(View.GONE);
                         mBlankLayout.setVisibility(View.GONE);
                         mEmployeeListLayout.setVisibility(View.VISIBLE);
                         mCompletedTransactionRadioButton.setChecked(true);
-                        System.out.println("FTEST1 " + mPendingEmployeeList.size());
                     } else if (mPendingEmployeeList.size()>0) {
                         mLoadingLayout.setVisibility(View.GONE);
                         mBlankLayout.setVisibility(View.GONE);
                         mEmployeeListLayout.setVisibility(View.VISIBLE);
-
-                        System.out.println("FTEST2 " + mPendingEmployeeList.size());
                         mPendingTransactionRadioButton.setChecked(true);
                     }else{
                         mLoadingLayout.setVisibility(View.GONE);
@@ -210,14 +200,14 @@ public class EmployeeRequestHolderFragment extends Fragment implements HttpRespo
                     }
                 } else {
                     if (getActivity() != null) {
-                        Toaster.makeText(getActivity(), "Failed to fetch manager list", Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.failed_loading_manager_list, Toast.LENGTH_LONG);
                         getActivity().onBackPressed();
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null) {
-                    Toaster.makeText(getActivity(), R.string.failed_loading_employee_list, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.failed_loading_manager_list, Toast.LENGTH_LONG);
                     getActivity().onBackPressed();
                 }
             }

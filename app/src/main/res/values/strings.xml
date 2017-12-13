@@ -1084,4 +1084,9 @@
     <string name="leave_account">Leave Account</string>
     <string name="do_you_want_to_leave">Do you want to leave this account permanently? You can\'t switch to this account in the future</string>
     <string name="leaving">Leaving</string>
+
+    <string name="failed_loading_manager_list">Failed to load manager list</string>
+    <string name="invite_manager_info_text">You have not added any member yet. Invite more people to manage this business account.</string>
+    <string name="invite_people">INVITE PEOPLE</string>
+    <string name="change_role">Change Role</string>
 </resources>
