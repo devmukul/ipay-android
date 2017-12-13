@@ -21,6 +21,7 @@ public class PayDashBoardHorizontalScrollView {
         horizontalScrollView = new HorizontalScrollView(context);
         HorizontalScrollView.LayoutParams params = new HorizontalScrollView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         horizontalScrollView.setLayoutParams(params);
+        horizontalScrollView.setHorizontalScrollBarEnabled(false);
 
         linearLayout = new LinearLayout(context);
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -45,7 +46,7 @@ public class PayDashBoardHorizontalScrollView {
     public CustomDashboardItemView addBusinessEntryView(final BusinessAccountEntry businessAccountEntry) {
         CustomDashboardItemView customDashboardItemView = new CustomDashboardItemView(context);
         customDashboardItemView.setNameView(businessAccountEntry.getBusinessName());
-        customDashboardItemView.setImageView(Constants.BASE_URL_FTP_SERVER + businessAccountEntry.getProfilePictureUrl(), true);
+        customDashboardItemView.setImageView("https://www.ipay.com.bd" + businessAccountEntry.getProfilePictureUrl(), true);
 
         linearLayout.addView(customDashboardItemView);
 

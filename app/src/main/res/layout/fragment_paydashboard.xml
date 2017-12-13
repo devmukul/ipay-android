@@ -22,6 +22,7 @@
             android:paddingRight="@dimen/value5"
             android:paddingTop="@dimen/activity_horizontal_margin"
             android:text="@string/top"
+            android:textAllCaps="true"
             android:textSize="@dimen/text_size_small_medium_value18" />
 
         <LinearLayout
@@ -36,7 +37,7 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin_card"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:background="@color/colorWhite"
+                android:background="@drawable/semiround_white_default"
                 android:elevation="@dimen/value2"
                 android:orientation="vertical">
 
@@ -63,7 +64,9 @@
                     android:paddingLeft="@dimen/value5"
                     android:paddingRight="@dimen/value5"
                     android:paddingTop="@dimen/activity_horizontal_margin_card"
-                    android:text="@string/mobile_topup" />
+                    android:text="@string/mobile_topup"
+                    android:textSize="@dimen/text_size_small_medium"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -73,7 +76,7 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                 android:layout_marginRight="@dimen/activity_horizontal_margin_card"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:background="@color/colorWhite"
+                android:background="@drawable/semiround_white_default"
                 android:elevation="@dimen/value2"
                 android:orientation="vertical">
 
@@ -100,7 +103,9 @@
                     android:paddingLeft="@dimen/value5"
                     android:paddingRight="@dimen/value5"
                     android:paddingTop="@dimen/activity_horizontal_margin_card"
-                    android:text="@string/pay_by_QR_code" />
+                    android:text="@string/pay_by_QR_code"
+                    android:textSize="@dimen/text_size_small_medium"
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </LinearLayout>
