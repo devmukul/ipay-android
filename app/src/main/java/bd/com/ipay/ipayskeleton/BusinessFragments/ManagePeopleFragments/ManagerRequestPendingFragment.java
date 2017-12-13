@@ -1,101 +1,53 @@
-package bd.com.ipay.ipayskeleton.ManagePeopleFragments;
+package bd.com.ipay.ipayskeleton.BusinessFragments.ManagePeopleFragments;
 
-import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.devspark.progressfragment.ProgressFragment;
-import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
-import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
-import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.ManagerList;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.ManagerListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.PendingInvitationList;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.PendingManagerListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.RemoveEmployeeResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.RemovePendingEmployeeRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.UpdateEmployeeRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
-import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
-import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
-import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class EmployeeRequestPendingFragment extends BaseFragment implements HttpResponseListener{
+public class ManagerRequestPendingFragment extends BaseFragment implements HttpResponseListener{
 
-    //private List<PendingInvitationList> mEmployeeList;
-    private TextView mEmptyListTextView;
+    private HttpRequestGetAsyncTask mGetAllManagerAsyncTask;
+    private PendingManagerListResponse mGetAllManagerResponse;
 
-    private HttpRequestGetAsyncTask mGetAllEmployeeAsyncTask;
-    private PendingManagerListResponse mGetAllEmployeesResponse;
-
-
-    private HttpRequestPutAsyncTask mRemoveAnEmployeeAsyncTask;
-    private RemoveEmployeeResponse mRemoveAnEmployeeResponse;
+    private HttpRequestPutAsyncTask mRemoveAnManagerAsyncTask;
+    private RemoveEmployeeResponse mRemoveAnManagerResponse;
 
     private EmployeeListAdapter adapter;
+    private LinearLayoutManager layoutManager;
 
-    private RecyclerView mEmployeeListView;
+    private RecyclerView mManagerListView;
+    private TextView mEmptyListTextView;
 
 
     @Nullable
@@ -104,11 +56,11 @@ public class EmployeeRequestPendingFragment extends BaseFragment implements Http
         View v = inflater.inflate(R.layout.fragment_employee_management, container, false);
 
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
-        mEmployeeListView = (RecyclerView) v.findViewById(R.id.list_employee);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mEmployeeListView.setLayoutManager(layoutManager);
+        mManagerListView = (RecyclerView) v.findViewById(R.id.list_manager);
+        layoutManager = new LinearLayoutManager(getActivity());
+        mManagerListView.setLayoutManager(layoutManager);
         adapter = new EmployeeListAdapter();
-        mEmployeeListView.setAdapter(adapter);
+        mManagerListView.setAdapter(adapter);
 
         return v;
     }
@@ -123,11 +75,9 @@ public class EmployeeRequestPendingFragment extends BaseFragment implements Http
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         adapter.notifyDataSetChanged();
-        if (EmployeeRequestHolderFragment.mPendingEmployeeList != null && EmployeeRequestHolderFragment.mPendingEmployeeList.size() == 0) {
+        if (ManagerRequestHolderFragment.mPendingEmployeeList != null && ManagerRequestHolderFragment.mPendingEmployeeList.size() == 0) {
             mEmptyListTextView.setVisibility(View.VISIBLE);
         } else mEmptyListTextView.setVisibility(View.GONE);
-//        getEmployeeList();
-//        setContentShown(false);
     }
 
     private void showDeleteEmployeeConfirmationDialog(final PendingInvitationList employee) {
@@ -146,25 +96,25 @@ public class EmployeeRequestPendingFragment extends BaseFragment implements Http
 
 
     private void getEmployeeList() {
-        if (mGetAllEmployeeAsyncTask != null)
+        if (mGetAllManagerAsyncTask != null)
             return;
 
-        mGetAllEmployeeAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PENDING_EMPLOYEE_LIST,
+        mGetAllManagerAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PENDING_EMPLOYEE_LIST,
                 Constants.BASE_URL_MM + Constants.URL_GET_PENDING_EMPLOYEE_LIST, getActivity(), this);
-        mGetAllEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mGetAllManagerAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void removeAnEmployee(long associationId) {
-        if (mRemoveAnEmployeeAsyncTask != null)
+        if (mRemoveAnManagerAsyncTask != null)
             return;
 
         RemovePendingEmployeeRequest createEmployeeRequest = new RemovePendingEmployeeRequest(associationId, "CANCELED");
         Gson gson = new Gson();
         String json = gson.toJson(createEmployeeRequest);
 
-        mRemoveAnEmployeeAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
+        mRemoveAnManagerAsyncTask = new HttpRequestPutAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
                 Constants.BASE_URL_MM + Constants.URL_REMOVE_PENDING_EMPLOYEE , json, getContext(), this);
-        mRemoveAnEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mRemoveAnManagerAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
@@ -172,7 +122,7 @@ public class EmployeeRequestPendingFragment extends BaseFragment implements Http
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mGetAllEmployeeAsyncTask = null;
+            mGetAllManagerAsyncTask = null;
 
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
@@ -182,43 +132,42 @@ public class EmployeeRequestPendingFragment extends BaseFragment implements Http
         Gson gson = new Gson();
         if (result.getApiCommand().equals(Constants.COMMAND_GET_PENDING_EMPLOYEE_LIST)) {
             try {
-                mGetAllEmployeesResponse = gson.fromJson(result.getJsonString(), PendingManagerListResponse.class);
+                mGetAllManagerResponse = gson.fromJson(result.getJsonString(), PendingManagerListResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    EmployeeRequestHolderFragment.mPendingEmployeeList = mGetAllEmployeesResponse.getPendingInvitationList();
+                    ManagerRequestHolderFragment.mPendingEmployeeList = mGetAllManagerResponse.getPendingInvitationList();
                     adapter.notifyDataSetChanged();
                 } else {
                     if (getActivity() != null) {
-                        Toaster.makeText(getActivity(), "Failed to fetch manager list", Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), R.string.failed_loading_manager_list, Toast.LENGTH_LONG);
                         getActivity().onBackPressed();
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null) {
-                    Toaster.makeText(getActivity(), R.string.failed_loading_employee_list, Toast.LENGTH_LONG);
+                    Toaster.makeText(getActivity(), R.string.failed_loading_manager_list, Toast.LENGTH_LONG);
                     getActivity().onBackPressed();
                 }
             }
 
-            mGetAllEmployeeAsyncTask = null;
+            mGetAllManagerAsyncTask = null;
         }
         else if (result.getApiCommand().equals(Constants.COMMAND_REMOVE_AN_EMPLOYEE)) {
 
             try {
-                mRemoveAnEmployeeResponse = gson.fromJson(result.getJsonString(), RemoveEmployeeResponse.class);
+                mRemoveAnManagerResponse = gson.fromJson(result.getJsonString(), RemoveEmployeeResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String message = mRemoveAnEmployeeResponse.getMessage();
+                    String message = mRemoveAnManagerResponse.getMessage();
 
                     if (getActivity() != null) {
-
                         Toaster.makeText(getActivity(), message, Toast.LENGTH_LONG);
                         getEmployeeList();
                     }
 
                 } else {
                     if (getActivity() != null)
-                        Toaster.makeText(getActivity(), mRemoveAnEmployeeResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), mRemoveAnManagerResponse.getMessage(), Toast.LENGTH_LONG);
                 }
 
             } catch (Exception e) {
@@ -227,10 +176,10 @@ public class EmployeeRequestPendingFragment extends BaseFragment implements Http
                     Toaster.makeText(getActivity(), R.string.could_not_remove_employee, Toast.LENGTH_LONG);
             }
 
-            mRemoveAnEmployeeAsyncTask = null;
+            mRemoveAnManagerAsyncTask = null;
         }
 
-        if (EmployeeRequestHolderFragment.mPendingEmployeeList != null && EmployeeRequestHolderFragment.mPendingEmployeeList.size() == 0) {
+        if (ManagerRequestHolderFragment.mPendingEmployeeList != null && ManagerRequestHolderFragment.mPendingEmployeeList.size() == 0) {
             mEmptyListTextView.setVisibility(View.VISIBLE);
         } else mEmptyListTextView.setVisibility(View.GONE);
     }
@@ -264,12 +213,12 @@ public class EmployeeRequestPendingFragment extends BaseFragment implements Http
             }
 
             public void bindView(final int pos) {
-                if (pos == EmployeeRequestHolderFragment.mPendingEmployeeList.size() - 1) divider.setVisibility(View.GONE);
-                final PendingInvitationList employee = EmployeeRequestHolderFragment.mPendingEmployeeList.get(pos);
+                if (pos == ManagerRequestHolderFragment.mPendingEmployeeList.size() - 1) divider.setVisibility(View.GONE);
+                final PendingInvitationList employee = ManagerRequestHolderFragment.mPendingEmployeeList.get(pos);
                 mEmployee_manage_ActionList = Arrays.asList(getResources().getStringArray(R.array.employee_management_action));
 
-//                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + employee.getProfilePictureUrl(),
-//                        false);
+                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + employee.getProfilePictures().get(0).getUrl(),
+                        false);
                 mNameView.setText(employee.getManagerName());
                 mMobileNumberView.setText(employee.getManagerMobileNumber());
 
@@ -279,46 +228,9 @@ public class EmployeeRequestPendingFragment extends BaseFragment implements Http
                 } else {
                     mDesignationView.setVisibility(View.GONE);
                 }
-
-//                switch (employee.getStatus()) {
-//                    case Constants.BUSINESS_INVITATION_ACCEPTED:
-//                        mStatusView.setImageResource(R.drawable.ic_verified);
-//                        mStatusView.setColorFilter(null);
-//                        break;
-//                    case Constants.BUSINESS_STATUS_PENDING:
-//                        mStatusView.setImageResource(R.drawable.ic_workinprogress);
-//                        mStatusView.setColorFilter(Color.GRAY);
-//                        break;
-//                    default:
-//                        mStatusView.setImageResource(R.drawable.ic_notverifiedgrey);
-//                        mStatusView.setColorFilter(null);
-//                        break;
-//                }
-
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-//                        mCustomSelectorDialog = new CustomSelectorDialog(getActivity(), employee.getManagerName(), mEmployee_manage_ActionList);
-//                        mCustomSelectorDialog.setOnResourceSelectedListener(new CustomSelectorDialog.OnResourceSelectedListener() {
-//                            @Override
-//                            public void onResourceSelected(int selectedIndex, String action) {
-//                                if (Constants.ACTION_TYPE_REMOVE.equals(action)) {
-//                                    showDeleteEmployeeConfirmationDialog(employee);
-//                                } else if (Constants.ACTION_TYPE_VIEW.equals(action)) {
-//                                    Bundle bundle = new Bundle();
-//                                    bundle.putLong(Constants.ASSOCIATION_ID, employee.getId());
-//                                    ((ManagePeopleActivity) getActivity()).switchToEmployeeInformationDetailsFragment(bundle);
-//                                } else if (Constants.ACTION_TYPE_EDIT.equals(action)) {
-//                                    Bundle bundle = new Bundle();
-//                                    bundle.putLong(Constants.ASSOCIATION_ID, employee.getId());
-//                                    bundle.putString(Constants.MOBILE_NUMBER, employee.getMobileNumber());
-//                                    bundle.putString(Constants.DESIGNATION, employee.getDesignation());
-//                                    ((ManagePeopleActivity) getActivity()).switchToEditEmployeeInformationFragment(bundle);
-//                                }
-//                            }
-//                        });
-//                        mCustomSelectorDialog.show();
                     }
                 });
 
@@ -353,8 +265,8 @@ public class EmployeeRequestPendingFragment extends BaseFragment implements Http
 
         @Override
         public int getItemCount() {
-            if (EmployeeRequestHolderFragment.mPendingEmployeeList != null)
-                return EmployeeRequestHolderFragment.mPendingEmployeeList.size();
+            if (ManagerRequestHolderFragment.mPendingEmployeeList != null)
+                return ManagerRequestHolderFragment.mPendingEmployeeList.size();
             else
                 return 0;
         }
