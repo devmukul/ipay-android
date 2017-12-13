@@ -45,6 +45,7 @@ public class LauncherActivity extends AppCompatActivity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             } else {
+                ProfileInfoCacheManager.updateProfileInfoCache(ProfileInfoCacheManager.getMainUserProfileInfo());
                 intent = new Intent(LauncherActivity.this, SignupOrLoginActivity.class);
                 intent.putExtra(Constants.TARGET_FRAGMENT, Constants.SIGN_IN);
                 startActivity(intent);

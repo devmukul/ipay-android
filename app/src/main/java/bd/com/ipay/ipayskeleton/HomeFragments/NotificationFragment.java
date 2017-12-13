@@ -128,11 +128,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         mLayoutManager = new LinearLayoutManager(getActivity());
         mNotificationsRecyclerView.setLayoutManager(mLayoutManager);
         mNotificationsRecyclerView.setAdapter(mNotificationListAdapter);
-        if (getArguments() != null) {
-            if (getArguments().getString(Constants.TAG).equals(Constants.RELOAD)) {
-                refreshNotificationLists(getActivity());
-            }
-        }
 
         mSwipeRefreshLayout.setOnRefreshListener(new CustomSwipeRefreshLayout.OnRefreshListener() {
             @Override

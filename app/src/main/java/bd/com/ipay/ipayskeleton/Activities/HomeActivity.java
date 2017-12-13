@@ -95,7 +95,6 @@ import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
-import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -283,7 +282,7 @@ public class HomeActivity extends BaseActivity
         getRelationshipList();
 
         // Fetch ACL List
-        if (SharedPrefManager.isRememberMeActive() && !ProfileInfoCacheManager.isAccountSwitched())
+        if (SharedPrefManager.isRememberMeActive())
             getAccessControlList();
 
         // Check if important permissions (e.g. Contacts permission) is given. If not,
@@ -339,11 +338,8 @@ public class HomeActivity extends BaseActivity
      * Business Information API as the Profile API doesn't provide us the Business Name
      */
     private void updateProfileInfo() {
-        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_PROFILE)) {
-            getProfileInfo();
-        }
-        if (ProfileInfoCacheManager.isBusinessAccount() &&
-                ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_INFO)) {
+        getProfileInfo();
+        if (ProfileInfoCacheManager.isBusinessAccount()) {
             getBusinessInformation();
         }
     }
@@ -815,11 +811,10 @@ public class HomeActivity extends BaseActivity
                         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
                     } else {
-                        Toaster.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toaster.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 }
 
                 mGetProfileInfoTask = null;
@@ -856,13 +851,10 @@ public class HomeActivity extends BaseActivity
                         ProfileInfoCacheManager.updateBusinessInfoCache(mGetBusinessInformationResponse);
                         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                     } else {
-                        Toaster.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);
 
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toaster.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);
-
                 }
                 mGetBusinessInformationAsyncTask = null;
                 break;

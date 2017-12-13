@@ -27,9 +27,7 @@ public class NotificationActivity extends BaseActivity {
             switchToReceivedRequestReviewFragment();
         else if (tag != null && tag.equals(Constants.RECOMMENDATION))
             switchToRecommendationReviewFragment(getIntent().getExtras());
-        else if (tag != null && tag.equals(Constants.RELOAD))
-            switchToNotificationFragment(Constants.RELOAD);
-        else if(tag!=null && tag.equals(Constants.BUSINESS))
+        else if (tag != null && tag.equals(Constants.BUSINESS))
             switchToBusinessRoleReviewFragment(getIntent().getExtras());
         else
             switchToNotificationFragment();
