@@ -14,8 +14,20 @@ public class SharedPrefManager {
         pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
     }
 
-    public static boolean getFirstLaunch(boolean defaultValue) {
-        return pref.getBoolean(SharedPrefConstants.FIRST_LAUNCH, defaultValue);
+    public static boolean getFirstLaunch() {
+        return pref.getBoolean(SharedPrefConstants.FIRST_LAUNCH, true);
+    }
+
+    public static void setFirstLaunch(boolean value) {
+        pref.edit().putBoolean(SharedPrefConstants.FIRST_LAUNCH, value).apply();
+    }
+
+    public static boolean isRememberMeActive() {
+        return pref.getBoolean(SharedPrefConstants.REMEMBER_ME, false);
+    }
+
+    public static void setRememberMeActive(boolean value) {
+        pref.edit().putBoolean(SharedPrefConstants.REMEMBER_ME, value).apply();
     }
 
     public static String getUserBalance() {
@@ -34,10 +46,6 @@ public class SharedPrefManager {
         return pref.getInt(SharedPrefConstants.MOBILE_NUMBER_TYPE, defaultValue);
     }
 
-    public static void setFirstLaunch(boolean defaultValue) {
-        pref.edit().putBoolean(SharedPrefConstants.FIRST_LAUNCH, defaultValue).apply();
-    }
-
     public static void setPinAdded(boolean value) {
         pref.edit().putBoolean(SharedPrefConstants.IS_PIN_ADDED, value).apply();
     }
@@ -46,8 +54,12 @@ public class SharedPrefManager {
         pref.edit().putInt(SharedPrefConstants.MOBILE_NUMBER_TYPE, value).apply();
     }
 
-    public static void serUserCountry(String value) {
+    public static void setUserCountry(String value) {
         pref.edit().putString(SharedPrefConstants.USERCOUNTRY, value).apply();
+    }
+
+    public static String getUserCountry() {
+        return pref.getString(SharedPrefConstants.USERCOUNTRY, "BD");
     }
 
     public static String getKeyPassword(String defaultValue) {
@@ -76,5 +88,9 @@ public class SharedPrefManager {
 
     public static boolean ifContainsUserID() {
         return (pref.contains(SharedPrefConstants.USERID));
+    }
+
+    public static boolean isBangladesh() {
+        return getUserCountry().equalsIgnoreCase("BD");
     }
 }

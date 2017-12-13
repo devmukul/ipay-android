@@ -28,6 +28,15 @@
         <item name="elevation">0dp</item>
     </style>
 
+    <style name="AppTheme.Light" parent="Theme.AppCompat">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@android:color/white</item>
+    </style>
+
+    <style name="my_checkbox_style">
+        <item name="buttonTint">@color/colorWhite</item>
+    </style>
+
     <style name="HomeBalanceButtonBackground">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -295,16 +304,39 @@
         <item name="android:gravity">right</item>
     </style>
 
-    <style name="TextViewInfoColorPrimaryReview" parent="@android:style/Widget.TextView">
+    <style name="TextViewInfoReview" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:paddingTop">@dimen/value5</item>
         <item name="android:paddingBottom">@dimen/value5</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
         <item name="android:textSize">@dimen/text_size_small_medium</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorBlack</item>
         <item name="android:layout_weight">0.5</item>
         <item name="android:gravity">right</item>
+    </style>
+
+    <style name="TextViewInfoBoldReview" parent="TextViewInfoReview">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextViewInfoColorRedReview" parent="TextViewInfoReview">
+        <item name="android:textColor">@color/colorRed</item>
+    </style>
+
+    <style name="TextViewInfoNoteReview" parent="TextViewInfoReview">
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="TextViewInfoColorPrimaryReview" parent="TextViewInfoReview">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="TextViewInfoColorPrimaryBoldReview" parent="TextViewInfoReview">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="TextViewInfoColorPrimaryReviewSmall" parent="@android:style/Widget.TextView">
@@ -605,6 +637,16 @@
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:paddingTop">@dimen/value10</item>
+        <item name="android:textColorHint">@color/colorGray</item>
+    </style>
+
+    <style name="CustomTextInputLayoutWithEqualMargin" parent="@android:style/Widget.Holo.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">@dimen/text_size_small_medium</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:paddingTop">@dimen/value5</item>
+        <item name="android:paddingBottom">@dimen/value5</item>
         <item name="android:textColorHint">@color/colorGray</item>
     </style>
 
@@ -1002,8 +1044,6 @@
         <item name="android:layout_marginLeft">@dimen/value10</item>
         <item name="android:layout_marginRight">@dimen/value10</item>
         <item name="android:background">@color/colorTransparent</item>
-        <item name="android:submitBackground">@color/colorTransparent</item>
-        <item name="android:queryBackground">@color/colorTransparent</item>
     </style>
 
     <style name="OnBoardPageTitleStyle">

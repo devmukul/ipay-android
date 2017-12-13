@@ -1,124 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:fillViewport="true">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:fillViewport="true"
         android:paddingBottom="@dimen/activity_horizontal_margin_double">
 
-        <ImageView
-            android:id="@+id/mapview"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/value200"
-            android:src="@drawable/map_new" />
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/activity_horizontal_margin_double">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/mapview"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/TextViewInfoLeftAlign"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:text="@string/contacts_info" />
-
-            <TextView
+            <ImageView
+                android:id="@+id/mapview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:text="@string/address"
-                android:textColor="@color/colorDarkKGray"
-                android:textSize="@dimen/text_size_small_medium" />
-
-            <TextView
-                android:id="@+id/address"
-                style="@style/TextViewInfoLeftAlign"
-                android:text="@string/contacts_info" />
+                android:layout_height="@dimen/value200"
+                android:src="@drawable/map_new" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="@dimen/activity_horizontal_margin_card">
+                android:layout_below="@+id/mapview"
+                android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    style="@style/TextViewInfoLeftAlign"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:text="@string/contacts_info" />
+
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/activity_vertical_margin"
-                    android:text="@string/phone_number"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:text="@string/address"
                     android:textColor="@color/colorDarkKGray"
                     android:textSize="@dimen/text_size_small_medium" />
 
                 <TextView
-                    android:id="@+id/phone_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:autoLink="phone" />
+                    android:id="@+id/address"
+                    style="@style/TextViewInfoLeftAlign"
+                    android:text="@string/contacts_info" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/activity_horizontal_margin_card">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_vertical_margin"
+                        android:text="@string/phone_number"
+                        android:textColor="@color/colorDarkKGray"
+                        android:textSize="@dimen/text_size_small_medium" />
+
+                    <TextView
+                        android:id="@+id/phone_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:autoLink="phone" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_vertical_margin"
+                        android:text="@string/email"
+                        android:textColor="@color/colorDarkKGray"
+                        android:textSize="@dimen/text_size_small_medium" />
+
+                    <TextView
+                        android:id="@+id/email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:autoLink="email" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_vertical_margin"
+                        android:text="@string/web"
+                        android:textColor="@color/colorDarkKGray"
+                        android:textSize="@dimen/text_size_small_medium" />
+
+                    <TextView
+                        android:id="@+id/web"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:autoLink="web" />
+
+                </LinearLayout>
             </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:src="@drawable/ic_compose"
+        app:backgroundTint="@color/colorPrimary"
+        app:borderWidth="0dp"
+        app:elevation="4dp"
+        app:fabSize="normal" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_vertical_margin"
-                    android:text="@string/email"
-                    android:textColor="@color/colorDarkKGray"
-                    android:textSize="@dimen/text_size_small_medium" />
+</RelativeLayout>
 
-                <TextView
-                    android:id="@+id/email"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:autoLink="email" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_vertical_margin"
-                    android:text="@string/web"
-                    android:textColor="@color/colorDarkKGray"
-                    android:textSize="@dimen/text_size_small_medium" />
-
-                <TextView
-                    android:id="@+id/web"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:autoLink="web" />
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_feedback"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:src="@drawable/ic_compose"
-            app:backgroundTint="@color/colorPrimary"
-            app:borderWidth="0dp"
-            app:elevation="4dp"
-            app:fabSize="normal" />
-
-    </RelativeLayout>
-</ScrollView>

@@ -69,7 +69,9 @@ import java.util.regex.Pattern;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
+import bd.com.ipay.ipayskeleton.Model.Service.IpayService;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import io.intercom.android.sdk.Intercom;
@@ -780,6 +782,16 @@ public class Utilities {
         ActivityCompat.requestPermissions(activity, requiredPermissions.toArray(new String[requiredPermissions.size()]), permissionCode);
     }
 
+    public static boolean isValidTokenWindowTime() {
+        if (currentTime() - TokenManager.getLastRefreshTokenFetchTime() > Constants.MIN_REQUIRED_REFRESH_TOKEN_TIME)
+            return true;
+        return false;
+    }
+
+    public static long currentTime() {
+        return System.currentTimeMillis();
+    }
+
     public static Tracker getTracker(Activity activity) {
         Tracker mTracker;
         MyApplication application = (MyApplication) activity.getApplication();
@@ -877,5 +889,18 @@ public class Utilities {
 
     public static long getBytesToMegaBytes(long length) {
         return length / 1000000;
+    }
+    private static final int[] ADD_MONEY_OPTION_SERVICE_ID = {ServiceIdConstants.ADD_MONEY_BY_BANK, ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
+    private static final String[] ADD_MONEY_OPTION_TITLE = {Constants.ADD_MONEY_BY_BANK_TITLE, Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE};
+    private static final int[] ADD_MONEY_OPTION_ICON = {R.drawable.ic_bank111, R.drawable.basic_card};
+
+    public static List<IpayService> getAvailableAddMoneyOptions() {
+        List<IpayService> ipayServiceList = new ArrayList<>();
+        for (int i = 0; i < ADD_MONEY_OPTION_SERVICE_ID.length; i++) {
+            if (ACLManager.hasServicesAccessibility(ADD_MONEY_OPTION_SERVICE_ID[i])) {
+                ipayServiceList.add(new IpayService(ADD_MONEY_OPTION_SERVICE_ID[i], ADD_MONEY_OPTION_ICON[i], ADD_MONEY_OPTION_TITLE[i]));
+            }
+        }
+        return ipayServiceList;
     }
 }

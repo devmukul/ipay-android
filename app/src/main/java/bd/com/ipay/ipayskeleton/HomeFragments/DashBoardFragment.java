@@ -30,7 +30,7 @@ public class DashBoardFragment extends Fragment {
     private final int TOTAL_PAGE_COUNT = 4;
 
     private HomeFragment mHomeFragment;
-    private PayFragment mPayFragment;
+    private PayDashBoardFragment mPayFragment;
     private ContactsHolderFragment mContactsHolderFragment;
     private TransactionHistoryHolderFragment mTransactionHistoryFragment;
 
@@ -53,7 +53,7 @@ public class DashBoardFragment extends Fragment {
         setTitle();
         mHomeFragment = new HomeFragment();
         mTransactionHistoryFragment = new TransactionHistoryHolderFragment();
-        mPayFragment = new PayFragment();
+        mPayFragment = new PayDashBoardFragment();
         mContactsHolderFragment = new ContactsHolderFragment();
 
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);

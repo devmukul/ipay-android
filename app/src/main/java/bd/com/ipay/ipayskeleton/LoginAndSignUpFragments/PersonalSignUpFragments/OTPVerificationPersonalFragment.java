@@ -284,9 +284,10 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                     mOtpResponsePersonalSignup = gson.fromJson(result.getJsonString(), OTPResponsePersonalSignup.class);
                     String message = mOtpResponsePersonalSignup.getMessage();
 
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED ||
+                            result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.otp_sent, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
                         // Start timer again
                         mTimerTextView.setVisibility(View.VISIBLE);
@@ -326,8 +327,9 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         ProfileInfoCacheManager.setName(SignupOrLoginActivity.mName);
                         ProfileInfoCacheManager.setBirthday(SignupOrLoginActivity.mBirthday);
                         ProfileInfoCacheManager.setGender(SignupOrLoginActivity.mGender);
-                        SharedPrefManager.serUserCountry("Bangladesh");
+                        SharedPrefManager.setUserCountry(SignupOrLoginActivity.mCountryCode);
                         ProfileInfoCacheManager.setAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
+
                         String UUID = mAddToTrustedDeviceResponse.getUUID();
                         ProfileInfoCacheManager.setUUID(UUID);
                         ProfileInfoCacheManager.uploadProfilePicture(false);

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_horizontal_margin">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/bank_icon_image_view"
+                style="@style/ReviewBankImageStyle"
+                android:contentDescription="@string/bank_icon"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_bank111" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/bank_name_text_view"
+                    style="@style/TextViewUserInfoPrimary"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+
+                <TextView
+                    android:id="@+id/bank_account_number_text_view"
+                    style="@style/TextViewUserInfoSecondary"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <View style="@style/Divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReview"
+                    android:text="@string/amount_to_transfer" />
+
+                <TextView
+                    android:id="@+id/amount_text_view"
+                    style="@style/TextViewInfoReview" />
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReview"
+                    android:text="@string/service_charge" />
+
+                <TextView
+                    android:id="@+id/service_charge_text_view"
+                    style="@style/TextViewInfoColorRedReview" />
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReview"
+                    android:text="@string/net_amount" />
+
+                <TextView
+                    android:id="@+id/net_amount_text_view"
+                    style="@style/TextViewInfoColorPrimaryReview"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View style="@style/Divider" />
+
+        <LinearLayout
+            android:id="@+id/description_view_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextViewInfoLabelReview"
+                android:text="@string/note" />
+
+            <TextView
+                android:id="@+id/description_text_view"
+                style="@style/TextViewInfoNoteReview" />
+
+            <View style="@style/Divider" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/add_money_button"
+            style="@style/ButtonPrimaryWithNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:text="@string/confirm" />
+    </LinearLayout>
+</ScrollView>

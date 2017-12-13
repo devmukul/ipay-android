@@ -197,7 +197,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
 
         }
 
-        if (!ContactEngine.isValidNumber(mobileNumber)) {
+        if (!InputValidator.isValidNumber(mobileNumber)) {
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             cancel = true;
@@ -252,7 +252,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (ContactEngine.isValidNumber(resultElements[0])) {
+                        if (InputValidator.isValidNumber(resultElements[0])) {
                             mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(resultElements[0]));
                             if (resultElements.length > 1) {
                                 switch (resultElements.length) {

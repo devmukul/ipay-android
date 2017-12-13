@@ -74,15 +74,13 @@ public class ProfileActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             Utilities.hideKeyboard(this);
-            if(mPreviewIdentificationDocumentFragment.isVisible()){
-                if(mPreviewIdentificationDocumentFragment.isDocumentViewOpen()){
+            if (mPreviewIdentificationDocumentFragment.isVisible()) {
+                if (mPreviewIdentificationDocumentFragment.isDocumentViewOpen()) {
                     mPreviewIdentificationDocumentFragment.hideDocumentPreview();
-                }
-                else{
+                } else {
                     getSupportFragmentManager().popBackStackImmediate();
                 }
-            }
-            else if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            } else if (getSupportFragmentManager().getBackStackEntryCount() > 0)
                 getSupportFragmentManager().popBackStack();
             else {
                 finish();
@@ -95,15 +93,13 @@ public class ProfileActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if(mPreviewIdentificationDocumentFragment.isVisible()){
-            if(mPreviewIdentificationDocumentFragment.isDocumentViewOpen()){
+        if (mPreviewIdentificationDocumentFragment.isVisible()) {
+            if (mPreviewIdentificationDocumentFragment.isDocumentViewOpen()) {
                 mPreviewIdentificationDocumentFragment.hideDocumentPreview();
-            }
-            else{
+            } else {
                 getSupportFragmentManager().popBackStackImmediate();
             }
-        }
-        else if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0)
             getSupportFragmentManager().popBackStack();
         else
             super.onBackPressed();
@@ -188,7 +184,9 @@ public class ProfileActivity extends BaseActivity {
                 default:
                     fragment = new AccountFragment();
             }
-            if (fragment != null) {
+            if (fragment == null) {
+                finish();
+            } else {
                 if (bundle != null)
                     fragment.setArguments(bundle);
 

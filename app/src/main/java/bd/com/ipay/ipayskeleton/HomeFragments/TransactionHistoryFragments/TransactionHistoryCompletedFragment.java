@@ -54,6 +54,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -73,7 +74,8 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private CheckBox mFilterOpeningBalance;
     private CheckBox mFilterSendMoney;
     private CheckBox mFilterRequestMoney;
-    private CheckBox mFilterAddMoney;
+    private CheckBox mFilterAddMoneyByBank;
+    private CheckBox mFilterAddMoneyByCreditOrDebitCard;
     private CheckBox mFilterWithdrawMoney;
     private CheckBox mFilterTopUp;
     private CheckBox mFilterPayment;
@@ -294,7 +296,8 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         mFilterOpeningBalance = (CheckBox) v.findViewById(R.id.filter_opening_balance);
         mFilterSendMoney = (CheckBox) v.findViewById(R.id.filter_send_money);
         mFilterRequestMoney = (CheckBox) v.findViewById(R.id.filter_request_money);
-        mFilterAddMoney = (CheckBox) v.findViewById(R.id.filter_add_money);
+        mFilterAddMoneyByBank = (CheckBox) v.findViewById(R.id.filter_add_money_by_bank);
+        mFilterAddMoneyByCreditOrDebitCard = (CheckBox) v.findViewById(R.id.filter_add_money_by_credit_or_debit_card);
         mFilterWithdrawMoney = (CheckBox) v.findViewById(R.id.filter_withdraw_money);
         mFilterTopUp = (CheckBox) v.findViewById(R.id.filter_top_up);
         mFilterPayment = (CheckBox) v.findViewById(R.id.filter_payment);
@@ -333,7 +336,8 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         mCheckBoxTypeMap.put(mFilterOpeningBalance, Constants.TRANSACTION_HISTORY_OPENING_BALANCE);
         mCheckBoxTypeMap.put(mFilterSendMoney, Constants.TRANSACTION_HISTORY_SEND_MONEY);
         mCheckBoxTypeMap.put(mFilterRequestMoney, Constants.TRANSACTION_HISTORY_REQUEST_MONEY);
-        mCheckBoxTypeMap.put(mFilterAddMoney, Constants.TRANSACTION_HISTORY_ADD_MONEY);
+        mCheckBoxTypeMap.put(mFilterAddMoneyByBank, Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK);
+        mCheckBoxTypeMap.put(mFilterAddMoneyByCreditOrDebitCard, Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD);
         mCheckBoxTypeMap.put(mFilterWithdrawMoney, Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY);
         mCheckBoxTypeMap.put(mFilterTopUp, Constants.TRANSACTION_HISTORY_TOP_UP);
         mCheckBoxTypeMap.put(mFilterPayment, Constants.TRANSACTION_HISTORY_MAKE_PAYMENT);
@@ -697,12 +701,17 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 mNetAmountView.setText(netAmountWithSign);
                 mTimeView.setText(responseTime);
 
-                if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY
+                if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK
                         || serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
                     if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
                     else mOtherImageView.setImageResource(R.drawable.ic_tran_add);
+
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD) {
+                    mProfileImageView.setVisibility(View.INVISIBLE);
+                    mOtherImageView.setVisibility(View.VISIBLE);
+                    mOtherImageView.setImageResource(transactionHistory.getAdditionalInfo().getCardIcon());
 
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
                         || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK
@@ -724,7 +733,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                         || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
-                    if (ContactEngine.isValidNumber(receiver)) {
+                    if (InputValidator.isValidNumber(receiver)) {
                         int mIcon = getOperatorIcon(receiver);
                         mOtherImageView.setImageResource(mIcon);
                     } else mOtherImageView.setImageResource(R.drawable.ic_top_up);
