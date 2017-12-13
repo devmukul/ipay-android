@@ -91,11 +91,6 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        /*Bundle args = getArguments();
-        if (args != null && args.containsKey(Constants.ASSOCIATION_ID)) {
-            mAssociationId = getArguments().getLong(Constants.ASSOCIATION_ID);
-        }*/
-
         View v = inflater.inflate(R.layout.fragment_employee_information, container, false);
         if (mAssociationId == 0) getActivity().setTitle(R.string.create_employee);
         else getActivity().setTitle(R.string.edit_employee);
@@ -181,7 +176,6 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
             mRoleEditText.setText(mSelectedRoleName);
             descriptionTextView.setVisibility(View.VISIBLE);
             descriptionTextView.setText(getString(R.string.your_assignee_can_do));
-            //getDetailsOfSelectedRole();
         }
         if (mSelectedMobileNumber != null)
             mMobileNumberEditText.setText(mSelectedMobileNumber);
