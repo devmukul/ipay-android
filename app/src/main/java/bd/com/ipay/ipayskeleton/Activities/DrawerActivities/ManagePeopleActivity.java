@@ -15,8 +15,8 @@ import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.CreateEmployeeFragment;
 import bd.com.ipay.ipayskeleton.BusinessFragments.ManagePeopleFragments.ManagerRequestHolderFragment;
+import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.CreateEmployeeFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRole;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRoleResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -116,11 +116,6 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                         mAllRoleList = (ArrayList<BusinessRole>) mGetRolesResponse.getBusinessRoleList();
-
-//                        // Create a hash map for roleId - Privileges
-//                        for (BusinessRole mRole : mAllRoleList)
-//                            mRolePrivilegeMap.put(mRole.getId(), mRole.getPrivileges());
-
                     } else {
                         finish();
                         Toaster.makeText(ManagePeopleActivity.this, mGetRolesResponse.getMessage(), Toast.LENGTH_LONG);
@@ -135,7 +130,6 @@ public class ManagePeopleActivity extends BaseActivity implements HttpResponseLi
                 break;
         }
     }
-
 
     @Override
     protected Context setContext() {
