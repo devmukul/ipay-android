@@ -153,7 +153,7 @@ public class HomeActivity extends BaseActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
-   
+
         mProgressDialog = new ProgressDialog(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

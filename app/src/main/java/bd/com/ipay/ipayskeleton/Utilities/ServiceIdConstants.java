@@ -92,6 +92,7 @@ public class ServiceIdConstants {
     public static final int SEE_ACTIVITY = 8017;
     public static final int SEE_OTHER_ACTIVITY = 8046;
 
+    //business account switch related
     public static final int SEE_BUSINESS_ROLE_INVITATION_REQUEST = 8057;
     public static final int SEND_BUSINESS_MANAGER_INVITATION = 8058;
     public static final int ACCEPT_REJECT_BUSINESS_MANAGER_INVITATION = 8059;

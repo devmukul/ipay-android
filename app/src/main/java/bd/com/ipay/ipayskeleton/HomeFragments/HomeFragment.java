@@ -73,9 +73,8 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private final BroadcastReceiver mProfileCompletionInfoUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (!ProfileInfoCacheManager.isAccountSwitched()) {
-                getProfileCompletionStatus();
-            }
+            getProfileCompletionStatus();
+
         }
     };
     private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
@@ -275,8 +274,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
         // Refresh balance each time home_activity page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
-            if (!ProfileInfoCacheManager.isAccountSwitched())
-                getProfileCompletionStatus();
+            getProfileCompletionStatus();
         }
 
         updateProfileData();
@@ -479,9 +477,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
             mRefreshBalanceTask = null;
             mGetProfileCompletionStatusTask = null;
 
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
-
             refreshBalanceButton.clearAnimation();
             return;
         }
@@ -521,14 +516,10 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                     promptForProfileCompletion();
                     mProgressBarWithoutAnimation.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
                 } else {
-                    if (getActivity() != null)
-                        Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
-                if (getActivity() != null)
-                    Toaster.makeText(getActivity(), R.string.failed_fetching_profile_completion_status, Toast.LENGTH_LONG);
             }
 
             mGetProfileCompletionStatusTask = null;
