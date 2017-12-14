@@ -153,11 +153,8 @@ public class HomeActivity extends BaseActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-            mProgressDialog = new ProgressDialog(HomeActivity.this);
-        } else
-            mProgressDialog = new ProgressDialog(this);
+   
+        mProgressDialog = new ProgressDialog(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
