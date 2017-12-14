@@ -547,7 +547,6 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
 
                 try {
-                    System.out.println("Test " + result.toString());
 
                     mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
