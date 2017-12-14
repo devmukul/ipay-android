@@ -287,6 +287,7 @@ public class HomeActivity extends BaseActivity
             BusinessAccountDetails tempProfileInfo = new BusinessAccountDetails(ProfileInfoCacheManager.getMainUserProfileInfo().getAccountId(),
                     ProfileInfoCacheManager.getMainUserProfileInfo().getName(), ProfileInfoCacheManager.getMainUserProfileInfo().getProfilePictures());
             mManagedBusinessAccoutnList.add(tempProfileInfo);
+            mMoreBusinessListImageView.setVisibility(View.VISIBLE);
         }
 
         // If profile picture gets updated, we need to refresh the profile picture in the drawer.
@@ -854,6 +855,10 @@ public class HomeActivity extends BaseActivity
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mGetManagedBusinessAccountsResponse = gson.fromJson(result.getJsonString(), GetManagedBusinessAccountsResponse.class);
                         mManagedBusinessAccoutnList = mGetManagedBusinessAccountsResponse.getBusinessList();
+                        if (mManagedBusinessAccoutnList == null || mManagedBusinessAccoutnList.size() == 0)
+                            mMoreBusinessListImageView.setVisibility(View.GONE);
+                        else
+                            mMoreBusinessListImageView.setVisibility(View.VISIBLE);
                     }
                 } catch (Exception e) {
                 }
