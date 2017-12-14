@@ -46,7 +46,7 @@ public class PayDashBoardHorizontalScrollView {
     public CustomDashboardItemView addBusinessEntryView(final BusinessAccountEntry businessAccountEntry) {
         CustomDashboardItemView customDashboardItemView = new CustomDashboardItemView(context);
         customDashboardItemView.setNameView(businessAccountEntry.getBusinessName());
-        customDashboardItemView.setImageView("https://www.ipay.com.bd" + businessAccountEntry.getProfilePictureUrl(), true);
+        customDashboardItemView.setImageView(Constants.BASE_URL_FTP_SERVER + businessAccountEntry.getProfilePictureUrl(), true);
 
         linearLayout.addView(customDashboardItemView);
 
