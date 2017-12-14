@@ -134,7 +134,7 @@ public class HomeActivity extends BaseActivity
     private String mUserID;
     private String mDeviceID;
 
-    public static ProgressDialog mProgressDialog;
+    public ProgressDialog mProgressDialog;
     public static NotificationFragment mNotificationFragment;
     private Menu mOptionsMenu;
     private Menu mNavigationMenu;
@@ -145,6 +145,7 @@ public class HomeActivity extends BaseActivity
 
     private String onAccountID = null;
     private LocationManager mLocationManager;
+    private DrawerLayout drawer;
 
 
     @Override
@@ -187,7 +188,7 @@ public class HomeActivity extends BaseActivity
             mNavigationMenu.findItem(R.id.nav_leave_account).setVisible(false);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -270,8 +271,8 @@ public class HomeActivity extends BaseActivity
         getRelationshipList();
 
         // Fetch ACL List
-        if (SharedPrefManager.isRememberMeActive())
-            getAccessControlList();
+
+        getAccessControlList();
 
         // Check if important permissions (e.g. Contacts permission) is given. If not,
         // request user for permission.
@@ -282,7 +283,7 @@ public class HomeActivity extends BaseActivity
 
         getAllBusinessAccountsList();
 
-        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS)) {
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS) && !ProfileInfoCacheManager.isAccountSwitched()) {
             getManagedBusinessAccountList();
         } else {
             mManagedBusinessAccoutnList = new ArrayList<>();
@@ -748,11 +749,13 @@ public class HomeActivity extends BaseActivity
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (ProfileInfoCacheManager.isAccountSwitched()) {
-                            ProfileInfoCacheManager.setAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
+                            ProfileInfoCacheManager.setAccountType(ProfileInfoCacheManager.getMainUserProfileInfo().getAccountType());
                             ProfileInfoCacheManager.updateBusinessInfoCache(null);
-                            ProfileInfoCacheManager.setOnAccountId(TokenManager.getOnAccountId());
                             ProfileInfoCacheManager.updateProfileInfoCache(ProfileInfoCacheManager.getMainUserProfileInfo());
                             ProfileInfoCacheManager.setSwitchAccount(false);
+                            TokenManager.setOnAccountId(null);
+                            ProfileInfoCacheManager.setOnAccountId(null);
+                            ProfileInfoCacheManager.setId(-1);
                         }
                         Utilities.resetIntercomInformation();
                         if (!exitFromApplication) {
@@ -984,6 +987,10 @@ public class HomeActivity extends BaseActivity
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (drawer.isDrawerOpen(GravityCompat.START)) {
+                            drawer.closeDrawer(GravityCompat.START);
+                        }
+
                         BusinessAccountSwitch businessAccountSwitch = new BusinessAccountSwitch(
                                 (int) item.getBusinessAccountId(), HomeActivity.this);
                         businessAccountSwitch.requestSwitchAccount();

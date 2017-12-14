@@ -125,6 +125,13 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ProfileInfoCacheManager.setAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
+                ProfileInfoCacheManager.updateBusinessInfoCache(null);
+                ProfileInfoCacheManager.setSwitchAccount(false);
+                ProfileInfoCacheManager.setOnAccountId(null);
+                TokenManager.setOnAccountId(null);
+                ProfileInfoCacheManager.updateProfileInfoCache(ProfileInfoCacheManager.getMainUserProfileInfo());
+                ProfileInfoCacheManager.setSwitchAccount(false);
                 // Hiding the keyboard after login button pressed
                 Utilities.hideKeyboard(getActivity());
                 if (Utilities.isConnectionAvailable(getActivity())) attemptLogin();

@@ -92,7 +92,8 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
 
             mImageUri = Constants.BASE_URL_FTP_SERVER + mBusinessRoleManagerInvitation.getImageUrl();
             mProfileImageView.setProfilePicture(mImageUri, false);
-            mTitleTextView.setText(Html.fromHtml(mBusinessRoleManagerInvitation.getNotificationTitle()));
+            String notificationTitle = mBusinessRoleManagerInvitation.getNotificationTitle().replace("Admin", mBusinessRoleManagerInvitation.getRoleName() + " Manager");
+            mTitleTextView.setText(Html.fromHtml(notificationTitle));
 
             mID = mBusinessRoleManagerInvitation.getId();
             getDetailsOfInvitedRole();
@@ -130,8 +131,7 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
                             .setNegativeButton(android.R.string.no, null);
 
                     dialog.show();
-                }
-                else
+                } else
                     DialogUtils.showServiceNotAllowedDialog(getActivity());
             }
         });
@@ -139,7 +139,7 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
         mRejectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ACLManager.hasServicesAccessibility(ServiceIdConstants.ACCEPT_REJECT_BUSINESS_MANAGER_INVITATION)) {
+                if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ACCEPT_REJECT_BUSINESS_MANAGER_INVITATION)) {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
                             .setMessage(R.string.reject_invitation_request)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -153,8 +153,7 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
                             .setNegativeButton(android.R.string.no, null);
 
                     dialog.show();
-                }
-                else
+                } else
                     DialogUtils.showServiceNotAllowedDialog(getActivity());
             }
         });
