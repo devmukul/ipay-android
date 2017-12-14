@@ -21,6 +21,7 @@ public class PayDashBoardHorizontalScrollView {
         horizontalScrollView = new HorizontalScrollView(context);
         HorizontalScrollView.LayoutParams params = new HorizontalScrollView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         horizontalScrollView.setLayoutParams(params);
+        horizontalScrollView.setHorizontalScrollBarEnabled(false);
 
         linearLayout = new LinearLayout(context);
         LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
