@@ -75,7 +75,7 @@ public class CustomDashboardItemView extends LinearLayout {
                     .crossFade()
                     .dontAnimate()
                     .fitCenter()
-                    .override(200, 200)
+                    .override(60, 60)
                     .into(mImageView);
 
         } catch (Exception e) {

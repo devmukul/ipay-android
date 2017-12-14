@@ -1,12 +1,11 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import bd.com.ipay.ipayskeleton.Utilities.AppInstance.AppInstanceUtilities;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
@@ -19,12 +18,12 @@ public class LauncherActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences pref = getSharedPreferences(Constants.ApplicationTag, MODE_PRIVATE);
-        firstLaunch = pref.getBoolean(SharedPrefConstants.FIRST_LAUNCH, true);
-        startApplication();
+        if (!AppInstanceUtilities.isAppAlreadyLaunched(this)) {
+            firstLaunch = SharedPrefManager.getFirstLaunch();
+            startApplication();
+        }
 
         finish();
-
     }
 
     private void startApplication() {

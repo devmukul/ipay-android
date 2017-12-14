@@ -35,7 +35,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/document_name"
                         android:inputType="text"
-                        android:maxLength="20"
+                        android:maxLength="@integer/document_name_max_length"
                         android:maxLines="1"
                         android:singleLine="true" />
 
@@ -57,7 +57,7 @@
                     android:digits="@string/alpha_numeric"
                     android:hint="@string/document_id"
                     android:inputType="text"
-                    android:maxLength="20"
+                    android:maxLength="@integer/document_id_max_length"
                     android:maxLines="1"
                     android:singleLine="true" />
 

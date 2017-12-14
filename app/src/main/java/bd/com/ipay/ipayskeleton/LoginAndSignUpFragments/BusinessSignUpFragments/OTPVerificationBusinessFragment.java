@@ -285,9 +285,10 @@ public class OTPVerificationBusinessFragment extends BaseFragment implements Htt
                     OTPResponseBusinessSignup mOtpResponseBusinessSignup = gson.fromJson(result.getJsonString(), OTPResponseBusinessSignup.class);
                     String message = mOtpResponseBusinessSignup.getMessage();
 
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED ||
+                            result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), R.string.otp_sent, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
                         // Start timer again
                         mTimerTextView.setVisibility(View.VISIBLE);
