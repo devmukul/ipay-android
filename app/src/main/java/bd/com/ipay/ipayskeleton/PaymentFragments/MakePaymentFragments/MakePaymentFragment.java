@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -65,6 +66,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
     private EditText mAmountEditText;
     private EditText mRefNumberEditText;
     private View mRightSideIconViewHolder;
+    private TextView mBalanceView;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
@@ -91,6 +93,10 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         buttonPayment = (Button) v.findViewById(R.id.button_payment);
+
+        mBalanceView = (TextView) v.findViewById(R.id.balance_view);
+
+        mBalanceView.setText(SharedPrefManager.getUserBalance());
 
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
             mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
