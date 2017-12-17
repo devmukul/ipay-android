@@ -50,6 +50,8 @@ public class BusinessAccountSwitch implements HttpResponseListener {
             ProfileInfoCacheManager.updateProfileInfoCache(ProfileInfoCacheManager.getMainUserProfileInfo());
             TokenManager.setOnAccountId(null);
             Intent intent = new Intent(context, HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            Toast.makeText(context, context.getString(R.string.account_switched), Toast.LENGTH_SHORT).show();
             context.startActivity(intent);
         } else {
             mSwitchAccountAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_SWITCH_ACCOUNT, Constants.BASE_URL_MM +
@@ -101,6 +103,7 @@ public class BusinessAccountSwitch implements HttpResponseListener {
                             ProfileInfoCacheManager.setProfilePictureUrl(mBusinessAccoutnDetails.getProfilePictures().get(0).getUrl());
                             Intent intent = new Intent(context, HomeActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            Toast.makeText(context, context.getString(R.string.account_switched), Toast.LENGTH_SHORT).show();
                             context.startActivity(intent);
                             break;
                         default:

@@ -164,6 +164,7 @@ public class MyApplication extends MultiDexApplication implements HttpResponseLi
         if(ProfileInfoCacheManager.isAccountSwitched()){
             TokenManager.setOnAccountId(null);
             ProfileInfoCacheManager.updateBusinessInfoCache(null);
+            ProfileInfoCacheManager.saveMainUserBusinessInfo(null);
             ProfileInfoCacheManager.updateProfileInfoCache(ProfileInfoCacheManager.getMainUserProfileInfo());
         }
         if (!isAppInBackground) {

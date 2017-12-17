@@ -181,9 +181,6 @@ public class HomeActivity extends BaseActivity
 
         if (!ProfileInfoCacheManager.isBusinessAccount())
             mNavigationMenu.findItem(R.id.nav_manage_account).setVisible(false);
-        if (!ProfileInfoCacheManager.isAccountSwitched()) {
-            mNavigationMenu.findItem(R.id.nav_leave_account).setVisible(false);
-        }
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -284,8 +281,14 @@ public class HomeActivity extends BaseActivity
             getManagedBusinessAccountList();
         } else {
             mManagedBusinessAccoutnList = new ArrayList<>();
-            BusinessAccountDetails tempProfileInfo = new BusinessAccountDetails(ProfileInfoCacheManager.getMainUserProfileInfo().getAccountId(),
-                    ProfileInfoCacheManager.getMainUserProfileInfo().getName(), ProfileInfoCacheManager.getMainUserProfileInfo().getProfilePictures());
+            String userName="";
+            if (ProfileInfoCacheManager.getMainUserProfileInfo().getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
+                userName=ProfileInfoCacheManager.getMainUserBusinessInfo().getBusinessName();
+            else
+                userName=ProfileInfoCacheManager.getMainUserProfileInfo().getName();
+
+                BusinessAccountDetails tempProfileInfo = new BusinessAccountDetails(ProfileInfoCacheManager.getMainUserProfileInfo().getAccountId(),
+                        userName, ProfileInfoCacheManager.getMainUserProfileInfo().getProfilePictures());
             mManagedBusinessAccoutnList.add(tempProfileInfo);
             mMoreBusinessListImageView.setVisibility(View.VISIBLE);
         }
@@ -749,6 +752,7 @@ public class HomeActivity extends BaseActivity
                         if (ProfileInfoCacheManager.isAccountSwitched()) {
                             ProfileInfoCacheManager.setAccountType(ProfileInfoCacheManager.getMainUserProfileInfo().getAccountType());
                             ProfileInfoCacheManager.updateBusinessInfoCache(null);
+                            ProfileInfoCacheManager.saveMainUserBusinessInfo(null);
                             ProfileInfoCacheManager.updateProfileInfoCache(ProfileInfoCacheManager.getMainUserProfileInfo());
                             ProfileInfoCacheManager.setSwitchAccount(false);
                             TokenManager.setOnAccountId(null);
@@ -837,6 +841,7 @@ public class HomeActivity extends BaseActivity
 
                         //saving user info in shared preference
                         ProfileInfoCacheManager.updateBusinessInfoCache(mGetBusinessInformationResponse);
+                        ProfileInfoCacheManager.saveMainUserBusinessInfo(mGetBusinessInformationResponse);
                         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                     } else {
 
@@ -980,10 +985,11 @@ public class HomeActivity extends BaseActivity
 
             public void bind(final BusinessAccountDetails item) {
                 nameTextView.setText(item.getBusinessName());
-                if (!ProfileInfoCacheManager.isAccountSwitched())
+                if (!ProfileInfoCacheManager.isAccountSwitched()||ProfileInfoCacheManager.getMainUserProfileInfo().getAccountType()==Constants.BUSINESS_ACCOUNT_TYPE)
                     profileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getProfilePictures().get(0).getUrl(), false);
-                else
+                else {
                     profileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getProfilePictures().get(0).getUrl(), false);
+                }
 
 
                 itemView.setOnClickListener(new View.OnClickListener() {
