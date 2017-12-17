@@ -154,7 +154,7 @@ public class HomeActivity extends BaseActivity
 
         setContentView(R.layout.activity_home);
 
-        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog = new ProgressDialog(HomeActivity.this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -188,6 +188,7 @@ public class HomeActivity extends BaseActivity
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
+
             }
 
             @Override
@@ -338,6 +339,7 @@ public class HomeActivity extends BaseActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.home_activity, menu);
         mOptionsMenu = menu;
+
         // If the menu is recreated, then restore the previous badge count
         updateNotificationBadgeCount(mBadgeCount);
         return true;
@@ -531,6 +533,7 @@ public class HomeActivity extends BaseActivity
 
     private void gotoDrawerItem(MenuItem item) {
         int id = item.getItemId();
+
         if (id == R.id.nav_home) {
 
             switchToDashBoard();
@@ -577,6 +580,7 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_about) {
 
             switchToAboutActivity();
+            switchedToHomeFragment=false;
 
         } else if (id == R.id.nav_logout) {
             if (Utilities.isConnectionAvailable(HomeActivity.this)) {
@@ -736,7 +740,6 @@ public class HomeActivity extends BaseActivity
             mGetProfileInfoTask = null;
             mGetBusinessInformationAsyncTask = null;
             mLocationUpdateRequestAsyncTask = null;
-            Toast.makeText(HomeActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -802,11 +805,10 @@ public class HomeActivity extends BaseActivity
 
                         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
-                    } else {
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Toaster.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 }
 
                 mGetProfileInfoTask = null;
@@ -843,12 +845,11 @@ public class HomeActivity extends BaseActivity
                         ProfileInfoCacheManager.updateBusinessInfoCache(mGetBusinessInformationResponse);
                         ProfileInfoCacheManager.saveMainUserBusinessInfo(mGetBusinessInformationResponse);
                         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
-                    } else {
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
+                   }
+
                 mGetBusinessInformationAsyncTask = null;
                 break;
             case Constants.COMMAND_POST_USER_LOCATION:

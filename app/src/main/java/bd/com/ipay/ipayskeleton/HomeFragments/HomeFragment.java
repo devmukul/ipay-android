@@ -74,7 +74,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         @Override
         public void onReceive(Context context, Intent intent) {
             getProfileCompletionStatus();
-
         }
     };
     private ProfileCompletionStatusResponse mProfileCompletionStatusResponse;
@@ -476,7 +475,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
             mRefreshBalanceTask = null;
             mGetProfileCompletionStatusTask = null;
-
             refreshBalanceButton.clearAnimation();
             return;
         }
@@ -515,7 +513,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     promptForProfileCompletion();
                     mProgressBarWithoutAnimation.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
-                } else {
                 }
 
             } catch (Exception e) {

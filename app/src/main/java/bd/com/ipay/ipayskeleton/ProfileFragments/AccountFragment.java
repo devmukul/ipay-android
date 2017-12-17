@@ -417,9 +417,6 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mUploadProfilePictureAsyncTask = null;
             mGetProfileCompletionStatusTask = null;
-            if (getActivity() != null) {
-                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
-            }
             return;
         }
 
@@ -482,15 +479,9 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
                                 + "complete.\nSubmit documents and other information to improve your profile.");
                         mProfileCompletionStatusView.setVisibility(View.VISIBLE);
                     }
-                } else {
-                    if (getActivity() != null)
-                        Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
-                if (getActivity() != null)
-                    Toaster.makeText(getActivity(), R.string.failed_fetching_profile_completion_status, Toast.LENGTH_LONG);
             }
 
             mGetProfileCompletionStatusTask = null;

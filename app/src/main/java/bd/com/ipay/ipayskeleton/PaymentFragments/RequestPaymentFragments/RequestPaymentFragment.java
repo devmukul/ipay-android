@@ -294,8 +294,6 @@ public class RequestPaymentFragment extends BaseFragment implements HttpResponse
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            if (getActivity() != null)
-                 Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -319,15 +317,9 @@ public class RequestPaymentFragment extends BaseFragment implements HttpResponse
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (getActivity() != null)
-                         Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
                 }
 
-            } else {
-                if (getActivity() != null)
-                     Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             }
-
             mGetBusinessRuleTask = null;
         }
     }
