@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -31,7 +30,6 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments.Request
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class RequestPaymentActivity extends BaseActivity implements HttpResponseListener {
@@ -176,7 +174,6 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR) {
             mGetSingleRequestPaymentDetailsTask = null;
-            Toaster.makeText(this, R.string.service_not_available, Toast.LENGTH_LONG);
             return;
         }
 
@@ -210,14 +207,11 @@ public class RequestPaymentActivity extends BaseActivity implements HttpResponse
                         launchSentPaymentRequestDetailsReviewFragment();
                     }
                 } else {
-                    Toaster.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                     finish();
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
-
-                Toaster.makeText(this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 finish();
             }
 

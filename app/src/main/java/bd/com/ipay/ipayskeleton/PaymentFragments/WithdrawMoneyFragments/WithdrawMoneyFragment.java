@@ -43,7 +43,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
-import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseListener {
@@ -296,13 +295,10 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            if (getActivity() != null)
-                                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
                         }
                         break;
+
                     default:
-                        if (getActivity() != null)
-                            Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
                         break;
                 }
                 break;
@@ -326,19 +322,12 @@ public class WithdrawMoneyFragment extends BaseFragment implements HttpResponseL
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            if (getActivity() != null)
-                                Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
                         }
                         break;
                     default:
-                        if (getActivity() != null)
-                            Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
                         break;
                 }
                 break;
-            default:
-                if (getActivity() != null)
-                    Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
         }
     }
 }

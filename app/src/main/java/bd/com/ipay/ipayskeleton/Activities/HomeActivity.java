@@ -598,7 +598,6 @@ public class HomeActivity extends BaseActivity
             mGetProfileInfoTask = null;
             mGetBusinessInformationAsyncTask = null;
             mLocationUpdateRequestAsyncTask = null;
-            Toast.makeText(HomeActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -649,12 +648,9 @@ public class HomeActivity extends BaseActivity
 
                         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
-                    } else {
-                        Toaster.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toaster.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                 }
 
                 mGetProfileInfoTask = null;
@@ -690,15 +686,10 @@ public class HomeActivity extends BaseActivity
                         //saving user info in shared preference
                         ProfileInfoCacheManager.updateBusinessInfoCache(mGetBusinessInformationResponse);
                         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
-                    } else {
-                        Toaster.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toaster.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);
-
-                }
+                   }
 
                 mGetBusinessInformationAsyncTask = null;
                 break;
