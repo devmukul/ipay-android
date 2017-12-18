@@ -35,7 +35,7 @@ public class ManagerRequestHolderFragment extends Fragment implements HttpRespon
     private RadioButton mPendingTransactionRadioButton;
     private RadioButton mCompletedTransactionRadioButton;
     private Button mAddNewEmployee;
-    private Button mAddNewEmployee_1;
+    private Button mInviteNewEmployee;
 
     private RelativeLayout mLoadingLayout;
     private RelativeLayout mBlankLayout;
@@ -73,8 +73,8 @@ public class ManagerRequestHolderFragment extends Fragment implements HttpRespon
             }
         });
 
-        mAddNewEmployee_1 = (Button) view.findViewById(R.id.invite_employee_1);
-        mAddNewEmployee_1.setOnClickListener(new View.OnClickListener() {
+        mInviteNewEmployee = (Button) view.findViewById(R.id.invite_employee_1);
+        mInviteNewEmployee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((ManagePeopleActivity) getActivity()).switchToEmployeeInformationFragment();
