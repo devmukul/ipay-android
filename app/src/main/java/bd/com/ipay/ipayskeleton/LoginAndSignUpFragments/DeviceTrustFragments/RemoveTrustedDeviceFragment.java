@@ -336,7 +336,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                     ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
                     ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
 
-                    if (ProfileInfoCacheManager.getAccountType()==1 && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                    if (ProfileInfoCacheManager.getAccountType()==Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
                             || !ProfileInfoCacheManager.isBasicInfoAdded())) {
                         ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
                     } else {
