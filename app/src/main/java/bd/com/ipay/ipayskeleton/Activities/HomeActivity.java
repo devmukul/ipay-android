@@ -1010,9 +1010,9 @@ public class HomeActivity extends BaseActivity
             public void bind(final BusinessAccountDetails item) {
                 nameTextView.setText(item.getBusinessName());
                 if (!ProfileInfoCacheManager.isAccountSwitched() || Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
-                    profileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getProfilePictures().get(0).getUrl(), false);
+                    profileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getBusinessProfilePictureUrlHigh(), false);
                 else {
-                    profileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getProfilePictures().get(0).getUrl(), false);
+                    profileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getBusinessProfilePictureUrlHigh(), false);
                 }
 
 

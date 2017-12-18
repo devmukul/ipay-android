@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class BusinessAccountDetails {
     private String message;
@@ -48,7 +49,7 @@ public class BusinessAccountDetails {
         return createdAt;
     }
 
-    public List<UserProfilePictureClass> getProfilePictures() {
+    private List<UserProfilePictureClass> getProfilePictures() {
         return profilePictures;
     }
 
@@ -58,5 +59,14 @@ public class BusinessAccountDetails {
 
     public List<BusinessService> getServiceList() {
         return serviceList;
+    }
+
+    public String getBusinessProfilePictureUrlHigh() {
+
+        for (int i = 0; i < profilePictures.size(); i++) {
+            if (profilePictures.get(i).getQuality().equalsIgnoreCase(Constants.QUALITY_HIGH))
+                return profilePictures.get(i).getUrl();
+        }
+        return null;
     }
 }
