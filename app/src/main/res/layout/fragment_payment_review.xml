@@ -10,10 +10,61 @@
         android:orientation="vertical"
         android:paddingBottom="@dimen/activity_horizontal_margin">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:background="#F1F2F3">
+
+            <TextView
+                android:id="@+id/balance_title_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:layout_centerVertical="true"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:text="iPay Balance"
+                android:fontFamily="sans-serif-regular"/>
+
+            <TextView
+                android:id="@+id/balance_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_centerVertical="true"
+                android:textSize="24sp"
+                android:text="10,90,230.50"
+                android:textColor="#212121"
+                android:fontFamily="sans-serif-light"
+                android:layout_toRightOf="@+id/balance_title_view"
+                android:layout_toLeftOf="@+id/tk_view"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+
+            <TextView
+                android:id="@+id/tk_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:layout_alignTop="@+id/balance_view"
+                android:layout_alignParentRight="true"
+                android:textSize="12sp"
+                android:textColor="#212121"
+                android:text="Tk"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="3dp"
+                android:fontFamily="sans-serif-medium"/>
+
+
+        </RelativeLayout>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                 android:id="@+id/business_profile_image_view"
@@ -22,10 +73,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin">
 
                 <TextView
                     android:id="@+id/business_name_text_view"
