@@ -148,6 +148,8 @@ public class HomeActivity extends BaseActivity
     private LocationManager mLocationManager;
     private DrawerLayout drawer;
 
+    private ManagedBusinessAcountAdapter mManageBusinessAcountAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +188,13 @@ public class HomeActivity extends BaseActivity
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+
+        mManagedBusinessListRecyclerView.setHasFixedSize(true);
+        mManagedBusinessListRecyclerView.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
+        mManagedBusinessListRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mManagedBusinessListRecyclerView.setVisibility(View.GONE);
+
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
@@ -195,11 +204,9 @@ public class HomeActivity extends BaseActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 Utilities.hideKeyboard(HomeActivity.this);
-                mManagedBusinessListRecyclerView.setHasFixedSize(true);
-                mManagedBusinessListRecyclerView.setAdapter(new ManagedBusinessAcountAdapter(mManagedBusinessAccountList));
-                mManagedBusinessListRecyclerView.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
-                mManagedBusinessListRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                mManagedBusinessListRecyclerView.setVisibility(View.GONE);
+                mManageBusinessAcountAdapter = new ManagedBusinessAcountAdapter(mManagedBusinessAccountList);
+                mManagedBusinessListRecyclerView.setAdapter(mManageBusinessAcountAdapter);
+                mManageBusinessAcountAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -871,9 +878,14 @@ public class HomeActivity extends BaseActivity
                         mGetManagedBusinessAccountsResponse = gson.fromJson(result.getJsonString(), GetManagedBusinessAccountsResponse.class);
                         mManagedBusinessAccountList = mGetManagedBusinessAccountsResponse.getBusinessList();
                         if (mManagedBusinessAccountList == null || mManagedBusinessAccountList.size() == 0)
-                            mMoreBusinessListImageView.setVisibility(View.GONE);
-                        else
+                            mMoreBusinessListImageView.setVisibility(View.INVISIBLE);
+                        else {
                             mMoreBusinessListImageView.setVisibility(View.VISIBLE);
+
+                            mManageBusinessAcountAdapter = new ManagedBusinessAcountAdapter(mManagedBusinessAccountList);
+                            mManagedBusinessListRecyclerView.setAdapter(mManageBusinessAcountAdapter);
+                            mManageBusinessAcountAdapter.notifyDataSetChanged();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
