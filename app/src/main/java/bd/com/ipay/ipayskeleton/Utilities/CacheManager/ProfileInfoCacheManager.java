@@ -191,24 +191,34 @@ public class ProfileInfoCacheManager {
     public static void updateProfileInfoCache(GetProfileInfoResponse profileInfo) {
         // For Business Account It contains the name of the contact person rather than the name of the business.
         // So We have to check if the Account Type is Personal or not to save this information
-        if (!ProfileInfoCacheManager.isBusinessAccount())
-            setUserName(profileInfo.getName());
+        if (profileInfo != null) {
+            if (!ProfileInfoCacheManager.isBusinessAccount())
+                setUserName(profileInfo.getName());
 
-        setProfilePictureUrl(Utilities.getImage(profileInfo.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH));
-        setVerificationStatus(profileInfo.getVerificationStatus());
-        setPrimaryEmail(profileInfo.getPrimaryEmail());
-        setAccountId(profileInfo.getAccountId());
-        setSignupTime(profileInfo.getSignupTime());
-        setGender(profileInfo.getGender());
-        setBirthday(profileInfo.getDob());
+            setProfilePictureUrl(Utilities.getImage(profileInfo.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH));
+            setVerificationStatus(profileInfo.getVerificationStatus());
+            setPrimaryEmail(profileInfo.getPrimaryEmail());
+            setAccountId(profileInfo.getAccountId());
+            setSignupTime(profileInfo.getSignupTime());
+            setGender(profileInfo.getGender());
+            setBirthday(profileInfo.getDob());
+            setMobileNumber(profileInfo.getMobileNumber());
+            setAccountType(profileInfo.getAccountType());
+        }
 
         BroadcastServiceIntent.sendBroadcast(context, Constants.PROFILE_INFO_UPDATE_BROADCAST);
     }
 
     public static void updateBusinessInfoCache(GetBusinessInformationResponse businessInfo) {
-        setUserName(businessInfo.getBusinessName());
-        setProfilePictureUrl(Utilities.getImage(businessInfo.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH));
-        setVerificationStatus(businessInfo.getVerificationStatus());
+        if (businessInfo != null) {
+            setUserName(businessInfo.getBusinessName());
+            setProfilePictureUrl(Utilities.getImage(businessInfo.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH));
+            setVerificationStatus(businessInfo.getVerificationStatus());
+        } else {
+            setUserName("");
+            setProfilePictureUrl("");
+            setVerificationStatus("");
+        }
 
         BroadcastServiceIntent.sendBroadcast(context, Constants.PROFILE_INFO_UPDATE_BROADCAST);
     }
@@ -276,5 +286,50 @@ public class ProfileInfoCacheManager {
         return pref.getBoolean(SharedPrefConstants.SWITCHED_FROM_SIGNUP, false);
     }
 
+    public static boolean isAccountSwitched() {
+        return pref.getBoolean(SharedPrefConstants.IS_ACCOUNT_SWITCHED, false);
+    }
+
+    public static void setSwitchAccount(boolean accountSwitch) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(SharedPrefConstants.IS_ACCOUNT_SWITCHED, accountSwitch).apply();
+    }
+
+    public static void saveMainUserProfileInfo(String profileInfo) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(SharedPrefConstants.PROFILE_INFO, profileInfo).apply();
+    }
+
+    public static String getMainUserProfileInfo() {
+        String profileInfoString = pref.getString(SharedPrefConstants.PROFILE_INFO, null);
+        return profileInfoString;
+    }
+
+    public static void saveMainUserBusinessInfo(String businessInformationResponse) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(SharedPrefConstants.PROFILE_INFO_BUSINESS, businessInformationResponse).apply();
+    }
+
+    public static String getMainUserBusinessInfo() {
+        return pref.getString(SharedPrefConstants.PROFILE_INFO_BUSINESS, null);
+    }
+
+    public static void setOnAccountId(String onAccountId) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(Constants.OPERATING_ON_ACCOUNT_ID, onAccountId).apply();
+    }
+
+    public static String getOnAccountId() {
+        return pref.getString(Constants.OPERATING_ON_ACCOUNT_ID, "");
+    }
+
+    public static void setId(long id) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putLong(SharedPrefConstants.Id, id).apply();
+    }
+
+    public static long getId() {
+        return pref.getLong(SharedPrefConstants.Id, 0);
+    }
 }
 

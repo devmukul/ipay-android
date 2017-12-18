@@ -86,7 +86,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_remove_trusted_device) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_remove_trusted_device));
     }
 
     @Override
@@ -186,7 +186,6 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         if (mLogoutTask != null) {
             return;
         }
-
         mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
         mProgressDialog.show();
         LogoutRequest mLogoutModel = new LogoutRequest(ProfileInfoCacheManager.getMobileNumber());
@@ -337,8 +336,8 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                     ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
                     ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
 
-                    if (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                            || !ProfileInfoCacheManager.isBasicInfoAdded()) {
+                    if (ProfileInfoCacheManager.getAccountType()==Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                            || !ProfileInfoCacheManager.isBasicInfoAdded())) {
                         ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
                     } else {
                         ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
@@ -360,6 +359,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                 mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
+                    ProfileInfoCacheManager.saveMainUserProfileInfo(Utilities.getMainUserProfileInfoString(mGetProfileInfoResponse));
                     getProfileCompletionStatus();
 
                 } else {

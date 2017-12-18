@@ -67,6 +67,8 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
 import bd.com.ipay.ipayskeleton.Model.Service.IpayService;
@@ -890,6 +892,7 @@ public class Utilities {
     public static long getBytesToMegaBytes(long length) {
         return length / 1000000;
     }
+
     private static final int[] ADD_MONEY_OPTION_SERVICE_ID = {ServiceIdConstants.ADD_MONEY_BY_BANK, ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
     private static final String[] ADD_MONEY_OPTION_TITLE = {Constants.ADD_MONEY_BY_BANK_TITLE, Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE};
     private static final int[] ADD_MONEY_OPTION_ICON = {R.drawable.ic_bank111, R.drawable.basic_card};
@@ -902,5 +905,38 @@ public class Utilities {
             }
         }
         return ipayServiceList;
+    }
+
+    public static String getMainUserProfileInfoString(GetProfileInfoResponse profileInfo) {
+        Gson gson = new Gson();
+        String profileInfoJson = gson.toJson(profileInfo);
+        return profileInfoJson;
+    }
+
+    public static GetProfileInfoResponse getMainUserInfoFromJsonString(String profileInfoJsonString) {
+        Gson gson = new Gson();
+        GetProfileInfoResponse getProfileInfoResponse = gson.fromJson(profileInfoJsonString, GetProfileInfoResponse.class);
+        return getProfileInfoResponse;
+    }
+
+    public static String getMainBusinessProfileInfoString(GetBusinessInformationResponse businessInformationResponse) {
+        if (businessInformationResponse != null) {
+            Gson gson = new Gson();
+            String businessProfileInfoString = gson.toJson(businessInformationResponse);
+            return businessProfileInfoString;
+        } else {
+            return null;
+        }
+    }
+
+    public static GetBusinessInformationResponse getMainBusinessInfo(String businessInfoString) {
+        if (businessInfoString == null) {
+            return null;
+        } else {
+            Gson gson = new Gson();
+            GetBusinessInformationResponse getBusinessInformationResponse = gson.
+                    fromJson(businessInfoString, GetBusinessInformationResponse.class);
+            return getBusinessInformationResponse;
+        }
     }
 }

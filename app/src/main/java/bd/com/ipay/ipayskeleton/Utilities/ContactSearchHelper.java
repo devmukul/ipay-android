@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.database.Cursor;
 
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 
 public class ContactSearchHelper {
 
@@ -18,8 +19,16 @@ public class ContactSearchHelper {
         mQuery = mobileNumber;
 
         DataHelper dataHelper = DataHelper.getInstance(activity);
-        Cursor cursor = dataHelper.searchContacts(mQuery, false, false, false,
-                false, false, false, null);
+        Cursor cursor = null;
+
+        if (ProfileInfoCacheManager.isAccountSwitched()) {
+            Long onAccountId = Long.parseLong(TokenManager.getOnAccountId());
+            cursor = dataHelper.searchBusinessContacts(mQuery, false, false, false,
+                    false, false, false, null, onAccountId);
+        } else {
+            cursor = dataHelper.searchContacts(mQuery, false, false, false,
+                    false, false, false, null);
+        }
 
         if (cursor != null) {
             if (cursor.getCount() > 0)

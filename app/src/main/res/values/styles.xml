@@ -483,6 +483,13 @@
         <item name="android:gravity">left</item>
     </style>
 
+    <style name="TextStyleListItemPrimary" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:gravity">left</item>
+    </style>
+
     <style name="TextStylePrimary" parent="@android:style/Widget.TextView">
         <item name="android:textSize">18.0sp</item>
         <item name="android:gravity">center</item>
@@ -674,6 +681,17 @@
         <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
     </style>
 
+
+    <style name="EditTextForBussinessManager" parent="@android:style/Widget.Holo.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">@dimen/text_size_small_medium</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:paddingTop">@dimen/value5</item>
+        <item name="android:paddingBottom">@dimen/value5</item>
+        <item name="android:textColorHint">@color/colorGray</item>
+    </style>
+
     <style name="CustomEditTextWithNoMargin" parent="@android:style/Widget.Holo.TextView">
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textSize">@dimen/text_size_small_medium</item>
@@ -767,6 +785,20 @@
     <item name="android:paddingTop">@dimen/activity_horizontal_margin_card</item>
     <item name="android:paddingBottom">@dimen/activity_horizontal_margin_card</item>
     <item name="android:drawableRight">@drawable/round_checkbox_for_filter</item>
+    <item name="android:button">@null</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:textColor">@color/colorTextPrimary</item>
+</style>
+    <!-- Transaction History --><style name="BusinessRolePrivilegeCheckboxStyle">
+
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+    <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+    <item name="android:paddingTop">@dimen/activity_horizontal_margin_card</item>
+    <item name="android:paddingBottom">@dimen/activity_horizontal_margin_card</item>
+    <item name="android:drawableLeft">@drawable/round_checkbox_for_filter</item>
+    <item name="android:drawablePadding">@dimen/value20</item>
     <item name="android:button">@null</item>
     <item name="android:textSize">14sp</item>
     <item name="android:textColor">@color/colorTextPrimary</item>

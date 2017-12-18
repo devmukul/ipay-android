@@ -71,6 +71,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
     private IconifiedTextViewWithButton mIntroducer;
     private IconifiedTextViewWithButton mAddress;
     private IconifiedTextViewWithButton mProfileCompleteness;
+    private View mDividerManagePeople;
 
     private String mName = "";
     private String mMobileNumber = "";
@@ -135,7 +136,6 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
         super.onResume();
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_user_account));
     }
-
 
     private void setVisibilityOfProfilePicUploadButton() {
         if (ProfileInfoCacheManager.isAccountVerified())

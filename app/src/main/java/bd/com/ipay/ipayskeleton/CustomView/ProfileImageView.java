@@ -84,6 +84,29 @@ public class ProfileImageView extends FrameLayout {
             e.printStackTrace();
         }
     }
+    public void setBusinessProfilePicture(String photoUri, boolean forceLoad) {
+        try {
+            final DrawableTypeRequest<String> glide = Glide.with(context).load(photoUri);
+
+            glide
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+
+            if (forceLoad) {
+                glide
+                        .signature(new StringSignature(String.valueOf(System.currentTimeMillis())));
+            }
+
+            glide
+                    .placeholder(R.drawable.ic_business_logo_round)
+                    .error(R.drawable.ic_business_logo_round)
+                    .crossFade()
+                    .dontAnimate()
+                    .transform(new CircleTransform(context))
+                    .into(mProfilePictureView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void setAccountPhoto(String photoUri, boolean forceLoad) {
         try {

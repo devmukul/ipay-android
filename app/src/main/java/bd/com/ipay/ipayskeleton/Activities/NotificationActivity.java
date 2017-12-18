@@ -4,8 +4,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentRequestReceivedDetailsFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestMoneyFragments.SentReceivedRequestReviewFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.BusinessRoleReviewFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.RecommendationReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -25,6 +27,8 @@ public class NotificationActivity extends BaseActivity {
             switchToReceivedRequestReviewFragment();
         else if (tag != null && tag.equals(Constants.RECOMMENDATION))
             switchToRecommendationReviewFragment(getIntent().getExtras());
+        else if (tag != null && tag.equals(Constants.BUSINESS))
+            switchToBusinessRoleReviewFragment(getIntent().getExtras());
         else
             switchToNotificationFragment();
 
@@ -43,8 +47,21 @@ public class NotificationActivity extends BaseActivity {
     }
 
     public void switchToNotificationFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, HomeActivity.mNotificationFragment).commit();
+        switchToNotificationFragment("");
+    }
+
+    public void switchToNotificationFragment(String tag) {
+        if (tag.equals("")) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, HomeActivity.mNotificationFragment).commit();
+        } else if (tag.equals(Constants.RELOAD)) {
+            HomeActivity.mNotificationFragment = new NotificationFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString(Constants.TAG, Constants.RELOAD);
+            HomeActivity.mNotificationFragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    HomeActivity.mNotificationFragment).commit();
+        }
     }
 
     public void switchToReceivedPaymentRequestDetailsFragment(Bundle bundle) {
@@ -67,6 +84,12 @@ public class NotificationActivity extends BaseActivity {
         RecommendationReviewFragment recommendationReviewFragment = new RecommendationReviewFragment();
         recommendationReviewFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recommendationReviewFragment).commit();
+    }
+
+    public void switchToBusinessRoleReviewFragment(Bundle bundle) {
+        BusinessRoleReviewFragment businessRoleReviewFragment = new BusinessRoleReviewFragment();
+        businessRoleReviewFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, businessRoleReviewFragment).addToBackStack(null).commit();
     }
 
     @Override
