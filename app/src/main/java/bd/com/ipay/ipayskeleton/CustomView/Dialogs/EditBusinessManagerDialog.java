@@ -19,7 +19,6 @@ import java.util.HashMap;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -27,11 +26,9 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.CreateEmployeeResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.UpdateEmployeeRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessRole;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.CreateEmployeeRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -227,8 +224,4 @@ public class EditBusinessManagerDialog extends AlertDialog implements HttpRespon
                 Constants.BASE_URL_MM + Constants.URL_GET_EMPLOYEE_LIST, json, context, this);
         mEditEmployeeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
-
-
-
-
 }

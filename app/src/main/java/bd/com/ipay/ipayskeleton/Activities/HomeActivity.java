@@ -109,7 +109,7 @@ public class HomeActivity extends BaseActivity
 
     private HttpRequestGetAsyncTask mGetBusinessAccountsAsyncTask;
     private GetManagedBusinessAccountsResponse mGetManagedBusinessAccountsResponse;
-    private List<BusinessAccountDetails> mManagedBusinessAccoutnList = new ArrayList<>();
+    private List<BusinessAccountDetails> mManagedBusinessAccountList = new ArrayList<>();
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
@@ -196,7 +196,7 @@ public class HomeActivity extends BaseActivity
             public void onDrawerOpened(View drawerView) {
                 Utilities.hideKeyboard(HomeActivity.this);
                 mManagedBusinessListRecyclerView.setHasFixedSize(true);
-                mManagedBusinessListRecyclerView.setAdapter(new ManagedBusinessAcountAdapter(mManagedBusinessAccoutnList));
+                mManagedBusinessListRecyclerView.setAdapter(new ManagedBusinessAcountAdapter(mManagedBusinessAccountList));
                 mManagedBusinessListRecyclerView.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
                 mManagedBusinessListRecyclerView.setItemAnimator(new DefaultItemAnimator());
                 mManagedBusinessListRecyclerView.setVisibility(View.GONE);
@@ -282,7 +282,7 @@ public class HomeActivity extends BaseActivity
         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS) && !ProfileInfoCacheManager.isAccountSwitched()) {
             getManagedBusinessAccountList();
         } else {
-            mManagedBusinessAccoutnList = new ArrayList<>();
+            mManagedBusinessAccountList = new ArrayList<>();
             String userName = "";
             if (ProfileInfoCacheManager.getMainUserProfileInfo().getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
                 userName = ProfileInfoCacheManager.getMainUserBusinessInfo().getBusinessName();
@@ -291,7 +291,7 @@ public class HomeActivity extends BaseActivity
 
             BusinessAccountDetails tempProfileInfo = new BusinessAccountDetails(ProfileInfoCacheManager.getMainUserProfileInfo().getAccountId(),
                     userName, ProfileInfoCacheManager.getMainUserProfileInfo().getProfilePictures());
-            mManagedBusinessAccoutnList.add(tempProfileInfo);
+            mManagedBusinessAccountList.add(tempProfileInfo);
             mMoreBusinessListImageView.setVisibility(View.VISIBLE);
         }
 
@@ -659,7 +659,7 @@ public class HomeActivity extends BaseActivity
             return;
         }
         if (ProfileInfoCacheManager.isAccountSwitched()) {
-            //saving the onAccount id in case of unsuccessful logout
+            // If logout is failed, then we restore the onAccount ID value in token
             onAccountID = TokenManager.getOnAccountId();
             TokenManager.setOnAccountId(null);
         }
@@ -868,8 +868,8 @@ public class HomeActivity extends BaseActivity
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         mGetManagedBusinessAccountsResponse = gson.fromJson(result.getJsonString(), GetManagedBusinessAccountsResponse.class);
-                        mManagedBusinessAccoutnList = mGetManagedBusinessAccountsResponse.getBusinessList();
-                        if (mManagedBusinessAccoutnList == null || mManagedBusinessAccoutnList.size() == 0)
+                        mManagedBusinessAccountList = mGetManagedBusinessAccountsResponse.getBusinessList();
+                        if (mManagedBusinessAccountList == null || mManagedBusinessAccountList.size() == 0)
                             mMoreBusinessListImageView.setVisibility(View.GONE);
                         else
                             mMoreBusinessListImageView.setVisibility(View.VISIBLE);
@@ -1016,6 +1016,4 @@ public class HomeActivity extends BaseActivity
             }
         }
     }
-
-
 }
