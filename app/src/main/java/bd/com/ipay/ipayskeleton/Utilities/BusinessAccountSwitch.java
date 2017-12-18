@@ -43,12 +43,12 @@ public class BusinessAccountSwitch implements HttpResponseListener {
 
     public void requestSwitchAccount() {
         if (ProfileInfoCacheManager.isAccountSwitched()) {
-            ProfileInfoCacheManager.setOnAccountId(null);
-            ProfileInfoCacheManager.setId(-1);
+            ProfileInfoCacheManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
+            ProfileInfoCacheManager.setId(Constants.ACCOUNT_ID_DEFAULT);
             ProfileInfoCacheManager.setAccountType(ProfileInfoCacheManager.getMainUserProfileInfo().getAccountType());
-            ProfileInfoCacheManager.setSwitchAccount(false);
+            ProfileInfoCacheManager.setSwitchAccount(Constants.ACCOUNT_DEFAULT);
             ProfileInfoCacheManager.updateProfileInfoCache(ProfileInfoCacheManager.getMainUserProfileInfo());
-            TokenManager.setOnAccountId(null);
+            TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
             Intent intent = new Intent(context, HomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             Toast.makeText(context, context.getString(R.string.account_switched), Toast.LENGTH_SHORT).show();
@@ -91,7 +91,7 @@ public class BusinessAccountSwitch implements HttpResponseListener {
                     switch (result.getStatus()) {
                         case Constants.HTTP_RESPONSE_STATUS_OK:
                             mBusinessAccoutnDetails = gson.fromJson(result.getJsonString(), BusinessAccountDetails.class);
-                            TokenManager.setOnAccountId(null);
+                            TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
                             TokenManager.setOnAccountId(Long.toString(mBusinessAccoutnDetails.getBusinessAccountId()));
                             ProfileInfoCacheManager.setOnAccountId(Long.toString(mBusinessAccoutnDetails.getBusinessAccountId()));
                             ProfileInfoCacheManager.setId(mBusinessAccoutnDetails.getId());
@@ -99,7 +99,7 @@ public class BusinessAccountSwitch implements HttpResponseListener {
                                     (getServiceIDsFromServiceList(mBusinessAccoutnDetails.getServiceList()));
                             ProfileInfoCacheManager.setAccountType(Constants.BUSINESS_ACCOUNT_TYPE);
                             ProfileInfoCacheManager.setUserName(mBusinessAccoutnDetails.getBusinessName());
-                            ProfileInfoCacheManager.setSwitchAccount(true);
+                            ProfileInfoCacheManager.setSwitchAccount(Constants.ACCOUNT_SWITCHED);
                             ProfileInfoCacheManager.setProfilePictureUrl(mBusinessAccoutnDetails.getProfilePictures().get(0).getUrl());
                             Intent intent = new Intent(context, HomeActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);

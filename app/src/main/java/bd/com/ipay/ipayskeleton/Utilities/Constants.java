@@ -4,11 +4,8 @@ import android.Manifest;
 
 import com.google.android.gms.vision.CameraSource;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import bd.com.ipay.ipayskeleton.BuildConfig;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessAccountDetails;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 
 public class Constants {
     public static final String ApplicationTag = "iPay";
@@ -875,6 +872,8 @@ public class Constants {
 
     // API Version Checker
     public static boolean IS_API_VERSION_CHECKED = false;
+    public static boolean ACCOUNT_DEFAULT = false;
+    public static boolean ACCOUNT_SWITCHED = true;
 
     // Format
     public static final String DATE_FORMAT = "%02d/%02d/%4d";
@@ -891,5 +890,8 @@ public class Constants {
     public static final String AMEX_CARD_STARTS_WITH_REGEX = "3[47](.*)";
     public static final String MASTER_CARD_STARTS_WITH_REGEX = "5[1-5](.*)";
 
+    public static final String ON_ACCOUNT_ID_DEFAULT = null;
+    public static final long ACCOUNT_ID_DEFAULT = -1;
+    public static final GetBusinessInformationResponse ACCOUNT_INFO_DEFAULT = null;
 
 }

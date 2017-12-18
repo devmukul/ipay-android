@@ -128,11 +128,11 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                 ProfileInfoCacheManager.setAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
                 ProfileInfoCacheManager.updateBusinessInfoCache(null);
                 ProfileInfoCacheManager.saveMainUserBusinessInfo(null);
-                ProfileInfoCacheManager.setSwitchAccount(false);
-                ProfileInfoCacheManager.setOnAccountId(null);
-                TokenManager.setOnAccountId(null);
+                ProfileInfoCacheManager.setSwitchAccount(Constants.ACCOUNT_DEFAULT);
+                ProfileInfoCacheManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
+                TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
                 ProfileInfoCacheManager.updateProfileInfoCache(ProfileInfoCacheManager.getMainUserProfileInfo());
-                ProfileInfoCacheManager.setSwitchAccount(false);
+                ProfileInfoCacheManager.setSwitchAccount(Constants.ACCOUNT_DEFAULT);
                 // Hiding the keyboard after login button pressed
                 Utilities.hideKeyboard(getActivity());
                 if (Utilities.isConnectionAvailable(getActivity())) attemptLogin();
@@ -340,7 +340,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             if (SharedPrefManager.ifContainsUUID()) {
                 UUID = ProfileInfoCacheManager.getUUID();
             }
-            TokenManager.setOnAccountId(null);
+            TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
             LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
                     Constants.MOBILE_ANDROID + mDeviceID, UUID, null, null, null, SignupOrLoginActivity.isRememberMe);
             Gson gson = new Gson();

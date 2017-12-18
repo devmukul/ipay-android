@@ -661,9 +661,9 @@ public class HomeActivity extends BaseActivity
         if (ProfileInfoCacheManager.isAccountSwitched()) {
             // If logout is failed, then we restore the onAccount ID value in token
             onAccountID = TokenManager.getOnAccountId();
-            TokenManager.setOnAccountId(null);
+            TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
         }
-        TokenManager.setOnAccountId(null);
+        TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
         mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
         mProgressDialog.show();
         LogoutRequest mLogoutModel = new LogoutRequest(ProfileInfoCacheManager.getMainUserProfileInfo().getMobileNumber());
@@ -762,13 +762,13 @@ public class HomeActivity extends BaseActivity
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (ProfileInfoCacheManager.isAccountSwitched()) {
                             ProfileInfoCacheManager.setAccountType(ProfileInfoCacheManager.getMainUserProfileInfo().getAccountType());
-                            ProfileInfoCacheManager.updateBusinessInfoCache(null);
-                            ProfileInfoCacheManager.saveMainUserBusinessInfo(null);
+                            ProfileInfoCacheManager.updateBusinessInfoCache(Constants.ACCOUNT_INFO_DEFAULT);
+                            ProfileInfoCacheManager.saveMainUserBusinessInfo(Constants.ACCOUNT_INFO_DEFAULT);
                             ProfileInfoCacheManager.updateProfileInfoCache(ProfileInfoCacheManager.getMainUserProfileInfo());
-                            ProfileInfoCacheManager.setSwitchAccount(false);
-                            TokenManager.setOnAccountId(null);
-                            ProfileInfoCacheManager.setOnAccountId(null);
-                            ProfileInfoCacheManager.setId(-1);
+                            ProfileInfoCacheManager.setSwitchAccount(Constants.ACCOUNT_DEFAULT);
+                            TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
+                            ProfileInfoCacheManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
+                            ProfileInfoCacheManager.setId(Constants.ACCOUNT_ID_DEFAULT);
                         }
                         Utilities.resetIntercomInformation();
                         if (!exitFromApplication) {
