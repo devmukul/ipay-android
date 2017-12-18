@@ -894,4 +894,7 @@ public class Constants {
     public static final long ACCOUNT_ID_DEFAULT = -1;
     public static final GetBusinessInformationResponse ACCOUNT_INFO_DEFAULT = null;
 
+    public static final int QUALITY_HIGH = 0;
+    public static final int QUALITY_MEDIUM = 1;
+    public static final int QUALITY_LOW = 2;
 }
