@@ -875,6 +875,7 @@ public class HomeActivity extends BaseActivity
                             mMoreBusinessListImageView.setVisibility(View.VISIBLE);
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 mGetBusinessAccountsAsyncTask = null;
                 break;
@@ -885,6 +886,7 @@ public class HomeActivity extends BaseActivity
                         businessAccountSwitch.requestSwitchAccount();
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 mRemoveAccountAsyncTask = null;
                 break;
