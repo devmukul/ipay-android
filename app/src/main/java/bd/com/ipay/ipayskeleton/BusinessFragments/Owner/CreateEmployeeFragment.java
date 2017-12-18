@@ -260,9 +260,6 @@ public class CreateEmployeeFragment extends Fragment implements HttpResponseList
         View focusView = null;
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
-        String a = mRoleEditText.getText().toString();
-        String b = a;
-
         if (!InputValidator.isValidNumber(mobileNumber)) {
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
