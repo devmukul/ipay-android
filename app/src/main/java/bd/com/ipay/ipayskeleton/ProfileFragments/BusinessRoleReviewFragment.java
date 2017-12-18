@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.ProfileFragments;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,7 +23,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.NotificationActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
@@ -221,8 +219,6 @@ public class BusinessRoleReviewFragment extends Fragment implements HttpResponse
                     case Constants.HTTP_RESPONSE_STATUS_OK:
                         Toast.makeText(getActivity(), updateInvitationRequestResponse.getMessage(), Toast.LENGTH_LONG).show();
                         getActivity().onBackPressed();
-                        Intent intent = new Intent(getActivity(), HomeActivity.class);
-                        getActivity().startActivity(intent);
                         break;
                     default:
                         Toast.makeText(getActivity(), updateInvitationRequestResponse.getMessage(), Toast.LENGTH_LONG).show();

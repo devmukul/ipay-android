@@ -95,6 +95,7 @@ import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
+import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -282,14 +283,14 @@ public class HomeActivity extends BaseActivity
             getManagedBusinessAccountList();
         } else {
             mManagedBusinessAccoutnList = new ArrayList<>();
-            String userName="";
+            String userName = "";
             if (ProfileInfoCacheManager.getMainUserProfileInfo().getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
-                userName=ProfileInfoCacheManager.getMainUserBusinessInfo().getBusinessName();
+                userName = ProfileInfoCacheManager.getMainUserBusinessInfo().getBusinessName();
             else
-                userName=ProfileInfoCacheManager.getMainUserProfileInfo().getName();
+                userName = ProfileInfoCacheManager.getMainUserProfileInfo().getName();
 
-                BusinessAccountDetails tempProfileInfo = new BusinessAccountDetails(ProfileInfoCacheManager.getMainUserProfileInfo().getAccountId(),
-                        userName, ProfileInfoCacheManager.getMainUserProfileInfo().getProfilePictures());
+            BusinessAccountDetails tempProfileInfo = new BusinessAccountDetails(ProfileInfoCacheManager.getMainUserProfileInfo().getAccountId(),
+                    userName, ProfileInfoCacheManager.getMainUserProfileInfo().getProfilePictures());
             mManagedBusinessAccoutnList.add(tempProfileInfo);
             mMoreBusinessListImageView.setVisibility(View.VISIBLE);
         }
@@ -317,6 +318,9 @@ public class HomeActivity extends BaseActivity
     }
 
     private void getManagedBusinessAccountList() {
+        if (mGetBusinessAccountsAsyncTask != null)
+            return;
+
         mGetBusinessAccountsAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_MANAGED_BUSINESS_ACCOUNTS,
                 Constants.BASE_URL_MM + Constants.URL_SWITCH_ACCOUNT, this, this);
         mGetBusinessAccountsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -361,6 +365,10 @@ public class HomeActivity extends BaseActivity
     public void onResume() {
         super.onResume();
         Utilities.hideKeyboard(this);
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS) && !ProfileInfoCacheManager.isAccountSwitched()) {
+            getManagedBusinessAccountList();
+        }
+
     }
 
     @Override
@@ -580,7 +588,7 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_about) {
 
             switchToAboutActivity();
-            switchedToHomeFragment=false;
+            switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_logout) {
             if (Utilities.isConnectionAvailable(HomeActivity.this)) {
@@ -848,7 +856,7 @@ public class HomeActivity extends BaseActivity
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                   }
+                }
 
                 mGetBusinessInformationAsyncTask = null;
                 break;
@@ -986,7 +994,7 @@ public class HomeActivity extends BaseActivity
 
             public void bind(final BusinessAccountDetails item) {
                 nameTextView.setText(item.getBusinessName());
-                if (!ProfileInfoCacheManager.isAccountSwitched()||ProfileInfoCacheManager.getMainUserProfileInfo().getAccountType()==Constants.BUSINESS_ACCOUNT_TYPE)
+                if (!ProfileInfoCacheManager.isAccountSwitched() || ProfileInfoCacheManager.getMainUserProfileInfo().getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
                     profileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getProfilePictures().get(0).getUrl(), false);
                 else {
                     profileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getProfilePictures().get(0).getUrl(), false);
