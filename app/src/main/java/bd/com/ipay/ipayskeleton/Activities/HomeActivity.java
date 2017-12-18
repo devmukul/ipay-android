@@ -284,13 +284,13 @@ public class HomeActivity extends BaseActivity
         } else {
             mManagedBusinessAccountList = new ArrayList<>();
             String userName = "";
-            if (ProfileInfoCacheManager.getMainUserProfileInfo().getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
-                userName = ProfileInfoCacheManager.getMainUserBusinessInfo().getBusinessName();
+            if (Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
+                userName = Utilities.getMainBusinessInfo(ProfileInfoCacheManager.getMainUserBusinessInfo()).getBusinessName();
             else
-                userName = ProfileInfoCacheManager.getMainUserProfileInfo().getName();
+                userName = Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getName();
 
-            BusinessAccountDetails tempProfileInfo = new BusinessAccountDetails(ProfileInfoCacheManager.getMainUserProfileInfo().getAccountId(),
-                    userName, ProfileInfoCacheManager.getMainUserProfileInfo().getProfilePictures());
+            BusinessAccountDetails tempProfileInfo = new BusinessAccountDetails(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getAccountId(),
+                    userName, Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getProfilePictures());
             mManagedBusinessAccountList.add(tempProfileInfo);
             mMoreBusinessListImageView.setVisibility(View.VISIBLE);
         }
@@ -666,7 +666,7 @@ public class HomeActivity extends BaseActivity
         TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
         mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
         mProgressDialog.show();
-        LogoutRequest mLogoutModel = new LogoutRequest(ProfileInfoCacheManager.getMainUserProfileInfo().getMobileNumber());
+        LogoutRequest mLogoutModel = new LogoutRequest(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getMobileNumber());
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
 
@@ -761,10 +761,11 @@ public class HomeActivity extends BaseActivity
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         if (ProfileInfoCacheManager.isAccountSwitched()) {
-                            ProfileInfoCacheManager.setAccountType(ProfileInfoCacheManager.getMainUserProfileInfo().getAccountType());
+                            ProfileInfoCacheManager.setAccountType(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getAccountType());
                             ProfileInfoCacheManager.updateBusinessInfoCache(Constants.ACCOUNT_INFO_DEFAULT);
-                            ProfileInfoCacheManager.saveMainUserBusinessInfo(Constants.ACCOUNT_INFO_DEFAULT);
-                            ProfileInfoCacheManager.updateProfileInfoCache(ProfileInfoCacheManager.getMainUserProfileInfo());
+                            ProfileInfoCacheManager.saveMainUserBusinessInfo(Utilities.getMainBusinessProfileInfoString(Constants.ACCOUNT_INFO_DEFAULT));
+                            ProfileInfoCacheManager.updateProfileInfoCache(Utilities.
+                                    getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()));
                             ProfileInfoCacheManager.setSwitchAccount(Constants.ACCOUNT_DEFAULT);
                             TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
                             ProfileInfoCacheManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
@@ -851,7 +852,7 @@ public class HomeActivity extends BaseActivity
 
                         //saving user info in shared preference
                         ProfileInfoCacheManager.updateBusinessInfoCache(mGetBusinessInformationResponse);
-                        ProfileInfoCacheManager.saveMainUserBusinessInfo(mGetBusinessInformationResponse);
+                        ProfileInfoCacheManager.saveMainUserBusinessInfo(Utilities.getMainBusinessProfileInfoString(mGetBusinessInformationResponse));
                         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
                     }
                 } catch (Exception e) {
@@ -996,7 +997,7 @@ public class HomeActivity extends BaseActivity
 
             public void bind(final BusinessAccountDetails item) {
                 nameTextView.setText(item.getBusinessName());
-                if (!ProfileInfoCacheManager.isAccountSwitched() || ProfileInfoCacheManager.getMainUserProfileInfo().getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
+                if (!ProfileInfoCacheManager.isAccountSwitched() || Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
                     profileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getProfilePictures().get(0).getUrl(), false);
                 else {
                     profileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getProfilePictures().get(0).getUrl(), false);

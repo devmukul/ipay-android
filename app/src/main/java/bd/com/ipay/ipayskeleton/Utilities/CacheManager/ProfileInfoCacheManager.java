@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.google.gson.Gson;
-
 import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
@@ -297,32 +295,23 @@ public class ProfileInfoCacheManager {
         editor.putBoolean(SharedPrefConstants.IS_ACCOUNT_SWITCHED, accountSwitch).apply();
     }
 
-    public static void saveMainUserProfileInfo(GetProfileInfoResponse profileInfo) {
-        Gson gson = new Gson();
-        String profileInfoJson = gson.toJson(profileInfo);
+    public static void saveMainUserProfileInfo(String profileInfo) {
         SharedPreferences.Editor editor = pref.edit();
-        editor.putString(SharedPrefConstants.PROFILE_INFO, profileInfoJson).apply();
+        editor.putString(SharedPrefConstants.PROFILE_INFO, profileInfo).apply();
     }
 
-    public static GetProfileInfoResponse getMainUserProfileInfo() {
-        Gson gson = new Gson();
-        GetProfileInfoResponse getProfileInfoResponse = gson.fromJson(pref.getString(SharedPrefConstants.PROFILE_INFO
-                , null), GetProfileInfoResponse.class);
-        return getProfileInfoResponse;
+    public static String getMainUserProfileInfo() {
+        String profileInfoString = pref.getString(SharedPrefConstants.PROFILE_INFO, null);
+        return profileInfoString;
     }
 
-    public static void saveMainUserBusinessInfo(GetBusinessInformationResponse businessInformationResponse) {
-        Gson gson = new Gson();
-        String profileInfoJson = gson.toJson(businessInformationResponse);
+    public static void saveMainUserBusinessInfo(String businessInformationResponse) {
         SharedPreferences.Editor editor = pref.edit();
-        editor.putString(SharedPrefConstants.PROFILE_INFO_BUSINESS, profileInfoJson).apply();
+        editor.putString(SharedPrefConstants.PROFILE_INFO_BUSINESS, businessInformationResponse).apply();
     }
 
-    public static GetBusinessInformationResponse getMainUserBusinessInfo() {
-        Gson gson = new Gson();
-        GetBusinessInformationResponse getProfileInfoResponse = gson.fromJson(pref.getString(SharedPrefConstants.PROFILE_INFO_BUSINESS
-                , null), GetBusinessInformationResponse.class);
-        return getProfileInfoResponse;
+    public static String getMainUserBusinessInfo() {
+        return pref.getString(SharedPrefConstants.PROFILE_INFO_BUSINESS, null);
     }
 
     public static void setOnAccountId(String onAccountId) {

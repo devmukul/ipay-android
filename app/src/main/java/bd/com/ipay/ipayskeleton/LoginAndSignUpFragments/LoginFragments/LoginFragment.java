@@ -127,11 +127,11 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             public void onClick(View v) {
                 ProfileInfoCacheManager.setAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
                 ProfileInfoCacheManager.updateBusinessInfoCache(null);
-                ProfileInfoCacheManager.saveMainUserBusinessInfo(null);
+                ProfileInfoCacheManager.saveMainUserBusinessInfo(Utilities.getMainBusinessProfileInfoString(Constants.ACCOUNT_INFO_DEFAULT));
                 ProfileInfoCacheManager.setSwitchAccount(Constants.ACCOUNT_DEFAULT);
                 ProfileInfoCacheManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
                 TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
-                ProfileInfoCacheManager.updateProfileInfoCache(ProfileInfoCacheManager.getMainUserProfileInfo());
+                ProfileInfoCacheManager.updateProfileInfoCache(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()));
                 ProfileInfoCacheManager.setSwitchAccount(Constants.ACCOUNT_DEFAULT);
                 // Hiding the keyboard after login button pressed
                 Utilities.hideKeyboard(getActivity());
@@ -552,7 +552,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                     mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
-                        ProfileInfoCacheManager.saveMainUserProfileInfo(mGetProfileInfoResponse);
+                        ProfileInfoCacheManager.saveMainUserProfileInfo(Utilities.getMainUserProfileInfoString(mGetProfileInfoResponse));
                         getProfileCompletionStatus();
 
                     } else {

@@ -359,7 +359,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                 mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
-                    ProfileInfoCacheManager.saveMainUserProfileInfo(mGetProfileInfoResponse);
+                    ProfileInfoCacheManager.saveMainUserProfileInfo(Utilities.getMainUserProfileInfoString(mGetProfileInfoResponse));
                     getProfileCompletionStatus();
 
                 } else {

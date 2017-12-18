@@ -385,7 +385,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                     mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
-                        ProfileInfoCacheManager.saveMainUserProfileInfo(mGetProfileInfoResponse);
+                        ProfileInfoCacheManager.saveMainUserProfileInfo(Utilities.getMainUserProfileInfoString(mGetProfileInfoResponse));
                         getProfileCompletionStatus();
                     } else {
                         hideProgressDialog();
