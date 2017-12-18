@@ -16,9 +16,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.Arrays;
-import java.util.List;
-
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -195,7 +192,6 @@ public class ManagerRequestAcceptedFragment extends BaseFragment implements Http
             private EditBusinessManagerDialog editBusinessManagerDialog;
 
             private CustomSelectorDialog mCustomSelectorDialog;
-            private List<String> mEmployee_manage_ActionList;
 
             public EmployeeViewHolder(View itemView) {
                 super(itemView);
@@ -213,7 +209,6 @@ public class ManagerRequestAcceptedFragment extends BaseFragment implements Http
                 if (pos == ManagerRequestHolderFragment.mAcceptedEmployeeList.size() - 1)
                     divider.setVisibility(View.GONE);
                 final ManagerList employee = ManagerRequestHolderFragment.mAcceptedEmployeeList.get(pos);
-                mEmployee_manage_ActionList = Arrays.asList(getResources().getStringArray(R.array.employee_management_action));
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + employee.getProfilePictures().get(0).getUrl(),
                         false);

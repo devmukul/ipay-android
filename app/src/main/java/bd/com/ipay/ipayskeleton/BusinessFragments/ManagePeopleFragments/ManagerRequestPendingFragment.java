@@ -16,9 +16,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.Arrays;
-import java.util.List;
-
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPutAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -197,7 +194,6 @@ public class ManagerRequestPendingFragment extends BaseFragment implements HttpR
             private final View divider;
 
             private CustomSelectorDialog mCustomSelectorDialog;
-            private List<String> mEmployee_manage_ActionList;
 
             public EmployeeViewHolder(View itemView) {
                 super(itemView);
@@ -215,7 +211,6 @@ public class ManagerRequestPendingFragment extends BaseFragment implements HttpR
             public void bindView(final int pos) {
                 if (pos == ManagerRequestHolderFragment.mPendingEmployeeList.size() - 1) divider.setVisibility(View.GONE);
                 final PendingInvitationList employee = ManagerRequestHolderFragment.mPendingEmployeeList.get(pos);
-                mEmployee_manage_ActionList = Arrays.asList(getResources().getStringArray(R.array.employee_management_action));
 
                 mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + employee.getProfilePictures().get(0).getUrl(),
                         false);
