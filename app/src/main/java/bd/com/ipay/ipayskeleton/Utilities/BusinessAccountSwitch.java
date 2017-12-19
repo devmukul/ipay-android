@@ -15,6 +15,7 @@ import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AccessControl.GetAccessControlResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessAccountDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessService;
 import bd.com.ipay.ipayskeleton.R;
@@ -26,8 +27,13 @@ public class BusinessAccountSwitch implements HttpResponseListener {
 
     public int businessAccountId;
     private ProgressDialog mProgressDialog;
+
     private HttpRequestGetAsyncTask mSwitchAccountAsyncTask = null;
     private BusinessAccountDetails mBusinessAccoutnDetails;
+
+    private HttpRequestGetAsyncTask mGetAccessControlTask = null;
+    private GetAccessControlResponse mGetAccessControlResponse;
+
     private Context context;
 
     public BusinessAccountSwitch(Context context) {
@@ -49,10 +55,7 @@ public class BusinessAccountSwitch implements HttpResponseListener {
             ProfileInfoCacheManager.setSwitchAccount(Constants.ACCOUNT_DEFAULT);
             ProfileInfoCacheManager.updateProfileInfoCache(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()));
             TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
-            Intent intent = new Intent(context, HomeActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            Toast.makeText(context, context.getString(R.string.account_switched), Toast.LENGTH_SHORT).show();
-            context.startActivity(intent);
+            getAccessControlList();
         } else {
             mSwitchAccountAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_SWITCH_ACCOUNT, Constants.BASE_URL_MM +
                     Constants.URL_SWITCH_ACCOUNT + Integer.toString(businessAccountId), context, this);
@@ -61,6 +64,17 @@ public class BusinessAccountSwitch implements HttpResponseListener {
             mProgressDialog.setMessage(context.getResources().getString(R.string.switching));
             mProgressDialog.show();
         }
+    }
+
+    private void getAccessControlList() {
+        if (mGetAccessControlTask != null)
+            return;
+
+        mGetAccessControlTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ACCESS_CONTROL_LIST,
+                Constants.BASE_URL_MM + Constants.URL_GET_ACCESS_CONTROL_LIST, context,this);
+        mGetAccessControlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mProgressDialog.setMessage(context.getString(R.string.switching));
+        mProgressDialog.show();
     }
 
     private int[] getServiceIDsFromServiceList(List<BusinessService> businessServiceList) {
@@ -108,6 +122,16 @@ public class BusinessAccountSwitch implements HttpResponseListener {
                             break;
                         default:
                             Toaster.makeText(context, mBusinessAccoutnDetails.getMessage(), Toast.LENGTH_LONG);
+                    }
+                } else if (result.getApiCommand().equals(Constants.COMMAND_GET_ACCESS_CONTROL_LIST)) {
+                    switch (result.getStatus()) {
+                        case Constants.HTTP_RESPONSE_STATUS_OK:
+                            mGetAccessControlResponse = gson.fromJson(result.getJsonString(), GetAccessControlResponse.class);
+                            ACLManager.updateAllowedServiceArray(mGetAccessControlResponse.getAccessControlList());
+                            Intent intent = new Intent(context, HomeActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            Toast.makeText(context, context.getString(R.string.account_switched), Toast.LENGTH_SHORT).show();
+                            context.startActivity(intent);
                     }
                 }
             } catch (Exception e) {
