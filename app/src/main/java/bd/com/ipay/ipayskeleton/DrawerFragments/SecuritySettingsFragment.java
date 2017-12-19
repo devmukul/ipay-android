@@ -28,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager.FingerPrintAuthenticationManager;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
+import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SecuritySettingsFragment extends BaseFragment implements HttpResponseListener {
@@ -45,6 +46,8 @@ public class SecuritySettingsFragment extends BaseFragment implements HttpRespon
     private View mFingerprintOptionHolder;
 
     private ProgressDialog mProgressDialog;
+
+    private String onAccountID = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -153,6 +156,7 @@ public class SecuritySettingsFragment extends BaseFragment implements HttpRespon
         dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
                 logOutFromAllDevices();
             }
         });
@@ -165,6 +169,11 @@ public class SecuritySettingsFragment extends BaseFragment implements HttpRespon
             return;
         }
 
+        if (ProfileInfoCacheManager.isAccountSwitched()) {
+            // If logout is failed, then we restore the onAccount ID value in token
+            onAccountID = TokenManager.getOnAccountId();
+            TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
+        }
         mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
         mProgressDialog.show();
 
@@ -198,17 +207,30 @@ public class SecuritySettingsFragment extends BaseFragment implements HttpRespon
         Gson gson = new Gson();
 
         if (result.getApiCommand().equals(Constants.COMMAND_LOG_OUT)) {
-
             try {
                 mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    ((MyApplication) getActivity().getApplication()).launchLoginPage(null);
+                    if (ProfileInfoCacheManager.isAccountSwitched()) {
+                        ProfileInfoCacheManager.setAccountType(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getAccountType());
+                        ProfileInfoCacheManager.updateBusinessInfoCache(Constants.ACCOUNT_INFO_DEFAULT);
+                        ProfileInfoCacheManager.saveMainUserBusinessInfo(Utilities.getMainBusinessProfileInfoString(Constants.ACCOUNT_INFO_DEFAULT));
+                        ProfileInfoCacheManager.updateProfileInfoCache(Utilities.
+                                getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()));
+                        ProfileInfoCacheManager.setSwitchAccount(Constants.ACCOUNT_DEFAULT);
+                        TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
+                        ProfileInfoCacheManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
+                        ProfileInfoCacheManager.setId(Constants.ACCOUNT_ID_DEFAULT);
+                    } else {
+                        ((MyApplication) getActivity().getApplication()).launchLoginPage(null);
+                    }
                 } else {
+                    TokenManager.setOnAccountId(onAccountID);
                     Toast.makeText(getActivity(), mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
             } catch (Exception e) {
+                TokenManager.setOnAccountId(onAccountID);
                 e.printStackTrace();
                 Toast.makeText(getActivity(), R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
             }
