@@ -221,16 +221,17 @@ public class SecuritySettingsFragment extends BaseFragment implements HttpRespon
                         TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
                         ProfileInfoCacheManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
                         ProfileInfoCacheManager.setId(Constants.ACCOUNT_ID_DEFAULT);
-                    } else {
+                    }
+                    ((MyApplication) getActivity().getApplication()).launchLoginPage(null);
+                } else {
+                    if (ProfileInfoCacheManager.isAccountSwitched()) {
                         ((MyApplication) getActivity().getApplication()).launchLoginPage(null);
                     }
-                } else {
-                    TokenManager.setOnAccountId(onAccountID);
                     Toast.makeText(getActivity(), mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
             } catch (Exception e) {
-                TokenManager.setOnAccountId(onAccountID);
+                ((MyApplication) getActivity().getApplication()).launchLoginPage(null);
                 e.printStackTrace();
                 Toast.makeText(getActivity(), R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
             }

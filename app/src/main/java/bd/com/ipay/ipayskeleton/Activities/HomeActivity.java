@@ -788,15 +788,16 @@ public class HomeActivity extends BaseActivity
                             finish();
                         }
                     } else {
-                        if (ProfileInfoCacheManager.isAccountSwitched())
-                            TokenManager.setOnAccountId(onAccountID);
-
+                        if (ProfileInfoCacheManager.isAccountSwitched()) {
+                            ((MyApplication) this.getApplication()).launchLoginPage(null);
+                        }
                         Toast.makeText(HomeActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
 
                 } catch (Exception e) {
-                    if (ProfileInfoCacheManager.isAccountSwitched())
-                        TokenManager.setOnAccountId(onAccountID);
+                    if (ProfileInfoCacheManager.isAccountSwitched()) {
+                        ((MyApplication) this.getApplication()).launchLoginPage(null);
+                    }
                     e.printStackTrace();
                     Toast.makeText(HomeActivity.this, R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
                 }
