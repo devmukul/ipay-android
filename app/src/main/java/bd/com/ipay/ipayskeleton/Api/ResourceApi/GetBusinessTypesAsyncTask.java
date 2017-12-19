@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -38,6 +40,16 @@ public class GetBusinessTypesAsyncTask extends HttpRequestGetAsyncTask {
                             GetBusinessTypeResponse.class);
 
                     List<BusinessType> businessTypes = getBusinessTypeResponse.getBusinesses();
+
+                    if (businessTypes.size() > 0) {
+                        Collections.sort(businessTypes, new Comparator<BusinessType>() {
+                            @Override
+                            public int compare(final BusinessType object1, final BusinessType object2) {
+                                return object1.getName().compareTo(object2.getName());
+                            }
+                        });
+                    }
+
                     CommonData.setBusinessTypes(businessTypes);
 
                     if (listener != null) {
