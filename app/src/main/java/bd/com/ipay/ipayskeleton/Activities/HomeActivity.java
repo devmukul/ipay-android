@@ -274,8 +274,9 @@ public class HomeActivity extends BaseActivity
         getRelationshipList();
 
         // Fetch ACL List
-
-        getAccessControlList();
+        if (SharedPrefManager.isRememberMeActive() && !ProfileInfoCacheManager.isAccountSwitched()) {
+            getAccessControlList();
+        }
 
         // Check if important permissions (e.g. Contacts permission) is given. If not,
         // request user for permission.
