@@ -102,9 +102,9 @@ public class BusinessAccountSwitch implements HttpResponseListener {
             Gson gson = new Gson();
             try {
                 if (result.getApiCommand().equals(Constants.COMMAND_SWITCH_ACCOUNT)) {
+                    mBusinessAccoutnDetails = gson.fromJson(result.getJsonString(), BusinessAccountDetails.class);
                     switch (result.getStatus()) {
                         case Constants.HTTP_RESPONSE_STATUS_OK:
-                            mBusinessAccoutnDetails = gson.fromJson(result.getJsonString(), BusinessAccountDetails.class);
                             TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
                             TokenManager.setOnAccountId(Long.toString(mBusinessAccoutnDetails.getBusinessAccountId()));
                             ProfileInfoCacheManager.setOnAccountId(Long.toString(mBusinessAccoutnDetails.getBusinessAccountId()));
@@ -122,6 +122,7 @@ public class BusinessAccountSwitch implements HttpResponseListener {
                             break;
                         default:
                             Toaster.makeText(context, mBusinessAccoutnDetails.getMessage(), Toast.LENGTH_LONG);
+                            break;
                     }
                 } else if (result.getApiCommand().equals(Constants.COMMAND_GET_ACCESS_CONTROL_LIST)) {
                     switch (result.getStatus()) {
