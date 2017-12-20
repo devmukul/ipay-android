@@ -99,7 +99,7 @@ public class TransactionDetailsFragment extends BaseFragment {
         //String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
         //String cardNumber = transactionHistory.getAdditionalInfo().getCardNumber();
 
-        final String receiver = transactionHistory.getReceiver();
+        final String receiver = transactionHistory.getAdditionalInfo().getMobileNumber();
         final String otherProfilePicture = transactionHistory.getAdditionalInfo().getUserProfilePic();
         final String otherMobileNumber = transactionHistory.getAdditionalInfo().getMobileNumber();
         final String otherName = transactionHistory.getAdditionalInfo().getName();

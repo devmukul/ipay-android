@@ -24,7 +24,7 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
         name = in.readString();
         number = in.readString();
         type = in.readString();
-        profilePictures = in.createTypedArrayList(UserProfilePictureClass.CREATOR);
+   //     profilePictures = in.createTypedArrayList(UserProfilePictureClass.CREATOR);
     }
 
     public String getName() {
@@ -65,6 +65,6 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
         dest.writeString(name);
         dest.writeString(number);
         dest.writeString(type);
-        dest.writeTypedList(this.profilePictures);
+       // dest.writeList(this.profilePictures);
     }
 }
