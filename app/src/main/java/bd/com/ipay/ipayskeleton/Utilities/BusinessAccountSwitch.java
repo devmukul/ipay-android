@@ -71,7 +71,7 @@ public class BusinessAccountSwitch implements HttpResponseListener {
             return;
 
         mGetAccessControlTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ACCESS_CONTROL_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_ACCESS_CONTROL_LIST, context,this);
+                Constants.BASE_URL_MM + Constants.URL_GET_ACCESS_CONTROL_LIST, context, this);
         mGetAccessControlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mProgressDialog.setMessage(context.getString(R.string.switching));
         mProgressDialog.show();
@@ -93,8 +93,8 @@ public class BusinessAccountSwitch implements HttpResponseListener {
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
+        mProgressDialog.dismiss();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.dismiss();
             mSwitchAccountAsyncTask = null;
             Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
@@ -102,9 +102,9 @@ public class BusinessAccountSwitch implements HttpResponseListener {
             Gson gson = new Gson();
             try {
                 if (result.getApiCommand().equals(Constants.COMMAND_SWITCH_ACCOUNT)) {
+                    mBusinessAccoutnDetails = gson.fromJson(result.getJsonString(), BusinessAccountDetails.class);
                     switch (result.getStatus()) {
                         case Constants.HTTP_RESPONSE_STATUS_OK:
-                            mBusinessAccoutnDetails = gson.fromJson(result.getJsonString(), BusinessAccountDetails.class);
                             TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
                             TokenManager.setOnAccountId(Long.toString(mBusinessAccoutnDetails.getBusinessAccountId()));
                             ProfileInfoCacheManager.setOnAccountId(Long.toString(mBusinessAccoutnDetails.getBusinessAccountId()));
@@ -122,6 +122,7 @@ public class BusinessAccountSwitch implements HttpResponseListener {
                             break;
                         default:
                             Toaster.makeText(context, mBusinessAccoutnDetails.getMessage(), Toast.LENGTH_LONG);
+                            break;
                     }
                 } else if (result.getApiCommand().equals(Constants.COMMAND_GET_ACCESS_CONTROL_LIST)) {
                     switch (result.getStatus()) {
