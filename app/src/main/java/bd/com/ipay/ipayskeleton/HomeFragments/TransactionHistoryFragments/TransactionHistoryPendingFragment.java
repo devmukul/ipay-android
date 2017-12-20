@@ -44,6 +44,7 @@ import java.util.Map;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -64,7 +65,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class TransactionHistoryPendingFragment extends ProgressFragment implements HttpResponseListener, PopupMenu.OnMenuItemClickListener, View.OnClickListener {
-    private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
+    private HttpRequestGetAsyncTask mTransactionHistoryTask = null;
     private TransactionHistoryResponse mTransactionHistoryResponse;
 
     private RecyclerView mTransactionHistoryRecyclerView;
@@ -98,7 +99,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     private TextView mFilterTitle;
     private PopupMenu popupMenu;
 
-    private int historyPageCount = 0;
+    private int historyPageCount = 1;
     private Integer type = null;
     private Calendar fromDate = null;
     private Calendar toDate = null;
@@ -579,18 +580,12 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         if (mTransactionHistoryTask != null) {
             return;
         }
-        TransactionHistoryRequest mTransactionHistoryRequest;
-        if (fromDate != null && toDate != null) {
-            mTransactionHistoryRequest = new TransactionHistoryRequest(
-                    type, historyPageCount, fromDate.getTimeInMillis(), toDate.getTimeInMillis(), null);
-        } else {
-            mTransactionHistoryRequest = new TransactionHistoryRequest(type, historyPageCount);
-        }
 
-        Gson gson = new Gson();
-        String json = gson.toJson(mTransactionHistoryRequest);
-        mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_PENDING_TRANSACTION_HISTORY,
-                Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY_PENDING, json, getActivity());
+        String url = TransactionHistoryRequest.generateUri(type,
+                fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT);
+
+        mTransactionHistoryTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PENDING_TRANSACTION_HISTORY,
+                url, getActivity());
         mTransactionHistoryTask.mHttpResponseListener = this;
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -680,15 +675,15 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             public void bindView(int pos) {
                 final TransactionHistory transactionHistory = userTransactionHistories.get(pos);
 
-                final String description = transactionHistory.getShortDescription(mMobileNumber);
+                final String description = transactionHistory.getShortDescription();
                 final String receiver = transactionHistory.getReceiver();
-                final String responseTime = Utilities.formatDateWithTime(transactionHistory.getResponseTime());
-                final String netAmountWithSign = transactionHistory.getNetAmountFormatted(transactionHistory.getAdditionalInfo().getUserMobileNumber());
+                final String responseTime = Utilities.formatDateWithTime(transactionHistory.getInsertTime());
+                final String netAmountWithSign = String.valueOf(transactionHistory.getAmount());
                 final Double balance = transactionHistory.getBalance();
                 final String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();
-                final int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
-                final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
-                final int serviceId = transactionHistory.getServiceID();
+                //final int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
+                //final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
+                final int serviceId = transactionHistory.getServiceId();
 
                 if (balance != null) {
                     mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
@@ -707,17 +702,17 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
-                    if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
-                    else mOtherImageView.setImageResource(R.drawable.ic_tran_add);
+                    //    if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
+                    //          else mOtherImageView.setImageResource(R.drawable.ic_tran_add);
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
-                    mOtherImageView.setImageResource(transactionHistory.getAdditionalInfo().getCardIcon());
+                    //          mOtherImageView.setImageResource(transactionHistory.getAdditionalInfo().getCardIcon());
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
-                    if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
-                    else mOtherImageView.setImageResource(R.drawable.ic_tran_withdraw);
+                    //        if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
+                    //      else mOtherImageView.setImageResource(R.drawable.ic_tran_withdraw);
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
@@ -876,17 +871,17 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
         intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER,
-                ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getUserMobileNumber()));
+                ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getMobileNumber()));
 
         intent.putExtra(Constants.DESCRIPTION_TAG, transactionHistory.getPurpose());
-        intent.putExtra(Constants.MONEY_REQUEST_ID, transactionHistory.getId());
+        //    intent.putExtra(Constants.MONEY_REQUEST_ID, transactionHistory.getId());
         intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
         intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());
         intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
 
         if (ProfileInfoCacheManager.getMobileNumber().equals(transactionHistory.getOriginatingMobileNumber())) {
             intent.putExtra(Constants.IS_IN_CONTACTS,
-                    new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getUserMobileNumber()));
+                    new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getMobileNumber()));
             intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
         } else {
             intent.putExtra(Constants.IS_IN_CONTACTS,
@@ -897,7 +892,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
     private void launchRequestPaymentReviewPage(TransactionHistory transactionHistory) {
         Intent intent = new Intent(getActivity(), RequestPaymentActivity.class);
-        intent.putExtra(Constants.REQUEST_ID, transactionHistory.getId());
+        //intent.putExtra(Constants.REQUEST_ID, transactionHistory.getId());
         intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
 
         startActivityForResult(intent, REQUEST_PAYMENT_REVIEW_REQUEST);

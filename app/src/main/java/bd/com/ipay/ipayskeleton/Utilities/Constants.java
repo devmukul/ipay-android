@@ -453,8 +453,8 @@ public class Constants {
     // SM Reports REST
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";
     public static final String URL_TRANSACTION_HISTORY_SINGLE = "report/transactions/single";
-    public static final String URL_TRANSACTION_HISTORY_COMPLETED = "report/completed-transactions";
-    public static final String URL_TRANSACTION_HISTORY_PENDING = "report/pending-transactions";
+    public static final String URL_TRANSACTION_HISTORY_COMPLETED = "ta/transaction-history";
+    public static final String URL_TRANSACTION_HISTORY_PENDING = "ta/pending-transactions";
 
     // SM User Rest
     public static final String URL_REFRESH_BALANCE = "user/balance";
@@ -885,6 +885,8 @@ public class Constants {
     public static final String METHOD_POST = "POST";
     public static final String METHOD_PUT = "PUT";
 
+    public static final String TRANSACTION_TYPE_CREDIT = "Cr";
+    public static final String TRANSACTION_TYPE_DEBIT = "Dr";
 
     public static final String VISA_CARD_STARTS_WITH_REGEX = "4(.*)";
     public static final String AMEX_CARD_STARTS_WITH_REGEX = "3[47](.*)";

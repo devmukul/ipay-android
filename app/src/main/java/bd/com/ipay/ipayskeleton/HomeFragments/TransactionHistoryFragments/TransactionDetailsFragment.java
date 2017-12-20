@@ -80,9 +80,9 @@ public class TransactionDetailsFragment extends BaseFragment {
         mAddInContactsButton = (Button) v.findViewById(R.id.add_in_contacts);
 
         String mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
-        if (transactionHistory.getDescription(mMobileNumber) != null)
-            descriptionTextView.setText(transactionHistory.getDescription(mMobileNumber));
-        timeTextView.setText(Utilities.formatDateWithTime(transactionHistory.getResponseTime()));
+        if (transactionHistory.getDescription() != null)
+            descriptionTextView.setText(transactionHistory.getDescription());
+        timeTextView.setText(Utilities.formatDateWithTime(transactionHistory.getInsertTime()));
         amountTextView.setText(Utilities.formatTaka(transactionHistory.getAmount()));
         feeTextView.setText(Utilities.formatTaka(transactionHistory.getFee()));
         transactionIDTextView.setText(transactionHistory.getTransactionID());
@@ -93,19 +93,19 @@ public class TransactionDetailsFragment extends BaseFragment {
 
         int serviceId = transactionHistory.getServiceID();
         String purpose = transactionHistory.getPurpose();
-        String bankName = transactionHistory.getAdditionalInfo().getBankName();
-        String bankAccountNumber = transactionHistory.getAdditionalInfo().getBankAccountNumber();
-        int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
-        String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
-        String cardNumber = transactionHistory.getAdditionalInfo().getCardNumber();
+       // String bankName = transactionHistory.getAdditionalInfo().getBankName();
+        //String bankAccountNumber = transactionHistory.getAdditionalInfo().getBankAccountNumber();
+        //int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
+        //String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
+        //String cardNumber = transactionHistory.getAdditionalInfo().getCardNumber();
 
         final String receiver = transactionHistory.getReceiver();
         final String otherProfilePicture = transactionHistory.getAdditionalInfo().getUserProfilePic();
-        final String otherMobileNumber = transactionHistory.getAdditionalInfo().getUserMobileNumber();
-        final String otherName = transactionHistory.getAdditionalInfo().getUserName();
+        final String otherMobileNumber = transactionHistory.getAdditionalInfo().getMobileNumber();
+        final String otherName = transactionHistory.getAdditionalInfo().getName();
 
         if (serviceId == Constants.TRANSACTION_HISTORY_SEND_MONEY || serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
-            if (!new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getUserMobileNumber())) {
+            if (!new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getMobileNumber())) {
                 mAddInContactsButton.setVisibility(View.VISIBLE);
             }
         }
@@ -122,8 +122,8 @@ public class TransactionDetailsFragment extends BaseFragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 mAddInContactsButton.setVisibility(View.GONE);
 
-                                addContact(transactionHistory.getAdditionalInfo().getUserName(),
-                                        transactionHistory.getAdditionalInfo().getUserMobileNumber(), null);
+                                addContact(transactionHistory.getAdditionalInfo().getName(),
+                                        transactionHistory.getAdditionalInfo().getMobileNumber(), null);
                             }
                         })
                         .setNegativeButton(android.R.string.no, null);
@@ -143,36 +143,36 @@ public class TransactionDetailsFragment extends BaseFragment {
 
         if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK
                 || serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT) {
-            mNameView.setText(bankName);
-            mMobileNumberView.setText(bankAccountNumber);
+       //     mNameView.setText(bankName);
+         //   mMobileNumberView.setText(bankAccountNumber);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            if (bankCode != null) otherImageView.setImageResource(bankIcon);
-            else otherImageView.setImageResource(R.drawable.ic_tran_add);
+         //   if (bankCode != null) otherImageView.setImageResource(bankIcon);
+         //   else otherImageView.setImageResource(R.drawable.ic_tran_add);
 
         } else if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD) {
-            if (TextUtils.isEmpty(transactionHistory.getAdditionalInfo().getCardHolderName())) {
+         //   if (TextUtils.isEmpty(transactionHistory.getAdditionalInfo().getCardHolderName())) {
                 mNameView.setText(R.string.credit_or_debit_card_transaction_default_header);
-            } else {
-                mNameView.setText(transactionHistory.getAdditionalInfo().getCardHolderName());
-            }
-            if (!TextUtils.isEmpty(cardNumber)) {
-                mMobileNumberView.setText(cardNumber);
-            } else {
-                mMobileNumberView.setText(transactionHistory.getOriginatingMobileNumber());
-            }
+       //     } else {
+           //     mNameView.setText(transactionHistory.getAdditionalInfo().getCardHolderName());
+         //   }
+        //    if (!TextUtils.isEmpty(cardNumber)) {
+        //        mMobileNumberView.setText(cardNumber);
+      //      } else {
+       //         mMobileNumberView.setText(transactionHistory.getOriginatingMobileNumber());
+         //   }
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            otherImageView.setImageResource(transactionHistory.getAdditionalInfo().getCardIcon());
+     //       otherImageView.setImageResource(transactionHistory.getAdditionalInfo().getCardIcon());
         } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
                 || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT
                 || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK) {
-            mNameView.setText(bankName);
-            mMobileNumberView.setText(bankAccountNumber);
+     //       mNameView.setText(bankName);
+        //    mMobileNumberView.setText(bankAccountNumber);
             mProfileImageView.setVisibility(View.GONE);
             otherImageView.setVisibility(View.VISIBLE);
-            if (bankCode != null) otherImageView.setImageResource(bankIcon);
-            else otherImageView.setImageResource(R.drawable.ic_tran_withdraw);
+       //     if (bankCode != null) otherImageView.setImageResource(bankIcon);
+          //  else otherImageView.setImageResource(R.drawable.ic_tran_withdraw);
 
         } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
             mNameView.setText(R.string.opening_balance_to);
@@ -229,7 +229,7 @@ public class TransactionDetailsFragment extends BaseFragment {
         final String status = transactionHistory.getStatus();
 
         if (statusCode != Constants.TRANSACTION_STATUS_ACCEPTED && statusCode != Constants.TRANSACTION_STATUS_PROCESSING) {
-            final String status_description = transactionHistory.getStatusDescription();
+            final String status_description = transactionHistory.getStatusInWord();
             failureCauseTextView.setText(status_description);
             failureCauseTextView.setTextColor(getResources().getColor(R.color.background_red));
             failureCauseLayout.setVisibility(View.VISIBLE);
