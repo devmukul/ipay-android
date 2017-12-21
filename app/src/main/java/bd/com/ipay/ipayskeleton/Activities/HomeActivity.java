@@ -182,7 +182,7 @@ public class HomeActivity extends BaseActivity
             }
         });
 
-        if (!ProfileInfoCacheManager.isBusinessAccount())
+        if (!ProfileInfoCacheManager.isBusinessAccount() || ProfileInfoCacheManager.isAccountSwitched())
             mNavigationMenu.findItem(R.id.nav_manage_account).setVisible(false);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
