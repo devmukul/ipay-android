@@ -1001,16 +1001,24 @@ public class HomeActivity extends BaseActivity
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             private TextView nameTextView;
+            private TextView roleTextView;
             private ProfileImageView profileImageView;
+
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 nameTextView = (TextView) itemView.findViewById(R.id.title_text_view);
+                roleTextView = (TextView) itemView.findViewById(R.id.role_text_view);
                 profileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_image_view);
             }
 
             public void bind(final BusinessAccountDetails item) {
                 nameTextView.setText(item.getBusinessName());
+                if(TextUtils.isEmpty(item.getRoleName())) {
+                    roleTextView.setVisibility(View.GONE);
+                }else{
+                    roleTextView.setText(item.getRoleName());
+                }
                 if (!ProfileInfoCacheManager.isAccountSwitched() || Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
                     profileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getBusinessProfilePictureUrlHigh(), false);
                 else {
