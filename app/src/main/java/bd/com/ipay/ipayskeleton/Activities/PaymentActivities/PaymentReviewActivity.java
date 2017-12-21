@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -20,6 +21,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteToiPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentReviewFragment;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentSucessFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
@@ -32,6 +34,8 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
     private ProgressBar mProgressBar;
 
     private String mReceiverMobileNumber;
+    private String mReceiverName;
+    private String mReceiverPhotoUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +48,14 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
 
         mReceiverMobileNumber = getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
 
-        getProfileInfo(mReceiverMobileNumber);
+        if (getIntent().hasExtra(Constants.NAME)) {
+            mReceiverName = getIntent().getStringExtra(Constants.NAME);
+            mReceiverPhotoUri = getIntent().getStringExtra(Constants.PHOTO_URI);
+            switchToPaymentReviewFragment(mReceiverName, mReceiverPhotoUri);
+
+        }else{
+            getProfileInfo(mReceiverMobileNumber);
+        }
     }
 
     private void switchToSendInviteFragment() {

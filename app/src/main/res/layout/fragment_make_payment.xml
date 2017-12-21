@@ -16,7 +16,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="@dimen/activity_horizontal_margin"
-            android:background="#F1F2F3">
+            android:background="@color/colorBackground"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/balance_title_view"
@@ -24,10 +25,10 @@
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:layout_centerVertical="true"
-                android:textSize="14sp"
-                android:textColor="#666666"
-                android:text="iPay Balance"
-                android:fontFamily="sans-serif-regular"/>
+                android:textSize="@dimen/text_size_small"
+                android:textColor="@color/colorPaymentReviewSecondaryText"
+                android:text="@string/ipay_balance"
+                android:fontFamily="sans-serif"/>
 
             <TextView
                 android:id="@+id/balance_view"
@@ -35,9 +36,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:layout_centerVertical="true"
-                android:textSize="24sp"
-                android:text="10,90,230.50"
-                android:textColor="#212121"
+                android:textSize="@dimen/text_size_extra_large"
+                android:textColor="@color/colorPaymentReviewPrimaryText"
                 android:fontFamily="sans-serif-light"
                 android:layout_toRightOf="@+id/balance_title_view"
                 android:layout_toLeftOf="@+id/tk_view"
@@ -50,21 +50,53 @@
                 android:gravity="left"
                 android:layout_alignTop="@+id/balance_view"
                 android:layout_alignParentRight="true"
-                android:textSize="12sp"
-                android:textColor="#212121"
-                android:text="Tk"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="3dp"
+                android:textSize="@dimen/text_size_mini"
+                android:textColor="@color/colorPaymentReviewPrimaryText"
+                android:text="@string/tk"
+                android:layout_marginTop="@dimen/value5"
+                android:layout_marginLeft="@dimen/value4"
                 android:fontFamily="sans-serif-medium"/>
 
 
         </RelativeLayout>
 
+        <LinearLayout
+            android:id="@+id/profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                android:id="@+id/profile_picture"
+                style="@style/ReviewImageStyle" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textview_name"
+                    style="@style/TextViewUserInfoPaymentReviewPrimary"
+                    android:ellipsize="end"
+                    android:singleLine="true" />
+
+                <TextView
+                    android:id="@+id/textview_mobile_number"
+                    style="@style/TextViewUserInfoPaymentReviewSecondary" />
+
+            </LinearLayout>
+        </LinearLayout>
+
 
         <RelativeLayout
+            android:id="@+id/mobile_number_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin">
+
 
             <bd.com.ipay.ipayskeleton.CustomView.BusinessContactsSearchView
                 android:id="@+id/mobile_number"
@@ -100,9 +132,12 @@
                     android:src="@drawable/ic_book3x" />
             </LinearLayout>
 
+            <View style="@style/Divider"
+                android:layout_alignParentBottom="true"/>
+
         </RelativeLayout>
 
-        <View style="@style/Divider" />
+
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

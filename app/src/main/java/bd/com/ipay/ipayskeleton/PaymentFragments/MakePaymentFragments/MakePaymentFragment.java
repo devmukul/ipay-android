@@ -1,12 +1,14 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,6 +20,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,10 +41,13 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.BusinessContactsSearchView;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -58,6 +66,11 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
     private final int PICK_CONTACT_REQUEST = 100;
     private final int PAYMENT_REVIEW_REQUEST = 101;
 
+    private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
+    private GetUserInfoResponse mGetUserInfoResponse;
+
+    private ProgressBar mProgressBar;
+
     private Button buttonPayment;
     private ImageView buttonSelectFromContacts;
     private ImageView buttonScanQRCode;
@@ -67,6 +80,19 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
     private EditText mRefNumberEditText;
     private View mRightSideIconViewHolder;
     private TextView mBalanceView;
+    private View profileView;
+    private View mobileNumberView;
+
+
+    private ProfileImageView businessProfileImageView;
+    private TextView businessNameTextView;
+    private TextView businessMobileNumberTextView;
+
+
+    private String mReceiverMobileNumber;
+    private String mReceiverName;
+    private String mReceiverPhotoUri;
+
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
@@ -81,11 +107,18 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_make_payment, container, false);
         getActivity().setTitle(R.string.make_payment);
+        mProgressBar = new ProgressBar(getActivity());
         mMobileNumberEditText = (BusinessContactsSearchView) v.findViewById(R.id.mobile_number);
+        profileView = (LinearLayout) v.findViewById(R.id.profile);
+        mobileNumberView = (RelativeLayout) v.findViewById(R.id.mobile_number_view);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mRefNumberEditText = (EditText) v.findViewById(R.id.reference_number);
         mRightSideIconViewHolder = v.findViewById(R.id.right_side_icon_view_holder);
+
+        businessProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
+        businessNameTextView = (TextView) v.findViewById(R.id.textview_name);
+        businessMobileNumberTextView = (TextView) v.findViewById(R.id.textview_mobile_number);
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
@@ -99,7 +132,28 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         mBalanceView.setText(SharedPrefManager.getUserBalance());
 
         if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
-            mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
+            mobileNumberView.setVisibility(View.GONE);
+            profileView.setVisibility(View.VISIBLE);
+            mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER);
+            businessMobileNumberTextView.setText(mReceiverMobileNumber);
+            if (getActivity().getIntent().hasExtra(Constants.NAME)) {
+                mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
+                mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
+                if (!TextUtils.isEmpty(mReceiverPhotoUri)) {
+                    businessProfileImageView.setProfilePicture(mReceiverPhotoUri, false);
+                }
+                if (TextUtils.isEmpty(mReceiverName)) {
+                    businessNameTextView.setVisibility(View.GONE);
+                } else {
+                    businessNameTextView.setVisibility(View.VISIBLE);
+                    businessNameTextView.setText(mReceiverName);
+                }
+            }else{
+                getProfileInfo(mReceiverMobileNumber);
+            }
+        }else{
+            profileView.setVisibility(View.GONE);
+            mobileNumberView.setVisibility(View.VISIBLE);
         }
 
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
@@ -139,6 +193,20 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         syncBusinessAccountList();
 
         return v;
+    }
+
+    private void getProfileInfo(String mobileNumber) {
+        if (mGetProfileInfoTask != null) {
+            return;
+        }
+
+        GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
+
+        String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
+        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
+                mUri, getContext(), this);
+
+        mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -278,14 +346,16 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
             cancel = true;
         }
 
-        if (!InputValidator.isValidNumber(mobileNumber)) {
-            focusView = mMobileNumberEditText;
-            mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
-            cancel = true;
-        } else if (ContactEngine.formatMobileNumberBD(mobileNumber).equals(ProfileInfoCacheManager.getMobileNumber())) {
-            focusView = mMobileNumberEditText;
-            mMobileNumberEditText.setError(getString(R.string.you_cannot_make_payment_to_your_number));
-            cancel = true;
+        if(TextUtils.isEmpty(mReceiverMobileNumber)) {
+            if (!InputValidator.isValidNumber(mobileNumber)) {
+                focusView = mMobileNumberEditText;
+                mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
+                cancel = true;
+            } else if (ContactEngine.formatMobileNumberBD(mobileNumber).equals(ProfileInfoCacheManager.getMobileNumber())) {
+                focusView = mMobileNumberEditText;
+                mMobileNumberEditText.setError(getString(R.string.you_cannot_make_payment_to_your_number));
+                cancel = true;
+            }
         }
 
         if (cancel) {
@@ -298,7 +368,16 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
 
     private void launchReviewPage() {
 
-        String receiver = mMobileNumberEditText.getText().toString().trim();
+
+        getActivity().getIntent().setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        String receiver=null;
+
+        if (TextUtils.isEmpty(mReceiverMobileNumber)) {
+            receiver = mMobileNumberEditText.getText().toString().trim();
+        }else{
+            receiver = mReceiverMobileNumber;
+        }
         BigDecimal amount = new BigDecimal(mAmountEditText.getText().toString().trim());
         String referenceNumber = mRefNumberEditText.getText().toString().trim();
         String description = mDescriptionEditText.getText().toString().trim();
@@ -309,6 +388,10 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         intent.putExtra(Constants.DESCRIPTION_TAG, description);
         intent.putExtra(Constants.REFERENCE_NUMBER, referenceNumber);
 
+        if(!TextUtils.isEmpty(mReceiverName)){
+            intent.putExtra(Constants.NAME, mReceiverName);
+            intent.putExtra(Constants.PHOTO_URI,mReceiverPhotoUri);
+        }
         startActivityForResult(intent, PAYMENT_REVIEW_REQUEST);
     }
 
@@ -362,6 +445,62 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
             }
 
             mGetBusinessRuleTask = null;
+        }else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
+            Gson gson = new Gson();
+            try {
+                mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    String name = mGetUserInfoResponse.getName();
+                    int accountType = mGetUserInfoResponse.getAccountType();
+
+                    if (accountType != Constants.BUSINESS_ACCOUNT_TYPE) {
+                        new AlertDialog.Builder(getContext())
+                                .setMessage(R.string.not_a_business_user)
+                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        getActivity().finish();
+                                    }
+                                })
+                                .setCancelable(false)
+                                .show();
+                    }
+
+                    String profilePicture = null;
+                    if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
+                        profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
+                    }
+
+
+
+                    if (!TextUtils.isEmpty(profilePicture)) {
+                        businessProfileImageView.setProfilePicture( Constants.BASE_URL_FTP_SERVER + profilePicture, false);
+                    }
+                    if (TextUtils.isEmpty(name)) {
+                        businessNameTextView.setVisibility(View.GONE);
+                    } else {
+                        businessNameTextView.setVisibility(View.VISIBLE);
+                        businessNameTextView.setText(name);
+                    }
+
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+                    Toaster.makeText(getContext(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+                    getActivity().finish();
+                } else {
+                    Toaster.makeText(getContext(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+                    getActivity().finish();
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                Toaster.makeText(getContext(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+                getActivity().finish();
+            }
+
+            mGetProfileInfoTask = null;
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 }
