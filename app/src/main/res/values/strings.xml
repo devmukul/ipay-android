@@ -1092,4 +1092,5 @@
     <string name="invite_people">INVITE PEOPLE</string>
     <string name="change_role">Change Role</string>
     <string name="account_switched">Account switched</string>
+    <string name="make_another_payment">MAKE ANOTHER PAYMENT</string>
 </resources>
