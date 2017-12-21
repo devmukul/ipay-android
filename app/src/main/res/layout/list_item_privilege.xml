@@ -5,14 +5,9 @@
 
     <CheckBox
         android:id="@+id/checkbox_privilege"
-        style="@style/TransactionHistoryFilterCheckboxStyle"
+        style="@style/BusinessRolePrivilegeCheckboxStyle"
         android:layout_gravity="center_vertical"
+        android:textSize="@dimen/text_size_small_medium"
         android:checked="true"
         android:enabled="false" />
-
-    <View
-        android:id="@+id/divider"
-        style="@style/Divider"
-        android:layout_below="@+id/checkbox_privilege" />
-
 </RelativeLayout>

@@ -24,12 +24,18 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,9 +52,11 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ActivityLogActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.HelpAndSupportActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.InviteActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManagePeopleActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.GetContactsAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -67,6 +75,8 @@ import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AccessControl.GetAccessControlResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessAccountDetails;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.GetManagedBusinessAccountsResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.Notification;
@@ -75,6 +85,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletio
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.BusinessType;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.Relationship;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessAccountSwitch;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -94,6 +105,11 @@ public class HomeActivity extends BaseActivity
     private static final int REQUEST_CODE_PERMISSION = 1001;
 
     private HttpRequestPostAsyncTask mLocationUpdateRequestAsyncTask;
+    private HttpRequestDeleteAsyncTask mRemoveAccountAsyncTask;
+
+    private HttpRequestGetAsyncTask mGetBusinessAccountsAsyncTask;
+    private GetManagedBusinessAccountsResponse mGetManagedBusinessAccountsResponse;
+    private List<BusinessAccountDetails> mManagedBusinessAccountList = new ArrayList<>();
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
@@ -112,22 +128,28 @@ public class HomeActivity extends BaseActivity
     private AutoResizeTextView mMobileNumberView;
     private TextView mNameView;
     private ProfileImageView mProfileImageView;
+    private NavigationView mNavigationView;
+    private RecyclerView mManagedBusinessListRecyclerView;
+    private ImageView mMoreBusinessListImageView;
 
     private String mUserID;
     private String mDeviceID;
 
-    private ProgressDialog mProgressDialog;
-    private NavigationView mNavigationView;
-
+    public ProgressDialog mProgressDialog;
     public static NotificationFragment mNotificationFragment;
     private Menu mOptionsMenu;
-
+    private Menu mNavigationMenu;
     private int mBadgeCount = 0;
 
     private static boolean switchedToHomeFragment = true;
     private boolean exitFromApplication = false;
 
+    private String onAccountID = null;
     private LocationManager mLocationManager;
+    private DrawerLayout drawer;
+
+    private ManagedBusinessAcountAdapter mManageBusinessAcountAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,10 +165,36 @@ public class HomeActivity extends BaseActivity
         getSupportActionBar().setLogo(R.drawable.logo_ipay);
 
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mManagedBusinessListRecyclerView = (RecyclerView) mNavigationView.getHeaderView(0).findViewById(R.id.managed_business_list);
+        mMoreBusinessListImageView = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.drop_arrow);
+        mNavigationMenu = mNavigationView.getMenu();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mMoreBusinessListImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mManagedBusinessListRecyclerView.getVisibility() == View.VISIBLE) {
+                    mMoreBusinessListImageView.animate().rotation(0).start();
+                    mManagedBusinessListRecyclerView.setVisibility(View.GONE);
+                } else {
+                    mMoreBusinessListImageView.animate().rotation(180).start();
+                    mManagedBusinessListRecyclerView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        if (!ProfileInfoCacheManager.isBusinessAccount())
+            mNavigationMenu.findItem(R.id.nav_manage_account).setVisible(false);
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+
+        mManagedBusinessListRecyclerView.setHasFixedSize(true);
+        mManagedBusinessListRecyclerView.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
+        mManagedBusinessListRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mManagedBusinessListRecyclerView.setVisibility(View.GONE);
+
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
@@ -156,6 +204,9 @@ public class HomeActivity extends BaseActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 Utilities.hideKeyboard(HomeActivity.this);
+                mManageBusinessAcountAdapter = new ManagedBusinessAcountAdapter(mManagedBusinessAccountList);
+                mManagedBusinessListRecyclerView.setAdapter(mManageBusinessAcountAdapter);
+                mManageBusinessAcountAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -223,8 +274,9 @@ public class HomeActivity extends BaseActivity
         getRelationshipList();
 
         // Fetch ACL List
-        if (SharedPrefManager.isRememberMeActive())
+        if (SharedPrefManager.isRememberMeActive() && !ProfileInfoCacheManager.isAccountSwitched()) {
             getAccessControlList();
+        }
 
         // Check if important permissions (e.g. Contacts permission) is given. If not,
         // request user for permission.
@@ -234,6 +286,22 @@ public class HomeActivity extends BaseActivity
         }
 
         getAllBusinessAccountsList();
+
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS) && !ProfileInfoCacheManager.isAccountSwitched()) {
+            getManagedBusinessAccountList();
+        } else {
+            mManagedBusinessAccountList = new ArrayList<>();
+            String userName = "";
+            if (Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
+                userName = Utilities.getMainBusinessInfo(ProfileInfoCacheManager.getMainUserBusinessInfo()).getBusinessName();
+            else
+                userName = Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getName();
+
+            BusinessAccountDetails tempProfileInfo = new BusinessAccountDetails(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getAccountId(),
+                    userName, Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getProfilePictures());
+            mManagedBusinessAccountList.add(tempProfileInfo);
+            mMoreBusinessListImageView.setVisibility(View.VISIBLE);
+        }
 
         // If profile picture gets updated, we need to refresh the profile picture in the drawer.
         LocalBroadcastManager.getInstance(this).registerReceiver(mProfilePictureUpdateBroadcastReceiver,
@@ -257,6 +325,15 @@ public class HomeActivity extends BaseActivity
         }
     }
 
+    private void getManagedBusinessAccountList() {
+        if (mGetBusinessAccountsAsyncTask != null)
+            return;
+
+        mGetBusinessAccountsAsyncTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_MANAGED_BUSINESS_ACCOUNTS,
+                Constants.BASE_URL_MM + Constants.URL_SWITCH_ACCOUNT, this, this);
+        mGetBusinessAccountsAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     /**
      * update Profile info fetches from the Profile Information API.
      * If the account type is business then, an additional task is done by calling the
@@ -264,7 +341,6 @@ public class HomeActivity extends BaseActivity
      */
     private void updateProfileInfo() {
         getProfileInfo();
-
         if (ProfileInfoCacheManager.isBusinessAccount()) {
             getBusinessInformation();
         }
@@ -297,6 +373,10 @@ public class HomeActivity extends BaseActivity
     public void onResume() {
         super.onResume();
         Utilities.hideKeyboard(this);
+        if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS) && !ProfileInfoCacheManager.isAccountSwitched()) {
+            getManagedBusinessAccountList();
+        }
+
     }
 
     @Override
@@ -357,6 +437,7 @@ public class HomeActivity extends BaseActivity
         }
     }
 
+    @ValidateAccess
     public void switchToDashBoard() {
         mNavigationView.getMenu().getItem(0).setChecked(true);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new DashBoardFragment()).commit();
@@ -374,6 +455,77 @@ public class HomeActivity extends BaseActivity
                 ActionItemBadge.update(this, mOptionsMenu.findItem(R.id.action_notification), getResources().getDrawable(R.drawable.ic_bell), ActionItemBadge.BadgeStyles.DARK_GREY, null);
             }
         }
+    }
+
+    @ValidateAccess
+    public void switchToManageBanksActivity() {
+        Intent intent = new Intent(HomeActivity.this, ManageBanksActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
+    @ValidateAccess
+    public void switchToActivityLogActivity() {
+        Intent intent = new Intent(HomeActivity.this, ActivityLogActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
+    @ValidateAccess
+    public void switchToSecuritySettingsActivity() {
+        Intent intent = new Intent(HomeActivity.this, SecuritySettingsActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
+    @ValidateAccess(ServiceIdConstants.SEE_MANAGERS)
+    public void switchToManageAccountsActivity() {
+        Intent intent = new Intent(HomeActivity.this, ManagePeopleActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
+    @ValidateAccess
+    public void switchToAboutActivity() {
+        Intent intent = new Intent(HomeActivity.this, AboutActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
+    @ValidateAccess
+    public void switchToHelpActivity() {
+        Intent intent = new Intent(HomeActivity.this, HelpAndSupportActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
+    @ValidateAccess
+    public void switchToInviteActivity() {
+        Intent intent = new Intent(HomeActivity.this, InviteActivity.class);
+        startActivity(intent);
+        switchedToHomeFragment = false;
+    }
+
+    @ValidateAccess
+    public void attemptLiveChat() {
+        if (isProfileInfoAvailable()) {
+            Utilities.initIntercomLogin();
+        } else {
+            DialogUtils.showAlertDialog(this, getString(R.string.live_chat_not_available));
+        }
+    }
+
+    @ValidateAccess
+    private void attemptLeaveAccount() {
+        if (mRemoveAccountAsyncTask != null)
+            return;
+        if (mProgressDialog != null) {
+            mProgressDialog.setMessage(getString(R.string.leaving));
+            mProgressDialog.show();
+        }
+        mRemoveAccountAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_AN_EMPLOYEE_FIRST_PART + ProfileInfoCacheManager.getId(), this, this);
+        mRemoveAccountAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -407,44 +559,43 @@ public class HomeActivity extends BaseActivity
             launchEditProfileActivity(ProfileCompletionPropertyConstants.PROFILE_INFO, new Bundle());
         } else if (id == R.id.nav_bank_account) {
 
-            Intent intent = new Intent(HomeActivity.this, ManageBanksActivity.class);
-            startActivity(intent);
-            switchedToHomeFragment = false;
+            switchToManageBanksActivity();
 
         } else if (id == R.id.nav_user_activity) {
-
-            Intent intent = new Intent(HomeActivity.this, ActivityLogActivity.class);
-            startActivity(intent);
-            switchedToHomeFragment = false;
+            switchToActivityLogActivity();
 
         } else if (id == R.id.nav_security_settings) {
 
-            Intent intent = new Intent(HomeActivity.this, SecuritySettingsActivity.class);
-            startActivity(intent);
-            switchedToHomeFragment = false;
+            switchToSecuritySettingsActivity();
 
         } else if (id == R.id.nav_invite) {
 
-            Intent intent = new Intent(this, InviteActivity.class);
-            startActivity(intent);
-            switchedToHomeFragment = true;
+            switchToInviteActivity();
+
+        } else if (id == R.id.nav_manage_account) {
+
+            switchToManageAccountsActivity();
 
         } else if (id == R.id.nav_live_chat) {
-            if (isProfileInfoAvailable()) {
-                Utilities.initIntercomLogin();
-            } else {
-                DialogUtils.showAlertDialog(this, getString(R.string.live_chat_not_available));
-            }
+
+            attemptLiveChat();
+
         } else if (id == R.id.nav_help) {
 
-            Intent intent = new Intent(this, HelpAndSupportActivity.class);
-            startActivity(intent);
-            switchedToHomeFragment = false;
+            switchToHelpActivity();
+
+        } else if (id == R.id.nav_leave_account) {
+            new AlertDialog.Builder(HomeActivity.this)
+                    .setMessage(R.string.do_you_want_to_leave)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            attemptLeaveAccount();
+                        }
+                    }).show();
 
         } else if (id == R.id.nav_about) {
 
-            Intent intent = new Intent(HomeActivity.this, AboutActivity.class);
-            startActivity(intent);
+            switchToAboutActivity();
             switchedToHomeFragment = false;
 
         } else if (id == R.id.nav_logout) {
@@ -503,6 +654,7 @@ public class HomeActivity extends BaseActivity
         }
     }
 
+    @ValidateAccess
     private void launchEditProfileActivity(String type, Bundle bundle) {
         Intent intent = new Intent(this, ProfileActivity.class);
         intent.putExtra(Constants.TARGET_FRAGMENT, type);
@@ -514,10 +666,15 @@ public class HomeActivity extends BaseActivity
         if (mLogoutTask != null) {
             return;
         }
-
+        if (ProfileInfoCacheManager.isAccountSwitched()) {
+            // If logout is failed, then we restore the onAccount ID value in token
+            onAccountID = TokenManager.getOnAccountId();
+            TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
+        }
+        TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
         mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
         mProgressDialog.show();
-        LogoutRequest mLogoutModel = new LogoutRequest(ProfileInfoCacheManager.getMobileNumber());
+        LogoutRequest mLogoutModel = new LogoutRequest(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getMobileNumber());
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
 
@@ -557,6 +714,7 @@ public class HomeActivity extends BaseActivity
         mGetBusinessTypesAsyncTask = new GetBusinessTypesAsyncTask(this, new GetBusinessTypesAsyncTask.BusinessTypeLoadListener() {
             @Override
             public void onLoadSuccess(List<BusinessType> businessTypes) {
+
             }
 
             @Override
@@ -598,7 +756,6 @@ public class HomeActivity extends BaseActivity
             mGetProfileInfoTask = null;
             mGetBusinessInformationAsyncTask = null;
             mLocationUpdateRequestAsyncTask = null;
-            Toast.makeText(HomeActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -611,6 +768,17 @@ public class HomeActivity extends BaseActivity
                     mLogOutResponse = gson.fromJson(result.getJsonString(), LogoutResponse.class);
 
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (ProfileInfoCacheManager.isAccountSwitched()) {
+                            ProfileInfoCacheManager.setAccountType(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getAccountType());
+                            ProfileInfoCacheManager.updateBusinessInfoCache(Constants.ACCOUNT_INFO_DEFAULT);
+                            ProfileInfoCacheManager.saveMainUserBusinessInfo(Utilities.getMainBusinessProfileInfoString(Constants.ACCOUNT_INFO_DEFAULT));
+                            ProfileInfoCacheManager.updateProfileInfoCache(Utilities.
+                                    getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()));
+                            ProfileInfoCacheManager.setSwitchAccount(Constants.ACCOUNT_DEFAULT);
+                            TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
+                            ProfileInfoCacheManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
+                            ProfileInfoCacheManager.setId(Constants.ACCOUNT_ID_DEFAULT);
+                        }
                         Utilities.resetIntercomInformation();
                         if (!exitFromApplication) {
                             ((MyApplication) this.getApplication()).launchLoginPage(null);
@@ -620,10 +788,16 @@ public class HomeActivity extends BaseActivity
                             finish();
                         }
                     } else {
+                        if (ProfileInfoCacheManager.isAccountSwitched()) {
+                            ((MyApplication) this.getApplication()).launchLoginPage(null);
+                        }
                         Toast.makeText(HomeActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
 
                 } catch (Exception e) {
+                    if (ProfileInfoCacheManager.isAccountSwitched()) {
+                        ((MyApplication) this.getApplication()).launchLoginPage(null);
+                    }
                     e.printStackTrace();
                     Toast.makeText(HomeActivity.this, R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
                 }
@@ -649,8 +823,6 @@ public class HomeActivity extends BaseActivity
 
                         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
-                    } else {
-                        Toaster.makeText(HomeActivity.this, R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -689,21 +861,49 @@ public class HomeActivity extends BaseActivity
 
                         //saving user info in shared preference
                         ProfileInfoCacheManager.updateBusinessInfoCache(mGetBusinessInformationResponse);
+                        ProfileInfoCacheManager.saveMainUserBusinessInfo(Utilities.getMainBusinessProfileInfoString(mGetBusinessInformationResponse));
                         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
-                    } else {
-                        Toaster.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toaster.makeText(HomeActivity.this, R.string.failed_loading_business_information, Toast.LENGTH_LONG);
-
                 }
 
                 mGetBusinessInformationAsyncTask = null;
                 break;
             case Constants.COMMAND_POST_USER_LOCATION:
                 mLocationUpdateRequestAsyncTask = null;
+                break;
+
+            case Constants.COMMAND_GET_MANAGED_BUSINESS_ACCOUNTS:
+                try {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mGetManagedBusinessAccountsResponse = gson.fromJson(result.getJsonString(), GetManagedBusinessAccountsResponse.class);
+                        mManagedBusinessAccountList = mGetManagedBusinessAccountsResponse.getBusinessList();
+                        if (mManagedBusinessAccountList == null || mManagedBusinessAccountList.size() == 0)
+                            mMoreBusinessListImageView.setVisibility(View.INVISIBLE);
+                        else {
+                            mMoreBusinessListImageView.setVisibility(View.VISIBLE);
+
+                            mManageBusinessAcountAdapter = new ManagedBusinessAcountAdapter(mManagedBusinessAccountList);
+                            mManagedBusinessListRecyclerView.setAdapter(mManageBusinessAcountAdapter);
+                            mManageBusinessAcountAdapter.notifyDataSetChanged();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                mGetBusinessAccountsAsyncTask = null;
+                break;
+            case Constants.COMMAND_REMOVE_AN_EMPLOYEE:
+                try {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        BusinessAccountSwitch businessAccountSwitch = new BusinessAccountSwitch(this);
+                        businessAccountSwitch.requestSwitchAccount();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                mRemoveAccountAsyncTask = null;
                 break;
         }
     }
@@ -775,4 +975,62 @@ public class HomeActivity extends BaseActivity
             updateProfileData();
         }
     };
+
+    private class ManagedBusinessAcountAdapter extends RecyclerView.Adapter<ManagedBusinessAcountAdapter.ViewHolder> {
+        private final List<BusinessAccountDetails> items;
+
+        public ManagedBusinessAcountAdapter(List<BusinessAccountDetails> items) {
+            this.items = items;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_manage_business_drawer, parent, false);
+            return new ViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.bind(items.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return items.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private TextView nameTextView;
+            private ProfileImageView profileImageView;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                nameTextView = (TextView) itemView.findViewById(R.id.title_text_view);
+                profileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_image_view);
+            }
+
+            public void bind(final BusinessAccountDetails item) {
+                nameTextView.setText(item.getBusinessName());
+                if (!ProfileInfoCacheManager.isAccountSwitched() || Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
+                    profileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getBusinessProfilePictureUrlHigh(), false);
+                else {
+                    profileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getBusinessProfilePictureUrlHigh(), false);
+                }
+
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (drawer.isDrawerOpen(GravityCompat.START)) {
+                            drawer.closeDrawer(GravityCompat.START);
+                        }
+
+                        BusinessAccountSwitch businessAccountSwitch = new BusinessAccountSwitch(
+                                (int) item.getBusinessAccountId(), HomeActivity.this);
+                        businessAccountSwitch.requestSwitchAccount();
+                    }
+                });
+            }
+        }
+    }
 }

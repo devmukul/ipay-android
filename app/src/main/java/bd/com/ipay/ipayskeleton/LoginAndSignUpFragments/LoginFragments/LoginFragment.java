@@ -125,6 +125,14 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ProfileInfoCacheManager.setAccountType(Constants.PERSONAL_ACCOUNT_TYPE);
+                ProfileInfoCacheManager.updateBusinessInfoCache(null);
+                ProfileInfoCacheManager.saveMainUserBusinessInfo(Utilities.getMainBusinessProfileInfoString(Constants.ACCOUNT_INFO_DEFAULT));
+                ProfileInfoCacheManager.setSwitchAccount(Constants.ACCOUNT_DEFAULT);
+                ProfileInfoCacheManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
+                TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
+                ProfileInfoCacheManager.updateProfileInfoCache(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()));
+                ProfileInfoCacheManager.setSwitchAccount(Constants.ACCOUNT_DEFAULT);
                 // Hiding the keyboard after login button pressed
                 Utilities.hideKeyboard(getActivity());
                 if (Utilities.isConnectionAvailable(getActivity())) attemptLogin();
@@ -332,7 +340,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             if (SharedPrefManager.ifContainsUUID()) {
                 UUID = ProfileInfoCacheManager.getUUID();
             }
-
+            TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
             LoginRequest mLoginModel = new LoginRequest(mUserNameLogin, mPasswordLogin,
                     Constants.MOBILE_ANDROID + mDeviceID, UUID, null, null, null, SignupOrLoginActivity.isRememberMe);
             Gson gson = new Gson();
@@ -516,8 +524,8 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                         ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
                         ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
 
-                        if (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                                || !ProfileInfoCacheManager.isBasicInfoAdded()) {
+                        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                                || !ProfileInfoCacheManager.isBasicInfoAdded())) {
                             ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
@@ -540,11 +548,11 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
             case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:
 
                 try {
-                    System.out.println("Test " + result.toString());
 
                     mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
+                        ProfileInfoCacheManager.saveMainUserProfileInfo(Utilities.getMainUserProfileInfoString(mGetProfileInfoResponse));
                         getProfileCompletionStatus();
 
                     } else {

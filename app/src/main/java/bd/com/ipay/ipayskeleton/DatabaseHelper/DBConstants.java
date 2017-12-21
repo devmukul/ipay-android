@@ -11,11 +11,13 @@ public class DBConstants {
     public static final String DB_IPAY = "iPayDatabase";
     public static final String DB_TABLE_CONTACTS = "contacts";
     public static final String DB_TABLE_BUSINESS_ACCOUNTS = "business";
+    public static final String DB_TABLE_CONTACTS_BUSINESS = "business_contacts";
     public static final Uri DB_TABLE_CONTACTS_URI = Uri
             .parse("sqlite://" + Constants.ApplicationPackage + "/" + DB_TABLE_CONTACTS);
     public static final Uri DB_TABLE_BUSINESS_URI = Uri
             .parse("sqlite://" + Constants.ApplicationPackage + "/" + DB_TABLE_BUSINESS_ACCOUNTS);
-
+    public static final Uri DB_TABLE_BUSINESS_CONTWACT_URI = Uri
+            .parse("sqlite://" + Constants.ApplicationPackage + "/" + DB_TABLE_CONTACTS_BUSINESS);
     // Subscriber table
     public static final String KEY_MOBILE_NUMBER = "mobile_number";
     public static final String KEY_VERIFICATION_STATUS = "verification_status";

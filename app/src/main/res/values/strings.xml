@@ -121,6 +121,9 @@
     <string name="are_you_sure_to_invite">Do you want to invite this person to iPay? By inviting to iPay you acknowledge that you know this person personally.</string>
     <string name="are_you_sure_to_remove_employee">Are you sure you want to remove this employee?</string>
     <string name="accept">Accept</string>
+    <string name="accepting_business_role_manager_request">Accepting Business Role Manager Request</string>
+    <string name="rejecting_business_role_manager_request">Rejecting Business Role Manager Request</string>
+    <string name="canceling_business_role_manager_request">Canceling Business Role Manager Request</string>
     <string name="this_person">this person</string>
     <string name="are_you_sure_to_remove_bank_account">Are you sure you want to remove this account from your bank list?</string>
     <string name="blocked_bank_message">Sorry, you have taken too many attempts to verify this bank account. Please contact with our customer support for any further queries.</string>
@@ -223,6 +226,7 @@
     <string name="progress_dialog_fetching_bank_list">Fetching bank list…</string>
     <string name="progress_dialog_sending_invite">Sending invitation…</string>
     <string name="progress_dialog_fetching_business_types">Loading business types..</string>
+    <string name="progress_dialog_fetching_details">Fetching Details</string>
     <string name="progress_dialog_sending_payment_request">Sending Payment Request…</string>
     <string name="progress_dialog_rejecting">Rejecting request…</string>
     <string name="progress_dialog_accepted">Accepting request…</string>
@@ -759,7 +763,7 @@
     <string name="preparing">Preparing</string>
     <string name="processing">Processing</string>
     <string name="see_other_activity">See Other Activity</string>
-    <string name="manage_people">Manage People</string>
+    <string name="manage_people">Manage Account</string>
     <string name="received_request">Requests Received</string>
     <string name="sent_request">Requests Sent</string>
     <string name="manage_bank_accounts">Manage Bank Accounts</string>
@@ -850,6 +854,8 @@
     <string name="comment_cannot_be_empty">Please enter your message.</string>
     <string name="not_available">Not available</string>
     <string name="accepted">Accepted</string>
+    <string name="accept_invitation_request">Do you want to accept the invitation request?</string>
+    <string name="reject_invitation_request">Do you want to reject the invitation request?</string>
     <string name="cancelled">Cancelled</string>
     <string name="rejected">Rejected</string>
     <string name="draft">Draft</string>
@@ -1070,4 +1076,20 @@
     <string name="add_money_from_credit_or_debit_card_failed_title">Money add failed</string>
     <string name="tk">Tk</string>
     <string name="success">Sucess</string>
+    <string name="you_can_do_following_things">You can do following things</string>
+    <string name="select_a_role">Select a Role</string>
+    <string name="manage_account">Manage Account</string>
+    <string name="your_assignee_can_do">Your assignee can do the following things</string>
+    <string name="please_select_a_role">Please select a role</string>
+    <string name="switching">Switching</string>
+    <string name="cant_switch">Cant Switch Account Now</string>
+    <string name="leave_account">Leave Account</string>
+    <string name="do_you_want_to_leave">Do you want to leave this account permanently? You can\'t switch to this account in the future</string>
+    <string name="leaving">Leaving</string>
+
+    <string name="failed_loading_manager_list">Failed to load manager list</string>
+    <string name="invite_manager_info_text">You have not added any member yet. Invite more people to manage this business account.</string>
+    <string name="invite_people">INVITE PEOPLE</string>
+    <string name="change_role">Change Role</string>
+    <string name="account_switched">Account switched</string>
 </resources>

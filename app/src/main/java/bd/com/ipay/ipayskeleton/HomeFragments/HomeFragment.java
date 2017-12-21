@@ -278,7 +278,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
         updateProfileData();
 
-        if(!SharedPrefManager.getUserCountry().equals("BD")){
+        if (!SharedPrefManager.getUserCountry().equals("BD")) {
             DialogUtils.showDialogForCountyNotSupported(getContext());
         }
 
@@ -475,10 +475,6 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
             mRefreshBalanceTask = null;
             mGetProfileCompletionStatusTask = null;
-
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
-
             refreshBalanceButton.clearAnimation();
             return;
         }
@@ -517,15 +513,10 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     promptForProfileCompletion();
                     mProgressBarWithoutAnimation.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
-                } else {
-                    if (getActivity() != null)
-                        Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
-                if (getActivity() != null)
-                    Toaster.makeText(getActivity(), R.string.failed_fetching_profile_completion_status, Toast.LENGTH_LONG);
             }
 
             mGetProfileCompletionStatusTask = null;

@@ -523,6 +523,7 @@ public class BusinessInformationFragment extends ProgressFragment implements Htt
         });
         mGetBusinessTypesAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         ProfileInfoCacheManager.updateBusinessInfoCache(mGetBusinessInformationResponse);
+        ProfileInfoCacheManager.saveMainUserBusinessInfo(Utilities.getMainBusinessProfileInfoString(mGetBusinessInformationResponse));
     }
 
     private void processProfileInfoResponse() {

@@ -140,7 +140,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
             if (TokenManager.getToken().length() > 0)
                 httpRequest.setHeader(Constants.TOKEN, TokenManager.getToken());
             if (TokenManager.isEmployerAccountActive())
-                httpRequest.setHeader(Constants.OPERATING_ON_ACCOUNT_ID, TokenManager.getOperatingOnAccountId());
+                httpRequest.setHeader(Constants.OPERATING_ON_ACCOUNT_ID, TokenManager.getOnAccountId());
             httpRequest.setHeader(Constants.USER_AGENT, Constants.USER_AGENT_MOBILE_ANDROID);
             httpRequest.setHeader("Accept", "application/json");
             httpRequest.setHeader("Content-type", "application/json");

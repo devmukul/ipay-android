@@ -19,7 +19,7 @@ public class TokenManager {
     private static final String REFRESH_TOKEN = "REFRESH_TOKEN";
     private static final String REFRESH_TOKEN_FETCH_TIME = "REFRESH_TOKEN_FETCH_TIME";
     // This field will be set when a personal user switches to an employer's account
-    private static String operatingOnAccountId;
+    private static String onAccountId;
 
     private static String token = "";
     private static String refreshToken = "";
@@ -28,26 +28,26 @@ public class TokenManager {
     private static long iPayTokenTimeInMs = Constants.DEFAULT_TOKEN_TIME;
     private static long tokenWindowOverlapTime = Constants.DEFAULT_TOKEN_OVERLAP_TIME;
 
+    public static String getOnAccountId() {
+        return onAccountId;
+    }
     private static SharedPreferences preferences;
 
     public static void initialize(Context context) {
         preferences = context.getSharedPreferences(Constants.ApplicationTag, Context.MODE_PRIVATE);
     }
 
-    public static String getOperatingOnAccountId() {
-        return operatingOnAccountId;
-    }
 
-    public static void setOperatingOnAccountId(String operatingOnAccountId) {
-        TokenManager.operatingOnAccountId = operatingOnAccountId;
+    public static void setOnAccountId(String onAccountId) {
+        TokenManager.onAccountId = onAccountId;
     }
 
     public static boolean isEmployerAccountActive() {
-        return operatingOnAccountId != null && !operatingOnAccountId.isEmpty();
+        return onAccountId != null && !onAccountId.isEmpty();
     }
 
     public static void deactivateEmployerAccount() {
-        operatingOnAccountId = null;
+        onAccountId = null;
     }
 
     public static boolean isTokenExists() {

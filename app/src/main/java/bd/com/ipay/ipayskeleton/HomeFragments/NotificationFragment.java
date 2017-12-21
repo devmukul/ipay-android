@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -37,9 +38,11 @@ import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.PendingIntroducerReviewDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.GetPendingRoleManagerInvitationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.ServiceCharge.GetServiceChargeResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.BusinessRoleManagerInvitation;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.GetMoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.GetMoneyAndPaymentRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.MoneyAndPaymentRequest;
@@ -73,6 +76,9 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private HttpRequestGetAsyncTask mGetPendingIntroducerListTask = null;
     private GetPendingIntroducerListResponse mPendingIntroducerListResponse;
 
+    private HttpRequestGetAsyncTask mGetPendingRoleManagerRequestTask = null;
+    private GetPendingRoleManagerInvitationResponse mGetPendingRoleManagerInvitationResponse;
+
     private RecyclerView mNotificationsRecyclerView;
     private NotificationListAdapter mNotificationListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -84,6 +90,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     private List<MoneyAndPaymentRequest> mMoneyAndPaymentRequests;
     private List<IntroductionRequestClass> mIntroductionRequests;
     private List<PendingIntroducer> mPendingIntroducerList;
+    private List<BusinessRoleManagerInvitation> mBusinessRoleManagerRequestsList;
 
     // These variables hold the information needed to populate the review dialog
     private List<InvoiceItem> mInvoiceItemList;
@@ -143,7 +150,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         if (Utilities.isConnectionAvailable(getActivity())) {
             refreshNotificationLists(getActivity());
         }
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_notifications) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_notifications));
     }
 
     @Override
@@ -177,12 +184,28 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         getMoneyAndPaymentRequest(context);
         getIntroductionRequestList(context);
         getPendingIntroducersList(context);
+        getPendingInvitationRequestsForRoleManager(context);
+    }
+
+    private void getPendingInvitationRequestsForRoleManager(Context context) {
+        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_BUSINESS_ROLE_INVITATION_REQUEST))
+            return;
+        if (mGetPendingRoleManagerRequestTask != null)
+            return;
+        else {
+            mGetPendingRoleManagerRequestTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ROLE_MAANGER_REQUESTS,
+                    Constants.BASE_URL_MM + Constants.URL_GET_ROLE_MANAGER_REQUESTS, context, this);
+            mGetPendingRoleManagerRequestTask.mHttpResponseListener = this;
+            mGetPendingRoleManagerRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+
     }
 
     public void refreshNotificationLists(Context context) {
         refreshIntroductionRequestList(context);
         refreshMoneyAndPaymentRequestList(context);
         refreshPendingIntroducerList(context);
+        refreshBusinessRoleManagerList(context);
     }
 
     @Override
@@ -272,6 +295,13 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         }
     }
 
+    private void refreshBusinessRoleManagerList(Context context) {
+        if (Utilities.isConnectionAvailable(context)) {
+            mBusinessRoleManagerRequestsList = null;
+            getPendingInvitationRequestsForRoleManager(context);
+        }
+    }
+
     private void refreshPendingIntroducerList(Context context) {
         if (Utilities.isConnectionAvailable(context)) {
             mPendingIntroducerList = null;
@@ -280,7 +310,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     }
 
     private boolean isAllNotificationsLoaded() {
-        return mGetMoneyAndPaymentRequestTask == null && mGetIntroductionRequestTask == null;
+        return mGetMoneyAndPaymentRequestTask == null && mGetIntroductionRequestTask == null && mGetPendingRoleManagerRequestTask == null;
     }
 
     private List<Notification> mergeNotificationLists() {
@@ -291,6 +321,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             notifications.addAll(mIntroductionRequests);
         if (mPendingIntroducerList != null)
             notifications.addAll(mPendingIntroducerList);
+        if (mBusinessRoleManagerRequestsList != null)
+            notifications.addAll(mBusinessRoleManagerRequestsList);
 
         // Date wise sort all notifications
         Collections.sort(notifications, new Comparator<Notification>() {
@@ -400,6 +432,14 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
         startActivity(intent);
     }
 
+    private void launchBusinessRoleReviewFragment(final BusinessRoleManagerInvitation businessRoleManagerInvitation) {
+        Bundle bundle = new Bundle();
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(businessRoleManagerInvitation);
+        bundle.putString(Constants.BUSINESS_ROLE_REQUEST, jsonString);
+        ((NotificationActivity) getActivity()).switchToBusinessRoleReviewFragment(bundle);
+    }
+
     public interface OnNotificationUpdateListener {
         void onNotificationUpdate(List<Notification> notifications);
     }
@@ -413,6 +453,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             mServiceChargeTask = null;
             mGetIntroductionRequestTask = null;
             mGetPendingIntroducerListTask = null;
+            mGetPendingRoleManagerRequestTask = null;
 
             if (isAdded()) {
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -520,7 +561,17 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
                 mServiceChargeTask = null;
                 break;
+            case Constants.COMMAND_GET_ROLE_MAANGER_REQUESTS:
+                try {
+                    mGetPendingRoleManagerInvitationResponse = gson.fromJson(result.getJsonString(),
+                            GetPendingRoleManagerInvitationResponse.class);
+                    mBusinessRoleManagerRequestsList = mGetPendingRoleManagerInvitationResponse.getInvitationList();
+                } catch (Exception e) {
 
+                }
+                mGetPendingRoleManagerRequestTask = null;
+                postProcessNotificationList();
+                break;
             default:
                 break;
         }
@@ -546,18 +597,23 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             public void bindView(int pos) {
 
                 Notification notification = mNotifications.get(pos);
+                if (!(notification instanceof BusinessRoleManagerInvitation)) {
 
-                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + notification.getImageUrl(), false);
-                mNameView.setText(notification.getName());
+                    mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + notification.getImageUrl(), false);
+                    mNameView.setText(notification.getName());
 
-                mTimeView.setText(Utilities.formatDateWithTime(notification.getTime()));
+                    mTimeView.setText(Utilities.formatDateWithTime(notification.getTime()));
 
-                if (notification.getNotificationTitle() != null && !notification.getNotificationTitle().equals("")) {
-                    mTitleView.setVisibility(View.VISIBLE);
-                    mTitleView.setText(notification.getNotificationTitle());
+                    if (notification.getNotificationTitle() != null && !notification.getNotificationTitle().equals("")) {
+                        mTitleView.setVisibility(View.VISIBLE);
+                        if (notification instanceof BusinessRoleManagerInvitation)
+                            mTitleView.setText(Html.fromHtml(notification.getNotificationTitle()));
+                        else
+                            mTitleView.setText(notification.getNotificationTitle());
 
-                } else {
-                    mTitleView.setVisibility(View.GONE);
+                    } else {
+                        mTitleView.setVisibility(View.GONE);
+                    }
                 }
 
             }
@@ -637,6 +693,38 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
         }
 
+        public class BusinessRoleManagerViewHolder extends NotificationViewHolder {
+
+            private ProfileImageView mProfileImageView;
+            private TextView mTitleTextView;
+
+            public BusinessRoleManagerViewHolder(final View itemView) {
+                super(itemView);
+                mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_image_view);
+                mTitleTextView = (TextView) itemView.findViewById(R.id.title_text_view);
+            }
+
+            @Override
+            public void bindView(int pos) {
+                super.bindView(pos);
+                final int position = pos;
+                BusinessRoleManagerInvitation businessRoleManagerInvitation = (BusinessRoleManagerInvitation) mNotifications.get(pos);
+                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER +
+                        businessRoleManagerInvitation.getImageUrl(), false);
+                String notificationTitle = businessRoleManagerInvitation.getNotificationTitle();
+                notificationTitle = notificationTitle.replace("Admin", businessRoleManagerInvitation.getRoleName() + " Manager");
+                mTitleTextView.setText(Html.fromHtml(notificationTitle));
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        launchBusinessRoleReviewFragment((BusinessRoleManagerInvitation) mNotifications.get(position));
+                    }
+                });
+
+            }
+        }
+
 
         public class PendingIntroductionListViewHolder extends NotificationViewHolder {
 
@@ -681,6 +769,10 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
             } else if (viewType == Constants.NOTIFICATION_TYPE_PENDING_INTRODUCER_REQUEST) {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_introduction_requests_notification, parent, false);
                 return new PendingIntroductionListViewHolder(v);
+            } else if (viewType == Constants.NOTIFICATION_TYPE_PENDING_ROLE_MANAGER_REQUEST) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_business_role_manager_requests_notification_new,
+                        parent, false);
+                return new BusinessRoleManagerViewHolder(v);
             } else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_money_and_make_payment_request, parent, false);
                 return new MoneyAndPaymentRequestViewHolder(v);

@@ -2,7 +2,6 @@ package bd.com.ipay.ipayskeleton.BroadcastReceiverClass;
 
 import android.content.Context;
 
-import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.BroadcastServiceIntent;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class MultipleBroadCastServiceIntent extends BroadcastServiceIntent {

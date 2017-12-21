@@ -19,6 +19,7 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         createContactsTable(db);
         createBusinessAccountsTable(db);
+        createContactsForBusinessAccountTable(db);
     }
 
     private void createContactsTable(SQLiteDatabase db) {
@@ -36,6 +37,25 @@ class DataBaseOpenHelper extends SQLiteOpenHelper {
                 DBConstants.KEY_VERIFICATION_STATUS + " integer default 0, " +
                 DBConstants.KEY_UPDATE_TIME + " long, " +
                 DBConstants.KEY_IS_MEMBER + " integer default 0, " +
+                DBConstants.KEY_IS_ACTIVE + " integer default " + DBConstants.ACTIVE + ")");
+    }
+
+    private void createContactsForBusinessAccountTable(SQLiteDatabase db) {
+        db.execSQL("create table if not exists " +
+                DBConstants.DB_TABLE_CONTACTS_BUSINESS +
+                "(_id integer primary key autoincrement, " +
+                DBConstants.KEY_MOBILE_NUMBER + " text unique not null, " +
+                DBConstants.KEY_NAME + " text, " +
+                DBConstants.KEY_ORIGINAL_NAME + " text, " +
+                DBConstants.KEY_ACCOUNT_TYPE + " integer default 1, " +
+                DBConstants.KEY_PROFILE_PICTURE + " text, " +
+                DBConstants.KEY_PROFILE_PICTURE_QUALITY_MEDIUM + " text, " +
+                DBConstants.KEY_PROFILE_PICTURE_QUALITY_HIGH + " text, " +
+                DBConstants.KEY_RELATIONSHIP + " text, " +
+                DBConstants.KEY_VERIFICATION_STATUS + " integer default 0, " +
+                DBConstants.KEY_UPDATE_TIME + " long, " +
+                DBConstants.KEY_IS_MEMBER + " integer default 0, " +
+                DBConstants.KEY_BUSINESS_ACCOUNT_ID + " long, " +
                 DBConstants.KEY_IS_ACTIVE + " integer default " + DBConstants.ACTIVE + ")");
     }
 

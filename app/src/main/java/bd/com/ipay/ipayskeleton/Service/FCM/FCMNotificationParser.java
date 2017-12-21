@@ -2,9 +2,9 @@ package bd.com.ipay.ipayskeleton.Service.FCM;
 
 import android.content.Context;
 
+import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.MultipleBroadCastServiceIntent;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.FCMNotificationResponse;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.BroadcastReceiverClass.MultipleBroadCastServiceIntent;
 
 public class FCMNotificationParser {
 

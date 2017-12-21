@@ -52,10 +52,12 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndI
 import bd.com.ipay.ipayskeleton.Model.Contact.DeleteContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Contact.InviteContactNode;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 import static bd.com.ipay.ipayskeleton.Utilities.Common.CommonColorList.PROFILE_PICTURE_BACKGROUNDS;
@@ -214,9 +216,14 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 List<String> invitees = null;
                 if (ContactsHolderFragment.mGetInviteInfoResponse != null)
                     invitees = ContactsHolderFragment.mGetInviteInfoResponse.getInvitees();
-
-                Cursor cursor = dataHelper.searchContacts(mQuery, miPayMembersOnly, mBusinessMemberOnly, mShowNonInvitedNonMembersOnly,
-                        mShowVerifiedUsersOnly, mShowInvitedOnly, mShowNonInvitedNonMembersOnly, invitees);
+                Cursor cursor;
+                if (ProfileInfoCacheManager.isAccountSwitched()) {
+                    cursor = dataHelper.searchBusinessContacts(mQuery, miPayMembersOnly, mBusinessMemberOnly, mShowNonInvitedNonMembersOnly,
+                            mShowVerifiedUsersOnly, mShowInvitedOnly, mShowNonInvitedNonMembersOnly, invitees, Long.parseLong(TokenManager.getOnAccountId()));
+                } else {
+                    cursor = dataHelper.searchContacts(mQuery, miPayMembersOnly, mBusinessMemberOnly, mShowNonInvitedNonMembersOnly,
+                            mShowVerifiedUsersOnly, mShowInvitedOnly, mShowNonInvitedNonMembersOnly, invitees);
+                }
 
                 if (cursor != null) {
                     nameIndex = cursor.getColumnIndex(DBConstants.KEY_NAME);
@@ -843,15 +850,14 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                             sendRecommendationRequest(mobileNumber);
                         }
                     });
-                }else{
+                } else {
                     if (isMember) {
                         if (!isVerified) {
                             verificationStatus.setVisibility(View.GONE);
                         } else {
                             verificationStatus.setVisibility(View.VISIBLE);
                         }
-                    }
-                    else {
+                    } else {
                         verificationStatus.setVisibility(View.GONE);
                     }
 
