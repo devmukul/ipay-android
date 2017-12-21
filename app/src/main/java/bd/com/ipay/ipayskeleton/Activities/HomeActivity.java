@@ -1014,7 +1014,7 @@ public class HomeActivity extends BaseActivity
 
             public void bind(final BusinessAccountDetails item) {
                 nameTextView.setText(item.getBusinessName());
-                if(TextUtils.isEmpty(item.getRoleName())) {
+                if (TextUtils.isEmpty(item.getRoleName())) {
                     roleTextView.setVisibility(View.GONE);
                 }else{
                     roleTextView.setText(item.getRoleName());
