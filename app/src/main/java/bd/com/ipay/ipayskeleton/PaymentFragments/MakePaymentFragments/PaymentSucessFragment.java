@@ -28,6 +28,7 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class PaymentSucessFragment extends BaseFragment{
@@ -130,8 +131,17 @@ public class PaymentSucessFragment extends BaseFragment{
         anotherPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), PaymentActivity.class));
-                getActivity().finish();
+                PinChecker makePaymentPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent = new Intent(getActivity(), PaymentActivity.class);
+                        intent.putExtra(PaymentActivity.LAUNCH_NEW_REQUEST, true);
+                        startActivity(intent);
+
+                        getActivity().finish();
+                    }
+                });
+                makePaymentPinChecker.execute();
             }
         });
     }
