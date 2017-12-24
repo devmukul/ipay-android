@@ -377,7 +377,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     }
 
     private void refreshTransactionHistory() {
-        historyPageCount = 0;
+        historyPageCount = 1;
         clearListAfterLoading = true;
         getPendingTransactionHistory();
     }

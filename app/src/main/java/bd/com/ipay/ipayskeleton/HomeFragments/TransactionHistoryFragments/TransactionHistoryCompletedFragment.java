@@ -107,7 +107,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private Integer type = null;
     private Calendar fromDate = null;
     private Calendar toDate = null;
-    private String mMobileNumber;
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
@@ -134,7 +133,6 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         View v = inflater.inflate(R.layout.fragment_transaction_history, container, false);
         getActivity().setTitle(R.string.transaction_history);
 
-        mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         initializeViews(v);
         setupViewsAndActions();
         handleBackPressWhenFilterIsOn(v);
@@ -367,7 +365,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     }
 
     private void refreshTransactionHistory() {
-        historyPageCount = 0;
+        historyPageCount = 1;
         clearListAfterLoading = true;
         getTransactionHistory();
     }
