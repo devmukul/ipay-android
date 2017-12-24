@@ -38,6 +38,8 @@
             android:ellipsize="marquee"
             android:gravity="center_horizontal"
             android:maxLines="1"
+            android:paddingLeft="@dimen/activity_horizontal_margin_card"
+            android:paddingRight="@dimen/activity_horizontal_margin_card"
             android:text="@string/pay_by_QR_code"
             android:textSize="@dimen/text_size_extra_smaller_value11"
             android:textStyle="bold" />
