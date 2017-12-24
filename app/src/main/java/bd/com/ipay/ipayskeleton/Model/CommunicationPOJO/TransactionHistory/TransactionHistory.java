@@ -201,10 +201,10 @@ public class TransactionHistory implements Parcelable {
         dest.writeString(this.accountId);
         dest.writeLong(this.insertTime);
         dest.writeString(this.type);
+        dest.writeParcelable(this.otherParty, flags);
         if (actions != null)
             dest.writeArray(this.actions);
         dest.writeString(this.message);
-        dest.writeParcelable(this.otherParty, flags);
     }
 
     protected TransactionHistory(Parcel in) {
@@ -224,9 +224,9 @@ public class TransactionHistory implements Parcelable {
         this.accountId = in.readString();
         this.message = in.readString();
         this.type = in.readString();
+        this.otherParty = in.readParcelable(TransactionHistoryAdditionalInfo.class.getClassLoader());
         if (this.actions != null)
             in.readStringArray(actions);
-        this.otherParty = in.readParcelable(TransactionHistoryAdditionalInfo.class.getClassLoader());
     }
 
     public static final Parcelable.Creator<TransactionHistory> CREATOR = new Parcelable.Creator<TransactionHistory>() {

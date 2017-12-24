@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class UserProfilePictureClass implements Parcelable {
-
     private final String url;
     private final String quality;
 
@@ -45,7 +44,6 @@ public class UserProfilePictureClass implements Parcelable {
             return new UserProfilePictureClass[size];
         }
     };
-
 
 
     @Override

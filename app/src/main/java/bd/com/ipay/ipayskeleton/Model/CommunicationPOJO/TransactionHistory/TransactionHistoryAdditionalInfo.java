@@ -1,30 +1,23 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.EducationPaymentDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Documents.DocumentPage;
-import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class TransactionHistoryAdditionalInfo implements Parcelable {
     private String name;
     private String number;
     private String type;
-    private List<UserProfilePictureClass> profilePictures = new ArrayList<>();
+    private List<UserProfilePictureClass> profilePictures;
 
     protected TransactionHistoryAdditionalInfo(Parcel in) {
         name = in.readString();
         number = in.readString();
         type = in.readString();
-   //     profilePictures = in.createTypedArrayList(UserProfilePictureClass.CREATOR);
+        profilePictures = in.createTypedArrayList(UserProfilePictureClass.CREATOR);
     }
 
     public String getName() {
@@ -37,6 +30,10 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
 
     public String getUserProfilePic() {
         return profilePictures.get(0).getUrl();
+    }
+
+    public List<UserProfilePictureClass> getProfilePictures() {
+        return profilePictures;
     }
 
     public String getType() {
@@ -65,6 +62,6 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
         dest.writeString(name);
         dest.writeString(number);
         dest.writeString(type);
-       // dest.writeList(this.profilePictures);
+        dest.writeTypedList(this.profilePictures);
     }
 }
