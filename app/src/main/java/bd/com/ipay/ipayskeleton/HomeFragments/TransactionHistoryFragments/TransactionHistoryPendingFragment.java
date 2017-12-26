@@ -673,12 +673,11 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
             public void bindView(int pos) {
                 final TransactionHistory transactionHistory = userTransactionHistories.get(pos);
-
                 final String description = transactionHistory.getShortDescription();
                 final String receiver = transactionHistory.getReceiver();
                 final String responseTime = Utilities.formatDateWithTime(transactionHistory.getInsertTime());
                 final String netAmountWithSign = String.valueOf(transactionHistory.getAmount());
-                final Double balance = transactionHistory.getAvailableBalance();
+                final Double balance = transactionHistory.getAccountBalance();
                 final int serviceId = transactionHistory.getServiceId();
 
                 if (balance != null) {

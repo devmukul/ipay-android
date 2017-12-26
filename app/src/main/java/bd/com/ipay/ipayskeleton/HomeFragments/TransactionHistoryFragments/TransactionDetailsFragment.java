@@ -78,7 +78,6 @@ public class TransactionDetailsFragment extends BaseFragment {
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mAddInContactsButton = (Button) v.findViewById(R.id.add_in_contacts);
 
-        String mMobileNumber = ProfileInfoCacheManager.getMobileNumber();
         if (transactionHistory.getDescription() != null)
             descriptionTextView.setText(transactionHistory.getDescription());
         timeTextView.setText(Utilities.formatDateWithTime(transactionHistory.getInsertTime()));
@@ -86,22 +85,15 @@ public class TransactionDetailsFragment extends BaseFragment {
         feeTextView.setText(Utilities.formatTaka(transactionHistory.getFee()));
         transactionIDTextView.setText(transactionHistory.getTransactionID());
         netAmountTextView.setText(Utilities.formatTaka(transactionHistory.getNetAmount()));
-        if (transactionHistory.getAvailableBalance() != null)
-            balanceTextView.setText(Utilities.formatTaka(transactionHistory.getAvailableBalance()));
+        if (transactionHistory.getAccountBalance() != null)
+            balanceTextView.setText(Utilities.formatTaka(transactionHistory.getAccountBalance()));
         mobileNumberTextView.setText(ProfileInfoCacheManager.getMobileNumber());
 
         int serviceId = transactionHistory.getServiceID();
         String purpose = transactionHistory.getPurpose();
-       // String bankName = transactionHistory.getAdditionalInfo().getBankName();
-        //String bankAccountNumber = transactionHistory.getAdditionalInfo().getBankAccountNumber();
-        //int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
-        //String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
-        //String cardNumber = transactionHistory.getAdditionalInfo().getCardNumber();
 
-        final String receiver = transactionHistory.getAdditionalInfo().getNumber();
-        final String otherProfilePicture = transactionHistory.getAdditionalInfo().getUserProfilePic();
-        final String otherMobileNumber = transactionHistory.getAdditionalInfo().getNumber();
-        final String otherName = transactionHistory.getAdditionalInfo().getName();
+        final String otherPartyNumber = transactionHistory.getAdditionalInfo().getNumber();
+        final String otherPartyName = transactionHistory.getAdditionalInfo().getName();
 
         if (serviceId == Constants.TRANSACTION_HISTORY_SEND_MONEY || serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
             if (!new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getNumber())) {
@@ -131,98 +123,21 @@ public class TransactionDetailsFragment extends BaseFragment {
             }
         });
 
-
-        if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
-            purposeLayout.setVisibility(View.GONE);
-        } else if (purpose != null && purpose.length() > 0) {
-            purposeTextView.setText(purpose);
-        } else {
-            purposeLayout.setVisibility(View.GONE);
-        }
-
-        if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK
-                || serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT) {
-       //     mNameView.setText(bankName);
-         //   mMobileNumberView.setText(bankAccountNumber);
-            mProfileImageView.setVisibility(View.GONE);
-            otherImageView.setVisibility(View.VISIBLE);
-         //   if (bankCode != null) otherImageView.setImageResource(bankIcon);
-         //   else otherImageView.setImageResource(R.drawable.ic_tran_add);
-
-        } else if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD) {
-         //   if (TextUtils.isEmpty(transactionHistory.getAdditionalInfo().getCardHolderName())) {
-                mNameView.setText(R.string.credit_or_debit_card_transaction_default_header);
-       //     } else {
-           //     mNameView.setText(transactionHistory.getAdditionalInfo().getCardHolderName());
-         //   }
-        //    if (!TextUtils.isEmpty(cardNumber)) {
-        //        mMobileNumberView.setText(cardNumber);
-      //      } else {
-       //         mMobileNumberView.setText(transactionHistory.getOriginatingMobileNumber());
-         //   }
-            mProfileImageView.setVisibility(View.GONE);
-            otherImageView.setVisibility(View.VISIBLE);
-     //       otherImageView.setImageResource(transactionHistory.getAdditionalInfo().getCardIcon());
-        } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
-                || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT
-                || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK) {
-     //       mNameView.setText(bankName);
-        //    mMobileNumberView.setText(bankAccountNumber);
-            mProfileImageView.setVisibility(View.GONE);
-            otherImageView.setVisibility(View.VISIBLE);
-       //     if (bankCode != null) otherImageView.setImageResource(bankIcon);
-          //  else otherImageView.setImageResource(R.drawable.ic_tran_withdraw);
-
-        } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE) {
-            mNameView.setText(R.string.opening_balance_to);
-            mMobileNumberView.setText(mMobileNumber);
-            mProfileImageView.setVisibility(View.GONE);
-            otherImageView.setVisibility(View.VISIBLE);
-            otherImageView.setImageResource(R.drawable.ic_transaction_ipaylogo);
-
-        } else if (serviceId == Constants.TRANSACTION_HISTORY_OFFER) {
-            mNameView.setText(R.string.offer_from_iPay);
-            mMobileNumberView.setText(mMobileNumber);
-            mProfileImageView.setVisibility(View.GONE);
-            otherImageView.setVisibility(View.VISIBLE);
-            otherImageView.setImageResource(R.drawable.ic_transaction_ipaylogo);
-
-        } else if (serviceId == Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER) {
-            mNameView.setText(R.string.internal_balance_transfer);
-            mProfileImageView.setVisibility(View.GONE);
-            otherImageView.setVisibility(View.VISIBLE);
-            otherImageView.setImageResource(R.drawable.ic_transaction_ipaylogo);
-
-        } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
-            mNameView.setText(R.string.recharge_to);
-            mMobileNumberView.setText(receiver);
-            mProfileImageView.setVisibility(View.GONE);
-            otherImageView.setVisibility(View.VISIBLE);
-            if (InputValidator.isValidNumber(receiver)) {
-                int mIcon = getOperatorIcon(receiver);
-                otherImageView.setImageResource(mIcon);
-            } else
-                otherImageView.setImageResource(R.drawable.ic_top_up);
-        } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
-            mNameView.setText(R.string.topup_rollback);
-            mMobileNumberView.setText(receiver);
-            mProfileImageView.setVisibility(View.GONE);
-            otherImageView.setVisibility(View.VISIBLE);
-            if (InputValidator.isValidNumber(receiver)) {
-                int mIcon = getOperatorIcon(receiver);
-                otherImageView.setImageResource(mIcon);
-            } else
-                otherImageView.setImageResource(R.drawable.ic_top_up);
-        } else {
-            if (otherName != null) {
-                mNameView.setText(otherName);
-            }
-
-            mMobileNumberView.setText(otherMobileNumber);
+        if (transactionHistory.getAdditionalInfo().getType().equalsIgnoreCase(Constants.TRANSACTION_TYPE_USER)) {
+            String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();
             otherImageView.setVisibility(View.GONE);
             mProfileImageView.setVisibility(View.VISIBLE);
-            mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + otherProfilePicture, false);
+            mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+        } else {
+            int iconId = transactionHistory.getAdditionalInfo().getImageWithType(getContext());
+            mProfileImageView.setVisibility(View.GONE);
+            otherImageView.setVisibility(View.VISIBLE);
+            otherImageView.setImageResource(iconId);
         }
+
+        mNameView.setText(otherPartyName);
+        mMobileNumberView.setText(otherPartyNumber);
+            purposeTextView.setText(purpose);
 
         final Integer statusCode = transactionHistory.getStatusCode();
         final String status = transactionHistory.getStatus();

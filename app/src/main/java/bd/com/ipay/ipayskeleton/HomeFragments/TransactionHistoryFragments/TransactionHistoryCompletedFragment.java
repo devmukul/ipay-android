@@ -661,10 +661,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 final String responseTime = Utilities.formatDateWithTime(transactionHistory.getTime());
                 final String netAmountWithSign = String.valueOf(transactionHistory.getNetAmountFormatted());
                 final Integer statusCode = transactionHistory.getStatusCode();
-                final Double balance = transactionHistory.getAvailableBalance();
-                // final int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
-                //final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
-                final int serviceId = transactionHistory.getServiceID();
+                final Double balance = transactionHistory.getAccountBalance();
                 final String status = transactionHistory.getStatus();
 
                 mStatusDescriptionView.setText(status);
