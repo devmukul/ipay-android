@@ -41,15 +41,19 @@ public class TransactionDetailsFragment extends BaseFragment {
     private TextView balanceTextView;
     private TextView purposeTextView;
     private TextView statusTextView;
-    private TextView failureCauseTextView;
     private TextView mobileNumberTextView;
-    private LinearLayout purposeLayout;
-    private LinearLayout failureCauseLayout;
     private ProfileImageView mProfileImageView;
     private ImageView otherImageView;
     private TextView mMobileNumberView;
     private TextView mNameView;
     private Button mAddInContactsButton;
+    private String otherPartyNumber;
+    private String otherPartyName;
+    private String purpose;
+    private int serviceId;
+    private Integer statusCode;
+    private String status;
+
 
     @Nullable
     @Override
@@ -57,6 +61,14 @@ public class TransactionDetailsFragment extends BaseFragment {
         View v = inflater.inflate(R.layout.fragment_transaction_details, container, false);
 
         transactionHistory = getArguments().getParcelable(Constants.TRANSACTION_DETAILS);
+        serviceId = transactionHistory.getServiceID();
+        purpose = transactionHistory.getPurpose();
+
+        otherPartyNumber = transactionHistory.getAdditionalInfo().getNumber();
+        otherPartyName = transactionHistory.getAdditionalInfo().getName();
+
+        statusCode = transactionHistory.getStatusCode();
+        status = transactionHistory.getStatus();
 
         descriptionTextView = (TextView) v.findViewById(R.id.description);
         timeTextView = (TextView) v.findViewById(R.id.time);
@@ -67,10 +79,7 @@ public class TransactionDetailsFragment extends BaseFragment {
         balanceTextView = (TextView) v.findViewById(R.id.balance);
         purposeTextView = (TextView) v.findViewById(R.id.purpose);
         statusTextView = (TextView) v.findViewById(R.id.status);
-        failureCauseTextView = (TextView) v.findViewById(R.id.failure_cause);
         mobileNumberTextView = (TextView) v.findViewById(R.id.your_number);
-        purposeLayout = (LinearLayout) v.findViewById(R.id.purpose_layout);
-        failureCauseLayout = (LinearLayout) v.findViewById(R.id.failure_cause_layout);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         otherImageView = (ImageView) v.findViewById(R.id.other_image);
@@ -89,11 +98,6 @@ public class TransactionDetailsFragment extends BaseFragment {
             balanceTextView.setText(Utilities.formatTaka(transactionHistory.getAccountBalance()));
         mobileNumberTextView.setText(ProfileInfoCacheManager.getMobileNumber());
 
-        int serviceId = transactionHistory.getServiceID();
-        String purpose = transactionHistory.getPurpose();
-
-        final String otherPartyNumber = transactionHistory.getAdditionalInfo().getNumber();
-        final String otherPartyName = transactionHistory.getAdditionalInfo().getName();
 
         if (serviceId == Constants.TRANSACTION_HISTORY_SEND_MONEY || serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
             if (!new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getNumber())) {
@@ -137,19 +141,7 @@ public class TransactionDetailsFragment extends BaseFragment {
 
         mNameView.setText(otherPartyName);
         mMobileNumberView.setText(otherPartyNumber);
-            purposeTextView.setText(purpose);
-
-        final Integer statusCode = transactionHistory.getStatusCode();
-        final String status = transactionHistory.getStatus();
-
-        if (statusCode != Constants.TRANSACTION_STATUS_ACCEPTED && statusCode != Constants.TRANSACTION_STATUS_PROCESSING) {
-            final String status_description = transactionHistory.getStatusInWord();
-            failureCauseTextView.setText(status_description);
-            failureCauseTextView.setTextColor(getResources().getColor(R.color.background_red));
-            failureCauseLayout.setVisibility(View.VISIBLE);
-        } else
-            failureCauseLayout.setVisibility(View.GONE);
-
+        purposeTextView.setText(purpose);
         statusTextView.setText(status);
 
         if (statusCode == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -157,11 +149,6 @@ public class TransactionDetailsFragment extends BaseFragment {
         } else if (statusCode == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
             statusTextView.setTextColor(getResources().getColor(R.color.colorAmber));
         } else {
-            if (serviceId != Constants.TRANSACTION_HISTORY_TOP_UP
-                    && serviceId != Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
-                    && serviceId != Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK) {
-                balanceTextView.setText(getString(R.string.not_applicable));
-            }
             statusTextView.setTextColor(getResources().getColor(R.color.background_red));
         }
 
@@ -183,27 +170,4 @@ public class TransactionDetailsFragment extends BaseFragment {
                 addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(),
                 getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
-
-
-    private int getOperatorIcon(String phoneNumber) {
-        phoneNumber = ContactEngine.trimPrefix(phoneNumber);
-
-        final String[] OPERATOR_PREFIXES = getResources().getStringArray(R.array.operator_prefix);
-        int[] operator_array = new int[]{
-                R.drawable.gp,
-                R.drawable.gp,
-                R.drawable.robi,
-                R.drawable.airtel,
-                R.drawable.banglalink,
-                R.drawable.teletalk,
-        };
-
-        for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
-            if (phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
-                return operator_array[i];
-            }
-        }
-        return 0;
-    }
-
 }

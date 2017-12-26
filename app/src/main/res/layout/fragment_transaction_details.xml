@@ -199,25 +199,6 @@
         <View style="@style/Divider" />
 
         <LinearLayout
-            android:id="@+id/failure_cause_layout"
-            style="@style/LinearLayoutHolderVertical">
-
-            <LinearLayout style="@style/LinearLayoutHolder">
-
-                <TextView
-                    style="@style/TextViewInfoLabelReviewSmall"
-                    android:text="@string/failure_cause" />
-
-                <TextView
-                    android:id="@+id/failure_cause"
-                    style="@style/TextViewInfoColorPrimaryReviewSmall" />
-            </LinearLayout>
-
-            <View style="@style/Divider" />
-
-        </LinearLayout>
-
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
