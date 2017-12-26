@@ -45,7 +45,7 @@ public class TransactionHistory implements Parcelable {
      * money, returns the bank name.
      */
     public String getReceiver() {
-        return otherParty.getMobileNumber();
+        return otherParty.getNumber();
     }
 
     public double getNetAmount() {
@@ -60,7 +60,7 @@ public class TransactionHistory implements Parcelable {
         return "" + amount;
     }
 
-    public Double getBalance() {
+    public Double getAvailableBalance() {
         return availableBalance;
     }
 
@@ -110,10 +110,6 @@ public class TransactionHistory implements Parcelable {
         return serviceId;
     }
 
-    public String getTransactionId() {
-        return transactionId;
-    }
-
     public String getMessage() {
         return message;
     }
@@ -128,10 +124,6 @@ public class TransactionHistory implements Parcelable {
 
     public Double getAccountBalance() {
         return accountBalance;
-    }
-
-    public Double getAvailableBalance() {
-        return availableBalance;
     }
 
     public TransactionHistoryAdditionalInfo getOtherParty() {
@@ -202,9 +194,9 @@ public class TransactionHistory implements Parcelable {
         dest.writeLong(this.insertTime);
         dest.writeString(this.type);
         dest.writeParcelable(this.otherParty, flags);
+        dest.writeString(this.message);
         if (actions != null)
             dest.writeArray(this.actions);
-        dest.writeString(this.message);
     }
 
     protected TransactionHistory(Parcel in) {

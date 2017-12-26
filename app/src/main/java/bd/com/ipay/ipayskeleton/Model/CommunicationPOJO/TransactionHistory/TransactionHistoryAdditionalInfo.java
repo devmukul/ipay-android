@@ -24,7 +24,7 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
         return name;
     }
 
-    public String getMobileNumber() {
+    public String getNumber() {
         return number;
     }
 

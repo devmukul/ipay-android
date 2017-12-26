@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,8 +86,8 @@ public class TransactionDetailsFragment extends BaseFragment {
         feeTextView.setText(Utilities.formatTaka(transactionHistory.getFee()));
         transactionIDTextView.setText(transactionHistory.getTransactionID());
         netAmountTextView.setText(Utilities.formatTaka(transactionHistory.getNetAmount()));
-        if (transactionHistory.getBalance() != null)
-            balanceTextView.setText(Utilities.formatTaka(transactionHistory.getBalance()));
+        if (transactionHistory.getAvailableBalance() != null)
+            balanceTextView.setText(Utilities.formatTaka(transactionHistory.getAvailableBalance()));
         mobileNumberTextView.setText(ProfileInfoCacheManager.getMobileNumber());
 
         int serviceId = transactionHistory.getServiceID();
@@ -99,13 +98,13 @@ public class TransactionDetailsFragment extends BaseFragment {
         //String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
         //String cardNumber = transactionHistory.getAdditionalInfo().getCardNumber();
 
-        final String receiver = transactionHistory.getAdditionalInfo().getMobileNumber();
+        final String receiver = transactionHistory.getAdditionalInfo().getNumber();
         final String otherProfilePicture = transactionHistory.getAdditionalInfo().getUserProfilePic();
-        final String otherMobileNumber = transactionHistory.getAdditionalInfo().getMobileNumber();
+        final String otherMobileNumber = transactionHistory.getAdditionalInfo().getNumber();
         final String otherName = transactionHistory.getAdditionalInfo().getName();
 
         if (serviceId == Constants.TRANSACTION_HISTORY_SEND_MONEY || serviceId == Constants.TRANSACTION_HISTORY_REQUEST_MONEY) {
-            if (!new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getMobileNumber())) {
+            if (!new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getNumber())) {
                 mAddInContactsButton.setVisibility(View.VISIBLE);
             }
         }
@@ -123,7 +122,7 @@ public class TransactionDetailsFragment extends BaseFragment {
                                 mAddInContactsButton.setVisibility(View.GONE);
 
                                 addContact(transactionHistory.getAdditionalInfo().getName(),
-                                        transactionHistory.getAdditionalInfo().getMobileNumber(), null);
+                                        transactionHistory.getAdditionalInfo().getNumber(), null);
                             }
                         })
                         .setNegativeButton(android.R.string.no, null);

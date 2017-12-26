@@ -45,7 +45,6 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActiv
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
@@ -679,7 +678,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 final String receiver = transactionHistory.getReceiver();
                 final String responseTime = Utilities.formatDateWithTime(transactionHistory.getInsertTime());
                 final String netAmountWithSign = String.valueOf(transactionHistory.getAmount());
-                final Double balance = transactionHistory.getBalance();
+                final Double balance = transactionHistory.getAvailableBalance();
                 final String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();
                 //final int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
                 //final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
@@ -871,17 +870,17 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
         intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER,
-                ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getMobileNumber()));
+                ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getNumber()));
 
         intent.putExtra(Constants.DESCRIPTION_TAG, transactionHistory.getPurpose());
-        //    intent.putExtra(Constants.MONEY_REQUEST_ID, transactionHistory.getId());
+        intent.putExtra(Constants.TRANSACTION_ID, transactionHistory.getTransactionID());
         intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
         intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());
         intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
 
         if (ProfileInfoCacheManager.getMobileNumber().equals(transactionHistory.getOriginatingMobileNumber())) {
             intent.putExtra(Constants.IS_IN_CONTACTS,
-                    new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getMobileNumber()));
+                    new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getNumber()));
             intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
         } else {
             intent.putExtra(Constants.IS_IN_CONTACTS,

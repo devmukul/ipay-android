@@ -42,7 +42,6 @@ import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
@@ -51,9 +50,7 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.UserActivity.GetActivityRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
@@ -664,7 +661,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 final String responseTime = Utilities.formatDateWithTime(transactionHistory.getTime());
                 final String netAmountWithSign = String.valueOf(transactionHistory.getNetAmountFormatted());
                 final Integer statusCode = transactionHistory.getStatusCode();
-                final Double balance = transactionHistory.getBalance();
+                final Double balance = transactionHistory.getAvailableBalance();
                 final String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();
                 // final int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
                 //final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
@@ -695,18 +692,28 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 mTimeView.setText(responseTime);
 
                 if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK
-                        || serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT) {
+                        || serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_REVERT
+                        || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
+                        || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK
+                        || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT
+                        || serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD
+                        || serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE
+                        || serviceId == Constants.TRANSACTION_HISTORY_OFFER
+                        || serviceId == Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER
+                        || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP
+                        || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK
+                        || serviceId == Constants.TRANSACTION_HISTORY_EDUCATION)  {
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
                     //         if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
                     //     else mOtherImageView.setImageResource(R.drawable.ic_tran_add);
 
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD) {
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD) { //**
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
                     //         mOtherImageView.setImageResource(transactionHistory.getAdditionalInfo().getCardIcon());
 
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY
+                } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY  //**
                         || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_ROLL_BACK
                         || serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY_REVERT) {
 
@@ -717,13 +724,13 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_OPENING_BALANCE
                         || serviceId == Constants.TRANSACTION_HISTORY_OFFER
-                        || serviceId == Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER) {
+                        || serviceId == Constants.TRANSACTION_HISTORY_INTERNAL_BALANCE_TRANSFER) { //**
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
-                    mOtherImageView.setImageResource(R.drawable.ic_transaction_ipaylogo);
+                  //  mOtherImageView.setImageResource(R.drawable.ic_transaction_ipaylogo);
 
                 } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP
-                        || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) {
+                        || serviceId == Constants.TRANSACTION_HISTORY_TOP_UP_ROLLBACK) { //**
                     mProfileImageView.setVisibility(View.INVISIBLE);
                     mOtherImageView.setVisibility(View.VISIBLE);
                     if (InputValidator.isValidNumber(receiver)) {
