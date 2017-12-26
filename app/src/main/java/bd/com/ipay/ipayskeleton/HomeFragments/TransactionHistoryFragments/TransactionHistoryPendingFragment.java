@@ -679,9 +679,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 final String responseTime = Utilities.formatDateWithTime(transactionHistory.getInsertTime());
                 final String netAmountWithSign = String.valueOf(transactionHistory.getAmount());
                 final Double balance = transactionHistory.getAvailableBalance();
-                final String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();
-                //final int bankIcon = transactionHistory.getAdditionalInfo().getBankIcon(getContext());
-                //final String bankCode = transactionHistory.getAdditionalInfo().getBankCode();
                 final int serviceId = transactionHistory.getServiceId();
 
                 if (balance != null) {
@@ -698,31 +695,16 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 mNetAmountView.setText(netAmountWithSign);
                 mTimeView.setText(responseTime);
 
-                if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_BANK) {
-                    mProfileImageView.setVisibility(View.INVISIBLE);
-                    mOtherImageView.setVisibility(View.VISIBLE);
-                    //    if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
-                    //          else mOtherImageView.setImageResource(R.drawable.ic_tran_add);
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD) {
-                    mProfileImageView.setVisibility(View.INVISIBLE);
-                    mOtherImageView.setVisibility(View.VISIBLE);
-                    //          mOtherImageView.setImageResource(transactionHistory.getAdditionalInfo().getCardIcon());
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_WITHDRAW_MONEY) {
-                    mProfileImageView.setVisibility(View.INVISIBLE);
-                    mOtherImageView.setVisibility(View.VISIBLE);
-                    //        if (bankCode != null) mOtherImageView.setImageResource(bankIcon);
-                    //      else mOtherImageView.setImageResource(R.drawable.ic_tran_withdraw);
-                } else if (serviceId == Constants.TRANSACTION_HISTORY_TOP_UP) {
-                    mProfileImageView.setVisibility(View.INVISIBLE);
-                    mOtherImageView.setVisibility(View.VISIBLE);
-                    if (InputValidator.isValidNumber(receiver)) {
-                        int mIcon = getOperatorIcon(receiver);
-                        mOtherImageView.setImageResource(mIcon);
-                    } else mOtherImageView.setImageResource(R.drawable.ic_top_up);
-                } else {
+                if (transactionHistory.getAdditionalInfo().getType().equalsIgnoreCase(Constants.TRANSACTION_TYPE_USER)) {
+                    String imageUrl = transactionHistory.getAdditionalInfo().getUserProfilePic();
                     mOtherImageView.setVisibility(View.INVISIBLE);
                     mProfileImageView.setVisibility(View.VISIBLE);
                     mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+                } else {
+                    int iconId = transactionHistory.getAdditionalInfo().getImageWithType(getContext());
+                    mProfileImageView.setVisibility(View.INVISIBLE);
+                    mOtherImageView.setVisibility(View.VISIBLE);
+                    mOtherImageView.setImageResource(iconId);
                 }
 
                 itemView.setOnClickListener(new View.OnClickListener() {
@@ -847,12 +829,12 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
             final String[] OPERATOR_PREFIXES = getResources().getStringArray(R.array.operator_prefix);
             int[] operator_array = new int[]{
-                    R.drawable.ic_gp2,
-                    R.drawable.ic_gp2,
-                    R.drawable.ic_robi2,
-                    R.drawable.ic_airtel2,
-                    R.drawable.ic_banglalink2,
-                    R.drawable.ic_teletalk2,
+                    R.drawable.gp,
+                    R.drawable.gp,
+                    R.drawable.robi,
+                    R.drawable.airtel,
+                    R.drawable.banglalink,
+                    R.drawable.teletalk,
             };
 
             for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {

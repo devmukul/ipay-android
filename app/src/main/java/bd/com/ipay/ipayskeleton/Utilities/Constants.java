@@ -887,6 +887,10 @@ public class Constants {
 
     public static final String TRANSACTION_TYPE_CREDIT = "Cr";
     public static final String TRANSACTION_TYPE_DEBIT = "Dr";
+    public static final String TRANSACTION_TYPE_USER = "USER";
+    public static final String TRANSACTION_TYPE_INTERNAL = "INTERNAL";
+    public static final String TRANSACTION_TYPE_CARD = "CARD";
+    public static final String TRANSACTION_TYPE_BANK = "BANK";
 
     public static final String VISA_CARD_STARTS_WITH_REGEX = "4(.*)";
     public static final String AMEX_CARD_STARTS_WITH_REGEX = "3[47](.*)";
@@ -897,4 +901,5 @@ public class Constants {
     public static final GetBusinessInformationResponse ACCOUNT_INFO_DEFAULT = null;
 
     public static final String QUALITY_HIGH = "High";
+
 }

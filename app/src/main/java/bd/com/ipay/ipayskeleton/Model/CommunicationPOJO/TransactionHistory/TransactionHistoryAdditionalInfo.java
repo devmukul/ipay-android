@@ -1,11 +1,15 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.Toast;
 
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class TransactionHistoryAdditionalInfo implements Parcelable {
     private String name;
@@ -26,6 +30,21 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
 
     public String getNumber() {
         return number;
+    }
+
+    public int getImageWithType(Context context) {
+        String imageUrl;
+        if (type.equalsIgnoreCase(Constants.TRANSACTION_TYPE_INTERNAL)) {
+            imageUrl = profilePictures.get(0).getUrl().toLowerCase();
+        } else if (type.equalsIgnoreCase(Constants.TRANSACTION_TYPE_BANK)) {
+            imageUrl = "ic_bank" + profilePictures.get(0).getUrl();
+        } else {
+            imageUrl = profilePictures.get(0).getUrl().toLowerCase();
+        }
+
+        Resources resources = context.getResources();
+        return resources.getIdentifier(imageUrl, "drawable",
+                context.getPackageName());
     }
 
     public String getUserProfilePic() {

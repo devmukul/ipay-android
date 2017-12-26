@@ -275,12 +275,12 @@ public class TransactionDetailsFragment extends BaseFragment {
 
         final String[] OPERATOR_PREFIXES = getResources().getStringArray(R.array.operator_prefix);
         int[] operator_array = new int[]{
-                R.drawable.ic_gp2,
-                R.drawable.ic_gp2,
-                R.drawable.ic_robi2,
-                R.drawable.ic_airtel2,
-                R.drawable.ic_banglalink2,
-                R.drawable.ic_teletalk2,
+                R.drawable.gp,
+                R.drawable.gp,
+                R.drawable.robi,
+                R.drawable.airtel,
+                R.drawable.banglalink,
+                R.drawable.teletalk,
         };
 
         for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
