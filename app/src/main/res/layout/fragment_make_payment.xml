@@ -64,32 +64,36 @@
             android:id="@+id/profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_margin="@dimen/activity_horizontal_margin"
             android:visibility="gone">
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                 android:id="@+id/profile_picture"
-                style="@style/ReviewImageStyle" />
+                style="@style/PaymentReviewImageStyleLarge" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:layout_gravity="center_horizontal">
 
                 <TextView
                     android:id="@+id/textview_name"
                     style="@style/TextViewUserInfoPaymentReviewPrimary"
                     android:ellipsize="end"
-                    android:singleLine="true" />
+                    android:maxLines="1"
+                    android:gravity="center_horizontal"/>
 
                 <TextView
                     android:id="@+id/textview_mobile_number"
-                    style="@style/TextViewUserInfoPaymentReviewSecondary" />
+                    style="@style/TextViewUserInfoPaymentReviewSecondary"
+                    android:gravity="center_horizontal"/>
 
             </LinearLayout>
         </LinearLayout>
-
 
         <RelativeLayout
             android:id="@+id/mobile_number_view"
@@ -132,12 +136,10 @@
                     android:src="@drawable/ic_book3x" />
             </LinearLayout>
 
-            <View style="@style/Divider"
-                android:layout_alignParentBottom="true"/>
-
         </RelativeLayout>
 
-
+        <View style="@style/Divider"
+            android:layout_alignParentBottom="true"/>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

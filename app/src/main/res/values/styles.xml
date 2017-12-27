@@ -650,9 +650,16 @@
         <item name="android:layout_height">74dp</item>
     </style>
 
+
+
     <style name="PaymentReviewImageStyle">
         <item name="android:layout_width">74dp</item>
         <item name="android:layout_height">74dp</item>
+    </style>
+
+    <style name="PaymentReviewImageStyleLarge">
+        <item name="android:layout_width">110dp</item>
+        <item name="android:layout_height">110dp</item>
     </style>
 
     <style name="ReviewImageStyleDialog">
