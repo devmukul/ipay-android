@@ -607,6 +607,7 @@
     <string name="mobile_topup_restriction_info">Unverified users can recharge only their own mobile number</string>
     <string name="send_money_description_info">Enter the details of the recipient to send money</string>
     <string name="request_money_description_info">Enter the details of the recipient to request money</string>
+    <string name="request_payment_description_info">Enter the details of the recipient to request for payment</string>
     <string name="make_payment_description_info">Enter the details of the recipient to make payment</string>
     <string name="total_amount">Total Amount</string>
     <string name="total_amount_in_tk">Total Amount (Tk)</string>
@@ -617,7 +618,7 @@
     <string name="item">Item</string>
     <string name="fee">Fee</string>
     <string name="net_payable">Net Payable</string>
-    <string name="service_charge">(-) Service Charge</string>
+    <string name="service_charge">Service Charge</string>
     <string name="topup_package">Type</string>
     <string name="operator">Operator</string>
     <string name="invite_this_person_to_ipay" tools:keep="@string/invite_this_person_to_ipay">Invite this person to iPay</string>

@@ -48,8 +48,6 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
 
     private String mReceiverMobileNumber;
     private String mDescription;
-    private BigDecimal mVat;
-    private BigDecimal mTotal;
     private BigDecimal mAmount;
 
     private String mReceiverName;
@@ -67,14 +65,6 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
         mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
         mAmount = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.AMOUNT));
-        mTotal = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.TOTAL));
-        if (getActivity().getIntent().getStringExtra(Constants.VAT).equals(""))
-            mVat = new BigDecimal(0);
-        else mVat = new BigDecimal(getActivity().getIntent().getStringExtra(Constants.VAT));
-
-        mVat = mAmount.multiply(mVat.divide(new BigDecimal(100), BigDecimal.ROUND_CEILING));
-        mTotal = mAmount.add(mVat);
-
         mReceiverName = getArguments().getString(Constants.NAME);
         mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
 
@@ -102,8 +92,6 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         final TextView receiverNameTextView = findViewById(R.id.receiver_name_text_view);
         final TextView receiverMobileNumberTextView = findViewById(R.id.receiver_mobile_number_text_view);
         final TextView amountTextView = findViewById(R.id.amount_text_view);
-        final TextView vatTextView = findViewById(R.id.vat_text_view);
-        final TextView totalTextView = findViewById(R.id.total_text_view);
         final View descriptionViewHolder = findViewById(R.id.description_view_holder);
         final TextView descriptionTextView = findViewById(R.id.description_text_view);
         final Button paymentRequestButton = findViewById(R.id.payment_request_button);
@@ -122,10 +110,8 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         receiverMobileNumberTextView.setText(mReceiverMobileNumber);
 
         amountTextView.setText(Utilities.formatTaka(mAmount));
-        vatTextView.setText(Utilities.formatTaka(mVat));
-        totalTextView.setText(Utilities.formatTaka(mTotal));
         serviceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
-        netAmountTextView.setText(Utilities.formatTaka(mTotal.subtract(new BigDecimal(0.0))));
+        netAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
 
 
         if (TextUtils.isEmpty(mDescription)) {
@@ -141,7 +127,7 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
 
                 if (Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                         && Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-                    final String errorMessage = InputValidator.isValidAmount(getActivity(), mTotal,
+                    final String errorMessage = InputValidator.isValidAmount(getActivity(), mAmount,
                             RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
                             RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
@@ -189,7 +175,7 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         mProgressDialog.setMessage(getString(R.string.progress_dialog_sending_payment_request));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        mSendNewPaymentRequest = new SendNewPaymentRequest(mAmount, mReceiverMobileNumber, mDescription, null, mVat);
+        mSendNewPaymentRequest = new SendNewPaymentRequest(mAmount, mReceiverMobileNumber, mDescription, null, null);
         Gson gson = new Gson();
         String json = gson.toJson(mSendNewPaymentRequest);
         mSendPaymentRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_SEND_PAYMENT_REQUEST,
@@ -212,13 +198,13 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
 
     @Override
     public BigDecimal getAmount() {
-        return mTotal;
+        return mAmount;
     }
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         serviceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
-        netAmountTextView.setText(Utilities.formatTaka(mTotal.subtract(serviceCharge)));
+        netAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
     }
 
     @Override

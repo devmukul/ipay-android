@@ -847,7 +847,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     }
 
     private void launchRequestMoneyReviewPage(TransactionHistory transactionHistory) {
-
         Intent intent = new Intent(getActivity(), SentReceivedRequestReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
         intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER,
@@ -858,23 +857,32 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
         intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());
         intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
+        intent.putExtra(Constants.IS_IN_CONTACTS,
+                new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getNumber()));
 
-        if (ProfileInfoCacheManager.getMobileNumber().equals(transactionHistory.getOriginatingMobileNumber())) {
-            intent.putExtra(Constants.IS_IN_CONTACTS,
-                    new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getNumber()));
+        if (transactionHistory.getType().equalsIgnoreCase(Constants.TRANSACTION_TYPE_CREDIT)) {
             intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
-        } else {
-            intent.putExtra(Constants.IS_IN_CONTACTS,
-                    new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getOriginatingMobileNumber()));
         }
         startActivityForResult(intent, REQUEST_MONEY_REVIEW_REQUEST);
     }
 
     private void launchRequestPaymentReviewPage(TransactionHistory transactionHistory) {
         Intent intent = new Intent(getActivity(), RequestPaymentActivity.class);
-        //intent.putExtra(Constants.REQUEST_ID, transactionHistory.getId());
-        intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
+        intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
+        intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER,
+                ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getNumber()));
 
+        intent.putExtra(Constants.DESCRIPTION_TAG, transactionHistory.getPurpose());
+        intent.putExtra(Constants.TRANSACTION_ID, transactionHistory.getTransactionID());
+        intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
+        intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());
+        intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
+        intent.putExtra(Constants.IS_IN_CONTACTS,
+                new ContactSearchHelper(getActivity()).searchMobileNumber(transactionHistory.getAdditionalInfo().getNumber()));
+
+        if (transactionHistory.getType().equalsIgnoreCase(Constants.TRANSACTION_TYPE_CREDIT)) {
+            intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
+        }
         startActivityForResult(intent, REQUEST_PAYMENT_REVIEW_REQUEST);
     }
 
