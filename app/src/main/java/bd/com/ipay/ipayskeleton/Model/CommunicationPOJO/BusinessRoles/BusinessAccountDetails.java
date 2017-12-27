@@ -10,12 +10,17 @@ public class BusinessAccountDetails {
     private long id;
     private long businessAccountId;
     private String businessName;
+    private String businessMobileNumber;
     private List<UserProfilePictureClass> profilePictures = null;
     private String roleName;
     private long createdAt;
     private List<BusinessService> serviceList;
 
     public BusinessAccountDetails() {
+    }
+
+    public String getBusinessMobileNumber() {
+        return businessMobileNumber;
     }
 
     public BusinessAccountDetails(long id, String businessName) {
