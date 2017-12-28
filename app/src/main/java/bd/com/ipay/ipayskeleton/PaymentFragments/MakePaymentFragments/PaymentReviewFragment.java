@@ -277,7 +277,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                     getActivity().setResult(Activity.RESULT_OK);
                     switchToPaymentSuccessFragment(mReceiverBusinessName, mPhotoUri);
 
-                    //Google Analytic event
                     Utilities.sendSuccessEventTracker(mTracker, "Make Payment", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
 
                     //getActivity().finish();
