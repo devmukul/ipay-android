@@ -163,14 +163,18 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
         mAddMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PinChecker addMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
-                    @Override
-                    public void ifPinAdded() {
-                        Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
-                        startActivity(intent);
-                    }
-                });
-                addMoneyPinChecker.execute();
+                if (ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_BANK) || ACLManager.hasServicesAccessibility(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)) {
+                    PinChecker addMoneyPinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                        @Override
+                        public void ifPinAdded() {
+                            Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                    addMoneyPinChecker.execute();
+                } else {
+                    DialogUtils.showServiceNotAllowedDialog(getActivity());
+                }
             }
         });
 
