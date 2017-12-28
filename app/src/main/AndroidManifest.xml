@@ -163,6 +163,7 @@
             android:label="@string/make_payment"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation" />
+
         <activity
             android:name=".Activities.PaymentActivities.RequestMoneyActivity"
             android:label="@string/request_money"

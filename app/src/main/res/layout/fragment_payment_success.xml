@@ -59,6 +59,7 @@
 
         </RelativeLayout>
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,9 +67,18 @@
             android:gravity="center_horizontal"
             android:layout_margin="@dimen/activity_horizontal_margin">
 
+            <TextView
+                android:id="@+id/success_amount"
+                style="@style/PaymentSuccessText"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
+                android:drawableLeft="@drawable/success_icon"
+                android:drawablePadding="@dimen/value4"/>
+
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                 android:id="@+id/business_profile_image_view"
-                style="@style/PaymentReviewImageStyleLarge" />
+                style="@style/PaymentReviewImageStyle"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -97,9 +107,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
-            <View style="@style/Divider" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -108,54 +115,19 @@
 
                 <TextView
                     style="@style/TextViewInfoLabelPaymentReview"
-                    android:text="@string/amount_in_tk" />
+                    android:text="@string/status" />
 
                 <TextView
-                    android:id="@+id/amount_text_view"
-                    style="@style/AmountTextViewPaymentReview" />
+                    android:id="@+id/status_text_view"
+                    style="@style/SuccessText" />
 
             </LinearLayout>
 
             <View style="@style/Divider" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewInfoLabelPaymentReview"
-                    android:text="@string/service_charge" />
-
-                <TextView
-                    android:id="@+id/service_charge_text_view"
-                    style="@style/ChargeTextViewPaymentReview" />
-
-            </LinearLayout>
-
-            <View style="@style/Divider" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewInfoLabelPaymentReview"
-                    android:text="@string/recipient_net_amount" />
-
-                <TextView
-                    android:id="@+id/net_amount_text_view"
-                    style="@style/NetAmountTextViewPaymentReview"/>
-
-            </LinearLayout>
-
-            <View style="@style/Divider" />
-
-            <LinearLayout
-                android:id="@+id/reference_number_view_holder"
+                android:id="@+id/transaction_id_view_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -171,7 +143,7 @@
                         android:text="@string/reference_number" />
 
                     <TextView
-                        android:id="@+id/reference_number_text_view"
+                        android:id="@+id/transaction_id_text_view"
                         style="@style/ReferenceNoTextViewPaymentReview"/>
 
                 </LinearLayout>
@@ -201,12 +173,13 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/make_payment_button"
-            style="@style/ButtonPrimaryWithNote"
+            android:id="@+id/another_payment_button"
+            style="@style/ButtonSecondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:text="@string/confirm" />
+            android:text="@string/make_another_payment"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"/>
     </LinearLayout>
 </ScrollView>

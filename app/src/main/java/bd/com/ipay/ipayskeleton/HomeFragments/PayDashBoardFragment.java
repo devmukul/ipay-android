@@ -182,6 +182,8 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                                             Intent intent;
                                             intent = new Intent(getActivity(), PaymentActivity.class);
                                             intent.putExtra(Constants.MOBILE_NUMBER, businessAccountEntry.getMobileNumber());
+                                            intent.putExtra(Constants.NAME, businessAccountEntry.getBusinessName());
+                                            intent.putExtra(Constants.PHOTO_URI, businessAccountEntry.getProfilePictureUrl());
                                             getContext().startActivity(intent);
                                         }
                                     });
