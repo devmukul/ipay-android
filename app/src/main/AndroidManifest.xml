@@ -217,6 +217,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+
+        <activity
+            android:name=".Activities.PaymentActivities.SentReceivedRequestPaymentReviewActivity"
+            android:label="@string/request_payment"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ActionBarNoElevation"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+
         <activity
             android:name=".Activities.PaymentActivities.TopUpReviewActivity"
             android:label="@string/mobile_topup"

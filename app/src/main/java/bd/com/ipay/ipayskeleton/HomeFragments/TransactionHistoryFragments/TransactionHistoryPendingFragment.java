@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestPaymentReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -50,6 +51,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryPendingRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
@@ -580,7 +582,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             return;
         }
 
-        String url = TransactionHistoryRequest.generateUri(type,
+        String url = TransactionHistoryPendingRequest.generateUri(type,
                 fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT);
 
         mTransactionHistoryTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_PENDING_TRANSACTION_HISTORY,
@@ -867,7 +869,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
     }
 
     private void launchRequestPaymentReviewPage(TransactionHistory transactionHistory) {
-        Intent intent = new Intent(getActivity(), RequestPaymentActivity.class);
+        Intent intent = new Intent(getActivity(), SentReceivedRequestPaymentReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, new BigDecimal(transactionHistory.getAmount()));
         intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER,
                 ContactEngine.formatMobileNumberBD(transactionHistory.getAdditionalInfo().getNumber()));
@@ -875,6 +877,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
         intent.putExtra(Constants.DESCRIPTION_TAG, transactionHistory.getPurpose());
         intent.putExtra(Constants.TRANSACTION_ID, transactionHistory.getTransactionID());
         intent.putExtra(Constants.NAME, transactionHistory.getReceiver());
+        intent.putExtra(Constants.STATUS, Constants.HTTP_RESPONSE_STATUS_PROCESSING);
         intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + transactionHistory.getAdditionalInfo().getUserProfilePic());
         intent.putExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, true);
         intent.putExtra(Constants.IS_IN_CONTACTS,

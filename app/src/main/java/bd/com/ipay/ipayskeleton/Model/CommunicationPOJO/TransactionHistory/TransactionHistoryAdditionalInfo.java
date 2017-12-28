@@ -48,7 +48,9 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
     }
 
     public String getUserProfilePic() {
-        return profilePictures.get(0).getUrl();
+        if (!profilePictures.isEmpty())
+            return profilePictures.get(0).getUrl();
+        else return "";
     }
 
     public List<UserProfilePictureClass> getProfilePictures() {

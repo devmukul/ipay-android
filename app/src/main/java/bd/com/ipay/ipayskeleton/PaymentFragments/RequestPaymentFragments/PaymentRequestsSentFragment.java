@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,11 +21,11 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestPaymentReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -36,11 +37,13 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PendingPaymentClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class PaymentRequestsSentFragment extends ProgressFragment implements HttpResponseListener {
-
+    private final int REQUEST_PAYMENT_REVIEW_REQUEST = 101;
     private HttpRequestPostAsyncTask mPendingInvoicesTask = null;
     private GetPendingPaymentsResponse mGetPendingPaymentsResponse;
 
@@ -79,7 +82,7 @@ public class PaymentRequestsSentFragment extends ProgressFragment implements Htt
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_money_request_sent) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_money_request_sent));
     }
 
     @Override
@@ -297,7 +300,7 @@ public class PaymentRequestsSentFragment extends ProgressFragment implements Htt
                             mReceiverName = name;
                             mReceiverMobileNumber = mobileNumber;
                             mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
-                            launchInvoiceDetailsFragment();
+                            launchReviewPage();
                         }
                     }
                 });
@@ -420,25 +423,19 @@ public class PaymentRequestsSentFragment extends ProgressFragment implements Htt
         }
     }
 
-    private void launchInvoiceDetailsFragment() {
+    private void launchReviewPage() {
 
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.DESCRIPTION, mDescription);
-        bundle.putString(Constants.TIME, mTime);
-        bundle.putLong(Constants.MONEY_REQUEST_ID, mID);
-        bundle.putString(Constants.AMOUNT, mAmount.toString());
-        bundle.putString(Constants.VAT, mVat.toString());
-        bundle.putInt(Constants.STATUS, mStatus);
-        bundle.putString(Constants.PHOTO_URI, mPhotoUri);
-        bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
-        bundle.putString(Constants.NAME, mReceiverName);
-        bundle.putString(Constants.TRANSACTION_ID, mTransactionID);
+        Intent intent = new Intent(getActivity(), SentReceivedRequestPaymentReviewActivity.class);
+        intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
+        intent.putExtra(Constants.AMOUNT, mAmount);
+        intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
+        intent.putExtra(Constants.DESCRIPTION_TAG, mDescription);
+        intent.putExtra(Constants.MONEY_REQUEST_ID, mID);
+        intent.putExtra(Constants.STATUS, mStatus);
+        intent.putExtra(Constants.NAME, mReceiverName);
+        intent.putExtra(Constants.PHOTO_URI, mPhotoUri);
+        intent.putExtra(Constants.IS_IN_CONTACTS, new ContactSearchHelper(getActivity()).searchMobileNumber(mReceiverMobileNumber));
 
-        if (mInvoiceItemList != null)
-            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mInvoiceItemList));
-        else
-            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
-
-        ((RequestPaymentActivity) getActivity()).switchToSentPaymentRequestDetailsFragment(bundle);
+        startActivityForResult(intent, REQUEST_PAYMENT_REVIEW_REQUEST);
     }
 }

@@ -168,6 +168,7 @@ public class TransactionHistory implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(this.otherParty, flags);
         dest.writeDouble(this.amount);
         dest.writeDouble(this.fee);
         dest.writeDouble(this.netAmount);
@@ -188,18 +189,25 @@ public class TransactionHistory implements Parcelable {
         dest.writeString(this.purpose);
         dest.writeString(this.statusInWord);
         dest.writeString(this.description);
-        dest.writeString(this.shortDesc);
+        if (this.shortDesc != null) {
+            dest.writeString(this.shortDesc);
+        }
         dest.writeString(this.transactionId);
         dest.writeString(this.accountId);
         dest.writeLong(this.insertTime);
-        dest.writeString(this.type);
-        dest.writeParcelable(this.otherParty, flags);
-        dest.writeString(this.message);
-        if (actions != null)
+        if (this.type != null) {
+            dest.writeString(this.type);
+        }
+        if (this.actions != null) {
             dest.writeArray(this.actions);
+        }
+        if (this.message != null) {
+            dest.writeString(this.message);
+        }
     }
 
     protected TransactionHistory(Parcel in) {
+        this.otherParty = in.readParcelable(TransactionHistoryAdditionalInfo.class.getClassLoader());
         this.amount = in.readDouble();
         this.fee = in.readDouble();
         this.netAmount = in.readDouble();
@@ -214,11 +222,10 @@ public class TransactionHistory implements Parcelable {
         this.transactionId = in.readString();
         this.insertTime = in.readLong();
         this.accountId = in.readString();
-        this.message = in.readString();
         this.type = in.readString();
-        this.otherParty = in.readParcelable(TransactionHistoryAdditionalInfo.class.getClassLoader());
-        if (this.actions != null)
+        if (actions != null)
             in.readStringArray(actions);
+        this.message = in.readString();
     }
 
     public static final Parcelable.Creator<TransactionHistory> CREATOR = new Parcelable.Creator<TransactionHistory>() {

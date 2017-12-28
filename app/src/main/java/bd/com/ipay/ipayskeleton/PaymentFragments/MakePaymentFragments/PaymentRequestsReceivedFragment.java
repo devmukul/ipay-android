@@ -28,10 +28,9 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestPaymentReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -46,10 +45,13 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.MoneyAndPay
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.GetMoneyRequest;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class PaymentRequestsReceivedFragment extends ProgressFragment implements HttpResponseListener {
+    private final int REQUEST_PAYMENT_REVIEW_REQUEST = 101;
 
     private HttpRequestPostAsyncTask mGetAllNotificationsTask = null;
     private GetMoneyAndPaymentRequestResponse mGetMoneyAndPaymentRequestResponse;
@@ -81,6 +83,7 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
     private long mMoneyRequestId;
     private String mTitle;
     private String mDescription;
+    private int mStatus;
     private TextView mEmptyListTextView;
 
 
@@ -126,7 +129,7 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
             refreshNotificationList();
         }
 
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_payment_request_received) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_payment_request_received));
     }
 
     @Override
@@ -356,14 +359,14 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
 
             public void bindViewMoneyRequestList(int pos) {
                 final MoneyAndPaymentRequest moneyRequest = moneyRequestList.get(pos);
-
-                final long id = moneyRequest.getId();
+                mMoneyRequestId = moneyRequest.getId();
                 final String imageUrl = moneyRequest.getOriginatorProfile().getUserProfilePicture();
                 final String name = moneyRequest.originatorProfile.getUserName();
                 final String mobileNumber = moneyRequest.originatorProfile.getUserMobileNumber();
                 final String description = moneyRequest.getDescriptionofRequest();
                 final String time = Utilities.formatDateWithTime(moneyRequest.getRequestTime());
                 final String title = moneyRequest.getTitle();
+                mStatus = moneyRequest.getStatus();
                 final BigDecimal amount = moneyRequest.getAmount();
                 final BigDecimal vat = moneyRequest.getVat();
                 final List<InvoiceItem> itemList = moneyRequest.getItemList();
@@ -377,7 +380,7 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mMoneyRequestId = id;
+
                         mAmount = amount;
                         mReceiverName = name;
                         mReceiverMobileNumber = mobileNumber;
@@ -386,7 +389,7 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
                         mVat = vat;
                         mInvoiceItemList = itemList;
                         mDescription = description;
-                        launchInvoiceHistoryFragment();
+                        launchReviewPage();
                     }
                 });
             }
@@ -500,25 +503,20 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
                 return MONEY_REQUEST_ITEM_VIEW;
         }
 
-        private void launchInvoiceHistoryFragment() {
+        private void launchReviewPage() {
 
-            Bundle bundle = new Bundle();
-            bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
-            bundle.putString(Constants.VAT, mVat.toString());
-            bundle.putString(Constants.PHOTO_URI, mPhotoUri);
-            bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
-            bundle.putString(Constants.NAME, mReceiverName);
-            bundle.putInt(Constants.MONEY_REQUEST_SERVICE_ID, Constants.SERVICE_ID_REQUEST_MONEY);
-            bundle.putString(Constants.AMOUNT, mAmount.toString());
-            bundle.putString(Constants.TITLE, mTitle);
-            bundle.putString(Constants.DESCRIPTION, mDescription);
+            Intent intent = new Intent(getActivity(), SentReceivedRequestPaymentReviewActivity.class);
+            intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
+            intent.putExtra(Constants.AMOUNT, mAmount);
+            intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
+            intent.putExtra(Constants.DESCRIPTION_TAG, mDescription);
+            intent.putExtra(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
+            intent.putExtra(Constants.STATUS, mStatus);
+            intent.putExtra(Constants.NAME, mReceiverName);
+            intent.putExtra(Constants.PHOTO_URI, mPhotoUri);
+            intent.putExtra(Constants.IS_IN_CONTACTS, new ContactSearchHelper(getActivity()).searchMobileNumber(mReceiverMobileNumber));
 
-            if (mInvoiceItemList != null)
-                bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mInvoiceItemList));
-            else
-                bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
-
-            ((PaymentActivity) getActivity()).switchToReceivedPaymentRequestDetailsFragment(bundle);
+            startActivityForResult(intent, REQUEST_PAYMENT_REVIEW_REQUEST);
         }
     }
 }

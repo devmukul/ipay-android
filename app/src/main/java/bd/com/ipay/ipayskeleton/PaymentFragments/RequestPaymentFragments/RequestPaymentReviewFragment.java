@@ -94,7 +94,7 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
         final TextView amountTextView = findViewById(R.id.amount_text_view);
         final View descriptionViewHolder = findViewById(R.id.description_view_holder);
         final TextView descriptionTextView = findViewById(R.id.description_text_view);
-        final Button paymentRequestButton = findViewById(R.id.payment_request_button);
+        final Button paymentRequestButton = findViewById(R.id.request_payment_button);
 
         serviceChargeTextView = findViewById(R.id.service_charge_text_view);
         netAmountTextView = findViewById(R.id.net_amount_text_view);
