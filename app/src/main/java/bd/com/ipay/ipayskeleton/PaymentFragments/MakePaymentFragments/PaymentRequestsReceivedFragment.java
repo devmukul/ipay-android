@@ -1,12 +1,8 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,22 +20,16 @@ import android.widget.Toast;
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestPaymentReviewActivity;
-import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewDialogFinishListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ReviewMakePaymentDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.GetMoneyAndPaymentRequestResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Notification.MoneyAndPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.GetMoneyRequest;
@@ -56,53 +46,34 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
     private HttpRequestPostAsyncTask mGetAllNotificationsTask = null;
     private GetMoneyAndPaymentRequestResponse mGetMoneyAndPaymentRequestResponse;
 
-    private HttpRequestGetAsyncTask mGetSingleInvoiceTask = null;
-    private MoneyAndPaymentRequest mGetSingleInvoiceResponse;
-
-    private RecyclerView mInvoiceRecyclerView;
-    private InvoiceListAdapter mInvoiceListAdapter;
+    private RecyclerView mRequestPaymentRecyclerView;
+    private RequestPaymentListAdapter mRequestPaymentListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<MoneyAndPaymentRequest> moneyRequestList;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
-    private ProgressDialog mProgressDialog;
 
     private int pageCount = 0;
     private boolean hasNext = false;
     private boolean isLoading = false;
     private boolean clearListAfterLoading;
 
-    // These variables hold the information needed to populate the review dialog
-    private List<InvoiceItem> mInvoiceItemList;
-    private BigDecimal mAmount;
-    private BigDecimal mVat;
-    private String mReceiverName;
-    private String mReceiverMobileNumber;
-    private String mPhotoUri;
-    private long mMoneyRequestId;
-    private String mTitle;
-    private String mDescription;
-    private int mStatus;
     private TextView mEmptyListTextView;
 
-
-    private static final int REQUEST_CODE_PERMISSION = 1001;
     private Tracker mTracker;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_invoice_payment, container, false);
+        View v = inflater.inflate(R.layout.fragment_payment_request_received, container, false);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
-        mInvoiceRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice);
-        mProgressDialog = new ProgressDialog(getActivity());
+        mRequestPaymentRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice);
 
         mEmptyListTextView = (TextView) v.findViewById(R.id.empty_list_text);
-        mInvoiceListAdapter = new InvoiceListAdapter();
+        mRequestPaymentListAdapter = new RequestPaymentListAdapter();
         mLayoutManager = new LinearLayoutManager(getActivity());
-        mInvoiceRecyclerView.setLayoutManager(mLayoutManager);
-        mInvoiceRecyclerView.setAdapter(mInvoiceListAdapter);
+        mRequestPaymentRecyclerView.setLayoutManager(mLayoutManager);
+        mRequestPaymentRecyclerView.setAdapter(mRequestPaymentListAdapter);
 
         // Refresh each time home_activity page appears
         if (Utilities.isConnectionAvailable(getActivity())) {
@@ -150,49 +121,6 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-
-        switch (requestCode) {
-            case REQUEST_CODE_PERMISSION: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    initiateScan();
-                } else {
-                    Toast.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
-
-    private void initiateScan() {
-        IntentIntegrator.forSupportFragment(this).initiateScan();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
-            IntentResult scanResult = IntentIntegrator.parseActivityResult(
-                    requestCode, resultCode, data);
-            if (scanResult == null) {
-                return;
-            }
-            final String result = scanResult.getContents();
-            if (result != null) {
-                Handler mHandler = new Handler();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            getSingleInvoice(Integer.parseInt(result));
-                        } catch (NumberFormatException e) {
-                            Toast.makeText(getActivity(), R.string.error_invalid_QR_code, Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setContentShown(false);
@@ -220,19 +148,6 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
                 Constants.BASE_URL_SM + Constants.URL_GET_NOTIFICATIONS, json, getActivity());
         mGetAllNotificationsTask.mHttpResponseListener = this;
         mGetAllNotificationsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void getSingleInvoice(int invoiceId) {
-        if (mGetSingleInvoiceTask != null) {
-            return;
-        }
-
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_payment_request));
-        mProgressDialog.show();
-        mGetSingleInvoiceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SINGLE_INVOICE,
-                Constants.BASE_URL_SM + Constants.URL_PAYMENT_GET_INVOICE + invoiceId + "/", getActivity());
-        mGetSingleInvoiceTask.mHttpResponseListener = this;
-        mGetSingleInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -268,7 +183,7 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
 
                         hasNext = mGetMoneyAndPaymentRequestResponse.isHasNext();
                         if (isLoading) isLoading = false;
-                        mInvoiceListAdapter.notifyDataSetChanged();
+                        mRequestPaymentListAdapter.notifyDataSetChanged();
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -285,47 +200,6 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
                 mSwipeRefreshLayout.setRefreshing(false);
 
                 break;
-            case Constants.COMMAND_GET_SINGLE_INVOICE:
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
-                    try {
-                        mGetSingleInvoiceResponse = gson.fromJson(result.getJsonString(), MoneyAndPaymentRequest.class);
-                        mMoneyRequestId = mGetSingleInvoiceResponse.getId();
-                        mAmount = mGetSingleInvoiceResponse.getAmount();
-                        mReceiverName = mGetSingleInvoiceResponse.originatorProfile.getUserName();
-                        mReceiverMobileNumber = mGetSingleInvoiceResponse.originatorProfile.getUserMobileNumber();
-                        mPhotoUri = mGetSingleInvoiceResponse.originatorProfile.getUserProfilePicture();
-                        mTitle = mGetSingleInvoiceResponse.getTitle();
-                        mVat = mGetSingleInvoiceResponse.getVat();
-                        mInvoiceItemList = mGetSingleInvoiceResponse.getItemList();
-
-                        ReviewMakePaymentDialog dialog = new ReviewMakePaymentDialog(getActivity(), mMoneyRequestId, mReceiverMobileNumber,
-                                mReceiverName, mPhotoUri, mAmount, mTitle, Constants.SERVICE_ID_REQUEST_MONEY, mVat, mInvoiceItemList,
-                                new ReviewDialogFinishListener() {
-                                    @Override
-                                    public void onReviewFinish() {
-                                        refreshNotificationList();
-                                    }
-                                });
-                        dialog.show();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (getActivity() != null) {
-                            Toaster.makeText(getActivity(), R.string.failed_fetching_payment_request, Toast.LENGTH_LONG);
-                        }
-                    }
-
-                } else {
-                    if (getActivity() != null) {
-                        Toaster.makeText(getActivity(), R.string.failed_fetching_payment_request, Toast.LENGTH_LONG);
-                    }
-                }
-                mGetSingleInvoiceTask = null;
-                mSwipeRefreshLayout.setRefreshing(false);
-                mProgressDialog.dismiss();
-
-                break;
         }
 
         if (moneyRequestList != null && moneyRequestList.size() == 0) {
@@ -333,12 +207,12 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
         } else mEmptyListTextView.setVisibility(View.GONE);
     }
 
-    private class InvoiceListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class RequestPaymentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int FOOTER_VIEW = 1;
         private static final int MONEY_REQUEST_ITEM_VIEW = 4;
 
-        public InvoiceListAdapter() {
+        public RequestPaymentListAdapter() {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -346,6 +220,14 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
             private final TextView mTitleView;
             private final TextView mTimeView;
             private final ProfileImageView mProfileImageView;
+            private BigDecimal mAmount;
+            private String mReceiverName;
+            private String mReceiverMobileNumber;
+            private String mPhotoUri;
+            private long mMoneyRequestId;
+            private String mDescription;
+            private int mStatus;
+            private String mTime;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -360,36 +242,35 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
             public void bindViewMoneyRequestList(int pos) {
                 final MoneyAndPaymentRequest moneyRequest = moneyRequestList.get(pos);
                 mMoneyRequestId = moneyRequest.getId();
-                final String imageUrl = moneyRequest.getOriginatorProfile().getUserProfilePicture();
-                final String name = moneyRequest.originatorProfile.getUserName();
-                final String mobileNumber = moneyRequest.originatorProfile.getUserMobileNumber();
-                final String description = moneyRequest.getDescriptionofRequest();
-                final String time = Utilities.formatDateWithTime(moneyRequest.getRequestTime());
-                final String title = moneyRequest.getTitle();
+                mPhotoUri = moneyRequest.getOriginatorProfile().getUserProfilePicture();
+                mReceiverName = moneyRequest.originatorProfile.getUserName();
+                mReceiverMobileNumber = moneyRequest.originatorProfile.getUserMobileNumber();
+                mDescription = moneyRequest.getDescriptionofRequest();
+                mTime = Utilities.formatDateWithTime(moneyRequest.getRequestTime());
                 mStatus = moneyRequest.getStatus();
-                final BigDecimal amount = moneyRequest.getAmount();
-                final BigDecimal vat = moneyRequest.getVat();
-                final List<InvoiceItem> itemList = moneyRequest.getItemList();
+                mAmount = moneyRequest.getAmount();
 
-                mDescriptionView.setText(Utilities.formatTaka(amount));
-                mTimeView.setText(time);
-                mTitleView.setText(name);
+                mDescriptionView.setText(Utilities.formatTaka(mAmount));
+                mTimeView.setText(mTime);
+                mTitleView.setText(mReceiverName);
 
-                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mPhotoUri, false);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), SentReceivedRequestPaymentReviewActivity.class);
+                        intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
+                        intent.putExtra(Constants.AMOUNT, mAmount);
+                        intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
+                        intent.putExtra(Constants.DESCRIPTION_TAG, mDescription);
+                        intent.putExtra(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
+                        intent.putExtra(Constants.STATUS, mStatus);
+                        intent.putExtra(Constants.NAME, mReceiverName);
+                        intent.putExtra(Constants.PHOTO_URI, mPhotoUri);
+                        intent.putExtra(Constants.IS_IN_CONTACTS, new ContactSearchHelper(getActivity()).searchMobileNumber(mReceiverMobileNumber));
 
-                        mAmount = amount;
-                        mReceiverName = name;
-                        mReceiverMobileNumber = mobileNumber;
-                        mPhotoUri = imageUrl;
-                        mTitle = title;
-                        mVat = vat;
-                        mInvoiceItemList = itemList;
-                        mDescription = description;
-                        launchReviewPage();
+                        startActivityForResult(intent, REQUEST_PAYMENT_REVIEW_REQUEST);
                     }
                 });
             }
@@ -501,22 +382,6 @@ public class PaymentRequestsReceivedFragment extends ProgressFragment implements
                 return FOOTER_VIEW;
             else
                 return MONEY_REQUEST_ITEM_VIEW;
-        }
-
-        private void launchReviewPage() {
-
-            Intent intent = new Intent(getActivity(), SentReceivedRequestPaymentReviewActivity.class);
-            intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
-            intent.putExtra(Constants.AMOUNT, mAmount);
-            intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
-            intent.putExtra(Constants.DESCRIPTION_TAG, mDescription);
-            intent.putExtra(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
-            intent.putExtra(Constants.STATUS, mStatus);
-            intent.putExtra(Constants.NAME, mReceiverName);
-            intent.putExtra(Constants.PHOTO_URI, mPhotoUri);
-            intent.putExtra(Constants.IS_IN_CONTACTS, new ContactSearchHelper(getActivity()).searchMobileNumber(mReceiverMobileNumber));
-
-            startActivityForResult(intent, REQUEST_PAYMENT_REVIEW_REQUEST);
         }
     }
 }
