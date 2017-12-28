@@ -140,7 +140,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                 mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
                 mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
                 if (!TextUtils.isEmpty(mReceiverPhotoUri)) {
-                    businessProfileImageView.setProfilePicture(mReceiverPhotoUri, false);
+                    businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
                 }
                 if (TextUtils.isEmpty(mReceiverName)) {
                     businessNameTextView.setVisibility(View.GONE);
@@ -148,10 +148,10 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                     businessNameTextView.setVisibility(View.VISIBLE);
                     businessNameTextView.setText(mReceiverName);
                 }
-            }else{
+            } else {
                 getProfileInfo(mReceiverMobileNumber);
             }
-        }else{
+        } else {
             profileView.setVisibility(View.GONE);
             mobileNumberView.setVisibility(View.VISIBLE);
         }
@@ -346,7 +346,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
             cancel = true;
         }
 
-        if(TextUtils.isEmpty(mReceiverMobileNumber)) {
+        if (TextUtils.isEmpty(mReceiverMobileNumber)) {
             if (!InputValidator.isValidNumber(mobileNumber)) {
                 focusView = mMobileNumberEditText;
                 mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
@@ -369,13 +369,13 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
     private void launchReviewPage() {
 
 
-        getActivity().getIntent().setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        getActivity().getIntent().setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        String receiver=null;
+        String receiver = null;
 
         if (TextUtils.isEmpty(mReceiverMobileNumber)) {
             receiver = mMobileNumberEditText.getText().toString().trim();
-        }else{
+        } else {
             receiver = mReceiverMobileNumber;
         }
         BigDecimal amount = new BigDecimal(mAmountEditText.getText().toString().trim());
@@ -388,9 +388,9 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         intent.putExtra(Constants.DESCRIPTION_TAG, description);
         intent.putExtra(Constants.REFERENCE_NUMBER, referenceNumber);
 
-        if(!TextUtils.isEmpty(mReceiverName)){
+        if (!TextUtils.isEmpty(mReceiverName)) {
             intent.putExtra(Constants.NAME, mReceiverName);
-            intent.putExtra(Constants.PHOTO_URI,mReceiverPhotoUri);
+            intent.putExtra(Constants.PHOTO_URI, mReceiverPhotoUri);
         }
         startActivityForResult(intent, PAYMENT_REVIEW_REQUEST);
     }
@@ -445,7 +445,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
             }
 
             mGetBusinessRuleTask = null;
-        }else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
             Gson gson = new Gson();
             try {
                 mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
@@ -472,9 +472,8 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                     }
 
 
-
                     if (!TextUtils.isEmpty(profilePicture)) {
-                        businessProfileImageView.setProfilePicture( Constants.BASE_URL_FTP_SERVER + profilePicture, false);
+                        businessProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture, false);
                     }
                     if (TextUtils.isEmpty(name)) {
                         businessNameTextView.setVisibility(View.GONE);
