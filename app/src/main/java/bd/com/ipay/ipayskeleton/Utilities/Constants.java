@@ -5,6 +5,7 @@ import android.Manifest;
 import com.google.android.gms.vision.CameraSource;
 
 import bd.com.ipay.ipayskeleton.BuildConfig;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 
 public class Constants {
     public static final String ApplicationTag = "iPay";
@@ -41,6 +42,7 @@ public class Constants {
     public static final String SEND_MONEY = "SEND_MONEY";
     public static final String REQUEST_MONEY = "REQUEST_MONEY";
     public static final String REQUEST_PAYMENT = "REQUEST_PAYMENT";
+    public static final String BUSINESS_ROLE_REQUEST = "BUSINESS_ROLE_REQUEST";
 
     public static final String VERIFIED_USERS_ONLY = "VERIFIED_USERS_ONLY";
     public static final String IPAY_MEMBERS_ONLY = "IPAY_MEMBERS_ONLY";
@@ -64,7 +66,7 @@ public class Constants {
     public static final String TOKEN = "token";
     public static final String REFRESH_TOKEN = "refresh-token";
     public static final String RESOURCE_TOKEN = "resource-token";
-    public static final String OPERATING_ON_ACCOUNT_ID = "operatingOnAccountId";
+    public static final String OPERATING_ON_ACCOUNT_ID = "onAccountId";
 
     public static final int CAMERA_REAR = CameraSource.CAMERA_FACING_BACK;
     public static final int CAMERA_FRONT = CameraSource.CAMERA_FACING_FRONT;
@@ -99,6 +101,10 @@ public class Constants {
     public static final String MESSAGE = "message";
 
     public static final String NAME = "NAME";
+    public static final String ACCEPTED = "ACCEPTED";
+    public static final String REJECTED = "REJECTED";
+    public static final String CANCELED = "CANCELED";
+
 
     public static final String OCCUPATION = "OCCUPATION";
     public static final String OCCUPATION_LIST = "OCCUPATION_LIST";
@@ -115,6 +121,8 @@ public class Constants {
     public static final String MOTHERS_MOBILE = "MOTHERS_MOBILE";
 
     public static final String ADDRESS = "ADDRESS";
+    public static final String RELOAD = "RELOAD";
+    public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
     public static final String PRESENT_ADDRESS = "PRESENT_ADDRESS";
@@ -206,6 +214,8 @@ public class Constants {
 
     public static final String PERSONAL_ACCOUNT = "Personal Account";
     public static final String BUSINESS_ACCOUNT = "Business Account";
+    public static final String BUSINESS = "Business";
+    public static final String PRIVILEGES = "PRIVILEGES";
     public static final String SERVICE_ID_SET = "SERVICE_ID_SET";
     public static final String NAVIGATION_MENU_SERVICE_ACCESS_SET = "NAVIGATION_MENU_SERVICE_ACCESS_SET";
     public static final String FRAGMENT_SERVICE_ACCESS_SET = "FRAGMENT_SERVICE_ACCESS_SET";
@@ -224,6 +234,7 @@ public class Constants {
     public static final String ADD_MONEY_BY_BANK_TITLE = "Bank";
     public static final String CARD_TRANSACTION_DATA = "CARD_TRANSACTION_DATA";
     public static final String VALID_IPAY_BD_ADDRESS = "(http://|https://)?(www|dev|test|stage|internal).ipay.com.bd/(.+)";
+    public static String Business_role = "BUSINESS_ROLE";
 
     static {
         if (SERVER_TYPE == DEV_SERVER) {
@@ -366,6 +377,7 @@ public class Constants {
     //business rule Rest
     //business rule Rest
     public static final String URL_BUSINESS_RULE = "business-rule";
+    public static final String URL_SWITCH_ACCOUNT = "business-manager/businesses/";
 
     public static final String URL_BUSINESS_RULE_WITH_SERVICE_CHARGE = "rules-charge";
 
@@ -374,6 +386,7 @@ public class Constants {
 
     public static final String URL_GET_DOWNSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "introducer/downstream/notapproved";
     public static final String URL_GET_DOWNSTREAM_APPROVED_INTRODUCTION_REQUESTS = "introducer/downstream/approved";
+    public static final String URL_GET_DETAILS_OF_INVITED_BUSINESS_ROLE = "business-manager-invitation/received/";
 
     public static final String URL_GET_UPSTREAM_NOT_APPROVED_INTRODUCTION_REQUESTS = "introducer/upstream/notapproved";
     public static final String URL_GET_UPSTREAM_APPROVED_INTRODUCTION_REQUESTS = "introducer/upstream/approved";
@@ -501,6 +514,18 @@ public class Constants {
 
     public static final String URL_GET_BUSINESS_LIST_TRENDING = "trending";
 
+    // Business Information (Owner)
+    public static final String URL_CREATE_EMPLOYEE = "business-manager-invitation";
+    public static final String URL_UPDATE_EMPLOYEE = "business/user";
+
+    public static final String URL_GET_PENDING_EMPLOYEE_LIST = "business-manager-invitation/sent";
+    public static final String URL_GET_EMPLOYEE_LIST = "business-manager";
+    public static final String URL_GET_EMPLOYEE_DETAILS = "business/user/";
+    public static final String URL_REMOVE_AN_EMPLOYEE_FIRST_PART = "business-manager/";
+    public static final String URL_REMOVE_PENDING_EMPLOYEE = "/business-manager-invitation";
+    public static final String URL_GET_BUSINESS_ROLES_DETAILS = "business-role/";
+    public static final String URL_GET_ROLE_MANAGER_REQUESTS = "business-manager-invitation/received";
+
     // Education
     public static final String URL_GET_ALL_INSTITUTIONS_LIST = "institute/all";
     public static final String URL_GET_ALL_SESSIONS_LIST = "session";
@@ -561,6 +586,7 @@ public class Constants {
     public static final String COMMAND_LOG_OUT = "COMMAND_LOG_OUT";
     public static final String COMMAND_SEND_MONEY = "COMMAND_SEND_MONEY";
     public static final String COMMAND_PAYMENT = "COMMAND_PAYMENT";
+    public static final String COMMAND_SWITCH_ACCOUNT = "COMMAND_SWITCH_ACCOUNT";
     public static final String COMMAND_GET_SERVICE_CHARGE = "COMMAND_GET_SERVICE_CHARGE";
     public static final String COMMAND_REFRESH_BALANCE = "COMMAND_REFRESH_BALANCE";
     public static final String COMMAND_GET_USER_ACTIVITIES = "COMMAND_GET_USER_ACTIVITIES";
@@ -574,6 +600,7 @@ public class Constants {
     public static final String COMMAND_CANCEL_REQUESTS_MONEY = "COMMAND_CANCEL_REQUESTS_MONEY";
     public static final String COMMAND_ACCEPT_REQUESTS_MONEY = "COMMAND_ACCEPT_REQUESTS_MONEY";
     public static final String COMMAND_REJECT_REQUESTS_MONEY = "COMMAND_REJECT_REQUESTS_MONEY";
+    public static final String COMMAND_GET_MANAGED_BUSINESS_ACCOUNTS = "COMMAND_GET_MANAGED_BUSINESS_ACCOUNTS";
     public static final String COMMAND_CANCEL_PAYMENT_REQUEST = "COMMAND_CANCEL_PAYMENT_REQUEST";
     public static final String COMMAND_ACCEPT_PAYMENT_REQUEST = "COMMAND_ACCEPT_PAYMENT_REQUEST";
     public static final String COMMAND_GET_PENDING_REQUESTS_ME = "COMMAND_GET_PENDING_REQUESTS_ME";
@@ -597,6 +624,7 @@ public class Constants {
     public static final String COMMAND_GET_IDENTIFICATION_BUSINESS_DOCUMENTS_REQUEST = "COMMAND_GET_IDENTIFICATION_BUSINESS_DOCUMENTS_REQUEST";
     public static final String COMMAND_GET_INTRODUCER_LIST = "COMMAND_GET_INTRODUCER_LIST";
     public static final String COMMAND_GET_INTRODUCED_LIST = "COMMAND_GET_INTRODUCED_LIST";
+    public static final String COMMAND_GET_DETAILS_OF_INVITED_BUSINESS_ROLE = "COMMAND_GET_DETAILS_OF_INVITED_BUSINESS_ROLE";
     public static final String COMMAND_GET_PENDING_INTRODUCER_LIST = "COMMAND_GET_PENDING_INTRODUCER_LIST";
     public static final String COMMAND_GET_SENT_REQUEST_LIST = "COMMAND_GET_SENT_REQUEST_LIST";
     public static final String COMMAND_SET_PROFILE_INFO_REQUEST = "COMMAND_SET_PROFILE_INFO_REQUEST";
@@ -618,6 +646,7 @@ public class Constants {
     public static final String COMMAND_DELETE_CONTACTS = "COMMAND_DELETE_CONTACTS";
     public static final String COMMAND_UPDATE_CONTACTS = "COMMAND_UPDATE_CONTACTS";
     public static final String COMMAND_GET_BUSINESS_RULE = "COMMAND_GET_BUSINESS_RULE";
+    public static final String COMMAND_UPDATE_BUSINESS_ROLE_INVITATION = "COMMAND_UPDATE_BUSINESS_ROLE_INVITATION";
     public static final String COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE = "COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE";
     public static final String COMMAND_GET_ALL_BUSINESS_LIST = "COMMAND_GET_ALL_BUSINESS_LIST";
     public static final String COMMAND_GET_TRENDING_BUSINESS_LIST = "COMMAND_GET_TRENDING_BUSINESS_LIST";
@@ -661,6 +690,16 @@ public class Constants {
     // Business Information (Owner)
     public static final String COMMAND_GET_BUSINESS_INFORMATION = "COMMAND_GET_BUSINESS_INFORMATION";
     public static final String COMMAND_SET_BUSINESS_INFORMATION = "COMMAND_SET_BUSINESS_INFORMATION";
+    public static final String COMMAND_GET_DETAILS_OF_BUSINESS_ROLE = "COMMAND_GET_DETAILS_OF_BUSINESS_ROLE";
+    public static final String COMMAND_GET_ROLE_MAANGER_REQUESTS = "COMMAND_GET_ROLE_MAANGER_REQUESTS";
+
+    public static final String COMMAND_CREATE_EMPLOYEE = "COMMAND_CREATE_EMPLOYEE";
+    public static final String COMMAND_UPDATE_EMPLOYEE = "COMMAND_UPDATE_EMPLOYEE";
+    public static final String COMMAND_GET_PENDING_EMPLOYEE_LIST = "COMMAND_GET_PENDING_EMPLOYEE_LIST";
+    public static final String COMMAND_GET_ACCEPTED_EMPLOYEE_LIST = "COMMAND_GET_ACCEPTED_EMPLOYEE_LIST";
+    public static final String COMMAND_REMOVE_AN_EMPLOYEE = "COMMAND_REMOVE_AN_EMPLOYEE";
+    public static final String COMMAND_GET_EMPLOYEE_DETAILS = "COMMAND_GET_EMPLOYEE_DETAILS";
+    public static final String COMMAND_GET_ALL_ROLES = "COMMAND_GET_ALL_ROLES";
 
     // Education
     public static final String COMMAND_GET_INSTITUTION_LIST = "COMMAND_GET_INSTITUTION_LIST";
@@ -746,6 +785,7 @@ public class Constants {
     public static final String ADDRESS_TYPE_OFFICE = "OFFICE";
 
     public static final String TOTAL = "total";
+    public static final String ROLENAME = "role";
     public static final String RECEIVER_MOBILE_NUMBER = "receiver";
     public static final String INVOICE_ITEM_NAME_TAG = "item_name";
     public static final String DESCRIPTION_TAG = "description";
@@ -800,6 +840,7 @@ public class Constants {
     public static final int NOTIFICATION_TYPE_MAKE_PAYMENT = 2;
     public static final int NOTIFICATION_TYPE_INTRODUCTION_REQUEST = 4;
     public static final int NOTIFICATION_TYPE_PENDING_INTRODUCER_REQUEST = 5;
+    public static final int NOTIFICATION_TYPE_PENDING_ROLE_MANAGER_REQUEST = 6;
 
     public static final String ACTION_TYPE_VERIFY = "Verify";
     public static final String ACTION_TYPE_REMOVE = "Remove";
@@ -831,6 +872,8 @@ public class Constants {
 
     // API Version Checker
     public static boolean IS_API_VERSION_CHECKED = false;
+    public static boolean ACCOUNT_DEFAULT = false;
+    public static boolean ACCOUNT_SWITCHED = true;
 
     // Format
     public static final String DATE_FORMAT = "%02d/%02d/%4d";
@@ -847,4 +890,9 @@ public class Constants {
     public static final String AMEX_CARD_STARTS_WITH_REGEX = "3[47](.*)";
     public static final String MASTER_CARD_STARTS_WITH_REGEX = "5[1-5](.*)";
 
+    public static final String ON_ACCOUNT_ID_DEFAULT = null;
+    public static final long ACCOUNT_ID_DEFAULT = -1;
+    public static final GetBusinessInformationResponse ACCOUNT_INFO_DEFAULT = null;
+
+    public static final String QUALITY_HIGH = "High";
 }

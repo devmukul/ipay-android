@@ -1,48 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/side_nav_bar"
-    android:gravity="center_vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin_double"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin_double"
-    android:paddingTop="@dimen/activity_vertical_margin_double"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:orientation="vertical">
 
-    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-        android:id="@+id/profile_picture"
-        android:layout_width="@dimen/value60"
-        android:layout_height="@dimen/value60"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_profile5"
-        app:riv_border_color="@color/colorPrimary"
-        app:riv_border_width="1dip"
-        app:riv_corner_radius="50dip"
-        app:riv_oval="false" />
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/profile_picture"
-        android:orientation="vertical">
+        android:background="@drawable/side_nav_bar"
+        android:gravity="center_vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin_double"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin_double"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-        <TextView
-            android:id="@+id/textview_name"
+        <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="@dimen/value60"
+            android:layout_height="@dimen/value60"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_profile5"
+            app:riv_border_color="@color/colorPrimary"
+            app:riv_border_width="1dip"
+            app:riv_corner_radius="50dip"
+            app:riv_oval="false" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/profile_picture"
+            android:orientation="vertical"
+            android:layout_toLeftOf="@+id/drop_arrow">
 
-        <bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView
-            android:id="@+id/textview_mobile_number"
+             <TextView
+                android:id="@+id/textview_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+
+                <bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView
+                    android:id="@+id/textview_mobile_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textColor="@android:color/white" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/drop_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textColor="@android:color/white" />
-    </LinearLayout>
-</RelativeLayout>
+            android:src="@drawable/ic_arrow_down"
+            android:layout_alignParentRight="true"
+            android:visibility="invisible"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/activity_horizontal_margin"/>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/managed_business_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_picture"
+        android:layout_marginTop="2dp">
+
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>
+
+

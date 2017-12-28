@@ -16,6 +16,7 @@ import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -28,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Model.BusinessContact.TrendingBusinessResponse;
 import bd.com.ipay.ipayskeleton.Model.SqLiteDatabase.BusinessAccountEntry;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
@@ -44,6 +46,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     private LinearLayout mScrollViewHolder;
     private View mTopUpView;
     private View mPayByQCView;
+    private View mRequestPaymentView;
 
     private PinChecker pinChecker;
 
@@ -65,9 +68,13 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mScrollViewHolder = (LinearLayout) v.findViewById(R.id.scrollViewHolder);
         mTopUpView = v.findViewById(R.id.topUpView);
         mPayByQCView = v.findViewById(R.id.payByQCView);
+        mRequestPaymentView = v.findViewById(R.id.requestPaymentView);
 
         getActivity().setTitle(R.string.pay);
         getTrendingBusinessList();
+
+        if (ProfileInfoCacheManager.isBusinessAccount())
+            mRequestPaymentView.setVisibility(View.VISIBLE);
 
         mTopUpView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +102,25 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     public void ifPinAdded() {
                         Intent intent;
                         intent = new Intent(getActivity(), QRCodePaymentActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                pinChecker.execute();
+            }
+        });
+
+        mRequestPaymentView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.REQUEST_PAYMENT)) {
+                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                    return;
+                }
+                pinChecker = new PinChecker(getActivity(), new PinChecker.PinCheckerListener() {
+                    @Override
+                    public void ifPinAdded() {
+                        Intent intent;
+                        intent = new Intent(getActivity(), RequestPaymentActivity.class);
                         startActivity(intent);
                     }
                 });
@@ -156,6 +182,8 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                                             Intent intent;
                                             intent = new Intent(getActivity(), PaymentActivity.class);
                                             intent.putExtra(Constants.MOBILE_NUMBER, businessAccountEntry.getMobileNumber());
+                                            intent.putExtra(Constants.NAME, businessAccountEntry.getBusinessName());
+                                            intent.putExtra(Constants.PHOTO_URI, businessAccountEntry.getProfilePictureUrl());
                                             getContext().startActivity(intent);
                                         }
                                     });

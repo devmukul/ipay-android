@@ -88,7 +88,7 @@ public class UploadProfilePictureAsyncTask extends AsyncTask<Void, Void, Generic
             if (TokenManager.isTokenExists())
                 post.setHeader(Constants.TOKEN, TokenManager.getToken());
             if (TokenManager.isEmployerAccountActive())
-                post.setHeader(Constants.OPERATING_ON_ACCOUNT_ID, TokenManager.getOperatingOnAccountId());
+                post.setHeader(Constants.OPERATING_ON_ACCOUNT_ID, TokenManager.getOnAccountId());
 
             MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE,
                     Constants.BOUNDARY, Charset.defaultCharset());

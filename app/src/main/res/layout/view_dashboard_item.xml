@@ -4,42 +4,44 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin_card"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:background="@color/colorWhite"
+        android:id="@+id/payByQCView"
+        android:layout_width="@dimen/value100"
+        android:layout_height="@dimen/value120"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
+        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+        android:background="@drawable/semiround_white_default"
         android:elevation="@dimen/value2"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="@dimen/value110"
-            android:layout_height="@dimen/value110"
+            android:layout_width="@dimen/value60"
+            android:layout_height="@dimen/value60"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:padding="@dimen/activity_horizontal_margin_card"
-            android:src="@drawable/background_icon_topup" />
+            android:layout_marginBottom="@dimen/value15"
+            android:layout_marginLeft="@dimen/value20"
+            android:layout_marginRight="@dimen/value20"
+            android:layout_marginTop="@dimen/value15"
+            android:src="@drawable/background_icon_pay_by_qc" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/value2"
+            android:layout_height="@dimen/value1"
             android:background="@color/divider_gray" />
 
         <TextView
             android:id="@+id/nameView"
-            android:layout_width="@dimen/value110"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center|center_horizontal"
+            android:layout_marginTop="@dimen/activity_horizontal_margin_card"
             android:ellipsize="marquee"
             android:gravity="center_horizontal"
             android:maxLines="1"
-            android:paddingBottom="@dimen/activity_horizontal_margin_card"
-            android:paddingLeft="@dimen/value5"
-            android:paddingRight="@dimen/value5"
-            android:paddingTop="@dimen/activity_horizontal_margin_card"
-            android:text="@string/mobile_topup" />
+            android:paddingLeft="@dimen/activity_horizontal_margin_card"
+            android:paddingRight="@dimen/activity_horizontal_margin_card"
+            android:text="@string/pay_by_QR_code"
+            android:textSize="@dimen/text_size_extra_smaller_value11"
+            android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

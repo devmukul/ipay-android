@@ -9,12 +9,98 @@
         android:layout_height="wrap_content"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:background="@color/colorBackground"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/balance_title_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/text_size_small"
+                android:textColor="@color/colorPaymentReviewSecondaryText"
+                android:text="@string/ipay_balance"
+                android:fontFamily="sans-serif"/>
+
+            <TextView
+                android:id="@+id/balance_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/text_size_extra_large"
+                android:textColor="@color/colorPaymentReviewPrimaryText"
+                android:fontFamily="sans-serif-light"
+                android:layout_toRightOf="@+id/balance_title_view"
+                android:layout_toLeftOf="@+id/tk_view"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+
+            <TextView
+                android:id="@+id/tk_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:layout_alignTop="@+id/balance_view"
+                android:layout_alignParentRight="true"
+                android:textSize="@dimen/text_size_mini"
+                android:textColor="@color/colorPaymentReviewPrimaryText"
+                android:text="@string/tk"
+                android:layout_marginTop="@dimen/value5"
+                android:layout_marginLeft="@dimen/value4"
+                android:fontFamily="sans-serif-medium"/>
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:visibility="gone">
+
+            <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                android:id="@+id/profile_picture"
+                style="@style/PaymentReviewImageStyleLarge" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:layout_gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/textview_name"
+                    style="@style/TextViewUserInfoPaymentReviewPrimary"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:gravity="center_horizontal"/>
+
+                <TextView
+                    android:id="@+id/textview_mobile_number"
+                    style="@style/TextViewUserInfoPaymentReviewSecondary"
+                    android:gravity="center_horizontal"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/mobile_number_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
+
 
             <bd.com.ipay.ipayskeleton.CustomView.BusinessContactsSearchView
                 android:id="@+id/mobile_number"
@@ -52,7 +138,8 @@
 
         </RelativeLayout>
 
-        <View style="@style/Divider" />
+        <View style="@style/Divider"
+            android:layout_alignParentBottom="true"/>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

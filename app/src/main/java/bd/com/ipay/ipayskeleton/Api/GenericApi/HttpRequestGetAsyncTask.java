@@ -25,5 +25,4 @@ public class HttpRequestGetAsyncTask extends HttpRequestAsyncTask {
         return new HttpGet(mUri);
     }
 
-
 }

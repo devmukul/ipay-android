@@ -14,5 +14,6 @@
         android:paddingRight="@dimen/value5"
         android:paddingTop="@dimen/activity_horizontal_margin"
         android:text="@string/top"
-        android:textSize="@dimen/text_size_small_medium_value18" />
+        android:textAllCaps="true"
+        android:textSize="@dimen/text_size_small" />
 </LinearLayout>

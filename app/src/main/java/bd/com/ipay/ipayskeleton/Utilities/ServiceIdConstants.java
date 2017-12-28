@@ -58,6 +58,9 @@ public class ServiceIdConstants {
     // Employee Manage
     public static final int SEE_EMPLOYEE = 8002;
     public static final int MANAGE_EMPLOYEE = 8003;
+    public static final int SEE_MANAGERS = 8060;
+    public static final int SEE_BUSINESS_ROLES = 8055;
+
 
     // Account
     public static final int SEE_EMAILS = 8004;
@@ -88,6 +91,13 @@ public class ServiceIdConstants {
 
     public static final int SEE_ACTIVITY = 8017;
     public static final int SEE_OTHER_ACTIVITY = 8046;
+
+    //business account switch related
+    public static final int SEE_BUSINESS_ROLE_INVITATION_REQUEST = 8057;
+    public static final int SEND_BUSINESS_MANAGER_INVITATION = 8058;
+    public static final int ACCEPT_REJECT_BUSINESS_MANAGER_INVITATION = 8059;
+    public static final int UPDATE_BUSINESS_MANAGER_ROLE = 8061;
+    public static final int REMOVE_BUSINESS_MANAGER = 8062;
 
     // Identification Document Related
     public static final int SEE_BUSINESS_DOCS = 8010;

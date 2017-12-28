@@ -359,8 +359,8 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                         ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
                         ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
 
-                        if (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                                || !ProfileInfoCacheManager.isBasicInfoAdded()) {
+                        if (ProfileInfoCacheManager.getAccountType()== Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                                || !ProfileInfoCacheManager.isBasicInfoAdded()) ){
                             ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
@@ -385,6 +385,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                     mGetProfileInfoResponse = gson.fromJson(result.getJsonString(), GetProfileInfoResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
+                        ProfileInfoCacheManager.saveMainUserProfileInfo(Utilities.getMainUserProfileInfoString(mGetProfileInfoResponse));
                         getProfileCompletionStatus();
                     } else {
                         hideProgressDialog();
