@@ -10,6 +10,13 @@
         android:layout_height="wrap_content"
         android:background="@drawable/side_nav_bar"
         android:padding="@dimen/activity_horizontal_margin">
+        <ImageView
+            android:layout_width="@dimen/value20"
+            android:layout_height="@dimen/value20"
+            android:layout_marginTop="@dimen/value15"
+            android:src="@drawable/cancel"
+            android:id="@+id/leave_account"
+            android:layout_alignParentRight="true"/>
         <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -20,6 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/profile_image_view"
+            android:layout_toLeftOf="@id/leave_account"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:orientation="vertical"

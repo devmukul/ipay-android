@@ -1085,6 +1085,7 @@
     <string name="cant_switch">Cant Switch Account Now</string>
     <string name="leave_account">Leave Account</string>
     <string name="do_you_want_to_leave">Do you want to leave this account permanently? You can\'t switch to this account in the future</string>
+    <string name="do_you_want_to_resign">Do you want to resign from this business account permanently? By doing this, you will lose all of your accesses to this account </string>
     <string name="leaving">Leaving</string>
 
     <string name="failed_loading_manager_list">Failed to load manager list</string>
