@@ -59,11 +59,12 @@ public class PaymentSucessFragment extends BaseFragment{
         mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
         mReceiverBusinessMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
         mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
-        mTransactionId = getActivity().getIntent().getStringExtra(Constants.REFERENCE_NUMBER);
+
 
         if (getArguments() != null) {
             mReceiverBusinessName = getArguments().getString(Constants.NAME);
             mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
+            mTransactionId = getArguments().getString(Constants.TRANSACTION_ID);
 
         }
 
@@ -100,7 +101,7 @@ public class PaymentSucessFragment extends BaseFragment{
         final Button anotherPaymentButton = findViewById(R.id.another_payment_button);
 
         if (!TextUtils.isEmpty(mPhotoUri)) {
-            businessProfileImageView.setProfilePicture(mPhotoUri, false);
+            businessProfileImageView.setBusinessProfilePicture(mPhotoUri, false);
         }
         if (TextUtils.isEmpty(mReceiverBusinessName)) {
             businessNameTextView.setVisibility(View.GONE);
