@@ -114,7 +114,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mNetAmountTextView = findViewById(R.id.net_amount_text_view);
 
         if (!TextUtils.isEmpty(mPhotoUri)) {
-            businessProfileImageView.setProfilePicture(mPhotoUri, false);
+            businessProfileImageView.setBusinessProfilePicture(mPhotoUri, false);
         }
         if (TextUtils.isEmpty(mReceiverBusinessName)) {
             businessNameTextView.setVisibility(View.GONE);
@@ -275,7 +275,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG);
                     getActivity().setResult(Activity.RESULT_OK);
-                    switchToPaymentSuccessFragment(mReceiverBusinessName, mPhotoUri);
+                    switchToPaymentSuccessFragment(mReceiverBusinessName, mPhotoUri, mPaymentResponse.getTransactionId());
 
                     Utilities.sendSuccessEventTracker(mTracker, "Make Payment", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
 
@@ -308,12 +308,13 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     }
 
 
-    private void switchToPaymentSuccessFragment(String name, String profilePictureUrl) {
+    private void switchToPaymentSuccessFragment(String name, String profilePictureUrl, String tansactionId) {
         PaymentSucessFragment paymentSuccessFragment = new PaymentSucessFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.NAME, name);
         bundle.putString(Constants.PHOTO_URI, profilePictureUrl);
+        bundle.putString(Constants.TRANSACTION_ID, tansactionId);
         paymentSuccessFragment.setArguments(bundle);
 
         getActivity().getSupportFragmentManager().beginTransaction()
