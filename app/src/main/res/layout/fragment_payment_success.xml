@@ -80,10 +80,10 @@
                     android:drawableLeft="@drawable/success_icon"
                     android:drawablePadding="@dimen/value4"/>
 
-                <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-                    android:id="@+id/business_profile_image_view"
-                    style="@style/PaymentReviewImageStyle"
-                    android:layout_marginTop="@dimen/activity_horizontal_margin"/>
+            <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                android:id="@+id/business_profile_image_view"
+                style="@style/PaymentReviewImageStyleLarge"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -143,9 +143,9 @@
                         android:gravity="center"
                         android:orientation="horizontal">
 
-                        <TextView
-                            style="@style/TextViewInfoLabelPaymentReview"
-                            android:text="@string/reference_number" />
+                    <TextView
+                        style="@style/TextViewInfoLabelPaymentReview"
+                        android:text="@string/transaction_id" />
 
                         <TextView
                             android:id="@+id/transaction_id_text_view"
