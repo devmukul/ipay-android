@@ -1039,7 +1039,12 @@ public class HomeActivity extends BaseActivity
                                         drawer.closeDrawer(GravityCompat.START);
                                         resignFromBusiness(item.getId());
                                     }
-                                }).show();
+                                }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }).show();
 
                     }
                 });
