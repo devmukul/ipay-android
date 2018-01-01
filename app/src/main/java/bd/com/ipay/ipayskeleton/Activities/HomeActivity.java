@@ -1000,7 +1000,7 @@ public class HomeActivity extends BaseActivity
             private TextView nameTextView;
             private TextView roleTextView;
             private ProfileImageView profileImageView;
-            private ImageView leaveAccountImageView;
+            private ImageView resignFromBusinessImageView;
 
 
             public ViewHolder(View itemView) {
@@ -1008,7 +1008,7 @@ public class HomeActivity extends BaseActivity
                 nameTextView = (TextView) itemView.findViewById(R.id.title_text_view);
                 roleTextView = (TextView) itemView.findViewById(R.id.role_text_view);
                 profileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_image_view);
-                leaveAccountImageView = (ImageView) itemView.findViewById(R.id.leave_account);
+                resignFromBusinessImageView = (ImageView) itemView.findViewById(R.id.leave_account);
             }
 
             public void bind(final BusinessAccountDetails item) {
@@ -1024,11 +1024,11 @@ public class HomeActivity extends BaseActivity
                     profileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getBusinessProfilePictureUrlHigh(), false);
                 }
                 if (ProfileInfoCacheManager.isAccountSwitched()) {
-                    leaveAccountImageView.setVisibility(View.GONE);
+                    resignFromBusinessImageView.setVisibility(View.GONE);
                 } else {
-                    leaveAccountImageView.setVisibility(View.VISIBLE);
+                    resignFromBusinessImageView.setVisibility(View.VISIBLE);
                 }
-                leaveAccountImageView.setOnClickListener(new View.OnClickListener() {
+                resignFromBusinessImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         new AlertDialog.Builder(HomeActivity.this).
