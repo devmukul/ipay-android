@@ -413,7 +413,7 @@ public class HomeActivity extends BaseActivity
         }
     }
 
-    private void removeAnEmployee(long associationId) {
+    private void resignFromBusiness(long associationId) {
         if (mResignFromBusinessAsyncTask != null) {
             return;
         }
@@ -1037,7 +1037,7 @@ public class HomeActivity extends BaseActivity
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         drawer.closeDrawer(GravityCompat.START);
-                                        removeAnEmployee(item.getId());
+                                        resignFromBusiness(item.getId());
                                     }
                                 }).show();
 
