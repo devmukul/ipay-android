@@ -90,7 +90,7 @@
             android:layout_marginStart="20dip"
             android:background="@drawable/transparent_background"
             android:contentDescription="@android:string/ok"
-            android:src="@drawable/ic_cancel_white_24dp"
+            android:src="@drawable/ic_cancel_white"
             android:visibility="gone" />
 
         <ImageButton
