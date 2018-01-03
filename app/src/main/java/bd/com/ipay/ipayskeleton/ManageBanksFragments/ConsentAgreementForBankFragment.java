@@ -159,6 +159,7 @@ public class ConsentAgreementForBankFragment extends BaseFragment implements Htt
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_LONG);
+                    ProfileInfoCacheManager.addSourceOfFund(true);
 
                     if (isSwitchedFromOnBoard) {
                         Intent intent = new Intent(getActivity(), HomeActivity.class);
