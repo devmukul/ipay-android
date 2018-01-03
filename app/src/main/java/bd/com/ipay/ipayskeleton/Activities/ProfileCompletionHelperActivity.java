@@ -22,6 +22,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRes
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBankFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoHelperFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddSourceOfFundHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAskForIntroductionHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardConsentAgreementForBankFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardContactsFragment;
@@ -58,13 +59,19 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
                 switchToPhotoIdUploadHelperFragment();
             } else if (!ProfileInfoCacheManager.isBasicInfoAdded()) {
                 switchToBasicInfoEditHelperFragment();
-            }
-            else if(!ProfileInfoCacheManager.isSourceOfFundAdded()){
-
-            }else {
+            } else if (!ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                switchToSourceOfFundHelperFragment();
+            } else {
                 switchToHomeActivity();
             }
         }
+    }
+
+    private void switchToSourceOfFundHelperFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 4)
+            getSupportFragmentManager().popBackStackImmediate();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new OnBoardAddSourceOfFundHelperFragment()).addToBackStack(null).commit();
     }
 
     @Override

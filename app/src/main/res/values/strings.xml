@@ -1097,4 +1097,6 @@
     <string name="source_of_fund">Source Of Fund</string>
     <string name="onboard_source_of_fund_text">Select a method of your add money to your iPay wallet</string>
     <string name="add_source_of_fund">Add Source Of Fund</string>
+    <string name="add_money_by_card">Add Money By Credit/Debit Card</string>
+    <string name="onboard_add_source_of_fund">Please select on of the method of you source of fund</string>
 </resources>
