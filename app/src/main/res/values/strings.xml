@@ -1094,4 +1094,7 @@
     <string name="change_role">Change Role</string>
     <string name="account_switched">Account switched</string>
     <string name="make_another_payment">MAKE ANOTHER PAYMENT</string>
+    <string name="source_of_fund">Source Of Fund</string>
+    <string name="onboard_source_of_fund_text">Select a method of your add money to your iPay wallet</string>
+    <string name="add_source_of_fund">Add Source Of Fund</string>
 </resources>

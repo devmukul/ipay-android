@@ -58,7 +58,10 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
                 switchToPhotoIdUploadHelperFragment();
             } else if (!ProfileInfoCacheManager.isBasicInfoAdded()) {
                 switchToBasicInfoEditHelperFragment();
-            } else {
+            }
+            else if(!ProfileInfoCacheManager.isSourceOfFundAdded()){
+
+            }else {
                 switchToHomeActivity();
             }
         }

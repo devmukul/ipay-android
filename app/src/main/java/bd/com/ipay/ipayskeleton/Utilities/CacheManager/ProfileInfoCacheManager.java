@@ -255,6 +255,11 @@ public class ProfileInfoCacheManager {
         editor.putBoolean(SharedPrefConstants.BASIC_INFO_ADDED, defaultvalue).apply();
     }
 
+    public static void addSourceOfFund(boolean defaultValue){
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(SharedPrefConstants.BASIC_INFO_ADDED, defaultvalue).apply();
+    }
+
     public static boolean isBasicInfoAdded() {
         return pref.getBoolean(SharedPrefConstants.BASIC_INFO_ADDED, false);
     }
