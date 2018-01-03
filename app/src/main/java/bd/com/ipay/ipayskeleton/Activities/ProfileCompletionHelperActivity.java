@@ -13,14 +13,19 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.List;
+
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.CardDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
+import bd.com.ipay.ipayskeleton.Model.GetCardResponse;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBankFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoHelperFragment;
@@ -49,13 +54,19 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
     private HttpRequestGetAsyncTask mGetBankTask = null;
     private GetBankListResponse mBankListResponse;
 
-    private HttpRequestGetAsyncTask mGetAddedCards=null;
+    private HttpRequestGetAsyncTask mGetAddedCards = null;
+    private GetCardResponse mGetCardResponse;
+
+    public static List<CardDetails> mCardDetailsList;
+    public static List<UserBankClass> mBankDetailsList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_completion_helper);
         SharedPrefManager.setFirstLaunch(false);
+        //getAddedCards();
+        getBankList();
         mProgressDialog = new ProgressDialog(ProfileCompletionHelperActivity.this);
         if (ProfileInfoCacheManager.isSwitchedFromSignup()) {
             switchToProfilePictureFragment();
@@ -74,12 +85,23 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
         }
     }
 
+    private void getBankList() {
+        if (mGetBankTask != null) {
+            return;
+        }
+
+        mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
+                Constants.BASE_URL_MM + Constants.URL_GET_BANK, this);
+        mGetBankTask.mHttpResponseListener = this;
+        mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
     public void switchToSourceOfFundHelperFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 4)
             getSupportFragmentManager().popBackStackImmediate();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new OnBoardAddSourceOfFundHelperFragment()).addToBackStack(null).commit();
     }
+
     @Override
     public void onBackPressed() {
 
