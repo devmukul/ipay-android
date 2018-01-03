@@ -71,16 +71,24 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
 
     private boolean startedFromProfileCompletion = false;
 
+    private boolean isSwitchedFromOnBoard = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_add_bank, container, false);
         getActivity().setTitle(R.string.add_bank);
         getActivity().setTitleColor(Color.WHITE);
+        isSwitchedFromOnBoard = false;
 
         Bundle args = getArguments();
         if (args != null)
             startedFromProfileCompletion = args.getBoolean(STARTED_FROM_PROFILE_ACTIVITY);
+        if (args != null) {
+            if (args.getBoolean(Constants.FROM_ON_BOARD, false)) {
+                isSwitchedFromOnBoard = args.getBoolean(Constants.FROM_ON_BOARD, false);
+            }
+        }
 
         mSelectedBankId = -1;
         mDistrictNames = new ArrayList<>();
@@ -249,6 +257,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         Bundle bundle = new Bundle();
         bundle.putString(Constants.BANK_NAME, mSelectedBankName);
         bundle.putParcelable(Constants.BANK_BRANCH, bankBranch);
+        bundle.putBoolean(Constants.FROM_ON_BOARD,isSwitchedFromOnBoard);
         bundle.putString(Constants.BANK_ACCOUNT_NUMBER, bankAccountNumber);
         bundle.putBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION, startedFromProfileCompletion);
 

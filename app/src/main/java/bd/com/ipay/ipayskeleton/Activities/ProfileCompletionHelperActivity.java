@@ -13,16 +13,17 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBankFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoHelperFragment;
-import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddSourceOfFundFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddSourceOfFundHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAskForIntroductionHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardConsentAgreementForBankFragment;
@@ -44,6 +45,11 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
     private LogoutResponse mLogOutResponse;
     private ProgressDialog mProgressDialog;
     public Uri mProfilePhotoUri;
+
+    private HttpRequestGetAsyncTask mGetBankTask = null;
+    private GetBankListResponse mBankListResponse;
+
+    private HttpRequestGetAsyncTask mGetAddedCards=null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,12 +79,6 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
             getSupportFragmentManager().popBackStackImmediate();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new OnBoardAddSourceOfFundHelperFragment()).addToBackStack(null).commit();
-    }
-    public void switchToSourceOfFundFragment() {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 5)
-            getSupportFragmentManager().popBackStackImmediate();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new OnBoardAddSourceOfFundFragment()).addToBackStack(null).commit();
     }
     @Override
     public void onBackPressed() {

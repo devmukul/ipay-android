@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,13 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 
 public class OnBoardAddSourceOfFundHelperFragment extends Fragment {
-    private Button mAddSourceOfFundButton;
+    private Button mAddMoneyByCardButton;
     private Button mSkipButton;
+    private Button mAddBankButton;
 
     @Nullable
     @Override
@@ -25,22 +30,32 @@ public class OnBoardAddSourceOfFundHelperFragment extends Fragment {
     }
 
     public void initializeViews(View view) {
-        mAddSourceOfFundButton = (Button) view.findViewById(R.id.button_add_source_of_fund);
+        mAddMoneyByCardButton = (Button) view.findViewById(R.id.button_add_money_by_card);
         mSkipButton = (Button) view.findViewById(R.id.button_skip);
+        mAddBankButton=(Button)view.findViewById(R.id.button_add_bank);
         setButtonActions();
     }
 
     public void setButtonActions() {
-        mAddSourceOfFundButton.setOnClickListener(new View.OnClickListener() {
+        mAddMoneyByCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileCompletionHelperActivity) getActivity()).switchToSourceOfFundFragment();
+                Intent intent=new Intent(getActivity(), AddMoneyActivity.class);
+                startActivity(intent);
             }
         });
         mSkipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+            }
+        });
+        mAddBankButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent =new Intent(getActivity(), ManageBanksActivity.class);
+                intent.putExtra(Constants.FROM_ON_BOARD,true);
+                startActivity(intent);
             }
         });
     }

@@ -49,11 +49,17 @@
                 android:gravity="top|center_horizontal" />
 
             <Button
-                android:id="@+id/button_add_source_of_fund"
+                android:id="@+id/button_add_bank"
                 style="@style/ButtonPrimaryOnBoard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/add_source_of_fund" />
+                android:text="@string/add_bank" />
+            <Button
+                android:id="@+id/button_add_money_by_card"
+                style="@style/ButtonPrimaryOnBoard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_money_by_card" />
 
             <Button
                 android:id="@+id/button_skip"
