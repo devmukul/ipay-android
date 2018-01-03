@@ -123,6 +123,7 @@ public class Constants {
     public static final String ADDRESS = "ADDRESS";
     public static final String RELOAD = "RELOAD";
     public static final String FROM_ON_BOARD = "FROM_ON_BOARD";
+    public static final String COMMAND_ADD_CARD = "COMMAND_ADD_CARD";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
@@ -346,6 +347,7 @@ public class Constants {
     public static final String URL_GET_BANK = "bank/";
     public static final String URL_REMOVE_A_BANK = "bank/";
     public static final String URL_VERIFY_WITH_AMOUNT_A_BANK = "bank/";
+    public static final String URL_GET_CARD = "/user/card/v1";
     // Bank Transaction REST
     public static final String URL_ADD_MONEY = "banktransaction/cashin/v2";
     public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout/v2";

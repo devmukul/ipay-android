@@ -53,7 +53,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
     private EditText mOccupationEditText;
     private EditText mOrganizationNameEditText;
     private String mGender = null;
-    private String mOrganizationName=null;
+    private String mOrganizationName = null;
     private int mOccupation = -1;
     private List<Occupation> mOccupationList;
 
@@ -97,11 +97,17 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
         mSkipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileCompletionHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();
+                if (((ProfileCompletionHelperActivity) getActivity()).mCardDetailsList.size() +
+                        ((ProfileCompletionHelperActivity) getActivity()).mBankDetailsList.size() > 0) {
+                    ((ProfileCompletionHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();
+                } else {
+                    ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+                }
+
             }
         });
 
-        if (getActivity().getSupportFragmentManager().getBackStackEntryCount()<=1){
+        if (getActivity().getSupportFragmentManager().getBackStackEntryCount() <= 1) {
             mBackButtonTop.setVisibility(View.INVISIBLE);
         }
 
@@ -166,11 +172,11 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
                     Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_LONG).show();
                     ProfileInfoCacheManager.addBasicInfo(true);
                     getActivity().getSupportFragmentManager().popBackStack();
-                    if(ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                    if (((ProfileCompletionHelperActivity) getActivity()).mCardDetailsList.size() +
+                            ((ProfileCompletionHelperActivity) getActivity()).mBankDetailsList.size() > 0) {
                         ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
-                    }
-                    else{
-                        ((ProfileCompletionHelperActivity)getActivity()).switchToSourceOfFundHelperFragment();
+                    } else {
+                        ((ProfileCompletionHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();
                     }
 
                 } else {
@@ -184,7 +190,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
             }
             mProgressDialog.dismiss();
             mSetUserAddressTask = null;
-        }else if (result.getApiCommand().equals(Constants.COMMAND_GET_OCCUPATIONS_REQUEST)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_OCCUPATIONS_REQUEST)) {
 
             try {
                 mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
@@ -198,7 +204,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
             }
 
             mGetOccupationTask = null;
-        }else if(result.getApiCommand().equals(Constants.COMMAND_SET_PROFILE_INFO_REQUEST)){
+        } else if (result.getApiCommand().equals(Constants.COMMAND_SET_PROFILE_INFO_REQUEST)) {
             try {
                 SetProfileInfoResponse mSetProfileInfoResponse = gson.fromJson(result.getJsonString(), SetProfileInfoResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {

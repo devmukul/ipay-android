@@ -54,7 +54,7 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
     private HttpRequestGetAsyncTask mGetBankTask = null;
     private GetBankListResponse mBankListResponse;
 
-    private HttpRequestGetAsyncTask mGetAddedCards = null;
+    private HttpRequestGetAsyncTask mGetAllAddedCards = null;
     private GetCardResponse mGetCardResponse;
 
     public static List<CardDetails> mCardDetailsList;
@@ -65,7 +65,7 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_completion_helper);
         SharedPrefManager.setFirstLaunch(false);
-        //getAddedCards();
+        getAddedCards();
         getBankList();
         mProgressDialog = new ProgressDialog(ProfileCompletionHelperActivity.this);
         if (ProfileInfoCacheManager.isSwitchedFromSignup()) {
@@ -95,6 +95,7 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
         mGetBankTask.mHttpResponseListener = this;
         mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
     public void switchToSourceOfFundHelperFragment() {
         while (getSupportFragmentManager().getBackStackEntryCount() > 4)
             getSupportFragmentManager().popBackStackImmediate();
@@ -131,6 +132,15 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
                         }
                     })
                     .show();
+        }
+    }
+
+    private void getAddedCards() {
+        if (mGetAllAddedCards != null) return;
+        else {
+            mGetAllAddedCards = new HttpRequestGetAsyncTask(Constants.COMMAND_ADD_CARD,
+                    Constants.BASE_URL_MM + Constants.URL_GET_CARD, this, this);
+            mGetAllAddedCards.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -253,6 +263,24 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
                     e.printStackTrace();
                     Toast.makeText(ProfileCompletionHelperActivity.this, R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
                 }
+                break;
+            case Constants.COMMAND_GET_BANK_LIST:
+                try {
+                    mBankListResponse = gson.fromJson(result.getJsonString(), GetBankListResponse.class);
+                    mBankDetailsList = mBankListResponse.getBanks();
+                } catch (Exception e) {
+
+                }
+                mGetBankTask = null;
+                break;
+            case Constants.COMMAND_ADD_CARD:
+                try {
+                    mGetCardResponse = gson.fromJson(result.getJsonString(), GetCardResponse.class);
+                    mCardDetailsList = mGetCardResponse.getUserCardList();
+                } catch (Exception e) {
+
+                }
+                mGetAllAddedCards = null;
                 break;
         }
     }
