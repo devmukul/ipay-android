@@ -97,7 +97,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
         mSkipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+                ((ProfileCompletionHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();
             }
         });
 
@@ -166,7 +166,12 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
                     Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_LONG).show();
                     ProfileInfoCacheManager.addBasicInfo(true);
                     getActivity().getSupportFragmentManager().popBackStack();
-                    ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+                    if(ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                        ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+                    }
+                    else{
+                        ((ProfileCompletionHelperActivity)getActivity()).switchToSourceOfFundHelperFragment();
+                    }
 
                 } else {
                     if (getActivity() != null)

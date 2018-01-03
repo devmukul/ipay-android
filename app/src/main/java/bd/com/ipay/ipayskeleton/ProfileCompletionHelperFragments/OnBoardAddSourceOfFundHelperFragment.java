@@ -27,13 +27,14 @@ public class OnBoardAddSourceOfFundHelperFragment extends Fragment {
     public void initializeViews(View view) {
         mAddSourceOfFundButton = (Button) view.findViewById(R.id.button_add_source_of_fund);
         mSkipButton = (Button) view.findViewById(R.id.button_skip);
+        setButtonActions();
     }
 
     public void setButtonActions() {
         mAddSourceOfFundButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                ((ProfileCompletionHelperActivity) getActivity()).switchToSourceOfFundFragment();
             }
         });
         mSkipButton.setOnClickListener(new View.OnClickListener() {

@@ -42,7 +42,7 @@ public class OnBoardAddBasicInfoHelperFragment extends Fragment {
         mSkipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+                ((ProfileCompletionHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();
             }
         });
 
