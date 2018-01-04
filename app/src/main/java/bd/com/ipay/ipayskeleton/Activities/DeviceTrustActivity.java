@@ -30,7 +30,7 @@ public class DeviceTrustActivity extends BaseActivity {
     }
 
     public void switchToProfileCompletionHelperActivity() {
-        Intent intent = new Intent(DeviceTrustActivity.this, ProfileCompletionHelperActivity.class);
+        Intent intent = new Intent(DeviceTrustActivity.this, ProfileVerificationHelperActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         this.finish();

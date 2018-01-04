@@ -45,7 +45,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class ProfileCompletionHelperActivity extends BaseActivity implements HttpResponseListener {
+public class ProfileVerificationHelperActivity extends BaseActivity implements HttpResponseListener {
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
     private ProgressDialog mProgressDialog;
@@ -63,11 +63,10 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_completion_helper);
+        setContentView(R.layout.activity_profile_verification_helper);
         SharedPrefManager.setFirstLaunch(false);
-        getAddedCards();
         getBankList();
-        mProgressDialog = new ProgressDialog(ProfileCompletionHelperActivity.this);
+        mProgressDialog = new ProgressDialog(ProfileVerificationHelperActivity.this);
         if (ProfileInfoCacheManager.isSwitchedFromSignup()) {
             switchToProfilePictureFragment();
         } else {
@@ -109,18 +108,18 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStackImmediate();
         } else {
-            new AlertDialog.Builder(ProfileCompletionHelperActivity.this)
+            new AlertDialog.Builder(ProfileVerificationHelperActivity.this)
                     .setMessage(R.string.are_you_sure_to_exit)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             if (SharedPrefManager.isRememberMeActive()) {
                                 finish();
                             } else {
-                                if (Utilities.isConnectionAvailable(ProfileCompletionHelperActivity.this)) {
+                                if (Utilities.isConnectionAvailable(ProfileVerificationHelperActivity.this)) {
                                     attemptLogout();
                                 } else {
                                     ProfileInfoCacheManager.setLoggedInStatus(false);
-                                    ((MyApplication) ProfileCompletionHelperActivity.this.getApplication()).clearTokenAndTimer();
+                                    ((MyApplication) ProfileVerificationHelperActivity.this.getApplication()).clearTokenAndTimer();
                                     finish();
                                 }
                             }
@@ -156,7 +155,7 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
         String json = gson.toJson(mLogoutModel);
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
-                Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, ProfileCompletionHelperActivity.this);
+                Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, ProfileVerificationHelperActivity.this);
         mLogoutTask.mHttpResponseListener = this;
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -164,7 +163,7 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
 
     public void switchToHomeActivity() {
         Utilities.hideKeyboard(this);
-        Intent intent = new Intent(ProfileCompletionHelperActivity.this, HomeActivity.class);
+        Intent intent = new Intent(ProfileVerificationHelperActivity.this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
@@ -244,7 +243,7 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mLogoutTask = null;
-            Toast.makeText(ProfileCompletionHelperActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
+            Toast.makeText(ProfileVerificationHelperActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -257,17 +256,20 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
                         ((MyApplication) this.getApplication()).clearTokenAndTimer();
                         finish();
                     } else {
-                        Toast.makeText(ProfileCompletionHelperActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(ProfileVerificationHelperActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(ProfileCompletionHelperActivity.this, R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
+                    Toast.makeText(ProfileVerificationHelperActivity.this, R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
                 }
                 break;
             case Constants.COMMAND_GET_BANK_LIST:
                 try {
                     mBankListResponse = gson.fromJson(result.getJsonString(), GetBankListResponse.class);
-                    mBankDetailsList = mBankListResponse.getBanks();
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mBankDetailsList = mBankListResponse.getBanks();
+                        getAddedCards();
+                    }
                 } catch (Exception e) {
 
                 }
@@ -276,7 +278,13 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
             case Constants.COMMAND_ADD_CARD:
                 try {
                     mGetCardResponse = gson.fromJson(result.getJsonString(), GetCardResponse.class);
-                    mCardDetailsList = mGetCardResponse.getUserCardList();
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mCardDetailsList = mGetCardResponse.getUserCardList();
+
+                        if (mCardDetailsList.isEmpty()  && mBankDetailsList.isEmpty()) {
+
+                        }
+                    }
                 } catch (Exception e) {
 
                 }
@@ -287,6 +295,6 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
 
     @Override
     protected Context setContext() {
-        return ProfileCompletionHelperActivity.this;
+        return ProfileVerificationHelperActivity.this;
     }
 }

@@ -210,7 +210,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     }
 
     public void switchToProfileCompletionHelperActivity() {
-        Intent intent = new Intent(SignupOrLoginActivity.this, ProfileCompletionHelperActivity.class);
+        Intent intent = new Intent(SignupOrLoginActivity.this, ProfileVerificationHelperActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         this.finish();

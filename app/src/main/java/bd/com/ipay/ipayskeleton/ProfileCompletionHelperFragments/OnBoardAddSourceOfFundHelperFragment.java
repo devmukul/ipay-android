@@ -11,7 +11,7 @@ import android.widget.Button;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileVerificationHelperActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -47,7 +47,7 @@ public class OnBoardAddSourceOfFundHelperFragment extends Fragment {
         mSkipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+                ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
             }
         });
         mAddBankButton.setOnClickListener(new View.OnClickListener() {

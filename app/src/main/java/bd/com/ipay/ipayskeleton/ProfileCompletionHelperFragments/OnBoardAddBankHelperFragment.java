@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileVerificationHelperActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputSignUpView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
@@ -58,9 +58,9 @@ public class OnBoardAddBankHelperFragment extends Fragment {
             public void onClick(View view) {
 
                 if(!ProfileInfoCacheManager.isIntroductionAsked() && !ProfileInfoCacheManager.isSwitchedFromSignup()){
-                    ((ProfileCompletionHelperActivity) getActivity()).switchToAskedIntroductionHelperFragment();
+                    ((ProfileVerificationHelperActivity) getActivity()).switchToAskedIntroductionHelperFragment();
                 }else {
-                    ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+                    ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
                 }
             }
         });
@@ -68,7 +68,7 @@ public class OnBoardAddBankHelperFragment extends Fragment {
         mUploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileCompletionHelperActivity) getActivity()).switchToAddNewBankFragment();
+                ((ProfileVerificationHelperActivity) getActivity()).switchToAddNewBankFragment();
             }
         });
     }

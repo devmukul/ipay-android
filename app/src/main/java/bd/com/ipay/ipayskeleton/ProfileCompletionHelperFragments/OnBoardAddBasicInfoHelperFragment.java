@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileVerificationHelperActivity;
 import bd.com.ipay.ipayskeleton.R;
 
 public class OnBoardAddBasicInfoHelperFragment extends Fragment {
@@ -42,14 +42,14 @@ public class OnBoardAddBasicInfoHelperFragment extends Fragment {
         mSkipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileCompletionHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();
+                ((ProfileVerificationHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();
             }
         });
 
         mUploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditFragment();
+                ((ProfileVerificationHelperActivity) getActivity()).switchToBasicInfoEditFragment();
             }
         });
 

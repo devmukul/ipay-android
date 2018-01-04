@@ -17,7 +17,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileVerificationHelperActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -97,11 +97,11 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
         mSkipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (((ProfileCompletionHelperActivity) getActivity()).mCardDetailsList.size() +
-                        ((ProfileCompletionHelperActivity) getActivity()).mBankDetailsList.size() > 0) {
-                    ((ProfileCompletionHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();
+                if (((ProfileVerificationHelperActivity) getActivity()).mCardDetailsList.size() +
+                        ((ProfileVerificationHelperActivity) getActivity()).mBankDetailsList.size() > 0) {
+                    ((ProfileVerificationHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();
                 } else {
-                    ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+                    ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
                 }
 
             }
@@ -172,11 +172,11 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
                     Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_LONG).show();
                     ProfileInfoCacheManager.addBasicInfo(true);
                     getActivity().getSupportFragmentManager().popBackStack();
-                    if (((ProfileCompletionHelperActivity) getActivity()).mCardDetailsList.size() +
-                            ((ProfileCompletionHelperActivity) getActivity()).mBankDetailsList.size() > 0) {
-                        ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+                    if (((ProfileVerificationHelperActivity) getActivity()).mCardDetailsList.size() +
+                            ((ProfileVerificationHelperActivity) getActivity()).mBankDetailsList.size() > 0) {
+                        ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
                     } else {
-                        ((ProfileCompletionHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();
+                        ((ProfileVerificationHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();
                     }
 
                 } else {

@@ -219,6 +219,16 @@ public class ProfileCompletionStatusResponse {
         return false;
     }
 
+    public boolean isBankAdded() {
+        for (CompletionStatus mCompletionStatus : completionStatusList) {
+            if (mCompletionStatus.getProperty().equals("ADD_BANK")) {
+                if(mCompletionStatus.getValue()>0)
+                    return true;
+            }
+        }
+        return false;
+    }
+
     public boolean isOnboardBasicInfoUpdated() {
         if(isAddressUpdated() || isBasicProfileUpdated())
                 return true;

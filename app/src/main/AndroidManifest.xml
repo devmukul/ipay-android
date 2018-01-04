@@ -78,7 +78,7 @@
         </activity>
 
         <activity
-            android:name=".Activities.ProfileCompletionHelperActivity"
+            android:name=".Activities.ProfileVerificationHelperActivity"
             android:label="@string/welcome_to_ipay"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"

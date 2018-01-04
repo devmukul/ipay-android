@@ -21,6 +21,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
 
+import java.util.List;
+
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -29,12 +31,16 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.CardDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceResponse;
+import bd.com.ipay.ipayskeleton.Model.GetCardResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -82,6 +88,15 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetProfileInfoResponse mGetProfileInfoResponse;
+
+    private HttpRequestGetAsyncTask mGetBankTask = null;
+    private GetBankListResponse mBankListResponse;
+
+    private HttpRequestGetAsyncTask mGetAllAddedCards = null;
+    private GetCardResponse mGetCardResponse;
+
+    public static List<CardDetails> mCardDetailsList;
+    public static List<UserBankClass> mBankDetailsList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -352,6 +367,27 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         }
     }
 
+
+    private void getBankList() {
+        if (mGetBankTask != null) {
+            return;
+        }
+
+        mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
+                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity());
+        mGetBankTask.mHttpResponseListener = this;
+        mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getAddedCards() {
+        if (mGetAllAddedCards != null) return;
+        else {
+            mGetAllAddedCards = new HttpRequestGetAsyncTask(Constants.COMMAND_ADD_CARD,
+                    Constants.BASE_URL_MM + Constants.URL_GET_CARD, getActivity());
+            mGetAllAddedCards.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
@@ -523,13 +559,17 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                         ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
                         ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
                         ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
+                        if (mProfileCompletionStatusResponse.isBankAdded()) {
+                            ProfileInfoCacheManager.addSourceOfFund(true);
 
-                        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                                || !ProfileInfoCacheManager.isBasicInfoAdded())) {
-                            ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
-                        } else {
-                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
-                        }
+                            if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                                    || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                                ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
+                            } else {
+                                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                            }
+                        } else getAddedCards();
+                        // getBankList();
                     } else {
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
@@ -565,6 +605,44 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
 
                 mGetProfileInfoTask = null;
 
+                break;
+
+            case Constants.COMMAND_GET_BANK_LIST:
+                try {
+                    mBankListResponse = gson.fromJson(result.getJsonString(), GetBankListResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mBankDetailsList = mBankListResponse.getBanks();
+                        if (mBankDetailsList.isEmpty())
+                            getAddedCards();
+                        else
+                            ProfileInfoCacheManager.addSourceOfFund(true);
+                    }
+                } catch (Exception e) {
+
+                }
+                mGetBankTask = null;
+                break;
+            case Constants.COMMAND_ADD_CARD:
+                try {
+                    mGetCardResponse = gson.fromJson(result.getJsonString(), GetCardResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mCardDetailsList = mGetCardResponse.getUserCardList();
+
+                        if (mCardDetailsList.isEmpty() && mBankDetailsList.isEmpty()) {
+                            ProfileInfoCacheManager.addSourceOfFund(false);
+                        } else ProfileInfoCacheManager.addSourceOfFund(true);
+
+                        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                                || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                            ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
+                        } else {
+                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        }
+                    }
+                } catch (Exception e) {
+
+                }
+                mGetAllAddedCards = null;
                 break;
 
             default:
