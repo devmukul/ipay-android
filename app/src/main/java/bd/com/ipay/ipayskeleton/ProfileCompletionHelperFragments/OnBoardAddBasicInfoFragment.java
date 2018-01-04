@@ -97,8 +97,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
         mSkipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (((ProfileVerificationHelperActivity) getActivity()).mCardDetailsList.size() +
-                        ((ProfileVerificationHelperActivity) getActivity()).mBankDetailsList.size() > 0) {
+                if (!ProfileInfoCacheManager.isSourceOfFundAdded()) {
                     ((ProfileVerificationHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();
                 } else {
                     ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
@@ -172,8 +171,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
                     Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_LONG).show();
                     ProfileInfoCacheManager.addBasicInfo(true);
                     getActivity().getSupportFragmentManager().popBackStack();
-                    if (((ProfileVerificationHelperActivity) getActivity()).mCardDetailsList.size() +
-                            ((ProfileVerificationHelperActivity) getActivity()).mBankDetailsList.size() > 0) {
+                    if (ProfileInfoCacheManager.isSourceOfFundAdded()) {
                         ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
                     } else {
                         ((ProfileVerificationHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();

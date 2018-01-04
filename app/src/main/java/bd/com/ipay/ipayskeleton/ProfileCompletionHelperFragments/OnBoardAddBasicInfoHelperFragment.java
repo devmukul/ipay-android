@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import bd.com.ipay.ipayskeleton.Activities.ProfileVerificationHelperActivity;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 
 public class OnBoardAddBasicInfoHelperFragment extends Fragment {
     private Button mUploadButton;
@@ -33,7 +34,7 @@ public class OnBoardAddBasicInfoHelperFragment extends Fragment {
         mSkipButton = (Button) view.findViewById(R.id.button_skip);
         mBackButtonTop = (ImageView) view.findViewById(R.id.back);
 
-        if (getActivity().getSupportFragmentManager().getBackStackEntryCount()<=1){
+        if (getActivity().getSupportFragmentManager().getBackStackEntryCount() <= 1) {
             mBackButtonTop.setVisibility(View.INVISIBLE);
         }
     }
@@ -42,7 +43,11 @@ public class OnBoardAddBasicInfoHelperFragment extends Fragment {
         mSkipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileVerificationHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();
+                if (!ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                    ((ProfileVerificationHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();
+                } else {
+                    ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
+                }
             }
         });
 

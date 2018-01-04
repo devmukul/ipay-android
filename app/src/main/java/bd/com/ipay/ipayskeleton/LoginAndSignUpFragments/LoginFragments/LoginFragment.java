@@ -89,14 +89,8 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetProfileInfoResponse mGetProfileInfoResponse;
 
-    private HttpRequestGetAsyncTask mGetBankTask = null;
-    private GetBankListResponse mBankListResponse;
-
     private HttpRequestGetAsyncTask mGetAllAddedCards = null;
     private GetCardResponse mGetCardResponse;
-
-    public static List<CardDetails> mCardDetailsList;
-    public static List<UserBankClass> mBankDetailsList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -367,23 +361,11 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         }
     }
 
-
-    private void getBankList() {
-        if (mGetBankTask != null) {
-            return;
-        }
-
-        mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity());
-        mGetBankTask.mHttpResponseListener = this;
-        mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     private void getAddedCards() {
         if (mGetAllAddedCards != null) return;
         else {
             mGetAllAddedCards = new HttpRequestGetAsyncTask(Constants.COMMAND_ADD_CARD,
-                    Constants.BASE_URL_MM + Constants.URL_GET_CARD, getActivity());
+                    Constants.BASE_URL_MM + Constants.URL_GET_CARD, getActivity(), this);
             mGetAllAddedCards.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -559,9 +541,9 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                         ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
                         ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
                         ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
-                        if (mProfileCompletionStatusResponse.isBankAdded()) {
-                            ProfileInfoCacheManager.addSourceOfFund(true);
+                        ProfileInfoCacheManager.addSourceOfFund(mProfileCompletionStatusResponse.isBankAdded());
 
+                        if (ProfileInfoCacheManager.isSourceOfFundAdded()) {
                             if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
                                     || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
                                 ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
@@ -607,28 +589,12 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
 
                 break;
 
-            case Constants.COMMAND_GET_BANK_LIST:
-                try {
-                    mBankListResponse = gson.fromJson(result.getJsonString(), GetBankListResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mBankDetailsList = mBankListResponse.getBanks();
-                        if (mBankDetailsList.isEmpty())
-                            getAddedCards();
-                        else
-                            ProfileInfoCacheManager.addSourceOfFund(true);
-                    }
-                } catch (Exception e) {
-
-                }
-                mGetBankTask = null;
-                break;
             case Constants.COMMAND_ADD_CARD:
                 try {
                     mGetCardResponse = gson.fromJson(result.getJsonString(), GetCardResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mCardDetailsList = mGetCardResponse.getUserCardList();
 
-                        if (mCardDetailsList.isEmpty() && mBankDetailsList.isEmpty()) {
+                        if (mGetCardResponse.getUserCardList().isEmpty()) {
                             ProfileInfoCacheManager.addSourceOfFund(false);
                         } else ProfileInfoCacheManager.addSourceOfFund(true);
 

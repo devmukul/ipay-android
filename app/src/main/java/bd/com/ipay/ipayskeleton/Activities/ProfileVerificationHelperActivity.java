@@ -13,19 +13,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.List;
-
-import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.CardDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
-import bd.com.ipay.ipayskeleton.Model.GetCardResponse;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBankFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoHelperFragment;
@@ -51,21 +43,12 @@ public class ProfileVerificationHelperActivity extends BaseActivity implements H
     private ProgressDialog mProgressDialog;
     public Uri mProfilePhotoUri;
 
-    private HttpRequestGetAsyncTask mGetBankTask = null;
-    private GetBankListResponse mBankListResponse;
-
-    private HttpRequestGetAsyncTask mGetAllAddedCards = null;
-    private GetCardResponse mGetCardResponse;
-
-    public static List<CardDetails> mCardDetailsList;
-    public static List<UserBankClass> mBankDetailsList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_verification_helper);
         SharedPrefManager.setFirstLaunch(false);
-        getBankList();
         mProgressDialog = new ProgressDialog(ProfileVerificationHelperActivity.this);
         if (ProfileInfoCacheManager.isSwitchedFromSignup()) {
             switchToProfilePictureFragment();
@@ -82,17 +65,6 @@ public class ProfileVerificationHelperActivity extends BaseActivity implements H
                 switchToHomeActivity();
             }
         }
-    }
-
-    private void getBankList() {
-        if (mGetBankTask != null) {
-            return;
-        }
-
-        mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
-                Constants.BASE_URL_MM + Constants.URL_GET_BANK, this);
-        mGetBankTask.mHttpResponseListener = this;
-        mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void switchToSourceOfFundHelperFragment() {
@@ -131,15 +103,6 @@ public class ProfileVerificationHelperActivity extends BaseActivity implements H
                         }
                     })
                     .show();
-        }
-    }
-
-    private void getAddedCards() {
-        if (mGetAllAddedCards != null) return;
-        else {
-            mGetAllAddedCards = new HttpRequestGetAsyncTask(Constants.COMMAND_ADD_CARD,
-                    Constants.BASE_URL_MM + Constants.URL_GET_CARD, this, this);
-            mGetAllAddedCards.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -232,12 +195,6 @@ public class ProfileVerificationHelperActivity extends BaseActivity implements H
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, consentAgreementForBankFragment).addToBackStack(null).commit();
     }
 
-    private void getAvailableBankList() {
-        GetAvailableBankAsyncTask getAvailableBanksTask = new GetAvailableBankAsyncTask(this);
-        getAvailableBanksTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -262,33 +219,6 @@ public class ProfileVerificationHelperActivity extends BaseActivity implements H
                     e.printStackTrace();
                     Toast.makeText(ProfileVerificationHelperActivity.this, R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
                 }
-                break;
-            case Constants.COMMAND_GET_BANK_LIST:
-                try {
-                    mBankListResponse = gson.fromJson(result.getJsonString(), GetBankListResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mBankDetailsList = mBankListResponse.getBanks();
-                        getAddedCards();
-                    }
-                } catch (Exception e) {
-
-                }
-                mGetBankTask = null;
-                break;
-            case Constants.COMMAND_ADD_CARD:
-                try {
-                    mGetCardResponse = gson.fromJson(result.getJsonString(), GetCardResponse.class);
-                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        mCardDetailsList = mGetCardResponse.getUserCardList();
-
-                        if (mCardDetailsList.isEmpty()  && mBankDetailsList.isEmpty()) {
-
-                        }
-                    }
-                } catch (Exception e) {
-
-                }
-                mGetAllAddedCards = null;
                 break;
         }
     }
