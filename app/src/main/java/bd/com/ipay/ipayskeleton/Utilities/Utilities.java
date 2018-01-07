@@ -893,13 +893,15 @@ public class Utilities {
         return length / 1000000;
     }
 
-    private static int[] ADD_MONEY_OPTION_SERVICE_ID = {ServiceIdConstants.ADD_MONEY_BY_BANK, ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
+    private static int[] ADD_MONEY_OPTION_SERVICE_ID;
     private static final String[] ADD_MONEY_OPTION_TITLE = {Constants.ADD_MONEY_BY_BANK_TITLE, Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE};
     private static final int[] ADD_MONEY_OPTION_ICON = {R.drawable.ic_bank111, R.drawable.basic_card};
 
-    public static List<IpayService> getAvailableAddMoneyOptions(boolean isFromOnboard) {
-        if (isFromOnboard) {
+    public static List<IpayService> getAvailableAddMoneyOptions(boolean isOnlyByCard) {
+        if (isOnlyByCard) {
             ADD_MONEY_OPTION_SERVICE_ID = new int[]{ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
+        } else {
+            ADD_MONEY_OPTION_SERVICE_ID = new int[]{ServiceIdConstants.ADD_MONEY_BY_BANK, ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
         }
         List<IpayService> ipayServiceList = new ArrayList<>();
         for (int i = 0; i < ADD_MONEY_OPTION_SERVICE_ID.length; i++) {

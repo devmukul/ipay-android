@@ -606,8 +606,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                         } else {
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                         }
-                    }
-                    else {
+                    } else {
                         Toaster.makeText(getActivity(), mGetCardResponse.getMessage(), Toast.LENGTH_SHORT);
                     }
                 } catch (Exception e) {

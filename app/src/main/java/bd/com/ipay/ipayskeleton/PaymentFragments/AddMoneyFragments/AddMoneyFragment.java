@@ -78,7 +78,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     private List<UserBankClass> mListUserBankClasses;
 
     private ProgressDialog mProgressDialog;
-    boolean isFromOnboard;
+    boolean isOnlyByCard;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,11 +106,11 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         final View mAddMoneyOptionSelectorViewHolder = findViewById(R.id.add_money_option_selector_view_holder);
         final Button mAddMoneyProceedButton = findViewById(R.id.add_money_proceed_button);
 
-        if(getActivity().getIntent().getStringExtra(Constants.TAG) != null && getActivity().getIntent().getStringExtra(Constants.TAG).equalsIgnoreCase("CARD"))
-        isFromOnboard = true;
+        if (getActivity().getIntent().getStringExtra(Constants.TAG) != null && getActivity().getIntent().getStringExtra(Constants.TAG).equalsIgnoreCase("CARD"))
+            isOnlyByCard = true;
         else
-            isFromOnboard = false;
-        final List<IpayService> availableAddMoneyOptions = Utilities.getAvailableAddMoneyOptions(isFromOnboard);
+            isOnlyByCard = false;
+        final List<IpayService> availableAddMoneyOptions = Utilities.getAvailableAddMoneyOptions(isOnlyByCard);
 
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
@@ -125,11 +125,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
         });
-
-        if (isFromOnboard) {
-            mAddMoneyOptionSelectorView.selectedItem(1);
-            mAddMoneyOptionSelectorViewHolder.setVisibility(View.GONE);
-        }
 
         mAddMoneyOptionSelectorView.setSelectorDialogTitle(getString(R.string.add_money_from));
         mAddMoneyOptionSelectorView.setOnItemAccessValidation(new SelectorView.OnItemAccessValidation() {
