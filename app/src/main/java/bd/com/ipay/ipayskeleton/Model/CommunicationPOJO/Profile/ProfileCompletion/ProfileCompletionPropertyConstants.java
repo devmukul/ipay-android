@@ -19,6 +19,7 @@ public class ProfileCompletionPropertyConstants {
     public static final String PHOTOID = "PHOTO_ID";
     public static final String VERIFICATION_DOCUMENT = "VERIFICATION_DOCUMENT";
     public static final String ADD_AND_VERIFY_BANK = "ADD_AND_VERIFY_BANK";
+    public static final String VERIFY_BY_CARD = "VERIFY_BY_CARD";
     public static final String PARENT = "PARENT";
     public static final String PROFILE_INFO = "PROFILEINFO";
 
@@ -54,6 +55,7 @@ public class ProfileCompletionPropertyConstants {
         PROPERTY_NAME_TO_TITLE_MAP.put(PHOTOID, "Submit Document");
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFICATION_DOCUMENT, "Submit Verification Document");
         PROPERTY_NAME_TO_TITLE_MAP.put(ADD_AND_VERIFY_BANK, "Add and Verify Bank Account");
+        PROPERTY_NAME_TO_TITLE_MAP.put(VERIFY_BY_CARD,"Verify By Card");
         PROPERTY_NAME_TO_TITLE_MAP.put(PARENT, "Add Parent's Information");
     }
 
@@ -68,6 +70,7 @@ public class ProfileCompletionPropertyConstants {
         PROPERTY_NAME_TO_ICON_MAP.put(VERIFICATION_DOCUMENT, R.drawable.ic_doc);
         PROPERTY_NAME_TO_ICON_MAP.put(BUSINESS_DOCUMENTS, R.drawable.ic_photoid);
         PROPERTY_NAME_TO_ICON_MAP.put(ADD_AND_VERIFY_BANK, R.drawable.ic_bank);
+        PROPERTY_NAME_TO_ICON_MAP.put(VERIFY_BY_CARD, R.drawable.ic_bank);
         PROPERTY_NAME_TO_ICON_MAP.put(PARENT, R.drawable.ic_parent);
     }
 

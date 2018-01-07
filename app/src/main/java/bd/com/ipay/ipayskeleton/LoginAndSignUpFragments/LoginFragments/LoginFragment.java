@@ -376,8 +376,11 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             hideProgressDialog();
-
             mLoginTask = null;
+            mGetAllAddedCards = null;
+            mGetProfileCompletionStatusTask = null;
+            mGetProfileInfoTask = null;
+
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
@@ -551,7 +554,6 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                                 ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                             }
                         } else getAddedCards();
-                        // getBankList();
                     } else {
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
@@ -605,8 +607,11 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                         }
                     }
+                    else {
+                        Toaster.makeText(getActivity(), mGetCardResponse.getMessage(), Toast.LENGTH_SHORT);
+                    }
                 } catch (Exception e) {
-
+                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 }
                 mGetAllAddedCards = null;
                 break;

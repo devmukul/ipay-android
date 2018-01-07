@@ -12,6 +12,7 @@ import android.widget.Button;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 
 public class OnBoardAddSourceOfFundFragment extends Fragment {
@@ -38,6 +39,7 @@ public class OnBoardAddSourceOfFundFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(getActivity(), AddMoneyActivity.class);
+                intent.putExtra(Constants.TAG, "CARD");
                 startActivity(intent);
             }
         });

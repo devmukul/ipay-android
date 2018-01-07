@@ -246,6 +246,8 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
             mAddTrustedDeviceTask = null;
             mLogoutTask = null;
             mRemoveTrustedDeviceTask = null;
+            mGetAllAddedCards = null;
+            mGetProfileCompletionStatusTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
@@ -405,8 +407,11 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                         ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
                     }
                 }
+                else {
+                    Toaster.makeText(getActivity(), mGetCardResponse.getMessage(), Toast.LENGTH_SHORT);
+                }
             } catch (Exception e) {
-
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
             }
             mGetAllAddedCards = null;
         }

@@ -229,6 +229,9 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
             hideProgressDialog();
 
             mLoginTask = null;
+            mGetAllAddedCards = null;
+            mGetProfileCompletionStatusTask = null;
+            mGetProfileInfoTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
@@ -410,9 +413,11 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                         } else {
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                         }
+                    } else {
+                        Toaster.makeText(getActivity(), mGetCardResponse.getMessage(), Toast.LENGTH_SHORT);
                     }
                 } catch (Exception e) {
-
+                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
                 }
                 mGetAllAddedCards = null;
                 break;

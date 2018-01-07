@@ -105,7 +105,8 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         final View mAddMoneyOptionSelectorViewHolder = findViewById(R.id.add_money_option_selector_view_holder);
         final Button mAddMoneyProceedButton = findViewById(R.id.add_money_proceed_button);
 
-        final List<IpayService> availableAddMoneyOptions = Utilities.getAvailableAddMoneyOptions();
+        int isFromOnboard = getActivity().getIntent().getStringExtra(Constants.TAG) != null && getActivity().getIntent().getStringExtra(Constants.TAG) == "CARD" ? 1 : 0;
+        final List<IpayService> availableAddMoneyOptions = Utilities.getAvailableAddMoneyOptions(isFromOnboard);
 
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
@@ -120,6 +121,11 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
         });
+
+       /* if (isFromOnboard == 1) {
+            mAddMoneyOptionSelectorView.selectedItem(1);
+            mAddMoneyOptionSelectorViewHolder.setVisibility(View.GONE);
+        }*/
 
         mAddMoneyOptionSelectorView.setSelectorDialogTitle(getString(R.string.add_money_from));
         mAddMoneyOptionSelectorView.setOnItemAccessValidation(new SelectorView.OnItemAccessValidation() {
@@ -199,7 +205,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         }
     }
 
-    @ValidateAccess(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)
+    //@ValidateAccess(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)
     private void setupAddMoneyFromCreditOrDebitCard() {
         mMessageTextView.setText(R.string.add_money_from_credit_or_debit_card_info);
         mBankSelectorViewHolder.setVisibility(View.GONE);

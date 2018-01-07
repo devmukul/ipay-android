@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessInformationFragment;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EditBusinessInformationFragment;
@@ -46,6 +47,7 @@ import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCo
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.VERIFICATION_DOCUMENT;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.VERIFIED_EMAIL;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.VERIFY_BY_CARD;
 
 public class ProfileActivity extends BaseActivity {
 
@@ -181,6 +183,9 @@ public class ProfileActivity extends BaseActivity {
                 case PROFILE_INFO:
                     fragment = new AccountFragment();
                     break;
+                case VERIFY_BY_CARD:
+                    launchIntendedActivity(new AddMoneyActivity(), Constants.ADD_MONEY_TYPE_BY_CREDIT_OR_DEBIT_CARD);
+                     break;
                 default:
                     fragment = new AccountFragment();
             }
