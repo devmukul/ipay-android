@@ -897,14 +897,14 @@ public class Utilities {
     private static final String[] ADD_MONEY_OPTION_TITLE = {Constants.ADD_MONEY_BY_BANK_TITLE, Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE};
     private static final int[] ADD_MONEY_OPTION_ICON = {R.drawable.ic_bank111, R.drawable.basic_card};
 
-    public static List<IpayService> getAvailableAddMoneyOptions(int isFromOnboard) {
-        if (isFromOnboard == 1){
+    public static List<IpayService> getAvailableAddMoneyOptions(boolean isFromOnboard) {
+        if (isFromOnboard) {
             ADD_MONEY_OPTION_SERVICE_ID = new int[]{ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
         }
         List<IpayService> ipayServiceList = new ArrayList<>();
         for (int i = 0; i < ADD_MONEY_OPTION_SERVICE_ID.length; i++) {
-           // if (ACLManager.hasServicesAccessibility(ADD_MONEY_OPTION_SERVICE_ID[i])) {
-                ipayServiceList.add(new IpayService(ADD_MONEY_OPTION_SERVICE_ID[i], ADD_MONEY_OPTION_ICON[i], ADD_MONEY_OPTION_TITLE[i]));
+            // if (ACLManager.hasServicesAccessibility(ADD_MONEY_OPTION_SERVICE_ID[i])) {
+            ipayServiceList.add(new IpayService(ADD_MONEY_OPTION_SERVICE_ID[i], ADD_MONEY_OPTION_ICON[i], ADD_MONEY_OPTION_TITLE[i]));
             //}
         }
         return ipayServiceList;

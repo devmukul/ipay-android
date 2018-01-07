@@ -78,6 +78,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     private List<UserBankClass> mListUserBankClasses;
 
     private ProgressDialog mProgressDialog;
+    boolean isFromOnboard;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,7 +106,10 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         final View mAddMoneyOptionSelectorViewHolder = findViewById(R.id.add_money_option_selector_view_holder);
         final Button mAddMoneyProceedButton = findViewById(R.id.add_money_proceed_button);
 
-        int isFromOnboard = getActivity().getIntent().getStringExtra(Constants.TAG) != null && getActivity().getIntent().getStringExtra(Constants.TAG) == "CARD" ? 1 : 0;
+        if(getActivity().getIntent().getStringExtra(Constants.TAG) != null && getActivity().getIntent().getStringExtra(Constants.TAG).equalsIgnoreCase("CARD"))
+        isFromOnboard = true;
+        else
+            isFromOnboard = false;
         final List<IpayService> availableAddMoneyOptions = Utilities.getAvailableAddMoneyOptions(isFromOnboard);
 
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
@@ -122,10 +126,10 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             }
         });
 
-       /* if (isFromOnboard == 1) {
+        if (isFromOnboard) {
             mAddMoneyOptionSelectorView.selectedItem(1);
             mAddMoneyOptionSelectorViewHolder.setVisibility(View.GONE);
-        }*/
+        }
 
         mAddMoneyOptionSelectorView.setSelectorDialogTitle(getString(R.string.add_money_from));
         mAddMoneyOptionSelectorView.setOnItemAccessValidation(new SelectorView.OnItemAccessValidation() {
