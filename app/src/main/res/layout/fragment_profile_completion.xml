@@ -33,6 +33,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="?android:attr/progressBarStyleHorizontal"/>
+
+            <TextView
+                android:id="@+id/textview_profile_completion_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                android:text="@string/profile_completion_detail_text"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin_card"
+                android:gravity="center"/>
+
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
