@@ -40,6 +40,7 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
     private List<CardDetails> mCardList;
 
     public FloatingActionButton mFabAddNewBank;
+    private TextView mDescriptionTextView;
 
     public ArrayList<String> mDistrictNames;
     public ArrayList<BankBranch> mBranches;
@@ -57,6 +58,7 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
         mBranchNames = new ArrayList<>();
 
         mFabAddNewBank = (FloatingActionButton) findViewById(R.id.fab_add_new_bank);
+        mDescriptionTextView = (TextView) findViewById(R.id.header_text_view);
         mAllCardListRecyclerView = (RecyclerView) findViewById(R.id.card_list);
         setTitle(this.getClass().getSimpleName());
         if (getSupportActionBar() != null) {
@@ -129,6 +131,7 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 addCardResponse = gson.fromJson(result.getJsonString(), AddCardResponse.class);
                 mCardList = addCardResponse.getUserCardList();
+                if (mCardList.size() == 0) mDescriptionTextView.setVisibility(View.VISIBLE);
                 CardAdapter cardAdapter = new CardAdapter();
                 mAllCardListRecyclerView.setAdapter(cardAdapter);
                 mAllCardListRecyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -3,24 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- <TextView
+    <TextView
         android:id="@+id/header_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:paddingTop="@dimen/value15"
+        android:gravity="center"
         android:paddingBottom="@dimen/value15"
-        android:text="Added Cards"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:background="@color/colorLightGray"
-        android:textSize="@dimen/text_size_small_medium_value18" />-->
+        android:paddingTop="@dimen/value15"
+        android:visibility="gone"
+        android:text="Nothing to show right now"
+        android:textSize="@dimen/text_size_small_medium_value18" />
 
     <RelativeLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:layout_below="@+id/header_text_view">
+        android:layout_below="@+id/header_text_view"
+        android:layout_marginTop="@dimen/activity_horizontal_margin">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/card_list"
