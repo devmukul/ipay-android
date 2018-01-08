@@ -383,7 +383,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             // Add Bank Header
             tempPosition += 1;
             if (position < tempPosition) {
-                ((HeaderViewHolder) holder).bindViewHeader(getString(R.string.add_bank));
+                ((HeaderViewHolder) holder).bindViewHeader(getString(R.string.source_of_fund));
                 return;
             }
 
