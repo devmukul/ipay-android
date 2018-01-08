@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/profile_completion_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/value30"
+            android:layout_height="@dimen/value30"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/value20"

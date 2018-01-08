@@ -371,6 +371,13 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                     intent.putExtra(Constants.MONEY_REQUEST_ID, transactionId);
                     startActivity(intent);
                 }
+                else{
+                    final String transactionId = data.getBundleExtra(Constants.CARD_TRANSACTION_DATA).getString(Constants.TRANSACTION_ID);
+                    intent = new Intent(getActivity(), TransactionDetailsActivity.class);
+                    intent.putExtra(Constants.STATUS, Constants.PAYMENT_REQUEST_STATUS_ALL);
+                    intent.putExtra(Constants.MONEY_REQUEST_ID, "111");
+                    startActivity(intent);
+                }
 
             }
             if (getActivity() != null)
