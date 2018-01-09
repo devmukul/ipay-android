@@ -617,7 +617,7 @@
     <string name="item">Item</string>
     <string name="fee">Fee</string>
     <string name="net_payable">Net Payable</string>
-    <string name="service_charge">(-) Service Charge</string>
+    <string name="service_charge">Service Charge</string>
     <string name="topup_package">Type</string>
     <string name="operator">Operator</string>
     <string name="invite_this_person_to_ipay" tools:keep="@string/invite_this_person_to_ipay">Invite this person to iPay</string>
@@ -1075,7 +1075,7 @@
     <string name="add_money_from_credit_or_debit_card_cancel_title">Money add cancelled</string>
     <string name="add_money_from_credit_or_debit_card_failed_title">Money add failed</string>
     <string name="tk">Tk</string>
-    <string name="success">Successfull</string> 
+    <string name="success">Successfull</string>
     <string name="you_can_do_following_things">You can do following things</string>
     <string name="select_a_role">Select a Role</string>
     <string name="manage_account">Manage Account</string>
