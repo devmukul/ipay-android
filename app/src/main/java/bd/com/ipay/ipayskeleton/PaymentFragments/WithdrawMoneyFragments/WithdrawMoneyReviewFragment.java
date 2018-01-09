@@ -101,7 +101,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
 
         amountTextView.setText(Utilities.formatTaka(getAmount()));
         mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
-        mNetAmountTextView.setText(Utilities.formatTaka(getAmount().add(new BigDecimal(0.0))));
+        mNetAmountTextView.setText(Utilities.formatTaka(getAmount().subtract(new BigDecimal(0.0))));
 
         if (mDescription == null || mDescription.isEmpty()) {
             descriptionViewHolder.setVisibility(View.GONE);
@@ -203,7 +203,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
-        mNetAmountTextView.setText(Utilities.formatTaka(getAmount().add(serviceCharge)));
+        mNetAmountTextView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
     }
 
     @Override
