@@ -132,6 +132,7 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
                 addCardResponse = gson.fromJson(result.getJsonString(), AddCardResponse.class);
                 mCardList = addCardResponse.getUserCardList();
                 if (mCardList.size() == 0) mDescriptionTextView.setVisibility(View.VISIBLE);
+                else mDescriptionTextView.setVisibility(View.GONE);
                 CardAdapter cardAdapter = new CardAdapter();
                 mAllCardListRecyclerView.setAdapter(cardAdapter);
                 mAllCardListRecyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -347,7 +347,7 @@ public class Constants {
     public static final String URL_GET_BANK = "bank/";
     public static final String URL_REMOVE_A_BANK = "bank/";
     public static final String URL_VERIFY_WITH_AMOUNT_A_BANK = "bank/";
-    public static final String URL_GET_CARD = "user/card/v1";
+    public static final String URL_GET_CARD = "user/card";
     // Bank Transaction REST
     public static final String URL_ADD_MONEY = "banktransaction/cashin/v2";
     public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout/v2";
