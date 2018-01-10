@@ -802,6 +802,7 @@
     <string name="manage_invitations">Manage invitations</string>
     <string name="manage_address">Manage address</string>
     <string name="see_profile_completion">See profile completeness</string>
+    <string name="profile_completion_detail_text">For verification purpose you need to complete the following information - your Profile Picture, Photo Identification, Basic Information and Source of Fund</string>
     <string name="privileges">Privileges</string>
     <string name="fetching_employee_details_failed">Failed to fetch details information</string>
     <string name="add_money_from_bank_info">It may take 3–5 business days to complete the operation</string>
