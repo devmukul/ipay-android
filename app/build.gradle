@@ -29,8 +29,8 @@ android {
         applicationId "bd.com.ipay.android"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 118
-        versionName "1.4.2"
+        versionCode 119
+        versionName "1.4.3"
         multiDexEnabled true
     }
 
