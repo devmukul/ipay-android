@@ -9,6 +9,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBus
 
 public class Constants {
     public static final String ApplicationTag = "iPay";
+    public static String ApplicationTagV2 = "iPayV2";
     public static final String ApplicationPackage = "bd.com.ipay.android";
 
     public static final String ERROR = "ERROR";
@@ -235,6 +236,7 @@ public class Constants {
     public static final String CARD_TRANSACTION_DATA = "CARD_TRANSACTION_DATA";
     public static final String VALID_IPAY_BD_ADDRESS = "(http://|https://)?(www|dev|test|stage|internal).ipay.com.bd/(.+)";
     public static String Business_role = "BUSINESS_ROLE";
+
 
     static {
         if (SERVER_TYPE == DEV_SERVER) {

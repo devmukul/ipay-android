@@ -11,7 +11,7 @@ public class SharedPrefManager {
 
 
     public static void initialize(Context context) {
-        pref = context.getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+        pref = context.getSharedPreferences(Constants.ApplicationTagV2, Activity.MODE_PRIVATE);
     }
 
     public static boolean getFirstLaunch() {
