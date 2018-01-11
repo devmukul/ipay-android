@@ -1075,7 +1075,7 @@
     <string name="add_money_from_credit_or_debit_card_cancel_title">Money add cancelled</string>
     <string name="add_money_from_credit_or_debit_card_failed_title">Money add failed</string>
     <string name="tk">Tk</string>
-    <string name="success">Successfull</string> 
+    <string name="success">Successfull</string>
     <string name="you_can_do_following_things">You can do following things</string>
     <string name="select_a_role">Select a Role</string>
     <string name="manage_account">Manage Account</string>
@@ -1085,6 +1085,7 @@
     <string name="cant_switch">Cant Switch Account Now</string>
     <string name="leave_account">Leave Account</string>
     <string name="do_you_want_to_leave">Do you want to leave this account permanently? You can\'t switch to this account in the future</string>
+    <string name="do_you_want_to_resign">Are you sure to remove this business account? </string>
     <string name="leaving">Leaving</string>
 
     <string name="failed_loading_manager_list">Failed to load manager list</string>

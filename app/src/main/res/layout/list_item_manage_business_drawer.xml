@@ -2,44 +2,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/colorTransparent">
+    android:background="@color/colorTransparent"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/side_nav_bar"
         android:padding="@dimen/activity_horizontal_margin">
+
+        <ImageView
+            android:id="@+id/leave_account"
+            android:layout_width="@dimen/value20"
+            android:layout_height="@dimen/value20"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/value15"
+            android:src="@drawable/ic_cancel_white" />
+
         <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+            android:id="@+id/profile_image_view"
             android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:id="@+id/profile_image_view">
-        </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
+            android:layout_height="50dp"></bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/profile_image_view"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:orientation="vertical"
-            android:gravity="center_vertical">
+            android:layout_toLeftOf="@id/leave_account"
+            android:layout_toRightOf="@+id/profile_image_view"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/title_text_view"
                 style="@style/TextStylePrimaryMedium"
-                android:textSize="@dimen/text_size_small_medium"
-                android:textColor="@color/colorWhite"/>
-
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/text_size_small_medium" />
+
+            <TextView
                 android:id="@+id/role_text_view"
                 style="@style/TextStylePrimaryMedium"
-                android:textSize="@dimen/text_size_small"
-                android:textColor="@color/colorLightGray"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorLightGray"
+                android:textSize="@dimen/text_size_small" />
 
         </LinearLayout>
     </RelativeLayout>
