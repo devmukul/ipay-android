@@ -8,8 +8,7 @@ import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 
 public class Constants {
-    public static final String ApplicationTag = "iPay";
-    public static String ApplicationTagV2 = "iPayV2";
+    public static final String ApplicationTag = "iPayV2";
     public static final String ApplicationPackage = "bd.com.ipay.android";
 
     public static final String ERROR = "ERROR";
