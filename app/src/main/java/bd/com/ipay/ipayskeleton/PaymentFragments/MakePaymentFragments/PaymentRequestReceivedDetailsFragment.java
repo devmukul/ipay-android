@@ -23,10 +23,12 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelRequest;
@@ -46,6 +48,9 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
 
     private HttpRequestPostAsyncTask mRejectRequestTask = null;
     private RequestMoneyAcceptRejectOrCancelResponse mPaymentRejectResponse;
+
+    private PaymentAcceptRejectOrCancelRequest mPaymentAcceptRejectOrCancelRequest;
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private LinearLayoutManager mLayoutManager;
     private RecyclerView mReviewRecyclerView;
@@ -81,7 +86,7 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_payment_request_received_details) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_payment_request_received_details));
     }
 
     @Override
@@ -138,6 +143,13 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
         this.mInvoiceItemList = bundle.getParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG);
     }
 
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mPaymentAcceptRejectOrCancelRequest);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
+                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
+    }
+
     private void acceptPaymentRequest(long id, String pin) {
 
         if (mAcceptPaymentTask != null)
@@ -146,7 +158,7 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_accepted));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        PaymentAcceptRejectOrCancelRequest mPaymentAcceptRejectOrCancelRequest =
+        mPaymentAcceptRejectOrCancelRequest =
                 new PaymentAcceptRejectOrCancelRequest(id, pin);
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
@@ -227,6 +239,11 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
                             getActivity().onBackPressed();
                     }
 
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED ||
+                        result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    Toaster.makeText(getActivity(), mPaymentAcceptPaymentResponse.getMessage(), Toast.LENGTH_LONG);
+                    SecuritySettingsActivity.otpDuration = mPaymentAcceptPaymentResponse.getOtpValidFor();
+                    launchOTPVerification();
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mPaymentAcceptPaymentResponse.getMessage(), Toast.LENGTH_LONG);
