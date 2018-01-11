@@ -99,11 +99,11 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
     public int getCardIcon() {
         if (cardNumber != null) {
             if (cardNumber.matches(Constants.VISA_CARD_STARTS_WITH_REGEX)) {
-                return R.drawable.visa_card;
+                return R.drawable.visa;
             } else if (cardNumber.matches(Constants.AMEX_CARD_STARTS_WITH_REGEX)) {
-                return R.drawable.amex_card;
+                return R.drawable.amex;
             } else if (cardNumber.matches(Constants.MASTER_CARD_STARTS_WITH_REGEX)) {
-                return R.drawable.master_card;
+                return R.drawable.mastercard;
             } else {
                 return R.drawable.basic_card;
             }

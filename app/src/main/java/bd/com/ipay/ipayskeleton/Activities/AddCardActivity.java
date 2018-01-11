@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -101,6 +102,11 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
         }
     }
 
+    private int getAppropriateCardIcon(String imageUrl) {
+        return getResources().getIdentifier(imageUrl, "drawable", this.getPackageName());
+
+    }
+
     @Override
     protected Context setContext() {
         return AddCardActivity.this;
@@ -154,7 +160,13 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
         @Override
         public void onBindViewHolder(CardViewHolder holder, int position) {
             holder.mTitleTextView.setText(mCardList.get(position).getCardInfo());
-            holder.mStatusTextView.setText(mCardList.get(position).getCardStatus());
+            holder.mCardImageView.setImageDrawable(getResources().
+                    getDrawable(getAppropriateCardIcon(mCardList.get(position).getCardType().toLowerCase())));
+            if (mCardList.get(position).getCardStatus().equals(Constants.VERIFIED)) {
+                holder.mVerifyImageView.setVisibility(View.VISIBLE);
+            } else {
+                holder.mVerifyImageView.setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -168,12 +180,14 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
 
         public class CardViewHolder extends RecyclerView.ViewHolder {
             private TextView mTitleTextView;
-            private TextView mStatusTextView;
+            private ImageView mVerifyImageView;
+            private ImageView mCardImageView;
 
             public CardViewHolder(View itemView) {
                 super(itemView);
                 mTitleTextView = (TextView) itemView.findViewById(R.id.title_text_view);
-                mStatusTextView = (TextView) itemView.findViewById(R.id.status_text_view);
+                mVerifyImageView = (ImageView) itemView.findViewById(R.id.verify_icon);
+                mCardImageView = (ImageView) itemView.findViewById(R.id.icon_card);
             }
         }
     }

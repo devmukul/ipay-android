@@ -124,6 +124,7 @@ public class Constants {
     public static final String RELOAD = "RELOAD";
     public static final String FROM_ON_BOARD = "FROM_ON_BOARD";
     public static final String COMMAND_ADD_CARD = "COMMAND_ADD_CARD";
+    public static final String VERIFIED = "VERIFIED";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
