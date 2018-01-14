@@ -48,7 +48,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_profile_completion) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_profile_completion));
     }
 
     @Nullable
@@ -160,8 +160,9 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             public abstract void bindViewProfileCompletion(int position);
 
             public void bindViewProfileCompletion(final ProfileCompletionStatusResponse.PropertyDetails propertyDetails) {
-                if (propertyDetails.getPropertyIcon() != null)
+                if (propertyDetails.getPropertyIcon() != null) {
                     profileCompletionIcon.setImageDrawable(getResources().getDrawable(propertyDetails.getPropertyIcon()));
+                }
                 titleView.setText(propertyDetails.getPropertyTitle());
 
                 if (!propertyDetails.isCompleted() && propertyDetails.getThreshold() > 1) {
@@ -383,7 +384,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             // Add Bank Header
             tempPosition += 1;
             if (position < tempPosition) {
-                ((HeaderViewHolder) holder).bindViewHeader(getString(R.string.add_bank));
+                ((HeaderViewHolder) holder).bindViewHeader(getString(R.string.source_of_fund));
                 return;
             }
 

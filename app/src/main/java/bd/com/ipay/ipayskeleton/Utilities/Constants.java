@@ -122,6 +122,9 @@ public class Constants {
 
     public static final String ADDRESS = "ADDRESS";
     public static final String RELOAD = "RELOAD";
+    public static final String FROM_ON_BOARD = "FROM_ON_BOARD";
+    public static final String COMMAND_ADD_CARD = "COMMAND_ADD_CARD";
+    public static final String VERIFIED = "VERIFIED";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
@@ -242,7 +245,7 @@ public class Constants {
 
             BASE_URL_MM = "http://10.10.10.10:8085/api/v1/";
             BASE_URL_SM = "http://10.10.10.11:8085/api/v1/money/";
-            BASE_URL_CARD = "http://10.10.10.11:2202/api/v1/card/";
+            BASE_URL_CARD = "http://10.10.10.11:5665/api/v1/card/";
             BASE_URL_EDU = "http://10.10.10.11:7150/api/v1/em/";
             BASE_URL_FTP_SERVER = "http://10.10.10.10";
             BASE_URL_CONTACT = "http://10.10.10.11:4000/external/v1/";
@@ -346,6 +349,7 @@ public class Constants {
     public static final String URL_GET_BANK = "bank/";
     public static final String URL_REMOVE_A_BANK = "bank/";
     public static final String URL_VERIFY_WITH_AMOUNT_A_BANK = "bank/";
+    public static final String URL_GET_CARD = "user/card";
     // Bank Transaction REST
     public static final String URL_ADD_MONEY = "banktransaction/cashin/v2";
     public static final String URL_WITHDRAW_MONEY = "banktransaction/cashout/v2";

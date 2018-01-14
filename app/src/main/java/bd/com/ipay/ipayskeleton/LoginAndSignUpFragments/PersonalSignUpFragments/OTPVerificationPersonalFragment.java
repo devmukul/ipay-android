@@ -335,6 +335,7 @@ public class OTPVerificationPersonalFragment extends Fragment implements HttpRes
                         ProfileInfoCacheManager.uploadProfilePicture(false);
                         ProfileInfoCacheManager.uploadIdentificationDocument(false);
                         ProfileInfoCacheManager.addBasicInfo(false);
+                        ProfileInfoCacheManager.addSourceOfFund(false);
 
                         ProfileInfoCacheManager.switchedFromSignup(true);
                         ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();

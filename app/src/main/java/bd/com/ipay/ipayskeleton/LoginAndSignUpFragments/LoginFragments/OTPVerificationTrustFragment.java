@@ -35,6 +35,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetPro
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrustedDeviceResponse;
+import bd.com.ipay.ipayskeleton.Model.GetCardResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -62,6 +63,9 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetProfileInfoResponse mGetProfileInfoResponse;
+
+    private HttpRequestGetAsyncTask mGetAllAddedCards = null;
+    private GetCardResponse mGetCardResponse;
 
     private Button mActivateButton;
     private EditText mOTPEditText;
@@ -209,6 +213,15 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
         }
     }
 
+    private void getAddedCards() {
+        if (mGetAllAddedCards != null) return;
+        else {
+            mGetAllAddedCards = new HttpRequestGetAsyncTask(Constants.COMMAND_ADD_CARD,
+                    Constants.BASE_URL_MM + Constants.URL_GET_CARD, getActivity(), this);
+            mGetAllAddedCards.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
@@ -216,6 +229,9 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
             hideProgressDialog();
 
             mLoginTask = null;
+            mGetAllAddedCards = null;
+            mGetProfileCompletionStatusTask = null;
+            mGetProfileInfoTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT).show();
             return;
@@ -358,13 +374,16 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                         ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
                         ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
                         ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
+                        ProfileInfoCacheManager.addSourceOfFund(mProfileCompletionStatusResponse.isBankAdded());
 
-                        if (ProfileInfoCacheManager.getAccountType()== Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                                || !ProfileInfoCacheManager.isBasicInfoAdded()) ){
-                            ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
-                        } else {
-                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
-                        }
+                        if (ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                            if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                                    || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                                ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
+                            } else {
+                                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                            }
+                        } else getAddedCards();
                     } else {
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
@@ -377,6 +396,30 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                 }
                 mProgressDialog.dismiss();
                 mGetProfileCompletionStatusTask = null;
+                break;
+
+            case Constants.COMMAND_ADD_CARD:
+                try {
+                    mGetCardResponse = gson.fromJson(result.getJsonString(), GetCardResponse.class);
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                        if (mGetCardResponse.getUserCardList().isEmpty()) {
+                            ProfileInfoCacheManager.addSourceOfFund(false);
+                        } else ProfileInfoCacheManager.addSourceOfFund(true);
+
+                        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                                || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                            ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
+                        } else {
+                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                        }
+                    } else {
+                        Toaster.makeText(getActivity(), mGetCardResponse.getMessage(), Toast.LENGTH_SHORT);
+                    }
+                } catch (Exception e) {
+                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                }
+                mGetAllAddedCards = null;
                 break;
 
             case Constants.COMMAND_GET_PROFILE_INFO_REQUEST:

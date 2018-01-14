@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileVerificationHelperActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -46,12 +46,12 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (ProfileInfoCacheManager.isSwitchedFromSignup() && SharedPrefManager.isBangladesh()) {
-                    ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
+                    ((ProfileVerificationHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
                 } else {
                     if (!ProfileInfoCacheManager.isBasicInfoAdded() && SharedPrefManager.isBangladesh()) {
-                        ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
+                        ((ProfileVerificationHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
                     } else {
-                        ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+                        ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
                     }
                 }
             }
@@ -60,14 +60,14 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment {
         mUploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileCompletionHelperActivity) getActivity()).switchToIdentificationDocumentListFragment();
+                ((ProfileVerificationHelperActivity) getActivity()).switchToIdentificationDocumentListFragment();
             }
         });
 
         mUploadImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileCompletionHelperActivity) getActivity()).switchToIdentificationDocumentListFragment();
+                ((ProfileVerificationHelperActivity) getActivity()).switchToIdentificationDocumentListFragment();
             }
         });
 

@@ -37,4 +37,5 @@ public class SharedPrefConstants {
     public static final String PROFILE_INFO = "PROFILE_INFO";
     public static final String PROFILE_INFO_BUSINESS = "PROFILE_INFO_BUSINESS";
     public static String Id = "Id";
+    public static String SOURCE_OF_FUND_ADDED = "SOURCE_OF_FUND_ADDED";
 }

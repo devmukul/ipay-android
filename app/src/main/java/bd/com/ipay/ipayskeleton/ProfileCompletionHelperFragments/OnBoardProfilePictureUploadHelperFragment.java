@@ -27,7 +27,7 @@ import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileVerificationHelperActivity;
 import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadProfilePictureAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -75,7 +75,7 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
         setButtonActions();
         initProfilePicHelperDialog();
 
-        mUri = ((ProfileCompletionHelperActivity) getActivity()).mProfilePhotoUri;
+        mUri = ((ProfileVerificationHelperActivity) getActivity()).mProfilePhotoUri;
         if (ProfileInfoCacheManager.isProfilePictureUploaded()) {
             mUploadImageView.setProfilePicture(mUri.getPath(), true);
 
@@ -307,18 +307,18 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
                         Toast.makeText(getActivity(), mSetProfilePictureResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
 
-                    ((ProfileCompletionHelperActivity) getActivity()).mProfilePhotoUri = mUri;
+                    ((ProfileVerificationHelperActivity) getActivity()).mProfilePhotoUri = mUri;
                     ProfileInfoCacheManager.uploadProfilePicture(true);
                     getActivity().getSupportFragmentManager().popBackStack();
                     if (ProfileInfoCacheManager.isSwitchedFromSignup()) {
-                        ((ProfileCompletionHelperActivity) getActivity()).switchToPhotoIdUploadHelperFragment();
+                        ((ProfileVerificationHelperActivity) getActivity()).switchToPhotoIdUploadHelperFragment();
                     } else {
                         if (!ProfileInfoCacheManager.isIdentificationDocumentUploaded()) {
-                            ((ProfileCompletionHelperActivity) getActivity()).switchToPhotoIdUploadHelperFragment();
+                            ((ProfileVerificationHelperActivity) getActivity()).switchToPhotoIdUploadHelperFragment();
                         } else if (!ProfileInfoCacheManager.isBasicInfoAdded() && SharedPrefManager.isBangladesh()) {
-                            ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
+                            ((ProfileVerificationHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
                         } else {
-                            ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+                            ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
                         }
                     }
                 } else {
