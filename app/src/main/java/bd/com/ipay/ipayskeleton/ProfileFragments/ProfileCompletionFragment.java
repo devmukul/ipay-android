@@ -1,11 +1,8 @@
 package bd.com.ipay.ipayskeleton.ProfileFragments;
 
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -164,14 +161,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
 
             public void bindViewProfileCompletion(final ProfileCompletionStatusResponse.PropertyDetails propertyDetails) {
                 if (propertyDetails.getPropertyIcon() != null) {
-                    if (propertyDetails.getPropertyIcon() == (R.drawable.card_icon_for_source_of_fund)) {
-                        Drawable drawable = getResources().getDrawable(R.drawable.card_icon_for_source_of_fund);
-                        drawable.setColorFilter(ContextCompat.getColor(getActivity(), android.R.color.darker_gray),
-                                PorterDuff.Mode.MULTIPLY);
-                        profileCompletionIcon.setImageDrawable(drawable);
-                    } else {
-                        profileCompletionIcon.setImageDrawable(getResources().getDrawable(propertyDetails.getPropertyIcon()));
-                    }
+                    profileCompletionIcon.setImageDrawable(getResources().getDrawable(propertyDetails.getPropertyIcon()));
                 }
                 titleView.setText(propertyDetails.getPropertyTitle());
 
