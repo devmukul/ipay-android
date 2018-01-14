@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
@@ -20,6 +21,7 @@ public class OnBoardAddSourceOfFundHelperFragment extends Fragment {
     private Button mAddMoneyByCardButton;
     private Button mSkipButton;
     private Button mAddBankButton;
+    private ImageView mBackButton;
 
     @Nullable
     @Override
@@ -32,7 +34,8 @@ public class OnBoardAddSourceOfFundHelperFragment extends Fragment {
     public void initializeViews(View view) {
         mAddMoneyByCardButton = (Button) view.findViewById(R.id.button_add_money_by_card);
         mSkipButton = (Button) view.findViewById(R.id.button_skip);
-        mAddBankButton=(Button)view.findViewById(R.id.button_add_bank);
+        mAddBankButton = (Button) view.findViewById(R.id.button_add_bank);
+        mBackButton = (ImageView) view.findViewById(R.id.back);
         setButtonActions();
     }
 
@@ -40,7 +43,7 @@ public class OnBoardAddSourceOfFundHelperFragment extends Fragment {
         mAddMoneyByCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(getActivity(), AddMoneyActivity.class);
+                Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
                 intent.putExtra(Constants.TAG, "CARD");
                 startActivity(intent);
             }
@@ -54,10 +57,22 @@ public class OnBoardAddSourceOfFundHelperFragment extends Fragment {
         mAddBankButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent =new Intent(getActivity(), ManageBanksActivity.class);
-                intent.putExtra(Constants.FROM_ON_BOARD,true);
+                Intent intent = new Intent(getActivity(), ManageBanksActivity.class);
+                intent.putExtra(Constants.FROM_ON_BOARD, true);
                 startActivity(intent);
             }
         });
+
+        if (getActivity().getSupportFragmentManager().getBackStackEntryCount() <= 1) {
+            mBackButton.setVisibility(View.INVISIBLE);
+        }
+
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+
     }
 }
