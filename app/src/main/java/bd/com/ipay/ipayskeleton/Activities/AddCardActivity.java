@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -43,6 +44,8 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
     public FloatingActionButton mFabAddNewBank;
     private TextView mDescriptionTextView;
 
+    private ProgressDialog mProgressDialog;
+
     public ArrayList<String> mDistrictNames;
     public ArrayList<BankBranch> mBranches;
     public ArrayList<String> mBranchNames;
@@ -53,7 +56,7 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_card);
-
+        mProgressDialog = new ProgressDialog(this);
         mDistrictNames = new ArrayList<>();
         mBranches = new ArrayList<>();
         mBranchNames = new ArrayList<>();
@@ -99,6 +102,8 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
             mGetAllAddedCards = new HttpRequestGetAsyncTask(Constants.COMMAND_ADD_CARD,
                     Constants.BASE_URL_MM + Constants.URL_GET_CARD, this, this);
             mGetAllAddedCards.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.show();
         }
     }
 
@@ -125,6 +130,7 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
+        mProgressDialog.dismiss();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetAllAddedCards = null;
@@ -133,16 +139,20 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
             }
             return;
         } else {
-            Gson gson = new Gson();
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                addCardResponse = gson.fromJson(result.getJsonString(), AddCardResponse.class);
-                mCardList = addCardResponse.getUserCardList();
-                if (mCardList.size() == 0) mDescriptionTextView.setVisibility(View.VISIBLE);
-                else mDescriptionTextView.setVisibility(View.GONE);
-                CardAdapter cardAdapter = new CardAdapter();
-                mAllCardListRecyclerView.setAdapter(cardAdapter);
-                mAllCardListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-                cardAdapter.notifyDataSetChanged();
+            try {
+                Gson gson = new Gson();
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    addCardResponse = gson.fromJson(result.getJsonString(), AddCardResponse.class);
+                    mCardList = addCardResponse.getUserCardList();
+                    if (mCardList.size() == 0) mDescriptionTextView.setVisibility(View.VISIBLE);
+                    else mDescriptionTextView.setVisibility(View.GONE);
+                    CardAdapter cardAdapter = new CardAdapter();
+                    mAllCardListRecyclerView.setAdapter(cardAdapter);
+                    mAllCardListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+                    cardAdapter.notifyDataSetChanged();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             mGetAllAddedCards = null;
         }
