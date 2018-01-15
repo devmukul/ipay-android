@@ -1,13 +1,170 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="@dimen/activity_horizontal_margin"
-    android:background="@android:color/white"
-    android:orientation="vertical">
+    android:background="@android:color/white">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list_invoice"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <LinearLayout
+            android:id="@+id/profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                android:id="@+id/profile_picture"
+                style="@style/ReviewImageStyle">
+
+            </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textview_name"
+                    style="@style/TextViewUserInfoPrimary"
+                    android:ellipsize="end"
+                    android:singleLine="true" />
+
+                <TextView
+                    android:id="@+id/textview_mobile_number"
+                    style="@style/TextViewUserInfoSecondary" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReview"
+                    android:text="@string/amount" />
+
+                <TextView
+                    android:id="@+id/textview_amount"
+                    style="@style/TextViewInfoColorPrimaryReview" />
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextViewInfoLabelReview"
+                    android:text="@string/service_charge" />
+
+                <TextView
+                    android:id="@+id/textview_service_charge"
+                    style="@style/TextViewInfoColorPrimaryReview" />
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/net_amount_title"
+                    style="@style/TextViewInfoLabelReview"
+                    android:text="@string/net_amount" />
+
+                <TextView
+                    android:id="@+id/textview_net_amount"
+                    style="@style/TextViewInfoColorPrimaryReview" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/value4"
+            android:background="@color/colorDividerGapGray" />
+
+        <LinearLayout
+            android:id="@+id/layout_title_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/description"
+                style="@style/ListHeaderStyle"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:text="@string/note" />
+
+            <TextView
+                android:id="@+id/textview_description"
+                style="@style/TextViewDescription" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_horizontal_margin">
+
+            <Button
+                android:id="@+id/button_cancel"
+                style="@style/ButtonCancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/button_reject"
+                style="@style/ButtonReject"
+                android:layout_width="0dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/value4"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/reject" />
+
+
+
+            <Button
+                android:id="@+id/button_accept"
+                style="@style/ButtonPrimary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/value4"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_weight="1"
+                android:text="@string/accept"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

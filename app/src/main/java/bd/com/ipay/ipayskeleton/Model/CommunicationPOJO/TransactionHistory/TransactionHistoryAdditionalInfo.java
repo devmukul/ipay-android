@@ -4,120 +4,61 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.Toast;
 
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Education.EducationPaymentDetails;
-import bd.com.ipay.ipayskeleton.R;
+import java.util.List;
+
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class TransactionHistoryAdditionalInfo implements Parcelable {
-    private String userName;
-    private String userMobileNumber;
-    private String userProfilePic;
-    private String bankAccountNumber;
-    private String bankAccountName;
-    private String bankName;
-    private String branchName;
-    private String bankCode;
-    private String cardHolderName;
-    private String cardNumber;
-    private boolean isReceiver;
-    private EducationPaymentDetails educationPayment;
-
-    public TransactionHistoryAdditionalInfo() {
-
-    }
+    private String name;
+    private String number;
+    private String type;
+    private List<UserProfilePictureClass> profilePictures;
 
     protected TransactionHistoryAdditionalInfo(Parcel in) {
-        userName = in.readString();
-        userMobileNumber = in.readString();
-        userProfilePic = in.readString();
-        bankAccountNumber = in.readString();
-        bankAccountName = in.readString();
-        bankName = in.readString();
-        branchName = in.readString();
-        bankCode = in.readString();
-        cardHolderName = in.readString();
-        cardNumber = in.readString();
-        isReceiver = in.readByte() != 0;
-        educationPayment = in.readParcelable(EducationPaymentDetails.class.getClassLoader());
+        name = in.readString();
+        number = in.readString();
+        type = in.readString();
+        profilePictures = in.createTypedArrayList(UserProfilePictureClass.CREATOR);
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public String getUserMobileNumber() {
-        return userMobileNumber;
+    public String getNumber() {
+        return number;
     }
 
-    public String getUserProfilePic() {
-        return userProfilePic;
-    }
+    public int getImageWithType(Context context) {
+        String imageUrl;
+        if (type.equalsIgnoreCase(Constants.TRANSACTION_TYPE_INTERNAL)) {
+            imageUrl = profilePictures.get(0).getUrl().toLowerCase();
+        } else if (type.equalsIgnoreCase(Constants.TRANSACTION_TYPE_BANK)) {
+            imageUrl = "ic_bank" + profilePictures.get(0).getUrl();
+        } else {
+            imageUrl = profilePictures.get(0).getUrl().toLowerCase();
+        }
 
-    public String getBankAccountNumber() {
-        return bankAccountNumber;
-    }
-
-    public String getBankAccountName() {
-        return bankAccountName;
-    }
-
-    public String getBankName() {
-        return bankName;
-    }
-
-    public String getBranchName() {
-        return branchName;
-    }
-
-    public String getBankCode() {
-        return bankCode;
-    }
-
-    public String getCardHolderName() {
-        return cardHolderName;
-    }
-
-    public void setCardHolderName(String cardHolderName) {
-        this.cardHolderName = cardHolderName;
-    }
-
-    public String getCardNumber() {
-        return cardNumber;
-    }
-
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
-    public int getBankIcon(Context context) {
         Resources resources = context.getResources();
-        return resources.getIdentifier("ic_bank" + getBankCode(), "drawable",
+        return resources.getIdentifier(imageUrl, "drawable",
                 context.getPackageName());
     }
 
-    public int getCardIcon() {
-        if (cardNumber != null) {
-            if (cardNumber.matches(Constants.VISA_CARD_STARTS_WITH_REGEX)) {
-                return R.drawable.visa_card;
-            } else if (cardNumber.matches(Constants.AMEX_CARD_STARTS_WITH_REGEX)) {
-                return R.drawable.amex_card;
-            } else if (cardNumber.matches(Constants.MASTER_CARD_STARTS_WITH_REGEX)) {
-                return R.drawable.master_card;
-            } else {
-                return R.drawable.basic_card;
-            }
-        } else {
-            return R.drawable.basic_card;
-        }
+    public String getUserProfilePic() {
+        if (!profilePictures.isEmpty())
+            return profilePictures.get(0).getUrl();
+        else return "";
     }
 
-    public boolean isReceiver() {
-        return isReceiver;
+    public List<UserProfilePictureClass> getProfilePictures() {
+        return profilePictures;
     }
 
-    public EducationPaymentDetails getEducationPayment() {
-        return educationPayment;
+    public String getType() {
+        return type;
     }
 
     @Override
@@ -139,17 +80,9 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(userName);
-        dest.writeString(userMobileNumber);
-        dest.writeString(userProfilePic);
-        dest.writeString(bankAccountNumber);
-        dest.writeString(bankAccountName);
-        dest.writeString(bankName);
-        dest.writeString(branchName);
-        dest.writeString(bankCode);
-        dest.writeString(cardHolderName);
-        dest.writeString(cardNumber);
-        dest.writeByte((byte) (isReceiver ? 1 : 0));
-        dest.writeParcelable(educationPayment, flags);
+        dest.writeString(name);
+        dest.writeString(number);
+        dest.writeString(type);
+        dest.writeTypedList(this.profilePictures);
     }
 }

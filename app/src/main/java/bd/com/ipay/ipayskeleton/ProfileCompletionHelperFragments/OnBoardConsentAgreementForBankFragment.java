@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileVerificationHelperActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -148,9 +148,9 @@ public class OnBoardConsentAgreementForBankFragment extends BaseFragment impleme
                         Toaster.makeText(getActivity(), R.string.bank_successfully_placed_for_verification, Toast.LENGTH_LONG);
 
                     if(!ProfileInfoCacheManager.isIntroductionAsked() && !ProfileInfoCacheManager.isSwitchedFromSignup()){
-                        ((ProfileCompletionHelperActivity) getActivity()).switchToAskedIntroductionHelperFragment();
+                        ((ProfileVerificationHelperActivity) getActivity()).switchToAskedIntroductionHelperFragment();
                     }else {
-                        ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+                        ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
                     }
 
                 } else {

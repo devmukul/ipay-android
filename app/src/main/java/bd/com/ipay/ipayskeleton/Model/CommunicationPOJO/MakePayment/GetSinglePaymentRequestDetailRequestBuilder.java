@@ -14,7 +14,7 @@ public class GetSinglePaymentRequestDetailRequestBuilder {
     }
 
     private void generateUri() {
-        Uri uri = Uri.parse(Constants.BASE_URL_SM + Constants.URL_PAYMENT_GET_INVOICE + invoiceId +"/");
+        Uri uri = Uri.parse(Constants.BASE_URL_SM + Constants.URL_GET_SINGLE_REQUEST_PAYMENT + invoiceId +"/");
         setGeneratedUri(uri.toString());
     }
 

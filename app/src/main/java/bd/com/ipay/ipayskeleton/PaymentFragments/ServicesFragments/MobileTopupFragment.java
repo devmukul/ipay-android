@@ -320,12 +320,12 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     private int[] getOperatorIcons() {
         //Setting the correct image based on Operator
         return new int[]{
-                R.drawable.ic_gp2,
-                R.drawable.ic_gp2,
-                R.drawable.ic_robi2,
-                R.drawable.ic_airtel2,
-                R.drawable.ic_banglalink2,
-                R.drawable.ic_teletalk2,
+                R.drawable.gp,
+                R.drawable.gp,
+                R.drawable.robi,
+                R.drawable.airtel,
+                R.drawable.banglalink,
+                R.drawable.teletalk,
         };
 
     }

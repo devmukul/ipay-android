@@ -26,7 +26,6 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.CardPaymentWebViewA
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByCreditOrDebitCardRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByCreditOrDebitCardResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
@@ -96,13 +95,13 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
                             AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
                     if (errorMessage == null) {
-                        attemptAddMoneyWithPinCheck();
+                        attemptAddMoney();
 
                     } else {
                         showErrorDialog(errorMessage);
                     }
                 } else
-                    attemptAddMoneyWithPinCheck();
+                    attemptAddMoney();
             }
         });
 
@@ -114,18 +113,8 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
             attemptGetServiceCharge();
     }
 
-    private void attemptAddMoneyWithPinCheck() {
-        if (AddMoneyActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
-            new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
-                @Override
-                public void ifPinCheckedAndAdded(String pin) {
-                    attemptAddMoney(pin);
-                }
-            });
-
-        } else {
-            attemptAddMoney(null);
-        }
+    private void attemptAddMoney() {
+        attemptAddMoney(null); // From business rule now pin wont be checked for add money by card
     }
 
     private void attemptAddMoney(String pin) {

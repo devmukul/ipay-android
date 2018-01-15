@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,11 +21,10 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestPaymentReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -32,15 +32,16 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetPendingPaymentsRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetPendingPaymentsResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PendingPaymentClass;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class PaymentRequestsSentFragment extends ProgressFragment implements HttpResponseListener {
-
+    private final int REQUEST_PAYMENT_REVIEW_REQUEST = 101;
     private HttpRequestPostAsyncTask mPendingInvoicesTask = null;
     private GetPendingPaymentsResponse mGetPendingPaymentsResponse;
 
@@ -50,18 +51,6 @@ public class PaymentRequestsSentFragment extends ProgressFragment implements Htt
     private RecyclerView.LayoutManager mLayoutManager;
     private List<PendingPaymentClass> pendingPaymentClasses;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
-    private String mTime;
-    private String mDescription;
-    private int mStatus;
-    private BigDecimal mAmount;
-    private BigDecimal mVat;
-    private long mID;
-    private String mTransactionID;
-    private List<InvoiceItem> mInvoiceItemList;
-    private String mReceiverName;
-    private String mReceiverMobileNumber;
-    private String mPhotoUri;
 
     private int historyPageCount = 0;
     private boolean hasNext = false;
@@ -79,12 +68,12 @@ public class PaymentRequestsSentFragment extends ProgressFragment implements Htt
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_money_request_sent) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_money_request_sent));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_sent_invoice, container, false);
+        View view = inflater.inflate(R.layout.fragment_sent_payment_request, container, false);
         getActivity().setTitle(R.string.request_payment);
 
         ((RequestPaymentActivity) getActivity()).mFabNewRequestPayment.setVisibility(View.VISIBLE);
@@ -218,6 +207,15 @@ public class PaymentRequestsSentFragment extends ProgressFragment implements Htt
             private final TextView statusView;
             private final ProfileImageView mProfileImageView;
 
+            private String mTime;
+            private String mDescription;
+            private int mStatus;
+            private BigDecimal mAmount;
+            private long mRequestID;
+            private String mReceiverName;
+            private String mReceiverMobileNumber;
+            private String mPhotoUri;
+
             public ViewHolder(final View itemView) {
                 super(itemView);
 
@@ -230,25 +228,20 @@ public class PaymentRequestsSentFragment extends ProgressFragment implements Htt
 
             public void bindView(int pos) {
 
-                final String imageUrl = pendingPaymentClasses.get(pos).getReceiverProfile().getUserProfilePicture();
-                final String time = Utilities.formatDateWithTime(pendingPaymentClasses.get(pos).getRequestTime());
-                final String title = pendingPaymentClasses.get(pos).getTitle();
-                final String name = pendingPaymentClasses.get(pos).getReceiverProfile().getUserName();
-                final String mobileNumber = pendingPaymentClasses.get(pos).getReceiverProfile().getUserMobileNumber();
-                final int status = pendingPaymentClasses.get(pos).getStatus();
-                final BigDecimal amount = pendingPaymentClasses.get(pos).getAmount();
-                final BigDecimal vat = pendingPaymentClasses.get(pos).getVat();
-                final String descriptionofRequest = pendingPaymentClasses.get(pos).getDescriptionOfRequest();
-                final String description = pendingPaymentClasses.get(pos).getCustomizedDescription();
-                final long id = pendingPaymentClasses.get(pos).getId();
-                final InvoiceItem[] itemList = pendingPaymentClasses.get(pos).getItemList();
-                final String transactionID = pendingPaymentClasses.get(pos).getTransactionID();
+                mPhotoUri = pendingPaymentClasses.get(pos).getReceiverProfile().getUserProfilePicture();
+                mTime = Utilities.formatDateWithTime(pendingPaymentClasses.get(pos).getRequestTime());
+                mReceiverName = pendingPaymentClasses.get(pos).getReceiverProfile().getUserName();
+                mReceiverMobileNumber = pendingPaymentClasses.get(pos).getReceiverProfile().getUserMobileNumber();
+                mStatus = pendingPaymentClasses.get(pos).getStatus();
+                mAmount = pendingPaymentClasses.get(pos).getAmount();
+                mDescription = pendingPaymentClasses.get(pos).getDescriptionOfRequest();
+                mRequestID = pendingPaymentClasses.get(pos).getId();
 
-                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
+                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mPhotoUri, false);
 
-                mSenderNameTextView.setText(name);
+                mSenderNameTextView.setText(mReceiverName);
 
-                switch (status) {
+                switch (mStatus) {
                     case Constants.INVOICE_STATUS_ACCEPTED:
                         statusView.setTextColor(getResources().getColor(R.color.bottle_green));
                         statusView.setText(R.string.accepted);
@@ -276,28 +269,24 @@ public class PaymentRequestsSentFragment extends ProgressFragment implements Htt
                 }
 
                 mAmountTextView.setText(Utilities.formatTaka(pendingPaymentClasses.get(pos).getAmount()));
-                mTimeTextView.setText(time);
+                mTimeTextView.setText(mTime);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (!mSwipeRefreshLayout.isRefreshing()) {
-                            mTime = time;
-                            mID = id;
-                            mTransactionID = transactionID;
-                            mAmount = amount;
-                            mVat = vat;
-                            if (itemList != null)
-                                mInvoiceItemList = Arrays.asList(itemList);
-                            if (title.equals(getString(R.string.invoice)))
-                                mDescription = description;
+                            Intent intent = new Intent(getActivity(), SentReceivedRequestPaymentReviewActivity.class);
+                            intent.putExtra(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_SENT_REQUEST);
+                            intent.putExtra(Constants.AMOUNT, mAmount);
+                            intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
+                            intent.putExtra(Constants.DESCRIPTION_TAG, mDescription);
+                            intent.putExtra(Constants.MONEY_REQUEST_ID, mRequestID);
+                            intent.putExtra(Constants.STATUS, mStatus);
+                            intent.putExtra(Constants.NAME, mReceiverName);
+                            intent.putExtra(Constants.PHOTO_URI, mPhotoUri);
+                            intent.putExtra(Constants.IS_IN_CONTACTS, new ContactSearchHelper(getActivity()).searchMobileNumber(mReceiverMobileNumber));
 
-                            else mDescription = descriptionofRequest;
-                            mStatus = status;
-                            mReceiverName = name;
-                            mReceiverMobileNumber = mobileNumber;
-                            mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
-                            launchInvoiceDetailsFragment();
+                            startActivityForResult(intent, REQUEST_PAYMENT_REVIEW_REQUEST);
                         }
                     }
                 });
@@ -418,27 +407,5 @@ public class PaymentRequestsSentFragment extends ProgressFragment implements Htt
             }
             return super.getItemViewType(position);
         }
-    }
-
-    private void launchInvoiceDetailsFragment() {
-
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.DESCRIPTION, mDescription);
-        bundle.putString(Constants.TIME, mTime);
-        bundle.putLong(Constants.MONEY_REQUEST_ID, mID);
-        bundle.putString(Constants.AMOUNT, mAmount.toString());
-        bundle.putString(Constants.VAT, mVat.toString());
-        bundle.putInt(Constants.STATUS, mStatus);
-        bundle.putString(Constants.PHOTO_URI, mPhotoUri);
-        bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
-        bundle.putString(Constants.NAME, mReceiverName);
-        bundle.putString(Constants.TRANSACTION_ID, mTransactionID);
-
-        if (mInvoiceItemList != null)
-            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, new ArrayList<>(mInvoiceItemList));
-        else
-            bundle.putParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG, null);
-
-        ((RequestPaymentActivity) getActivity()).switchToSentPaymentRequestDetailsFragment(bundle);
     }
 }

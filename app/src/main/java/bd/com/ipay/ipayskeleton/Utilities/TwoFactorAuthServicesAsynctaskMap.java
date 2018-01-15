@@ -106,6 +106,14 @@ public class TwoFactorAuthServicesAsynctaskMap {
                 json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
                 mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_REQUESTS_MONEY, uri, json, context);
                 return mHttpPostAsyncTask;
+            case Constants.COMMAND_ACCEPT_PAYMENT_REQUEST:
+                RequestMoneyAcceptRejectOrCancelRequest mRequestMoneyAcceptRejectOrCancelRequest=
+                        gson.fromJson(json,RequestMoneyAcceptRejectOrCancelRequest.class);
+                if (otp != null)
+                    mRequestMoneyAcceptRejectOrCancelRequest.setOtp(otp);
+                json = gson.toJson(mRequestMoneyAcceptRejectOrCancelRequest);
+                mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST, uri, json, context);
+                return mHttpPostAsyncTask;
 
             default:
                 return null;

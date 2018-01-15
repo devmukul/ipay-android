@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.ManageBanksFragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
@@ -43,6 +45,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
 
     private static final String STARTED_FROM_PROFILE_ACTIVITY = "started_from_profile_activity";
 
+    private HttpRequestGetAsyncTask mGetBankTask = null;
     private HttpRequestGetAsyncTask mGetBankBranchesTask = null;
 
     private ProgressDialog mProgressDialog;
@@ -71,26 +74,39 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
 
     private boolean startedFromProfileCompletion = false;
 
+    private boolean isSwitchedFromOnBoard = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_add_bank, container, false);
         getActivity().setTitle(R.string.add_bank);
         getActivity().setTitleColor(Color.WHITE);
+        isSwitchedFromOnBoard = false;
 
         Bundle args = getArguments();
         if (args != null)
             startedFromProfileCompletion = args.getBoolean(STARTED_FROM_PROFILE_ACTIVITY);
+        if (args != null) {
+            if (args.getBoolean(Constants.FROM_ON_BOARD, false)) {
+                isSwitchedFromOnBoard = args.getBoolean(Constants.FROM_ON_BOARD, false);
+            }
+        }
 
+        mProgressDialog = new ProgressDialog(getActivity());
         mSelectedBankId = -1;
         mDistrictNames = new ArrayList<>();
         mBranches = new ArrayList<>();
         mBranchNames = new ArrayList<>();
         List<Bank> bankNames = new ArrayList<>();
-        if (CommonData.getAvailableBanks() != null)
-            bankNames.addAll(CommonData.getAvailableBanks());
 
-        mProgressDialog = new ProgressDialog(getActivity());
+        if (!CommonData.isAvailableBankListLoaded()) {
+            attemptRefreshAvailableBankNames();
+        } else {
+            bankNames.addAll(CommonData.getAvailableBanks());
+            setBankAdapter(bankNames);
+        }
+
         mBankListSelection = (EditText) v.findViewById(R.id.default_bank_accounts);
         mDistrictSelection = (EditText) v.findViewById(R.id.branch_districts);
         mAccountNameEditText = (EditText) v.findViewById(R.id.bank_account_name);
@@ -99,7 +115,6 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         mBankBranchEditTextProgressBar = (EditTextWithProgressBar) v.findViewById(R.id.editText_with_progressBar_branch);
         mBankBranchSelection = mBankBranchEditTextProgressBar.getEditText();
 
-        setBankAdapter(bankNames);
 
         mAccountNameEditText.setText(ProfileInfoCacheManager.getUserName());
 
@@ -137,6 +152,29 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         mBranches = ((ManageBanksActivity) getActivity()).mBranches;
         mBranchNames = ((ManageBanksActivity) getActivity()).mBranchNames;
         Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_add_bank));
+    }
+
+    private void attemptRefreshAvailableBankNames() {
+        GetAvailableBankAsyncTask mGetAvailableBankAsyncTask = new GetAvailableBankAsyncTask(getActivity(),
+                new GetAvailableBankAsyncTask.BankLoadListener() {
+                    @Override
+                    public void onLoadSuccess() {
+                        mProgressDialog.dismiss();
+                        setBankAdapter(CommonData.getAvailableBanks());
+
+                    }
+
+                    @Override
+                    public void onLoadFailed() {
+                        if (getActivity() != null) {
+                            Toaster.makeText(getActivity(), R.string.failed_available_bank_list_loading, Toast.LENGTH_LONG);
+                            getActivity().finish();
+                        }
+                    }
+                });
+        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_fetching_bank_list));
+        mProgressDialog.show();
+        mGetAvailableBankAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void setBankAdapter(List<Bank> bankList) {
@@ -249,6 +287,7 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         Bundle bundle = new Bundle();
         bundle.putString(Constants.BANK_NAME, mSelectedBankName);
         bundle.putParcelable(Constants.BANK_BRANCH, bankBranch);
+        bundle.putBoolean(Constants.FROM_ON_BOARD, isSwitchedFromOnBoard);
         bundle.putString(Constants.BANK_ACCOUNT_NUMBER, bankAccountNumber);
         bundle.putBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION, startedFromProfileCompletion);
 
@@ -268,6 +307,20 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         mGetBankBranchesTask.mHttpResponseListener = this;
 
         mGetBankBranchesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getBankList() {
+        if (mGetBankTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_bank_info));
+        mProgressDialog.show();
+        mGetBankTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BANK_LIST,
+                Constants.BASE_URL_MM + Constants.URL_GET_BANK, getActivity());
+        mGetBankTask.mHttpResponseListener = this;
+
+        mGetBankTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

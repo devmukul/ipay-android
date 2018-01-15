@@ -17,7 +17,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileVerificationHelperActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -53,7 +53,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
     private EditText mOccupationEditText;
     private EditText mOrganizationNameEditText;
     private String mGender = null;
-    private String mOrganizationName=null;
+    private String mOrganizationName = null;
     private int mOccupation = -1;
     private List<Occupation> mOccupationList;
 
@@ -97,11 +97,16 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
         mSkipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+                if (!ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                    ((ProfileVerificationHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();
+                } else {
+                    ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
+                }
+
             }
         });
 
-        if (getActivity().getSupportFragmentManager().getBackStackEntryCount()<=1){
+        if (getActivity().getSupportFragmentManager().getBackStackEntryCount() <= 1) {
             mBackButtonTop.setVisibility(View.INVISIBLE);
         }
 
@@ -166,7 +171,11 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
                     Toast.makeText(getActivity(), mSetUserAddressResponse.getMessage(), Toast.LENGTH_LONG).show();
                     ProfileInfoCacheManager.addBasicInfo(true);
                     getActivity().getSupportFragmentManager().popBackStack();
-                    ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+                    if (ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                        ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
+                    } else {
+                        ((ProfileVerificationHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();
+                    }
 
                 } else {
                     if (getActivity() != null)
@@ -179,7 +188,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
             }
             mProgressDialog.dismiss();
             mSetUserAddressTask = null;
-        }else if (result.getApiCommand().equals(Constants.COMMAND_GET_OCCUPATIONS_REQUEST)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_OCCUPATIONS_REQUEST)) {
 
             try {
                 mGetOccupationResponse = gson.fromJson(result.getJsonString(), GetOccupationResponse.class);
@@ -193,7 +202,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
             }
 
             mGetOccupationTask = null;
-        }else if(result.getApiCommand().equals(Constants.COMMAND_SET_PROFILE_INFO_REQUEST)){
+        } else if (result.getApiCommand().equals(Constants.COMMAND_SET_PROFILE_INFO_REQUEST)) {
             try {
                 SetProfileInfoResponse mSetProfileInfoResponse = gson.fromJson(result.getJsonString(), SetProfileInfoResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {

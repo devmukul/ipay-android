@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/icon_card"
+        android:layout_width="@dimen/value50"
+        android:layout_height="@dimen/value50"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:src="@drawable/basic_card"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:id="@+id/title_text_view"
+        android:layout_toRightOf="@+id/icon_card"
+        android:layout_toLeftOf="@+id/verify_icon"
+        android:layout_marginTop="@dimen/value10"
+        style="@style/TextViewInfoBoldReview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:gravity="left" />
+
+    <ImageView
+        android:id="@+id/verify_icon"
+        android:layout_width="@dimen/value20"
+        android:layout_height="@dimen/value20"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:src="@drawable/ic_verified"
+        android:layout_alignParentRight="true" />
+
+    <View
+        style="@style/DividerWithoutMargin"
+        android:layout_below="@+id/icon_card"
+        android:layout_marginTop="@dimen/value10"
+        android:background="@color/colorBlack"></View>
+
+
+</RelativeLayout>

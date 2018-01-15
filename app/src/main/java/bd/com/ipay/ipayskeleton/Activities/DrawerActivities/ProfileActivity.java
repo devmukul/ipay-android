@@ -8,10 +8,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
+import bd.com.ipay.ipayskeleton.Activities.AddCardActivity;
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.BusinessInformationFragment;
 import bd.com.ipay.ipayskeleton.BusinessFragments.Owner.EditBusinessInformationFragment;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.ProfileFragments.AccountFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.AddressFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.BasicInfoFragment;
@@ -128,6 +130,8 @@ public class ProfileActivity extends BaseActivity {
         if (targetFragment.equals(ADD_AND_VERIFY_BANK)) {
             Intent intent = new Intent(ProfileActivity.this, ManageBanksActivity.class);
             startActivity(intent);
+        } else if (targetFragment.equals(ProfileCompletionPropertyConstants.VERIFY_BY_CARD)) {
+            launchIntendedActivity(new AddCardActivity(), Constants.ADD_MONEY_TYPE_BY_CREDIT_OR_DEBIT_CARD);
         } else {
             switch (targetFragment) {
                 case Constants.VERIFY_BANK:

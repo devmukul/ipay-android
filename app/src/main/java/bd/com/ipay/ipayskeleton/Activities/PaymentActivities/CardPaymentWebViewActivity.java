@@ -23,6 +23,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 
@@ -188,6 +189,7 @@ public class CardPaymentWebViewActivity extends AppCompatActivity {
                 showTransactionErrorDialog(intent, getString(R.string.add_money_from_credit_or_debit_card_failed_title), getString(R.string.add_money_from_credit_or_debit_card_failed_message));
                 break;
             case CARD_TRANSACTION_SUCCESSFUL:
+                ProfileInfoCacheManager.addSourceOfFund(true);
                 data.putString(Constants.TRANSACTION_ID, transactionId);
                 setResult(RESULT_OK, intent);
                 finish();

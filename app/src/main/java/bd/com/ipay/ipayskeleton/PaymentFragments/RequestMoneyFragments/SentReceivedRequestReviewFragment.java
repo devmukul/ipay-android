@@ -67,6 +67,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     private String mPhotoUri;
     private String mDescription;
     private long mRequestID;
+    private String mTransactionID;
 
     private ProfileImageView mProfileImageView;
     private TextView mNameView;
@@ -107,7 +108,6 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
         mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
         mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
-        mRequestID = (long) getActivity().getIntent().getSerializableExtra(Constants.MONEY_REQUEST_ID);
         mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
         mPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
         mRequestType = getActivity().getIntent()
@@ -116,6 +116,11 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         isInContacts = getActivity().getIntent().getBooleanExtra(Constants.IS_IN_CONTACTS, false);
         switchedFromTransactionHistory = getActivity().getIntent()
                 .getBooleanExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, false);
+
+        if (switchedFromTransactionHistory)
+            mTransactionID = getActivity().getIntent().getStringExtra(Constants.TRANSACTION_ID);
+        else
+            mRequestID = (long) getActivity().getIntent().getSerializableExtra(Constants.MONEY_REQUEST_ID);
 
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
@@ -193,7 +198,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                 rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        rejectRequestMoney(mRequestID);
+                        rejectRequestMoney();
                     }
                 });
                 rejectDialog.show();
@@ -222,11 +227,11 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
-                    acceptRequestMoney(mRequestID, pin);
+                    acceptRequestMoney(pin);
                 }
             });
         } else {
-            acceptRequestMoney(mRequestID, null);
+            acceptRequestMoney(null);
         }
 
     }
@@ -238,7 +243,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
         alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                cancelRequest(id);
+                cancelRequest();
             }
         });
 
@@ -251,7 +256,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         alertDialogue.show();
     }
 
-    private void cancelRequest(Long id) {
+    private void cancelRequest() {
         if (mAddInContactsCheckBox.isChecked()) {
             addContact(mReceiverName, mReceiverMobileNumber, null);
         }
@@ -264,17 +269,23 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
         // No PIN needed for now to place a request from me
-        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
-                new RequestMoneyAcceptRejectOrCancelRequest(id, null);
+        if (!switchedFromTransactionHistory) {
+            mRequestMoneyAcceptRejectOrCancelRequest =
+                    new RequestMoneyAcceptRejectOrCancelRequest(mRequestID, null);
+        } else {
+            mRequestMoneyAcceptRejectOrCancelRequest =
+                    new RequestMoneyAcceptRejectOrCancelRequest(mTransactionID, null);
+        }
+
         Gson gson = new Gson();
-        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
+        String json = gson.toJson(mRequestMoneyAcceptRejectOrCancelRequest);
         mCancelRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CANCEL_REQUESTS_MONEY,
                 Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity());
         mCancelRequestTask.mHttpResponseListener = this;
         mCancelRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void rejectRequestMoney(long id) {
+    private void rejectRequestMoney() {
         if (mAddInContactsCheckBox.isChecked()) {
             addContact(mReceiverName, mReceiverMobileNumber, null);
         }
@@ -286,10 +297,14 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mProgressDialog.setMessage(getString(R.string.progress_dialog_rejecting));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
-                new RequestMoneyAcceptRejectOrCancelRequest(id);
+        if (!switchedFromTransactionHistory) {
+            mRequestMoneyAcceptRejectOrCancelRequest =
+                    new RequestMoneyAcceptRejectOrCancelRequest(mRequestID);
+        } else mRequestMoneyAcceptRejectOrCancelRequest =
+                new RequestMoneyAcceptRejectOrCancelRequest(mTransactionID);
+
         Gson gson = new Gson();
-        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
+        String json = gson.toJson(mRequestMoneyAcceptRejectOrCancelRequest);
         mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
                 Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mRejectRequestTask.mHttpResponseListener = this;
@@ -304,16 +319,23 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
-    private void acceptRequestMoney(long id, String pin) {
+    private void acceptRequestMoney(String pin) {
         if (mAcceptRequestTask != null) {
             return;
         }
-        
+
         mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_accepted));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        mRequestMoneyAcceptRejectOrCancelRequest =
-                new RequestMoneyAcceptRejectOrCancelRequest(id, pin);
+
+        if (!switchedFromTransactionHistory) {
+            mRequestMoneyAcceptRejectOrCancelRequest =
+                    new RequestMoneyAcceptRejectOrCancelRequest(mRequestID, pin);
+        } else {
+            mRequestMoneyAcceptRejectOrCancelRequest =
+                    new RequestMoneyAcceptRejectOrCancelRequest(mTransactionID, pin);
+        }
+
         Gson gson = new Gson();
         String json = gson.toJson(mRequestMoneyAcceptRejectOrCancelRequest);
         mAcceptRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_REQUESTS_MONEY,

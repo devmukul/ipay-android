@@ -39,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.AddToTrust
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.GetTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.RemoveTrustedDeviceResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TrustedDevice.TrustedDevice;
+import bd.com.ipay.ipayskeleton.Model.GetCardResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -63,6 +64,9 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
 
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetProfileInfoResponse mGetProfileInfoResponse;
+
+    private HttpRequestGetAsyncTask mGetAllAddedCards = null;
+    private GetCardResponse mGetCardResponse;
 
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
@@ -143,6 +147,15 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         mGetTrustedDeviceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRUSTED_DEVICES,
                 Constants.BASE_URL_MM + Constants.URL_GET_TRUSTED_DEVICES, getActivity(), this);
         mGetTrustedDeviceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getAddedCards() {
+        if (mGetAllAddedCards != null) return;
+        else {
+            mGetAllAddedCards = new HttpRequestGetAsyncTask(Constants.COMMAND_ADD_CARD,
+                    Constants.BASE_URL_MM + Constants.URL_GET_CARD, getActivity(), this);
+            mGetAllAddedCards.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
     private void removeTrustedDevice(long id) {
@@ -233,6 +246,8 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
             mAddTrustedDeviceTask = null;
             mLogoutTask = null;
             mRemoveTrustedDeviceTask = null;
+            mGetAllAddedCards = null;
+            mGetProfileCompletionStatusTask = null;
             if (getActivity() != null)
                 Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
@@ -335,13 +350,16 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                     ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
                     ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
                     ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
+                    ProfileInfoCacheManager.addSourceOfFund(mProfileCompletionStatusResponse.isBankAdded());
 
-                    if (ProfileInfoCacheManager.getAccountType()==Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                            || !ProfileInfoCacheManager.isBasicInfoAdded())) {
-                        ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
-                    } else {
-                        ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
-                    }
+                    if (ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                                || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                            ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
+                        } else {
+                            ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+                        }
+                    } else getAddedCards();
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
@@ -373,6 +391,29 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
             }
 
             mGetProfileInfoTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_ADD_CARD)) {
+            try {
+                mGetCardResponse = gson.fromJson(result.getJsonString(), GetCardResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                    if (mGetCardResponse.getUserCardList().isEmpty()) {
+                        ProfileInfoCacheManager.addSourceOfFund(false);
+                    } else ProfileInfoCacheManager.addSourceOfFund(true);
+
+                    if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                            || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                        ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
+                    } else {
+                        ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+                    }
+                }
+                else {
+                    Toaster.makeText(getActivity(), mGetCardResponse.getMessage(), Toast.LENGTH_SHORT);
+                }
+            } catch (Exception e) {
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+            }
+            mGetAllAddedCards = null;
         }
     }
 

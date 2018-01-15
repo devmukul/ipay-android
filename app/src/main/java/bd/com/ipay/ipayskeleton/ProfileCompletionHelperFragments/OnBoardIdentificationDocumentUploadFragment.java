@@ -30,7 +30,7 @@ import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.util.Arrays;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileVerificationHelperActivity;
 import bd.com.ipay.ipayskeleton.Api.DocumentUploadApi.UploadMultipleIdentifierDocumentAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -350,12 +350,12 @@ public class OnBoardIdentificationDocumentUploadFragment extends BaseFragment im
                         getActivity().getSupportFragmentManager().popBackStack();
 
                         if (ProfileInfoCacheManager.isSwitchedFromSignup() && SharedPrefManager.isBangladesh()) {
-                            ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
+                            ((ProfileVerificationHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
                         } else {
                             if (!ProfileInfoCacheManager.isBasicInfoAdded() && SharedPrefManager.isBangladesh()) {
-                                ((ProfileCompletionHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
+                                ((ProfileVerificationHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
                             } else {
-                                ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+                                ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
                             }
                         }
                         break;

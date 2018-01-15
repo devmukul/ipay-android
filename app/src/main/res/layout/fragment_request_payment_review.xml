@@ -74,42 +74,6 @@
 
                 <TextView
                     style="@style/TextViewInfoLabelReview"
-                    android:text="@string/vat" />
-
-                <TextView
-                    android:id="@+id/vat_text_view"
-                    style="@style/TextViewInfoReview" />
-
-            </LinearLayout>
-
-            <View style="@style/Divider" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewInfoLabelReview"
-                    android:text="@string/TOTAL" />
-
-                <TextView
-                    android:id="@+id/total_text_view"
-                    style="@style/TextViewInfoBoldReview" />
-
-            </LinearLayout>
-
-            <View style="@style/Divider" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewInfoLabelReview"
                     android:text="@string/service_charge" />
 
                 <TextView
@@ -137,9 +101,9 @@
 
             </LinearLayout>
 
-            <View style="@style/Divider" />
-
         </LinearLayout>
+
+        <View style="@style/Divider" />
 
         <LinearLayout
             android:id="@+id/description_view_holder"
@@ -149,7 +113,7 @@
 
             <TextView
                 style="@style/TextViewInfoLabelReview"
-                android:text="@string/note" />
+                android:text="@string/description" />
 
             <TextView
                 android:id="@+id/description_text_view"
@@ -158,8 +122,19 @@
             <View style="@style/Divider" />
         </LinearLayout>
 
+        <CheckBox
+            android:id="@+id/add_to_contact_check_box"
+            style="@style/CheckboxRightStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+            android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+            android:drawableTint="@color/colorPrimary"
+            android:text="@string/add_to_contacts"
+            android:visibility="gone" />
+
         <Button
-            android:id="@+id/payment_request_button"
+            android:id="@+id/request_payment_button"
             style="@style/ButtonPrimaryWithNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
