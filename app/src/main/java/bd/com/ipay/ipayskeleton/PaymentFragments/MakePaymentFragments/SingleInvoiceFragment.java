@@ -108,8 +108,8 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_payment_request));
         mProgressDialog.show();
-        mGetSingleInvoiceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SINGLE_INVOICE,
-                Constants.BASE_URL_SM + Constants.URL_PAYMENT_GET_INVOICE + invoiceId + "/", getActivity());
+        mGetSingleInvoiceTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_SINGLE_REQUEST_PAYMENT,
+                Constants.BASE_URL_SM + Constants.URL_GET_SINGLE_REQUEST_PAYMENT + invoiceId + "/", getActivity());
         mGetSingleInvoiceTask.mHttpResponseListener = this;
         mGetSingleInvoiceTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -204,7 +204,7 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
         Gson gson = new Gson();
 
         switch (result.getApiCommand()) {
-            case Constants.COMMAND_GET_SINGLE_INVOICE:
+            case Constants.COMMAND_GET_SINGLE_REQUEST_PAYMENT:
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                     try {

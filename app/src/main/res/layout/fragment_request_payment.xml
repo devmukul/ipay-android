@@ -45,33 +45,13 @@
                 style="@style/CustomEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/amount"
+                android:hint="@string/enter_amount"
                 android:inputType="numberDecimal"
                 android:maxLines="1"
                 android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
 
         <View style="@style/Divider" />
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/vat"
-                style="@style/CustomEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/enter_vat"
-                android:inputType="number"
-                android:maxLines="1"
-                android:singleLine="true" />
-
-        </android.support.design.widget.TextInputLayout>
-
-
-        <View style="@style/Divider" />
-
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -83,7 +63,7 @@
                 style="@style/CustomEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/item_description"
+                android:hint="@string/description"
                 android:inputType="text"
                 android:maxLines="1"
                 android:singleLine="true" />
@@ -91,29 +71,18 @@
 
         <View style="@style/Divider" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/TextViewInfoLabel"
-                android:text="@string/total_amount" />
-
-            <TextView
-                android:id="@+id/total"
-                style="@style/TextViewInfo" />
-
-        </LinearLayout>
-
-        <View style="@style/Divider" />
-
         <Button
-            android:id="@+id/button_request_money"
+            android:id="@+id/button_request_payment"
             style="@style/ButtonPrimaryWithNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:text="@string/continue_request_money" />
+
+        <TextView
+            style="@style/CustomNoteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/request_payment_description_info" />
     </LinearLayout>
 </ScrollView>

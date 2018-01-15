@@ -7,8 +7,7 @@ import java.util.Calendar;
 
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
-public class TransactionHistoryRequest {
-
+public class TransactionHistoryPendingRequest {
     private final static String PARAM_SERVICE_ID = "serviceId";
     private final static String PARAM_PAGE = "page";
     private final static String PARAM_START_MS = "startMs";
@@ -16,7 +15,7 @@ public class TransactionHistoryRequest {
     private final static String PARAM_LIMIT = "limit";
 
     public static String generateUri(Integer serviceId, Calendar fromDate, Calendar toDate, Integer page, Integer limit) {
-        Uri.Builder uri = Uri.parse(Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY_COMPLETED)
+        Uri.Builder uri = Uri.parse(Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY_PENDING)
                 .buildUpon();
 
         if (serviceId != null)

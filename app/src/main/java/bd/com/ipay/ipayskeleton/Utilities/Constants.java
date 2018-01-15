@@ -450,7 +450,7 @@ public class Constants {
 
     // SM Payment REST
     public static final String URL_SEND_PAYMENT_REQUEST = "payment/invoice/send";
-    public static final String URL_PAYMENT_GET_INVOICE = "payment/invoice/get/";
+    public static final String URL_GET_SINGLE_REQUEST_PAYMENT = "payment/invoice/get/";
 
 
     public static final String URL_PAYMENT = "payment/v2";
@@ -458,8 +458,8 @@ public class Constants {
     // SM Reports REST
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";
     public static final String URL_TRANSACTION_HISTORY_SINGLE = "report/transactions/single";
-    public static final String URL_TRANSACTION_HISTORY_COMPLETED = "report/completed-transactions";
-    public static final String URL_TRANSACTION_HISTORY_PENDING = "report/pending-transactions";
+    public static final String URL_TRANSACTION_HISTORY_COMPLETED = "ta/transaction-history";
+    public static final String URL_TRANSACTION_HISTORY_PENDING = "ta/pending-transactions";
 
     // SM User Rest
     public static final String URL_REFRESH_BALANCE = "user/balance";
@@ -608,10 +608,11 @@ public class Constants {
     public static final String COMMAND_GET_MANAGED_BUSINESS_ACCOUNTS = "COMMAND_GET_MANAGED_BUSINESS_ACCOUNTS";
     public static final String COMMAND_CANCEL_PAYMENT_REQUEST = "COMMAND_CANCEL_PAYMENT_REQUEST";
     public static final String COMMAND_ACCEPT_PAYMENT_REQUEST = "COMMAND_ACCEPT_PAYMENT_REQUEST";
+    public static final String COMMAND_REJECT_PAYMENT_REQUEST = "COMMAND_REJECT_PAYMENT_REQUEST";
     public static final String COMMAND_GET_PENDING_REQUESTS_ME = "COMMAND_GET_PENDING_REQUESTS_ME";
     public static final String COMMAND_REQUEST_MONEY = "COMMAND_REQUEST_MONEY";
     public static final String COMMAND_SEND_PAYMENT_REQUEST = "COMMAND_SEND_PAYMENT_REQUEST";
-    public static final String COMMAND_GET_SINGLE_INVOICE = "COMMAND_GET_SINGLE_INVOICE";
+    public static final String COMMAND_GET_SINGLE_REQUEST_PAYMENT = "COMMAND_GET_SINGLE_REQUEST_PAYMENT";
     public static final String COMMAND_SET_PROFILE_PICTURE = "COMMAND_SET_PROFILE_PICTURE";
     public static final String COMMAND_SET_BUSINESS_CONTACT_PROFILE_PICTURE = "COMMAND_SET_BUSINESS_CONTACT_PROFILE_PICTURE";
     public static final String COMMAND_ADD_A_BANK = "COMMAND_ADD_A_BANK";
@@ -795,7 +796,7 @@ public class Constants {
     public static final String INVOICE_ITEM_NAME_TAG = "item_name";
     public static final String DESCRIPTION_TAG = "description";
     public static final String REFERENCE_NUMBER = "reference number";
-    public static final String INVOICE_AMOUNT_TAG = "amount";
+    public static final String AMOUNT_TAG = "amount";
 
     public static final String SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT = "SENDMONEY_MIN_AMOUNT_SINGLE";
     public static final String SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT = "SENDMONEY_MAX_AMOUNT_SINGLE";
@@ -890,6 +891,12 @@ public class Constants {
     public static final String METHOD_POST = "POST";
     public static final String METHOD_PUT = "PUT";
 
+    public static final String TRANSACTION_TYPE_CREDIT = "Cr";
+    public static final String TRANSACTION_TYPE_DEBIT = "Dr";
+    public static final String TRANSACTION_TYPE_USER = "USER";
+    public static final String TRANSACTION_TYPE_INTERNAL = "INTERNAL";
+    public static final String TRANSACTION_TYPE_CARD = "CARD";
+    public static final String TRANSACTION_TYPE_BANK = "BANK";
 
     public static final String VISA_CARD_STARTS_WITH_REGEX = "4(.*)";
     public static final String AMEX_CARD_STARTS_WITH_REGEX = "3[47](.*)";
@@ -900,4 +907,5 @@ public class Constants {
     public static final GetBusinessInformationResponse ACCOUNT_INFO_DEFAULT = null;
 
     public static final String QUALITY_HIGH = "High";
+
 }

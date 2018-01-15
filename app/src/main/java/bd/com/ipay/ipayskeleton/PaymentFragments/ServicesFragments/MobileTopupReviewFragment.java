@@ -238,12 +238,12 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     private void setOperatorIcon() {
         //Setting the correct image based on Operator
         int[] images = {
-                R.drawable.ic_gp2,
-                R.drawable.ic_gp2,
-                R.drawable.ic_robi2,
-                R.drawable.ic_airtel2,
-                R.drawable.ic_banglalink2,
-                R.drawable.ic_teletalk2,
+                R.drawable.gp,
+                R.drawable.gp,
+                R.drawable.robi,
+                R.drawable.airtel,
+                R.drawable.banglalink,
+                R.drawable.teletalk,
         };
 
         mOperatorImageView.setImageResource(images[mOperatorCode - 1]);

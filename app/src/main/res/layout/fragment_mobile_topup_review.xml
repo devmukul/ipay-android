@@ -144,7 +144,7 @@
                     android:layout_width="@dimen/value30"
                     android:layout_height="@dimen/value30"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_gp2" />
+                    android:src="@drawable/gp" />
 
                 <TextView
                     android:id="@+id/textview_operator"
