@@ -16,12 +16,12 @@ import com.google.gson.Gson;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
-import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAvailableBankAsyncTask;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBankFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoHelperFragment;
+import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddSourceOfFundHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAskForIntroductionHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardConsentAgreementForBankFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardContactsFragment;
@@ -37,18 +37,19 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class ProfileCompletionHelperActivity extends BaseActivity implements HttpResponseListener {
+public class ProfileVerificationHelperActivity extends BaseActivity implements HttpResponseListener {
     private HttpRequestPostAsyncTask mLogoutTask = null;
     private LogoutResponse mLogOutResponse;
     private ProgressDialog mProgressDialog;
     public Uri mProfilePhotoUri;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_completion_helper);
+        setContentView(R.layout.activity_profile_verification_helper);
         SharedPrefManager.setFirstLaunch(false);
-        mProgressDialog = new ProgressDialog(ProfileCompletionHelperActivity.this);
+        mProgressDialog = new ProgressDialog(ProfileVerificationHelperActivity.this);
         if (ProfileInfoCacheManager.isSwitchedFromSignup()) {
             switchToProfilePictureFragment();
         } else {
@@ -58,10 +59,19 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
                 switchToPhotoIdUploadHelperFragment();
             } else if (!ProfileInfoCacheManager.isBasicInfoAdded()) {
                 switchToBasicInfoEditHelperFragment();
+            } else if (!ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                switchToSourceOfFundHelperFragment();
             } else {
                 switchToHomeActivity();
             }
         }
+    }
+
+    public void switchToSourceOfFundHelperFragment() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 4)
+            getSupportFragmentManager().popBackStackImmediate();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new OnBoardAddSourceOfFundHelperFragment()).addToBackStack(null).commit();
     }
 
     @Override
@@ -70,18 +80,18 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStackImmediate();
         } else {
-            new AlertDialog.Builder(ProfileCompletionHelperActivity.this)
+            new AlertDialog.Builder(ProfileVerificationHelperActivity.this)
                     .setMessage(R.string.are_you_sure_to_exit)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             if (SharedPrefManager.isRememberMeActive()) {
                                 finish();
                             } else {
-                                if (Utilities.isConnectionAvailable(ProfileCompletionHelperActivity.this)) {
+                                if (Utilities.isConnectionAvailable(ProfileVerificationHelperActivity.this)) {
                                     attemptLogout();
                                 } else {
                                     ProfileInfoCacheManager.setLoggedInStatus(false);
-                                    ((MyApplication) ProfileCompletionHelperActivity.this.getApplication()).clearTokenAndTimer();
+                                    ((MyApplication) ProfileVerificationHelperActivity.this.getApplication()).clearTokenAndTimer();
                                     finish();
                                 }
                             }
@@ -108,7 +118,7 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
         String json = gson.toJson(mLogoutModel);
 
         mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
-                Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, ProfileCompletionHelperActivity.this);
+                Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, ProfileVerificationHelperActivity.this);
         mLogoutTask.mHttpResponseListener = this;
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -116,7 +126,7 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
 
     public void switchToHomeActivity() {
         Utilities.hideKeyboard(this);
-        Intent intent = new Intent(ProfileCompletionHelperActivity.this, HomeActivity.class);
+        Intent intent = new Intent(ProfileVerificationHelperActivity.this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
@@ -185,18 +195,12 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, consentAgreementForBankFragment).addToBackStack(null).commit();
     }
 
-    private void getAvailableBankList() {
-        GetAvailableBankAsyncTask getAvailableBanksTask = new GetAvailableBankAsyncTask(this);
-        getAvailableBanksTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mLogoutTask = null;
-            Toast.makeText(ProfileCompletionHelperActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
+            Toast.makeText(ProfileVerificationHelperActivity.this, R.string.service_not_available, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -209,11 +213,11 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
                         ((MyApplication) this.getApplication()).clearTokenAndTimer();
                         finish();
                     } else {
-                        Toast.makeText(ProfileCompletionHelperActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(ProfileVerificationHelperActivity.this, mLogOutResponse.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(ProfileCompletionHelperActivity.this, R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
+                    Toast.makeText(ProfileVerificationHelperActivity.this, R.string.could_not_sign_out, Toast.LENGTH_LONG).show();
                 }
                 break;
         }
@@ -221,6 +225,6 @@ public class ProfileCompletionHelperActivity extends BaseActivity implements Htt
 
     @Override
     protected Context setContext() {
-        return ProfileCompletionHelperActivity.this;
+        return ProfileVerificationHelperActivity.this;
     }
 }

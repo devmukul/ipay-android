@@ -21,7 +21,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileVerificationHelperActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -127,9 +127,9 @@ public class OnBoardIdentificationDocumentListFragment extends ProgressFragment 
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.SELECTED_IDENTIFICATION_DOCUMENT, identificationDocument);
         if (identificationDocument.getDocumentVerificationStatus() == null) {
-            ((ProfileCompletionHelperActivity) getActivity()).switchToUploadIdentificationDocumentFragment(bundle);
+            ((ProfileVerificationHelperActivity) getActivity()).switchToUploadIdentificationDocumentFragment(bundle);
         } else {
-            ((ProfileCompletionHelperActivity) getActivity()).switchToPreviewIdentificationDocumentFragment(bundle);
+            ((ProfileVerificationHelperActivity) getActivity()).switchToPreviewIdentificationDocumentFragment(bundle);
         }
     }
 

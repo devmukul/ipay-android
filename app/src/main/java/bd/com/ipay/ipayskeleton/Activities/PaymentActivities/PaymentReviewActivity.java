@@ -14,8 +14,8 @@ import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteToiPayFragment;
@@ -32,6 +32,8 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
     private ProgressBar mProgressBar;
 
     private String mReceiverMobileNumber;
+    private String mReceiverName;
+    private String mReceiverPhotoUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +46,14 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
 
         mReceiverMobileNumber = getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
 
-        getProfileInfo(mReceiverMobileNumber);
+        if (getIntent().hasExtra(Constants.NAME)) {
+            mReceiverName = getIntent().getStringExtra(Constants.NAME);
+            mReceiverPhotoUri = getIntent().getStringExtra(Constants.PHOTO_URI);
+            switchToPaymentReviewFragment(mReceiverName, mReceiverPhotoUri);
+
+        }else{
+            getProfileInfo(mReceiverMobileNumber);
+        }
     }
 
     private void switchToSendInviteFragment() {

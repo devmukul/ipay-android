@@ -803,6 +803,7 @@
     <string name="manage_invitations">Manage invitations</string>
     <string name="manage_address">Manage address</string>
     <string name="see_profile_completion">See profile completeness</string>
+    <string name="profile_completion_detail_text">For verification purpose you need to complete the following information - your Profile Picture, Photo Identification, Basic Information and Source of Fund</string>
     <string name="privileges">Privileges</string>
     <string name="fetching_employee_details_failed">Failed to fetch details information</string>
     <string name="add_money_from_bank_info">It may take 3–5 business days to complete the operation</string>
@@ -1075,6 +1076,8 @@
     <string name="continue_message">Continue</string>
     <string name="add_money_from_credit_or_debit_card_cancel_title">Money add cancelled</string>
     <string name="add_money_from_credit_or_debit_card_failed_title">Money add failed</string>
+    <string name="tk">Tk</string>
+    <string name="success">Successful</string>
     <string name="you_can_do_following_things">You can do following things</string>
     <string name="select_a_role">Select a Role</string>
     <string name="manage_account">Manage Account</string>
@@ -1084,6 +1087,7 @@
     <string name="cant_switch">Cant Switch Account Now</string>
     <string name="leave_account">Leave Account</string>
     <string name="do_you_want_to_leave">Do you want to leave this account permanently? You can\'t switch to this account in the future</string>
+    <string name="do_you_want_to_resign">Are you sure to remove this business account? </string>
     <string name="leaving">Leaving</string>
 
     <string name="failed_loading_manager_list">Failed to load manager list</string>
@@ -1091,4 +1095,11 @@
     <string name="invite_people">INVITE PEOPLE</string>
     <string name="change_role">Change Role</string>
     <string name="account_switched">Account switched</string>
+    <string name="make_another_payment">MAKE ANOTHER PAYMENT</string>
+    <string name="source_of_fund">Source Of Fund</string>
+    <string name="onboard_source_of_fund_text">For verification process you need to add at least one source of fund. Select a method of add money to your iPay wallet</string>
+    <string name="add_source_of_fund">Add Source Of Fund</string>
+    <string name="add_money_by_card">Add Money By Credit/Debit Card</string>
+    <string name="onboard_add_source_of_fund">Please select on of the method of you source of fund</string>
+    <string name="added_cards">Added Cards</string>
 </resources>

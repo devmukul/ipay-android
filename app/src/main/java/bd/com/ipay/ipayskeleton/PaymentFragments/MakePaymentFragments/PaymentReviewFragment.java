@@ -23,6 +23,8 @@ import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentReviewActivity;
+import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -112,7 +114,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mNetAmountTextView = findViewById(R.id.net_amount_text_view);
 
         if (!TextUtils.isEmpty(mPhotoUri)) {
-            businessProfileImageView.setProfilePicture(mPhotoUri, false);
+            businessProfileImageView.setBusinessProfilePicture(mPhotoUri, false);
         }
         if (TextUtils.isEmpty(mReceiverBusinessName)) {
             businessNameTextView.setVisibility(View.GONE);
@@ -273,11 +275,11 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG);
                     getActivity().setResult(Activity.RESULT_OK);
+                    switchToPaymentSuccessFragment(mReceiverBusinessName, mPhotoUri, mPaymentResponse.getTransactionId());
 
-                    //Google Analytic event
                     Utilities.sendSuccessEventTracker(mTracker, "Make Payment", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
 
-                    getActivity().finish();
+                    //getActivity().finish();
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
                     ((MyApplication) getActivity().getApplication()).launchLoginPage(mPaymentResponse.getMessage());
                     Utilities.sendBlockedEventTracker(mTracker, "Make Payment", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
@@ -303,5 +305,20 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
             mPaymentTask = null;
 
         }
+    }
+
+
+    private void switchToPaymentSuccessFragment(String name, String profilePictureUrl, String tansactionId) {
+        PaymentSucessFragment paymentSuccessFragment = new PaymentSucessFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.NAME, name);
+        bundle.putString(Constants.PHOTO_URI, profilePictureUrl);
+        bundle.putString(Constants.TRANSACTION_ID, tansactionId);
+        paymentSuccessFragment.setArguments(bundle);
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, paymentSuccessFragment).commit();
+
     }
 }

@@ -1,9 +1,9 @@
 
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager;
 
-import java.util.List;
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
 

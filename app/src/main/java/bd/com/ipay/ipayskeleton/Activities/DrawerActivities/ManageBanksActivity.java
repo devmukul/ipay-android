@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.Activities.DrawerActivities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.MenuItem;
@@ -41,7 +42,7 @@ public class ManageBanksActivity extends BaseActivity {
         mDistrictNames = new ArrayList<>();
         mBranches = new ArrayList<>();
         mBranchNames = new ArrayList<>();
-
+        Intent intent = getIntent();
         mFabAddNewBank = (FloatingActionButton) findViewById(R.id.fab_add_new_bank);
         mFabAddNewBank.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,7 +50,14 @@ public class ManageBanksActivity extends BaseActivity {
                 switchToAddNewBankFragment();
             }
         });
-        if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT) != null) {
+        if (intent != null && intent.getBooleanExtra(Constants.FROM_ON_BOARD, false)) {
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(Constants.FROM_ON_BOARD, intent.getBooleanExtra(Constants.FROM_ON_BOARD, false));
+            mFabAddNewBank.setVisibility(View.GONE);
+            switchToAddNewBankFragment(bundle);
+        }
+
+        else if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT) != null) {
             if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.BANK_ACCOUNT)) {
                 switchToBankAccountsFragment();
             } else if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT).equals(Constants.ADD_BANK)) {
@@ -113,6 +121,15 @@ public class ManageBanksActivity extends BaseActivity {
         }
 
         mFabAddNewBank.setVisibility(View.GONE);
+    }
+
+    public void switchToAddNewBankFragment(Bundle bundle) {
+
+        AddBankFragment addBankFragment = new AddBankFragment();
+        addBankFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, addBankFragment).commit();
+
     }
 
     public void switchToAddBankAgreementFragment(Bundle bundle) {

@@ -75,6 +75,7 @@ import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AccessControl.GetAccessControlResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.RemoveEmployeeResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessAccountDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.GetManagedBusinessAccountsResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
@@ -124,6 +125,9 @@ public class HomeActivity extends BaseActivity
 
     private GetBusinessTypesAsyncTask mGetBusinessTypesAsyncTask;
     private GetRelationshipListAsyncTask mGetRelationshipListAsyncTask;
+
+    private HttpRequestDeleteAsyncTask mResignFromBusinessAsyncTask;
+    private RemoveEmployeeResponse mResignFromBusinessResponse;
 
     private AutoResizeTextView mMobileNumberView;
     private TextView mNameView;
@@ -409,6 +413,18 @@ public class HomeActivity extends BaseActivity
         }
     }
 
+    private void resignFromBusiness(long associationId) {
+        if (mResignFromBusinessAsyncTask != null) {
+            return;
+        }
+
+        mResignFromBusinessAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
+                Constants.BASE_URL_MM + Constants.URL_REMOVE_AN_EMPLOYEE_FIRST_PART + associationId, this, this);
+        mResignFromBusinessAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.show();
+    }
+
     private void getAllBusinessAccountsList() {
         GetAllBusinessContactRequestBuilder mGetAllBusinessContactRequestBuilder = new GetAllBusinessContactRequestBuilder(0);
         new GetAllBusinessListAsyncTask(this, mGetAllBusinessContactRequestBuilder.getGeneratedUri()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -515,19 +531,6 @@ public class HomeActivity extends BaseActivity
         }
     }
 
-    @ValidateAccess
-    private void attemptLeaveAccount() {
-        if (mRemoveAccountAsyncTask != null)
-            return;
-        if (mProgressDialog != null) {
-            mProgressDialog.setMessage(getString(R.string.leaving));
-            mProgressDialog.show();
-        }
-        mRemoveAccountAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_REMOVE_AN_EMPLOYEE,
-                Constants.BASE_URL_MM + Constants.URL_REMOVE_AN_EMPLOYEE_FIRST_PART + ProfileInfoCacheManager.getId(), this, this);
-        mRemoveAccountAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     @Override
     @ValidateAccess
     public boolean onNavigationItemSelected(final MenuItem item) {
@@ -583,15 +586,6 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_help) {
 
             switchToHelpActivity();
-
-        } else if (id == R.id.nav_leave_account) {
-            new AlertDialog.Builder(HomeActivity.this)
-                    .setMessage(R.string.do_you_want_to_leave)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            attemptLeaveAccount();
-                        }
-                    }).show();
 
         } else if (id == R.id.nav_about) {
 
@@ -758,7 +752,7 @@ public class HomeActivity extends BaseActivity
             mLocationUpdateRequestAsyncTask = null;
             return;
         }
-
+        mProgressDialog.dismiss();
         Gson gson = new Gson();
 
         switch (result.getApiCommand()) {
@@ -895,15 +889,18 @@ public class HomeActivity extends BaseActivity
                 mGetBusinessAccountsAsyncTask = null;
                 break;
             case Constants.COMMAND_REMOVE_AN_EMPLOYEE:
+                mResignFromBusinessResponse = new Gson().fromJson(result.getJsonString(), RemoveEmployeeResponse.class);
                 try {
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                        BusinessAccountSwitch businessAccountSwitch = new BusinessAccountSwitch(this);
-                        businessAccountSwitch.requestSwitchAccount();
+                        Toaster.makeText(this, mResignFromBusinessResponse.getMessage(), Toast.LENGTH_LONG);
+                        getManagedBusinessAccountList();
+                    } else {
+                        Toaster.makeText(this, mResignFromBusinessResponse.getMessage(), Toast.LENGTH_LONG);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                mRemoveAccountAsyncTask = null;
+                mResignFromBusinessAsyncTask = null;
                 break;
         }
     }
@@ -1003,6 +1000,7 @@ public class HomeActivity extends BaseActivity
             private TextView nameTextView;
             private TextView roleTextView;
             private ProfileImageView profileImageView;
+            private ImageView resignFromBusinessImageView;
 
 
             public ViewHolder(View itemView) {
@@ -1010,13 +1008,14 @@ public class HomeActivity extends BaseActivity
                 nameTextView = (TextView) itemView.findViewById(R.id.title_text_view);
                 roleTextView = (TextView) itemView.findViewById(R.id.role_text_view);
                 profileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_image_view);
+                resignFromBusinessImageView = (ImageView) itemView.findViewById(R.id.leave_account);
             }
 
             public void bind(final BusinessAccountDetails item) {
                 nameTextView.setText(item.getBusinessName());
                 if (TextUtils.isEmpty(item.getRoleName())) {
                     roleTextView.setVisibility(View.GONE);
-                }else{
+                } else {
                     roleTextView.setText(item.getRoleName());
                 }
                 if (!ProfileInfoCacheManager.isAccountSwitched() || Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE)
@@ -1024,6 +1023,31 @@ public class HomeActivity extends BaseActivity
                 else {
                     profileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getBusinessProfilePictureUrlHigh(), false);
                 }
+                if (ProfileInfoCacheManager.isAccountSwitched()) {
+                    resignFromBusinessImageView.setVisibility(View.GONE);
+                } else {
+                    resignFromBusinessImageView.setVisibility(View.VISIBLE);
+                }
+                resignFromBusinessImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new AlertDialog.Builder(HomeActivity.this).
+                                setMessage(getString(R.string.do_you_want_to_resign))
+                                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        drawer.closeDrawer(GravityCompat.START);
+                                        resignFromBusiness(item.getId());
+                                    }
+                                }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }).show();
+
+                    }
+                });
 
 
                 itemView.setOnClickListener(new View.OnClickListener() {

@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.ManageBanksFragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -49,12 +51,23 @@ public class ConsentAgreementForBankFragment extends BaseFragment implements Htt
     private BankBranch mBankBranch;
 
     private boolean startedFromProfileCompletion = false;
+    private boolean isSwitchedFromOnBoard = false;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_bank_agreement, container, false);
         getActivity().setTitle(R.string.bank_consent_agreement);
+        isSwitchedFromOnBoard = false;
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            try {
+                isSwitchedFromOnBoard = bundle.getBoolean(Constants.FROM_ON_BOARD);
+            } catch (Exception e) {
+
+            }
+        }
 
         initializeViews(view);
         initializeBankInfo(getArguments());
@@ -67,7 +80,7 @@ public class ConsentAgreementForBankFragment extends BaseFragment implements Htt
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_consent_agreement_for_bank) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_consent_agreement_for_bank));
     }
 
     private void setOnClickListeners() {
@@ -146,10 +159,15 @@ public class ConsentAgreementForBankFragment extends BaseFragment implements Htt
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mAddBankResponse.getMessage(), Toast.LENGTH_LONG);
+                    ProfileInfoCacheManager.addSourceOfFund(true);
 
-                    if (!startedFromProfileCompletion)
+                    if (isSwitchedFromOnBoard) {
+                        Intent intent = new Intent(getActivity(), HomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    } else if (!isSwitchedFromOnBoard) {
                         ((ManageBanksActivity) getActivity()).switchToBankAccountsFragment();
-                    else
+                    } else
                         Toaster.makeText(getActivity(), R.string.bank_successfully_placed_for_verification, Toast.LENGTH_LONG);
 
                 } else {
