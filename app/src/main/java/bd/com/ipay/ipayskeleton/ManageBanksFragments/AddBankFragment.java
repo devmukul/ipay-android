@@ -1,7 +1,6 @@
 package bd.com.ipay.ipayskeleton.ManageBanksFragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -100,13 +99,6 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         mBranchNames = new ArrayList<>();
         List<Bank> bankNames = new ArrayList<>();
 
-        if (!CommonData.isAvailableBankListLoaded()) {
-            attemptRefreshAvailableBankNames();
-        } else {
-            bankNames.addAll(CommonData.getAvailableBanks());
-            setBankAdapter(bankNames);
-        }
-
         mBankListSelection = (EditText) v.findViewById(R.id.default_bank_accounts);
         mDistrictSelection = (EditText) v.findViewById(R.id.branch_districts);
         mAccountNameEditText = (EditText) v.findViewById(R.id.bank_account_name);
@@ -115,6 +107,12 @@ public class AddBankFragment extends BaseFragment implements HttpResponseListene
         mBankBranchEditTextProgressBar = (EditTextWithProgressBar) v.findViewById(R.id.editText_with_progressBar_branch);
         mBankBranchSelection = mBankBranchEditTextProgressBar.getEditText();
 
+        if (!CommonData.isAvailableBankListLoaded()) {
+            attemptRefreshAvailableBankNames();
+        } else {
+            bankNames.addAll(CommonData.getAvailableBanks());
+            setBankAdapter(bankNames);
+        }
 
         mAccountNameEditText.setText(ProfileInfoCacheManager.getUserName());
 
