@@ -95,7 +95,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
     // These variables hold the information needed to populate the review dialog
     private List<InvoiceItem> mInvoiceItemList;
     private BigDecimal mAmount;
-    private BigDecimal mVat;
+    private int mStatus;
     private BigDecimal mServiceCharge;
     private String mReceiverName;
     private String mReceiverMobileNumber;
@@ -365,15 +365,15 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
 
     private void launchPaymentRequestsReceivedDetailsFragment() {
         Bundle bundle = new Bundle();
-        bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
-        bundle.putString(Constants.MOBILE_NUMBER, mReceiverMobileNumber);
-        bundle.putString(Constants.NAME, mReceiverName);
-        bundle.putInt(Constants.MONEY_REQUEST_SERVICE_ID, Constants.SERVICE_ID_REQUEST_MONEY);
-        bundle.putString(Constants.VAT, mVat.toString());
-        bundle.putString(Constants.PHOTO_URI, mPhotoUri);
+        bundle.putInt(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
         bundle.putString(Constants.AMOUNT, mAmount.toString());
-        bundle.putString(Constants.TITLE, mTitle);
+        bundle.putString(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
         bundle.putString(Constants.DESCRIPTION, mDescriptionOfRequest);
+        bundle.putLong(Constants.MONEY_REQUEST_ID, mMoneyRequestId);
+        bundle.putString(Constants.NAME, mReceiverName);
+        bundle.putString(Constants.PHOTO_URI, mPhotoUri);
+        bundle.putInt(Constants.STATUS, mStatus);
+        bundle.putBoolean(Constants.IS_IN_CONTACTS, new ContactSearchHelper(getActivity()).searchMobileNumber(mReceiverMobileNumber));
         bundle.putString(Constants.TAG, Constants.REQUEST_PAYMENT);
 
         if (mInvoiceItemList != null)
@@ -643,8 +643,8 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 final long id = moneyAndPaymentRequest.getId();
                 final BigDecimal amount = moneyAndPaymentRequest.getAmount();
                 final int serviceID = moneyAndPaymentRequest.getServiceID();
-                final BigDecimal vat = moneyAndPaymentRequest.getVat();
                 final List<InvoiceItem> itemList = moneyAndPaymentRequest.getItemList();
+                final int status = moneyAndPaymentRequest.getStatus();
 
                 mAmountView.setText(Utilities.formatTaka(amount));
 
@@ -658,7 +658,7 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                         mPhotoUri = Constants.BASE_URL_FTP_SERVER + imageUrl;
                         mTitle = title;
                         mDescriptionOfRequest = descriptionOfRequest;
-                        mVat = vat;
+                        mStatus = status;
                         mInvoiceItemList = itemList;
 
                         if (serviceID == Constants.SERVICE_ID_REQUEST_MONEY)
