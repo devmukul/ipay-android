@@ -643,7 +643,6 @@ public class NotificationFragment extends ProgressFragment implements HttpRespon
                 final long id = moneyAndPaymentRequest.getId();
                 final BigDecimal amount = moneyAndPaymentRequest.getAmount();
                 final int serviceID = moneyAndPaymentRequest.getServiceID();
-                final BigDecimal vat = moneyAndPaymentRequest.getVat();
                 final List<InvoiceItem> itemList = moneyAndPaymentRequest.getItemList();
                 final int status = moneyAndPaymentRequest.getStatus();
 
