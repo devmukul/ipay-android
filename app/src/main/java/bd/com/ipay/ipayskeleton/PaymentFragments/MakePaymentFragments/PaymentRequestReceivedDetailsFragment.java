@@ -1,17 +1,16 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,60 +20,64 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.InvoiceItem;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mAcceptPaymentTask = null;
-    private PaymentAcceptRejectOrCancelResponse mPaymentAcceptPaymentResponse;
+    private HttpRequestPostAsyncTask mAcceptRequestTask = null;
+
+    private HttpRequestPostAsyncTask mCancelRequestTask = null;
 
     private HttpRequestPostAsyncTask mRejectRequestTask = null;
-    private RequestMoneyAcceptRejectOrCancelResponse mPaymentRejectResponse;
 
-    private PaymentAcceptRejectOrCancelRequest mPaymentAcceptRejectOrCancelRequest;
+    private PaymentAcceptRejectOrCancelRequest mRequestPaymentAcceptRejectOrCancelRequest;
+    private PaymentAcceptRejectOrCancelResponse mRequestPaymentAcceptRejectOrCancelResponse;
+
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
-
-    private LinearLayoutManager mLayoutManager;
-    private RecyclerView mReviewRecyclerView;
-    private PaymentReviewAdapter paymentReviewAdapter;
-
-    private List<InvoiceItem> mInvoiceItemList;
-    private BigDecimal mTotal;
-    private BigDecimal mAmount;
-    private BigDecimal mNetAmount;
-    private BigDecimal mVat;
-    public BigDecimal mServiceCharge = new BigDecimal(-1);
-    private String mReceiverName;
-    private String mReceiverMobileNumber;
-    private String mPhotoUri;
-    private long requestId;
-    private String mTitle;
-    private String mDescription;
-
-    private boolean isPinRequired = true;
-    private boolean switchedFromTransactionHistory = false;
 
     private ProgressDialog mProgressDialog;
 
-    private final int HEADER_FOOTER_VIEW_COUNT = 2;
+    private int mRequestType;
+    private BigDecimal mAmount;
+    private String mReceiverName;
+    private String mReceiverMobileNumber;
+    private String mPhotoUri;
+    private String mDescription;
+    private long mRequestID;
+    private String mTransactionID;
+    private int mStatus;
+
+    private ProfileImageView mProfileImageView;
+    private TextView mNameView;
+    private TextView mMobileNumberView;
+    private TextView mDescriptionTagView;
+    private TextView mDescriptionView;
+    private TextView mAmountView;
+    private TextView mServiceChargeView;
+    private TextView mNetAmountView;
+    private Button mRejectButton;
+    private Button mAcceptButton;
+    private Button mCancelButton;
+
+    private boolean isPinRequired = true;
+    private boolean switchedFromTransactionHistory = false;
     private Tracker mTracker;
 
     @Override
@@ -86,125 +89,234 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_payment_request_received_details));
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_request_money_sent_review));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_make_payment_notification_review, container, false);
-        getActivity().setTitle(R.string.make_payment);
+        View v = inflater.inflate(R.layout.fragment_sent_received_request_review, container, false);
 
-        mReviewRecyclerView = (RecyclerView) v.findViewById(R.id.list_invoice);
-        paymentReviewAdapter = new PaymentReviewAdapter();
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mReviewRecyclerView.setLayoutManager(mLayoutManager);
+        Bundle bundle = getArguments();
 
-        mProgressDialog = new ProgressDialog(getActivity());
+        bundle.putBoolean(Constants.IS_IN_CONTACTS, new ContactSearchHelper(getActivity()).searchMobileNumber(mReceiverMobileNumber));
+
+        mRequestType = bundle.getInt(Constants.REQUEST_TYPE, Constants.REQUEST_TYPE_RECEIVED_REQUEST);
+        mAmount = new BigDecimal(bundle.getString(Constants.AMOUNT));
+        mReceiverMobileNumber = bundle.getString(Constants.RECEIVER_MOBILE_NUMBER);
+        mDescription = bundle.getString(Constants.DESCRIPTION);
+        mReceiverName = bundle.getString(Constants.NAME);
+        mStatus = bundle.getInt(Constants.STATUS, Constants.HTTP_RESPONSE_STATUS_PROCESSING);
+        mPhotoUri = bundle.getString(Constants.PHOTO_URI);
 
         switchedFromTransactionHistory = getActivity().getIntent()
                 .getBooleanExtra(Constants.SWITCHED_FROM_TRANSACTION_HISTORY, false);
 
-        initializeValues();
+        if (switchedFromTransactionHistory)
+            mTransactionID = getActivity().getIntent().getStringExtra(Constants.TRANSACTION_ID);
+        else
+            mRequestID = (long) getActivity().getIntent().getSerializableExtra(Constants.MONEY_REQUEST_ID);
 
-        mReviewRecyclerView.setAdapter(paymentReviewAdapter);
+        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
+        mNameView = (TextView) v.findViewById(R.id.textview_name);
+        mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
+        mDescriptionTagView = (TextView) v.findViewById(R.id.description);
+        mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
+        mAmountView = (TextView) v.findViewById(R.id.textview_amount);
+        mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
+        mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
+
+        mAcceptButton = (Button) v.findViewById(R.id.button_accept);
+        mRejectButton = (Button) v.findViewById(R.id.button_reject);
+        mCancelButton = (Button) v.findViewById(R.id.button_cancel);
+
+        mProgressDialog = new ProgressDialog(getActivity());
+
+        getActivity().setTitle(R.string.request_payment);
+
+        mProfileImageView.setProfilePicture(mPhotoUri, false);
+
+        if (mReceiverName == null || mReceiverName.isEmpty()) {
+            mNameView.setVisibility(View.GONE);
+        } else {
+            mNameView.setText(mReceiverName);
+        }
+
+        mMobileNumberView.setText(mReceiverMobileNumber);
+
+        if (mDescription == null || mDescription.isEmpty()) {
+            mDescriptionTagView.setVisibility(View.GONE);
+            mDescriptionView.setVisibility(View.GONE);
+        } else
+            mDescriptionView.setText(mDescription);
+
+        if (mStatus == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
+            if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST) {
+                mAcceptButton.setVisibility(View.VISIBLE);
+                mRejectButton.setVisibility(View.VISIBLE);
+                mCancelButton.setVisibility(View.GONE);
+            } else {
+                mAcceptButton.setVisibility(View.GONE);
+                mRejectButton.setVisibility(View.GONE);
+                mCancelButton.setVisibility(View.VISIBLE);
+            }
+        } else {
+            mAcceptButton.setVisibility(View.GONE);
+            mRejectButton.setVisibility(View.GONE);
+            mCancelButton.setVisibility(View.GONE);
+        }
+
+        mAmountView.setText(Utilities.formatTaka(mAmount));
+
+        mAcceptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            @ValidateAccess(ServiceIdConstants.ACCEPT_REQUEST)
+            public void onClick(View v) {
+                attempAcceptRequestWithPinCheck();
+            }
+        });
+
+        mRejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            @ValidateAccess(ServiceIdConstants.REJECT_REQUEST)
+            public void onClick(View v) {
+                MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
+                rejectDialog.content(R.string.confirm_request_rejection);
+                rejectDialog.positiveText(R.string.yes);
+                rejectDialog.negativeText(R.string.no);
+                rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        rejectRequestPayment();
+                    }
+                });
+                rejectDialog.show();
+            }
+        });
+
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            @ValidateAccess(ServiceIdConstants.CANCEL_REQUEST)
+            public void onClick(View v) {
+                showAlertDialogue(getString(R.string.cancel_money_request_confirm), mRequestID);
+            }
+        });
 
         attemptGetServiceCharge();
+
         return v;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    private void attemptAcceptPaymentRequestWithPinCheck() {
+    private void attempAcceptRequestWithPinCheck() {
         if (this.isPinRequired) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
-                    acceptPaymentRequest(requestId, pin);
+                    acceptRequestPayment(pin);
                 }
             });
-        } else
-            acceptPaymentRequest(requestId, null);
+        } else {
+            acceptRequestPayment(null);
+        }
+
     }
 
-    private void initializeValues() {
-        Bundle bundle = getArguments();
+    private void showAlertDialogue(String msg, final long id) {
+        AlertDialog.Builder alertDialogue = new AlertDialog.Builder(getActivity());
+        alertDialogue.setTitle(R.string.confirm_query);
+        alertDialogue.setMessage(msg);
 
-        this.requestId = bundle.getLong(Constants.MONEY_REQUEST_ID);
-        this.mReceiverMobileNumber = bundle.getString(Constants.MOBILE_NUMBER);
-        this.mReceiverName = bundle.getString(Constants.NAME);
-        this.mPhotoUri = bundle.getString(Constants.PHOTO_URI);
-        this.mVat = new BigDecimal(bundle.getString(Constants.VAT));
-        this.mTotal = new BigDecimal(bundle.getString(Constants.AMOUNT));
-        this.mTitle = bundle.getString(Constants.TITLE);
-        this.mDescription = bundle.getString(Constants.DESCRIPTION);
-        this.mInvoiceItemList = bundle.getParcelableArrayList(Constants.INVOICE_ITEM_NAME_TAG);
+        alertDialogue.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                cancelRequestPayment();
+            }
+        });
+
+        alertDialogue.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+            }
+        });
+
+        alertDialogue.show();
     }
 
-    private void launchOTPVerification() {
-        String jsonString = new Gson().toJson(mPaymentAcceptRejectOrCancelRequest);
-        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, Constants.METHOD_POST);
-        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
-    }
-
-    private void acceptPaymentRequest(long id, String pin) {
-
-        if (mAcceptPaymentTask != null)
+    private void cancelRequestPayment() {
+        if (mCancelRequestTask != null) {
             return;
+        }
 
-        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_accepted));
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_cancelling));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        mPaymentAcceptRejectOrCancelRequest =
-                new PaymentAcceptRejectOrCancelRequest(id, pin);
+        // No PIN needed for now to place a request from me
+        if (!switchedFromTransactionHistory) {
+            mRequestPaymentAcceptRejectOrCancelRequest =
+                    new PaymentAcceptRejectOrCancelRequest(mRequestID, null);
+        } else {
+            mRequestPaymentAcceptRejectOrCancelRequest =
+                    new PaymentAcceptRejectOrCancelRequest(mTransactionID, null);
+        }
+
         Gson gson = new Gson();
-        String json = gson.toJson(mPaymentAcceptRejectOrCancelRequest);
-        mAcceptPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
-                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
-        mAcceptPaymentTask.mHttpResponseListener = this;
-        mAcceptPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        String json = gson.toJson(mRequestPaymentAcceptRejectOrCancelRequest);
+        mCancelRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_CANCEL_PAYMENT_REQUEST,
+                Constants.BASE_URL_SM + Constants.URL_CANCEL_NOTIFICATION_REQUEST, json, getActivity());
+        mCancelRequestTask.mHttpResponseListener = this;
+        mCancelRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void rejectPaymentRequest(long id) {
-        if (mRejectRequestTask != null)
+    private void rejectRequestPayment() {
+        if (mRejectRequestTask != null) {
             return;
+        }
 
-        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_rejecting));
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_rejecting));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        RequestMoneyAcceptRejectOrCancelRequest requestMoneyAcceptRejectOrCancelRequest =
-                new RequestMoneyAcceptRejectOrCancelRequest(id);
+        if (!switchedFromTransactionHistory) {
+            mRequestPaymentAcceptRejectOrCancelRequest =
+                    new PaymentAcceptRejectOrCancelRequest(mRequestID);
+        } else mRequestPaymentAcceptRejectOrCancelRequest =
+                new PaymentAcceptRejectOrCancelRequest(mTransactionID);
+
         Gson gson = new Gson();
-        String json = gson.toJson(requestMoneyAcceptRejectOrCancelRequest);
-        mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_REQUESTS_MONEY,
+        String json = gson.toJson(mRequestPaymentAcceptRejectOrCancelRequest);
+        mRejectRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_REJECT_PAYMENT_REQUEST,
                 Constants.BASE_URL_SM + Constants.URL_REJECT_NOTIFICATION_REQUEST, json, getActivity());
         mRejectRequestTask.mHttpResponseListener = this;
         mRejectRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    @Override
-    protected int getServiceID() {
-        return Constants.SERVICE_ID_REQUEST_PAYMENT;
+    private void acceptRequestPayment(String pin) {
+        if (mAcceptRequestTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getActivity().getString(R.string.progress_dialog_accepted));
+        mProgressDialog.show();
+        mProgressDialog.setCancelable(false);
+
+        if (!switchedFromTransactionHistory) {
+            mRequestPaymentAcceptRejectOrCancelRequest =
+                    new PaymentAcceptRejectOrCancelRequest(mRequestID, pin);
+        } else {
+            mRequestPaymentAcceptRejectOrCancelRequest =
+                    new PaymentAcceptRejectOrCancelRequest(mTransactionID, pin);
+        }
+
+        Gson gson = new Gson();
+        String json = gson.toJson(mRequestPaymentAcceptRejectOrCancelRequest);
+        mAcceptRequestTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
+                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, json, getActivity());
+        mAcceptRequestTask.mHttpResponseListener = this;
+        mAcceptRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    @Override
-    protected BigDecimal getAmount() {
-        return mTotal;
-    }
-
-    @Override
-    protected void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-
-        this.mServiceCharge = serviceCharge;
-        paymentReviewAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    protected void onPinLoadFinished(boolean isPinRequired) {
-        this.isPinRequired = isPinRequired;
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mRequestPaymentAcceptRejectOrCancelRequest);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
+                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
     @Override
@@ -214,22 +326,48 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
-            mAcceptPaymentTask = null;
-            mRejectRequestTask = null;
             if (getActivity() != null)
-                Toaster.makeText(getActivity(), R.string.send_money_failed_due_to_server_down, Toast.LENGTH_SHORT);
+                Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
             return;
         }
-
         Gson gson = new Gson();
 
-        if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST)) {
+        if (result.getApiCommand().equals(Constants.COMMAND_CANCEL_PAYMENT_REQUEST)) {
+
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                try {
+                    mRequestPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                            PaymentAcceptRejectOrCancelResponse.class);
+                    String message = mRequestPaymentAcceptRejectOrCancelResponse.getMessage();
+                    if (getActivity() != null)
+                        Toaster.makeText(getActivity(), message, Toast.LENGTH_LONG);
+
+                    if (switchedFromTransactionHistory) {
+                        Utilities.finishLauncherActivity(getActivity());
+                    } else
+                        getActivity().finish();
+                    // ((RequestPaymentActivity) getActivity()).switchToSentPaymentRequestsFragment();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        Toaster.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG);
+                }
+
+            } else {
+                if (getActivity() != null)
+                    Toaster.makeText(getActivity(), R.string.could_not_cancel_money_request, Toast.LENGTH_LONG);
+            }
+
+            mProgressDialog.dismiss();
+            mCancelRequestTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_ACCEPT_PAYMENT_REQUEST)) {
 
             try {
-                mPaymentAcceptPaymentResponse = gson.fromJson(result.getJsonString(),
+                mRequestPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
                         PaymentAcceptRejectOrCancelResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String message = mPaymentAcceptPaymentResponse.getMessage();
+                    String message = mRequestPaymentAcceptRejectOrCancelResponse.getMessage();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
@@ -241,12 +379,12 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED ||
                         result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                    Toaster.makeText(getActivity(), mPaymentAcceptPaymentResponse.getMessage(), Toast.LENGTH_LONG);
-                    SecuritySettingsActivity.otpDuration = mPaymentAcceptPaymentResponse.getOtpValidFor();
+                    Toaster.makeText(getActivity(), mRequestPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
+                    SecuritySettingsActivity.otpDuration = mRequestPaymentAcceptRejectOrCancelResponse.getOtpValidFor();
                     launchOTPVerification();
                 } else {
                     if (getActivity() != null)
-                        Toaster.makeText(getActivity(), mPaymentAcceptPaymentResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), mRequestPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -254,15 +392,15 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
                     Toaster.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG);
             }
             mProgressDialog.dismiss();
-            mAcceptPaymentTask = null;
+            mAcceptRequestTask = null;
 
-        } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_REQUESTS_MONEY)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_REJECT_PAYMENT_REQUEST)) {
 
             try {
-                mPaymentRejectResponse = gson.fromJson(result.getJsonString(),
-                        RequestMoneyAcceptRejectOrCancelResponse.class);
+                mRequestPaymentAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
+                        PaymentAcceptRejectOrCancelResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    String message = mPaymentRejectResponse.getMessage();
+                    String message = mRequestPaymentAcceptRejectOrCancelResponse.getMessage();
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
@@ -274,7 +412,7 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
 
                 } else {
                     if (getActivity() != null)
-                        Toaster.makeText(getActivity(), mPaymentRejectResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(getActivity(), mRequestPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -288,202 +426,26 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
         }
     }
 
-    private class PaymentReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    @Override
+    public int getServiceID() {
+        return Constants.SERVICE_ID_REQUEST_PAYMENT;
+    }
 
-        private static final int NOTIFICATION_REVIEW_LIST_ITEM_VIEW = 2;
-        private static final int NOTIFICATION_REVIEW_LIST_HEADER_VIEW = 1;
-        private static final int NOTIFICATION_REVIEW_LIST_FOOTER_VIEW = 3;
+    @Override
+    public BigDecimal getAmount() {
+        return mAmount;
+    }
 
-        public PaymentReviewAdapter() {
-        }
+    @Override
+    public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
+        mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
+        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+    }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
-
-            private final TextView mItemNameView;
-            private final TextView mQuantityView;
-            private final TextView mAmountView;
-            private final ProfileImageView mProfileImageView;
-            private final TextView mNameView;
-            private final TextView mMobileNumberView;
-            private final TextView mNetAmountView;
-            private final TextView mVatView;
-            private final View headerView;
-            private final TextView mServiceChargeView;
-            private final TextView mTotalView;
-            private Button mAcceptButton;
-            private Button mRejectButton;
-            private LinearLayout mLinearLayoutDescriptionHolder;
-            private TextView mDescriptionView;
-
-            public ViewHolder(final View itemView) {
-                super(itemView);
-
-                mItemNameView = (TextView) itemView.findViewById(R.id.textview_item);
-                mQuantityView = (TextView) itemView.findViewById(R.id.textview_quantity);
-                mAmountView = (TextView) itemView.findViewById(R.id.textview_amount);
-
-                mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
-                mNameView = (TextView) itemView.findViewById(R.id.textview_name);
-                mMobileNumberView = (TextView) itemView.findViewById(R.id.textview_mobile_number);
-                mNetAmountView = (TextView) itemView.findViewById(R.id.textview_net_amount);
-                mVatView = (TextView) itemView.findViewById(R.id.textview_vat);
-                headerView = itemView.findViewById(R.id.header);
-                mServiceChargeView = (TextView) itemView.findViewById(R.id.textview_service_charge);
-                mTotalView = (TextView) itemView.findViewById(R.id.textview_total);
-                mAcceptButton = (Button) itemView.findViewById(R.id.button_accept);
-                mRejectButton = (Button) itemView.findViewById(R.id.button_reject);
-
-                mLinearLayoutDescriptionHolder = (LinearLayout) itemView.findViewById(R.id.layout_description_holder);
-                mDescriptionView = (TextView) itemView.findViewById(R.id.textview_description);
-            }
-
-            public void bindViewForListItem(int pos) {
-                // Decrease pos by 1 as there is a header view now.
-                pos = pos - 1;
-
-                mItemNameView.setText(mInvoiceItemList.get(pos).getItem());
-                mQuantityView.setText(mInvoiceItemList.get(pos).getQuantity().toString());
-                mAmountView.setText(Utilities.formatTaka(mInvoiceItemList.get(pos).getAmount()));
-            }
-
-            public void bindViewForHeader() {
-
-                if (mInvoiceItemList == null || mInvoiceItemList.size() == 0)
-                    headerView.setVisibility(View.GONE);
-
-                if (mReceiverName == null || mReceiverName.isEmpty())
-                    mNameView.setVisibility(View.GONE);
-                else
-                    mNameView.setText(mReceiverName);
-
-                mMobileNumberView.setText(mReceiverMobileNumber);
-                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mPhotoUri, false);
-            }
-
-            public void bindViewForFooter() {
-                mAmount = mTotal.subtract(mVat);
-                mNetAmount = mTotal.subtract(mServiceCharge);
-
-                mAmountView.setText(Utilities.formatTaka(mAmount));
-                mNetAmountView.setText(Utilities.formatTaka(mNetAmount));
-                mVatView.setText(Utilities.formatTaka(mVat));
-                mServiceChargeView.setText(Utilities.formatTaka(mServiceCharge));
-                mTotalView.setText(Utilities.formatTaka(mTotal));
-
-                if (mTitle.equals("Invoice"))
-                    mLinearLayoutDescriptionHolder.setVisibility(View.GONE);
-                else
-                    mDescriptionView.setText(mDescription);
-
-                mAcceptButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        attemptAcceptPaymentRequestWithPinCheck();
-                    }
-                });
-
-                mRejectButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        MaterialDialog.Builder rejectDialog = new MaterialDialog.Builder(getActivity());
-                        rejectDialog.content(R.string.confirm_request_rejection);
-                        rejectDialog.positiveText(R.string.yes);
-                        rejectDialog.negativeText(R.string.no);
-                        rejectDialog.onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                rejectPaymentRequest(requestId);
-                            }
-                        });
-                        rejectDialog.show();
-                    }
-                });
-            }
-        }
-
-        public class ListFooterViewHolder extends ViewHolder {
-            public ListFooterViewHolder(View itemView) {
-                super(itemView);
-            }
-        }
-
-        public class ListHeaderViewHolder extends ViewHolder {
-            public ListHeaderViewHolder(View itemView) {
-                super(itemView);
-            }
-        }
-
-        public class ListItemViewHolder extends ViewHolder {
-            public ListItemViewHolder(View itemView) {
-                super(itemView);
-            }
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View v;
-            if (viewType == NOTIFICATION_REVIEW_LIST_HEADER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_make_payment_notification_review_header, parent, false);
-                return new ListHeaderViewHolder(v);
-
-            } else if (viewType == NOTIFICATION_REVIEW_LIST_FOOTER_VIEW) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_request_payment_accept_reject_footer_view, parent, false);
-                return new ListFooterViewHolder(v);
-
-            } else {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_make_payment_notification_review, parent, false);
-                return new ListItemViewHolder(v);
-            }
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            try {
-                if (holder instanceof ListItemViewHolder) {
-                    ListItemViewHolder vh = (ListItemViewHolder) holder;
-                    vh.bindViewForListItem(position);
-
-                } else if (holder instanceof ListHeaderViewHolder) {
-                    ListHeaderViewHolder vh = (ListHeaderViewHolder) holder;
-                    vh.bindViewForHeader();
-
-                } else if (holder instanceof ListFooterViewHolder) {
-                    ListFooterViewHolder vh = (ListFooterViewHolder) holder;
-                    vh.bindViewForFooter();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            if (mInvoiceItemList == null || mInvoiceItemList.size() == 0)
-                return HEADER_FOOTER_VIEW_COUNT;
-            if (mInvoiceItemList.size() > 0)
-                // Count 2 added for header and footer view
-                return 1 + mInvoiceItemList.size() + 1;
-            else return 0;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (mInvoiceItemList == null || mInvoiceItemList.size() == 0) {
-                if (position == 0) return NOTIFICATION_REVIEW_LIST_HEADER_VIEW;
-                else return NOTIFICATION_REVIEW_LIST_FOOTER_VIEW;
-            }
-
-            if (mInvoiceItemList.size() > 0) {
-                if (position == 0) return NOTIFICATION_REVIEW_LIST_HEADER_VIEW;
-                else if (position == mInvoiceItemList.size() + 1)
-                    return NOTIFICATION_REVIEW_LIST_FOOTER_VIEW;
-                else return NOTIFICATION_REVIEW_LIST_ITEM_VIEW;
-            }
-
-            return super.getItemViewType(position);
-        }
+    @Override
+    public void onPinLoadFinished(boolean isPinRequired) {
+        this.isPinRequired = isPinRequired;
     }
 }
+
 

@@ -21,11 +21,13 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelResponse;
@@ -46,6 +48,8 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
 
     private PaymentAcceptRejectOrCancelRequest mRequestPaymentAcceptRejectOrCancelRequest;
     private PaymentAcceptRejectOrCancelResponse mRequestPaymentAcceptRejectOrCancelResponse;
+
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private ProgressDialog mProgressDialog;
 
@@ -304,6 +308,13 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         mAcceptRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mRequestPaymentAcceptRejectOrCancelRequest);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
+                Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);
@@ -362,6 +373,11 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
                             getActivity().onBackPressed();
                     }
 
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED ||
+                        result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    Toaster.makeText(getActivity(), mRequestPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
+                    SecuritySettingsActivity.otpDuration = mRequestPaymentAcceptRejectOrCancelResponse.getOtpValidFor();
+                    launchOTPVerification();
                 } else {
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), mRequestPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
