@@ -32,7 +32,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.ADD_AND_VERIFY_BANK;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.VERIFY_BANK_OR_CARD;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BASIC_PROFILE;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_ADDRESS;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BUSINESS_DOCUMENTS;
@@ -110,7 +110,7 @@ public class ProfileActivity extends BaseActivity {
     private Bundle setBundle(String targetFragment) {
         Bundle args = new Bundle();
         switch (targetFragment) {
-            case ADD_AND_VERIFY_BANK:
+            case VERIFY_BANK_OR_CARD:
                 args.putBoolean(STARTED_FROM_PROFILE_ACTIVITY, true);
                 break;
             default:
@@ -127,12 +127,10 @@ public class ProfileActivity extends BaseActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment fragment = null;
 
-        if (targetFragment.equals(ADD_AND_VERIFY_BANK)) {
+        if (targetFragment.equals(VERIFY_BANK_OR_CARD)) {
             Intent intent = new Intent(ProfileActivity.this, ManageBanksActivity.class);
             startActivity(intent);
-        } else if (targetFragment.equals(ProfileCompletionPropertyConstants.VERIFY_BY_CARD)) {
-            launchIntendedActivity(new AddCardActivity(), Constants.ADD_MONEY_TYPE_BY_CREDIT_OR_DEBIT_CARD);
-        } else {
+        }  else {
             switch (targetFragment) {
                 case Constants.VERIFY_BANK:
                     launchIntendedActivity(new ManageBanksActivity(), Constants.BANK_ACCOUNT);
