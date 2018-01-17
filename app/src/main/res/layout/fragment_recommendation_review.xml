@@ -19,37 +19,32 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                    android:id="@+id/profile_picture"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    style="@style/PaymentReviewImageStyleLarge" />
 
                 <LinearLayout
-                    android:id="@+id/profile"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:layout_gravity="center_horizontal">
 
-                    <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-                        android:id="@+id/profile_picture"
-                        style="@style/ReviewImageStyle">
+                    <TextView
+                        android:id="@+id/textview_name"
+                        style="@style/TextViewUserInfoPaymentReviewPrimary"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:gravity="center_horizontal"/>
 
-                    </bd.com.ipay.ipayskeleton.CustomView.ProfileImageView>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/textview_name"
-                            style="@style/TextViewUserInfoPrimary"
-                            android:ellipsize="end"
-                            android:singleLine="true" />
-
-                        <TextView
-                            android:id="@+id/textview_mobile_number"
-                            style="@style/TextViewUserInfoSecondary" />
-
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/textview_mobile_number"
+                        style="@style/TextViewUserInfoPaymentReviewSecondary"
+                        android:gravity="center_horizontal"/>
 
                 </LinearLayout>
 
