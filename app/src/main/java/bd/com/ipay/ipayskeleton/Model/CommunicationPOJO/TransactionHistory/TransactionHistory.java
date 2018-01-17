@@ -54,10 +54,10 @@ public class TransactionHistory implements Parcelable {
 
     public String getNetAmountFormatted() {
         if (type.equals(Constants.TRANSACTION_TYPE_CREDIT))
-            return "+" + amount;
+            return "+" + netAmount;
         else if (type.equals(Constants.TRANSACTION_TYPE_DEBIT))
-            return "-" + amount;
-        return "" + amount;
+            return "-" + netAmount;
+        return "" + netAmount;
     }
 
     public Double getAvailableBalance() {
