@@ -27,6 +27,7 @@ import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationDocumentFragments
 import bd.com.ipay.ipayskeleton.ProfileFragments.IdentificationHolderFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.ProfileCompletionFragment;
 import bd.com.ipay.ipayskeleton.ProfileFragments.RecommendationReviewFragment;
+import bd.com.ipay.ipayskeleton.ProfileFragments.SourceOfFundDashBoardFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -126,78 +127,75 @@ public class ProfileActivity extends BaseActivity {
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment fragment = null;
-
-        if (targetFragment.equals(VERIFY_BANK_OR_CARD)) {
-            Intent intent = new Intent(ProfileActivity.this, ManageBanksActivity.class);
-            startActivity(intent);
-        }  else {
-            switch (targetFragment) {
-                case Constants.VERIFY_BANK:
-                    launchIntendedActivity(new ManageBanksActivity(), Constants.BANK_ACCOUNT);
-                    break;
-                case Constants.ADD_BANK:
-                    launchIntendedActivity(new ManageBanksActivity(), Constants.ADD_BANK);
-                    break;
-                case TRUSTED_NETWORK:
-                case TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE:
-                    launchIntendedActivity(new SecuritySettingsActivity(), Constants.ADD_TRUSTED_PERSON);
-                    break;
-                case BASIC_PROFILE:
-                    if (ProfileInfoCacheManager.isBusinessAccount())
-                        fragment = new BusinessInformationFragment();
-                    else
-                        fragment = new BasicInfoFragment();
-                    break;
-                case BUSINESS_INFO:
+        switch (targetFragment) {
+            case Constants.VERIFY_BANK:
+                launchIntendedActivity(new ManageBanksActivity(), Constants.BANK_ACCOUNT);
+                break;
+            case Constants.ADD_BANK:
+                launchIntendedActivity(new ManageBanksActivity(), Constants.ADD_BANK);
+                break;
+            case TRUSTED_NETWORK:
+            case TRUSTED_NETWORK_AND_PASSWORD_RECOVERY_RULE:
+                launchIntendedActivity(new SecuritySettingsActivity(), Constants.ADD_TRUSTED_PERSON);
+                break;
+            case BASIC_PROFILE:
+                if (ProfileInfoCacheManager.isBusinessAccount())
                     fragment = new BusinessInformationFragment();
-                    break;
-                case PROFILE_PICTURE:
-                    fragment = new AccountFragment();
-                    break;
-                case PARENT:
+                else
                     fragment = new BasicInfoFragment();
-                    break;
-                case INTRODUCER:
-                    fragment = new IdentificationHolderFragment();
-                    break;
-                case PERSONAL_ADDRESS:
-                    if (ProfileInfoCacheManager.isBusinessAccount())
-                        fragment = new BusinessInformationFragment();
-                    else
-                        fragment = new AddressFragment();
-                    break;
-                case BUSINESS_ADDRESS:
+                break;
+            case BUSINESS_INFO:
+                fragment = new BusinessInformationFragment();
+                break;
+            case PROFILE_PICTURE:
+                fragment = new AccountFragment();
+                break;
+            case PARENT:
+                fragment = new BasicInfoFragment();
+                break;
+            case INTRODUCER:
+                fragment = new IdentificationHolderFragment();
+                break;
+            case PERSONAL_ADDRESS:
+                if (ProfileInfoCacheManager.isBusinessAccount())
+                    fragment = new BusinessInformationFragment();
+                else
                     fragment = new AddressFragment();
-                    break;
-                case VERIFIED_EMAIL:
-                    fragment = new EmailFragment();
-                    break;
-                case BUSINESS_DOCUMENTS:
-                case VERIFICATION_DOCUMENT:
-                case PHOTOID:
-                    fragment = new IdentificationDocumentListFragment();
-                    break;
-                case PROFILE_COMPLETENESS:
-                    fragment = new ProfileCompletionFragment();
-                    break;
-                case PROFILE_INFO:
-                    fragment = new AccountFragment();
-                    break;
-                default:
-                    fragment = new AccountFragment();
-            }
-            if (fragment == null) {
-                finish();
-            } else {
-                if (bundle != null)
-                    fragment.setArguments(bundle);
+                break;
+            case BUSINESS_ADDRESS:
+                fragment = new AddressFragment();
+                break;
+            case VERIFIED_EMAIL:
+                fragment = new EmailFragment();
+                break;
+            case BUSINESS_DOCUMENTS:
+            case VERIFICATION_DOCUMENT:
+            case PHOTOID:
+                fragment = new IdentificationDocumentListFragment();
+                break;
+            case PROFILE_COMPLETENESS:
+                fragment = new ProfileCompletionFragment();
+                break;
+            case VERIFY_BANK_OR_CARD:
+                fragment = new SourceOfFundDashBoardFragment();
+                break;
+            case PROFILE_INFO:
+                fragment = new AccountFragment();
+                break;
+            default:
+                fragment = new AccountFragment();
+        }
+        if (fragment == null) {
+            finish();
+        } else {
+            if (bundle != null)
+                fragment.setArguments(bundle);
 
-                ft.replace(R.id.fragment_container, fragment);
-                if (addToBackStack)
-                    ft.addToBackStack(null);
+            ft.replace(R.id.fragment_container, fragment);
+            if (addToBackStack)
+                ft.addToBackStack(null);
 
-                ft.commitAllowingStateLoss();
-            }
+            ft.commitAllowingStateLoss();
         }
     }
 
