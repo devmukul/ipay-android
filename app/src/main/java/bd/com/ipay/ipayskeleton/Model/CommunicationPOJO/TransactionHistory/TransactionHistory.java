@@ -53,19 +53,14 @@ public class TransactionHistory implements Parcelable {
     }
 
     public String getNetAmountFormatted() {
-        if (type.equals(Constants.TRANSACTION_TYPE_CREDIT))
-            return "+" + netAmount;
-        else if (type.equals(Constants.TRANSACTION_TYPE_DEBIT))
-            return "-" + netAmount;
-        return "" + netAmount;
         if (statusCode != Constants.TRANSACTION_STATUS_CANCELLED && statusCode != Constants.TRANSACTION_STATUS_FAILED && statusCode != Constants.TRANSACTION_STATUS_REJECTED) {
             if (type.equals(Constants.TRANSACTION_TYPE_CREDIT))
-                return "+" + amount;
+                return "+" + netAmount;
             else if (type.equals(Constants.TRANSACTION_TYPE_DEBIT))
-                return "-" + amount;
-            return "" + amount;
+                return "-" + netAmount;
+            return "" + netAmount;
         }
-        return "" + amount;
+        return "" + netAmount;
     }
 
     public Double getAvailableBalance() {
