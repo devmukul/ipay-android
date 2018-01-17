@@ -52,8 +52,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.Trans
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
-import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -659,7 +657,8 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 final String description = transactionHistory.getShortDescription();
                 final String receiver = transactionHistory.getReceiver();
                 final String responseTime = Utilities.formatDateWithTime(transactionHistory.getTime());
-                final String netAmountWithSign = String.valueOf(transactionHistory.getNetAmountFormatted());
+
+                final String netAmountWithSign = String.valueOf(Utilities.formatTakaFromString(transactionHistory.getNetAmountFormatted()));
                 final Integer statusCode = transactionHistory.getStatusCode();
                 final Double balance = transactionHistory.getAccountBalance();
                 final String status = transactionHistory.getStatus();
