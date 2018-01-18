@@ -11,12 +11,11 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
-import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
-import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
+import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.HomeFragments.TransactionHistoryFragments.TransactionDetailsFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.SingleTransactionHistoryRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.SingleTransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -24,8 +23,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 
 public class TransactionDetailsActivity extends BaseActivity implements HttpResponseListener {
 
-    private HttpRequestPostAsyncTask mTransactionHistoryTask = null;
-    private SingleTransactionHistoryResponse mTransactionHistoryResponse;
+    private HttpRequestGetAsyncTask mTransactionHistoryTask = null;
 
     private TransactionHistory transactionHistory;
     private int status;
@@ -83,8 +81,8 @@ public class TransactionDetailsActivity extends BaseActivity implements HttpResp
 
         Gson gson = new Gson();
         String json = gson.toJson(mTransactionHistoryRequest);
-        mTransactionHistoryTask = new HttpRequestPostAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
-                Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY_SINGLE, json, this.getApplicationContext());
+        mTransactionHistoryTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
+                Constants.BASE_URL_SM + Constants.URL_TRANSACTION_HISTORY_SINGLE + "/" + requestID, this.getApplicationContext());
         mTransactionHistoryTask.mHttpResponseListener = this;
         mTransactionHistoryTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -107,8 +105,7 @@ public class TransactionDetailsActivity extends BaseActivity implements HttpResp
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
-                    mTransactionHistoryResponse = gson.fromJson(result.getJsonString(), SingleTransactionHistoryResponse.class);
-                    transactionHistory = mTransactionHistoryResponse.getTransaction();
+                    transactionHistory = gson.fromJson(result.getJsonString(), TransactionHistory.class);
                     if (transactionHistory != null) {
                         TransactionDetailsFragment transactionDetailsFragment = new TransactionDetailsFragment();
 
