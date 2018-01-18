@@ -438,8 +438,7 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        // User who're accepting the request should not see the service charge. By force action. Deal with it :)
     }
 
     @Override

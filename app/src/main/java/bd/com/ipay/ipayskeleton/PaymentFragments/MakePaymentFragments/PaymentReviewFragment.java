@@ -23,8 +23,6 @@ import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentReviewActivity;
-import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -234,8 +232,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
-        mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        // User who're accepting the request should not see the service charge. By force action. Deal with it :)
     }
 
     @Override
