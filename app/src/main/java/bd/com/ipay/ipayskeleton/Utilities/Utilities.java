@@ -496,9 +496,17 @@ public class Utilities {
     public static String formatTaka(double amount) {
         return String.format("\u09F3%.2f", amount);
     }
-    public static String formatTakaFromString(String amount){
-        double amountDouble=Double.parseDouble(amount);
-        return  String.format("\u09F3%.2f", amountDouble);
+
+    public static String formatTakaFromString(String amount) {
+        String sign = "";
+        if (amount.charAt(0) == '+' || amount.charAt(0) == '-') {
+            StringBuilder stringBuilder = new StringBuilder(amount);
+            sign += amount.charAt(0);
+            stringBuilder.deleteCharAt(0);
+            amount = stringBuilder.toString();
+        }
+        double amountDouble = Double.parseDouble(amount);
+        return sign + String.format("\u09F3%.2f", amountDouble);
     }
 
     public static void hideKeyboard(Activity activity) {
