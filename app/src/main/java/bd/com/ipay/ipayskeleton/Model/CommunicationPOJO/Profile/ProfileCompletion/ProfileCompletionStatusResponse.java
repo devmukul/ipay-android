@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.BASIC_PROFILE;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PERSONAL_ADDRESS;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROPERTY_NAME_TO_ACTION_NAME_MAP;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROPERTY_NAME_TO_ICON_MAP;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROPERTY_NAME_TO_TITLE_MAP;
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_ADD_BANK;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_SOURCE_OF_FUND;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_BASIC_INFO;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_BUSINESS_ADDRESS;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_BUSINESS_DOCUMENTS;
@@ -31,17 +30,17 @@ public class ProfileCompletionStatusResponse {
     private int basicInfoItemCount = 0;
     private int addressItemCount = 0;
     private int identificationItemCount = 0;
-    private int addBankItemCount = 0;
+    private int sourceOfFundItemCount = 0;
 
     private double basicInfoCompletionSum = 0;
     private double addressCompletionSum = 0;
     private double identificationCompletionSum = 0;
-    private double addBankCompletionSum = 0;
+    private double sourceOfFundSum = 0;
 
     private final List<PropertyDetails> basicInfoCompletionDetails = new ArrayList<>();
     private final List<PropertyDetails> addressCompletionDetails = new ArrayList<>();
     private final List<PropertyDetails> identificationCompletionDetails = new ArrayList<>();
-    private final List<PropertyDetails> addBankCompletionDetails = new ArrayList<>();
+    private final List<PropertyDetails> sourceOfFundDetails = new ArrayList<>();
     private final List<PropertyDetails> otherCompletionDetails = new ArrayList<>();
 
     public String getMessage() {
@@ -62,7 +61,7 @@ public class ProfileCompletionStatusResponse {
     }
 
     public List<PropertyDetails> getAddBankCompletionDetails() {
-        return addBankCompletionDetails;
+        return sourceOfFundDetails;
     }
 
     public List<PropertyDetails> getOtherCompletionDetails() {
@@ -74,8 +73,8 @@ public class ProfileCompletionStatusResponse {
     }
 
     public int getCompletionPercentage() {
-//        double totalCompletionSum = basicInfoCompletionSum + addressCompletionSum + identificationCompletionSum + addBankCompletionSum;
-//        double totalItemCount = basicInfoItemCount + addressItemCount + identificationItemCount + addBankItemCount;
+//        double totalCompletionSum = basicInfoCompletionSum + addressCompletionSum + identificationCompletionSum + sourceOfFundSum;
+//        double totalItemCount = basicInfoItemCount + addressItemCount + identificationItemCount + sourceOfFundItemCount;
 //        return (int) Math.round(totalCompletionSum / totalItemCount);
         return completionPercentage;
     }
@@ -93,7 +92,7 @@ public class ProfileCompletionStatusResponse {
     }
 
     public int getAddBankCompletionPercentage() {
-        return (int) Math.round(addBankCompletionSum / addBankItemCount);
+        return (int) Math.round(sourceOfFundSum / sourceOfFundItemCount);
     }
 
     private double getPropertyCompletionPercentage(int threshold, int value) {
@@ -108,8 +107,6 @@ public class ProfileCompletionStatusResponse {
     }
 
     public void analyzeProfileCompletionData() {
-
-        addBankCompletionDetails.add(new PropertyDetails(0, 1, 1000, ProfileCompletionPropertyConstants.VERIFY_BY_CARD));
 
         // Iterate the completionStatusList
         for (CompletionStatus mCompletionStatus : completionStatusList) {
@@ -167,13 +164,13 @@ public class ProfileCompletionStatusResponse {
                 if (propertyDetails.getPropertyTitle() != null)
                     identificationCompletionDetails.add(propertyDetails);
 
-            } else if (mCompletionStatus.getTag() == TAG_POSITION_ADD_BANK) {
+            } else if (mCompletionStatus.getTag() == TAG_POSITION_SOURCE_OF_FUND) {
 
-                addBankItemCount++;
-                addBankCompletionSum = addBankCompletionSum + propertyCompletionPercentage;
+                sourceOfFundItemCount++;
+                sourceOfFundSum = sourceOfFundSum + propertyCompletionPercentage;
 
                 if (propertyDetails.getPropertyTitle() != null)
-                    addBankCompletionDetails.add(propertyDetails);
+                    sourceOfFundDetails.add(propertyDetails);
             } else {
                 if (propertyDetails.getPropertyTitle() != null)
                     otherCompletionDetails.add(propertyDetails);

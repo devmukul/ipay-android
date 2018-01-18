@@ -296,6 +296,7 @@
     <string name="enter_mobile_number">Enter Mobile Number (+8801xxxxxxxx)</string>
     <string name="enter_bank_account_number">Bank Account Number</string>
     <string name="bank_account">Bank Account</string>
+    <string name="bank">Bank</string>
     <string name="event_link">Event link</string>
     <string name="no_contact_selected">No contacts selected</string>
     <string name="per_ticket_cost">Per ticket cost in BDT</string>
@@ -1102,4 +1103,5 @@
     <string name="add_money_by_card">Add Money By Credit/Debit Card</string>
     <string name="onboard_add_source_of_fund">Please select on of the method of you source of fund</string>
     <string name="added_cards">Added Cards</string>
+    <string name="card">Credit or Debit Card</string>
 </resources>
