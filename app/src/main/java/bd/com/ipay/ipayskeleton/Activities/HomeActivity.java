@@ -668,6 +668,7 @@ public class HomeActivity extends BaseActivity
         TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
         mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
         mProgressDialog.show();
+        String m = Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getMobileNumber();
         LogoutRequest mLogoutModel = new LogoutRequest(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getMobileNumber());
         Gson gson = new Gson();
         String json = gson.toJson(mLogoutModel);
@@ -814,6 +815,7 @@ public class HomeActivity extends BaseActivity
 
                         //saving user info in shared preference
                         ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
+                        ProfileInfoCacheManager.saveMainUserProfileInfo(Utilities.getMainUserProfileInfoString(mGetProfileInfoResponse));
 
                         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
