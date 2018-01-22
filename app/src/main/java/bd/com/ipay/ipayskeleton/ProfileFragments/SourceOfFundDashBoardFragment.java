@@ -8,14 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import bd.com.ipay.ipayskeleton.Activities.AddCardActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ManageBanksActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SourceOfFundDashBoardFragment extends BaseFragment{
+public class SourceOfFundDashBoardFragment extends BaseFragment {
     private View mBankView;
     private View mCardView;
 
@@ -50,8 +49,7 @@ public class SourceOfFundDashBoardFragment extends BaseFragment{
         mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AddMoneyActivity.class);
-                intent.putExtra(Constants.INTENDED_FRAGMENT,  Constants.ADD_MONEY_TYPE_BY_CREDIT_OR_DEBIT_CARD);
+                Intent intent = new Intent(getActivity(), AddCardActivity.class);
                 startActivity(intent);
             }
         });
