@@ -73,7 +73,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserPr
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
 import bd.com.ipay.ipayskeleton.Model.Service.IpayService;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import io.intercom.android.sdk.Intercom;
@@ -496,6 +495,18 @@ public class Utilities {
 
     public static String formatTaka(double amount) {
         return String.format("\u09F3%.2f", amount);
+    }
+
+    public static String formatTakaFromString(String amount) {
+        String sign = "";
+        if (amount.charAt(0) == '+' || amount.charAt(0) == '-') {
+            StringBuilder stringBuilder = new StringBuilder(amount);
+            sign += amount.charAt(0);
+            stringBuilder.deleteCharAt(0);
+            amount = stringBuilder.toString();
+        }
+        double amountDouble = Double.parseDouble(amount);
+        return sign + String.format("\u09F3%.2f", amountDouble);
     }
 
     public static void hideKeyboard(Activity activity) {

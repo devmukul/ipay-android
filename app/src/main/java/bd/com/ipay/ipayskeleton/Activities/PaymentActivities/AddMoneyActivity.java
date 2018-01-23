@@ -16,6 +16,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class AddMoneyActivity extends BaseActivity {
 
     public static final int ADD_MONEY_REVIEW_REQUEST = 101;
+    public static boolean FROM_ON_BOARD;
 
     public static final MandatoryBusinessRules mMandatoryBusinessRules = new MandatoryBusinessRules();
 
@@ -26,6 +27,13 @@ public class AddMoneyActivity extends BaseActivity {
 
         if (getIntent().getStringExtra(Constants.INTENDED_FRAGMENT) != null) {
             getIntent().putExtra(Constants.TAG, "CARD");
+        }
+        if (getIntent() != null) {
+            try {
+                FROM_ON_BOARD = getIntent().getBooleanExtra(Constants.FROM_ON_BOARD, false);
+            } catch (Exception e) {
+
+            }
         }
         changeFragment(new AddMoneyFragment());
 

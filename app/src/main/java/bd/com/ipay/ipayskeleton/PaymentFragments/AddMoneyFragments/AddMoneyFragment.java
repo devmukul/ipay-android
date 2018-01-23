@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.CardPaymentWebViewActivity;
@@ -365,11 +366,18 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 final int addMoneyByCreditOrDebitCardStatus = data.getBundleExtra(Constants.CARD_TRANSACTION_DATA).getInt(Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_STATUS, 0);
                 final Intent intent;
                 if (addMoneyByCreditOrDebitCardStatus == CardPaymentWebViewActivity.CARD_TRANSACTION_SUCCESSFUL) {
-                    final String transactionId = data.getBundleExtra(Constants.CARD_TRANSACTION_DATA).getString(Constants.TRANSACTION_ID);
-                    intent = new Intent(getActivity(), TransactionDetailsActivity.class);
-                    intent.putExtra(Constants.STATUS, Constants.PAYMENT_REQUEST_STATUS_ALL);
-                    intent.putExtra(Constants.MONEY_REQUEST_ID, transactionId);
-                    startActivity(intent);
+                    if (((AddMoneyActivity) getActivity()).FROM_ON_BOARD) {
+                        Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.money_added_successfully), Toast.LENGTH_LONG).show();
+                        intent = new Intent(getActivity(), HomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    } else {
+                        final String transactionId = data.getBundleExtra(Constants.CARD_TRANSACTION_DATA).getString(Constants.TRANSACTION_ID);
+                        intent = new Intent(getActivity(), TransactionDetailsActivity.class);
+                        intent.putExtra(Constants.STATUS, Constants.PAYMENT_REQUEST_STATUS_ALL);
+                        intent.putExtra(Constants.MONEY_REQUEST_ID, transactionId);
+                        startActivity(intent);
+                    }
                 }
 
             }

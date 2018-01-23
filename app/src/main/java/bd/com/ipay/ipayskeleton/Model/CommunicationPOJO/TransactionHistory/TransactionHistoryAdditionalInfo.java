@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.widget.Toast;
 
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
+import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 public class TransactionHistoryAdditionalInfo implements Parcelable {
@@ -43,8 +43,9 @@ public class TransactionHistoryAdditionalInfo implements Parcelable {
         }
 
         Resources resources = context.getResources();
-        return resources.getIdentifier(imageUrl, "drawable",
+        final int iconId =resources.getIdentifier(imageUrl, "drawable",
                 context.getPackageName());
+        return iconId != 0 ? iconId : R.drawable.ic_transaction_ipaylogo;
     }
 
     public String getUserProfilePic() {

@@ -457,7 +457,7 @@ public class Constants {
 
     // SM Reports REST
     public static final String URL_TRANSACTION_HISTORY = "report/transactions";
-    public static final String URL_TRANSACTION_HISTORY_SINGLE = "report/transactions/single";
+    public static final String URL_TRANSACTION_HISTORY_SINGLE = "/ta/single-transaction";
     public static final String URL_TRANSACTION_HISTORY_COMPLETED = "ta/transaction-history";
     public static final String URL_TRANSACTION_HISTORY_PENDING = "ta/pending-transactions";
 
@@ -837,6 +837,7 @@ public class Constants {
     public static final int TRANSACTION_STATUS_PROCESSING = 102;
     public static final int TRANSACTION_STATUS_CANCELLED = 2;
     public static final int TRANSACTION_STATUS_REJECTED = 3;
+    public static final int TRANSACTION_STATUS_FAILED = 444;
 
     public static final String IMAGE_QUALITY_LOW = "low";
     public static final String IMAGE_QUALITY_MEDIUM = "medium";

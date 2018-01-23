@@ -338,19 +338,19 @@
     </style>
 
     <style name="ChargeTextViewPaymentReview" parent="TextViewInfoPaymentReview">
-        <item name="android:textSize">@dimen/text_size_small_medium_value15</item>
+        <item name="android:textSize">@dimen/text_size_small_medium</item>
         <item name="android:textColor">@color/colorPaymentReviewServiceCharge</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="ReferenceNoTextViewPaymentReview" parent="TextViewInfoPaymentReview">
-        <item name="android:textSize">@dimen/text_size_small_medium_value15</item>
+        <item name="android:textSize">@dimen/text_size_small_medium</item>
         <item name="android:textColor">@color/colorPaymentReviewPrimaryText</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="NoteTextViewPaymentReview" parent="TextViewInfoPaymentReview">
-        <item name="android:textSize">@dimen/text_size_small_medium_value15</item>
+        <item name="android:textSize">@dimen/text_size_small_medium</item>
         <item name="android:textColor">@color/colorPaymentReviewNoteText</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>

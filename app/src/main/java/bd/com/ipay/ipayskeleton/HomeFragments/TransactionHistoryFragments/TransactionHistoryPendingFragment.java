@@ -41,7 +41,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestPaymentReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SentReceivedRequestReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TransactionDetailsActivity;
@@ -52,7 +51,6 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomSwipeRefreshLayout;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistory;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryPendingRequest;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TransactionHistory.TransactionHistoryResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
@@ -61,7 +59,6 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
-import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -654,11 +651,9 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
             private final TextView mTransactionDescriptionView;
             private final TextView mTimeView;
             private final TextView mReceiverView;
-            private final TextView mAmountTextView;
             private final TextView mNetAmountView;
             private final ImageView mOtherImageView;
             private final ProfileImageView mProfileImageView;
-            private final View mBalanceView;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
@@ -666,11 +661,9 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 mTransactionDescriptionView = (TextView) itemView.findViewById(R.id.activity_description);
                 mTimeView = (TextView) itemView.findViewById(R.id.time);
                 mReceiverView = (TextView) itemView.findViewById(R.id.receiver);
-                mAmountTextView = (TextView) itemView.findViewById(R.id.amount);
                 mNetAmountView = (TextView) itemView.findViewById(R.id.net_amount);
                 mProfileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_picture);
                 mOtherImageView = (ImageView) itemView.findViewById(R.id.other_image);
-                mBalanceView = itemView.findViewById(R.id.balance_holder);
             }
 
             public void bindView(int pos) {
@@ -678,14 +671,8 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 final String description = transactionHistory.getShortDescription();
                 final String receiver = transactionHistory.getReceiver();
                 final String responseTime = Utilities.formatDateWithTime(transactionHistory.getInsertTime());
-                final String netAmountWithSign = String.valueOf(transactionHistory.getAmount());
-                final Double balance = transactionHistory.getAccountBalance();
+                final String netAmount = String.valueOf(Utilities.formatTaka(transactionHistory.getNetAmount()));
                 final int serviceId = transactionHistory.getServiceId();
-
-                if (balance != null) {
-                    mAmountTextView.setText(Utilities.formatTakaWithComma(balance));
-                    mBalanceView.setVisibility(View.VISIBLE);
-                } else mBalanceView.setVisibility(View.GONE);
 
                 mTransactionDescriptionView.setText(description);
                 if (receiver != null && !receiver.equals("")) {
@@ -693,7 +680,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                     mReceiverView.setText(receiver);
                 } else mReceiverView.setVisibility(View.GONE);
 
-                mNetAmountView.setText(netAmountWithSign);
+                mNetAmountView.setText(netAmount);
                 mTimeView.setText(responseTime);
 
                 if (transactionHistory.getAdditionalInfo().getType().equalsIgnoreCase(Constants.TRANSACTION_TYPE_USER)) {
@@ -788,7 +775,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 return new FooterViewHolder(v);
             }
 
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history, parent, false);
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction_history_pending, parent, false);
 
             return new NormalViewHolder(v);
         }
@@ -824,28 +811,6 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
 
             return super.getItemViewType(position);
         }
-
-        private int getOperatorIcon(String phoneNumber) {
-            phoneNumber = ContactEngine.trimPrefix(phoneNumber);
-
-            final String[] OPERATOR_PREFIXES = getResources().getStringArray(R.array.operator_prefix);
-            int[] operator_array = new int[]{
-                    R.drawable.gp,
-                    R.drawable.gp,
-                    R.drawable.robi,
-                    R.drawable.airtel,
-                    R.drawable.banglalink,
-                    R.drawable.teletalk,
-            };
-
-            for (int i = 0; i < OPERATOR_PREFIXES.length; i++) {
-                if (phoneNumber.startsWith(OPERATOR_PREFIXES[i])) {
-                    return operator_array[i];
-                }
-            }
-            return 0;
-        }
-
     }
 
     private void launchRequestMoneyReviewPage(TransactionHistory transactionHistory) {

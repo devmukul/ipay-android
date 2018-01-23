@@ -35,6 +35,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddCardActivity extends BaseActivity implements HttpResponseListener {
 
+    private static final int INVALID_RESOURCE_ID = 0;
     private boolean switchedFromBankVerification = false;
     private HttpRequestGetAsyncTask mGetAllAddedCards;
     private AddCardResponse addCardResponse;
@@ -68,13 +69,13 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        setTitle("Added Cards");
+        setTitle(R.string.added_cards);
         getAddedCards();
         mFabAddNewBank.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AddCardActivity.this, AddMoneyActivity.class);
-                intent.putExtra(Constants.TAG, "CARD");
+                intent.putExtra(Constants.INTENDED_FRAGMENT, Constants.ADD_MONEY_TYPE_BY_CREDIT_OR_DEBIT_CARD);
                 startActivity(intent);
             }
         });
@@ -170,8 +171,12 @@ public class AddCardActivity extends BaseActivity implements HttpResponseListene
         @Override
         public void onBindViewHolder(CardViewHolder holder, int position) {
             holder.mTitleTextView.setText(mCardList.get(position).getCardInfo());
-            holder.mCardImageView.setImageDrawable(getResources().
-                    getDrawable(getAppropriateCardIcon(mCardList.get(position).getCardType().toLowerCase())));
+            final int iconId = getAppropriateCardIcon(mCardList.get(position).getCardType().toLowerCase());
+            if (iconId == INVALID_RESOURCE_ID) {
+                holder.mCardImageView.setImageResource(R.drawable.basic_card);
+            } else {
+                holder.mCardImageView.setImageResource(iconId);
+            }
             if (mCardList.get(position).getCardStatus().equals(Constants.VERIFIED)) {
                 holder.mVerifyImageView.setVisibility(View.VISIBLE);
             } else {
