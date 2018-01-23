@@ -13,30 +13,32 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                 android:id="@+id/receiver_profile_image_view"
-                style="@style/ReviewImageStyle" />
+                style="@style/PaymentReviewImageStyleLarge"
+                android:layout_margin="@dimen/activity_horizontal_margin" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/receiver_name_text_view"
-                    style="@style/TextViewUserInfoPrimary"
+                    android:id="@+id/textview_name"
+                    style="@style/TextViewUserInfoPaymentReviewPrimary"
                     android:ellipsize="end"
+                    android:gravity="center_horizontal"
                     android:maxLines="1" />
 
                 <TextView
-                    android:id="@+id/receiver_mobile_number_text_view"
-                    style="@style/TextViewUserInfoSecondary"
-                    android:textStyle="bold" />
+                    android:id="@+id/textview_mobile_number"
+                    style="@style/TextViewUserInfoPaymentReviewSecondary"
+                    android:gravity="center_horizontal" />
 
             </LinearLayout>
         </LinearLayout>
