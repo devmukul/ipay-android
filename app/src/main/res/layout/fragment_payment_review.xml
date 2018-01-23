@@ -22,39 +22,39 @@
                 android:id="@+id/balance_title_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="left"
                 android:layout_centerVertical="true"
-                android:textSize="@dimen/text_size_small"
-                android:textColor="@color/colorPaymentReviewSecondaryText"
+                android:fontFamily="sans-serif"
+                android:gravity="left"
                 android:text="@string/ipay_balance"
-                android:fontFamily="sans-serif"/>
+                android:textColor="@color/colorPaymentReviewSecondaryText"
+                android:textSize="@dimen/text_size_small" />
 
             <TextView
                 android:id="@+id/balance_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="right"
                 android:layout_centerVertical="true"
-                android:textSize="@dimen/text_size_extra_large"
-                android:textColor="@color/colorPaymentReviewPrimaryText"
-                android:fontFamily="sans-serif-light"
-                android:layout_toRightOf="@+id/balance_title_view"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_toLeftOf="@+id/tk_view"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+                android:layout_toRightOf="@+id/balance_title_view"
+                android:fontFamily="sans-serif-light"
+                android:gravity="right"
+                android:textColor="@color/colorPaymentReviewPrimaryText"
+                android:textSize="@dimen/text_size_extra_large" />
 
             <TextView
                 android:id="@+id/tk_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="left"
-                android:layout_alignTop="@+id/balance_view"
                 android:layout_alignParentRight="true"
-                android:textSize="@dimen/text_size_mini"
-                android:textColor="@color/colorPaymentReviewPrimaryText"
-                android:text="@string/tk"
-                android:layout_marginTop="@dimen/value5"
+                android:layout_alignTop="@+id/balance_view"
                 android:layout_marginLeft="@dimen/value4"
-                android:fontFamily="sans-serif-medium"/>
+                android:layout_marginTop="@dimen/value5"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="left"
+                android:text="@string/tk"
+                android:textColor="@color/colorPaymentReviewPrimaryText"
+                android:textSize="@dimen/text_size_mini" />
 
 
         </RelativeLayout>
@@ -62,9 +62,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_margin="@dimen/activity_horizontal_margin"
             android:gravity="center_horizontal"
-            android:layout_margin="@dimen/activity_horizontal_margin">
+            android:orientation="vertical">
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                 android:id="@+id/business_profile_image_view"
@@ -73,21 +73,21 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:layout_gravity="center_horizontal">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/business_name_text_view"
                     style="@style/TextViewUserInfoPaymentReviewPrimary"
                     android:ellipsize="end"
-                    android:maxLines="1"
-                    android:gravity="center_horizontal"/>
+                    android:gravity="center_horizontal"
+                    android:maxLines="1" />
 
                 <TextView
                     android:id="@+id/business_mobile_number_text_view"
                     style="@style/TextViewUserInfoPaymentReviewSecondary"
-                    android:gravity="center_horizontal"/>
+                    android:gravity="center_horizontal" />
 
             </LinearLayout>
         </LinearLayout>
@@ -112,7 +112,8 @@
 
                 <TextView
                     android:id="@+id/amount_text_view"
-                    style="@style/AmountTextViewPaymentReview" />
+                    style="@style/AmountTextViewPaymentReview"
+                    android:textSize="@dimen/text_size_small_medium" />
 
             </LinearLayout>
 
@@ -148,7 +149,8 @@
 
                 <TextView
                     android:id="@+id/net_amount_text_view"
-                    style="@style/NetAmountTextViewPaymentReview"/>
+                    style="@style/NetAmountTextViewPaymentReview"
+                    android:textSize="@dimen/text_size_small_medium" />
 
             </LinearLayout>
 
@@ -172,7 +174,7 @@
 
                     <TextView
                         android:id="@+id/reference_number_text_view"
-                        style="@style/ReferenceNoTextViewPaymentReview"/>
+                        style="@style/ReferenceNoTextViewPaymentReview" />
 
                 </LinearLayout>
 
@@ -197,7 +199,7 @@
                 android:layout_width="match_parent"
                 android:gravity="left"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"/>
+                android:paddingRight="@dimen/activity_horizontal_margin" />
         </LinearLayout>
 
         <Button

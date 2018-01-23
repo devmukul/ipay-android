@@ -18,7 +18,7 @@ public class ProfileCompletionPropertyConstants {
     public static final String VERIFIED_EMAIL = "VERIFIED_EMAIL";
     public static final String PHOTOID = "PHOTO_ID";
     public static final String VERIFICATION_DOCUMENT = "VERIFICATION_DOCUMENT";
-    public static final String ADD_AND_VERIFY_BANK = "ADD_AND_VERIFY_BANK";
+    public static final String VERIFY_BANK_OR_CARD = "VERIFY_BANK_OR_CARD";
     public static final String PARENT = "PARENT";
     public static final String PROFILE_INFO = "PROFILEINFO";
 
@@ -29,7 +29,7 @@ public class ProfileCompletionPropertyConstants {
     public static final int TAG_POSITION_BASIC_INFO = 0;
     public static final int TAG_POSITION_PERSONAL_ADDRESS = 1;
     public static final int TAG_POSITION_IDENTIFICATION = 2;
-    public static final int TAG_POSITION_ADD_BANK = 3;
+    public static final int TAG_POSITION_SOURCE_OF_FUND = 3;
 
     public static final int TAG_POSITION_BUSINESS_INFO = 0;
     public static final int TAG_POSITION_BUSINESS_ADDRESS = 1;
@@ -53,7 +53,7 @@ public class ProfileCompletionPropertyConstants {
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFIED_EMAIL, "Add a verified email");
         PROPERTY_NAME_TO_TITLE_MAP.put(PHOTOID, "Submit Document");
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFICATION_DOCUMENT, "Submit Verification Document");
-        PROPERTY_NAME_TO_TITLE_MAP.put(ADD_AND_VERIFY_BANK, "Add and Verify Bank Account");
+        PROPERTY_NAME_TO_TITLE_MAP.put(VERIFY_BANK_OR_CARD, "Verify by Bank or Card");
         PROPERTY_NAME_TO_TITLE_MAP.put(PARENT, "Add Parent's Information");
     }
 
@@ -67,7 +67,7 @@ public class ProfileCompletionPropertyConstants {
         PROPERTY_NAME_TO_ICON_MAP.put(PHOTOID, R.drawable.ic_photoid);
         PROPERTY_NAME_TO_ICON_MAP.put(VERIFICATION_DOCUMENT, R.drawable.ic_doc);
         PROPERTY_NAME_TO_ICON_MAP.put(BUSINESS_DOCUMENTS, R.drawable.ic_photoid);
-        PROPERTY_NAME_TO_ICON_MAP.put(ADD_AND_VERIFY_BANK, R.drawable.ic_bank);
+        PROPERTY_NAME_TO_ICON_MAP.put(VERIFY_BANK_OR_CARD, R.drawable.ic_bank);
         PROPERTY_NAME_TO_ICON_MAP.put(PARENT, R.drawable.ic_parent);
     }
 

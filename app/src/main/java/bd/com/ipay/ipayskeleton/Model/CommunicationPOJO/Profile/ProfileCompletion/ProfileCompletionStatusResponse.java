@@ -10,7 +10,7 @@ import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCo
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROPERTY_NAME_TO_ACTION_NAME_MAP;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROPERTY_NAME_TO_ICON_MAP;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROPERTY_NAME_TO_TITLE_MAP;
-import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_ADD_BANK;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_SOURCE_OF_FUND;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_BASIC_INFO;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_BUSINESS_ADDRESS;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_BUSINESS_DOCUMENTS;
@@ -30,23 +30,22 @@ public class ProfileCompletionStatusResponse {
     private int basicInfoItemCount = 0;
     private int addressItemCount = 0;
     private int identificationItemCount = 0;
-    private int addBankItemCount = 0;
+    private int sourceOfFundItemCount = 0;
 
     private double basicInfoCompletionSum = 0;
     private double addressCompletionSum = 0;
     private double identificationCompletionSum = 0;
-    private double addBankCompletionSum = 0;
+    private double sourceOfFundSum = 0;
 
     private final List<PropertyDetails> basicInfoCompletionDetails = new ArrayList<>();
     private final List<PropertyDetails> addressCompletionDetails = new ArrayList<>();
     private final List<PropertyDetails> identificationCompletionDetails = new ArrayList<>();
-    private final List<PropertyDetails> addBankCompletionDetails = new ArrayList<>();
+    private final List<PropertyDetails> sourceOfFundDetails = new ArrayList<>();
     private final List<PropertyDetails> otherCompletionDetails = new ArrayList<>();
 
     public String getMessage() {
         return message;
     }
-
 
 
     public List<PropertyDetails> getBasicInfoCompletionDetails() {
@@ -62,7 +61,7 @@ public class ProfileCompletionStatusResponse {
     }
 
     public List<PropertyDetails> getAddBankCompletionDetails() {
-        return addBankCompletionDetails;
+        return sourceOfFundDetails;
     }
 
     public List<PropertyDetails> getOtherCompletionDetails() {
@@ -74,8 +73,8 @@ public class ProfileCompletionStatusResponse {
     }
 
     public int getCompletionPercentage() {
-//        double totalCompletionSum = basicInfoCompletionSum + addressCompletionSum + identificationCompletionSum + addBankCompletionSum;
-//        double totalItemCount = basicInfoItemCount + addressItemCount + identificationItemCount + addBankItemCount;
+//        double totalCompletionSum = basicInfoCompletionSum + addressCompletionSum + identificationCompletionSum + sourceOfFundSum;
+//        double totalItemCount = basicInfoItemCount + addressItemCount + identificationItemCount + sourceOfFundItemCount;
 //        return (int) Math.round(totalCompletionSum / totalItemCount);
         return completionPercentage;
     }
@@ -93,7 +92,7 @@ public class ProfileCompletionStatusResponse {
     }
 
     public int getAddBankCompletionPercentage() {
-        return (int) Math.round(addBankCompletionSum / addBankItemCount);
+        return (int) Math.round(sourceOfFundSum / sourceOfFundItemCount);
     }
 
     private double getPropertyCompletionPercentage(int threshold, int value) {
@@ -149,7 +148,7 @@ public class ProfileCompletionStatusResponse {
                     basicInfoCompletionDetails.add(propertyDetails);
 
 
-            } else if (mCompletionStatus.getTag() == TAG_POSITION_PERSONAL_ADDRESS  ) {
+            } else if (mCompletionStatus.getTag() == TAG_POSITION_PERSONAL_ADDRESS) {
 
                 addressItemCount++;
                 addressCompletionSum = addressCompletionSum + propertyCompletionPercentage;
@@ -165,14 +164,14 @@ public class ProfileCompletionStatusResponse {
                 if (propertyDetails.getPropertyTitle() != null)
                     identificationCompletionDetails.add(propertyDetails);
 
-            } else if (mCompletionStatus.getTag() == TAG_POSITION_ADD_BANK) {
+            } else if (mCompletionStatus.getTag() == TAG_POSITION_SOURCE_OF_FUND) {
 
-                addBankItemCount++;
-                addBankCompletionSum = addBankCompletionSum + propertyCompletionPercentage;
+                sourceOfFundItemCount++;
+                sourceOfFundSum = sourceOfFundSum + propertyCompletionPercentage;
 
                 if (propertyDetails.getPropertyTitle() != null)
-                    addBankCompletionDetails.add(propertyDetails);
-            }  else {
+                    sourceOfFundDetails.add(propertyDetails);
+            } else {
                 if (propertyDetails.getPropertyTitle() != null)
                     otherCompletionDetails.add(propertyDetails);
             }
@@ -182,7 +181,7 @@ public class ProfileCompletionStatusResponse {
     public boolean isPhotoIdUpdated() {
         for (CompletionStatus mCompletionStatus : completionStatusList) {
             if (mCompletionStatus.getProperty().equals("VERIFICATION_DOCUMENT")) {
-                if(mCompletionStatus.getValue()>0)
+                if (mCompletionStatus.getValue() > 0)
                     return true;
             }
         }
@@ -192,7 +191,7 @@ public class ProfileCompletionStatusResponse {
     public boolean isPhotoUpdated() {
         for (CompletionStatus mCompletionStatus : completionStatusList) {
             if (mCompletionStatus.getProperty().equals("PROFILE_PICTURE")) {
-                if(mCompletionStatus.getValue()>0)
+                if (mCompletionStatus.getValue() > 0)
                     return true;
             }
         }
@@ -202,7 +201,7 @@ public class ProfileCompletionStatusResponse {
     public boolean isAddressUpdated() {
         for (CompletionStatus mCompletionStatus : completionStatusList) {
             if (mCompletionStatus.getProperty().equals("PERSONAL_ADDRESS")) {
-                if(mCompletionStatus.getValue()>0)
+                if (mCompletionStatus.getValue() > 0)
                     return true;
             }
         }
@@ -212,7 +211,17 @@ public class ProfileCompletionStatusResponse {
     public boolean isBasicProfileUpdated() {
         for (CompletionStatus mCompletionStatus : completionStatusList) {
             if (mCompletionStatus.getProperty().equals("BASIC_PROFILE")) {
-                if(mCompletionStatus.getValue()>0)
+                if (mCompletionStatus.getValue() > 0)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isBankAdded() {
+        for (CompletionStatus mCompletionStatus : completionStatusList) {
+            if (mCompletionStatus.getProperty().equals("ADD_BANK")) {
+                if (mCompletionStatus.getValue() > 0)
                     return true;
             }
         }
@@ -220,13 +229,13 @@ public class ProfileCompletionStatusResponse {
     }
 
     public boolean isOnboardBasicInfoUpdated() {
-        if(isAddressUpdated() || isBasicProfileUpdated())
-                return true;
+        if (isAddressUpdated() || isBasicProfileUpdated())
+            return true;
         return false;
     }
 
 
-    public class PropertyDetails implements Comparable<PropertyDetails>{
+    public class PropertyDetails implements Comparable<PropertyDetails> {
         private final String propertyName;
         private final int value;
         private final int threshold;
@@ -248,8 +257,10 @@ public class ProfileCompletionStatusResponse {
         }
 
         public String getPropertyTitle() {
-            if (propertyName.equals(PERSONAL_ADDRESS) && ProfileInfoCacheManager.isBusinessAccount()) return "Add Business DBContactNode's Address";
-            else if (propertyName.equals(BASIC_PROFILE) && ProfileInfoCacheManager.isBusinessAccount()) return "Complete Business DBContactNode Information";
+            if (propertyName.equals(PERSONAL_ADDRESS) && ProfileInfoCacheManager.isBusinessAccount())
+                return "Add Business DBContactNode's Address";
+            else if (propertyName.equals(BASIC_PROFILE) && ProfileInfoCacheManager.isBusinessAccount())
+                return "Complete Business DBContactNode Information";
             return PROPERTY_NAME_TO_TITLE_MAP.get(propertyName);
         }
 

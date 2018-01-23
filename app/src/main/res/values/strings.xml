@@ -296,6 +296,7 @@
     <string name="enter_mobile_number">Enter Mobile Number (+8801xxxxxxxx)</string>
     <string name="enter_bank_account_number">Bank Account Number</string>
     <string name="bank_account">Bank Account</string>
+    <string name="bank">Bank</string>
     <string name="event_link">Event link</string>
     <string name="no_contact_selected">No contacts selected</string>
     <string name="per_ticket_cost">Per ticket cost in BDT</string>
@@ -607,6 +608,7 @@
     <string name="mobile_topup_restriction_info">Unverified users can recharge only their own mobile number</string>
     <string name="send_money_description_info">Enter the details of the recipient to send money</string>
     <string name="request_money_description_info">Enter the details of the recipient to request money</string>
+    <string name="request_payment_description_info">Enter the details of the recipient to request for payment</string>
     <string name="make_payment_description_info">Enter the details of the recipient to make payment</string>
     <string name="total_amount">Total Amount</string>
     <string name="total_amount_in_tk">Total Amount (Tk)</string>
@@ -617,7 +619,7 @@
     <string name="item">Item</string>
     <string name="fee">Fee</string>
     <string name="net_payable">Net Payable</string>
-    <string name="service_charge">(-) Service Charge</string>
+    <string name="service_charge">Service Charge</string>
     <string name="topup_package">Type</string>
     <string name="operator">Operator</string>
     <string name="invite_this_person_to_ipay" tools:keep="@string/invite_this_person_to_ipay">Invite this person to iPay</string>
@@ -802,6 +804,7 @@
     <string name="manage_invitations">Manage invitations</string>
     <string name="manage_address">Manage address</string>
     <string name="see_profile_completion">See profile completeness</string>
+    <string name="profile_completion_detail_text">For verification purpose you need to complete the following information - your Profile Picture, Photo Identification, Basic Information and Source of Fund</string>
     <string name="privileges">Privileges</string>
     <string name="fetching_employee_details_failed">Failed to fetch details information</string>
     <string name="add_money_from_bank_info">It may take 3–5 business days to complete the operation</string>
@@ -1075,7 +1078,7 @@
     <string name="add_money_from_credit_or_debit_card_cancel_title">Money add cancelled</string>
     <string name="add_money_from_credit_or_debit_card_failed_title">Money add failed</string>
     <string name="tk">Tk</string>
-    <string name="success">Successfull</string>
+    <string name="success">Successful</string>
     <string name="you_can_do_following_things">You can do following things</string>
     <string name="select_a_role">Select a Role</string>
     <string name="manage_account">Manage Account</string>
@@ -1094,4 +1097,12 @@
     <string name="change_role">Change Role</string>
     <string name="account_switched">Account switched</string>
     <string name="make_another_payment">MAKE ANOTHER PAYMENT</string>
+    <string name="source_of_fund">Source Of Fund</string>
+    <string name="onboard_source_of_fund_text">For verification process you need to add at least one source of fund. Select a method of add money to your iPay wallet</string>
+    <string name="add_source_of_fund">Add Source Of Fund</string>
+    <string name="add_money_by_card">Add Money By Credit/Debit Card</string>
+    <string name="onboard_add_source_of_fund">Please select on of the method of you source of fund</string>
+    <string name="added_cards">Added Cards</string>
+    <string name="card">Credit or Debit Card</string>
+    <string name="money_added_successfully">Money Added Successfully</string>
 </resources>

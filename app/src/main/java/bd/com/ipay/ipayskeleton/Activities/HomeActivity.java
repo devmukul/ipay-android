@@ -660,22 +660,21 @@ public class HomeActivity extends BaseActivity
         if (mLogoutTask != null) {
             return;
         }
-        if (ProfileInfoCacheManager.isAccountSwitched()) {
-            // If logout is failed, then we restore the onAccount ID value in token
-            onAccountID = TokenManager.getOnAccountId();
-            TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
-        }
         TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
-        mProgressDialog.show();
-        LogoutRequest mLogoutModel = new LogoutRequest(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getMobileNumber());
-        Gson gson = new Gson();
-        String json = gson.toJson(mLogoutModel);
+        try {
+            LogoutRequest mLogoutModel = new LogoutRequest(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getMobileNumber());
+            Gson gson = new Gson();
+            String json = gson.toJson(mLogoutModel);
 
-        mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
-                Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, HomeActivity.this);
-        mLogoutTask.mHttpResponseListener = this;
-        mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
+                    Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, HomeActivity.this);
+            mLogoutTask.mHttpResponseListener = this;
+            mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
+            mProgressDialog.show();
+        } catch (Exception e) {
+
+        }
     }
 
     private void getProfileInfo() {
@@ -814,7 +813,9 @@ public class HomeActivity extends BaseActivity
 
                         //saving user info in shared preference
                         ProfileInfoCacheManager.updateProfileInfoCache(mGetProfileInfoResponse);
-
+                        if (!ProfileInfoCacheManager.isAccountSwitched()) {
+                            ProfileInfoCacheManager.saveMainUserProfileInfo(Utilities.getMainUserProfileInfoString(mGetProfileInfoResponse));
+                        }
                         mProfileImageView.setAccountPhoto(Constants.BASE_URL_FTP_SERVER + imageUrl, false);
 
                     }

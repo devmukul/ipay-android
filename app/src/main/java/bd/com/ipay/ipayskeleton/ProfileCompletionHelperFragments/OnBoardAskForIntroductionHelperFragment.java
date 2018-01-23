@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileVerificationHelperActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.CustomView.AddressInputSignUpView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
@@ -58,14 +58,14 @@ public class OnBoardAskForIntroductionHelperFragment extends Fragment {
         mSkipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileCompletionHelperActivity) getActivity()).switchToHomeActivity();
+                ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
             }
         });
 
         mUploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ProfileCompletionHelperActivity) getActivity()).switchToContactFragment();
+                ((ProfileVerificationHelperActivity) getActivity()).switchToContactFragment();
             }
         });
     }

@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import bd.com.ipay.ipayskeleton.Activities.HomeActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyReviewActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.CardPaymentWebViewActivity;
@@ -78,6 +79,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     private List<UserBankClass> mListUserBankClasses;
 
     private ProgressDialog mProgressDialog;
+    boolean isOnlyByCard;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,7 +107,11 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         final View mAddMoneyOptionSelectorViewHolder = findViewById(R.id.add_money_option_selector_view_holder);
         final Button mAddMoneyProceedButton = findViewById(R.id.add_money_proceed_button);
 
-        final List<IpayService> availableAddMoneyOptions = Utilities.getAvailableAddMoneyOptions();
+        if (getActivity().getIntent().getStringExtra(Constants.TAG) != null && getActivity().getIntent().getStringExtra(Constants.TAG).equalsIgnoreCase("CARD"))
+            isOnlyByCard = true;
+        else
+            isOnlyByCard = false;
+        final List<IpayService> availableAddMoneyOptions = Utilities.getAvailableAddMoneyOptions(isOnlyByCard);
 
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
 
@@ -199,7 +205,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         }
     }
 
-    @ValidateAccess(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)
+    //@ValidateAccess(ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD)
     private void setupAddMoneyFromCreditOrDebitCard() {
         mMessageTextView.setText(R.string.add_money_from_credit_or_debit_card_info);
         mBankSelectorViewHolder.setVisibility(View.GONE);
@@ -360,11 +366,18 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 final int addMoneyByCreditOrDebitCardStatus = data.getBundleExtra(Constants.CARD_TRANSACTION_DATA).getInt(Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_STATUS, 0);
                 final Intent intent;
                 if (addMoneyByCreditOrDebitCardStatus == CardPaymentWebViewActivity.CARD_TRANSACTION_SUCCESSFUL) {
-                    final String transactionId = data.getBundleExtra(Constants.CARD_TRANSACTION_DATA).getString(Constants.TRANSACTION_ID);
-                    intent = new Intent(getActivity(), TransactionDetailsActivity.class);
-                    intent.putExtra(Constants.STATUS, Constants.PAYMENT_REQUEST_STATUS_ALL);
-                    intent.putExtra(Constants.MONEY_REQUEST_ID, transactionId);
-                    startActivity(intent);
+                    if (((AddMoneyActivity) getActivity()).FROM_ON_BOARD) {
+                        Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.money_added_successfully), Toast.LENGTH_LONG).show();
+                        intent = new Intent(getActivity(), HomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    } else {
+                        final String transactionId = data.getBundleExtra(Constants.CARD_TRANSACTION_DATA).getString(Constants.TRANSACTION_ID);
+                        intent = new Intent(getActivity(), TransactionDetailsActivity.class);
+                        intent.putExtra(Constants.STATUS, Constants.PAYMENT_REQUEST_STATUS_ALL);
+                        intent.putExtra(Constants.MONEY_REQUEST_ID, transactionId);
+                        startActivity(intent);
+                    }
                 }
 
             }

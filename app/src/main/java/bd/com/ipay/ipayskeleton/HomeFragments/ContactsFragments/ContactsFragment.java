@@ -519,6 +519,7 @@ public class ContactsFragment extends Fragment implements LoaderManager.LoaderCa
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mSendInviteTask = null;
+            mAskForRecommendationTask = null;
 
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), R.string.failed_request, Toast.LENGTH_SHORT);

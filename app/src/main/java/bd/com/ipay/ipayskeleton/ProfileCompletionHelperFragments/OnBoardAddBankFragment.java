@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import bd.com.ipay.ipayskeleton.Activities.ProfileCompletionHelperActivity;
+import bd.com.ipay.ipayskeleton.Activities.ProfileVerificationHelperActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -230,7 +230,7 @@ public class OnBoardAddBankFragment extends BaseFragment implements HttpResponse
         bundle.putString(Constants.BANK_ACCOUNT_NUMBER, bankAccountNumber);
         bundle.putBoolean(Constants.IS_STARTED_FROM_PROFILE_COMPLETION, startedFromProfileCompletion);
 
-        ((ProfileCompletionHelperActivity) getActivity()).switchToAddBankAgreementFragment(bundle);
+        ((ProfileVerificationHelperActivity) getActivity()).switchToAddBankAgreementFragment(bundle);
     }
 
     private void getBankBranches(long bankID) {

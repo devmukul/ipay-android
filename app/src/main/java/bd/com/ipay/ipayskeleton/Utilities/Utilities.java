@@ -73,7 +73,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserPr
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RefreshToken.TokenParserClass;
 import bd.com.ipay.ipayskeleton.Model.Service.IpayService;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Logger;
 import io.intercom.android.sdk.Intercom;
@@ -498,6 +497,18 @@ public class Utilities {
         return String.format("\u09F3%.2f", amount);
     }
 
+    public static String formatTakaFromString(String amount) {
+        String sign = "";
+        if (amount.charAt(0) == '+' || amount.charAt(0) == '-') {
+            StringBuilder stringBuilder = new StringBuilder(amount);
+            sign += amount.charAt(0);
+            stringBuilder.deleteCharAt(0);
+            amount = stringBuilder.toString();
+        }
+        double amountDouble = Double.parseDouble(amount);
+        return sign + String.format("\u09F3%.2f", amountDouble);
+    }
+
     public static void hideKeyboard(Activity activity) {
         View view = activity.getCurrentFocus();
         if (view != null) {
@@ -893,16 +904,21 @@ public class Utilities {
         return length / 1000000;
     }
 
-    private static final int[] ADD_MONEY_OPTION_SERVICE_ID = {ServiceIdConstants.ADD_MONEY_BY_BANK, ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
+    private static int[] ADD_MONEY_OPTION_SERVICE_ID;
     private static final String[] ADD_MONEY_OPTION_TITLE = {Constants.ADD_MONEY_BY_BANK_TITLE, Constants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD_TITLE};
     private static final int[] ADD_MONEY_OPTION_ICON = {R.drawable.ic_bank111, R.drawable.basic_card};
 
-    public static List<IpayService> getAvailableAddMoneyOptions() {
+    public static List<IpayService> getAvailableAddMoneyOptions(boolean isOnlyByCard) {
+        if (isOnlyByCard) {
+            ADD_MONEY_OPTION_SERVICE_ID = new int[]{ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
+        } else {
+            ADD_MONEY_OPTION_SERVICE_ID = new int[]{ServiceIdConstants.ADD_MONEY_BY_BANK, ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD};
+        }
         List<IpayService> ipayServiceList = new ArrayList<>();
         for (int i = 0; i < ADD_MONEY_OPTION_SERVICE_ID.length; i++) {
-            if (ACLManager.hasServicesAccessibility(ADD_MONEY_OPTION_SERVICE_ID[i])) {
-                ipayServiceList.add(new IpayService(ADD_MONEY_OPTION_SERVICE_ID[i], ADD_MONEY_OPTION_ICON[i], ADD_MONEY_OPTION_TITLE[i]));
-            }
+            // if (ACLManager.hasServicesAccessibility(ADD_MONEY_OPTION_SERVICE_ID[i])) {
+            ipayServiceList.add(new IpayService(ADD_MONEY_OPTION_SERVICE_ID[i], ADD_MONEY_OPTION_ICON[i], ADD_MONEY_OPTION_TITLE[i]));
+            //}
         }
         return ipayServiceList;
     }
