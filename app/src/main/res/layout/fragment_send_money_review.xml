@@ -29,14 +29,14 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textview_name"
+                    android:id="@+id/receiver_name_text_view"
                     style="@style/TextViewUserInfoPaymentReviewPrimary"
                     android:ellipsize="end"
                     android:gravity="center_horizontal"
                     android:maxLines="1" />
 
                 <TextView
-                    android:id="@+id/textview_mobile_number"
+                    android:id="@+id/receiver_mobile_number_text_view"
                     style="@style/TextViewUserInfoPaymentReviewSecondary"
                     android:gravity="center_horizontal" />
 

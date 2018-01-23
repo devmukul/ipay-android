@@ -45,7 +45,11 @@ public class TransactionHistory implements Parcelable {
      * money, returns the bank name.
      */
     public String getReceiver() {
-        return otherParty.getNumber();
+        if (otherParty.getName() == null) {
+            return otherParty.getNumber();
+        } else {
+            return otherParty.getName();
+        }
     }
 
     public double getNetAmount() {

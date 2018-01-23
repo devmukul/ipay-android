@@ -29,16 +29,15 @@
 
                 <TextView
                     android:id="@+id/receiver_name_text_view"
-                    style="@style/TextViewUserInfoPrimary"
+                    style="@style/TextViewUserInfoPaymentReviewPrimary"
                     android:ellipsize="end"
-                    android:gravity="center"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:gravity="center_horizontal"/>
 
                 <TextView
                     android:id="@+id/receiver_mobile_number_text_view"
-                    style="@style/TextViewUserInfoSecondary"
-                    android:gravity="center"
-                    android:textStyle="bold" />
+                    style="@style/TextViewUserInfoPaymentReviewSecondary"
+                    android:gravity="center_horizontal" />
 
             </LinearLayout>
         </LinearLayout>
