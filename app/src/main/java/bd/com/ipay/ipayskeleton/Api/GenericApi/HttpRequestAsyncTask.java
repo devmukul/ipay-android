@@ -58,13 +58,14 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         try {
             if (SSLPinning.validatePinning()) {
                 if (Utilities.isConnectionAvailable(mContext)) {
-                    if (Constants.IS_API_VERSION_CHECKED) {
+                    if (Constants.IS_API_VERSION_CHECKED && !Constants.HAS_COME_FROM_BACKGROUND_TO_FOREGROUND) {
                         mHttpResponse = makeRequest();
                         mGenericHttpResponse = parseHttpResponse(mHttpResponse);
                         mGenericHttpResponse.setUpdateNeeded(false);
                     } else {
                         mHttpResponse = makeApiVersionCheckRequest();
                         mGenericHttpResponse = parseHttpResponse(mHttpResponse);
+                        Constants.HAS_COME_FROM_BACKGROUND_TO_FOREGROUND = false;
 
                         // Validate the Api version and set whether the update is required or not
                         mGenericHttpResponse = validateApiVersion(mGenericHttpResponse);

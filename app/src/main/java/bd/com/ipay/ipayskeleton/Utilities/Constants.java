@@ -881,6 +881,7 @@ public class Constants {
     public static boolean IS_API_VERSION_CHECKED = false;
     public static boolean ACCOUNT_DEFAULT = false;
     public static boolean ACCOUNT_SWITCHED = true;
+    public static boolean HAS_COME_FROM_BACKGROUND_TO_FOREGROUND = false;
 
     // Format
     public static final String DATE_FORMAT = "%02d/%02d/%4d";
