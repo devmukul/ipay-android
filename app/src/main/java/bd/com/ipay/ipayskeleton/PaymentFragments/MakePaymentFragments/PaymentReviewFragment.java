@@ -56,6 +56,8 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     private String mPhotoUri;
     private String mDescription;
     private String mReferenceNumber;
+    private double latitude;
+    private double longitude;
 
     private TextView mServiceChargeTextView;
     private TextView mNetAmountTextView;
@@ -70,6 +72,9 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mReceiverBusinessMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
         mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
         mReferenceNumber = getActivity().getIntent().getStringExtra(Constants.REFERENCE_NUMBER);
+        latitude = getActivity().getIntent().getDoubleExtra(Constants.LATITUDE, 0.0);
+        longitude = getActivity().getIntent().getDoubleExtra(Constants.LONGITUDE, 0.0);
+
 
         if (getArguments() != null) {
             mReceiverBusinessName = getArguments().getString(Constants.NAME);
@@ -199,7 +204,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mProgressDialog.setCancelable(false);
         mPaymentRequest = new PaymentRequest(
                 ContactEngine.formatMobileNumberBD(mReceiverBusinessMobileNumber),
-                mAmount.toString(), mDescription, pin, mReferenceNumber);
+                mAmount.toString(), mDescription, pin, mReferenceNumber, latitude, longitude);
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentRequest);
         mPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT,

@@ -1,13 +1,23 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -20,9 +30,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,10 +66,13 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class MakePaymentFragment extends BaseFragment implements HttpResponseListener {
+public class MakePaymentFragment extends BaseFragment implements LocationListener, HttpResponseListener {
 
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
+    private static final int LOCATION_SETTINGS_PERMISSION_CODE = 1003;
+    private static final int LOCATION_SETTINGS_RESULT_CODE = 1002;
+    private static final int LOCATION_SOURCE_SETTINGS_RESULT_CODE = 1004;
 
     private final int PICK_CONTACT_REQUEST = 100;
     private final int PAYMENT_REVIEW_REQUEST = 101;
@@ -78,11 +89,9 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
     private EditText mRefNumberEditText;
-    private View mRightSideIconViewHolder;
     private TextView mBalanceView;
     private View profileView;
     private View mobileNumberView;
-
 
     private ProfileImageView businessProfileImageView;
     private TextView businessNameTextView;
@@ -109,12 +118,11 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         getActivity().setTitle(R.string.make_payment);
         mProgressBar = new ProgressBar(getActivity());
         mMobileNumberEditText = (BusinessContactsSearchView) v.findViewById(R.id.mobile_number);
-        profileView = (LinearLayout) v.findViewById(R.id.profile);
-        mobileNumberView = (RelativeLayout) v.findViewById(R.id.mobile_number_view);
+        profileView = v.findViewById(R.id.profile);
+        mobileNumberView = v.findViewById(R.id.mobile_number_view);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mRefNumberEditText = (EditText) v.findViewById(R.id.reference_number);
-        mRightSideIconViewHolder = v.findViewById(R.id.right_side_icon_view_holder);
 
         businessProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         businessNameTextView = (TextView) v.findViewById(R.id.textview_name);
@@ -170,8 +178,16 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     // For now, we are directly sending the money without going through any send money query
                     // sendMoneyQuery();
+                    Utilities.hideKeyboard(getContext(), getView());
                     if (verifyUserInputs()) {
-                        launchReviewPage();
+                        if (PaymentActivity.mMandatoryBusinessRules.IS_LOCATION_REQUIRED()) {
+                            if (hasLocationPermission()) {
+                                getLocationAndLaunchReviewPage();
+
+                            }
+                        } else {
+                            launchReviewPage(null);
+                        }
                     }
                 } else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
@@ -181,7 +197,6 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         buttonScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Utilities.performQRCodeScan(MakePaymentFragment.this, REQUEST_CODE_PERMISSION);
 
             }
@@ -193,6 +208,78 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         syncBusinessAccountList();
 
         return v;
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getLocationAndLaunchReviewPage() {
+        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager != null) {
+            locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, Looper.getMainLooper());
+        } else {
+            Toast.makeText(getContext(), R.string.can_not_process_make_payment, Toast.LENGTH_SHORT).show();
+            getActivity().finish();
+        }
+    }
+
+    private boolean hasLocationPermission() {
+        if (Utilities.isNecessaryPermissionExists(getActivity(), Constants.LOCATION_PERMISSIONS)) {
+            String locationProviders = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            if (TextUtils.isEmpty(locationProviders)) {
+                showGPSDisabledDialog();
+            } else {
+                return true;
+            }
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+            Utilities.requestRequiredPermissions(this, LOCATION_SETTINGS_PERMISSION_CODE, Constants.LOCATION_PERMISSIONS);
+        } else {
+            showLocationPermissionDialog();
+        }
+        return false;
+    }
+
+    private void showGPSDisabledDialog() {
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                .setTitle(R.string.gps_disabled)
+                .setMessage(R.string.make_payment_location_settings_on_message)
+                .setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), LOCATION_SOURCE_SETTINGS_RESULT_CODE);
+                    }
+                })
+                .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                    }
+                })
+                .setCancelable(false)
+                .create();
+        alertDialog.show();
+    }
+
+    private void showLocationPermissionDialog() {
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                .setMessage(R.string.make_payment_location_permission_required_message)
+                .setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getContext().getPackageName(), null);
+                        intent.setData(uri);
+                        startActivityForResult(intent, LOCATION_SETTINGS_RESULT_CODE);
+                    }
+                })
+                .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                    }
+                })
+                .setCancelable(false)
+                .create();
+        alertDialog.show();
     }
 
     private void getProfileInfo(String mobileNumber) {
@@ -255,6 +342,9 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                     Toast.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG).show();
                 }
             }
+            case LOCATION_SETTINGS_PERMISSION_CODE: {
+                buttonPayment.performClick();
+            }
         }
     }
 
@@ -287,6 +377,8 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                     }
                 });
             }
+        } else if (requestCode == LOCATION_SETTINGS_RESULT_CODE || requestCode == LOCATION_SOURCE_SETTINGS_RESULT_CODE) {
+            buttonPayment.performClick();
         }
     }
 
@@ -366,12 +458,11 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         }
     }
 
-    private void launchReviewPage() {
-
+    private void launchReviewPage(@Nullable Location location) {
 
         getActivity().getIntent().setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        String receiver = null;
+        String receiver;
 
         if (TextUtils.isEmpty(mReceiverMobileNumber)) {
             receiver = mMobileNumberEditText.getText().toString().trim();
@@ -381,12 +472,15 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         BigDecimal amount = new BigDecimal(mAmountEditText.getText().toString().trim());
         String referenceNumber = mRefNumberEditText.getText().toString().trim();
         String description = mDescriptionEditText.getText().toString().trim();
-
         Intent intent = new Intent(getActivity(), PaymentReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, amount);
         intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(receiver));
         intent.putExtra(Constants.DESCRIPTION_TAG, description);
         intent.putExtra(Constants.REFERENCE_NUMBER, referenceNumber);
+        if (location != null) {
+            intent.putExtra(Constants.LATITUDE, location.getLatitude());
+            intent.putExtra(Constants.LONGITUDE, location.getLongitude());
+        }
 
         if (!TextUtils.isEmpty(mReceiverName)) {
             intent.putExtra(Constants.NAME, mReceiverName);
@@ -405,6 +499,26 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                 mUri, getActivity(), this);
 
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        launchReviewPage(location);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
     @Override
@@ -430,6 +544,8 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
 
                             } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
                                 PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_IS_LOCATION_REQUIRED)) {
+                                PaymentActivity.mMandatoryBusinessRules.setIS_LOCATION_REQUIRED(rule.getRuleValue().intValue() == 1);
                             }
                         }
                     }
