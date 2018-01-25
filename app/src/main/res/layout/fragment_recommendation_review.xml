@@ -25,7 +25,9 @@
                 <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                     android:id="@+id/profile_picture"
                     android:layout_margin="@dimen/activity_horizontal_margin"
-                    style="@style/PaymentReviewImageStyleLarge" />
+                    style="@style/PaymentReviewImageStyleLarge"
+                    android:layout_width="@dimen/value100"
+                    android:layout_height="@dimen/value100"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -129,11 +131,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/value30"
                     android:paddingBottom="@dimen/activity_horizontal_margin"
                     android:paddingTop="@dimen/activity_horizontal_margin">
-
-
-
 
                     <Button
                         android:id="@+id/button_spam"
