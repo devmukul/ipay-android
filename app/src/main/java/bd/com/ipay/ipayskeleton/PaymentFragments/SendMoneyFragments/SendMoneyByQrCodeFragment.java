@@ -120,38 +120,6 @@ public class SendMoneyByQrCodeFragment extends BaseFragment implements HttpRespo
         }
     }
 
-   /* @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
-            String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
-            if (mobileNumber != null)
-                mMobileNumberEditText.setText(mobileNumber);
-
-        } else if (requestCode == SEND_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
-            getActivity().finish();
-        } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
-            IntentResult scanResult = IntentIntegrator.parseActivityResult(
-                    requestCode, resultCode, data);
-            if (scanResult == null) {
-                return;
-            }
-            final String result = scanResult.getContents();
-            if (result != null) {
-                Handler mHandler = new Handler();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (InputValidator.isValidNumber(result)) {
-                            mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
-                        } else if (getActivity() != null)
-                            Toaster.makeText(getActivity(), getResources().getString(
-                                    R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT);
-                    }
-                });
-            }
-        }
-    }*/
-
     private boolean verifyUserInputs() {
         mAmountEditText.setError(null);
         mDescriptionEditText.setError(null);

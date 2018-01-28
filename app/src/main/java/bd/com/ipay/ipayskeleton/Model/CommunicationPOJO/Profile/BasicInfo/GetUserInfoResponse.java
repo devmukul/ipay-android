@@ -30,5 +30,7 @@ public class GetUserInfoResponse {
         return accountStatus;
     }
 
-    public int getAccountType() { return accountType; }
+    public int getAccountType() {
+        return accountType;
+    }
 }
