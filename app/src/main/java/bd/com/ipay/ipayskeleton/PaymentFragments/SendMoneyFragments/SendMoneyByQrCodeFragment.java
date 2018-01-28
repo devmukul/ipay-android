@@ -1,44 +1,36 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import java.math.BigDecimal;
 
-import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
-import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
-import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -53,41 +45,39 @@ public class SendMoneyByQrCodeFragment extends BaseFragment implements HttpRespo
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
     private Button buttonSend;
-    private ImageView buttonSelectFromContacts;
-    private ImageView buttonScanQRCode;
-    private CustomContactsSearchView mMobileNumberEditText;
+
+    private TextView mMobileNumberTextView;
+    private TextView mNameTextView;
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
+    private ProfileImageView mProfileImageView;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_send_money_by_qr_code, container, false);
-        mMobileNumberEditText = (CustomContactsSearchView) v.findViewById(R.id.mobile_number);
+        mMobileNumberTextView = (TextView) v.findViewById(R.id.receiver_mobile_number_text_view);
+        mNameTextView = (TextView) v.findViewById(R.id.receiver_name_text_view);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
-        buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
-        buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
+        mProfileImageView = (ProfileImageView) v.findViewById(R.id.receiver_profile_image_view);
         buttonSend = (Button) v.findViewById(R.id.button_send_money);
+        try {
 
-        // Allow user to write not more than two digits after decimal point for an input of an amount
-        mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
-
-        mMobileNumberEditText.setCurrentFragmentTag(Constants.SEND_MONEY);
-
-        if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
-            mMobileNumberEditText.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
-        }
-
-        buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ContactPickerDialogActivity.class);
-                intent.putExtra(Constants.IPAY_MEMBERS_ONLY, true);
-                startActivityForResult(intent, PICK_CONTACT_REQUEST);
+            if (getActivity().getIntent().hasExtra(Constants.MOBILE_NUMBER)) {
+                mMobileNumberTextView.setText(getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER));
             }
-        });
+            if (getActivity().getIntent().hasExtra(Constants.NAME)) {
+                mNameTextView.setText(getActivity().getIntent().getStringExtra(Constants.NAME));
+            }
+            if (getActivity().getIntent().hasExtra(Constants.PHOTO_URI)) {
+                mProfileImageView.setProfilePicture(getActivity().getIntent().getStringExtra(Constants.PHOTO_URI),
+                        false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,14 +93,6 @@ public class SendMoneyByQrCodeFragment extends BaseFragment implements HttpRespo
             }
         });
 
-        buttonScanQRCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Utilities.performQRCodeScan(SendMoneyByQrCodeFragment.this, REQUEST_CODE_PERMISSION);
-
-            }
-        });
 
         // Get business rule
         attemptGetBusinessRule(Constants.SERVICE_ID_SEND_MONEY);
@@ -121,7 +103,7 @@ public class SendMoneyByQrCodeFragment extends BaseFragment implements HttpRespo
     @Override
     public void onResume() {
         super.onResume();
-       // Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_send_money_by_qr_c));
+        //Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_send_money_by_qr_c));
     }
 
     @Override
@@ -138,7 +120,7 @@ public class SendMoneyByQrCodeFragment extends BaseFragment implements HttpRespo
         }
     }
 
-    @Override
+   /* @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
@@ -168,17 +150,16 @@ public class SendMoneyByQrCodeFragment extends BaseFragment implements HttpRespo
                 });
             }
         }
-    }
+    }*/
 
     private boolean verifyUserInputs() {
         mAmountEditText.setError(null);
-        mMobileNumberEditText.setError(null);
+        mDescriptionEditText.setError(null);
 
         boolean cancel = false;
         View focusView = null;
         String errorMessage = null;
 
-        String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
         if (SharedPrefManager.ifContainsUserBalance()) {
             final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
@@ -216,16 +197,7 @@ public class SendMoneyByQrCodeFragment extends BaseFragment implements HttpRespo
             focusView = mDescriptionEditText;
             mDescriptionEditText.setError(getString(R.string.please_write_note));
             cancel = true;
-        } else if (!InputValidator.isValidNumber(mobileNumber)) {
-            focusView = mMobileNumberEditText;
-            mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
-            cancel = true;
-        } else if (ContactEngine.formatMobileNumberBD(mobileNumber).equals(ProfileInfoCacheManager.getMobileNumber())) {
-            focusView = mMobileNumberEditText;
-            mMobileNumberEditText.setError(getString(R.string.you_cannot_send_money_to_your_number));
-            cancel = true;
         }
-
         if (cancel) {
             focusView.requestFocus();
             return false;
@@ -236,7 +208,7 @@ public class SendMoneyByQrCodeFragment extends BaseFragment implements HttpRespo
 
     private void launchReviewPage() {
 
-        String receiver = mMobileNumberEditText.getText().toString().trim();
+        String receiver = mMobileNumberTextView.getText().toString().trim();
         BigDecimal amount = new BigDecimal(mAmountEditText.getText().toString().trim());
         String description = mDescriptionEditText.getText().toString().trim();
 
