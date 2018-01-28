@@ -89,7 +89,7 @@ public class TransactionDetailsFragment extends BaseFragment {
 
         if (transactionHistory.getDescription() != null)
             descriptionTextView.setText(transactionHistory.getDescription());
-        timeTextView.setText(Utilities.formatDateWithTime(transactionHistory.getInsertTime()));
+        timeTextView.setText(Utilities.formatDateWithTime(transactionHistory.getTime()));
         amountTextView.setText(Utilities.formatTaka(transactionHistory.getAmount()));
         feeTextView.setText(Utilities.formatTaka(transactionHistory.getFee()));
         transactionIDTextView.setText(transactionHistory.getTransactionID());
