@@ -166,37 +166,34 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
 
         boolean cancel = false;
         View focusView = null;
+        String error_message = null;
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
-
-        if (RequestMoneyActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
-            DialogUtils.showDialogVerificationRequired(getActivity());
-        }
 
         if (!Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 || !Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
             DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
         }
+
+        if (RequestMoneyActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
+            DialogUtils.showDialogVerificationRequired(getActivity());
+        }
+
         // validation check of amount
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
-            focusView = mAmountEditText;
-            mAmountEditText.setError(getString(R.string.please_enter_amount));
-            cancel = true;
-
-        } else if ((mAmountEditText.getText().toString().trim().length() > 0)
-                && Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                && Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+            error_message = getString(R.string.please_enter_amount);
+        } else if (mAmountEditText.getText().toString().trim().length() > 0) {
 
             BigDecimal maxAmount = RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT();
 
-            String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+            error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
                     RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
+        }
 
-            if (error_message != null) {
-                focusView = mAmountEditText;
-                mAmountEditText.setError(error_message);
-                cancel = true;
-            }
+        if (error_message != null) {
+            focusView = mAmountEditText;
+            mAmountEditText.setError(error_message);
+            cancel = true;
         }
 
         if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
