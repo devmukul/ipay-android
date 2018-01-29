@@ -299,7 +299,7 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
 
     @Override
     public void onPinLoadFinished(boolean isPinRequired) {
-        PaymentActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
+        PaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(isPinRequired);
     }
 
     @Override

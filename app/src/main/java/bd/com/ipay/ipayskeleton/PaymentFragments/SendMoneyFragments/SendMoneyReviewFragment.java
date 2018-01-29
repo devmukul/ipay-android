@@ -268,7 +268,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
     @Override
     public void onPinLoadFinished(boolean isPinRequired) {
-        SendMoneyActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
+        SendMoneyActivity.mMandatoryBusinessRules.setPIN_REQUIRED(isPinRequired);
     }
 
     @Override

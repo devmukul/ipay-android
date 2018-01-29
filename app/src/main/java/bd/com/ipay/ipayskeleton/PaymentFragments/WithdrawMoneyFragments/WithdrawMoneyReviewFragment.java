@@ -208,7 +208,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
 
     @Override
     public void onPinLoadFinished(boolean isPinRequired) {
-        WithdrawMoneyActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
+        WithdrawMoneyActivity.mMandatoryBusinessRules.setPIN_REQUIRED(isPinRequired);
     }
 
     private void launchOTPVerification() {

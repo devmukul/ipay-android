@@ -47,6 +47,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.Service.IpayService;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
@@ -444,16 +445,16 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
                             for (BusinessRule rule : businessRuleArray) {
                                 switch (rule.getRuleID()) {
-                                    case Constants.SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT:
+                                    case BusinessRuleConstants.SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT:
                                         AddMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                                         break;
-                                    case Constants.SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT:
+                                    case BusinessRuleConstants.SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT:
                                         AddMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                                         break;
-                                    case Constants.SERVICE_RULE_ADD_CARDMONEY_MAX_AMOUNT_SINGLE:
+                                    case BusinessRuleConstants.SERVICE_RULE_ADD_CARDMONEY_MAX_AMOUNT_SINGLE:
                                         AddMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                                         break;
-                                    case Constants.SERVICE_RULE_ADD_CARDMONEY_MIN_AMOUNT_SINGLE:
+                                    case BusinessRuleConstants.SERVICE_RULE_ADD_CARDMONEY_MIN_AMOUNT_SINGLE:
                                         AddMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                                         break;
                                 }

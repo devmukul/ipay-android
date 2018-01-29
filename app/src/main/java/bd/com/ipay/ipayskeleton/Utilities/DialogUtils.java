@@ -41,6 +41,7 @@ public class DialogUtils {
 
         dialog.show();
     }
+
     public static void showChangePasswordSuccessDialog(final Context context) {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
         dialog
@@ -95,6 +96,36 @@ public class DialogUtils {
                 .cancelable(false)
                 .content(context.getString(R.string.country_not_support_message))
                 .positiveText(R.string.ok)
+                .show();
+        dialog.show();
+    }
+
+    public static void showDialogForBusinessRuleNotAvailable(final Context context) {
+        MaterialDialog dialog = new MaterialDialog.Builder(context)
+                .cancelable(false)
+                .content(context.getString(R.string.service_unavailable_support_message))
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        ((Activity) context).finish();
+                    }
+                })
+                .show();
+        dialog.show();
+    }
+
+    public static void showDialogVerificationRequired(final Context context) {
+        MaterialDialog dialog = new MaterialDialog.Builder(context)
+                .cancelable(false)
+                .content(context.getString(R.string.verification_required_message))
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        ((Activity) context).finish();
+                    }
+                })
                 .show();
         dialog.show();
     }

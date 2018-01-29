@@ -231,7 +231,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
     @Override
     public void onPinLoadFinished(boolean isPinRequired) {
-        TopUpActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
+        TopUpActivity.mMandatoryBusinessRules.setPIN_REQUIRED(isPinRequired);
 
     }
 
