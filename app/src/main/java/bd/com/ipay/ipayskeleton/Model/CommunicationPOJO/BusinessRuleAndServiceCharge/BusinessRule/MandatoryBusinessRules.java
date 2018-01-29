@@ -38,8 +38,10 @@ public class MandatoryBusinessRules {
         return PIN_REQUIRED;
     }
 
-    public void setPIN_REQUIRED(boolean PIN_REQUIRED) {
-
+    public void setPIN_REQUIRED(BigDecimal PIN_REQUIRED) {
+        if (PIN_REQUIRED.compareTo(BigDecimal.ZERO) > 0)
+            this.PIN_REQUIRED = true;
+        else
             this.PIN_REQUIRED = false;
     }
 

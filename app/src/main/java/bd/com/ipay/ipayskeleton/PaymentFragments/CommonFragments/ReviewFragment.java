@@ -229,7 +229,7 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
                             return;
                         }
                         if (mBusinessRulesResponseWithServiceCharge.getPinRequired() != null) {
-                            onPinLoadFinished(mBusinessRulesResponseWithServiceCharge.getPinRequired());
+                          //  onPinLoadFinished(mBusinessRulesResponseWithServiceCharge.getPinRequired());
                         }
                     }
 

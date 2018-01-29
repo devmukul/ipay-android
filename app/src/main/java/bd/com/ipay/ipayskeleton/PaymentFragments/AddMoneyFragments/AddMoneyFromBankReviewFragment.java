@@ -213,8 +213,6 @@ public class AddMoneyFromBankReviewFragment extends ReviewFragment implements Ht
 
     @Override
     public void onPinLoadFinished(boolean isPinRequired) {
-        AddMoneyActivity.mMandatoryBusinessRules.setPIN_REQUIRED(isPinRequired);
-
     }
 
     @Override

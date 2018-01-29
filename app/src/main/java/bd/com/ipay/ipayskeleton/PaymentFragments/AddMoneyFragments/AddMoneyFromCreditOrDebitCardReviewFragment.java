@@ -171,7 +171,6 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
 
     @Override
     protected void onPinLoadFinished(boolean isPinRequired) {
-        AddMoneyActivity.mMandatoryBusinessRules.setPIN_REQUIRED(isPinRequired);
     }
 
     @Override

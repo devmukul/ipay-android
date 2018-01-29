@@ -239,7 +239,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
 
     @Override
     public void onPinLoadFinished(boolean isPinRequired) {
-        PaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(isPinRequired);
     }
 
     private void launchOTPVerification() {
