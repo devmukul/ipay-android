@@ -12,9 +12,9 @@ public class PaymentRequest {
     private final String ref;
     private String otp;
     @SerializedName("lat")
-    private final double latitude;
+    private Double latitude;
     @SerializedName("lng")
-    private final double longitude;
+    private Double longitude;
 
     public PaymentRequest(String mobileNumber, String amount, String description, String pin, String ref, double latitude, double longitude) {
         this.mobileNumber = mobileNumber;
@@ -22,8 +22,10 @@ public class PaymentRequest {
         this.description = description;
         this.pin = pin;
         this.ref = ref;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        if (latitude != 0.0 && longitude != 0.0) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
     }
 
     public void setOtp(String otp) {

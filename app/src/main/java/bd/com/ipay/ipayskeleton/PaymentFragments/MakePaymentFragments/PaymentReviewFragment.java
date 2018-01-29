@@ -205,6 +205,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mPaymentRequest = new PaymentRequest(
                 ContactEngine.formatMobileNumberBD(mReceiverBusinessMobileNumber),
                 mAmount.toString(), mDescription, pin, mReferenceNumber, latitude, longitude);
+
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentRequest);
         mPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT,

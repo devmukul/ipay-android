@@ -1,6 +1,5 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -10,14 +9,11 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -70,9 +66,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
-    private static final int LOCATION_SETTINGS_PERMISSION_CODE = 1003;
-    private static final int LOCATION_SETTINGS_RESULT_CODE = 1002;
-    private static final int LOCATION_SOURCE_SETTINGS_RESULT_CODE = 1004;
 
     private final int PICK_CONTACT_REQUEST = 100;
     private final int PAYMENT_REVIEW_REQUEST = 101;
@@ -181,9 +174,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     Utilities.hideKeyboard(getContext(), getView());
                     if (verifyUserInputs()) {
                         if (PaymentActivity.mMandatoryBusinessRules.IS_LOCATION_REQUIRED()) {
-                            if (hasLocationPermission()) {
+                            if (Utilities.hasForcedLocationPermission(MakePaymentFragment.this)) {
                                 getLocationAndLaunchReviewPage();
-
                             }
                         } else {
                             launchReviewPage(null);
@@ -213,73 +205,12 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     @SuppressLint("MissingPermission")
     private void getLocationAndLaunchReviewPage() {
         LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager != null) {
+        if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, Looper.getMainLooper());
         } else {
             Toast.makeText(getContext(), R.string.can_not_process_make_payment, Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
-    }
-
-    private boolean hasLocationPermission() {
-        if (Utilities.isNecessaryPermissionExists(getActivity(), Constants.LOCATION_PERMISSIONS)) {
-            String locationProviders = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-            if (TextUtils.isEmpty(locationProviders)) {
-                showGPSDisabledDialog();
-            } else {
-                return true;
-            }
-        } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
-            Utilities.requestRequiredPermissions(this, LOCATION_SETTINGS_PERMISSION_CODE, Constants.LOCATION_PERMISSIONS);
-        } else {
-            showLocationPermissionDialog();
-        }
-        return false;
-    }
-
-    private void showGPSDisabledDialog() {
-        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
-                .setTitle(R.string.gps_disabled)
-                .setMessage(R.string.make_payment_location_settings_on_message)
-                .setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), LOCATION_SOURCE_SETTINGS_RESULT_CODE);
-                    }
-                })
-                .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        getActivity().finish();
-                    }
-                })
-                .setCancelable(false)
-                .create();
-        alertDialog.show();
-    }
-
-    private void showLocationPermissionDialog() {
-        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
-                .setMessage(R.string.make_payment_location_permission_required_message)
-                .setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent();
-                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri = Uri.fromParts("package", getContext().getPackageName(), null);
-                        intent.setData(uri);
-                        startActivityForResult(intent, LOCATION_SETTINGS_RESULT_CODE);
-                    }
-                })
-                .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        getActivity().finish();
-                    }
-                })
-                .setCancelable(false)
-                .create();
-        alertDialog.show();
     }
 
     private void getProfileInfo(String mobileNumber) {
@@ -342,7 +273,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     Toast.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG).show();
                 }
             }
-            case LOCATION_SETTINGS_PERMISSION_CODE: {
+            case Utilities.LOCATION_SETTINGS_PERMISSION_CODE: {
                 buttonPayment.performClick();
             }
         }
@@ -377,7 +308,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     }
                 });
             }
-        } else if (requestCode == LOCATION_SETTINGS_RESULT_CODE || requestCode == LOCATION_SOURCE_SETTINGS_RESULT_CODE) {
+        } else if (requestCode == Utilities.LOCATION_SETTINGS_RESULT_CODE || requestCode == Utilities.LOCATION_SOURCE_SETTINGS_RESULT_CODE) {
             buttonPayment.performClick();
         }
     }
@@ -545,7 +476,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                             } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
                                 PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                             } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_IS_LOCATION_REQUIRED)) {
-                                PaymentActivity.mMandatoryBusinessRules.setIS_LOCATION_REQUIRED(rule.getRuleValue().intValue() == 1);
+                                PaymentActivity.mMandatoryBusinessRules.setIS_LOCATION_REQUIRED(rule.getRuleValue().intValue() == Constants.LOCATION_REQUIRED_TRUE);
                             }
                         }
                     }

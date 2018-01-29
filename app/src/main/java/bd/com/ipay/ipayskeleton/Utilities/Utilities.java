@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -11,9 +12,11 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -954,5 +957,70 @@ public class Utilities {
                     fromJson(businessInfoString, GetBusinessInformationResponse.class);
             return getBusinessInformationResponse;
         }
+    }
+
+    public static final int LOCATION_SETTINGS_PERMISSION_CODE = 9876;
+    public static final int LOCATION_SETTINGS_RESULT_CODE = 9875;
+    public static final int LOCATION_SOURCE_SETTINGS_RESULT_CODE = 9874;
+
+    public static boolean hasForcedLocationPermission(Fragment fragment) {
+        if (Utilities.isNecessaryPermissionExists(fragment.getActivity(), Constants.LOCATION_PERMISSIONS)) {
+            String locationProviders = Settings.Secure.getString(fragment.getActivity().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            if (TextUtils.isEmpty(locationProviders)) {
+                showGPSDisabledDialog(fragment);
+            } else {
+                return true;
+            }
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(fragment.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+            Utilities.requestRequiredPermissions(fragment, LOCATION_SETTINGS_PERMISSION_CODE, Constants.LOCATION_PERMISSIONS);
+        } else {
+            showLocationPermissionDialog(fragment);
+        }
+        return false;
+    }
+
+    private static void showGPSDisabledDialog(final Fragment fragment) {
+        AlertDialog alertDialog = new AlertDialog.Builder(fragment.getActivity())
+                .setTitle(R.string.gps_disabled)
+                .setMessage(R.string.make_payment_location_settings_on_message)
+                .setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        fragment.startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), LOCATION_SOURCE_SETTINGS_RESULT_CODE);
+                    }
+                })
+                .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        fragment.getActivity().finish();
+                    }
+                })
+                .setCancelable(false)
+                .create();
+        alertDialog.show();
+    }
+
+    private static void showLocationPermissionDialog(final Fragment fragment) {
+        AlertDialog alertDialog = new AlertDialog.Builder(fragment.getActivity())
+                .setMessage(R.string.make_payment_location_permission_required_message)
+                .setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", fragment.getActivity().getPackageName(), null);
+                        intent.setData(uri);
+                        fragment.startActivityForResult(intent, LOCATION_SETTINGS_RESULT_CODE);
+                    }
+                })
+                .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        fragment.getActivity().finish();
+                    }
+                })
+                .setCancelable(false)
+                .create();
+        alertDialog.show();
     }
 }
