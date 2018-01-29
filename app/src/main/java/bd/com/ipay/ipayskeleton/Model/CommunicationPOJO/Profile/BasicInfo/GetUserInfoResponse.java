@@ -10,6 +10,7 @@ public class GetUserInfoResponse {
     private final List<UserProfilePictureClass> profilePictures = new ArrayList<>();
     private String accountStatus;
     private int accountType;
+    private UserAddressList addressList;
 
     public GetUserInfoResponse() {
     }
@@ -22,6 +23,10 @@ public class GetUserInfoResponse {
         return name;
     }
 
+    public UserAddressList getAddressList() {
+        return addressList;
+    }
+
     public List<UserProfilePictureClass> getProfilePictures() {
         return profilePictures;
     }
@@ -30,5 +35,7 @@ public class GetUserInfoResponse {
         return accountStatus;
     }
 
-    public int getAccountType() { return accountType; }
+    public int getAccountType() {
+        return accountType;
+    }
 }
