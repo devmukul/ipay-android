@@ -108,7 +108,7 @@ public class DialogUtils {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        ((Activity) context).finish();
+                        ((Activity) context).onBackPressed();
                     }
                 })
                 .show();
@@ -123,7 +123,7 @@ public class DialogUtils {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        ((Activity) context).finish();
+                        ((Activity) context).onBackPressed();
                     }
                 })
                 .show();

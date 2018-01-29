@@ -185,6 +185,11 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
+        if (!Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                || !Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+        }
+
         if (SendMoneyActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
             DialogUtils.showDialogVerificationRequired(getActivity());
         }
@@ -194,29 +199,20 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
 
             if (TextUtils.isEmpty(mAmountEditText.getText())) {
                 errorMessage = getString(R.string.please_enter_amount);
-                focusView = mAmountEditText;
-                cancel = true;
 
             } else {
                 final BigDecimal sendMoneyAmount = new BigDecimal(mAmountEditText.getText().toString());
                 if (sendMoneyAmount.compareTo(balance) > 0) {
                     errorMessage = getString(R.string.insufficient_balance);
-                }
-                if (Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                        && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-
+                } else {
                     final BigDecimal minimumSendMoneyAmount = SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
                     final BigDecimal maximumSendMoneyAmount = SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
 
                     errorMessage = InputValidator.isValidAmount(getActivity(), sendMoneyAmount, minimumSendMoneyAmount, maximumSendMoneyAmount);
-                } else {
-                    DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                 }
             }
         } else {
-            focusView = mAmountEditText;
             errorMessage = getString(R.string.balance_not_available);
-            cancel = true;
         }
 
         if (errorMessage != null) {

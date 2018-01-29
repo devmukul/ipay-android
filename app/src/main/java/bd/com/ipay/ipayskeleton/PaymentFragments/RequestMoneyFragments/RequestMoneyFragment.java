@@ -90,7 +90,6 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         }
 
         mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage(getString(R.string.submitting_request_money));
 
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,6 +172,11 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         if (RequestMoneyActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
             DialogUtils.showDialogVerificationRequired(getActivity());
         }
+
+        if (!Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                || !Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+        }
         // validation check of amount
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
             focusView = mAmountEditText;
@@ -193,11 +197,6 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
                 mAmountEditText.setError(error_message);
                 cancel = true;
             }
-        }
-
-        if (!Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                || !Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
         }
 
         if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
@@ -286,10 +285,12 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
     }
 
     private void attemptGetBusinessRule(int serviceID) {
-
         if (mGetBusinessRuleTask != null) {
             return;
         }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
+        mProgressDialog.show();
 
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
@@ -300,7 +301,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-
+        mProgressDialog.dismiss();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
@@ -326,10 +327,15 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
                             }
                         }
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
+                    if (getActivity() != null)
+                        DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                 }
+
+            } else {
+                if (getActivity() != null)
+                    DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             }
             mGetBusinessRuleTask = null;
         }
