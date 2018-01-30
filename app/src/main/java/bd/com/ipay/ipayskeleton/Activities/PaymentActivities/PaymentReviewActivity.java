@@ -55,6 +55,9 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
         if (getIntent().hasExtra(Constants.NAME)) {
             mReceiverName = getIntent().getStringExtra(Constants.NAME);
             mReceiverPhotoUri = getIntent().getStringExtra(Constants.PHOTO_URI);
+            mAddressString = getIntent().getStringExtra(Constants.ADDRESS);
+            mDistrict = getIntent().getStringExtra(Constants.DISTRICT);
+            mCountry = getIntent().getStringExtra(Constants.COUNTRY);
             switchToPaymentReviewFragment(mReceiverName, mReceiverPhotoUri);
 
         } else {

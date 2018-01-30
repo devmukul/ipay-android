@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -28,6 +29,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.BusinessContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
@@ -45,6 +47,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserAddress;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
@@ -80,6 +83,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
     private View profileView;
     private View mobileNumberView;
 
+    private ProgressDialog mProgressDialog;
 
     private ProfileImageView businessProfileImageView;
     private TextView businessNameTextView;
@@ -89,7 +93,9 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
     private String mReceiverMobileNumber;
     private String mReceiverName;
     private String mReceiverPhotoUri;
-
+    private String mAddressString;
+    private String mDistrict;
+    private String mCountry;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
@@ -124,6 +130,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         buttonPayment = (Button) v.findViewById(R.id.button_payment);
 
+        mProgressDialog = new ProgressDialog(getContext());
         mBalanceView = (TextView) v.findViewById(R.id.balance_view);
 
         mBalanceView.setText(SharedPrefManager.getUserBalance());
@@ -145,6 +152,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                     businessNameTextView.setVisibility(View.VISIBLE);
                     businessNameTextView.setText(mReceiverName);
                 }
+                getProfileInfo(mReceiverMobileNumber);
             } else {
                 getProfileInfo(mReceiverMobileNumber);
             }
@@ -202,7 +210,9 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
                 mUri, getContext(), this);
-
+        mProgressDialog.setMessage(getActivity().getString(R.string.loading));
+        mProgressDialog.show();
+        mProgressDialog.setCancelable(false);
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -355,6 +365,9 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(receiver));
         intent.putExtra(Constants.DESCRIPTION_TAG, description);
         intent.putExtra(Constants.REFERENCE_NUMBER, referenceNumber);
+        intent.putExtra(Constants.ADDRESS, mAddressString);
+        intent.putExtra(Constants.COUNTRY, mCountry);
+        intent.putExtra(Constants.DISTRICT, mDistrict);
 
         if (!TextUtils.isEmpty(mReceiverName)) {
             intent.putExtra(Constants.NAME, mReceiverName);
@@ -377,6 +390,8 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
+
+        mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -420,6 +435,17 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String name = mGetUserInfoResponse.getName();
+
+                    List<UserAddress> office = mGetUserInfoResponse.getAddressList().getOFFICE();
+                    if (office != null) {
+                        mAddressString = office.get(0).getAddressLine1();
+                        mDistrict = office.get(0).getDistrict();
+                        mCountry = office.get(0).getCountry();
+                    } else {
+                        mAddressString = "";
+                        mDistrict = "";
+                        mCountry = "";
+                    }
                     int accountType = mGetUserInfoResponse.getAccountType();
 
                     if (accountType != Constants.BUSINESS_ACCOUNT_TYPE) {
