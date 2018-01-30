@@ -127,6 +127,7 @@ public class Constants {
     public static final String VERIFIED = "VERIFIED";
     public static final String DISTRICT = "DISTRICT";
     public static final String COUNTRY = "COUNTRY";
+    public static final String FROM_QR_SCAN = "FROM_QR_SCAN";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";

@@ -41,7 +41,11 @@ public class TransactionHistory implements Parcelable {
     }
 
     public String getReceiver() {
-        return otherParty.getNumber();
+        if (otherParty.getName() == null) {
+            return otherParty.getNumber();
+        } else {
+            return otherParty.getName();
+        }
     }
 
     public double getNetAmount() {
