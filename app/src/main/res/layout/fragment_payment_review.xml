@@ -13,9 +13,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorBackground"
             android:orientation="horizontal"
             android:padding="@dimen/activity_horizontal_margin"
-            android:background="@color/colorBackground"
             android:visibility="gone">
 
             <TextView
@@ -85,7 +85,12 @@
                     android:maxLines="1" />
 
                 <TextView
-                    android:id="@+id/business_mobile_number_text_view"
+                    android:id="@+id/business_address_line_1_text_view"
+                    style="@style/TextViewUserInfoPaymentReviewSecondary"
+                    android:gravity="center_horizontal" />
+
+                <TextView
+                    android:id="@+id/business_address_line_2_text_view"
                     style="@style/TextViewUserInfoPaymentReviewSecondary"
                     android:gravity="center_horizontal" />
 

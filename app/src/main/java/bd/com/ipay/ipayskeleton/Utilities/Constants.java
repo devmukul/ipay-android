@@ -125,6 +125,8 @@ public class Constants {
     public static final String FROM_ON_BOARD = "FROM_ON_BOARD";
     public static final String COMMAND_ADD_CARD = "COMMAND_ADD_CARD";
     public static final String VERIFIED = "VERIFIED";
+    public static final String DISTRICT = "DISTRICT";
+    public static final String COUNTRY = "COUNTRY";
     public static final String FROM_QR_SCAN = "FROM_QR_SCAN";
     public static String ROLEID = "ROLEID";
 
@@ -142,9 +144,8 @@ public class Constants {
     public static final String PHOTO_URI = "photo_uri";
     public static final String VAT = "vat";
 
-    public static final String OFFICE_LAND_LINE_NUMBER_PRIMARY = "+88-02-9852507";
-    public static final String OFFICE_LAND_LINE_NUMBER_SECONDARY = "+88-02-9852508";
-    public static final String OFFICE_LAND_LINE_NUMBER_OTHER = "+880-9638 900800";
+    public static final String OFFICE_LAND_LINE_NUMBER_PRIMARY = "+880-9638 900800";
+    public static final String OFFICE_LAND_LINE_NUMBER_EXTENSION = "1112 – 1120";
     public static final String OFFICE_EMAIL = "support@ipay.com.bd";
     public static final String FEEDBACK = "feedback@ipay.com.bd";
     public static final String OFFICE_ADDRESS = "Silver Tower (12th Floor)\n52 Gulshan Avenue, Circle-1\nDhaka-1212\nBangladesh\n";
