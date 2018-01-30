@@ -670,7 +670,7 @@ public class TransactionHistoryPendingFragment extends ProgressFragment implemen
                 final TransactionHistory transactionHistory = userTransactionHistories.get(pos);
                 final String description = transactionHistory.getShortDescription();
                 final String receiver = transactionHistory.getReceiver();
-                final String responseTime = Utilities.formatDateWithTime(transactionHistory.getInsertTime());
+                final String responseTime = Utilities.formatDateWithTime(transactionHistory.getTime());
                 final String netAmount = String.valueOf(Utilities.formatTaka(transactionHistory.getNetAmount()));
                 final int serviceId = transactionHistory.getServiceId();
 
