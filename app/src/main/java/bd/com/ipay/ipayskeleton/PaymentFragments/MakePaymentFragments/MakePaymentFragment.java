@@ -441,10 +441,6 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                         mAddressString = office.get(0).getAddressLine1();
                         mDistrict = office.get(0).getDistrict();
                         mCountry = office.get(0).getCountry();
-                    } else {
-                        mAddressString = "";
-                        mDistrict = "";
-                        mCountry = "";
                     }
                     int accountType = mGetUserInfoResponse.getAccountType();
 
