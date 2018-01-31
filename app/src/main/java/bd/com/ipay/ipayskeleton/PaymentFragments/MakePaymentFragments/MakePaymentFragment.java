@@ -435,13 +435,15 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String name = mGetUserInfoResponse.getName();
-
-                    List<UserAddress> office = mGetUserInfoResponse.getAddressList().getOFFICE();
-                    if (office != null) {
-                        mAddressString = office.get(0).getAddressLine1();
-                        mDistrict = office.get(0).getDistrict();
-                        mCountry = office.get(0).getCountry();
+                    if (mGetUserInfoResponse.getAddressList() != null) {
+                        List<UserAddress> office = mGetUserInfoResponse.getAddressList().getOFFICE();
+                        if (office != null) {
+                            mAddressString = office.get(0).getAddressLine1();
+                            mDistrict = office.get(0).getDistrict();
+                            mCountry = office.get(0).getCountry();
+                        }
                     }
+
                     int accountType = mGetUserInfoResponse.getAccountType();
 
                     if (accountType != Constants.BUSINESS_ACCOUNT_TYPE) {

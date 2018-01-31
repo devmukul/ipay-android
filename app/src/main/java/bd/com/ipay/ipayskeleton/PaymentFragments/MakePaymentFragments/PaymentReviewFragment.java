@@ -127,8 +127,12 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                 businessNameTextView.setVisibility(View.VISIBLE);
                 businessNameTextView.setText(mReceiverBusinessName);
             }
-            businessAddressTextView.setText(mAddressString);
-            businessDistrictAndCountryTextView.setText(mDistrict + " , " + mCountry);
+            if (mAddressString != null && mDistrict != null && mCountry != null) {
+                businessAddressTextView.setVisibility(View.VISIBLE);
+                businessDistrictAndCountryTextView.setVisibility(View.VISIBLE);
+                businessAddressTextView.setText(mAddressString);
+                businessDistrictAndCountryTextView.setText(mDistrict + " , " + mCountry);
+            }
 
             amountTextView.setText(Utilities.formatTaka(mAmount));
             mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
