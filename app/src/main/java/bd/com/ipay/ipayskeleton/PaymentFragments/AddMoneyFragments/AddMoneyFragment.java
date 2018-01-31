@@ -53,6 +53,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
@@ -262,10 +263,12 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     }
 
     private void attemptGetBusinessRule(int serviceID) {
-
         if (mGetBusinessRuleTask != null) {
             return;
         }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
+        mProgressDialog.show();
 
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
@@ -306,21 +309,29 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     }
 
     private boolean isValidAmount() {
-        final boolean isValidAmount;
+        boolean isValidAmount;
+        String errorMessage;
+
+        if (!Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                || !Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+        }
+
+        if (AddMoneyActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
+            DialogUtils.showDialogVerificationRequired(getActivity());
+        }
+
         if (TextUtils.isEmpty(mAmountEditText.getText())) {
-            isValidAmount = false;
-            mAmountEditText.setError(getString(R.string.please_enter_amount));
-        } else if (Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                && Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-            final String errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+            errorMessage = (getString(R.string.please_enter_amount));
+        } else {
+            errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
                     AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
                     AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
-            if (errorMessage != null) {
-                isValidAmount = false;
-                mAmountEditText.setError(errorMessage);
-            } else {
-                isValidAmount = true;
-            }
+        }
+
+        if (errorMessage != null) {
+            isValidAmount = false;
+            mAmountEditText.setError(errorMessage);
         } else {
             isValidAmount = true;
         }
@@ -451,11 +462,22 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                                     case BusinessRuleConstants.SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT:
                                         AddMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                                         break;
+                                    case BusinessRuleConstants.SERVICE_RULE_ADD_MONEY_VERIFICATION_REQUIRED:
+                                        AddMoneyActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                                        break;
+                                    // For add money by card
                                     case BusinessRuleConstants.SERVICE_RULE_ADD_CARDMONEY_MAX_AMOUNT_SINGLE:
                                         AddMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                                         break;
                                     case BusinessRuleConstants.SERVICE_RULE_ADD_CARDMONEY_MIN_AMOUNT_SINGLE:
                                         AddMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                        break;
+                                    case BusinessRuleConstants.SERVICE_RULE_ADD_CARDMONEY_VERIFICATION_REQUIRED:
+                                        AddMoneyActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                                        break;
+                                    // For all types of add money
+                                    case BusinessRuleConstants.SERVICE_RULE_ADD_MONEY_PIN_REQUIRED:
+                                        AddMoneyActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
                                         break;
                                 }
                             }
@@ -463,12 +485,12 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                         } catch (Exception e) {
                             e.printStackTrace();
                             if (getActivity() != null)
-                                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
+                                DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                         }
                         break;
                     default:
                         if (getActivity() != null)
-                            Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
+                            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                         break;
                 }
                 break;
