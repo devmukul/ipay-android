@@ -72,7 +72,7 @@ public class SendMoneyByQrCodeFragment extends BaseFragment implements HttpRespo
                 mNameTextView.setText(getActivity().getIntent().getStringExtra(Constants.NAME));
             }
             if (getActivity().getIntent().hasExtra(Constants.PHOTO_URI)) {
-                mProfileImageView.setProfilePicture(getActivity().getIntent().getStringExtra(Constants.PHOTO_URI),
+                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + getActivity().getIntent().getStringExtra(Constants.PHOTO_URI),
                         false);
             }
         } catch (Exception e) {

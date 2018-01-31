@@ -89,6 +89,7 @@
 
                 <TextView
                     android:id="@+id/textview_mobile_number"
+                    android:visibility="gone"
                     style="@style/TextViewUserInfoPaymentReviewSecondary"
                     android:gravity="center_horizontal"/>
 
