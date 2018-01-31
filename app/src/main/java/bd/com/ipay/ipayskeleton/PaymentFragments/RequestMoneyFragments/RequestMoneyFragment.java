@@ -173,10 +173,12 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         if (!Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 || !Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
             DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+            return false;
         }
 
         if (RequestMoneyActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
             DialogUtils.showDialogVerificationRequired(getActivity());
+            return false;
         }
 
         // validation check of amount

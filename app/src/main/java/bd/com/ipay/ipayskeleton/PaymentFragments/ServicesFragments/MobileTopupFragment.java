@@ -231,10 +231,12 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         if (!Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 || !Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
             DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+            return false;
         }
 
         if (TopUpActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
             DialogUtils.showDialogVerificationRequired(getActivity());
+            return false;
         }
 
         if (SharedPrefManager.ifContainsUserBalance()) {

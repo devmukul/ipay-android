@@ -20,7 +20,6 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -137,11 +136,7 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
             }
         });
 
-        if (!Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
-                && !Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_REQUEST_MONEY);
-        else
-            attemptGetServiceCharge();
+        attemptGetServiceCharge();
     }
 
     public <T extends View> T findViewById(@IdRes int id) {

@@ -37,7 +37,6 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -108,29 +107,11 @@ public class AddMoneyFromBankReviewFragment extends ReviewFragment implements Ht
         addMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                        && Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-                    final String errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
-                            AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                            AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
-
-                    if (errorMessage == null) {
-                        attemptAddMoneyWithPinCheck();
-
-                    } else {
-                        showErrorDialog(errorMessage);
-                    }
-                } else
-                    attemptAddMoneyWithPinCheck();
+                attemptAddMoneyWithPinCheck();
             }
         });
 
-        // Check if Min or max amount is available
-        if (!Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
-                && !Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_ADD_MONEY_BY_BANK);
-        else
-            attemptGetServiceCharge();
+        attemptGetServiceCharge();
     }
 
     @Override
