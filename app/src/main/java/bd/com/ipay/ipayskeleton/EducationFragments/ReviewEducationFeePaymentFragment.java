@@ -118,12 +118,7 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
             }
         });
 
-        // Check if Min or max amount is available
-        if (!Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
-                && !Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_MAKE_PAYMENT);
-        else
-            attemptGetServiceCharge();
+        attemptGetServiceCharge();
         return v;
     }
 

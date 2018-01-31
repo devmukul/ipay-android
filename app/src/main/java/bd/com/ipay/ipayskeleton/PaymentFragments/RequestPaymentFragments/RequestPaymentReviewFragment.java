@@ -141,12 +141,7 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
             }
         });
 
-        // Check if min or max amount is available
-        if (!Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
-                && !Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_REQUEST_PAYMENT);
-        else
-            attemptGetServiceCharge();
+        attemptGetServiceCharge();
     }
 
     public <T extends View> T findViewById(@IdRes int id) {

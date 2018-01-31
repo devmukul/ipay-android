@@ -383,8 +383,6 @@ public class Constants {
     public static final String URL_BUSINESS_RULE = "business-rule";
     public static final String URL_SWITCH_ACCOUNT = "business-manager/businesses/";
 
-    public static final String URL_BUSINESS_RULE_WITH_SERVICE_CHARGE = "rules-charge";
-
     // Introducer REST
     public static final String URL_ASK_FOR_INTRODUCTION = "/introducer/introduceme/";
 

@@ -1,6 +1,7 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -79,11 +80,10 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
     private EditText mRefNumberEditText;
-    private View mRightSideIconViewHolder;
     private TextView mBalanceView;
     private View profileView;
     private View mobileNumberView;
-
+    private ProgressDialog mProgressDialog;
 
     private ProfileImageView businessProfileImageView;
     private TextView businessNameTextView;
@@ -110,12 +110,12 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         getActivity().setTitle(R.string.make_payment);
         mProgressBar = new ProgressBar(getActivity());
         mMobileNumberEditText = (BusinessContactsSearchView) v.findViewById(R.id.mobile_number);
-        profileView = (LinearLayout) v.findViewById(R.id.profile);
-        mobileNumberView = (RelativeLayout) v.findViewById(R.id.mobile_number_view);
+        profileView = v.findViewById(R.id.profile);
+        mobileNumberView = v.findViewById(R.id.mobile_number_view);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mRefNumberEditText = (EditText) v.findViewById(R.id.reference_number);
-        mRightSideIconViewHolder = v.findViewById(R.id.right_side_icon_view_holder);
+        mProgressDialog = new ProgressDialog(getActivity());
 
         businessProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         businessNameTextView = (TextView) v.findViewById(R.id.textview_name);
@@ -368,11 +368,9 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
     }
 
     private void launchReviewPage() {
-
-
         getActivity().getIntent().setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        String receiver = null;
+        String receiver;
 
         if (TextUtils.isEmpty(mReceiverMobileNumber)) {
             receiver = mMobileNumberEditText.getText().toString().trim();
@@ -397,9 +395,11 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
     }
 
     private void attemptGetBusinessRule(int serviceID) {
-
         if (mGetBusinessRuleTask != null)
             return;
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
+        mProgressDialog.show();
 
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
@@ -410,7 +410,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-
+        mProgressDialog.dismiss();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             if (getActivity() != null)
@@ -428,9 +428,12 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                         for (BusinessRule rule : businessRuleArray) {
                             if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT)) {
                                 PaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-
                             } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
                                 PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            }else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_VERIFICATION_REQUIRED)) {
+                                PaymentActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                            } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_PIN_REQUIRED)) {
+                                PaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
                             }
                         }
                     }
