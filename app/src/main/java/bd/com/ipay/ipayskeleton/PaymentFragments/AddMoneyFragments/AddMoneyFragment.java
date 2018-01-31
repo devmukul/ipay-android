@@ -151,11 +151,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             public boolean onItemSelected(int selectedItemPosition) {
                 switch (availableAddMoneyOptions.get(selectedItemPosition).getServiceId()) {
                     case ServiceIdConstants.ADD_MONEY_BY_BANK:
-                        if (ProfileInfoCacheManager.getVerificationStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
-                            setupAddMoneyFromBank();
-                        } else {
-                            showGetVerifiedDialog();
-                        }
+                        setupAddMoneyFromBank();
                         break;
                     case ServiceIdConstants.ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD:
                         setupAddMoneyFromCreditOrDebitCard();
@@ -268,6 +264,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         }
 
         mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
+        mProgressDialog.setCancelable(false);
         mProgressDialog.show();
 
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
@@ -282,16 +279,23 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         final View focusView;
         clearAllErrorMessage();
 
-        if (!isValidAmount()) {
-            focusView = mAmountEditText;
-            shouldProceed = false;
-        } else if (mAddMoneyOptionSelectorView.getSelectedItemPosition() == -1) {
+        if (mAddMoneyOptionSelectorView.getSelectedItemPosition() == -1) {
             focusView = null;
             mAddMoneyOptionSelectorView.setError(R.string.choose_add_money_option);
             shouldProceed = false;
+        } else if (!Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                || !Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+            return false;
+        } else if (AddMoneyActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
+            DialogUtils.showDialogVerificationRequired(getActivity());
+            return false;
         } else if (mAddMoneyOptionSelectorView.getSelectedItem().getServiceId() == ServiceIdConstants.ADD_MONEY_BY_BANK && mBankSelectorView.getSelectedItemPosition() == -1) {
             focusView = null;
             mBankSelectorView.setError(R.string.select_a_bank);
+            shouldProceed = false;
+        } else if (!isValidAmount()) {
+            focusView = mAmountEditText;
             shouldProceed = false;
         } else if (TextUtils.isEmpty(mNoteEditText.getText().toString().trim())) {
             focusView = mNoteEditText;
@@ -311,15 +315,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
     private boolean isValidAmount() {
         boolean isValidAmount;
         String errorMessage;
-
-        if (!Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                || !Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
-        }
-
-        if (AddMoneyActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
-            DialogUtils.showDialogVerificationRequired(getActivity());
-        }
 
         if (TextUtils.isEmpty(mAmountEditText.getText())) {
             errorMessage = (getString(R.string.please_enter_amount));
