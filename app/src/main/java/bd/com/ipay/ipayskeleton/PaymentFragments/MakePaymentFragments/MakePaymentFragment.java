@@ -88,6 +88,8 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
     private ProfileImageView businessProfileImageView;
     private TextView businessNameTextView;
     private TextView businessMobileNumberTextView;
+    private TextView mAddressTextView;
+    private TextView mAddressCountryAndDistrictTextView;
 
 
     private String mReceiverMobileNumber;
@@ -118,6 +120,8 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mRefNumberEditText = (EditText) v.findViewById(R.id.reference_number);
         mRightSideIconViewHolder = v.findViewById(R.id.right_side_icon_view_holder);
+        mAddressTextView = (TextView) v.findViewById(R.id.textview_address_line_1);
+        mAddressCountryAndDistrictTextView = (TextView) v.findViewById(R.id.textview_address_line_2);
 
         businessProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         businessNameTextView = (TextView) v.findViewById(R.id.textview_name);
@@ -152,7 +156,20 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                     businessNameTextView.setVisibility(View.VISIBLE);
                     businessNameTextView.setText(mReceiverName);
                 }
-                getProfileInfo(mReceiverMobileNumber);
+                if (getActivity().getIntent().getStringExtra(Constants.ADDRESS) != null &&
+                        getActivity().getIntent().getStringExtra(Constants.COUNTRY) != null &&
+                        getActivity().getIntent().getStringExtra(Constants.DISTRICT) != null) {
+                    mAddressString = getActivity().getIntent().getStringExtra(Constants.ADDRESS);
+                    mCountry = getActivity().getIntent().getStringExtra(Constants.COUNTRY);
+                    mDistrict = getActivity().getIntent().getStringExtra(Constants.DISTRICT);
+                    mAddressTextView.setVisibility(View.VISIBLE);
+                    mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
+                    mAddressTextView.setText(mAddressString);
+                    mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                }
+                else{
+                    getProfileInfo(mReceiverMobileNumber);
+                }
             } else {
                 getProfileInfo(mReceiverMobileNumber);
             }
@@ -441,6 +458,10 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                             mAddressString = office.get(0).getAddressLine1();
                             mDistrict = office.get(0).getDistrict();
                             mCountry = office.get(0).getCountry();
+                            mAddressTextView.setVisibility(View.VISIBLE);
+                            mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
+                            mAddressTextView.setText(mAddressString);
+                            mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
                         }
                     }
 
@@ -465,7 +486,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
 
 
                     if (!TextUtils.isEmpty(profilePicture)) {
-                        businessProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture, false);
+                        businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture, false);
                     }
                     if (TextUtils.isEmpty(name)) {
                         businessNameTextView.setVisibility(View.GONE);
