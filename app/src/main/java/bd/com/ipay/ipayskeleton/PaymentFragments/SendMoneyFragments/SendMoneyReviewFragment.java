@@ -167,11 +167,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
             }
         });
 
-        if (!Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
-                && !Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
-        else
-            attemptGetServiceCharge();
+        attemptGetServiceCharge();
 
     }
 
