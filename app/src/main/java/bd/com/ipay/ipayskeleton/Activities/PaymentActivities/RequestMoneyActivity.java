@@ -39,11 +39,7 @@ public class RequestMoneyActivity extends BaseActivity {
                 switchToRequestMoneyFragment();
             }
         });
-
-        if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false))
-            switchToRequestMoneyFragment();
-        else
-            switchToMoneyRequestListFragment();
+        switchToRequestMoneyFragment();
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -63,16 +59,11 @@ public class RequestMoneyActivity extends BaseActivity {
     public void onBackPressed() {
         if (getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
             finish();
-        } else if (switchedToPendingList) {
-            super.onBackPressed();
         } else {
-            switchToMoneyRequestListFragment();
+            super.onBackPressed();
         }
     }
 
-    public void switchToMoneyRequestListFragment() {
-        switchToMoneyRequestListFragment(false);
-    }
 
     public void switchToMoneyRequestListFragment(boolean switchToSentRequestsFragment) {
         MoneyRequestListHolderFragment moneyRequestListHolderFragment = new MoneyRequestListHolderFragment();
