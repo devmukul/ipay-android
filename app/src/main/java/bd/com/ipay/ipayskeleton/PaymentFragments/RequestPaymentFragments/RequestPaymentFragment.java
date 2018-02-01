@@ -195,8 +195,9 @@ public class RequestPaymentFragment extends BaseFragment implements HttpResponse
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), getString(R.string.no_contact_selected),
                         Toast.LENGTH_SHORT);
-        } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_PAYMENT_REVIEW)
-            ((RequestPaymentActivity) getActivity()).switchToSentPaymentRequestsFragment();
+        } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_PAYMENT_REVIEW) {
+            getActivity().finish();
+        }
     }
 
     @Override

@@ -8,7 +8,6 @@ import android.view.View;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
-import bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments.PaymentRequestsSentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments.RequestPaymentFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -33,7 +32,7 @@ public class RequestPaymentActivity extends BaseActivity {
             }
         });
 
-        switchToSentPaymentRequestsFragment();
+        switchToRequestPaymentFragment();
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -59,23 +58,10 @@ public class RequestPaymentActivity extends BaseActivity {
 
     }
 
-    public void switchToSentPaymentRequestsFragment() {
-        while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStackImmediate();
-        }
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new PaymentRequestsSentFragment())
-                .commit();
-        mFabNewRequestPayment.setVisibility(View.VISIBLE);
-
-    }
-
     private void switchToRequestPaymentFragment() {
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new RequestPaymentFragment())
-                .addToBackStack(null)
                 .commit();
         mFabNewRequestPayment.setVisibility(View.GONE);
     }
