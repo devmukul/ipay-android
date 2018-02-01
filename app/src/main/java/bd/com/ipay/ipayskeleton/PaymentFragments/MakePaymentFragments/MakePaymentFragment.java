@@ -443,11 +443,11 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
+                        DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                 }
             } else {
                 if (getActivity() != null)
-                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
+                    DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             }
 
             mGetBusinessRuleTask = null;
