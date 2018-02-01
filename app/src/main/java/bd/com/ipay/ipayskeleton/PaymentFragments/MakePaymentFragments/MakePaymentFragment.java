@@ -169,8 +169,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
                     mAddressTextView.setText(mAddressString);
                     mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
-                }
-                else{
+                } else {
                     getProfileInfo(mReceiverMobileNumber);
                 }
             } else {
@@ -461,12 +460,11 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
-        mProgressDialog.dismiss();
-
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
             mGetBusinessRuleTask = null;
+            mGetProfileInfoTask = null;
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
