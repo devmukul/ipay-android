@@ -56,6 +56,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -305,23 +306,26 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         View focusView = null;
         String errorMessage = null;
 
+        if (!Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                || !Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+            return false;
+        } else if (PaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
+            DialogUtils.showDialogVerificationRequired(getActivity());
+            return false;
+        }
+
         if (SharedPrefManager.ifContainsUserBalance()) {
             final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
 
             //validation check of amount
             if (TextUtils.isEmpty(mAmountEditText.getText())) {
-                focusView = mAmountEditText;
-                mAmountEditText.setError(getString(R.string.please_enter_amount));
-                cancel = true;
-
+                errorMessage = getString(R.string.please_enter_amount);
             } else {
                 final BigDecimal paymentAmount = new BigDecimal(mAmountEditText.getText().toString());
                 if (paymentAmount.compareTo(balance) > 0) {
                     errorMessage = getString(R.string.insufficient_balance);
-                }
-                if (Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                        && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-
+                } else {
                     final BigDecimal minimumPaymentAmount = PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
                     final BigDecimal maximumPaymentAmount = PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
 
@@ -329,9 +333,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                 }
             }
         } else {
-            focusView = mAmountEditText;
             errorMessage = getString(R.string.balance_not_available);
-            cancel = true;
         }
 
         if (errorMessage != null) {
@@ -430,7 +432,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                                 PaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                             } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
                                 PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                            }else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_VERIFICATION_REQUIRED)) {
+                            } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_VERIFICATION_REQUIRED)) {
                                 PaymentActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
                             } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_PIN_REQUIRED)) {
                                 PaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
