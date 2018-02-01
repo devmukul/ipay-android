@@ -6,8 +6,10 @@ import android.view.MenuItem;
 
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
+import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyByQrCodeFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments.SendMoneyFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyActivity extends BaseActivity {
@@ -18,9 +20,14 @@ public class SendMoneyActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_money);
+        if (getIntent() != null && getIntent().getBooleanExtra(Constants.FROM_QR_SCAN, false)) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, new SendMoneyByQrCodeFragment()).commit();
 
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, new SendMoneyFragment()).commit();
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, new SendMoneyFragment()).commit();
+        }
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

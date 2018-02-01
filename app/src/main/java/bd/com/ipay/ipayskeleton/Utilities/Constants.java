@@ -125,6 +125,9 @@ public class Constants {
     public static final String FROM_ON_BOARD = "FROM_ON_BOARD";
     public static final String COMMAND_ADD_CARD = "COMMAND_ADD_CARD";
     public static final String VERIFIED = "VERIFIED";
+    public static final String DISTRICT = "DISTRICT";
+    public static final String COUNTRY = "COUNTRY";
+    public static final String FROM_QR_SCAN = "FROM_QR_SCAN";
     public static final String LATITUDE = "LATITUDE";
     public static final String LONGITUDE = "LONGITUDE";
     public static String ROLEID = "ROLEID";
