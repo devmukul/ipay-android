@@ -2,6 +2,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,7 +27,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,7 +73,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
 
-    private ProgressBar mProgressBar;
+    private ProgressDialog mProgressDialog;
 
     private Button buttonPayment;
     private ImageView buttonSelectFromContacts;
@@ -109,7 +109,11 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_make_payment, container, false);
         getActivity().setTitle(R.string.make_payment);
-        mProgressBar = new ProgressBar(getActivity());
+
+        mProgressDialog = new ProgressDialog(getContext());
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setMessage(getString(R.string.please_wait));
+
         mMobileNumberEditText = (BusinessContactsSearchView) v.findViewById(R.id.mobile_number);
         profileView = v.findViewById(R.id.profile);
         mobileNumberView = v.findViewById(R.id.mobile_number_view);
@@ -204,12 +208,12 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
     @SuppressLint("MissingPermission")
     private void getLocationAndLaunchReviewPage() {
+        mProgressDialog.show();
         LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, Looper.getMainLooper());
         } else {
-            Toast.makeText(getContext(), R.string.can_not_process_make_payment, Toast.LENGTH_SHORT).show();
-            getActivity().finish();
+            Utilities.showGPSHighAccuracyDialog(this);
         }
     }
 
@@ -274,7 +278,11 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 }
             }
             case Utilities.LOCATION_SETTINGS_PERMISSION_CODE: {
-                buttonPayment.performClick();
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Utilities.initiateQRCodeScan(this);
+                } else {
+                    buttonPayment.performClick();
+                }
             }
         }
     }
@@ -391,6 +399,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
     private void launchReviewPage(@Nullable Location location) {
 
+        mProgressDialog.dismiss();
         getActivity().getIntent().setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         String receiver;
@@ -425,6 +434,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         if (mGetBusinessRuleTask != null)
             return;
 
+        mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
                 mUri, getActivity(), this);
@@ -457,10 +467,11 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            mProgressDialog.dismiss();
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
-
+            mProgressDialog.dismiss();
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
@@ -476,7 +487,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                             } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
                                 PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                             } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_IS_LOCATION_REQUIRED)) {
-                                PaymentActivity.mMandatoryBusinessRules.setIS_LOCATION_REQUIRED(rule.getRuleValue().intValue() == Constants.LOCATION_REQUIRED_TRUE);
+                                PaymentActivity.mMandatoryBusinessRules.setIS_LOCATION_REQUIRED(rule.getRuleValue().intValue() >= Constants.LOCATION_REQUIRED_TRUE);
                             }
                         }
                     }
@@ -546,7 +557,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             }
 
             mGetProfileInfoTask = null;
-            mProgressBar.setVisibility(View.GONE);
         }
     }
 }

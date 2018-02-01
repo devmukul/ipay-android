@@ -335,8 +335,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, Looper.getMainLooper());
         } else {
-            Toast.makeText(getContext(), R.string.can_not_process_make_payment, Toast.LENGTH_SHORT).show();
-            getActivity().finish();
+            Utilities.showGPSHighAccuracyDialog(this);
         }
     }
 
@@ -345,11 +344,6 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_ACCEPT_PAYMENT_REQUEST,
                 Constants.BASE_URL_SM + Constants.URL_ACCEPT_NOTIFICATION_REQUEST, Constants.METHOD_POST);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        acceptRequestPayment(mPin, location);
     }
 
     private void acceptRequestPayment(final String pin, final Location location) {
@@ -382,6 +376,12 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
     }
 
     @Override
+    public void onLocationChanged(Location location) {
+        acceptRequestPayment(mPin, location);
+    }
+
+
+    @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
 
     }
@@ -397,11 +397,56 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
     }
 
     @Override
+    public int getServiceID() {
+        return Constants.SERVICE_ID_REQUEST_PAYMENT;
+    }
+
+    @Override
+    public BigDecimal getAmount() {
+        return mAmount;
+    }
+
+    @Override
+    public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
+        // User who're accepting the request should not see the service charge. By force action. Deal with it :)
+        mServiceChargeView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
+        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
+        attemptGetBusinessRule(getServiceID());
+    }
+
+    private void attemptGetBusinessRule(int serviceID) {
+
+        if (mGetBusinessRuleTask != null) {
+            return;
+        }
+
+        if (isAdded()) {
+            mProgressDialog.setMessage(getString(R.string.please_wait));
+        }
+        mProgressDialog.show();
+
+        String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
+        mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
+                mUri, getActivity(), this);
+
+        mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    public void onPinLoadFinished(boolean isPinRequired) {
+        this.isPinRequired = isPinRequired;
+    }
+
+    @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            mAcceptRequestTask = null;
+            mCancelRequestTask = null;
+            mRejectRequestTask = null;
+            mGetBusinessRuleTask = null;
             mProgressDialog.dismiss();
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), R.string.fetch_info_failed, Toast.LENGTH_LONG);
@@ -420,7 +465,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
                         if (businessRuleArray != null) {
                             for (BusinessRule rule : businessRuleArray) {
                                 if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_IS_LOCATION_REQUIRED)) {
-                                    mMandatoryBusinessRules.setIS_LOCATION_REQUIRED(rule.getRuleValue().intValue() == Constants.LOCATION_REQUIRED_TRUE);
+                                    mMandatoryBusinessRules.setIS_LOCATION_REQUIRED(rule.getRuleValue().intValue() >= Constants.LOCATION_REQUIRED_TRUE);
                                 }
                             }
                         }
@@ -535,47 +580,6 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
 
                 break;
         }
-    }
-
-    @Override
-    public int getServiceID() {
-        return Constants.SERVICE_ID_REQUEST_PAYMENT;
-    }
-
-    @Override
-    public BigDecimal getAmount() {
-        return mAmount;
-    }
-
-    @Override
-    public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        // User who're accepting the request should not see the service charge. By force action. Deal with it :)
-        mServiceChargeView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
-        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
-        attemptGetBusinessRule(getServiceID());
-    }
-
-    private void attemptGetBusinessRule(int serviceID) {
-
-        if (mGetBusinessRuleTask != null) {
-            return;
-        }
-
-        if (isAdded()) {
-            mProgressDialog.setMessage(getString(R.string.please_wait));
-        }
-        mProgressDialog.show();
-
-        String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
-        mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
-                mUri, getActivity(), this);
-
-        mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-        this.isPinRequired = isPinRequired;
     }
 }
 

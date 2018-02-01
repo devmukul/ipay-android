@@ -972,17 +972,58 @@ public class Utilities {
                 return true;
             }
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(fragment.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
-            Utilities.requestRequiredPermissions(fragment, LOCATION_SETTINGS_PERMISSION_CODE, Constants.LOCATION_PERMISSIONS);
+            showRationaleDialog(fragment);
         } else {
             showLocationPermissionDialog(fragment);
         }
         return false;
     }
 
+    private static void showRationaleDialog(final Fragment fragment) {
+        AlertDialog alertDialog = new AlertDialog.Builder(fragment.getActivity())
+                .setMessage(R.string.make_payment_location_permission_required_rationale_message)
+                .setPositiveButton(R.string.continue_make_payment, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Utilities.requestRequiredPermissions(fragment, LOCATION_SETTINGS_PERMISSION_CODE, Constants.LOCATION_PERMISSIONS);
+                    }
+                })
+                .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        fragment.getActivity().finish();
+                    }
+                })
+                .setCancelable(false)
+                .create();
+        alertDialog.show();
+    }
+
     private static void showGPSDisabledDialog(final Fragment fragment) {
         AlertDialog alertDialog = new AlertDialog.Builder(fragment.getActivity())
                 .setTitle(R.string.gps_disabled)
                 .setMessage(R.string.make_payment_location_settings_on_message)
+                .setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        fragment.startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), LOCATION_SOURCE_SETTINGS_RESULT_CODE);
+                    }
+                })
+                .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        fragment.getActivity().finish();
+                    }
+                })
+                .setCancelable(false)
+                .create();
+        alertDialog.show();
+    }
+
+    public static void showGPSHighAccuracyDialog(final Fragment fragment) {
+        AlertDialog alertDialog = new AlertDialog.Builder(fragment.getActivity())
+                .setTitle(R.string.location_mode)
+                .setMessage(R.string.make_payment_location_mode_on_message)
                 .setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
