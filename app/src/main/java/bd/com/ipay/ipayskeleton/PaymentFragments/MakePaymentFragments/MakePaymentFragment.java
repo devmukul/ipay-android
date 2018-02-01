@@ -468,6 +468,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
+            mGetBusinessRuleTask = null;
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
@@ -481,13 +482,16 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
                     if (businessRuleArray != null) {
                         for (BusinessRule rule : businessRuleArray) {
-                            if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT)) {
-                                PaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-
-                            } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
-                                PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                            } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_IS_LOCATION_REQUIRED)) {
-                                PaymentActivity.mMandatoryBusinessRules.setIS_LOCATION_REQUIRED(rule.getRuleValue().intValue() >= Constants.LOCATION_REQUIRED_TRUE);
+                            switch (rule.getRuleID()) {
+                                case Constants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT:
+                                    PaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                    break;
+                                case Constants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT:
+                                    PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                    break;
+                                case Constants.SERVICE_RULE_IS_LOCATION_REQUIRED:
+                                    PaymentActivity.mMandatoryBusinessRules.setIS_LOCATION_REQUIRED(rule.getRuleValue().intValue() >= Constants.LOCATION_REQUIRED_TRUE);
+                                    break;
                             }
                         }
                     }

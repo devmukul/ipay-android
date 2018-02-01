@@ -464,7 +464,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
 
                         if (businessRuleArray != null) {
                             for (BusinessRule rule : businessRuleArray) {
-                                if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_IS_LOCATION_REQUIRED)) {
+                                if (rule.getRuleID().equals(Constants.SERVICE_RULE_IS_LOCATION_REQUIRED)) {
                                     mMandatoryBusinessRules.setIS_LOCATION_REQUIRED(rule.getRuleValue().intValue() >= Constants.LOCATION_REQUIRED_TRUE);
                                 }
                             }
