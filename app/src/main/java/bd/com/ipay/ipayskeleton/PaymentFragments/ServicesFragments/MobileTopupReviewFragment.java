@@ -224,10 +224,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
     }
 
-    @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-    }
-
     private void setOperatorIcon() {
         //Setting the correct image based on Operator
         int[] images = {

@@ -238,9 +238,4 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
         mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
     }
-
-    @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-
-    }
 }

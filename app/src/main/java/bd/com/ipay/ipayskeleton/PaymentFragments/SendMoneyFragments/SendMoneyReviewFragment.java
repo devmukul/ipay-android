@@ -263,10 +263,6 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     }
 
     @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-    }
-
-    @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);
         mProgressDialog.dismiss();

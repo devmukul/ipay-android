@@ -150,10 +150,6 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
     }
 
     @Override
-    protected void onPinLoadFinished(boolean isPinRequired) {
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         getActivity().setResult(resultCode, data);
         getActivity().finish();

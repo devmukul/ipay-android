@@ -216,10 +216,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
     }
 
-    @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-    }
-
     private void launchOTPVerification() {
         String jsonString = new Gson().toJson(mPaymentRequest);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_PAYMENT,

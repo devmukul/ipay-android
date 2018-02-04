@@ -22,6 +22,8 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -29,12 +31,16 @@ import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -46,6 +52,8 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
     private HttpRequestPostAsyncTask mCancelRequestTask = null;
 
     private HttpRequestPostAsyncTask mRejectRequestTask = null;
+
+    private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
     private PaymentAcceptRejectOrCancelRequest mRequestPaymentAcceptRejectOrCancelRequest;
     private PaymentAcceptRejectOrCancelResponse mRequestPaymentAcceptRejectOrCancelResponse;
@@ -76,7 +84,6 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
     private Button mAcceptButton;
     private Button mCancelButton;
 
-    private boolean isPinRequired = true;
     private boolean switchedFromTransactionHistory = false;
     private Tracker mTracker;
 
@@ -171,7 +178,7 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
             @Override
             @ValidateAccess(ServiceIdConstants.ACCEPT_REQUEST)
             public void onClick(View v) {
-                attempAcceptRequestWithPinCheck();
+                attemptAcceptRequestWithPinCheck();
             }
         });
 
@@ -201,13 +208,14 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
             }
         });
 
-        attemptGetServiceCharge();
+        // Get business rule
+        attemptGetBusinessRule(Constants.SERVICE_ID_REQUEST_PAYMENT);
 
         return v;
     }
 
-    private void attempAcceptRequestWithPinCheck() {
-        if (this.isPinRequired) {
+    private void attemptAcceptRequestWithPinCheck() {
+        if (RequestPaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
@@ -319,6 +327,20 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
+    private void attemptGetBusinessRule(int serviceID) {
+        if (mGetBusinessRuleTask != null)
+            return;
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
+        mProgressDialog.show();
+
+        String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
+        mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
+                mUri, getActivity(), this);
+
+        mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);
@@ -331,8 +353,39 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
             return;
         }
         Gson gson = new Gson();
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
-        if (result.getApiCommand().equals(Constants.COMMAND_CANCEL_PAYMENT_REQUEST)) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                try {
+
+                    BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
+
+                    for (BusinessRule rule : businessRuleArray) {
+                        if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_MAX_AMOUNT_PER_PAYMENT)) {
+                            RequestPaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                        } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
+                            RequestPaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                        } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_VERIFICATION_REQUIRED)) {
+                            RequestPaymentActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                        } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_PIN_REQUIRED)) {
+                            RequestPaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+                        }
+                    }
+                    attemptGetServiceCharge();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+                }
+
+            } else {
+                if (getActivity() != null)
+                    DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+            }
+
+            mGetBusinessRuleTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_CANCEL_PAYMENT_REQUEST)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 try {
@@ -441,11 +494,6 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
         // User who're accepting the request should not see the service charge. By force action. Deal with it :)
         mServiceChargeView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
         mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
-    }
-
-    @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-        this.isPinRequired = isPinRequired;
     }
 }
 

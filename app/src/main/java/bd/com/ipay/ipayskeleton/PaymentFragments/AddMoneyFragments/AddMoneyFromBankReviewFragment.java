@@ -193,10 +193,6 @@ public class AddMoneyFromBankReviewFragment extends ReviewFragment implements Ht
     }
 
     @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-    }
-
-    @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);
 

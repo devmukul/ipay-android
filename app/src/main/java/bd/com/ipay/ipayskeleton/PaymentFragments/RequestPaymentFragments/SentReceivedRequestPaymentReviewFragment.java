@@ -83,7 +83,6 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
     private Button mAcceptButton;
     private Button mCancelButton;
 
-    private boolean isPinRequired = true;
     private boolean switchedFromTransactionHistory = false;
     private Tracker mTracker;
 
@@ -214,7 +213,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
     }
 
     private void attemptAcceptRequestWithPinCheck() {
-        if (this.isPinRequired) {
+        if (RequestPaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
@@ -495,10 +494,5 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
 
     }
-
-    @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-    }
-
 }
 

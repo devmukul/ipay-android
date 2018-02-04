@@ -546,8 +546,4 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
         mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
     }
-
-    //@Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-    }
 }

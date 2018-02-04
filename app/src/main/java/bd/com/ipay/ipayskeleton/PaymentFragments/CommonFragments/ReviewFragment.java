@@ -45,8 +45,6 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
      */
     protected abstract void onServiceChargeLoadFinished(BigDecimal serviceCharge);
 
-    protected abstract void onPinLoadFinished(boolean isPinRequired);
-
     protected void attemptGetServiceCharge() {
 
         if (mServiceChargeTask != null) {
@@ -107,8 +105,6 @@ public abstract class ReviewFragment extends Fragment implements HttpResponseLis
                         } else {
                             onServiceChargeLoadFinished(mGetServiceChargeResponse.getServiceCharge(getAmount()));
                         }
-
-                        onPinLoadFinished(mGetServiceChargeResponse.isPinRequired());
 
                     } else {
                         Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);

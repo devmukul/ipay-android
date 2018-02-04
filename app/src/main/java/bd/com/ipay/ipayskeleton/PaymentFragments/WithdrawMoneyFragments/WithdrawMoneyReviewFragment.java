@@ -201,10 +201,6 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         mNetAmountTextView.setText(Utilities.formatTaka(getAmount().add(serviceCharge)));
     }
 
-    @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-    }
-
     private void launchOTPVerification() {
         String jsonString = new Gson().toJson(mWithdrawMoneyRequest);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_WITHDRAW_MONEY,
