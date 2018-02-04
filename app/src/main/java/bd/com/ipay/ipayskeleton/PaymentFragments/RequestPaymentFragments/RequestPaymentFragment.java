@@ -250,7 +250,7 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
                 Toaster.makeText(getActivity(), getString(R.string.no_contact_selected),
                         Toast.LENGTH_SHORT);
         } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_PAYMENT_REVIEW) {
-            ((RequestPaymentActivity) getActivity()).switchToSentPaymentRequestsFragment();
+            getActivity().finish();
         } else if (requestCode == Utilities.LOCATION_SETTINGS_RESULT_CODE || requestCode == Utilities.LOCATION_SOURCE_SETTINGS_RESULT_CODE) {
             buttonRequestPayment.performClick();
         }

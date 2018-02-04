@@ -409,9 +409,20 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         // User who're accepting the request should not see the service charge. By force action. Deal with it :)
-        mServiceChargeView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
-        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
-        attemptGetBusinessRule(getServiceID());
+        if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST) {
+            mServiceChargeView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
+            mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
+        }
+        else{
+            mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
+            mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        }
+
+    }
+
+    @Override
+    public void onPinLoadFinished(boolean isPinRequired) {
+        this.isPinRequired = isPinRequired;
     }
 
     private void attemptGetBusinessRule(int serviceID) {
@@ -430,11 +441,6 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
                 mUri, getActivity(), this);
 
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-        this.isPinRequired = isPinRequired;
     }
 
     @Override
