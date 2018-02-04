@@ -9,8 +9,6 @@ public class MandatoryBusinessRules {
     private boolean PIN_REQUIRED;
     private boolean VERIFICATION_REQUIRED;
     private boolean LOCATION_REQUIRED;
-    private boolean IS_LOCATION_REQUIRED;
-    private boolean IS_PIN_REQUIRED;
 
     public MandatoryBusinessRules() {
         MAX_AMOUNT_PER_PAYMENT = new BigDecimal("-1");
@@ -58,19 +56,14 @@ public class MandatoryBusinessRules {
             this.VERIFICATION_REQUIRED = false;
     }
 
-    public boolean isLOCATION_REQUIRED() {
+    public boolean IS_LOCATION_REQUIRED() {
         return LOCATION_REQUIRED;
     }
 
-    public void setLOCATION_REQUIRED(boolean LOCATION_REQUIRED) {
-        this.LOCATION_REQUIRED = LOCATION_REQUIRED;
-    }
-
-    public boolean IS_LOCATION_REQUIRED() {
-        return IS_LOCATION_REQUIRED;
-    }
-
-    public void setIS_LOCATION_REQUIRED(boolean IS_LOCATION_REQUIRED) {
-        this.IS_LOCATION_REQUIRED = IS_LOCATION_REQUIRED;
+    public void setLOCATION_REQUIRED(BigDecimal LOCATION_REQUIRED) {
+        if (LOCATION_REQUIRED.compareTo(BigDecimal.ZERO) > 0)
+            this.LOCATION_REQUIRED = true;
+        else
+            this.LOCATION_REQUIRED = false;
     }
 }

@@ -44,6 +44,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAccep
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
@@ -90,7 +91,6 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
     private Button mAcceptButton;
     private Button mCancelButton;
 
-    private boolean isPinRequired = true;
     private boolean switchedFromTransactionHistory = false;
     private Tracker mTracker;
 
@@ -221,7 +221,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
             }
         });
 
-        attemptGetServiceCharge();
+        attemptGetBusinessRule(Constants.SERVICE_ID_REQUEST_PAYMENT);
 
         return v;
     }
@@ -236,7 +236,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
     }
 
     private void getLocationAndAttemptAcceptRequestWithPinCheck() {
-        if (this.isPinRequired) {
+        if (mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
@@ -249,7 +249,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
     }
 
     private void attemptAcceptRequestWithPinCheck() {
-        if (this.isPinRequired) {
+        if (mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
@@ -421,11 +421,6 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
 
     }
 
-    @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-        this.isPinRequired = isPinRequired;
-    }
-
     private void attemptGetBusinessRule(int serviceID) {
 
         if (mGetBusinessRuleTask != null) {
@@ -471,8 +466,10 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
 
                         if (businessRuleArray != null) {
                             for (BusinessRule rule : businessRuleArray) {
-                                if (rule.getRuleID().equals(Constants.SERVICE_RULE_IS_LOCATION_REQUIRED)) {
-                                    mMandatoryBusinessRules.setIS_LOCATION_REQUIRED(rule.getRuleValue().intValue() >= Constants.LOCATION_REQUIRED_TRUE);
+                                if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_LOCATION_REQUIRED)) {
+                                    mMandatoryBusinessRules.setLOCATION_REQUIRED(rule.getRuleValue());
+                                } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_PIN_REQUIRED)) {
+                                    mMandatoryBusinessRules.setLOCATION_REQUIRED(rule.getRuleValue());
                                 }
                             }
                         }

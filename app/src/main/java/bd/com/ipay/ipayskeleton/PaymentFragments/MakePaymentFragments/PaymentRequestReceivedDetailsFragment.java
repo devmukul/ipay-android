@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestPaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -44,6 +45,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAccep
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
@@ -91,7 +93,6 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
     private Button mAcceptButton;
     private Button mCancelButton;
 
-    private boolean isPinRequired = true;
     private boolean switchedFromTransactionHistory = false;
     private Tracker mTracker;
 
@@ -225,7 +226,7 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
             }
         });
 
-        attemptGetServiceCharge();
+        attemptGetBusinessRule(Constants.SERVICE_ID_REQUEST_PAYMENT);
 
         return v;
     }
@@ -240,7 +241,7 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
     }
 
     private void getLocationAndAttemptAcceptRequestWithPinCheck() {
-        if (this.isPinRequired) {
+        if (RequestPaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
@@ -253,7 +254,7 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
     }
 
     private void attemptAcceptRequestWithPinCheck() {
-        if (this.isPinRequired) {
+        if (RequestPaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
@@ -439,11 +440,6 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
     }
 
     @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-        this.isPinRequired = isPinRequired;
-    }
-
-    @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);
 
@@ -466,11 +462,15 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
 
                         if (businessRuleArray != null) {
                             for (BusinessRule rule : businessRuleArray) {
-                                if (rule.getRuleID().equals(Constants.SERVICE_RULE_IS_LOCATION_REQUIRED)) {
-                                    mMandatoryBusinessRules.setIS_LOCATION_REQUIRED(rule.getRuleValue().intValue() >= Constants.LOCATION_REQUIRED_TRUE);
+                                if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_LOCATION_REQUIRED)) {
+                                    mMandatoryBusinessRules.setLOCATION_REQUIRED(rule.getRuleValue());
+                                }
+                                if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_PIN_REQUIRED)) {
+                                    mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
                                 }
                             }
                         }
+                        attemptGetServiceCharge();
 
                     } catch (Exception e) {
                         e.printStackTrace();
