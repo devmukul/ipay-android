@@ -12,12 +12,15 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.List;
+
 import bd.com.ipay.ipayskeleton.Activities.BaseActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserAddress;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.InviteToiPayFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -34,6 +37,9 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
     private String mReceiverMobileNumber;
     private String mReceiverName;
     private String mReceiverPhotoUri;
+    private String mAddressString;
+    private String mDistrict;
+    private String mCountry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +55,12 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
         if (getIntent().hasExtra(Constants.NAME)) {
             mReceiverName = getIntent().getStringExtra(Constants.NAME);
             mReceiverPhotoUri = getIntent().getStringExtra(Constants.PHOTO_URI);
+            mAddressString = getIntent().getStringExtra(Constants.ADDRESS);
+            mDistrict = getIntent().getStringExtra(Constants.DISTRICT);
+            mCountry = getIntent().getStringExtra(Constants.COUNTRY);
             switchToPaymentReviewFragment(mReceiverName, mReceiverPhotoUri);
 
-        }else{
+        } else {
             getProfileInfo(mReceiverMobileNumber);
         }
     }
@@ -75,6 +84,9 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
         Bundle bundle = new Bundle();
         bundle.putString(Constants.NAME, name);
         bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + profilePictureUrl);
+        bundle.putString(Constants.ADDRESS, mAddressString);
+        bundle.putString(Constants.DISTRICT, mDistrict);
+        bundle.putString(Constants.COUNTRY, mCountry);
         paymentReviewFragment.setArguments(bundle);
 
         getSupportFragmentManager().beginTransaction()
@@ -127,6 +139,14 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String name = mGetUserInfoResponse.getName();
                     int accountType = mGetUserInfoResponse.getAccountType();
+                    if (mGetUserInfoResponse.getAddressList() != null) {
+                        List<UserAddress> office = mGetUserInfoResponse.getAddressList().getOFFICE();
+                        if (office != null) {
+                            mAddressString = office.get(0).getAddressLine1();
+                            mDistrict = office.get(0).getDistrict();
+                            mCountry = office.get(0).getCountry();
+                        }
+                    }
 
                     if (accountType != Constants.BUSINESS_ACCOUNT_TYPE) {
                         new AlertDialog.Builder(PaymentReviewActivity.this)

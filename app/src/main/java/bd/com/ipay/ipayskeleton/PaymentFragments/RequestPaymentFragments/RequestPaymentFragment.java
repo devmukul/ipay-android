@@ -1,10 +1,19 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.RequestPaymentFragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,16 +37,14 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
-import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
-import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class RequestPaymentFragment extends BaseFragment implements HttpResponseListener {
+public class RequestPaymentFragment extends BaseFragment implements LocationListener, HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
@@ -53,7 +60,7 @@ public class RequestPaymentFragment extends BaseFragment implements HttpResponse
 
     private String mAmount;
     private String mDescription;
-    private String mReceiver;
+    private String mReceiverMobileNumber;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,18 +77,28 @@ public class RequestPaymentFragment extends BaseFragment implements HttpResponse
         mMobileNumberEditText.setCurrentFragmentTag(Constants.REQUEST_PAYMENT);
 
         mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage(getString(R.string.submitting_request_money));
+        mProgressDialog.setCancelable(false);
 
 
         buttonRequestPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (Utilities.isConnectionAvailable(getActivity())) {
+                    // For now, we are directly sending the money without going through any send money query
+                    // sendMoneyQuery();
+                    Utilities.hideKeyboard(getContext(), getView());
                     if (verifyUserInputs()) {
-                        launchReviewPage();
+                        if (RequestPaymentActivity.mMandatoryBusinessRules.IS_LOCATION_REQUIRED()) {
+                            if (Utilities.hasForcedLocationPermission(RequestPaymentFragment.this)) {
+                                getLocationAndLaunchReviewPage();
+                            }
+                        } else {
+                            launchReviewPage(null);
+                        }
                     }
                 } else if (getActivity() != null)
-                    Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG);
+                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -100,6 +117,18 @@ public class RequestPaymentFragment extends BaseFragment implements HttpResponse
         return v;
     }
 
+    @SuppressLint("MissingPermission")
+    private void getLocationAndLaunchReviewPage() {
+        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            mProgressDialog.setMessage(getString(R.string.please_wait));
+            mProgressDialog.show();
+            locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, Looper.getMainLooper());
+        } else {
+            Utilities.showGPSHighAccuracyDialog(this);
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -109,33 +138,15 @@ public class RequestPaymentFragment extends BaseFragment implements HttpResponse
     private boolean verifyUserInputs() {
         boolean cancel = false;
         View focusView = null;
-        String error_message = null;
 
-        mReceiver = mMobileNumberEditText.getText().toString();
+        mReceiverMobileNumber = mMobileNumberEditText.getText().toString();
         mDescription = mDescriptionEditText.getText().toString();
         mAmount = mAmountEditText.getText().toString().trim();
 
-        if (!Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                || !Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
-            return false;
-        } else if (RequestPaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
-            DialogUtils.showDialogVerificationRequired(getActivity());
-            return false;
-        }
-
         // Check for a validation
         if (!(mAmount.length() > 0 && Double.parseDouble(mAmount) > 0)) {
-            error_message = getString(R.string.please_enter_amount);
-        } else if (mAmount.trim().length() > 0) {
-            error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
-                    RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                    RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
-        }
-
-        if (error_message != null) {
+            mAmountEditText.setError(getString(R.string.please_enter_amount));
             focusView = mAmountEditText;
-            mAmountEditText.setError(error_message);
             cancel = true;
         }
 
@@ -145,14 +156,29 @@ public class RequestPaymentFragment extends BaseFragment implements HttpResponse
             cancel = true;
         }
 
-        if (!InputValidator.isValidNumber(mReceiver)) {
+        if (!InputValidator.isValidNumber(mReceiverMobileNumber)) {
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             cancel = true;
-        } else if (ContactEngine.formatMobileNumberBD(mReceiver).equals(ProfileInfoCacheManager.getMobileNumber())) {
+        } else if (ContactEngine.formatMobileNumberBD(mReceiverMobileNumber).equals(ProfileInfoCacheManager.getMobileNumber())) {
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.you_cannot_request_money_from_your_number));
             cancel = true;
+        }
+
+        if ((mAmount.trim().length() > 0)
+                && Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                && Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+
+            String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
+                    RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                    RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+
+            if (error_message != null) {
+                focusView = mAmountEditText;
+                mAmountEditText.setError(error_message);
+                cancel = true;
+            }
         }
 
         if (cancel) {
@@ -163,20 +189,31 @@ public class RequestPaymentFragment extends BaseFragment implements HttpResponse
         }
     }
 
-    private void launchReviewPage() {
+    private void launchReviewPage(@Nullable Location location) {
+        mProgressDialog.dismiss();
+
         Intent intent = new Intent(getActivity(), RequestPaymentReviewActivity.class);
         intent.putExtra(Constants.DESCRIPTION_TAG, mDescription);
         intent.putExtra(Constants.AMOUNT_TAG, mAmount);
-        intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mReceiver));
+        intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
+
+        if (location != null) {
+            intent.putExtra(Constants.LATITUDE, location.getLatitude());
+            intent.putExtra(Constants.LONGITUDE, location.getLongitude());
+        }
+
         startActivityForResult(intent, REQUEST_PAYMENT_REVIEW);
+
     }
+
 
     private void attemptGetBusinessRule(int serviceID) {
 
         if (mGetBusinessRuleTask != null) {
             return;
         }
-
+        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
                 mUri, getActivity(), this);
@@ -185,23 +222,58 @@ public class RequestPaymentFragment extends BaseFragment implements HttpResponse
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case Utilities.LOCATION_SETTINGS_PERMISSION_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Utilities.initiateQRCodeScan(this);
+                } else {
+                    buttonRequestPayment.performClick();
+                }
+            }
+        }
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK && requestCode == PICK_CONTACT_REQUEST) {
 
-            if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
-                String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
-                if (mobileNumber != null) {
-                    mMobileNumberEditText.setText(mobileNumber);
-                }
+            String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
+            if (mobileNumber != null) {
+                mMobileNumberEditText.setText(mobileNumber);
             }
         } else if (resultCode == Activity.RESULT_CANCELED && requestCode == PICK_CONTACT_REQUEST) {
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), getString(R.string.no_contact_selected),
                         Toast.LENGTH_SHORT);
-        } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_PAYMENT_REVIEW)
-            ((RequestPaymentActivity) getActivity()).switchToSentPaymentRequestsFragment();
+        } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_PAYMENT_REVIEW) {
+            getActivity().finish();
+        } else if (requestCode == Utilities.LOCATION_SETTINGS_RESULT_CODE || requestCode == Utilities.LOCATION_SOURCE_SETTINGS_RESULT_CODE) {
+            buttonRequestPayment.performClick();
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        launchReviewPage(location);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
     @Override
@@ -209,8 +281,12 @@ public class RequestPaymentFragment extends BaseFragment implements HttpResponse
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            mGetBusinessRuleTask = null;
+            mProgressDialog.dismiss();
+            if (getActivity() != null)
+                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
-
+            mProgressDialog.dismiss();
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
@@ -220,18 +296,20 @@ public class RequestPaymentFragment extends BaseFragment implements HttpResponse
 
                     if (businessRuleArray != null) {
                         for (BusinessRule rule : businessRuleArray) {
-                            String ruleID = rule.getRuleID();
-                            if (ruleID.equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_MAX_AMOUNT_PER_PAYMENT)) {
-                                RequestPaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                            } else if (ruleID.equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
-                                RequestPaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                            } else if (ruleID.equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_VERIFICATION_REQUIRED)) {
-                                RequestPaymentActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
-                            } else if (ruleID.equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_PIN_REQUIRED)) {
-                                RequestPaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+                            switch (rule.getRuleID()) {
+                                case Constants.SERVICE_RULE_REQUEST_PAYMENT_MAX_AMOUNT_PER_PAYMENT:
+                                    RequestPaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                    break;
+                                case Constants.SERVICE_RULE_REQUEST_PAYMENT_MIN_AMOUNT_PER_PAYMENT:
+                                    RequestPaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                    break;
+                                case Constants.SERVICE_RULE_IS_LOCATION_REQUIRED:
+                                    RequestPaymentActivity.mMandatoryBusinessRules.setIS_LOCATION_REQUIRED(rule.getRuleValue().intValue() >= Constants.LOCATION_REQUIRED_TRUE);
+                                    break;
                             }
                         }
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -244,7 +244,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
                 mMobileNumberEditText.setText(mobileNumber);
             }
         } else if (requestCode == REQUEST_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
-            ((RequestMoneyActivity) getActivity()).switchToMoneyRequestListFragment(true);
+            getActivity().finish();
         } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
             IntentResult scanResult = IntentIntegrator.parseActivityResult(
                     requestCode, resultCode, data);

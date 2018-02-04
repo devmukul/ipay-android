@@ -126,7 +126,15 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
             receiverNameTextView.setVisibility(View.VISIBLE);
             receiverNameTextView.setText(mReceiverName);
         }
-        receiverMobileNumberTextView.setText(mReceiverMobileNumber);
+        if (getActivity().getIntent() != null) {
+            if (getActivity().getIntent().getBooleanExtra(Constants.FROM_QR_SCAN, false)) {
+                receiverMobileNumberTextView.setVisibility(View.GONE);
+            } else {
+                receiverMobileNumberTextView.setText(mReceiverMobileNumber);
+            }
+        } else {
+            receiverMobileNumberTextView.setText(mReceiverMobileNumber);
+        }
 
         amountTextView.setText(Utilities.formatTaka(mAmount));
         mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));

@@ -128,7 +128,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         else
             mRequestID = (long) getActivity().getIntent().getSerializableExtra(Constants.MONEY_REQUEST_ID);
 
-        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
+        mProfileImageView = (ProfileImageView) v.findViewById(R.id.image_view_profile);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mDescriptionTagView = (TextView) v.findViewById(R.id.description);

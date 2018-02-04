@@ -52,9 +52,14 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     private BigDecimal mAmount;
     private String mReceiverBusinessName;
     private String mReceiverBusinessMobileNumber;
+    private String mAddressString;
+    private String mCountry;
+    private String mDistrict;
     private String mPhotoUri;
     private String mDescription;
     private String mReferenceNumber;
+    private double latitude;
+    private double longitude;
 
     private TextView mServiceChargeTextView;
     private TextView mNetAmountTextView;
@@ -69,11 +74,17 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mReceiverBusinessMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
         mDescription = getActivity().getIntent().getStringExtra(Constants.DESCRIPTION_TAG);
         mReferenceNumber = getActivity().getIntent().getStringExtra(Constants.REFERENCE_NUMBER);
+        latitude = getActivity().getIntent().getDoubleExtra(Constants.LATITUDE, 0.0);
+        longitude = getActivity().getIntent().getDoubleExtra(Constants.LONGITUDE, 0.0);
+
+
 
         if (getArguments() != null) {
             mReceiverBusinessName = getArguments().getString(Constants.NAME);
             mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
-
+            mAddressString = getArguments().getString(Constants.ADDRESS);
+            mCountry = getArguments().getString(Constants.COUNTRY);
+            mDistrict = getArguments().getString(Constants.DISTRICT);
         }
 
         mProgressDialog = new ProgressDialog(getActivity());
@@ -84,9 +95,9 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_make_payment_review));
+        Utilities.sendScreenTracker(mTracker,
+                getString(R.string.screen_name_make_payment_review));
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -99,7 +110,8 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
 
         final ProfileImageView businessProfileImageView = findViewById(R.id.business_profile_image_view);
         final TextView businessNameTextView = findViewById(R.id.business_name_text_view);
-        final TextView businessMobileNumberTextView = findViewById(R.id.business_mobile_number_text_view);
+        final TextView businessAddressTextView = findViewById(R.id.business_address_line_1_text_view);
+        final TextView businessDistrictAndCountryTextView = findViewById(R.id.business_address_line_2_text_view);
         final TextView amountTextView = findViewById(R.id.amount_text_view);
         final View referenceNumberViewHolder = findViewById(R.id.reference_number_view_holder);
         final TextView referenceNumberTextView = findViewById(R.id.reference_number_text_view);
@@ -109,35 +121,43 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
 
         mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
         mNetAmountTextView = findViewById(R.id.net_amount_text_view);
+        try {
+            if (!TextUtils.isEmpty(mPhotoUri)) {
+                businessProfileImageView.setBusinessProfilePicture(mPhotoUri, false);
+            }
+            if (TextUtils.isEmpty(mReceiverBusinessName)) {
+                businessNameTextView.setVisibility(View.GONE);
+            } else {
+                businessNameTextView.setVisibility(View.VISIBLE);
+                businessNameTextView.setText(mReceiverBusinessName);
+            }
+            if (mAddressString != null && mDistrict != null && mCountry != null) {
+                businessAddressTextView.setVisibility(View.VISIBLE);
+                businessDistrictAndCountryTextView.setVisibility(View.VISIBLE);
+                businessAddressTextView.setText(mAddressString);
+                businessDistrictAndCountryTextView.setText(mDistrict + " , " + mCountry);
+            }
 
-        if (!TextUtils.isEmpty(mPhotoUri)) {
-            businessProfileImageView.setBusinessProfilePicture(mPhotoUri, false);
-        }
-        if (TextUtils.isEmpty(mReceiverBusinessName)) {
-            businessNameTextView.setVisibility(View.GONE);
-        } else {
-            businessNameTextView.setVisibility(View.VISIBLE);
-            businessNameTextView.setText(mReceiverBusinessName);
-        }
-        businessMobileNumberTextView.setText(mReceiverBusinessMobileNumber);
-
-        amountTextView.setText(Utilities.formatTaka(mAmount));
-        mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
-        mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
+            amountTextView.setText(Utilities.formatTaka(mAmount));
+            mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
+            mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
 
 
-        if (TextUtils.isEmpty(mReferenceNumber)) {
-            referenceNumberViewHolder.setVisibility(View.GONE);
-        } else {
-            referenceNumberViewHolder.setVisibility(View.VISIBLE);
-            referenceNumberTextView.setText(mReferenceNumber);
-        }
+            if (TextUtils.isEmpty(mReferenceNumber)) {
+                referenceNumberViewHolder.setVisibility(View.GONE);
+            } else {
+                referenceNumberViewHolder.setVisibility(View.VISIBLE);
+                referenceNumberTextView.setText(mReferenceNumber);
+            }
 
-        if (TextUtils.isEmpty(mDescription)) {
-            descriptionViewHolder.setVisibility(View.GONE);
-        } else {
-            descriptionViewHolder.setVisibility(View.VISIBLE);
-            descriptionTextView.setText(mDescription);
+            if (TextUtils.isEmpty(mDescription)) {
+                descriptionViewHolder.setVisibility(View.GONE);
+            } else {
+                descriptionViewHolder.setVisibility(View.VISIBLE);
+                descriptionTextView.setText(mDescription);
+            }
+        } catch (Exception e) {
+
         }
 
         makePaymentButton.setOnClickListener(new View.OnClickListener() {
@@ -178,7 +198,8 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mProgressDialog.setCancelable(false);
         mPaymentRequest = new PaymentRequest(
                 ContactEngine.formatMobileNumberBD(mReceiverBusinessMobileNumber),
-                mAmount.toString(), mDescription, pin, mReferenceNumber);
+                mAmount.toString(), mDescription, pin, mReferenceNumber, latitude, longitude);
+
         Gson gson = new Gson();
         String json = gson.toJson(mPaymentRequest);
         mPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT,
