@@ -225,7 +225,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
 
         boolean cancel = false;
         View focusView = null;
-        String errorMessage = null;
+        String errorMessage;
 
         if (!Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 || !Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {

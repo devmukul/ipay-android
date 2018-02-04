@@ -32,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -108,15 +109,33 @@ public class RequestPaymentFragment extends BaseFragment implements HttpResponse
     private boolean verifyUserInputs() {
         boolean cancel = false;
         View focusView = null;
+        String error_message = null;
 
         mReceiver = mMobileNumberEditText.getText().toString();
         mDescription = mDescriptionEditText.getText().toString();
         mAmount = mAmountEditText.getText().toString().trim();
 
+        if (!Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                || !Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+            return false;
+        } else if (RequestPaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
+            DialogUtils.showDialogVerificationRequired(getActivity());
+            return false;
+        }
+
         // Check for a validation
         if (!(mAmount.length() > 0 && Double.parseDouble(mAmount) > 0)) {
-            mAmountEditText.setError(getString(R.string.please_enter_amount));
+            error_message = getString(R.string.please_enter_amount);
+        } else if (mAmount.trim().length() > 0) {
+            error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
+                    RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                    RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+        }
+
+        if (error_message != null) {
             focusView = mAmountEditText;
+            mAmountEditText.setError(error_message);
             cancel = true;
         }
 
@@ -134,21 +153,6 @@ public class RequestPaymentFragment extends BaseFragment implements HttpResponse
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.you_cannot_request_money_from_your_number));
             cancel = true;
-        }
-
-        if ((mAmount.trim().length() > 0)
-                && Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                && Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-
-            String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
-                    RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                    RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
-
-            if (error_message != null) {
-                focusView = mAmountEditText;
-                mAmountEditText.setError(error_message);
-                cancel = true;
-            }
         }
 
         if (cancel) {
@@ -219,13 +223,15 @@ public class RequestPaymentFragment extends BaseFragment implements HttpResponse
                             String ruleID = rule.getRuleID();
                             if (ruleID.equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_MAX_AMOUNT_PER_PAYMENT)) {
                                 RequestPaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-
                             } else if (ruleID.equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
                                 RequestPaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            } else if (ruleID.equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_VERIFICATION_REQUIRED)) {
+                                RequestPaymentActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                            } else if (ruleID.equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_PIN_REQUIRED)) {
+                                RequestPaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
                             }
                         }
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

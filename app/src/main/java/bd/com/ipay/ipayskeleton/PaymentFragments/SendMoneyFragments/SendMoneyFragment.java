@@ -181,7 +181,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
 
         boolean cancel = false;
         View focusView = null;
-        String errorMessage = null;
+        String errorMessage;
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 

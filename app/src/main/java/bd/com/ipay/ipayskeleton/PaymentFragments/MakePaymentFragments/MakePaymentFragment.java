@@ -304,7 +304,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
 
         boolean cancel = false;
         View focusView = null;
-        String errorMessage = null;
+        String errorMessage;
 
         if (!Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 || !Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
