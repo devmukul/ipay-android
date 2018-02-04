@@ -112,7 +112,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         else
             mRequestID = (long) getActivity().getIntent().getSerializableExtra(Constants.MONEY_REQUEST_ID);
 
-        mProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
+        mProfileImageView = (ProfileImageView) v.findViewById(R.id.image_view_profile);
         mNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mDescriptionTagView = (TextView) v.findViewById(R.id.description);
@@ -435,8 +435,14 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         // User who're accepting the request should not see the service charge. By force action. Deal with it :)
-        mServiceChargeView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
-        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
+        if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST) {
+            mServiceChargeView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
+            mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
+        }
+        else{
+            mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
+            mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        }
 
     }
 

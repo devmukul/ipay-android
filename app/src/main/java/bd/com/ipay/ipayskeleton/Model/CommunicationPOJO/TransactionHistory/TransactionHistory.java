@@ -40,12 +40,12 @@ public class TransactionHistory implements Parcelable {
         return fee;
     }
 
-    /**
-     * @return The name of the receiver if found, otherwise the mobile number. For add money/withdraw
-     * money, returns the bank name.
-     */
     public String getReceiver() {
-        return otherParty.getNumber();
+        if (otherParty.getName() == null) {
+            return otherParty.getNumber();
+        } else {
+            return otherParty.getName();
+        }
     }
 
     public double getNetAmount() {
@@ -99,10 +99,6 @@ public class TransactionHistory implements Parcelable {
         if (shortDesc != null)
             return shortDesc;
         return "No Information Available";
-    }
-
-    public long getInsertTime() {
-        return insertTime;
     }
 
     public String getAccountId() {
@@ -175,6 +171,7 @@ public class TransactionHistory implements Parcelable {
         dest.writeDouble(this.amount);
         dest.writeDouble(this.fee);
         dest.writeDouble(this.netAmount);
+        dest.writeLong(this.insertTime);
         if (this.availableBalance != null)
             dest.writeDouble(this.availableBalance);
         else {
@@ -197,7 +194,6 @@ public class TransactionHistory implements Parcelable {
         }
         dest.writeString(this.transactionId);
         dest.writeString(this.accountId);
-        dest.writeLong(this.insertTime);
         if (this.type != null) {
             dest.writeString(this.type);
         }
@@ -214,6 +210,7 @@ public class TransactionHistory implements Parcelable {
         this.amount = in.readDouble();
         this.fee = in.readDouble();
         this.netAmount = in.readDouble();
+        this.insertTime = in.readLong();
         this.availableBalance = in.readDouble();
         this.accountBalance = in.readDouble();
         this.serviceId = in.readInt();
@@ -223,7 +220,6 @@ public class TransactionHistory implements Parcelable {
         this.description = in.readString();
         this.shortDesc = in.readString();
         this.transactionId = in.readString();
-        this.insertTime = in.readLong();
         this.accountId = in.readString();
         this.type = in.readString();
         if (actions != null)
