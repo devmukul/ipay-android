@@ -72,7 +72,7 @@ public class SendMoneyByQrCodeFragment extends BaseFragment implements HttpRespo
                 mNameTextView.setText(getActivity().getIntent().getStringExtra(Constants.NAME));
             }
             if (getActivity().getIntent().hasExtra(Constants.PHOTO_URI)) {
-                mProfileImageView.setProfilePicture(getActivity().getIntent().getStringExtra(Constants.PHOTO_URI),
+                mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + getActivity().getIntent().getStringExtra(Constants.PHOTO_URI),
                         false);
             }
         } catch (Exception e) {
@@ -182,6 +182,7 @@ public class SendMoneyByQrCodeFragment extends BaseFragment implements HttpRespo
 
         Intent intent = new Intent(getActivity(), SendMoneyReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, amount);
+        intent.putExtra(Constants.FROM_QR_SCAN, true);
         intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(receiver));
         intent.putExtra(Constants.DESCRIPTION_TAG, description);
         intent.putExtra(Constants.IS_IN_CONTACTS, new ContactSearchHelper(getActivity()).searchMobileNumber(receiver));

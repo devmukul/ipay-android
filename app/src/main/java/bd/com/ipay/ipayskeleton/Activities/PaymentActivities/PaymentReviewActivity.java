@@ -55,6 +55,9 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
         if (getIntent().hasExtra(Constants.NAME)) {
             mReceiverName = getIntent().getStringExtra(Constants.NAME);
             mReceiverPhotoUri = getIntent().getStringExtra(Constants.PHOTO_URI);
+            mAddressString = getIntent().getStringExtra(Constants.ADDRESS);
+            mDistrict = getIntent().getStringExtra(Constants.DISTRICT);
+            mCountry = getIntent().getStringExtra(Constants.COUNTRY);
             switchToPaymentReviewFragment(mReceiverName, mReceiverPhotoUri);
 
         } else {
@@ -136,15 +139,13 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String name = mGetUserInfoResponse.getName();
                     int accountType = mGetUserInfoResponse.getAccountType();
-                    List<UserAddress> office = mGetUserInfoResponse.getAddressList().getOFFICE();
-                    if (office != null) {
-                        mAddressString = office.get(0).getAddressLine1();
-                        mDistrict = office.get(0).getDistrict();
-                        mCountry = office.get(0).getCountry();
-                    } else {
-                        mAddressString = "";
-                        mDistrict = "";
-                        mCountry = "";
+                    if (mGetUserInfoResponse.getAddressList() != null) {
+                        List<UserAddress> office = mGetUserInfoResponse.getAddressList().getOFFICE();
+                        if (office != null) {
+                            mAddressString = office.get(0).getAddressLine1();
+                            mDistrict = office.get(0).getDistrict();
+                            mCountry = office.get(0).getCountry();
+                        }
                     }
 
                     if (accountType != Constants.BUSINESS_ACCOUNT_TYPE) {

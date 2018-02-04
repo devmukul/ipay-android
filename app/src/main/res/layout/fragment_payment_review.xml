@@ -86,12 +86,14 @@
 
                 <TextView
                     android:id="@+id/business_address_line_1_text_view"
+                    android:visibility="gone"
                     style="@style/TextViewUserInfoPaymentReviewSecondary"
                     android:gravity="center_horizontal" />
 
                 <TextView
                     android:id="@+id/business_address_line_2_text_view"
                     style="@style/TextViewUserInfoPaymentReviewSecondary"
+                    android:visibility="gone"
                     android:gravity="center_horizontal" />
 
             </LinearLayout>

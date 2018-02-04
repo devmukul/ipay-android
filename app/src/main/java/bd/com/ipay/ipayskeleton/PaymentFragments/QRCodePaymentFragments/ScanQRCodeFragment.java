@@ -49,6 +49,9 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
     private String mobileNumber;
     private String name;
     private String imageUrl;
+    private String address;
+    private String country;
+    private String district;
 
     @Nullable
     @Override
@@ -145,6 +148,11 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                     GetUserInfoResponse getUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
                     imageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
                     name = getUserInfoResponse.getName();
+                    if (getUserInfoResponse.getAddressList() != null) {
+                        address = getUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
+                        country = getUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
+                        district = getUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
+                    }
 
                     // We will do a check here to know if the account is a personal account or business account.
                     // For Personal Account we have to launch the SendMoneyActivity
@@ -179,7 +187,10 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         intent.putExtra(Constants.MOBILE_NUMBER, mobileNumber);
         intent.putExtra(Constants.FROM_QR_SCAN, true);
         intent.putExtra(Constants.NAME, name);
-        intent.putExtra(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + imageUrl);
+        intent.putExtra(Constants.PHOTO_URI, imageUrl);
+        intent.putExtra(Constants.COUNTRY, country);
+        intent.putExtra(Constants.DISTRICT, district);
+        intent.putExtra(Constants.ADDRESS, address);
         startActivity(intent);
         getActivity().finish();
     }
