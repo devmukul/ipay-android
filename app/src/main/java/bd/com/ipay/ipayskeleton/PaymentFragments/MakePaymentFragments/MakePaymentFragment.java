@@ -115,7 +115,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
         mProgressDialog = new ProgressDialog(getContext());
         mProgressDialog.setCancelable(false);
-        mProgressDialog.setMessage(getString(R.string.please_wait));
 
         mMobileNumberEditText = (BusinessContactsSearchView) v.findViewById(R.id.mobile_number);
         profileView = v.findViewById(R.id.profile);
@@ -227,9 +226,10 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
     @SuppressLint("MissingPermission")
     private void getLocationAndLaunchReviewPage() {
-        mProgressDialog.show();
         LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            mProgressDialog.setMessage(getString(R.string.please_wait));
+            mProgressDialog.show();
             locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, Looper.getMainLooper());
         } else {
             Utilities.showGPSHighAccuracyDialog(this);
@@ -247,6 +247,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
                 mUri, getContext(), this);
         mProgressDialog.setMessage(getActivity().getString(R.string.loading));
+        mProgressDialog.setMessage(getString(R.string.please_wait));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -428,7 +429,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
         if (mGetBusinessRuleTask != null)
             return;
-
+        mProgressDialog.setMessage(getString(R.string.please_wait));
         mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,

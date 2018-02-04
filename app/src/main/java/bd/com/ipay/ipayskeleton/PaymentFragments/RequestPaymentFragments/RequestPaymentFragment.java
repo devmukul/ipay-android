@@ -78,7 +78,6 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setCancelable(false);
-        mProgressDialog.setMessage(getString(R.string.please_wait));
 
 
         buttonRequestPayment.setOnClickListener(new View.OnClickListener() {
@@ -120,9 +119,10 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
 
     @SuppressLint("MissingPermission")
     private void getLocationAndLaunchReviewPage() {
-        mProgressDialog.show();
         LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            mProgressDialog.setMessage(getString(R.string.please_wait));
+            mProgressDialog.show();
             locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, Looper.getMainLooper());
         } else {
             Utilities.showGPSHighAccuracyDialog(this);
@@ -212,7 +212,7 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
         if (mGetBusinessRuleTask != null) {
             return;
         }
-
+        mProgressDialog.setMessage(getString(R.string.please_wait));
         mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,

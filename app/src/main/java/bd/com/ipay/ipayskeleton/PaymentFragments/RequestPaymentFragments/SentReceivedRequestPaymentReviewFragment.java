@@ -333,6 +333,8 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         this.mPin = pin;
         LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            mProgressDialog.setMessage(getString(R.string.please_wait));
+            mProgressDialog.show();
             locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, Looper.getMainLooper());
         } else {
             Utilities.showGPSHighAccuracyDialog(this);
@@ -412,8 +414,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST) {
             mServiceChargeView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
             mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
-        }
-        else{
+        } else {
             mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
             mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
         }

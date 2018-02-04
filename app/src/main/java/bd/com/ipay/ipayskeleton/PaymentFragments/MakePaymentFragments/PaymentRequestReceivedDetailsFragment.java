@@ -147,6 +147,7 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
         mCancelButton = (Button) v.findViewById(R.id.button_cancel);
 
         mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setCancelable(false);
 
         getActivity().setTitle(R.string.request_payment);
 
@@ -269,6 +270,8 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
         this.mPin = pin;
         LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            mProgressDialog.setMessage(getString(R.string.please_wait));
+            mProgressDialog.show();
             locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, Looper.getMainLooper());
         } else {
             Utilities.showGPSHighAccuracyDialog(this);
