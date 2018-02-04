@@ -166,6 +166,19 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                     mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
                     mAddressTextView.setText(mAddressString);
                     mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                } else if (getArguments() != null) {
+                    try {
+                        mAddressString = getArguments().getString(Constants.ADDRESS);
+                        mCountry = getArguments().getString(Constants.COUNTRY);
+                        mDistrict = getArguments().getString(Constants.DISTRICT);
+                        mAddressTextView.setText(mAddressString);
+                        mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                        mAddressTextView.setVisibility(View.VISIBLE);
+                        mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
+                    } catch (Exception e) {
+                        getProfileInfo(mReceiverMobileNumber);
+                    }
+
                 } else {
                     getProfileInfo(mReceiverMobileNumber);
                 }
@@ -407,10 +420,10 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
+        mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.dismiss();
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
@@ -442,7 +455,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                 if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
             }
-            mProgressDialog.dismiss();
+
             mGetBusinessRuleTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
             Gson gson = new Gson();
@@ -457,10 +470,10 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                             mAddressString = office.get(0).getAddressLine1();
                             mDistrict = office.get(0).getDistrict();
                             mCountry = office.get(0).getCountry();
-                            mAddressTextView.setVisibility(View.VISIBLE);
-                            mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
                             mAddressTextView.setText(mAddressString);
                             mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                            mAddressTextView.setVisibility(View.VISIBLE);
+                            mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
                         }
                     }
 
@@ -511,7 +524,6 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
             }
 
             mGetProfileInfoTask = null;
-            mProgressDialog.dismiss();
             mProgressBar.setVisibility(View.GONE);
         }
     }
