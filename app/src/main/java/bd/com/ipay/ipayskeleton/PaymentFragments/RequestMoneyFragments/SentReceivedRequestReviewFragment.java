@@ -377,10 +377,10 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);
+        mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.dismiss();
             mAcceptRequestTask = null;
             mRejectRequestTask = null;
             if (getActivity() != null)

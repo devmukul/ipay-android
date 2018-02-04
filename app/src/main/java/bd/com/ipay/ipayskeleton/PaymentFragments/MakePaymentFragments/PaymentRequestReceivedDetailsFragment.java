@@ -418,7 +418,6 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
         // User who're accepting the request should not see the service charge. By force action. Deal with it :)
         mServiceChargeView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
         mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
-        attemptGetBusinessRule(getServiceID());
     }
 
     private void attemptGetBusinessRule(int serviceID) {
