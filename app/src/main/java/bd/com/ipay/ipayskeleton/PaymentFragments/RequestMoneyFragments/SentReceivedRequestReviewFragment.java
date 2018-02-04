@@ -219,9 +219,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         });
 
         // Get business rule
-        attemptGetBusinessRule(Constants.SERVICE_ID_MAKE_PAYMENT);
-
-        attemptGetServiceCharge();
+        attemptGetBusinessRule(Constants.SERVICE_ID_REQUEST_MONEY);
 
         return v;
     }
@@ -414,6 +412,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                                 }
                             }
                         }
+                        attemptGetServiceCharge();
                     } else {
                         if (getActivity() != null)
                             DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
