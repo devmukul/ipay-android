@@ -6,6 +6,7 @@ public class MandatoryBusinessRules {
 
     private BigDecimal MAX_AMOUNT_PER_PAYMENT;
     private BigDecimal MIN_AMOUNT_PER_PAYMENT;
+    private boolean IS_LOCATION_REQUIRED;
     private boolean IS_PIN_REQUIRED;
 
     public MandatoryBusinessRules() {
@@ -36,5 +37,13 @@ public class MandatoryBusinessRules {
 
     public void setIS_PIN_REQUIRED(boolean IS_PIN_REQUIRED) {
         this.IS_PIN_REQUIRED = IS_PIN_REQUIRED;
+    }
+
+    public boolean IS_LOCATION_REQUIRED() {
+        return IS_LOCATION_REQUIRED;
+    }
+
+    public void setIS_LOCATION_REQUIRED(boolean IS_LOCATION_REQUIRED) {
+        this.IS_LOCATION_REQUIRED = IS_LOCATION_REQUIRED;
     }
 }

@@ -128,6 +128,8 @@ public class Constants {
     public static final String DISTRICT = "DISTRICT";
     public static final String COUNTRY = "COUNTRY";
     public static final String FROM_QR_SCAN = "FROM_QR_SCAN";
+    public static final String LATITUDE = "LATITUDE";
+    public static final String LONGITUDE = "LONGITUDE";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
@@ -818,6 +820,8 @@ public class Constants {
     public static final String SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT = "PAYMENT_MIN_AMOUNT_SINGLE";
     public static final String SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT = "PAYMENT_MAX_AMOUNT_SINGLE";
 
+    public static final String SERVICE_RULE_IS_LOCATION_REQUIRED = "LOCATION_REQUIRED";
+
     public static final String SERVICE_RULE_REQUEST_PAYMENT_MIN_AMOUNT_PER_PAYMENT = "REQUEST_PAYMENT_MIN_AMOUNT_SINGLE";
     public static final String SERVICE_RULE_REQUEST_PAYMENT_MAX_AMOUNT_PER_PAYMENT = "REQUEST_PAYMENT_MAX_AMOUNT_SINGLE";
 
@@ -911,5 +915,7 @@ public class Constants {
     public static final GetBusinessInformationResponse ACCOUNT_INFO_DEFAULT = null;
 
     public static final String QUALITY_HIGH = "High";
+
+    public static final int LOCATION_REQUIRED_TRUE = 1;
 
 }
