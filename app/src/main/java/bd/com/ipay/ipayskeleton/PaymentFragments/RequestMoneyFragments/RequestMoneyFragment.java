@@ -166,7 +166,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
 
         boolean cancel = false;
         View focusView = null;
-        String error_message = null;
+        String errorMessage = null;
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
@@ -183,18 +183,18 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
 
         // validation check of amount
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
-            error_message = getString(R.string.please_enter_amount);
+            errorMessage = getString(R.string.please_enter_amount);
         } else if (mAmountEditText.getText().toString().trim().length() > 0) {
 
             BigDecimal maxAmount = RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT();
 
-            error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+            errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
                     RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
         }
 
-        if (error_message != null) {
+        if (errorMessage != null) {
             focusView = mAmountEditText;
-            mAmountEditText.setError(error_message);
+            mAmountEditText.setError(errorMessage);
             cancel = true;
         }
 

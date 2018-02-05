@@ -140,7 +140,7 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
     private boolean verifyUserInputs() {
         boolean cancel = false;
         View focusView = null;
-        String error_message = null;
+        String errorMessage = null;
 
         mReceiverMobileNumber = mMobileNumberEditText.getText().toString();
         mDescription = mDescriptionEditText.getText().toString();
@@ -157,16 +157,16 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
 
         // Check for a validation
         if (!(mAmount.length() > 0 && Double.parseDouble(mAmount) > 0)) {
-            error_message = getString(R.string.please_enter_amount);
+            errorMessage = getString(R.string.please_enter_amount);
 
         } else if (mAmount.trim().length() > 0) {
-            error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
+            errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
                     RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
                     RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
         }
-        if (error_message != null) {
+        if (errorMessage != null) {
             focusView = mAmountEditText;
-            mAmountEditText.setError(error_message);
+            mAmountEditText.setError(errorMessage);
             cancel = true;
         }
 

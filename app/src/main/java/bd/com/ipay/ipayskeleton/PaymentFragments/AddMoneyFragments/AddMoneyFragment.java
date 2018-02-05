@@ -316,7 +316,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         String errorMessage;
 
         if (TextUtils.isEmpty(mAmountEditText.getText())) {
-            errorMessage = (getString(R.string.please_enter_amount));
+            errorMessage = getString(R.string.please_enter_amount);
         } else {
             errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
                     AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
