@@ -1,167 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/trending_business_list_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:fillViewport="true">
+    android:layout_height="wrap_content">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/divider_gray"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:maxLines="1"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/value5"
-            android:paddingTop="@dimen/activity_horizontal_margin"
-            android:text="@string/top"
-            android:textAllCaps="true"
-            android:textSize="@dimen/text_size_small" />
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:background="@color/divider_gray"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/value5"
+                android:paddingTop="@dimen/activity_horizontal_margin"
+                android:text="@string/top"
+                android:textAllCaps="true"
+                android:textSize="@dimen/text_size_small" />
 
             <LinearLayout
-                android:id="@+id/topUpView"
-                android:layout_width="@dimen/value100"
-                android:layout_height="@dimen/value120"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                android:background="@drawable/semiround_white_default"
-                android:elevation="@dimen/value2"
-                android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="@dimen/value60"
-                    android:layout_height="@dimen/value60"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="@dimen/value15"
-                    android:layout_marginLeft="@dimen/value20"
-                    android:layout_marginRight="@dimen/value20"
-                    android:layout_marginTop="@dimen/value15"
-                    android:src="@drawable/background_icon_topup" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/value1"
-                    android:background="@color/divider_gray" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|center_horizontal"
+                <LinearLayout
+                    android:id="@+id/topUpView"
+                    android:layout_width="@dimen/value100"
+                    android:layout_height="@dimen/value120"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                     android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                    android:ellipsize="marquee"
-                    android:gravity="center_horizontal"
-                    android:maxLines="1"
-                    android:paddingLeft="@dimen/activity_horizontal_margin_card"
-                    android:paddingRight="@dimen/activity_horizontal_margin_card"
-                    android:text="@string/mobile_topup"
-                    android:textSize="@dimen/text_size_extra_smaller_value11"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                    android:background="@drawable/semiround_white_default"
+                    android:elevation="@dimen/value2"
+                    android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/payByQCView"
-                android:layout_width="@dimen/value100"
-                android:layout_height="@dimen/value120"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                android:background="@drawable/semiround_white_default"
-                android:elevation="@dimen/value2"
-                android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="@dimen/value60"
+                        android:layout_height="@dimen/value60"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="@dimen/value15"
+                        android:layout_marginLeft="@dimen/value20"
+                        android:layout_marginRight="@dimen/value20"
+                        android:layout_marginTop="@dimen/value15"
+                        android:src="@drawable/background_icon_topup" />
 
-                <ImageView
-                    android:layout_width="@dimen/value60"
-                    android:layout_height="@dimen/value60"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="@dimen/value15"
-                    android:layout_marginLeft="@dimen/value20"
-                    android:layout_marginRight="@dimen/value20"
-                    android:layout_marginTop="@dimen/value15"
-                    android:src="@drawable/background_icon_pay_by_qc" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/value1"
+                        android:background="@color/divider_gray" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/value1"
-                    android:background="@color/divider_gray" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|center_horizontal"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                        android:ellipsize="marquee"
+                        android:gravity="center_horizontal"
+                        android:maxLines="1"
+                        android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                        android:paddingRight="@dimen/activity_horizontal_margin_card"
+                        android:text="@string/mobile_topup"
+                        android:textSize="@dimen/text_size_extra_smaller_value11"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|center_horizontal"
+                <LinearLayout
+                    android:id="@+id/payByQCView"
+                    android:layout_width="@dimen/value100"
+                    android:layout_height="@dimen/value120"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                     android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                    android:ellipsize="marquee"
-                    android:gravity="center_horizontal"
-                    android:maxLines="1"
-                    android:paddingLeft="@dimen/activity_horizontal_margin_card"
-                    android:paddingRight="@dimen/activity_horizontal_margin_card"
-                    android:text="@string/pay_by_QR_code"
-                    android:textSize="@dimen/text_size_extra_smaller_value11"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                    android:background="@drawable/semiround_white_default"
+                    android:elevation="@dimen/value2"
+                    android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/requestPaymentView"
-                android:layout_width="@dimen/value100"
-                android:layout_height="@dimen/value120"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
-                android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                android:background="@drawable/semiround_white_default"
-                android:elevation="@dimen/value2"
-                android:orientation="vertical"
-                android:visibility="gone">
+                    <ImageView
+                        android:layout_width="@dimen/value60"
+                        android:layout_height="@dimen/value60"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="@dimen/value15"
+                        android:layout_marginLeft="@dimen/value20"
+                        android:layout_marginRight="@dimen/value20"
+                        android:layout_marginTop="@dimen/value15"
+                        android:src="@drawable/background_icon_pay_by_qc" />
 
-                <ImageView
-                    android:layout_width="@dimen/value60"
-                    android:layout_height="@dimen/value60"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="@dimen/value15"
-                    android:layout_marginLeft="@dimen/value20"
-                    android:layout_marginRight="@dimen/value20"
-                    android:layout_marginTop="@dimen/value15"
-                    android:src="@drawable/background_icon_request_payment" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/value1"
+                        android:background="@color/divider_gray" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/value1"
-                    android:background="@color/divider_gray" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|center_horizontal"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                        android:ellipsize="marquee"
+                        android:gravity="center_horizontal"
+                        android:maxLines="1"
+                        android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                        android:paddingRight="@dimen/activity_horizontal_margin_card"
+                        android:text="@string/pay_by_QR_code"
+                        android:textSize="@dimen/text_size_extra_smaller_value11"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|center_horizontal"
+                <LinearLayout
+                    android:id="@+id/requestPaymentView"
+                    android:layout_width="@dimen/value100"
+                    android:layout_height="@dimen/value120"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin_card"
                     android:layout_marginTop="@dimen/activity_horizontal_margin_card"
-                    android:ellipsize="marquee"
-                    android:gravity="center_horizontal"
-                    android:maxLines="1"
-                    android:paddingLeft="@dimen/activity_horizontal_margin_card"
-                    android:paddingRight="@dimen/activity_horizontal_margin_card"
-                    android:text="@string/request_payment"
-                    android:textSize="@dimen/text_size_extra_smaller_value11"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </LinearLayout>
+                    android:background="@drawable/semiround_white_default"
+                    android:elevation="@dimen/value2"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/trending_business_list_refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
+                    <ImageView
+                        android:layout_width="@dimen/value60"
+                        android:layout_height="@dimen/value60"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="@dimen/value15"
+                        android:layout_marginLeft="@dimen/value20"
+                        android:layout_marginRight="@dimen/value20"
+                        android:layout_marginTop="@dimen/value15"
+                        android:src="@drawable/background_icon_request_payment" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/value1"
+                        android:background="@color/divider_gray" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|center_horizontal"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin_card"
+                        android:ellipsize="marquee"
+                        android:gravity="center_horizontal"
+                        android:maxLines="1"
+                        android:paddingLeft="@dimen/activity_horizontal_margin_card"
+                        android:paddingRight="@dimen/activity_horizontal_margin_card"
+                        android:text="@string/request_payment"
+                        android:textSize="@dimen/text_size_extra_smaller_value11"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/scrollViewHolder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:orientation="vertical" />
-        </android.support.v4.widget.SwipeRefreshLayout>
-    </LinearLayout>
-</ScrollView>
+        </LinearLayout>
+    </ScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>

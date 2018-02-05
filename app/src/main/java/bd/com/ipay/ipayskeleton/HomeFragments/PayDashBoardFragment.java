@@ -72,7 +72,6 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mPayByQCView = v.findViewById(R.id.payByQCView);
         mRequestPaymentView = v.findViewById(R.id.requestPaymentView);
         trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
-
         getActivity().setTitle(R.string.pay);
         getTrendingBusinessList();
 
@@ -134,7 +133,11 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         trendingBusinessListRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getTrendingBusinessList();
+                if (mScrollViewHolder.getVisibility() == View.VISIBLE) {
+                    getTrendingBusinessList();
+                } else {
+                    trendingBusinessListRefreshLayout.setRefreshing(false);
+                }
             }
         });
 
@@ -181,7 +184,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     PayDashBoardHorizontalScrollView payDashBoardHorizontalScrollView = new PayDashBoardHorizontalScrollView(this.getContext());
                     payDashBoardHorizontalScrollView.addHorizontalScrollView(mScrollViewHolder, mBusinessType);
 
-                    trendingBusinessListRefreshLayout.setVisibility(View.VISIBLE);
+                    mScrollViewHolder.setVisibility(View.VISIBLE);
 
                     List<BusinessAccountEntry> mBusinessAccountEntryList = trendingBusiness.getBusinessProfile();
                     for (final BusinessAccountEntry businessAccountEntry : mBusinessAccountEntryList) {
