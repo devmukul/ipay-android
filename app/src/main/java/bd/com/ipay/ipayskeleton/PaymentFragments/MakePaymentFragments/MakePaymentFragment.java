@@ -146,10 +146,6 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
             businessMobileNumberTextView.setText(mReceiverMobileNumber);
             if (getActivity().getIntent().hasExtra(Constants.NAME)) {
                 mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
-                mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
-                if (!TextUtils.isEmpty(mReceiverPhotoUri)) {
-                    businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
-                }
                 if (TextUtils.isEmpty(mReceiverName)) {
                     businessNameTextView.setVisibility(View.GONE);
                 } else {
@@ -166,8 +162,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                     mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
                     mAddressTextView.setText(mAddressString);
                     mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
-                }
-                else{
+                } else {
                     getProfileInfo(mReceiverMobileNumber);
                 }
             } else {
