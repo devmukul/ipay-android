@@ -124,6 +124,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         mAddressCountryAndDistrictTextView = (TextView) v.findViewById(R.id.textview_address_line_2);
 
         businessProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
+        businessProfileImageView.setBusinessLogoPlaceHolder();
         businessNameTextView = (TextView) v.findViewById(R.id.textview_name);
         businessMobileNumberTextView = (TextView) v.findViewById(R.id.textview_mobile_number);
 
