@@ -175,10 +175,12 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         mAddressString = getArguments().getString(Constants.ADDRESS);
                         mCountry = getArguments().getString(Constants.COUNTRY);
                         mDistrict = getArguments().getString(Constants.DISTRICT);
-                        mAddressTextView.setText(mAddressString);
-                        mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
-                        mAddressTextView.setVisibility(View.VISIBLE);
-                        mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
+                        if (mAddressString != null) {
+                            mAddressTextView.setText(mAddressString);
+                            mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                            mAddressTextView.setVisibility(View.VISIBLE);
+                            mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
+                        }
                     } catch (Exception e) {
                         getProfileInfo(mReceiverMobileNumber);
                     }

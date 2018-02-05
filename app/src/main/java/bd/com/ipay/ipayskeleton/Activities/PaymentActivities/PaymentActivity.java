@@ -160,6 +160,7 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                Bundle bundle = new Bundle();
 
                 try {
                     Gson gson = new Gson();
@@ -168,16 +169,15 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
                         address = mGetUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
                         district = mGetUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
                         country = mGetUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
-                        Bundle bundle = new Bundle();
                         bundle.putString(Constants.ADDRESS, address);
                         bundle.putString(Constants.COUNTRY, country);
                         bundle.putString(Constants.DISTRICT, district);
-                        switchToMakePaymentFragment(bundle);
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                switchToMakePaymentFragment(bundle);
             }
         }
     }
