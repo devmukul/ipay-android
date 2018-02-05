@@ -25,7 +25,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -87,8 +86,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private TextView mBalanceView;
     private View profileView;
     private View mobileNumberView;
-
-    private ProgressDialog mProgressDialog;
 
     private ProfileImageView businessProfileImageView;
     private TextView businessNameTextView;
