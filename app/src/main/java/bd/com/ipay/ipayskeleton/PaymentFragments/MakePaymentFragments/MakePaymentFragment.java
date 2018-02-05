@@ -24,6 +24,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -117,8 +119,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mProgressDialog.setCancelable(false);
 
         mMobileNumberEditText = (BusinessContactsSearchView) v.findViewById(R.id.mobile_number);
-        profileView = v.findViewById(R.id.profile);
-        mobileNumberView = v.findViewById(R.id.mobile_number_view);
+        profileView = (LinearLayout) v.findViewById(R.id.profile);
+        mobileNumberView = (RelativeLayout) v.findViewById(R.id.mobile_number_view);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mRefNumberEditText = (EditText) v.findViewById(R.id.reference_number);
@@ -168,6 +170,21 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
                     mAddressTextView.setText(mAddressString);
                     mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                } else if (getArguments() != null) {
+                    try {
+                        mAddressString = getArguments().getString(Constants.ADDRESS);
+                        mCountry = getArguments().getString(Constants.COUNTRY);
+                        mDistrict = getArguments().getString(Constants.DISTRICT);
+                        if (mAddressString != null) {
+                            mAddressTextView.setText(mAddressString);
+                            mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                            mAddressTextView.setVisibility(View.VISIBLE);
+                            mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
+                        }
+                    } catch (Exception e) {
+                        getProfileInfo(mReceiverMobileNumber);
+                    }
+
                 } else {
                     getProfileInfo(mReceiverMobileNumber);
                 }
@@ -461,6 +478,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
+        mProgressDialog.dismiss();
+
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
@@ -511,16 +530,16 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String name = mGetUserInfoResponse.getName();
-                    if (mGetUserInfoResponse.getAddressList() != null) {
+                    if (mGetUserInfoResponse.getAddressList().getOFFICE() != null) {
                         List<UserAddress> office = mGetUserInfoResponse.getAddressList().getOFFICE();
                         if (office != null) {
                             mAddressString = office.get(0).getAddressLine1();
                             mDistrict = office.get(0).getDistrict();
                             mCountry = office.get(0).getCountry();
-                            mAddressTextView.setVisibility(View.VISIBLE);
-                            mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
                             mAddressTextView.setText(mAddressString);
                             mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                            mAddressTextView.setVisibility(View.VISIBLE);
+                            mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
                         }
                     }
 
