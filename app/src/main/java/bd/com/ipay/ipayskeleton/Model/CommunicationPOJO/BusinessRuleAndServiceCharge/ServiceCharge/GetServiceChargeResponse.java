@@ -44,7 +44,7 @@ public class GetServiceChargeResponse {
     public BigDecimal getServiceCharge(BigDecimal amount) {
         try {
             BigDecimal calculatedServiceCharge = getPerTransactionFlatFee().add(((getPerTransactionVeriableCharge().multiply(amount))).divide(new BigDecimal(100)));
-
+            calculatedServiceCharge = calculatedServiceCharge.setScale(2, BigDecimal.ROUND_HALF_EVEN);
             if (getMaxTransactionFee() == null) return calculatedServiceCharge;
             else if (getMaxTransactionFee().compareTo(calculatedServiceCharge) > 0)
                 return calculatedServiceCharge;
@@ -54,7 +54,6 @@ public class GetServiceChargeResponse {
             e.printStackTrace();
             return new BigDecimal(-1);
         }
-
 
     }
 }
