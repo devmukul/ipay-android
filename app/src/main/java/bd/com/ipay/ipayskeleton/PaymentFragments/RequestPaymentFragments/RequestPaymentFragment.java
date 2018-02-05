@@ -62,6 +62,8 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
     private String mDescription;
     private String mReceiverMobileNumber;
 
+    private LocationManager locationManager;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -119,11 +121,11 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
 
     @SuppressLint("MissingPermission")
     private void getLocationAndLaunchReviewPage() {
-        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             mProgressDialog.setMessage(getString(R.string.please_wait));
             mProgressDialog.show();
-            locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, Looper.getMainLooper());
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this, Looper.getMainLooper());
         } else {
             Utilities.showGPSHighAccuracyDialog(this);
         }
@@ -259,6 +261,8 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
     @Override
     public void onLocationChanged(Location location) {
         launchReviewPage(location);
+        if (locationManager != null)
+            locationManager.removeUpdates(this);
     }
 
     @Override
