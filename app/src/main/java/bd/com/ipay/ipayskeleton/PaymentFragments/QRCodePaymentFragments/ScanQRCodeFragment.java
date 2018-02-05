@@ -148,10 +148,12 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                     GetUserInfoResponse getUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
                     imageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
                     name = getUserInfoResponse.getName();
-                    if (getUserInfoResponse.getAddressList().getOFFICE() != null) {
-                        address = getUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
-                        country = getUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
-                        district = getUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
+                    if (getUserInfoResponse.getAddressList() != null) {
+                        if (getUserInfoResponse.getAddressList().getOFFICE() != null) {
+                            address = getUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
+                            country = getUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
+                            district = getUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
+                        }
                     }
 
                     // We will do a check here to know if the account is a personal account or business account.
