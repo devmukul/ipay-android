@@ -21,7 +21,6 @@ import java.io.IOException;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseParser;
-import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Configuration.ApiVersionResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -58,13 +57,14 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         try {
             if (SSLPinning.validatePinning()) {
                 if (Utilities.isConnectionAvailable(mContext)) {
-                    if (Constants.IS_API_VERSION_CHECKED) {
+                    if (Constants.IS_API_VERSION_CHECKED && !Constants.HAS_COME_FROM_BACKGROUND_TO_FOREGROUND) {
                         mHttpResponse = makeRequest();
                         mGenericHttpResponse = parseHttpResponse(mHttpResponse);
                         mGenericHttpResponse.setUpdateNeeded(false);
                     } else {
                         mHttpResponse = makeApiVersionCheckRequest();
                         mGenericHttpResponse = parseHttpResponse(mHttpResponse);
+                        Constants.HAS_COME_FROM_BACKGROUND_TO_FOREGROUND = false;
 
                         // Validate the Api version and set whether the update is required or not
                         mGenericHttpResponse = validateApiVersion(mGenericHttpResponse);
@@ -81,6 +81,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
         }
 
         return mGenericHttpResponse;
+
     }
 
     @Override
@@ -206,12 +207,13 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
             if (mGenericHttpResponse.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 if (mApiVersionResponse != null) {
                     int requiredAPIVersion = mApiVersionResponse.getAndroid();
-                    int availableAPIVersion = BuildConfig.VERSION_CODE;
+                    int availableAPIVersion = 10;
 
                     if (availableAPIVersion < requiredAPIVersion) {
                         mGenericHttpResponse.setUpdateNeeded(true);
                     } else {
                         Constants.IS_API_VERSION_CHECKED = true;
+                        Constants.HAS_COME_FROM_BACKGROUND_TO_FOREGROUND = false;
                         mHttpResponse = makeRequest();
                         mGenericHttpResponse = parseHttpResponse(mHttpResponse);
                         mGenericHttpResponse.setUpdateNeeded(false);
