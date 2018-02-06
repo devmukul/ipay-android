@@ -176,7 +176,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
             return false;
         }
 
-        if (RequestMoneyActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
+        if (RequestMoneyActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
             DialogUtils.showDialogVerificationRequired(getActivity());
             return false;
         }

@@ -351,7 +351,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 || !Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
             DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             return false;
-        } else if (PaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
+        } else if (PaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
             DialogUtils.showDialogVerificationRequired(getActivity());
             return false;
         }
@@ -513,7 +513,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                                 PaymentActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
                             } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_PIN_REQUIRED)) {
                                 PaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
-                            }else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_LOCATION_REQUIRED)) {
+                            } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_LOCATION_REQUIRED)) {
                                 PaymentActivity.mMandatoryBusinessRules.setLOCATION_REQUIRED(rule.getRuleValue());
                             }
                         }

@@ -189,7 +189,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                 || !Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
             DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             return false;
-        } else if (SendMoneyActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
+        } else if (SendMoneyActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
             DialogUtils.showDialogVerificationRequired(getActivity());
             return false;
         }

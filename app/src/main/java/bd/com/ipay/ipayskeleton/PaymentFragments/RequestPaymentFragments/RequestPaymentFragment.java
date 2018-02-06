@@ -152,7 +152,7 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
                 || !Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
             DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             return false;
-        } else if (RequestPaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
+        } else if (RequestPaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
             DialogUtils.showDialogVerificationRequired(getActivity());
             return false;
         }

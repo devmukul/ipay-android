@@ -49,6 +49,7 @@ import bd.com.ipay.ipayskeleton.Model.Service.IpayService;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
@@ -286,7 +287,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
                 || !Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
             DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             return false;
-        } else if (AddMoneyActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
+        } else if (AddMoneyActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
             DialogUtils.showDialogVerificationRequired(getActivity());
             return false;
         } else if (mAddMoneyOptionSelectorView.getSelectedItem().getServiceId() == ServiceIdConstants.ADD_MONEY_BY_BANK && mBankSelectorView.getSelectedItemPosition() == -1) {

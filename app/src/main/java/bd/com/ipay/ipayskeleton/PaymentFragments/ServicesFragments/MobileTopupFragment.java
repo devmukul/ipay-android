@@ -233,7 +233,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             return false;
         }
 
-        if (TopUpActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
+        if (TopUpActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
             DialogUtils.showDialogVerificationRequired(getActivity());
             return false;
         }
