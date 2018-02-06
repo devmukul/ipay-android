@@ -21,6 +21,7 @@ import java.io.IOException;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseParser;
+import bd.com.ipay.ipayskeleton.BuildConfig;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Configuration.ApiVersionResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -207,7 +208,7 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
             if (mGenericHttpResponse.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 if (mApiVersionResponse != null) {
                     int requiredAPIVersion = mApiVersionResponse.getAndroid();
-                    int availableAPIVersion = 10;
+                    int availableAPIVersion = BuildConfig.VERSION_CODE;
 
                     if (availableAPIVersion < requiredAPIVersion) {
                         mGenericHttpResponse.setUpdateNeeded(true);
