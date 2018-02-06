@@ -55,32 +55,35 @@ public abstract class HttpRequestAsyncTask extends AsyncTask<Void, Void, Generic
 
         GenericHttpResponse mGenericHttpResponse = null;
 
-        try {
-            if (SSLPinning.validatePinning()) {
-                if (Utilities.isConnectionAvailable(mContext)) {
-                    if (Constants.IS_API_VERSION_CHECKED) {
-                        mHttpResponse = makeRequest();
-                        mGenericHttpResponse = parseHttpResponse(mHttpResponse);
-                        mGenericHttpResponse.setUpdateNeeded(false);
+        synchronized (new Object()) {
+            try {
+                if (SSLPinning.validatePinning()) {
+                    if (Utilities.isConnectionAvailable(mContext)) {
+                        if (Constants.IS_API_VERSION_CHECKED && !Constants.HAS_COME_FROM_BACKGROUND_TO_FOREGROUND) {
+                            mHttpResponse = makeRequest();
+                            mGenericHttpResponse = parseHttpResponse(mHttpResponse);
+                            mGenericHttpResponse.setUpdateNeeded(false);
+                        } else {
+                            mHttpResponse = makeApiVersionCheckRequest();
+                            mGenericHttpResponse = parseHttpResponse(mHttpResponse);
+                            Constants.HAS_COME_FROM_BACKGROUND_TO_FOREGROUND = false;
+
+                            // Validate the Api version and set whether the update is required or not
+                            mGenericHttpResponse = validateApiVersion(mGenericHttpResponse);
+                        }
+
                     } else {
-                        mHttpResponse = makeApiVersionCheckRequest();
-                        mGenericHttpResponse = parseHttpResponse(mHttpResponse);
-
-                        // Validate the Api version and set whether the update is required or not
-                        mGenericHttpResponse = validateApiVersion(mGenericHttpResponse);
+                        Logger.logD(Constants.ERROR, API_COMMAND);
+                        error = true;
+                        return null;
                     }
-
-                } else {
-                    Logger.logD(Constants.ERROR, API_COMMAND);
-                    error = true;
-                    return null;
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        return mGenericHttpResponse;
+            return mGenericHttpResponse;
+        }
     }
 
     @Override
