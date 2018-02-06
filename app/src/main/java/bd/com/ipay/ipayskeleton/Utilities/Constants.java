@@ -130,6 +130,7 @@ public class Constants {
     public static final String FROM_QR_SCAN = "FROM_QR_SCAN";
     public static final String LATITUDE = "LATITUDE";
     public static final String LONGITUDE = "LONGITUDE";
+    public static final String COMMAND_CHECK_VERSION = "COMMAND_CHECK_VERSION";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
