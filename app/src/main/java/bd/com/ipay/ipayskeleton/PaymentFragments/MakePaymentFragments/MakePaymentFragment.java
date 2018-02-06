@@ -182,7 +182,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         getProfileInfo(mReceiverMobileNumber);
                     }
 
-                } else{
+                } else {
                     getProfileInfo(mReceiverMobileNumber);
                 }
             } else {
