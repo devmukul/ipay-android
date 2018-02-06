@@ -78,7 +78,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         longitude = getActivity().getIntent().getDoubleExtra(Constants.LONGITUDE, 0.0);
 
 
-
         if (getArguments() != null) {
             mReceiverBusinessName = getArguments().getString(Constants.NAME);
             mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
@@ -232,9 +231,14 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        // User who're accepting the request should not see the service charge. By force action. Deal with it :)
-        mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
-        mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
+        if (serviceCharge.compareTo(BigDecimal.ZERO) > 0) {
+            // User who're accepting the request should not see the service charge. By force action. Deal with it :)
+            mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
+            mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        } else {
+            mServiceChargeTextView.setVisibility(View.GONE);
+            mNetAmountTextView.setVisibility(View.GONE);
+        }
     }
 
     private void launchOTPVerification() {
