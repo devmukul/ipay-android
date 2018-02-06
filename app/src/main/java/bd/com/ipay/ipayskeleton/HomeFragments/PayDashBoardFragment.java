@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     private View mTopUpView;
     private View mPayByQCView;
     private View mRequestPaymentView;
+    private SwipeRefreshLayout trendingBusinessListRefreshLayout;
 
     private PinChecker pinChecker;
 
@@ -69,7 +71,7 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
         mTopUpView = v.findViewById(R.id.topUpView);
         mPayByQCView = v.findViewById(R.id.payByQCView);
         mRequestPaymentView = v.findViewById(R.id.requestPaymentView);
-
+        trendingBusinessListRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.trending_business_list_refresh_layout);
         getActivity().setTitle(R.string.pay);
         getTrendingBusinessList();
 
@@ -128,6 +130,17 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
             }
         });
 
+        trendingBusinessListRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (mScrollViewHolder.getVisibility() == View.VISIBLE) {
+                    getTrendingBusinessList();
+                } else {
+                    trendingBusinessListRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
+
         return v;
     }
 
@@ -151,14 +164,18 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
     public void httpResponseReceiver(GenericHttpResponse result) {
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            mGetTrendingBusinessListTask = null;
             if (getActivity() != null) {
                 Toast.makeText(getActivity(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG).show();
-                return;
             }
+            return;
         }
         try {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 Gson gson = new Gson();
+
+                mScrollViewHolder.removeAllViews();
+
                 mTrendingBusinessResponse = gson.fromJson(result.getJsonString(), TrendingBusinessResponse.class);
                 mTrendingBusinessList = mTrendingBusinessResponse.getTrendingBusinessList();
                 for (TrendingBusiness trendingBusiness : mTrendingBusinessList) {
@@ -166,6 +183,8 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
 
                     PayDashBoardHorizontalScrollView payDashBoardHorizontalScrollView = new PayDashBoardHorizontalScrollView(this.getContext());
                     payDashBoardHorizontalScrollView.addHorizontalScrollView(mScrollViewHolder, mBusinessType);
+
+                    mScrollViewHolder.setVisibility(View.VISIBLE);
 
                     List<BusinessAccountEntry> mBusinessAccountEntryList = trendingBusiness.getBusinessProfile();
                     for (final BusinessAccountEntry businessAccountEntry : mBusinessAccountEntryList) {
@@ -200,6 +219,8 @@ public class PayDashBoardFragment extends BaseFragment implements HttpResponseLi
                     Toaster.makeText(getActivity(), R.string.business_contacts_sync_failed, Toast.LENGTH_LONG);
                 }
             }
+            mGetTrendingBusinessListTask = null;
+            trendingBusinessListRefreshLayout.setRefreshing(false);
         } catch (Exception e) {
             e.printStackTrace();
 
