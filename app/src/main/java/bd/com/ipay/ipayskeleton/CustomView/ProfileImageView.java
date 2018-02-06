@@ -84,6 +84,11 @@ public class ProfileImageView extends FrameLayout {
             e.printStackTrace();
         }
     }
+
+    public void setBusinessLogoPlaceHolder() {
+        mProfilePictureView.setImageResource(R.drawable.ic_business_logo_round);
+    }
+
     public void setBusinessProfilePicture(String photoUri, boolean forceLoad) {
         try {
             final DrawableTypeRequest<String> glide = Glide.with(context).load(photoUri);
