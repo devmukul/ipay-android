@@ -98,6 +98,8 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
 
     private String mPin;
 
+    private LocationManager locationManager;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -269,11 +271,11 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
     @SuppressLint("MissingPermission")
     private void getLocationAndAcceptRequestPayment(String pin) {
         this.mPin = pin;
-        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             mProgressDialog.setMessage(getString(R.string.please_wait));
             mProgressDialog.show();
-            locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, Looper.getMainLooper());
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this, Looper.getMainLooper());
         } else {
             Utilities.showGPSHighAccuracyDialog(this);
         }
@@ -385,6 +387,8 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
     @Override
     public void onLocationChanged(Location location) {
         acceptRequestPayment(mPin, location);
+        if (locationManager != null)
+            locationManager.removeUpdates(this);
     }
 
 

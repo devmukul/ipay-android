@@ -95,6 +95,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
     private Tracker mTracker;
 
     private String mPin;
+    private LocationManager locationManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -331,7 +332,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
     @SuppressLint("MissingPermission")
     private void getLocationAndAcceptRequestPayment(String pin) {
         this.mPin = pin;
-        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             mProgressDialog.setMessage(getString(R.string.please_wait));
             mProgressDialog.show();
@@ -380,6 +381,8 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
     @Override
     public void onLocationChanged(Location location) {
         acceptRequestPayment(mPin, location);
+        if (locationManager != null)
+            locationManager.removeUpdates(this);
     }
 
 

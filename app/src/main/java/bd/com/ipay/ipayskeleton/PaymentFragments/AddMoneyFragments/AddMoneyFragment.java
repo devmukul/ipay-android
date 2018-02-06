@@ -49,6 +49,7 @@ import bd.com.ipay.ipayskeleton.Model.Service.IpayService;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
@@ -275,7 +276,7 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
 
     private boolean verifyUserInputs() {
         final boolean shouldProceed;
-        final View focusView;
+        View focusView = null;
         clearAllErrorMessage();
 
         if (mAddMoneyOptionSelectorView.getSelectedItemPosition() == -1) {
@@ -287,8 +288,11 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
             DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             return false;
         } else if (AddMoneyActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED()) {
-            DialogUtils.showDialogVerificationRequired(getActivity());
-            return false;
+            if(!ProfileInfoCacheManager.isAccountVerified()) {
+                DialogUtils.showDialogVerificationRequired(getActivity());
+                return false;
+            }
+            else shouldProceed = true;
         } else if (mAddMoneyOptionSelectorView.getSelectedItem().getServiceId() == ServiceIdConstants.ADD_MONEY_BY_BANK && mBankSelectorView.getSelectedItemPosition() == -1) {
             focusView = null;
             mBankSelectorView.setError(R.string.select_a_bank);
