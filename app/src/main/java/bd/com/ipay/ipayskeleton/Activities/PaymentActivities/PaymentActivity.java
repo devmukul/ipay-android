@@ -40,6 +40,7 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
     private String address;
     private String district;
     private String country;
+    private String thana;
 
     /**
      * If this value is set in the intent extras,
@@ -169,9 +170,11 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
                         address = mGetUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
                         district = mGetUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
                         country = mGetUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
+                        thana = mGetUserInfoResponse.getAddressList().getOFFICE().get(0).getThana();
                         bundle.putString(Constants.ADDRESS, address);
                         bundle.putString(Constants.COUNTRY, country);
                         bundle.putString(Constants.DISTRICT, district);
+                        bundle.putString(Constants.THANA, thana);
                         bundle.putString(Constants.PHOTO_URI, Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH));
                     }
 

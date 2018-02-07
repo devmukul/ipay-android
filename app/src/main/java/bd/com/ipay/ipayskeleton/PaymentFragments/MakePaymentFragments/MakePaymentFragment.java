@@ -91,7 +91,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private TextView businessNameTextView;
     private TextView businessMobileNumberTextView;
     private TextView mAddressTextView;
-    private TextView mAddressCountryAndDistrictTextView;
+    private TextView mThanaAndDistrictTextView;
+    private TextView mCountryTextView;
 
 
     private String mReceiverMobileNumber;
@@ -100,6 +101,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private String mAddressString;
     private String mDistrict;
     private String mCountry;
+    private String mThana;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
@@ -127,8 +129,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mRefNumberEditText = (EditText) v.findViewById(R.id.reference_number);
         mAddressTextView = (TextView) v.findViewById(R.id.textview_address_line_1);
-        mAddressCountryAndDistrictTextView = (TextView) v.findViewById(R.id.textview_address_line_2);
-
+        mThanaAndDistrictTextView = (TextView) v.findViewById(R.id.textview_address_line_2);
+        mCountryTextView = (TextView) v.findViewById(R.id.textview_address_line_3);
         businessProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         businessProfileImageView.setBusinessLogoPlaceHolder();
         businessNameTextView = (TextView) v.findViewById(R.id.textview_name);
@@ -160,15 +162,19 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 }
                 if (getActivity().getIntent().getStringExtra(Constants.ADDRESS) != null &&
                         getActivity().getIntent().getStringExtra(Constants.COUNTRY) != null &&
-                        getActivity().getIntent().getStringExtra(Constants.DISTRICT) != null) {
+                        getActivity().getIntent().getStringExtra(Constants.DISTRICT) != null &&
+                        getActivity().getIntent().getStringExtra(Constants.THANA) != null) {
                     mAddressString = getActivity().getIntent().getStringExtra(Constants.ADDRESS);
                     mCountry = Utilities.getFormattedCountryName(getActivity().getIntent().getStringExtra(Constants.COUNTRY));
                     mDistrict = getActivity().getIntent().getStringExtra(Constants.DISTRICT);
+                    mThana = getActivity().getIntent().getStringExtra(Constants.THANA);
                     mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
                     mAddressTextView.setVisibility(View.VISIBLE);
-                    mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
+                    mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+                    mCountryTextView.setVisibility(View.VISIBLE);
                     mAddressTextView.setText(mAddressString);
-                    mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                    mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
+                    mCountryTextView.setText(mCountry);
                     if (mReceiverPhotoUri != null) {
                         businessProfileImageView.setBusinessProfilePicture
                                 (Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
@@ -178,12 +184,15 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         mAddressString = getArguments().getString(Constants.ADDRESS);
                         mCountry = Utilities.getFormattedCountryName(getArguments().getString(Constants.COUNTRY));
                         mDistrict = getArguments().getString(Constants.DISTRICT);
+                        mThana = getArguments().getString(Constants.THANA);
 
                         if (mAddressString != null) {
                             mAddressTextView.setText(mAddressString);
-                            mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                            mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
+                            mCountryTextView.setText(mCountry);
                             mAddressTextView.setVisibility(View.VISIBLE);
-                            mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
+                            mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+                            mCountryTextView.setVisibility(View.VISIBLE);
                         }
                         if (getArguments().getString(Constants.PHOTO_URI) != null) {
                             mReceiverPhotoUri = getArguments().getString(Constants.PHOTO_URI);
@@ -439,6 +448,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         intent.putExtra(Constants.ADDRESS, mAddressString);
         intent.putExtra(Constants.COUNTRY, mCountry);
         intent.putExtra(Constants.DISTRICT, mDistrict);
+        intent.putExtra(Constants.THANA, mThana);
         if (location != null) {
             intent.putExtra(Constants.LATITUDE, location.getLatitude());
             intent.putExtra(Constants.LONGITUDE, location.getLongitude());
@@ -548,10 +558,13 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                                 mAddressString = office.get(0).getAddressLine1();
                                 mDistrict = office.get(0).getDistrict();
                                 mCountry = Utilities.getFormattedCountryName(office.get(0).getCountry());
+                                mThana = office.get(0).getThana();
                                 mAddressTextView.setText(mAddressString);
-                                mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                                mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
                                 mAddressTextView.setVisibility(View.VISIBLE);
-                                mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
+                                mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+                                mCountryTextView.setVisibility(View.VISIBLE);
+                                mCountryTextView.setText(mCountry);
                             }
                         }
                     }
