@@ -144,7 +144,7 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
                         if (office != null) {
                             mAddressString = office.get(0).getAddressLine1();
                             mDistrict = office.get(0).getDistrict();
-                            mCountry = office.get(0).getCountry();
+                            mCountry = Utilities.getFormattedCountryName(office.get(0).getCountry());
                         }
                     }
 

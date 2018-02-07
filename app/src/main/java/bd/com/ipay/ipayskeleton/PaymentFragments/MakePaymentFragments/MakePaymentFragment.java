@@ -162,22 +162,33 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         getActivity().getIntent().getStringExtra(Constants.COUNTRY) != null &&
                         getActivity().getIntent().getStringExtra(Constants.DISTRICT) != null) {
                     mAddressString = getActivity().getIntent().getStringExtra(Constants.ADDRESS);
-                    mCountry = getActivity().getIntent().getStringExtra(Constants.COUNTRY);
+                    mCountry = Utilities.getFormattedCountryName(getActivity().getIntent().getStringExtra(Constants.COUNTRY));
                     mDistrict = getActivity().getIntent().getStringExtra(Constants.DISTRICT);
+                    mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
                     mAddressTextView.setVisibility(View.VISIBLE);
                     mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
                     mAddressTextView.setText(mAddressString);
                     mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                    if (mReceiverPhotoUri != null) {
+                        businessProfileImageView.setBusinessProfilePicture
+                                (Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
+                    }
                 } else if (getArguments() != null) {
                     try {
                         mAddressString = getArguments().getString(Constants.ADDRESS);
-                        mCountry = getArguments().getString(Constants.COUNTRY);
+                        mCountry = Utilities.getFormattedCountryName(getArguments().getString(Constants.COUNTRY));
                         mDistrict = getArguments().getString(Constants.DISTRICT);
+
                         if (mAddressString != null) {
                             mAddressTextView.setText(mAddressString);
                             mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
                             mAddressTextView.setVisibility(View.VISIBLE);
                             mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
+                        }
+                        if (getArguments().getString(Constants.PHOTO_URI) != null) {
+                            mReceiverPhotoUri = getArguments().getString(Constants.PHOTO_URI);
+                            businessProfileImageView.setBusinessProfilePicture
+                                    (Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
                         }
                     } catch (Exception e) {
                         getProfileInfo(mReceiverMobileNumber);
@@ -530,16 +541,18 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String name = mGetUserInfoResponse.getName();
-                    if (mGetUserInfoResponse.getAddressList().getOFFICE() != null) {
-                        List<UserAddress> office = mGetUserInfoResponse.getAddressList().getOFFICE();
-                        if (office != null) {
-                            mAddressString = office.get(0).getAddressLine1();
-                            mDistrict = office.get(0).getDistrict();
-                            mCountry = office.get(0).getCountry();
-                            mAddressTextView.setText(mAddressString);
-                            mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
-                            mAddressTextView.setVisibility(View.VISIBLE);
-                            mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
+                    if (mGetUserInfoResponse.getAddressList() != null) {
+                        if (mGetUserInfoResponse.getAddressList().getOFFICE() != null) {
+                            List<UserAddress> office = mGetUserInfoResponse.getAddressList().getOFFICE();
+                            if (office != null) {
+                                mAddressString = office.get(0).getAddressLine1();
+                                mDistrict = office.get(0).getDistrict();
+                                mCountry = Utilities.getFormattedCountryName(office.get(0).getCountry());
+                                mAddressTextView.setText(mAddressString);
+                                mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                                mAddressTextView.setVisibility(View.VISIBLE);
+                                mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
 
@@ -563,7 +576,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     }
 
 
-                    if (!TextUtils.isEmpty(profilePicture)) {
+                    if (!TextUtils.isEmpty(profilePicture) && mReceiverPhotoUri == null) {
                         businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture, false);
                     }
                     if (TextUtils.isEmpty(name)) {
