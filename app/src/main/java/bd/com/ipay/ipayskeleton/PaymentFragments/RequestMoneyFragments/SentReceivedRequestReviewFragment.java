@@ -84,6 +84,8 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     private TextView mDescriptionView;
     private TextView mAmountView;
     private TextView mServiceChargeView;
+    private View mNetAmountViewHolder;
+    private View mServiceChargeViewHolder;
     private TextView mNetAmountTitleView;
     private TextView mNetAmountView;
     private Button mRejectButton;
@@ -135,6 +137,8 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
+        mNetAmountViewHolder = v.findViewById(R.id.netAmountViewHolder);
+        mServiceChargeViewHolder = v.findViewById(R.id.serviceChargeViewHolder);
         mNetAmountTitleView = (TextView) v.findViewById(R.id.net_amount_title);
         mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
         mAddInContactsCheckBox = (CheckBox) v.findViewById(R.id.add_in_contacts);
@@ -543,7 +547,11 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        if (serviceCharge.compareTo(BigDecimal.ZERO) > 0) {
+            mServiceChargeViewHolder.setVisibility(View.VISIBLE);
+            mNetAmountViewHolder.setVisibility(View.VISIBLE);
+            mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
+            mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        }
     }
 }
