@@ -51,6 +51,8 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
     private TextView mServiceChargeTextView;
     private TextView mNetAmountTextView;
+    private View mNetAmountViewHolder;
+    private View mServiceChargeViewHolder;
 
     private Tracker mTracker;
 
@@ -94,6 +96,9 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         final TextView amountTextView = findViewById(R.id.amount_text_view);
         mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
         mNetAmountTextView = findViewById(R.id.net_amount_text_view);
+        mNetAmountViewHolder = findViewById(R.id.netAmountViewHolder);
+        mServiceChargeViewHolder = findViewById(R.id.serviceChargeViewHolder);
+
         TextView descriptionTextView = findViewById(R.id.description_text_view);
         View descriptionViewHolder = findViewById(R.id.description_view_holder);
         final CheckBox addToContactCheckBox = findViewById(R.id.add_to_contact_check_box);
@@ -235,7 +240,11 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
-        mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        if (serviceCharge.compareTo(BigDecimal.ZERO) > 0) {
+            mServiceChargeViewHolder.setVisibility(View.VISIBLE);
+            mNetAmountViewHolder.setVisibility(View.VISIBLE);
+            mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
+            mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        }
     }
 }
