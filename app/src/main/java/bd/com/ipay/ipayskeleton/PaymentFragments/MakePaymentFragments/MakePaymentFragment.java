@@ -162,7 +162,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         getActivity().getIntent().getStringExtra(Constants.COUNTRY) != null &&
                         getActivity().getIntent().getStringExtra(Constants.DISTRICT) != null) {
                     mAddressString = getActivity().getIntent().getStringExtra(Constants.ADDRESS);
-                    mCountry = Utilities.formattedCountryName(getActivity().getIntent().getStringExtra(Constants.COUNTRY));
+                    mCountry = Utilities.getFormattedCountryName(getActivity().getIntent().getStringExtra(Constants.COUNTRY));
                     mDistrict = getActivity().getIntent().getStringExtra(Constants.DISTRICT);
                     mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
                     mAddressTextView.setVisibility(View.VISIBLE);
@@ -176,7 +176,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 } else if (getArguments() != null) {
                     try {
                         mAddressString = getArguments().getString(Constants.ADDRESS);
-                        mCountry = Utilities.formattedCountryName(getArguments().getString(Constants.COUNTRY));
+                        mCountry = Utilities.getFormattedCountryName(getArguments().getString(Constants.COUNTRY));
                         mDistrict = getArguments().getString(Constants.DISTRICT);
 
                         if (mAddressString != null) {
@@ -547,7 +547,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                             if (office != null) {
                                 mAddressString = office.get(0).getAddressLine1();
                                 mDistrict = office.get(0).getDistrict();
-                                mCountry = Utilities.formattedCountryName(office.get(0).getCountry());
+                                mCountry = Utilities.getFormattedCountryName(office.get(0).getCountry());
                                 mAddressTextView.setText(mAddressString);
                                 mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
                                 mAddressTextView.setVisibility(View.VISIBLE);
