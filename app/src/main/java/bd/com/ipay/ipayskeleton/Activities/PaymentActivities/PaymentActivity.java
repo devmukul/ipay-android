@@ -172,6 +172,7 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
                         bundle.putString(Constants.ADDRESS, address);
                         bundle.putString(Constants.COUNTRY, country);
                         bundle.putString(Constants.DISTRICT, district);
+                        bundle.putString(Constants.PHOTO_URI, Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_HIGH));
                     }
 
                 } catch (Exception e) {

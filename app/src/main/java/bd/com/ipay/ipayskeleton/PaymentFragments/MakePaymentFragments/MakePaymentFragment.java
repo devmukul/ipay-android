@@ -164,20 +164,31 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     mAddressString = getActivity().getIntent().getStringExtra(Constants.ADDRESS);
                     mCountry = getActivity().getIntent().getStringExtra(Constants.COUNTRY);
                     mDistrict = getActivity().getIntent().getStringExtra(Constants.DISTRICT);
+                    mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
                     mAddressTextView.setVisibility(View.VISIBLE);
                     mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
                     mAddressTextView.setText(mAddressString);
                     mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                    if (mReceiverPhotoUri != null) {
+                        businessProfileImageView.setBusinessProfilePicture
+                                (Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
+                    }
                 } else if (getArguments() != null) {
                     try {
                         mAddressString = getArguments().getString(Constants.ADDRESS);
                         mCountry = getArguments().getString(Constants.COUNTRY);
                         mDistrict = getArguments().getString(Constants.DISTRICT);
+
                         if (mAddressString != null) {
                             mAddressTextView.setText(mAddressString);
                             mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
                             mAddressTextView.setVisibility(View.VISIBLE);
                             mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
+                        }
+                        if (getArguments().getString(Constants.PHOTO_URI) != null) {
+                            mReceiverPhotoUri = getArguments().getString(Constants.PHOTO_URI);
+                            businessProfileImageView.setBusinessProfilePicture
+                                    (Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
                         }
                     } catch (Exception e) {
                         getProfileInfo(mReceiverMobileNumber);
@@ -563,7 +574,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     }
 
 
-                    if (!TextUtils.isEmpty(profilePicture)) {
+                    if (!TextUtils.isEmpty(profilePicture) && mReceiverPhotoUri == null) {
                         businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture, false);
                     }
                     if (TextUtils.isEmpty(name)) {
