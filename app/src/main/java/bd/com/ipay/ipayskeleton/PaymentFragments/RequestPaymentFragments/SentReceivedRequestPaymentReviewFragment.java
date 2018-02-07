@@ -85,6 +85,8 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
     private TextView mDescriptionTagView;
     private TextView mDescriptionView;
     private TextView mAmountView;
+    private View mNetAmountViewHolder;
+    private View mServiceChargeViewHolder;
     private TextView mServiceChargeView;
     private TextView mNetAmountView;
     private Button mRejectButton;
@@ -138,6 +140,8 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
+        mNetAmountViewHolder = v.findViewById(R.id.netAmountViewHolder);
+        mServiceChargeViewHolder = v.findViewById(R.id.serviceChargeViewHolder);
 
         mAcceptButton = (Button) v.findViewById(R.id.button_accept);
         mRejectButton = (Button) v.findViewById(R.id.button_reject);
@@ -418,6 +422,8 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
             mServiceChargeView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
             mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
         } else {
+            mServiceChargeViewHolder.setVisibility(View.VISIBLE);
+            mNetAmountViewHolder.setVisibility(View.VISIBLE);
             mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
             mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
         }
