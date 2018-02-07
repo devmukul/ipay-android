@@ -55,6 +55,8 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
 
     private TextView serviceChargeTextView;
     private TextView netAmountTextView;
+    private View mNetAmountViewHolder;
+    private View mServiceChargeViewHolder;
 
     private Tracker mTracker;
 
@@ -98,6 +100,8 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
 
         serviceChargeTextView = findViewById(R.id.service_charge_text_view);
         netAmountTextView = findViewById(R.id.net_amount_text_view);
+        mNetAmountViewHolder = findViewById(R.id.netAmountViewHolder);
+        mServiceChargeViewHolder = findViewById(R.id.serviceChargeViewHolder);
 
         receiverProfileImageView.setProfilePicture(mPhotoUri, false);
 
@@ -198,8 +202,12 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        serviceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
-        netAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        if (serviceCharge.compareTo(BigDecimal.ZERO) > 0) {
+            mServiceChargeViewHolder.setVisibility(View.VISIBLE);
+            mNetAmountViewHolder.setVisibility(View.VISIBLE);
+            serviceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
+            netAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        }
     }
 
     @Override
