@@ -92,6 +92,8 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
     private Button mRejectButton;
     private Button mAcceptButton;
     private Button mCancelButton;
+    private View mNetAmountViewHolder;
+    private View mServiceChargeViewHolder;
 
     private boolean switchedFromTransactionHistory = false;
     private Tracker mTracker;
@@ -144,6 +146,8 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
         mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
+        mNetAmountViewHolder = v.findViewById(R.id.netAmountViewHolder);
+        mServiceChargeViewHolder = v.findViewById(R.id.serviceChargeViewHolder);
 
         mAcceptButton = (Button) v.findViewById(R.id.button_accept);
         mRejectButton = (Button) v.findViewById(R.id.button_reject);
@@ -420,6 +424,8 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         // User who're accepting the request should not see the service charge. By force action. Deal with it :)
+        mServiceChargeViewHolder.setVisibility(View.VISIBLE);
+        mNetAmountViewHolder.setVisibility(View.VISIBLE);
         mServiceChargeView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
         mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
     }

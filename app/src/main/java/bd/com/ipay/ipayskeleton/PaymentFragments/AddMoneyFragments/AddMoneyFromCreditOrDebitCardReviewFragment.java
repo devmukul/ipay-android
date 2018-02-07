@@ -40,6 +40,8 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
 
     private TextView mServiceChargeTextView;
     private TextView mNetAmountTextView;
+    private View mNetAmountViewHolder;
+    private View mServiceChargeViewHolder;
 
     private ProgressDialog mProgressDialog;
 
@@ -69,6 +71,8 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
         final LinearLayout descriptionViewHolder = findViewById(R.id.description_view_holder);
         final TextView descriptionTextView = findViewById(R.id.description_text_view);
         final Button addMoneyButton = findViewById(R.id.add_money_button);
+        mNetAmountViewHolder = findViewById(R.id.netAmountViewHolder);
+        mServiceChargeViewHolder = findViewById(R.id.serviceChargeViewHolder);
 
         amountTextView.setText(Utilities.formatTaka(getAmount()));
         mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
@@ -145,8 +149,12 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
 
     @Override
     protected void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
-        mNetAmountTextView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
+        if (serviceCharge.compareTo(BigDecimal.ZERO) > 0) {
+            mServiceChargeViewHolder.setVisibility(View.VISIBLE);
+            mNetAmountViewHolder.setVisibility(View.VISIBLE);
+            mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
+            mNetAmountTextView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
+        }
     }
 
     @Override
