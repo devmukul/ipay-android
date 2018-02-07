@@ -766,6 +766,13 @@ public class Utilities {
         }
     }
 
+    public static String formattedCountryName(String countryName){
+        if(countryName.toLowerCase().equals("bd")){
+            countryName="Bangladesh";
+        }
+        return countryName;
+    }
+
     public static void initiateQRCodeScan(Fragment fragment) {
         IntentIntegrator.forSupportFragment(fragment).setPrompt(fragment.getString(R.string.qr_code_prompt)).initiateScan();
     }
