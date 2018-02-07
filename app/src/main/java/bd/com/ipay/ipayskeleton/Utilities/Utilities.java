@@ -766,9 +766,9 @@ public class Utilities {
         }
     }
 
-    public static String formattedCountryName(String countryName){
-        if(countryName.toLowerCase().equals("bd")){
-            countryName="Bangladesh";
+    public static String formattedCountryName(String countryName) {
+        if (countryName.toLowerCase().equals("bd")) {
+            countryName = "Bangladesh";
         }
         return countryName;
     }
