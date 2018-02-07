@@ -63,6 +63,8 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
 
     private TextView mServiceChargeTextView;
     private TextView mNetAmountTextView;
+    private View mNetAmountViewHolder;
+    private View mServiceChargeViewHolder;
 
     private Tracker mTracker;
 
@@ -120,6 +122,8 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
 
         mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
         mNetAmountTextView = findViewById(R.id.net_amount_text_view);
+        mNetAmountViewHolder = findViewById(R.id.netAmountViewHolder);
+        mServiceChargeViewHolder = findViewById(R.id.serviceChargeViewHolder);
         try {
             if (!TextUtils.isEmpty(mPhotoUri)) {
                 businessProfileImageView.setBusinessProfilePicture(mPhotoUri, false);
@@ -232,12 +236,10 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         if (serviceCharge.compareTo(BigDecimal.ZERO) > 0) {
-            // User who're accepting the request should not see the service charge. By force action. Deal with it :)
+            mServiceChargeViewHolder.setVisibility(View.VISIBLE);
+            mNetAmountViewHolder.setVisibility(View.VISIBLE);
             mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
             mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
-        } else {
-            mServiceChargeTextView.setVisibility(View.GONE);
-            mNetAmountTextView.setVisibility(View.GONE);
         }
     }
 
