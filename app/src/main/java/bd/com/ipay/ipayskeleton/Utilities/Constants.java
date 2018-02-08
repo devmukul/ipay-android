@@ -132,6 +132,7 @@ public class Constants {
     public static final String LONGITUDE = "LONGITUDE";
     public static final String COMMAND_CHECK_VERSION = "COMMAND_CHECK_VERSION";
     public static final String THANA = "THANA";
+    public static final String ID = "ID";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
