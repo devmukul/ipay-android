@@ -85,7 +85,7 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.NAME, name);
-        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + profilePictureUrl);
+        bundle.putString(Constants.PHOTO_URI, profilePictureUrl);
         bundle.putString(Constants.ADDRESS, mAddressString);
         bundle.putString(Constants.DISTRICT, mDistrict);
         bundle.putString(Constants.COUNTRY, mCountry);
