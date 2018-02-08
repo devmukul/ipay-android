@@ -126,7 +126,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mNetAmountTextView = findViewById(R.id.net_amount_text_view);
         try {
             if (!TextUtils.isEmpty(mPhotoUri)) {
-                businessProfileImageView.setBusinessProfilePicture(mPhotoUri, false);
+                businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mPhotoUri, false);
             }
             if (TextUtils.isEmpty(mReceiverBusinessName)) {
                 businessNameTextView.setVisibility(View.GONE);
