@@ -95,6 +95,11 @@
                     style="@style/TextViewUserInfoPaymentReviewSecondary"
                     android:visibility="gone"
                     android:gravity="center_horizontal" />
+                <TextView
+                    android:id="@+id/business_address_line_3_text_view"
+                    style="@style/TextViewUserInfoPaymentReviewSecondary"
+                    android:visibility="gone"
+                    android:gravity="center_horizontal" />
 
             </LinearLayout>
         </LinearLayout>
