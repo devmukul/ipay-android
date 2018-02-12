@@ -72,8 +72,8 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
         View view = inflater.inflate(R.layout.fragment_onboard_profile_picture, container, false);
 
         initializeViews(view);
-        setButtonActions();
         initProfilePicHelperDialog();
+        setButtonActions();
 
         mUri = ((ProfileVerificationHelperActivity) getActivity()).mProfilePhotoUri;
         if (ProfileInfoCacheManager.isProfilePictureUploaded()) {
@@ -153,20 +153,18 @@ public class OnBoardProfilePictureUploadHelperFragment extends Fragment implemen
     }
 
     private void initProfilePicHelperDialog() {
-        if (!ProfileInfoCacheManager.isAccountVerified()) {
-            profilePictureHelperDialog = new CustomUploadPickerDialog(getActivity(), getString(R.string.select_an_image), mOptionsForImageSelectionList);
-            profilePictureHelperDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
-                @Override
-                public void onResourceSelected(int mActionId, String action) {
-                    if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS)) {
-                        selectProfilePictureIntent(mActionId);
-                    } else {
-                        mSelectedOptionForImage = mActionId;
-                        Utilities.requestRequiredPermissions(OnBoardProfilePictureUploadHelperFragment.this, REQUEST_CODE_PERMISSION, DocumentPicker.DOCUMENT_PICK_PERMISSIONS);
-                    }
+        profilePictureHelperDialog = new CustomUploadPickerDialog(getActivity(), getString(R.string.select_an_image), mOptionsForImageSelectionList);
+        profilePictureHelperDialog.setOnResourceSelectedListener(new CustomUploadPickerDialog.OnResourceSelectedListener() {
+            @Override
+            public void onResourceSelected(int mActionId, String action) {
+                if (Utilities.isNecessaryPermissionExists(getContext(), DocumentPicker.DOCUMENT_PICK_PERMISSIONS)) {
+                    selectProfilePictureIntent(mActionId);
+                } else {
+                    mSelectedOptionForImage = mActionId;
+                    Utilities.requestRequiredPermissions(OnBoardProfilePictureUploadHelperFragment.this, REQUEST_CODE_PERMISSION, DocumentPicker.DOCUMENT_PICK_PERMISSIONS);
                 }
-            });
-        }
+            }
+        });
     }
 
     private void selectProfilePictureIntent(int id) {
