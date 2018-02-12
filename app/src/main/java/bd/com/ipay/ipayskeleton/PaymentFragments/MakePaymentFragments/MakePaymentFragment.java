@@ -449,6 +449,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         intent.putExtra(Constants.COUNTRY, mCountry);
         intent.putExtra(Constants.DISTRICT, mDistrict);
         intent.putExtra(Constants.THANA, mThana);
+        intent.putExtra(Constants.PHOTO_URI, mReceiverPhotoUri);
         if (location != null) {
             intent.putExtra(Constants.LATITUDE, location.getLatitude());
             intent.putExtra(Constants.LONGITUDE, location.getLongitude());
@@ -590,6 +591,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
 
                     if (!TextUtils.isEmpty(profilePicture) && mReceiverPhotoUri == null) {
+                        mReceiverPhotoUri = profilePicture;
                         businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture, false);
                     }
                     if (TextUtils.isEmpty(name)) {
