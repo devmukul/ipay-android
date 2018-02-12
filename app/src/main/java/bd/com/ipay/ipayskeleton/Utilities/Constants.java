@@ -133,6 +133,7 @@ public class Constants {
     public static final String COMMAND_CHECK_VERSION = "COMMAND_CHECK_VERSION";
     public static final String THANA = "THANA";
     public static final String ID = "ID";
+    public static final String BUSINESS_ACCOUNT_ID = "BUSINESS_ACCOUNT_ID";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
@@ -705,6 +706,7 @@ public class Constants {
     public static final String COMMAND_SET_BUSINESS_INFORMATION = "COMMAND_SET_BUSINESS_INFORMATION";
     public static final String COMMAND_GET_DETAILS_OF_BUSINESS_ROLE = "COMMAND_GET_DETAILS_OF_BUSINESS_ROLE";
     public static final String COMMAND_GET_ROLE_MAANGER_REQUESTS = "COMMAND_GET_ROLE_MAANGER_REQUESTS";
+    public static final String COMMAND_LEAVE_ACCOUNT = "COMMAND_LEAVE_ACCOUNT";
 
     public static final String COMMAND_CREATE_EMPLOYEE = "COMMAND_CREATE_EMPLOYEE";
     public static final String COMMAND_UPDATE_EMPLOYEE = "COMMAND_UPDATE_EMPLOYEE";

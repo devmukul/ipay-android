@@ -1117,4 +1117,5 @@
     <string name="location_mode">Location Mode</string>
     <string name="make_payment_location_mode_on_message">To make a payment, Please change location mode to High Accuracy.</string>
     <string name="view_role">View access list</string>
+    <string name="availed_service">You can currently do the following things on behalf of the business.</string>
 </resources>

@@ -17,7 +17,7 @@
             android:layout_height="@dimen/value20"
             android:layout_alignParentRight="true"
             android:layout_marginTop="@dimen/value15"
-            android:src="@drawable/ic_cancel_white" />
+            android:src="@drawable/ic_business_account_settings" />
 
         <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
             android:id="@+id/profile_image_view"

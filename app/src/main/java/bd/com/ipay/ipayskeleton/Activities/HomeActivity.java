@@ -378,6 +378,11 @@ public class HomeActivity extends BaseActivity
     public void onResume() {
         super.onResume();
         Utilities.hideKeyboard(this);
+        try {
+            drawer.closeDrawer(GravityCompat.START);
+        } catch (Exception e) {
+
+        }
         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS) && !ProfileInfoCacheManager.isAccountSwitched()) {
             getManagedBusinessAccountList();
         }
@@ -1033,21 +1038,11 @@ public class HomeActivity extends BaseActivity
                 resignFromBusinessImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        new AlertDialog.Builder(HomeActivity.this).
-                                setMessage(getString(R.string.do_you_want_to_resign))
-                                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        drawer.closeDrawer(GravityCompat.START);
-                                        resignFromBusiness(item.getId());
-                                    }
-                                }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        }).show();
-
+                        Intent intent = new Intent(HomeActivity.this,
+                                ManagedBusinessAccountSettingsActivity.class);
+                        intent.putExtra(Constants.BUSINESS_ACCOUNT_ID, item.getBusinessAccountId());
+                        intent.putExtra(Constants.ID, item.getId());
+                        startActivity(intent);
                     }
                 });
 

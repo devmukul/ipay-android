@@ -177,6 +177,11 @@
             android:theme="@style/AppTheme.ActionBarNoElevation"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
+            android:name=".Activities.ManagedBusinessAccountSettingsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ActionBarNoElevation"></activity>
+
+        <activity
             android:name=".Activities.PaymentActivities.TopUpActivity"
             android:label="@string/mobile_topup"
             android:screenOrientation="portrait"
