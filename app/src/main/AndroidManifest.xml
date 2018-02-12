@@ -179,8 +179,7 @@
         <activity
             android:name=".Activities.ManagedBusinessAccountSettingsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.ActionBarNoElevation"></activity>
-
+            android:theme="@style/AppTheme.ActionBarNoElevation" />
         <activity
             android:name=".Activities.PaymentActivities.TopUpActivity"
             android:label="@string/mobile_topup"
