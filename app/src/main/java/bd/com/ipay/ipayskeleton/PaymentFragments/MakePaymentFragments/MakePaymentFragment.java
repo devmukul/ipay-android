@@ -134,7 +134,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mAddressTextView = (TextView) v.findViewById(R.id.textview_address_line_1);
         mThanaAndDistrictTextView = (TextView) v.findViewById(R.id.textview_address_line_2);
         mCountryTextView = (TextView) v.findViewById(R.id.textview_address_line_3);
-        mAddressCountryAndDistrictTextView = (TextView) v.findViewById(R.id.textview_address_line_2);
         mProgressDialog = new ProgressDialog(getActivity());
 
         businessProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
