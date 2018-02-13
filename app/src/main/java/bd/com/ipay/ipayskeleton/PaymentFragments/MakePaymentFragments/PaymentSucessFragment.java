@@ -31,7 +31,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.PinChecker;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class PaymentSucessFragment extends BaseFragment{
+public class PaymentSucessFragment extends BaseFragment {
 
     private HttpRequestPostAsyncTask mPaymentTask = null;
 
@@ -54,7 +54,7 @@ public class PaymentSucessFragment extends BaseFragment{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         mAmount = (BigDecimal) getActivity().getIntent().getSerializableExtra(Constants.AMOUNT);
         mReceiverBusinessMobileNumber = getActivity().getIntent().getStringExtra(Constants.RECEIVER_MOBILE_NUMBER);
@@ -101,7 +101,7 @@ public class PaymentSucessFragment extends BaseFragment{
         final Button anotherPaymentButton = findViewById(R.id.another_payment_button);
 
         if (!TextUtils.isEmpty(mPhotoUri)) {
-            businessProfileImageView.setBusinessProfilePicture(mPhotoUri, false);
+            businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mPhotoUri, false);
         }
         if (TextUtils.isEmpty(mReceiverBusinessName)) {
             businessNameTextView.setVisibility(View.GONE);
