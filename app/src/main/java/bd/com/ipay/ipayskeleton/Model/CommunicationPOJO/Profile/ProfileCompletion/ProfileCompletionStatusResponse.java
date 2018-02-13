@@ -106,6 +106,18 @@ public class ProfileCompletionStatusResponse {
         return completedMandetoryFields;
     }
 
+    public String analyzeProfileVarificationData() {
+        String message = "";
+
+        for (int i = 0; i < tagwiseScorePercentage.size(); i++) {
+            if (tagwiseScorePercentage.get(i) == 0) {
+                message += " " +tagList.get(i);
+            }
+        }
+
+        return message;
+    }
+
     public void analyzeProfileCompletionData() {
 
         // Iterate the completionStatusList
