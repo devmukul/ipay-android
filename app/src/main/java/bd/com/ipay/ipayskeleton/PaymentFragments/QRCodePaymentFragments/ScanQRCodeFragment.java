@@ -52,6 +52,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
     private String address;
     private String country;
     private String district;
+    private String thana;
 
     @Nullable
     @Override
@@ -153,6 +154,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                             address = getUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
                             country = getUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
                             district = getUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
+                            thana = getUserInfoResponse.getAddressList().getOFFICE().get(0).getThana();
                         }
                     }
 
@@ -193,6 +195,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         intent.putExtra(Constants.COUNTRY, country);
         intent.putExtra(Constants.DISTRICT, district);
         intent.putExtra(Constants.ADDRESS, address);
+        intent.putExtra(Constants.THANA,thana);
         startActivity(intent);
         getActivity().finish();
     }

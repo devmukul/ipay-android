@@ -94,7 +94,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private TextView businessNameTextView;
     private TextView businessMobileNumberTextView;
     private TextView mAddressTextView;
-    private TextView mAddressCountryAndDistrictTextView;
+    private TextView mThanaAndDistrictTextView;
+    private TextView mCountryTextView;
 
 
     private String mReceiverMobileNumber;
@@ -103,6 +104,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private String mAddressString;
     private String mDistrict;
     private String mCountry;
+    private String mThana;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
@@ -130,6 +132,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mRefNumberEditText = (EditText) v.findViewById(R.id.reference_number);
         mAddressTextView = (TextView) v.findViewById(R.id.textview_address_line_1);
+        mThanaAndDistrictTextView = (TextView) v.findViewById(R.id.textview_address_line_2);
+        mCountryTextView = (TextView) v.findViewById(R.id.textview_address_line_3);
         mAddressCountryAndDistrictTextView = (TextView) v.findViewById(R.id.textview_address_line_2);
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -164,24 +168,42 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 }
                 if (getActivity().getIntent().getStringExtra(Constants.ADDRESS) != null &&
                         getActivity().getIntent().getStringExtra(Constants.COUNTRY) != null &&
-                        getActivity().getIntent().getStringExtra(Constants.DISTRICT) != null) {
+                        getActivity().getIntent().getStringExtra(Constants.DISTRICT) != null &&
+                        getActivity().getIntent().getStringExtra(Constants.THANA) != null) {
                     mAddressString = getActivity().getIntent().getStringExtra(Constants.ADDRESS);
-                    mCountry = getActivity().getIntent().getStringExtra(Constants.COUNTRY);
+                    mCountry = Utilities.getFormattedCountryName(getActivity().getIntent().getStringExtra(Constants.COUNTRY));
                     mDistrict = getActivity().getIntent().getStringExtra(Constants.DISTRICT);
+                    mThana = getActivity().getIntent().getStringExtra(Constants.THANA);
+                    mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
                     mAddressTextView.setVisibility(View.VISIBLE);
-                    mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
+                    mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+                    mCountryTextView.setVisibility(View.VISIBLE);
                     mAddressTextView.setText(mAddressString);
-                    mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                    mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
+                    mCountryTextView.setText(mCountry);
+                    if (mReceiverPhotoUri != null) {
+                        businessProfileImageView.setBusinessProfilePicture
+                                (Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
+                    }
                 } else if (getArguments() != null) {
                     try {
                         mAddressString = getArguments().getString(Constants.ADDRESS);
-                        mCountry = getArguments().getString(Constants.COUNTRY);
+                        mCountry = Utilities.getFormattedCountryName(getArguments().getString(Constants.COUNTRY));
                         mDistrict = getArguments().getString(Constants.DISTRICT);
+                        mThana = getArguments().getString(Constants.THANA);
+
                         if (mAddressString != null) {
                             mAddressTextView.setText(mAddressString);
-                            mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                            mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
+                            mCountryTextView.setText(mCountry);
                             mAddressTextView.setVisibility(View.VISIBLE);
-                            mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
+                            mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+                            mCountryTextView.setVisibility(View.VISIBLE);
+                        }
+                        if (getArguments().getString(Constants.PHOTO_URI) != null) {
+                            mReceiverPhotoUri = getArguments().getString(Constants.PHOTO_URI);
+                            businessProfileImageView.setBusinessProfilePicture
+                                    (Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
                         }
                     } catch (Exception e) {
                         getProfileInfo(mReceiverMobileNumber);
@@ -433,6 +455,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         intent.putExtra(Constants.ADDRESS, mAddressString);
         intent.putExtra(Constants.COUNTRY, mCountry);
         intent.putExtra(Constants.DISTRICT, mDistrict);
+        intent.putExtra(Constants.THANA, mThana);
+        intent.putExtra(Constants.PHOTO_URI, mReceiverPhotoUri);
         if (location != null) {
             intent.putExtra(Constants.LATITUDE, location.getLatitude());
             intent.putExtra(Constants.LONGITUDE, location.getLongitude());
@@ -536,16 +560,21 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String name = mGetUserInfoResponse.getName();
-                    if (mGetUserInfoResponse.getAddressList().getOFFICE() != null) {
-                        List<UserAddress> office = mGetUserInfoResponse.getAddressList().getOFFICE();
-                        if (office != null) {
-                            mAddressString = office.get(0).getAddressLine1();
-                            mDistrict = office.get(0).getDistrict();
-                            mCountry = office.get(0).getCountry();
-                            mAddressTextView.setText(mAddressString);
-                            mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
-                            mAddressTextView.setVisibility(View.VISIBLE);
-                            mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
+                    if (mGetUserInfoResponse.getAddressList() != null) {
+                        if (mGetUserInfoResponse.getAddressList().getOFFICE() != null) {
+                            List<UserAddress> office = mGetUserInfoResponse.getAddressList().getOFFICE();
+                            if (office != null) {
+                                mAddressString = office.get(0).getAddressLine1();
+                                mDistrict = office.get(0).getDistrict();
+                                mCountry = Utilities.getFormattedCountryName(office.get(0).getCountry());
+                                mThana = office.get(0).getThana();
+                                mAddressTextView.setText(mAddressString);
+                                mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
+                                mAddressTextView.setVisibility(View.VISIBLE);
+                                mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+                                mCountryTextView.setVisibility(View.VISIBLE);
+                                mCountryTextView.setText(mCountry);
+                            }
                         }
                     }
 
@@ -569,7 +598,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     }
 
 
-                    if (!TextUtils.isEmpty(profilePicture)) {
+                    if (!TextUtils.isEmpty(profilePicture) && mReceiverPhotoUri == null) {
+                        mReceiverPhotoUri = profilePicture;
                         businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture, false);
                     }
                     if (TextUtils.isEmpty(name)) {

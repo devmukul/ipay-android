@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
+import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -23,6 +24,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         MyApplication myApp = (MyApplication) this.getApplication();
         myApp.isAppInBackground = false;
+        Constants.HAS_COME_FROM_BACKGROUND_TO_FOREGROUND = true;
 
         if (SharedPrefManager.isRememberMeActive()) {
             if (Utilities.isValidTokenWindowTime())
@@ -35,6 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onPause();
 
         ((MyApplication) this.getApplication()).isAppInBackground = true;
+        Constants.HAS_COME_FROM_BACKGROUND_TO_FOREGROUND = false;
     }
 
     @Override

@@ -55,6 +55,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     private String mAddressString;
     private String mCountry;
     private String mDistrict;
+    private String mThana;
     private String mPhotoUri;
     private String mDescription;
     private String mReferenceNumber;
@@ -86,6 +87,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
             mAddressString = getArguments().getString(Constants.ADDRESS);
             mCountry = getArguments().getString(Constants.COUNTRY);
             mDistrict = getArguments().getString(Constants.DISTRICT);
+            mThana = getArguments().getString(Constants.THANA);
         }
 
         mProgressDialog = new ProgressDialog(getActivity());
@@ -112,12 +114,13 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         final ProfileImageView businessProfileImageView = findViewById(R.id.business_profile_image_view);
         final TextView businessNameTextView = findViewById(R.id.business_name_text_view);
         final TextView businessAddressTextView = findViewById(R.id.business_address_line_1_text_view);
-        final TextView businessDistrictAndCountryTextView = findViewById(R.id.business_address_line_2_text_view);
+        final TextView businessDistrictAndThanaTextView = findViewById(R.id.business_address_line_2_text_view);
         final TextView amountTextView = findViewById(R.id.amount_text_view);
         final View referenceNumberViewHolder = findViewById(R.id.reference_number_view_holder);
         final TextView referenceNumberTextView = findViewById(R.id.reference_number_text_view);
         final View descriptionViewHolder = findViewById(R.id.description_view_holder);
         final TextView descriptionTextView = findViewById(R.id.description_text_view);
+        final TextView mCountryTextView = findViewById(R.id.business_address_line_3_text_view);
         final Button makePaymentButton = findViewById(R.id.make_payment_button);
 
         mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
@@ -126,7 +129,7 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         mServiceChargeViewHolder = findViewById(R.id.serviceChargeViewHolder);
         try {
             if (!TextUtils.isEmpty(mPhotoUri)) {
-                businessProfileImageView.setBusinessProfilePicture(mPhotoUri, false);
+                businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mPhotoUri, false);
             }
             if (TextUtils.isEmpty(mReceiverBusinessName)) {
                 businessNameTextView.setVisibility(View.GONE);
@@ -136,9 +139,11 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
             }
             if (mAddressString != null && mDistrict != null && mCountry != null) {
                 businessAddressTextView.setVisibility(View.VISIBLE);
-                businessDistrictAndCountryTextView.setVisibility(View.VISIBLE);
+                businessDistrictAndThanaTextView.setVisibility(View.VISIBLE);
+                mCountryTextView.setVisibility(View.VISIBLE);
                 businessAddressTextView.setText(mAddressString);
-                businessDistrictAndCountryTextView.setText(mDistrict + " , " + mCountry);
+                businessDistrictAndThanaTextView.setText(mThana + " , " + mDistrict);
+                mCountryTextView.setText(mCountry);
             }
 
             amountTextView.setText(Utilities.formatTaka(mAmount));

@@ -167,6 +167,7 @@ public class HomeActivity extends BaseActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setLogo(R.drawable.logo_ipay);
+        DialogUtils.showAppUpdateDialog = null;
 
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mManagedBusinessListRecyclerView = (RecyclerView) mNavigationView.getHeaderView(0).findViewById(R.id.managed_business_list);

@@ -130,6 +130,8 @@ public class Constants {
     public static final String FROM_QR_SCAN = "FROM_QR_SCAN";
     public static final String LATITUDE = "LATITUDE";
     public static final String LONGITUDE = "LONGITUDE";
+    public static final String COMMAND_CHECK_VERSION = "COMMAND_CHECK_VERSION";
+    public static final String THANA = "THANA";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
@@ -857,6 +859,7 @@ public class Constants {
     public static boolean IS_API_VERSION_CHECKED = false;
     public static boolean ACCOUNT_DEFAULT = false;
     public static boolean ACCOUNT_SWITCHED = true;
+    public static boolean HAS_COME_FROM_BACKGROUND_TO_FOREGROUND = false;
 
     // Format
     public static final String DATE_FORMAT = "%02d/%02d/%4d";

@@ -14,8 +14,13 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivi
 import bd.com.ipay.ipayskeleton.R;
 
 public class DialogUtils {
+    public static MaterialDialog showAppUpdateDialog;
+
     public static void showAppUpdateRequiredDialog(final Context mContext) {
-        MaterialDialog dialog = new MaterialDialog.Builder(mContext)
+        if(showAppUpdateDialog!=null){
+            return;
+        }
+        showAppUpdateDialog = new MaterialDialog.Builder(mContext)
                 .title(R.string.update_ipay)
                 .cancelable(false)
                 .content(R.string.update_your_application)
@@ -23,7 +28,7 @@ public class DialogUtils {
                 .negativeText(R.string.later)
                 .show();
 
-        dialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
+        showAppUpdateDialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 Utilities.goToiPayInAppStore(mContext);
@@ -31,7 +36,7 @@ public class DialogUtils {
             }
         });
 
-        dialog.getBuilder().onNegative(new MaterialDialog.SingleButtonCallback() {
+        showAppUpdateDialog.getBuilder().onNegative(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 dialog.dismiss();
@@ -39,7 +44,7 @@ public class DialogUtils {
             }
         });
 
-        dialog.show();
+        showAppUpdateDialog.show();
     }
 
     public static void showChangePasswordSuccessDialog(final Context context) {
