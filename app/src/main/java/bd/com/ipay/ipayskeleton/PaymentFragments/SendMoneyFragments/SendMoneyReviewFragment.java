@@ -67,6 +67,8 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
     private TextView mServiceChargeTextView;
     private TextView mNetAmountTextView;
+    private View mNetAmountViewHolder;
+    private View mServiceChargeViewHolder;
 
     private Tracker mTracker;
 
@@ -110,10 +112,12 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         final TextView receiverNameTextView = findViewById(R.id.receiver_name_text_view);
         final TextView receiverMobileNumberTextView = findViewById(R.id.receiver_mobile_number_text_view);
         final TextView amountTextView = findViewById(R.id.amount_text_view);
-        mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
-        mNetAmountTextView = findViewById(R.id.net_amount_text_view);
         TextView descriptionTextView = findViewById(R.id.description_text_view);
         View descriptionViewHolder = findViewById(R.id.description_view_holder);
+        mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
+        mNetAmountTextView = findViewById(R.id.net_amount_text_view);
+        mNetAmountViewHolder = findViewById(R.id.netAmountViewHolder);
+        mServiceChargeViewHolder = findViewById(R.id.serviceChargeViewHolder);
         final CheckBox addToContactCheckBox = findViewById(R.id.add_to_contact_check_box);
         Button sendMoneyButton = findViewById(R.id.send_money_button);
 
@@ -175,11 +179,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
             }
         });
 
-        if (!Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
-                && !Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_SEND_MONEY);
-        else
-            attemptGetServiceCharge();
+        attemptGetServiceCharge();
 
     }
 
@@ -270,13 +270,12 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
-        mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
-    }
-
-    @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-        SendMoneyActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
+        if (serviceCharge.compareTo(BigDecimal.ZERO) > 0) {
+            mServiceChargeViewHolder.setVisibility(View.VISIBLE);
+            mNetAmountViewHolder.setVisibility(View.VISIBLE);
+            mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
+            mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        }
     }
 
     @Override

@@ -37,9 +37,11 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -140,15 +142,33 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
     private boolean verifyUserInputs() {
         boolean cancel = false;
         View focusView = null;
+        String errorMessage = null;
 
         mReceiverMobileNumber = mMobileNumberEditText.getText().toString();
         mDescription = mDescriptionEditText.getText().toString();
         mAmount = mAmountEditText.getText().toString().trim();
 
+        if (!Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                || !Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+            return false;
+        } else if (RequestPaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
+            DialogUtils.showDialogVerificationRequired(getActivity());
+            return false;
+        }
+
         // Check for a validation
         if (!(mAmount.length() > 0 && Double.parseDouble(mAmount) > 0)) {
-            mAmountEditText.setError(getString(R.string.please_enter_amount));
+            errorMessage = getString(R.string.please_enter_amount);
+
+        } else if (mAmount.trim().length() > 0) {
+            errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
+                    RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
+                    RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
+        }
+        if (errorMessage != null) {
             focusView = mAmountEditText;
+            mAmountEditText.setError(errorMessage);
             cancel = true;
         }
 
@@ -166,21 +186,6 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.you_cannot_request_money_from_your_number));
             cancel = true;
-        }
-
-        if ((mAmount.trim().length() > 0)
-                && Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                && Utilities.isValueAvailable(RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-
-            String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
-                    RequestPaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                    RequestPaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
-
-            if (error_message != null) {
-                focusView = mAmountEditText;
-                mAmountEditText.setError(error_message);
-                cancel = true;
-            }
         }
 
         if (cancel) {
@@ -301,14 +306,20 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
                     if (businessRuleArray != null) {
                         for (BusinessRule rule : businessRuleArray) {
                             switch (rule.getRuleID()) {
-                                case Constants.SERVICE_RULE_REQUEST_PAYMENT_MAX_AMOUNT_PER_PAYMENT:
+                                case BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_MAX_AMOUNT_PER_PAYMENT:
                                     RequestPaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                                     break;
-                                case Constants.SERVICE_RULE_REQUEST_PAYMENT_MIN_AMOUNT_PER_PAYMENT:
+                                case BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_MIN_AMOUNT_PER_PAYMENT:
                                     RequestPaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
                                     break;
-                                case Constants.SERVICE_RULE_IS_LOCATION_REQUIRED:
-                                    RequestPaymentActivity.mMandatoryBusinessRules.setIS_LOCATION_REQUIRED(rule.getRuleValue().intValue() >= Constants.LOCATION_REQUIRED_TRUE);
+                                case BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_VERIFICATION_REQUIRED:
+                                    RequestPaymentActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                                    break;
+                                case BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_PIN_REQUIRED:
+                                    RequestPaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+                                    break;
+                                case BusinessRuleConstants.SERVICE_RULE_REQUEST_PAYMENT_LOCATION_REQUIRED:
+                                    RequestPaymentActivity.mMandatoryBusinessRules.setLOCATION_REQUIRED(rule.getRuleValue());
                                     break;
                             }
                         }
@@ -317,7 +328,6 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
             mGetBusinessRuleTask = null;
         }

@@ -86,9 +86,9 @@
 
                 <TextView
                     android:id="@+id/business_address_line_1_text_view"
-                    android:visibility="gone"
                     style="@style/TextViewUserInfoPaymentReviewSecondary"
-                    android:gravity="center_horizontal" />
+                    android:gravity="center_horizontal"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/business_address_line_2_text_view"
@@ -129,41 +129,57 @@
 
             </LinearLayout>
 
-            <View style="@style/Divider" />
-
             <LinearLayout
+                android:id="@+id/serviceChargeViewHolder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <TextView
-                    style="@style/TextViewInfoLabelPaymentReview"
-                    android:text="@string/service_charge" />
+                <View style="@style/Divider" />
 
-                <TextView
-                    android:id="@+id/service_charge_text_view"
-                    style="@style/ChargeTextViewPaymentReview" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
+                    <TextView
+                        style="@style/TextViewInfoLabelPaymentReview"
+                        android:text="@string/service_charge" />
+
+                    <TextView
+                        android:id="@+id/service_charge_text_view"
+                        style="@style/ChargeTextViewPaymentReview" />
+
+                </LinearLayout>
             </LinearLayout>
 
-            <View style="@style/Divider" />
-
             <LinearLayout
+                android:id="@+id/netAmountViewHolder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <TextView
-                    style="@style/TextViewInfoLabelPaymentReview"
-                    android:text="@string/recipient_net_amount" />
+                <View style="@style/Divider" />
 
-                <TextView
-                    android:id="@+id/net_amount_text_view"
-                    style="@style/NetAmountTextViewPaymentReview"
-                    android:textSize="@dimen/text_size_small_medium" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
+                    <TextView
+                        style="@style/TextViewInfoLabelPaymentReview"
+                        android:text="@string/recipient_net_amount" />
+
+                    <TextView
+                        android:id="@+id/net_amount_text_view"
+                        style="@style/NetAmountTextViewPaymentReview"
+                        android:textSize="@dimen/text_size_small_medium" />
+
+                </LinearLayout>
             </LinearLayout>
 
             <View style="@style/Divider" />

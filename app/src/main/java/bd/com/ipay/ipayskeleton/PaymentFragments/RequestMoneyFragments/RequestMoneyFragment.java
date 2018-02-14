@@ -36,11 +36,13 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -88,7 +90,6 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         }
 
         mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage(getString(R.string.submitting_request_money));
 
         buttonSelectFromContacts.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,36 +166,42 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
 
         boolean cancel = false;
         View focusView = null;
+        String errorMessage = null;
 
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
+        if (!Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                || !Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+            return false;
+        }
+
+        if (RequestMoneyActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
+            DialogUtils.showDialogVerificationRequired(getActivity());
+            return false;
+        }
+
         // validation check of amount
         if (!(mAmountEditText.getText().toString().trim().length() > 0)) {
-            focusView = mAmountEditText;
-            mAmountEditText.setError(getString(R.string.please_enter_amount));
-            cancel = true;
-
-        } else if ((mAmountEditText.getText().toString().trim().length() > 0)
-                && Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                && Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+            errorMessage = getString(R.string.please_enter_amount);
+        } else if (mAmountEditText.getText().toString().trim().length() > 0) {
 
             BigDecimal maxAmount = RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT();
 
-            String error_message = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
+            errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmountEditText.getText().toString()),
                     RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(), maxAmount);
+        }
 
-            if (error_message != null) {
-                focusView = mAmountEditText;
-                mAmountEditText.setError(error_message);
-                cancel = true;
-            }
+        if (errorMessage != null) {
+            focusView = mAmountEditText;
+            mAmountEditText.setError(errorMessage);
+            cancel = true;
         }
 
         if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
             focusView = mDescriptionEditText;
             mDescriptionEditText.setError(getString(R.string.please_write_note));
             cancel = true;
-
         }
 
         if (!InputValidator.isValidNumber(mobileNumber)) {
@@ -277,10 +284,12 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
     }
 
     private void attemptGetBusinessRule(int serviceID) {
-
         if (mGetBusinessRuleTask != null) {
             return;
         }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
+        mProgressDialog.show();
 
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
@@ -291,7 +300,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-
+        mProgressDialog.dismiss();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
@@ -306,18 +315,26 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
                     if (businessRuleArray != null) {
 
                         for (BusinessRule rule : businessRuleArray) {
-                            if (rule.getRuleID().equals(Constants.SERVICE_RULE_REQUEST_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
+                            if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_MAX_AMOUNT_PER_PAYMENT)) {
                                 RequestMoneyActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-
-                            } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_REQUEST_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
+                            } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_MIN_AMOUNT_PER_PAYMENT)) {
                                 RequestMoneyActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_VERIFICATION_REQUIRED)) {
+                                RequestMoneyActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                            } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_REQUEST_MONEY_PIN_REQUIRED)) {
+                                RequestMoneyActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
                             }
                         }
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
+                    if (getActivity() != null)
+                        DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                 }
+
+            } else {
+                if (getActivity() != null)
+                    DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             }
             mGetBusinessRuleTask = null;
         }

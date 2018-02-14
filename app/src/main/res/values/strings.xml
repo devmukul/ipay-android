@@ -152,7 +152,9 @@
     <string name="from_date">From Date</string>
     <string name="service_not_available">Service Currently Not Available</string>
     <string name="contact_support_message">This service is unavailable right now for you. Please contact support for more info.</string>
+    <string name="service_unavailable_support_message">This service is unavailable right now for you. Please try again later.</string>
     <string name="country_not_support_message">iPay is not officially supported in your country, some features may not work properly.</string>
+    <string name="verification_required_message">You need to get verified to access this feature. Please complete the verification process and try again.</string>
     <string name="please_wait">Please wait. Loading…</string>
     <string name="loading">Loading…</string>
     <string name="load_more">Load more…</string>
@@ -222,6 +224,7 @@
     <string name="progress_dialog_validating_promo_code">Validating invitation code…</string>
     <string name="progress_dialog_processing">Processing TopUp…</string>
     <string name="progress_dialog_fetching_bank_info">Fetching bank information…</string>
+    <string name="progress_dialog_fetching">Fetching…</string>
     <string name="progress_dialog_cancelling">Cancelling request…</string>
     <string name="progress_dialog_fetching_bank_list">Fetching bank list…</string>
     <string name="progress_dialog_sending_invite">Sending invitation…</string>

@@ -6,13 +6,16 @@ public class MandatoryBusinessRules {
 
     private BigDecimal MAX_AMOUNT_PER_PAYMENT;
     private BigDecimal MIN_AMOUNT_PER_PAYMENT;
-    private boolean IS_LOCATION_REQUIRED;
-    private boolean IS_PIN_REQUIRED;
+    private boolean PIN_REQUIRED;
+    private boolean VERIFICATION_REQUIRED;
+    private boolean LOCATION_REQUIRED;
 
     public MandatoryBusinessRules() {
         MAX_AMOUNT_PER_PAYMENT = new BigDecimal("-1");
         MIN_AMOUNT_PER_PAYMENT = new BigDecimal("-1");
-        IS_PIN_REQUIRED = true;
+        PIN_REQUIRED = true;
+        VERIFICATION_REQUIRED = false;
+        LOCATION_REQUIRED = false;
     }
 
     public BigDecimal getMAX_AMOUNT_PER_PAYMENT() {
@@ -32,18 +35,35 @@ public class MandatoryBusinessRules {
     }
 
     public boolean IS_PIN_REQUIRED() {
-        return IS_PIN_REQUIRED;
+        return PIN_REQUIRED;
     }
 
-    public void setIS_PIN_REQUIRED(boolean IS_PIN_REQUIRED) {
-        this.IS_PIN_REQUIRED = IS_PIN_REQUIRED;
+    public void setPIN_REQUIRED(BigDecimal PIN_REQUIRED) {
+        if (PIN_REQUIRED.compareTo(BigDecimal.ZERO) > 0)
+            this.PIN_REQUIRED = true;
+        else
+            this.PIN_REQUIRED = false;
+    }
+
+    public boolean isVERIFICATION_REQUIRED() {
+        return VERIFICATION_REQUIRED;
+    }
+
+    public void setVERIFICATION_REQUIRED(BigDecimal VERIFICATION_REQUIRED) {
+        if (VERIFICATION_REQUIRED.compareTo(BigDecimal.ZERO) > 0)
+            this.VERIFICATION_REQUIRED = true;
+        else
+            this.VERIFICATION_REQUIRED = false;
     }
 
     public boolean IS_LOCATION_REQUIRED() {
-        return IS_LOCATION_REQUIRED;
+        return LOCATION_REQUIRED;
     }
 
-    public void setIS_LOCATION_REQUIRED(boolean IS_LOCATION_REQUIRED) {
-        this.IS_LOCATION_REQUIRED = IS_LOCATION_REQUIRED;
+    public void setLOCATION_REQUIRED(BigDecimal LOCATION_REQUIRED) {
+        if (LOCATION_REQUIRED.compareTo(BigDecimal.ZERO) > 0)
+            this.LOCATION_REQUIRED = true;
+        else
+            this.LOCATION_REQUIRED = false;
     }
 }
