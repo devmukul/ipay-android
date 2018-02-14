@@ -106,12 +106,15 @@ public class ProfileCompletionStatusResponse {
         return completedMandetoryFields;
     }
 
-    public String analyzeProfileVarificationData() {
+    public String getAnalyzedProfileVerificationMessage() {
         String message = "";
 
         for (int i = 0; i < tagwiseScorePercentage.size(); i++) {
             if (tagwiseScorePercentage.get(i) == 0) {
-                message += " " +tagList.get(i);
+                message += tagList.get(i);
+                if (i > 0 && i < tagwiseScorePercentage.size() - 1) {
+                    message += ", ";
+                }
             }
         }
 

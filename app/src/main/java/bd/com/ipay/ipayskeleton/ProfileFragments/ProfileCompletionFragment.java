@@ -37,6 +37,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
 
     private TextView mProfileCompletionStatusView;
     private ProgressBar mProfileCompletionStatusProgressBar;
+    private TextView mProfileCompletionInformationView;
     private Tracker mTracker;
 
     @Override
@@ -63,6 +64,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
         mProfileCompletionRecyclerView.setLayoutManager(mLayoutManager);
 
         mProfileCompletionStatusView = (TextView) v.findViewById(R.id.textview_profile_completion_status);
+        mProfileCompletionInformationView = (TextView) v.findViewById(R.id.textview_profile_completion_title);
         mProfileCompletionStatusProgressBar = (ProgressBar) v.findViewById(R.id.progress_bar_profile_completion_status);
         getProfileCompletionStatus();
 
@@ -83,6 +85,10 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
         mProfileCompletionStatusView.setText("Your profile is " + mProfileCompletionStatusResponse.getCompletionPercentage()
                 + "% complete");
         mProfileCompletionStatusProgressBar.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
+        if (!mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
+            mProfileCompletionInformationView.setText("For verification purpose you need to complete the following information - your "
+                    + mProfileCompletionStatusResponse.getAnalyzedProfileVerificationMessage() + " to get verified.");
+        } else mProfileCompletionInformationView.setVisibility(View.GONE);
 
         if (this.isAdded()) setContentShown(true);
     }
