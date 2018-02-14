@@ -1,13 +1,19 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
@@ -19,7 +25,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,7 +63,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class MakePaymentFragment extends BaseFragment implements HttpResponseListener {
+public class MakePaymentFragment extends BaseFragment implements LocationListener, HttpResponseListener {
 
 
     private static final int REQUEST_CODE_PERMISSION = 1001;
@@ -69,7 +74,7 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
 
-    private ProgressBar mProgressBar;
+    private ProgressDialog mProgressDialog;
 
     private Button buttonPayment;
     private ImageView buttonSelectFromContacts;
@@ -78,18 +83,16 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
     private EditText mRefNumberEditText;
-    private View mRightSideIconViewHolder;
     private TextView mBalanceView;
     private View profileView;
     private View mobileNumberView;
-
-    private ProgressDialog mProgressDialog;
 
     private ProfileImageView businessProfileImageView;
     private TextView businessNameTextView;
     private TextView businessMobileNumberTextView;
     private TextView mAddressTextView;
-    private TextView mAddressCountryAndDistrictTextView;
+    private TextView mThanaAndDistrictTextView;
+    private TextView mCountryTextView;
 
 
     private String mReceiverMobileNumber;
@@ -98,8 +101,11 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
     private String mAddressString;
     private String mDistrict;
     private String mCountry;
+    private String mThana;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
+
+    private LocationManager locationManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,17 +118,19 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_make_payment, container, false);
         getActivity().setTitle(R.string.make_payment);
-        mProgressBar = new ProgressBar(getActivity());
+
+        mProgressDialog = new ProgressDialog(getContext());
+        mProgressDialog.setCancelable(false);
+
         mMobileNumberEditText = (BusinessContactsSearchView) v.findViewById(R.id.mobile_number);
         profileView = (LinearLayout) v.findViewById(R.id.profile);
         mobileNumberView = (RelativeLayout) v.findViewById(R.id.mobile_number_view);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mRefNumberEditText = (EditText) v.findViewById(R.id.reference_number);
-        mRightSideIconViewHolder = v.findViewById(R.id.right_side_icon_view_holder);
         mAddressTextView = (TextView) v.findViewById(R.id.textview_address_line_1);
-        mAddressCountryAndDistrictTextView = (TextView) v.findViewById(R.id.textview_address_line_2);
-
+        mThanaAndDistrictTextView = (TextView) v.findViewById(R.id.textview_address_line_2);
+        mCountryTextView = (TextView) v.findViewById(R.id.textview_address_line_3);
         businessProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         businessProfileImageView.setBusinessLogoPlaceHolder();
         businessNameTextView = (TextView) v.findViewById(R.id.textview_name);
@@ -135,7 +143,6 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         buttonPayment = (Button) v.findViewById(R.id.button_payment);
 
-        mProgressDialog = new ProgressDialog(getContext());
         mBalanceView = (TextView) v.findViewById(R.id.balance_view);
 
         mBalanceView.setText(SharedPrefManager.getUserBalance());
@@ -155,14 +162,47 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                 }
                 if (getActivity().getIntent().getStringExtra(Constants.ADDRESS) != null &&
                         getActivity().getIntent().getStringExtra(Constants.COUNTRY) != null &&
-                        getActivity().getIntent().getStringExtra(Constants.DISTRICT) != null) {
+                        getActivity().getIntent().getStringExtra(Constants.DISTRICT) != null &&
+                        getActivity().getIntent().getStringExtra(Constants.THANA) != null) {
                     mAddressString = getActivity().getIntent().getStringExtra(Constants.ADDRESS);
-                    mCountry = getActivity().getIntent().getStringExtra(Constants.COUNTRY);
+                    mCountry = Utilities.getFormattedCountryName(getActivity().getIntent().getStringExtra(Constants.COUNTRY));
                     mDistrict = getActivity().getIntent().getStringExtra(Constants.DISTRICT);
+                    mThana = getActivity().getIntent().getStringExtra(Constants.THANA);
+                    mReceiverPhotoUri = getActivity().getIntent().getStringExtra(Constants.PHOTO_URI);
                     mAddressTextView.setVisibility(View.VISIBLE);
-                    mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
+                    mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+                    mCountryTextView.setVisibility(View.VISIBLE);
                     mAddressTextView.setText(mAddressString);
-                    mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                    mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
+                    mCountryTextView.setText(mCountry);
+                    if (mReceiverPhotoUri != null) {
+                        businessProfileImageView.setBusinessProfilePicture
+                                (Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
+                    }
+                } else if (getArguments() != null) {
+                    try {
+                        mAddressString = getArguments().getString(Constants.ADDRESS);
+                        mCountry = Utilities.getFormattedCountryName(getArguments().getString(Constants.COUNTRY));
+                        mDistrict = getArguments().getString(Constants.DISTRICT);
+                        mThana = getArguments().getString(Constants.THANA);
+
+                        if (mAddressString != null) {
+                            mAddressTextView.setText(mAddressString);
+                            mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
+                            mCountryTextView.setText(mCountry);
+                            mAddressTextView.setVisibility(View.VISIBLE);
+                            mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+                            mCountryTextView.setVisibility(View.VISIBLE);
+                        }
+                        if (getArguments().getString(Constants.PHOTO_URI) != null) {
+                            mReceiverPhotoUri = getArguments().getString(Constants.PHOTO_URI);
+                            businessProfileImageView.setBusinessProfilePicture
+                                    (Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
+                        }
+                    } catch (Exception e) {
+                        getProfileInfo(mReceiverMobileNumber);
+                    }
+
                 } else {
                     getProfileInfo(mReceiverMobileNumber);
                 }
@@ -188,8 +228,15 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     // For now, we are directly sending the money without going through any send money query
                     // sendMoneyQuery();
+                    Utilities.hideKeyboard(getContext(), getView());
                     if (verifyUserInputs()) {
-                        launchReviewPage();
+                        if (PaymentActivity.mMandatoryBusinessRules.IS_LOCATION_REQUIRED()) {
+                            if (Utilities.hasForcedLocationPermission(MakePaymentFragment.this)) {
+                                getLocationAndLaunchReviewPage();
+                            }
+                        } else {
+                            launchReviewPage(null);
+                        }
                     }
                 } else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
@@ -199,7 +246,6 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         buttonScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Utilities.performQRCodeScan(MakePaymentFragment.this, REQUEST_CODE_PERMISSION);
 
             }
@@ -213,6 +259,18 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         return v;
     }
 
+    @SuppressLint("MissingPermission")
+    private void getLocationAndLaunchReviewPage() {
+        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            mProgressDialog.setMessage(getString(R.string.please_wait));
+            mProgressDialog.show();
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this, Looper.getMainLooper());
+        } else {
+            Utilities.showGPSHighAccuracyDialog(this);
+        }
+    }
+
     private void getProfileInfo(String mobileNumber) {
         if (mGetProfileInfoTask != null) {
             return;
@@ -224,8 +282,9 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
                 mUri, getContext(), this);
         mProgressDialog.setMessage(getActivity().getString(R.string.loading));
-        mProgressDialog.show();
+        mProgressDialog.setMessage(getString(R.string.please_wait));
         mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
         mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -244,6 +303,13 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                     Utilities.initiateQRCodeScan(this);
                 } else {
                     Toast.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG).show();
+                }
+            }
+            case Utilities.LOCATION_SETTINGS_PERMISSION_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Utilities.initiateQRCodeScan(this);
+                } else {
+                    buttonPayment.performClick();
                 }
             }
         }
@@ -278,6 +344,8 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                     }
                 });
             }
+        } else if (requestCode == Utilities.LOCATION_SETTINGS_RESULT_CODE || requestCode == Utilities.LOCATION_SOURCE_SETTINGS_RESULT_CODE) {
+            buttonPayment.performClick();
         }
     }
 
@@ -357,12 +425,12 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         }
     }
 
-    private void launchReviewPage() {
+    private void launchReviewPage(@Nullable Location location) {
 
-
+        mProgressDialog.dismiss();
         getActivity().getIntent().setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        String receiver = null;
+        String receiver;
 
         if (TextUtils.isEmpty(mReceiverMobileNumber)) {
             receiver = mMobileNumberEditText.getText().toString().trim();
@@ -372,7 +440,6 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         BigDecimal amount = new BigDecimal(mAmountEditText.getText().toString().trim());
         String referenceNumber = mRefNumberEditText.getText().toString().trim();
         String description = mDescriptionEditText.getText().toString().trim();
-
         Intent intent = new Intent(getActivity(), PaymentReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, amount);
         intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(receiver));
@@ -381,6 +448,12 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
         intent.putExtra(Constants.ADDRESS, mAddressString);
         intent.putExtra(Constants.COUNTRY, mCountry);
         intent.putExtra(Constants.DISTRICT, mDistrict);
+        intent.putExtra(Constants.THANA, mThana);
+        intent.putExtra(Constants.PHOTO_URI, mReceiverPhotoUri);
+        if (location != null) {
+            intent.putExtra(Constants.LATITUDE, location.getLatitude());
+            intent.putExtra(Constants.LONGITUDE, location.getLongitude());
+        }
 
         if (!TextUtils.isEmpty(mReceiverName)) {
             intent.putExtra(Constants.NAME, mReceiverName);
@@ -393,12 +466,35 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
 
         if (mGetBusinessRuleTask != null)
             return;
-
+        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
         mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
                 mUri, getActivity(), this);
 
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        launchReviewPage(location);
+        if (locationManager != null)
+            locationManager.removeUpdates(this);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
     @Override
@@ -408,10 +504,13 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            mProgressDialog.dismiss();
+            mGetBusinessRuleTask = null;
+            mGetProfileInfoTask = null;
             if (getActivity() != null)
                 Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
-
+            mProgressDialog.dismiss();
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
@@ -421,11 +520,16 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
 
                     if (businessRuleArray != null) {
                         for (BusinessRule rule : businessRuleArray) {
-                            if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT)) {
-                                PaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-
-                            } else if (rule.getRuleID().equals(Constants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
-                                PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            switch (rule.getRuleID()) {
+                                case Constants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT:
+                                    PaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                    break;
+                                case Constants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT:
+                                    PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                    break;
+                                case Constants.SERVICE_RULE_IS_LOCATION_REQUIRED:
+                                    PaymentActivity.mMandatoryBusinessRules.setIS_LOCATION_REQUIRED(rule.getRuleValue().intValue() >= Constants.LOCATION_REQUIRED_TRUE);
+                                    break;
                             }
                         }
                     }
@@ -449,15 +553,20 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     String name = mGetUserInfoResponse.getName();
                     if (mGetUserInfoResponse.getAddressList() != null) {
-                        List<UserAddress> office = mGetUserInfoResponse.getAddressList().getOFFICE();
-                        if (office != null) {
-                            mAddressString = office.get(0).getAddressLine1();
-                            mDistrict = office.get(0).getDistrict();
-                            mCountry = office.get(0).getCountry();
-                            mAddressTextView.setVisibility(View.VISIBLE);
-                            mAddressCountryAndDistrictTextView.setVisibility(View.VISIBLE);
-                            mAddressTextView.setText(mAddressString);
-                            mAddressCountryAndDistrictTextView.setText(mDistrict + " , " + mCountry);
+                        if (mGetUserInfoResponse.getAddressList().getOFFICE() != null) {
+                            List<UserAddress> office = mGetUserInfoResponse.getAddressList().getOFFICE();
+                            if (office != null) {
+                                mAddressString = office.get(0).getAddressLine1();
+                                mDistrict = office.get(0).getDistrict();
+                                mCountry = Utilities.getFormattedCountryName(office.get(0).getCountry());
+                                mThana = office.get(0).getThana();
+                                mAddressTextView.setText(mAddressString);
+                                mThanaAndDistrictTextView.setText(mThana + " , " + mDistrict);
+                                mAddressTextView.setVisibility(View.VISIBLE);
+                                mThanaAndDistrictTextView.setVisibility(View.VISIBLE);
+                                mCountryTextView.setVisibility(View.VISIBLE);
+                                mCountryTextView.setText(mCountry);
+                            }
                         }
                     }
 
@@ -481,7 +590,8 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
                     }
 
 
-                    if (!TextUtils.isEmpty(profilePicture)) {
+                    if (!TextUtils.isEmpty(profilePicture) && mReceiverPhotoUri == null) {
+                        mReceiverPhotoUri = profilePicture;
                         businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture, false);
                     }
                     if (TextUtils.isEmpty(name)) {
@@ -508,7 +618,6 @@ public class MakePaymentFragment extends BaseFragment implements HttpResponseLis
             }
 
             mGetProfileInfoTask = null;
-            mProgressBar.setVisibility(View.GONE);
         }
     }
 }

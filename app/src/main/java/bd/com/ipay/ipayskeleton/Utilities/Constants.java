@@ -128,6 +128,10 @@ public class Constants {
     public static final String DISTRICT = "DISTRICT";
     public static final String COUNTRY = "COUNTRY";
     public static final String FROM_QR_SCAN = "FROM_QR_SCAN";
+    public static final String LATITUDE = "LATITUDE";
+    public static final String LONGITUDE = "LONGITUDE";
+    public static final String COMMAND_CHECK_VERSION = "COMMAND_CHECK_VERSION";
+    public static final String THANA = "THANA";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
@@ -818,6 +822,8 @@ public class Constants {
     public static final String SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT = "PAYMENT_MIN_AMOUNT_SINGLE";
     public static final String SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT = "PAYMENT_MAX_AMOUNT_SINGLE";
 
+    public static final String SERVICE_RULE_IS_LOCATION_REQUIRED = "LOCATION_REQUIRED";
+
     public static final String SERVICE_RULE_REQUEST_PAYMENT_MIN_AMOUNT_PER_PAYMENT = "REQUEST_PAYMENT_MIN_AMOUNT_SINGLE";
     public static final String SERVICE_RULE_REQUEST_PAYMENT_MAX_AMOUNT_PER_PAYMENT = "REQUEST_PAYMENT_MAX_AMOUNT_SINGLE";
 
@@ -883,6 +889,7 @@ public class Constants {
     public static boolean IS_API_VERSION_CHECKED = false;
     public static boolean ACCOUNT_DEFAULT = false;
     public static boolean ACCOUNT_SWITCHED = true;
+    public static boolean HAS_COME_FROM_BACKGROUND_TO_FOREGROUND = false;
 
     // Format
     public static final String DATE_FORMAT = "%02d/%02d/%4d";
@@ -910,5 +917,7 @@ public class Constants {
     public static final GetBusinessInformationResponse ACCOUNT_INFO_DEFAULT = null;
 
     public static final String QUALITY_HIGH = "High";
+
+    public static final int LOCATION_REQUIRED_TRUE = 1;
 
 }

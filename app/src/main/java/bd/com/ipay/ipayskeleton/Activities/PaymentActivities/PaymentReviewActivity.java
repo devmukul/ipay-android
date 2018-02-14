@@ -40,6 +40,7 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
     private String mAddressString;
     private String mDistrict;
     private String mCountry;
+    private String mThana;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
             mAddressString = getIntent().getStringExtra(Constants.ADDRESS);
             mDistrict = getIntent().getStringExtra(Constants.DISTRICT);
             mCountry = getIntent().getStringExtra(Constants.COUNTRY);
+            mThana = getIntent().getStringExtra(Constants.THANA);
             switchToPaymentReviewFragment(mReceiverName, mReceiverPhotoUri);
 
         } else {
@@ -83,10 +85,11 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.NAME, name);
-        bundle.putString(Constants.PHOTO_URI, Constants.BASE_URL_FTP_SERVER + profilePictureUrl);
+        bundle.putString(Constants.PHOTO_URI, profilePictureUrl);
         bundle.putString(Constants.ADDRESS, mAddressString);
         bundle.putString(Constants.DISTRICT, mDistrict);
         bundle.putString(Constants.COUNTRY, mCountry);
+        bundle.putString(Constants.THANA, mThana);
         paymentReviewFragment.setArguments(bundle);
 
         getSupportFragmentManager().beginTransaction()
@@ -144,7 +147,8 @@ public class PaymentReviewActivity extends BaseActivity implements HttpResponseL
                         if (office != null) {
                             mAddressString = office.get(0).getAddressLine1();
                             mDistrict = office.get(0).getDistrict();
-                            mCountry = office.get(0).getCountry();
+                            mCountry = Utilities.getFormattedCountryName(office.get(0).getCountry());
+                            mThana = office.get(0).getThana();
                         }
                     }
 

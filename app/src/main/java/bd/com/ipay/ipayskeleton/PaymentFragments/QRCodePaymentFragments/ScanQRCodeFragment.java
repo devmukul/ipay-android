@@ -52,6 +52,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
     private String address;
     private String country;
     private String district;
+    private String thana;
 
     @Nullable
     @Override
@@ -149,9 +150,12 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                     imageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
                     name = getUserInfoResponse.getName();
                     if (getUserInfoResponse.getAddressList() != null) {
-                        address = getUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
-                        country = getUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
-                        district = getUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
+                        if (getUserInfoResponse.getAddressList().getOFFICE() != null) {
+                            address = getUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
+                            country = getUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
+                            district = getUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
+                            thana = getUserInfoResponse.getAddressList().getOFFICE().get(0).getThana();
+                        }
                     }
 
                     // We will do a check here to know if the account is a personal account or business account.
@@ -191,6 +195,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         intent.putExtra(Constants.COUNTRY, country);
         intent.putExtra(Constants.DISTRICT, district);
         intent.putExtra(Constants.ADDRESS, address);
+        intent.putExtra(Constants.THANA,thana);
         startActivity(intent);
         getActivity().finish();
     }
