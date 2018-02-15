@@ -388,8 +388,6 @@ public class Constants {
     public static final String URL_BUSINESS_RULE = "business-rule";
     public static final String URL_SWITCH_ACCOUNT = "business-manager/businesses/";
 
-    public static final String URL_BUSINESS_RULE_WITH_SERVICE_CHARGE = "rules-charge";
-
     // Introducer REST
     public static final String URL_ASK_FOR_INTRODUCTION = "/introducer/introduceme/";
 
@@ -657,7 +655,6 @@ public class Constants {
     public static final String COMMAND_UPDATE_CONTACTS = "COMMAND_UPDATE_CONTACTS";
     public static final String COMMAND_GET_BUSINESS_RULE = "COMMAND_GET_BUSINESS_RULE";
     public static final String COMMAND_UPDATE_BUSINESS_ROLE_INVITATION = "COMMAND_UPDATE_BUSINESS_ROLE_INVITATION";
-    public static final String COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE = "COMMAND_GET_BUSINESS_RULE_WITH_SERVICE_CHARGE";
     public static final String COMMAND_GET_ALL_BUSINESS_LIST = "COMMAND_GET_ALL_BUSINESS_LIST";
     public static final String COMMAND_GET_TRENDING_BUSINESS_LIST = "COMMAND_GET_TRENDING_BUSINESS_LIST";
     public static final String COMMAND_GET_ALL_SECURITY_QUESTIONS = "COMMAND_GET_ALL_SECURITY_QUESTIONS";
@@ -801,33 +798,6 @@ public class Constants {
     public static final String DESCRIPTION_TAG = "description";
     public static final String REFERENCE_NUMBER = "reference number";
     public static final String AMOUNT_TAG = "amount";
-
-    public static final String SERVICE_RULE_SEND_MONEY_MIN_AMOUNT_PER_PAYMENT = "SENDMONEY_MIN_AMOUNT_SINGLE";
-    public static final String SERVICE_RULE_SEND_MONEY_MAX_AMOUNT_PER_PAYMENT = "SENDMONEY_MAX_AMOUNT_SINGLE";
-
-    public static final String SERVICE_RULE_REQUEST_MONEY_MIN_AMOUNT_PER_PAYMENT = "REQUESTMONEY_MIN_AMOUNT_SINGLE";
-    public static final String SERVICE_RULE_REQUEST_MONEY_MAX_AMOUNT_PER_PAYMENT = "REQUESTMONEY_MAX_AMOUNT_SINGLE";
-
-    public static final String SERVICE_RULE_ADD_MONEY_MIN_AMOUNT_PER_PAYMENT = "ADDMONEY_MIN_AMOUNT_SINGLE";
-    public static final String SERVICE_RULE_ADD_MONEY_MAX_AMOUNT_PER_PAYMENT = "ADDMONEY_MAX_AMOUNT_SINGLE";
-
-    public static final String SERVICE_RULE_TOP_UP_MIN_AMOUNT_PER_PAYMENT = "TOPUP_MIN_AMOUNT_SINGLE";
-    public static final String SERVICE_RULE_TOP_UP_MAX_AMOUNT_PER_PAYMENT = "TOPUP_MAX_AMOUNT_SINGLE";
-
-    public static final String SERVICE_RULE_WITHDRAW_MONEY_MIN_AMOUNT_PER_PAYMENT = "WITHDRAW_MIN_AMOUNT_SINGLE";
-    public static final String SERVICE_RULE_WITHDRAW_MONEY_MAX_AMOUNT_PER_PAYMENT = "WITHDRAW_MAX_AMOUNT_SINGLE";
-
-    public static final String SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT = "PAYMENT_MIN_AMOUNT_SINGLE";
-    public static final String SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT = "PAYMENT_MAX_AMOUNT_SINGLE";
-
-    public static final String SERVICE_RULE_IS_LOCATION_REQUIRED = "LOCATION_REQUIRED";
-
-    public static final String SERVICE_RULE_REQUEST_PAYMENT_MIN_AMOUNT_PER_PAYMENT = "REQUEST_PAYMENT_MIN_AMOUNT_SINGLE";
-    public static final String SERVICE_RULE_REQUEST_PAYMENT_MAX_AMOUNT_PER_PAYMENT = "REQUEST_PAYMENT_MAX_AMOUNT_SINGLE";
-
-    public static final String SERVICE_RULE_ADD_CARDMONEY_MIN_AMOUNT_SINGLE = "ADD_CARDMONEY_MIN_AMOUNT_SINGLE";
-    public static final String SERVICE_RULE_ADD_CARDMONEY_MAX_AMOUNT_SINGLE = "ADD_CARDMONEY_MAX_AMOUNT_SINGLE";
-    public static final String SERVICE_RULE_ADD_CARDMONEY_PINREQUIRED = "ADD_CARDMONEY_PINREQUIRED";
 
     public static final int INVOICE_STATUS_ACCEPTED = 200;
     public static final int INVOICE_STATUS_PROCESSING = 102;

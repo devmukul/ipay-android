@@ -150,12 +150,7 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
             }
         });
 
-
-        if (!Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
-                && !Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_TOP_UP);
-        else
-            attemptGetServiceCharge();
+        attemptGetServiceCharge();
 
         return v;
     }
@@ -226,12 +221,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
             mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
 
         }
-
-    }
-
-    @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-        TopUpActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
 
     }
 

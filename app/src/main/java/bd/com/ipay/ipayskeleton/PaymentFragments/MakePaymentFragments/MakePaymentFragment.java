@@ -54,11 +54,13 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserAddress;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -74,7 +76,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
 
-    private ProgressDialog mProgressDialog;
 
     private Button buttonPayment;
     private ImageView buttonSelectFromContacts;
@@ -86,6 +87,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private TextView mBalanceView;
     private View profileView;
     private View mobileNumberView;
+    private ProgressDialog mProgressDialog;
+
 
     private ProfileImageView businessProfileImageView;
     private TextView businessNameTextView;
@@ -131,6 +134,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mAddressTextView = (TextView) v.findViewById(R.id.textview_address_line_1);
         mThanaAndDistrictTextView = (TextView) v.findViewById(R.id.textview_address_line_2);
         mCountryTextView = (TextView) v.findViewById(R.id.textview_address_line_3);
+        mProgressDialog = new ProgressDialog(getActivity());
+
         businessProfileImageView = (ProfileImageView) v.findViewById(R.id.profile_picture);
         businessProfileImageView.setBusinessLogoPlaceHolder();
         businessNameTextView = (TextView) v.findViewById(R.id.textview_name);
@@ -361,25 +366,28 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
         boolean cancel = false;
         View focusView = null;
-        String errorMessage = null;
+        String errorMessage;
+
+        if (!Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
+                || !Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
+            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+            return false;
+        } else if (PaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
+            DialogUtils.showDialogVerificationRequired(getActivity());
+            return false;
+        }
 
         if (SharedPrefManager.ifContainsUserBalance()) {
             final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
 
             //validation check of amount
             if (TextUtils.isEmpty(mAmountEditText.getText())) {
-                focusView = mAmountEditText;
-                mAmountEditText.setError(getString(R.string.please_enter_amount));
-                cancel = true;
-
+                errorMessage = getString(R.string.please_enter_amount);
             } else {
                 final BigDecimal paymentAmount = new BigDecimal(mAmountEditText.getText().toString());
                 if (paymentAmount.compareTo(balance) > 0) {
                     errorMessage = getString(R.string.insufficient_balance);
-                }
-                if (Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                        && Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-
+                } else {
                     final BigDecimal minimumPaymentAmount = PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
                     final BigDecimal maximumPaymentAmount = PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
 
@@ -387,9 +395,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 }
             }
         } else {
-            focusView = mAmountEditText;
             errorMessage = getString(R.string.balance_not_available);
-            cancel = true;
         }
 
         if (errorMessage != null) {
@@ -463,9 +469,12 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     }
 
     private void attemptGetBusinessRule(int serviceID) {
-
         if (mGetBusinessRuleTask != null)
             return;
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
+        mProgressDialog.show();
+
         mProgressDialog.setMessage(getString(R.string.please_wait));
         mProgressDialog.show();
         String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
@@ -499,7 +508,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-
         mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
@@ -520,28 +528,27 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
                     if (businessRuleArray != null) {
                         for (BusinessRule rule : businessRuleArray) {
-                            switch (rule.getRuleID()) {
-                                case Constants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT:
-                                    PaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                    break;
-                                case Constants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT:
-                                    PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
-                                    break;
-                                case Constants.SERVICE_RULE_IS_LOCATION_REQUIRED:
-                                    PaymentActivity.mMandatoryBusinessRules.setIS_LOCATION_REQUIRED(rule.getRuleValue().intValue() >= Constants.LOCATION_REQUIRED_TRUE);
-                                    break;
+                            if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT)) {
+                                PaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
+                                PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                            } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_VERIFICATION_REQUIRED)) {
+                                PaymentActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                            } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_PIN_REQUIRED)) {
+                                PaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+                            } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_LOCATION_REQUIRED)) {
+                                PaymentActivity.mMandatoryBusinessRules.setLOCATION_REQUIRED(rule.getRuleValue());
                             }
                         }
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
+                        DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                 }
             } else {
                 if (getActivity() != null)
-                    Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
+                    DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             }
 
             mGetBusinessRuleTask = null;

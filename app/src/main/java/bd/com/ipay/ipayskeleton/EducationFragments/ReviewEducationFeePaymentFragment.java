@@ -49,9 +49,6 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
     private HttpRequestPostAsyncTask mEducationPaymentTask = null;
     private MakeEducationPaymentResponse mPaymentResponse;
 
-    private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
-    private GetUserInfoResponse mGetUserInfoResponse;
-
     private ProgressDialog mProgressDialog;
 
     private String mError_message;
@@ -118,12 +115,7 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
             }
         });
 
-        // Check if Min or max amount is available
-        if (!Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
-                && !Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_MAKE_PAYMENT);
-        else
-            attemptGetServiceCharge();
+        attemptGetServiceCharge();
         return v;
     }
 
@@ -295,11 +287,6 @@ public class ReviewEducationFeePaymentFragment extends ReviewFragment implements
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         mNetPayableView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
-    }
-
-    @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-        PaymentActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
     }
 
     @Override
