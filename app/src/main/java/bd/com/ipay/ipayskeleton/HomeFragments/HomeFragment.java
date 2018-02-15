@@ -366,7 +366,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
             mProfileCompletionStatusResponse.analyzeProfileCompletionData();
 
-            if (!mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
+            if (!mProfileCompletionStatusResponse.isCompletedMandatoryFields()) {
 
                 mProfileCompletionMessageView.setText("Your profile is " +
                         mProfileCompletionStatusResponse.getCompletionPercentage() + "% "

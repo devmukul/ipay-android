@@ -26,9 +26,9 @@ public class ProfileCompletionPropertyConstants {
     public static final String BUSINESS_INFO = "BUSINESS_INFO";
     public static final String BUSINESS_DOCUMENTS = "BUSINESS_DOCUMENTS";
 
-    public static final int TAG_POSITION_BASIC_INFO = 0;
-    public static final int TAG_POSITION_PERSONAL_ADDRESS = 1;
-    public static final int TAG_POSITION_IDENTIFICATION = 2;
+    public static final int TAG_POSITION_PROFILE_PICTURE = 0;
+    public static final int TAG_POSITION_IDENTIFICATION = 1;
+    public static final int TAG_POSITION_BASIC_INFO = 2;
     public static final int TAG_POSITION_SOURCE_OF_FUND = 3;
 
     public static final int TAG_POSITION_BUSINESS_INFO = 0;
