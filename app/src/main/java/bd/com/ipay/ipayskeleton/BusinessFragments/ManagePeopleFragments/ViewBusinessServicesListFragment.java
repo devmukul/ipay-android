@@ -35,7 +35,7 @@ import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
 
-public class ViewAccessListFragment extends Fragment implements HttpResponseListener {
+public class ViewBusinessServicesListFragment extends Fragment implements HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetDetailsOfRoleTask;
     private BusinessAccountDetails mBusinessAccoutnDetails;
@@ -60,7 +60,7 @@ public class ViewAccessListFragment extends Fragment implements HttpResponseList
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mainView = inflater.inflate(R.layout.fragment_view_acces_list, container, false);
+        mainView = inflater.inflate(R.layout.fragment_view_business_services_list, container, false);
         mBusinessLogo = (ProfileImageView) mainView.findViewById(R.id.business_profile_image_view);
         mBusinessNameTextView = (TextView) mainView.findViewById(R.id.business_name_text_view);
         mRoleTextView = (TextView) mainView.findViewById(R.id.role_name);
@@ -94,7 +94,7 @@ public class ViewAccessListFragment extends Fragment implements HttpResponseList
     private void getAssociatedID() {
         try {
             mID = ((ManagedBusinessAccountSettingsActivity) (getActivity())).mId;
-            if (mID == -1) {
+            if (mID == Constants.BUSINESS_ID_DEFAULT) {
                 getActivity().finish();
             }
         } catch (Exception e) {
@@ -118,7 +118,7 @@ public class ViewAccessListFragment extends Fragment implements HttpResponseList
     private void getAssociatedBusinessAccountID() {
         try {
             mBusinessAccountID = ((ManagedBusinessAccountSettingsActivity) (getActivity())).mBusinessAccountId;
-            if (mBusinessAccountID == -1) {
+            if (mBusinessAccountID == Constants.BUSINESS_ID_DEFAULT) {
                 getActivity().finish();
             } else {
                 getDetailsOfAssociatedRole();

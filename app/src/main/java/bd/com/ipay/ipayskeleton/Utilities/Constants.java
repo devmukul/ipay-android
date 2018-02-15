@@ -175,6 +175,7 @@ public class Constants {
     public static final int STARTING_MONTH = 01;
     public static final int STARTING_YEAR = 2016;
     public static final int DEFAULT_USER_CLASS = 1;
+    public static final int BUSINESS_ID_DEFAULT = -1;
 
     public static final int PHOTO_ID_FILE_MAX_SIZE = 5;
 

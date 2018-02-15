@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.MenuItem;
 
-import bd.com.ipay.ipayskeleton.BusinessFragments.ManagePeopleFragments.ViewAccessListFragment;
+import bd.com.ipay.ipayskeleton.BusinessFragments.ManagePeopleFragments.ViewBusinessServicesListFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -21,8 +21,8 @@ public class ManagedBusinessAccountSettingsActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle bundle = getIntent().getExtras();
         setTitle("Business account settings");
-        mBusinessAccountId = bundle.getLong(Constants.BUSINESS_ACCOUNT_ID, -1);
-        mId = bundle.getLong(Constants.ID, -1);
+        mBusinessAccountId = bundle.getLong(Constants.BUSINESS_ACCOUNT_ID, Constants.BUSINESS_ID_DEFAULT);
+        mId = bundle.getLong(Constants.ID, Constants.BUSINESS_ID_DEFAULT);
         switchToViewAccessListFragment();
     }
 
@@ -31,7 +31,7 @@ public class ManagedBusinessAccountSettingsActivity extends BaseActivity {
             getSupportFragmentManager().popBackStackImmediate();
         }
         getSupportFragmentManager().beginTransaction().
-                replace(R.id.fragment_container, new ViewAccessListFragment()).commit();
+                replace(R.id.fragment_container, new ViewBusinessServicesListFragment()).commit();
     }
 
     @Override
