@@ -21,7 +21,6 @@ import com.google.gson.GsonBuilder;
 
 import java.math.BigDecimal;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.CardPaymentWebViewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -31,7 +30,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMo
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -42,6 +40,8 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
 
     private TextView mServiceChargeTextView;
     private TextView mNetAmountTextView;
+    private View mNetAmountViewHolder;
+    private View mServiceChargeViewHolder;
 
     private ProgressDialog mProgressDialog;
 
@@ -71,6 +71,8 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
         final LinearLayout descriptionViewHolder = findViewById(R.id.description_view_holder);
         final TextView descriptionTextView = findViewById(R.id.description_text_view);
         final Button addMoneyButton = findViewById(R.id.add_money_button);
+        mNetAmountViewHolder = findViewById(R.id.netAmountViewHolder);
+        mServiceChargeViewHolder = findViewById(R.id.serviceChargeViewHolder);
 
         amountTextView.setText(Utilities.formatTaka(getAmount()));
         mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
@@ -88,29 +90,11 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
         addMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                        && Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-                    final String errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
-                            AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                            AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
-
-                    if (errorMessage == null) {
-                        attemptAddMoney();
-
-                    } else {
-                        showErrorDialog(errorMessage);
-                    }
-                } else
-                    attemptAddMoney();
+                attemptAddMoney();
             }
         });
 
-        // Check if Min or max amount is available
-        if (!Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
-                && !Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD);
-        else
-            attemptGetServiceCharge();
+        attemptGetServiceCharge();
     }
 
     private void attemptAddMoney() {
@@ -165,13 +149,12 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
 
     @Override
     protected void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
-        mNetAmountTextView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
-    }
-
-    @Override
-    protected void onPinLoadFinished(boolean isPinRequired) {
-        AddMoneyActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
+        if (serviceCharge.compareTo(BigDecimal.ZERO) > 0) {
+            mServiceChargeViewHolder.setVisibility(View.VISIBLE);
+            mNetAmountViewHolder.setVisibility(View.VISIBLE);
+            mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
+            mNetAmountTextView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
+        }
     }
 
     @Override
@@ -179,7 +162,6 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
         getActivity().setResult(resultCode, data);
         getActivity().finish();
     }
-
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {

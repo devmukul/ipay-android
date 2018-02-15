@@ -104,4 +104,34 @@ public class DialogUtils {
                 .show();
         dialog.show();
     }
+
+    public static void showDialogForBusinessRuleNotAvailable(final Context context) {
+        MaterialDialog dialog = new MaterialDialog.Builder(context)
+                .cancelable(false)
+                .content(context.getString(R.string.service_unavailable_support_message))
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        ((Activity) context).onBackPressed();
+                    }
+                })
+                .show();
+        dialog.show();
+    }
+
+    public static void showDialogVerificationRequired(final Context context) {
+        MaterialDialog dialog = new MaterialDialog.Builder(context)
+                .cancelable(false)
+                .content(context.getString(R.string.verification_required_message))
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        ((Activity) context).onBackPressed();
+                    }
+                })
+                .show();
+        dialog.show();
+    }
 }

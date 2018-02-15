@@ -6,8 +6,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:layout_above="@+id/another_payment_button">
+        android:layout_above="@+id/another_payment_button"
+        android:background="@android:color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,48 +18,48 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/colorBackground"
                 android:orientation="horizontal"
                 android:padding="@dimen/activity_horizontal_margin"
-                android:background="@color/colorBackground"
                 android:visibility="gone">
 
                 <TextView
                     android:id="@+id/balance_title_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="left"
                     android:layout_centerVertical="true"
-                    android:textSize="@dimen/text_size_small"
-                    android:textColor="@color/colorPaymentReviewSecondaryText"
+                    android:fontFamily="sans-serif"
+                    android:gravity="left"
                     android:text="@string/ipay_balance"
-                    android:fontFamily="sans-serif"/>
+                    android:textColor="@color/colorPaymentReviewSecondaryText"
+                    android:textSize="@dimen/text_size_small" />
 
                 <TextView
                     android:id="@+id/balance_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="right"
                     android:layout_centerVertical="true"
-                    android:textSize="@dimen/text_size_extra_large"
-                    android:textColor="@color/colorPaymentReviewPrimaryText"
-                    android:fontFamily="sans-serif-light"
-                    android:layout_toRightOf="@+id/balance_title_view"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_toLeftOf="@+id/tk_view"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+                    android:layout_toRightOf="@+id/balance_title_view"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="right"
+                    android:textColor="@color/colorPaymentReviewPrimaryText"
+                    android:textSize="@dimen/text_size_extra_large" />
 
                 <TextView
                     android:id="@+id/tk_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:layout_alignTop="@+id/balance_view"
                     android:layout_alignParentRight="true"
-                    android:textSize="@dimen/text_size_mini"
-                    android:textColor="@color/colorPaymentReviewPrimaryText"
-                    android:text="@string/tk"
-                    android:layout_marginTop="@dimen/value5"
+                    android:layout_alignTop="@+id/balance_view"
                     android:layout_marginLeft="@dimen/value4"
-                    android:fontFamily="sans-serif-medium"/>
+                    android:layout_marginTop="@dimen/value5"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="left"
+                    android:text="@string/tk"
+                    android:textColor="@color/colorPaymentReviewPrimaryText"
+                    android:textSize="@dimen/text_size_mini" />
 
 
             </RelativeLayout>
@@ -68,41 +68,41 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_margin="@dimen/activity_horizontal_margin"
                 android:gravity="center_horizontal"
-                android:layout_margin="@dimen/activity_horizontal_margin">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/success_amount"
                     style="@style/PaymentSuccessText"
-                    android:gravity="center_horizontal"
                     android:layout_gravity="center_horizontal"
                     android:drawableLeft="@drawable/success_icon"
-                    android:drawablePadding="@dimen/value4"/>
+                    android:drawablePadding="@dimen/value4"
+                    android:gravity="center_horizontal" />
 
-            <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-                android:id="@+id/business_profile_image_view"
-                style="@style/PaymentReviewImageStyleLarge"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"/>
+                <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                    android:id="@+id/business_profile_image_view"
+                    style="@style/PaymentReviewImageStyleLarge"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:layout_gravity="center_horizontal">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/business_name_text_view"
                         style="@style/TextViewUserInfoPaymentReviewPrimary"
                         android:ellipsize="end"
-                        android:maxLines="1"
-                        android:gravity="center_horizontal"/>
+                        android:gravity="center_horizontal"
+                        android:maxLines="1" />
 
                     <TextView
                         android:id="@+id/business_mobile_number_text_view"
                         style="@style/TextViewUserInfoPaymentReviewSecondary"
-                        android:gravity="center_horizontal"/>
+                        android:gravity="center_horizontal" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -143,13 +143,14 @@
                         android:gravity="center"
                         android:orientation="horizontal">
 
-                    <TextView
-                        style="@style/TextViewInfoLabelPaymentReview"
-                        android:text="@string/transaction_id" />
+                        <TextView
+                            style="@style/TextViewInfoLabelPaymentReview"
+                            android:text="@string/transaction_id" />
 
                         <TextView
                             android:id="@+id/transaction_id_text_view"
-                            style="@style/ReferenceNoTextViewPaymentReview"/>
+                            style="@style/ReferenceNoTextViewPaymentReview"
+                            android:textSize="@dimen/value14" />
 
                     </LinearLayout>
 
@@ -174,7 +175,7 @@
                     android:layout_width="match_parent"
                     android:gravity="left"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingRight="@dimen/activity_horizontal_margin"/>
+                    android:paddingRight="@dimen/activity_horizontal_margin" />
             </LinearLayout>
 
 
@@ -186,12 +187,12 @@
         style="@style/ButtonSecondary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:text="@string/make_another_payment"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:layout_alignParentBottom="true"/>
+        android:text="@string/make_another_payment" />
 
 </RelativeLayout>
 

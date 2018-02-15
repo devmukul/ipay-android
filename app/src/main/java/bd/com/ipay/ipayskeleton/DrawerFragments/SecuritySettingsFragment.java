@@ -14,6 +14,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
+import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -28,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager.FingerPrintAuthenticationManager;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
+import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SecuritySettingsFragment extends BaseFragment implements HttpResponseListener {
@@ -131,7 +133,28 @@ public class SecuritySettingsFragment extends BaseFragment implements HttpRespon
         mFingerprintOptionHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((SecuritySettingsActivity) getActivity()).switchToFingerprintAuthenticationSettingsFragment();
+                if (SignupOrLoginActivity.mPassword == null || SignupOrLoginActivity.mPassword.isEmpty()) {
+                    MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
+                    dialog
+                            .content(R.string.logout_for_fingerprint_activation)
+                            .cancelable(false)
+                            .positiveText(R.string.yes)
+                            .negativeText(R.string.no);
+
+                    dialog.onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            if (Utilities.isConnectionAvailable(getActivity())) {
+                                attemptLogout();
+                            } else {
+                                ((MyApplication) getActivity().getApplication()).launchLoginPage(null);
+                            }
+                        }
+                    });
+
+                    dialog.show();
+                } else
+                    ((SecuritySettingsActivity) getActivity()).switchToFingerprintAuthenticationSettingsFragment();
             }
         });
         mTwoFAHeader.setOnClickListener(new View.OnClickListener() {
@@ -177,6 +200,27 @@ public class SecuritySettingsFragment extends BaseFragment implements HttpRespon
         mLogoutTask.mHttpResponseListener = this;
 
         mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void attemptLogout() {
+        if (mLogoutTask != null) {
+            return;
+        }
+        TokenManager.setOnAccountId(Constants.ON_ACCOUNT_ID_DEFAULT);
+        try {
+            LogoutRequest mLogoutModel = new LogoutRequest(Utilities.getMainUserInfoFromJsonString(ProfileInfoCacheManager.getMainUserProfileInfo()).getMobileNumber());
+            Gson gson = new Gson();
+            String json = gson.toJson(mLogoutModel);
+
+            mLogoutTask = new HttpRequestPostAsyncTask(Constants.COMMAND_LOG_OUT,
+                    Constants.BASE_URL_MM + Constants.URL_LOG_OUT, json, getActivity());
+            mLogoutTask.mHttpResponseListener = this;
+            mLogoutTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            mProgressDialog.setMessage(getString(R.string.progress_dialog_signing_out));
+            mProgressDialog.show();
+        } catch (Exception e) {
+
+        }
     }
 
     public void setTitle() {

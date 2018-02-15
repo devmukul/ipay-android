@@ -25,7 +25,9 @@ import com.google.gson.Gson;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
@@ -33,13 +35,17 @@ import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
+import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
@@ -52,6 +58,8 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     private HttpRequestPostAsyncTask mCancelRequestTask = null;
 
     private HttpRequestPostAsyncTask mRejectRequestTask = null;
+
+    private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
@@ -74,9 +82,10 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     private TextView mMobileNumberView;
     private TextView mDescriptionTagView;
     private TextView mDescriptionView;
-    private View mDescriptionHolder;
     private TextView mAmountView;
     private TextView mServiceChargeView;
+    private View mNetAmountViewHolder;
+    private View mServiceChargeViewHolder;
     private TextView mNetAmountTitleView;
     private TextView mNetAmountView;
     private Button mRejectButton;
@@ -85,7 +94,6 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     private CheckBox mAddInContactsCheckBox;
 
     private boolean isInContacts;
-    private boolean isPinRequired = true;
     private boolean switchedFromTransactionHistory = false;
     private Tracker mTracker;
 
@@ -127,9 +135,10 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mDescriptionTagView = (TextView) v.findViewById(R.id.description);
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
-        mDescriptionHolder = v.findViewById(R.id.layout_description_holder);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
         mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
+        mNetAmountViewHolder = v.findViewById(R.id.netAmountViewHolder);
+        mServiceChargeViewHolder = v.findViewById(R.id.serviceChargeViewHolder);
         mNetAmountTitleView = (TextView) v.findViewById(R.id.net_amount_title);
         mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
         mAddInContactsCheckBox = (CheckBox) v.findViewById(R.id.add_in_contacts);
@@ -183,7 +192,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
             @Override
             @ValidateAccess(ServiceIdConstants.ACCEPT_REQUEST)
             public void onClick(View v) {
-                attempAcceptRequestWithPinCheck();
+                attemptAcceptRequestWithPinCheck();
             }
         });
 
@@ -213,17 +222,18 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
             }
         });
 
-        attemptGetServiceCharge();
+        // Get business rule
+        attemptGetBusinessRule(Constants.SERVICE_ID_REQUEST_MONEY);
 
         return v;
     }
 
-    private void attempAcceptRequestWithPinCheck() {
+    private void attemptAcceptRequestWithPinCheck() {
         if (mAddInContactsCheckBox.isChecked()) {
             addContact(mReceiverName, mReceiverMobileNumber, null);
         }
 
-        if (this.isPinRequired) {
+       if (PaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
@@ -354,13 +364,27 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                 getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void attemptGetBusinessRule(int serviceID) {
+        if (mGetBusinessRuleTask != null)
+            return;
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
+        mProgressDialog.show();
+
+        String mUri = new GetBusinessRuleRequestBuilder(serviceID).getGeneratedUri();
+        mGetBusinessRuleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_BUSINESS_RULE,
+                mUri, getActivity(), this);
+
+        mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         super.httpResponseReceiver(result);
+        mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mProgressDialog.dismiss();
             mAcceptRequestTask = null;
             mRejectRequestTask = null;
             if (getActivity() != null)
@@ -373,6 +397,39 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
 
         switch (result.getApiCommand()) {
+            case Constants.COMMAND_GET_BUSINESS_RULE:
+                try {
+                    if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                        BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
+
+                        if (businessRuleArray != null) {
+                            for (BusinessRule rule : businessRuleArray) {
+                                if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MAX_AMOUNT_PER_PAYMENT)) {
+                                    PaymentActivity.mMandatoryBusinessRules.setMAX_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_MIN_AMOUNT_PER_PAYMENT)) {
+                                    PaymentActivity.mMandatoryBusinessRules.setMIN_AMOUNT_PER_PAYMENT(rule.getRuleValue());
+                                } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_VERIFICATION_REQUIRED)) {
+                                    PaymentActivity.mMandatoryBusinessRules.setVERIFICATION_REQUIRED(rule.getRuleValue());
+                                } else if (rule.getRuleID().equals(BusinessRuleConstants.SERVICE_RULE_MAKE_PAYMENT_PIN_REQUIRED)) {
+                                    PaymentActivity.mMandatoryBusinessRules.setPIN_REQUIRED(rule.getRuleValue());
+                                }
+                            }
+                        }
+                        attemptGetServiceCharge();
+                    } else {
+                        if (getActivity() != null)
+                            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (getActivity() != null)
+                        DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+
+                }
+                mGetBusinessRuleTask = null;
+                break;
+
             case Constants.COMMAND_ACCEPT_REQUESTS_MONEY:
                 try {
                     mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
@@ -490,12 +547,11 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
-    }
-
-    @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-        this.isPinRequired = isPinRequired;
+        if (serviceCharge.compareTo(BigDecimal.ZERO) > 0) {
+            mServiceChargeViewHolder.setVisibility(View.VISIBLE);
+            mNetAmountViewHolder.setVisibility(View.VISIBLE);
+            mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
+            mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        }
     }
 }

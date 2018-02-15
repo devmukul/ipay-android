@@ -184,11 +184,6 @@ public class SingleInvoiceFragment extends ReviewFragment implements HttpRespons
     }
 
     @Override
-    protected void onPinLoadFinished(boolean isPinRequired) {
-        this.isPinRequired = isPinRequired;
-    }
-
-    @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
