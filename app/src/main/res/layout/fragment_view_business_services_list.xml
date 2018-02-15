@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/activity_horizontal_margin"
-        android:text="@string/leave_account"
+        android:text="@string/remove_account"
         android:textColor="@color/colorWhite" />
 
 </RelativeLayout>

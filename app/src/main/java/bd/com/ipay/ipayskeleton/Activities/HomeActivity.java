@@ -1022,7 +1022,7 @@ public class HomeActivity extends BaseActivity
 
             public void bind(final BusinessAccountDetails item) {
                 Drawable drawable = getResources().getDrawable(R.drawable.ic_business_account_settings);
-                drawable.setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(getResources().getColor(R.color.colorFadeWhite), PorterDuff.Mode.SRC_ATOP);
                 resignFromBusinessImageView.setImageDrawable(drawable);
                 nameTextView.setText(item.getBusinessName());
                 if (TextUtils.isEmpty(item.getRoleName())) {

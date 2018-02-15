@@ -31,6 +31,8 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.RemoveEmployeeResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessAccountDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessService;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.GetBusinessDetailsRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.LeaveOrRemoveBusinessAccountRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 
@@ -46,6 +48,8 @@ public class ViewBusinessServicesListFragment extends Fragment implements HttpRe
     private List<String> privilegeList;
     private long mID;
     private long mBusinessAccountID;
+    private String uriLeaveAccount;
+    private String uriGetDetailsOfBusiness;
 
     private ProgressDialog mProgressDialog;
 
@@ -106,9 +110,8 @@ public class ViewBusinessServicesListFragment extends Fragment implements HttpRe
         if (mResignFromBusinessAsyncTask != null) {
             return;
         }
-
-        mResignFromBusinessAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_LEAVE_ACCOUNT,
-                Constants.BASE_URL_MM + Constants.URL_REMOVE_AN_EMPLOYEE_FIRST_PART + id, getActivity(), this);
+        uriLeaveAccount = new LeaveOrRemoveBusinessAccountRequestBuilder(id).getGeneratedUri();
+        mResignFromBusinessAsyncTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_LEAVE_ACCOUNT, uriLeaveAccount, getActivity(), this);
         mResignFromBusinessAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         mProgressDialog.setMessage(getString(R.string.please_wait));
         mProgressDialog.show();
@@ -134,8 +137,10 @@ public class ViewBusinessServicesListFragment extends Fragment implements HttpRe
             mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching_details));
             mProgressDialog.show();
             mProgressDialog.setCancelable(false);
+            GetBusinessDetailsRequestBuilder getBusinessDetailsRequestBuilder = new GetBusinessDetailsRequestBuilder(mBusinessAccountID);
+            uriGetDetailsOfBusiness = getBusinessDetailsRequestBuilder.getGeneratedUri();
             mGetDetailsOfRoleTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_DETAILS_OF_BUSINESS_ROLE,
-                    Constants.BASE_URL_MM + Constants.URL_SWITCH_ACCOUNT + mBusinessAccountID, getActivity());
+                    uriGetDetailsOfBusiness, getActivity());
             mGetDetailsOfRoleTask.mHttpResponseListener = this;
             mGetDetailsOfRoleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
