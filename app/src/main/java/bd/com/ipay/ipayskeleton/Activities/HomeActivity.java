@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -1019,6 +1021,9 @@ public class HomeActivity extends BaseActivity
             }
 
             public void bind(final BusinessAccountDetails item) {
+                Drawable drawable = getResources().getDrawable(R.drawable.ic_business_account_settings);
+                drawable.setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+                resignFromBusinessImageView.setImageDrawable(drawable);
                 nameTextView.setText(item.getBusinessName());
                 if (TextUtils.isEmpty(item.getRoleName())) {
                     roleTextView.setVisibility(View.GONE);
