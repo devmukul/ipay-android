@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -26,6 +27,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Manager.RemoveEmployeeResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessAccountDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRoles.BusinessService;
@@ -50,15 +52,23 @@ public class ViewAccessListFragment extends Fragment implements HttpResponseList
     private Button mBackButton;
     private RecyclerView mAccessListRecyclerView;
 
+    private ProfileImageView mBusinessLogo;
+    private TextView mBusinessNameTextView;
+    private TextView mRoleTextView;
+    private View mainView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_view_acces_list, container, false);
+        mainView = inflater.inflate(R.layout.fragment_view_acces_list, container, false);
+        mBusinessLogo = (ProfileImageView) mainView.findViewById(R.id.business_profile_image_view);
+        mBusinessNameTextView = (TextView) mainView.findViewById(R.id.business_name_text_view);
+        mRoleTextView = (TextView) mainView.findViewById(R.id.role_name);
         mProgressDialog = new ProgressDialog(getContext());
         getAssociatedBusinessAccountID();
         getAssociatedID();
-        mBackButton = (Button) view.findViewById(R.id.back_button);
-        mAccessListRecyclerView = (RecyclerView) view.findViewById(R.id.access_list_recycler_view);
+        mBackButton = (Button) mainView.findViewById(R.id.back_button);
+        mAccessListRecyclerView = (RecyclerView) mainView.findViewById(R.id.access_list_recycler_view);
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,7 +87,8 @@ public class ViewAccessListFragment extends Fragment implements HttpResponseList
                 }).show();
             }
         });
-        return view;
+        mainView.setVisibility(View.GONE);
+        return mainView;
     }
 
     private void getAssociatedID() {
@@ -154,6 +165,11 @@ public class ViewAccessListFragment extends Fragment implements HttpResponseList
                         privilegeList = getServiceNamesFromBusinessServices(mBusinessAccoutnDetails.getServiceList());
                         mAccessListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                         mAccessListRecyclerView.setAdapter(new AccessListAdapter());
+                        mBusinessNameTextView.setText(mBusinessAccoutnDetails.getBusinessName());
+                        mRoleTextView.setText(mBusinessAccoutnDetails.getRoleName());
+                        mBusinessLogo.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER +
+                                mBusinessAccoutnDetails.getBusinessProfilePictureUrlHigh(), false);
+                        mainView.setVisibility(View.VISIBLE);
 
                     } else {
                         Toast.makeText(getActivity(), getActivity().getString(R.string.service_not_available), Toast.LENGTH_LONG).show();
@@ -189,7 +205,7 @@ public class ViewAccessListFragment extends Fragment implements HttpResponseList
     public class AccessListAdapter extends RecyclerView.Adapter<AccessListViewHolder> {
         @Override
         public AccessListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_privilege, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_role_privileges, parent, false);
             return new AccessListViewHolder(view);
         }
 

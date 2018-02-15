@@ -4,13 +4,41 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/profile_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+            android:id="@+id/business_profile_image_view"
+            style="@style/PaymentReviewImageStyleLarge" />
+
+
+        <TextView
+            android:id="@+id/business_name_text_view"
+            style="@style/TextViewUserInfoPaymentReviewPrimary"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:maxLines="1" />
+
+        <TextView
+            android:id="@+id/role_name"
+            style="@style/TextViewUserInfoPaymentReviewSecondary"
+            android:gravity="center_horizontal" />
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/description"
         style="@style/TextViewUserInfoPaymentReviewPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_layout"
         android:layout_margin="@dimen/activity_horizontal_margin"
-        android:text="@string/availed_service" />
+        android:text="@string/service_under_the_role" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/access_list_recycler_view"
@@ -18,15 +46,15 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/back_button"
         android:layout_below="@+id/description"
-        android:layout_margin="@dimen/activity_horizontal_margin" />
+        android:layout_marginBottom="@dimen/activity_horizontal_margin" />
 
     <Button
         android:id="@+id/back_button"
+        style="@style/ButtonReject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:background="@color/colorPrimary"
+        android:layout_margin="@dimen/activity_horizontal_margin"
         android:text="@string/leave_account"
         android:textColor="@color/colorWhite" />
 
