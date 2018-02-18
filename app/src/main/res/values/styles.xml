@@ -371,8 +371,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TextViewInfoColorRedReview" parent="TextViewInfoReview">
-        <item name="android:textColor">@color/colorRed</item>
+    <style name="TextViewInfoColorRegularReview" parent="TextViewInfoReview">
     </style>
 
     <style name="TextViewInfoNoteReview" parent="TextViewInfoReview">
