@@ -135,6 +135,7 @@ public class HomeActivity extends BaseActivity
     private NavigationView mNavigationView;
     private RecyclerView mManagedBusinessListRecyclerView;
     private ImageView mMoreBusinessListImageView;
+    private View headerView;
 
     private String mUserID;
     private String mDeviceID;
@@ -172,9 +173,10 @@ public class HomeActivity extends BaseActivity
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mManagedBusinessListRecyclerView = (RecyclerView) mNavigationView.getHeaderView(0).findViewById(R.id.managed_business_list);
         mMoreBusinessListImageView = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.drop_arrow);
+        headerView = mNavigationView.getHeaderView(0);
         mNavigationMenu = mNavigationView.getMenu();
 
-        mMoreBusinessListImageView.setOnClickListener(new View.OnClickListener() {
+        headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mManagedBusinessListRecyclerView.getVisibility() == View.VISIBLE) {
