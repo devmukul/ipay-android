@@ -26,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -40,7 +41,7 @@ import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class PaymentReviewFragment extends ReviewFragment implements HttpResponseListener {
+public class PaymentReviewFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mPaymentTask = null;
 
@@ -61,11 +62,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
     private String mReferenceNumber;
     private double latitude;
     private double longitude;
-
-    private TextView mServiceChargeTextView;
-    private TextView mNetAmountTextView;
-    private View mNetAmountViewHolder;
-    private View mServiceChargeViewHolder;
 
     private Tracker mTracker;
 
@@ -123,10 +119,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
         final TextView mCountryTextView = findViewById(R.id.business_address_line_3_text_view);
         final Button makePaymentButton = findViewById(R.id.make_payment_button);
 
-        mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
-        mNetAmountTextView = findViewById(R.id.net_amount_text_view);
-        mNetAmountViewHolder = findViewById(R.id.netAmountViewHolder);
-        mServiceChargeViewHolder = findViewById(R.id.serviceChargeViewHolder);
         try {
             if (!TextUtils.isEmpty(mPhotoUri)) {
                 businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mPhotoUri, false);
@@ -147,9 +139,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
             }
 
             amountTextView.setText(Utilities.formatTaka(mAmount));
-            mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
-            mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
-
 
             if (TextUtils.isEmpty(mReferenceNumber)) {
                 referenceNumberViewHolder.setVisibility(View.GONE);
@@ -174,8 +163,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                 attemptPaymentWithPinCheck();
             }
         });
-
-        attemptGetServiceCharge();
     }
 
     public <T extends View> T findViewById(@IdRes int id) {
@@ -228,26 +215,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
                 .show();
     }
 
-    @Override
-    public int getServiceID() {
-        return Constants.SERVICE_ID_MAKE_PAYMENT;
-    }
-
-    @Override
-    public BigDecimal getAmount() {
-        return mAmount;
-    }
-
-    @Override
-    public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        if (serviceCharge.compareTo(BigDecimal.ZERO) > 0) {
-            mServiceChargeViewHolder.setVisibility(View.VISIBLE);
-            mNetAmountViewHolder.setVisibility(View.VISIBLE);
-            mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
-            mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
-        }
-    }
-
     private void launchOTPVerification() {
         String jsonString = new Gson().toJson(mPaymentRequest);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_PAYMENT,
@@ -258,7 +225,6 @@ public class PaymentReviewFragment extends ReviewFragment implements HttpRespons
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        super.httpResponseReceiver(result);
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
