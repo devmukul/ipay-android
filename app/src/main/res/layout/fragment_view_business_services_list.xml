@@ -1,64 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/leave_account"
+        android:fillViewport="true">
 
-        <LinearLayout
-            android:id="@+id/profile_layout"
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
-                android:id="@+id/business_profile_image_view"
-                style="@style/PaymentReviewImageStyleLarge" />
-
-
-            <TextView
-                android:id="@+id/business_name_text_view"
-                style="@style/TextViewUserInfoPaymentReviewPrimary"
-                android:ellipsize="end"
+            <LinearLayout
+                android:id="@+id/profile_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:gravity="center_horizontal"
-                android:maxLines="1" />
+                android:orientation="vertical">
+
+                <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
+                    android:id="@+id/business_profile_image_view"
+                    style="@style/PaymentReviewImageStyleLarge" />
+
+
+                <TextView
+                    android:id="@+id/business_name_text_view"
+                    style="@style/TextViewUserInfoPaymentReviewPrimary"
+                    android:ellipsize="end"
+                    android:gravity="center_horizontal"
+                    android:maxLines="1" />
+
+                <TextView
+                    android:id="@+id/role_name"
+                    style="@style/TextViewUserInfoPaymentReviewSecondary"
+                    android:gravity="center_horizontal" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/role_name"
-                style="@style/TextViewUserInfoPaymentReviewSecondary"
-                android:gravity="center_horizontal" />
+                android:id="@+id/description"
+                style="@style/TextViewUserInfoPaymentReviewPrimary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profile_layout"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:text="@string/service_under_this_role" />
 
-        </LinearLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/access_list_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/description"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                android:nestedScrollingEnabled="false" />
+        </RelativeLayout>
+    </ScrollView>
 
-        <TextView
-            android:id="@+id/description"
-            style="@style/TextViewUserInfoPaymentReviewPrimary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/profile_layout"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:text="@string/service_under_this_role" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/access_list_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/description"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
-            android:nestedScrollingEnabled="false" />
-
-        <Button
-            android:id="@+id/back_button"
-            style="@style/ButtonReject"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:layout_below="@id/access_list_recycler_view"
-            android:text="@string/remove_account"
-            android:textColor="@color/colorWhite" />
-    </RelativeLayout>
-</ScrollView>
+    <Button
+        android:id="@+id/leave_account"
+        style="@style/ButtonReject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:text="@string/remove_account"
+        android:textColor="@color/colorWhite" />
+</RelativeLayout>

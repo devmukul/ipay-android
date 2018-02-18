@@ -71,7 +71,7 @@ public class ViewBusinessServicesListFragment extends Fragment implements HttpRe
         mProgressDialog = new ProgressDialog(getContext());
         getAssociatedBusinessAccountID();
         getAssociatedID();
-        mBackButton = (Button) mainView.findViewById(R.id.back_button);
+        mBackButton = (Button) mainView.findViewById(R.id.leave_account);
         mAccessListRecyclerView = (RecyclerView) mainView.findViewById(R.id.access_list_recycler_view);
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
