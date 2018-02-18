@@ -32,6 +32,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -40,7 +41,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
-import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -51,7 +51,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SentReceivedRequestReviewFragment extends ReviewFragment implements HttpResponseListener {
+public class SentReceivedRequestReviewFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mAcceptRequestTask = null;
 
@@ -83,11 +83,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
     private TextView mDescriptionTagView;
     private TextView mDescriptionView;
     private TextView mAmountView;
-    private TextView mServiceChargeView;
-    private View mNetAmountViewHolder;
-    private View mServiceChargeViewHolder;
     private TextView mNetAmountTitleView;
-    private TextView mNetAmountView;
     private Button mRejectButton;
     private Button mAcceptButton;
     private Button mCancelButton;
@@ -136,11 +132,7 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
         mDescriptionTagView = (TextView) v.findViewById(R.id.description);
         mDescriptionView = (TextView) v.findViewById(R.id.textview_description);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
-        mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
-        mNetAmountViewHolder = v.findViewById(R.id.netAmountViewHolder);
-        mServiceChargeViewHolder = v.findViewById(R.id.serviceChargeViewHolder);
         mNetAmountTitleView = (TextView) v.findViewById(R.id.net_amount_title);
-        mNetAmountView = (TextView) v.findViewById(R.id.textview_net_amount);
         mAddInContactsCheckBox = (CheckBox) v.findViewById(R.id.add_in_contacts);
 
         mAcceptButton = (Button) v.findViewById(R.id.button_accept);
@@ -380,7 +372,6 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        super.httpResponseReceiver(result);
         mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
@@ -416,7 +407,6 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                                 }
                             }
                         }
-                        attemptGetServiceCharge();
                     } else {
                         if (getActivity() != null)
                             DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
@@ -533,25 +523,5 @@ public class SentReceivedRequestReviewFragment extends ReviewFragment implements
                 break;
         }
 
-    }
-
-    @Override
-    public int getServiceID() {
-        return Constants.SERVICE_ID_REQUEST_MONEY;
-    }
-
-    @Override
-    public BigDecimal getAmount() {
-        return mAmount;
-    }
-
-    @Override
-    public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        if (serviceCharge.compareTo(BigDecimal.ZERO) > 0) {
-            mServiceChargeViewHolder.setVisibility(View.VISIBLE);
-            mNetAmountViewHolder.setVisibility(View.VISIBLE);
-            mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-            mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
-        }
     }
 }
