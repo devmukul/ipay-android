@@ -201,12 +201,10 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        if (serviceCharge.compareTo(BigDecimal.ZERO) > 0) {
             mServiceChargeViewHolder.setVisibility(View.VISIBLE);
             mNetAmountViewHolder.setVisibility(View.VISIBLE);
             mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
             mNetAmountTextView.setText(Utilities.formatTaka(getAmount().add(serviceCharge)));
-        }
     }
 
     private void launchOTPVerification() {

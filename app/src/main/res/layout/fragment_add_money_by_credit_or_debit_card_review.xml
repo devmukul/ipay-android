@@ -87,7 +87,7 @@
 
                     <TextView
                         android:id="@+id/service_charge_text_view"
-                        style="@style/TextViewInfoColorRedReview" />
+                        style="@style/TextViewInfoReview" />
 
                 </LinearLayout>
             </LinearLayout>

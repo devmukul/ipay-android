@@ -424,10 +424,15 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
         // User who're accepting the request should not see the service charge. By force action. Deal with it :)
-        mServiceChargeViewHolder.setVisibility(View.VISIBLE);
-        mNetAmountViewHolder.setVisibility(View.VISIBLE);
-        mServiceChargeView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
-        mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
+        if (mRequestType == Constants.REQUEST_TYPE_RECEIVED_REQUEST) {
+            mServiceChargeView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
+            mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
+        } else {
+            mServiceChargeViewHolder.setVisibility(View.VISIBLE);
+            mNetAmountViewHolder.setVisibility(View.VISIBLE);
+            mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
+            mNetAmountView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
+        }
     }
 
     private void attemptGetBusinessRule(int serviceID) {

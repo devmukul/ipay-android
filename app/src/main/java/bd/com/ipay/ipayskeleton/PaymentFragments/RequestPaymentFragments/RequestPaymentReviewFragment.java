@@ -202,12 +202,10 @@ public class RequestPaymentReviewFragment extends ReviewFragment implements Http
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        if (serviceCharge.compareTo(BigDecimal.ZERO) > 0) {
-            mServiceChargeViewHolder.setVisibility(View.VISIBLE);
-            mNetAmountViewHolder.setVisibility(View.VISIBLE);
-            serviceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
-            netAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
-        }
+        mServiceChargeViewHolder.setVisibility(View.VISIBLE);
+        mNetAmountViewHolder.setVisibility(View.VISIBLE);
+        serviceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
+        netAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
     }
 
     @Override

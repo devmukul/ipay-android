@@ -31,13 +31,13 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
-import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -47,7 +47,7 @@ import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class SendMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
+public class SendMoneyReviewFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mSendMoneyTask = null;
 
@@ -64,11 +64,6 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     private String mPhotoUri;
     private String mDescription;
     private boolean isInContacts;
-
-    private TextView mServiceChargeTextView;
-    private TextView mNetAmountTextView;
-    private View mNetAmountViewHolder;
-    private View mServiceChargeViewHolder;
 
     private Tracker mTracker;
 
@@ -114,10 +109,6 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         final TextView amountTextView = findViewById(R.id.amount_text_view);
         TextView descriptionTextView = findViewById(R.id.description_text_view);
         View descriptionViewHolder = findViewById(R.id.description_view_holder);
-        mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
-        mNetAmountTextView = findViewById(R.id.net_amount_text_view);
-        mNetAmountViewHolder = findViewById(R.id.netAmountViewHolder);
-        mServiceChargeViewHolder = findViewById(R.id.serviceChargeViewHolder);
         final CheckBox addToContactCheckBox = findViewById(R.id.add_to_contact_check_box);
         Button sendMoneyButton = findViewById(R.id.send_money_button);
 
@@ -141,8 +132,6 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
         }
 
         amountTextView.setText(Utilities.formatTaka(mAmount));
-        mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
-        mServiceChargeTextView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
 
         if (TextUtils.isEmpty(mDescription)) {
             descriptionViewHolder.setVisibility(View.GONE);
@@ -160,7 +149,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
             public void onClick(View v) {
                 if (Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                         && Utilities.isValueAvailable(SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-                    final String errorMessage = InputValidator.isValidAmount(getActivity(), getAmount(),
+                    final String errorMessage = InputValidator.isValidAmount(getActivity(), mAmount,
                             SendMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
                             SendMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
 
@@ -178,9 +167,6 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
                 }
             }
         });
-
-        attemptGetServiceCharge();
-
     }
 
     public <T extends View> T findViewById(@IdRes int id) {
@@ -259,28 +245,7 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
     }
 
     @Override
-    public int getServiceID() {
-        return Constants.SERVICE_ID_SEND_MONEY;
-    }
-
-    @Override
-    public BigDecimal getAmount() {
-        return mAmount;
-    }
-
-    @Override
-    public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        if (serviceCharge.compareTo(BigDecimal.ZERO) > 0) {
-            mServiceChargeViewHolder.setVisibility(View.VISIBLE);
-            mNetAmountViewHolder.setVisibility(View.VISIBLE);
-            mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
-            mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
-        }
-    }
-
-    @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        super.httpResponseReceiver(result);
         mProgressDialog.dismiss();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
@@ -334,6 +299,5 @@ public class SendMoneyReviewFragment extends ReviewFragment implements HttpRespo
             mSendMoneyTask = null;
 
         }
-
     }
 }
