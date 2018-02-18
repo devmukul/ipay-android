@@ -217,6 +217,12 @@ public class ViewBusinessServicesListFragment extends Fragment implements HttpRe
         @Override
         public void onBindViewHolder(AccessListViewHolder holder, int position) {
             holder.privilege.setText(privilegeList.get(position));
+            if (position == privilegeList.size() - 1) {
+                holder.dividerEnd.setVisibility(View.VISIBLE);
+            }
+            else{
+                holder.dividerEnd.setVisibility(View.GONE);
+            }
 
         }
 
@@ -228,10 +234,12 @@ public class ViewBusinessServicesListFragment extends Fragment implements HttpRe
 
     public class AccessListViewHolder extends RecyclerView.ViewHolder {
         private CheckBox privilege;
+        private View dividerEnd;
 
         public AccessListViewHolder(View itemView) {
             super(itemView);
             privilege = (CheckBox) (itemView.findViewById(R.id.checkbox_privilege));
+            dividerEnd = itemView.findViewById(R.id.divider);
         }
     }
 

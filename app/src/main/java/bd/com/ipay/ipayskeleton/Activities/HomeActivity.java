@@ -8,8 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -1009,7 +1007,7 @@ public class HomeActivity extends BaseActivity
             private TextView nameTextView;
             private TextView roleTextView;
             private ProfileImageView profileImageView;
-            private ImageView resignFromBusinessImageView;
+            private ImageView businessAccountSettingsImageView;
 
 
             public ViewHolder(View itemView) {
@@ -1017,13 +1015,10 @@ public class HomeActivity extends BaseActivity
                 nameTextView = (TextView) itemView.findViewById(R.id.title_text_view);
                 roleTextView = (TextView) itemView.findViewById(R.id.role_text_view);
                 profileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_image_view);
-                resignFromBusinessImageView = (ImageView) itemView.findViewById(R.id.leave_account);
+                businessAccountSettingsImageView = (ImageView) itemView.findViewById(R.id.leave_account);
             }
 
             public void bind(final BusinessAccountDetails item) {
-                Drawable drawable = getResources().getDrawable(R.drawable.ic_business_account_settings);
-                drawable.setColorFilter(getResources().getColor(R.color.colorFadeWhite), PorterDuff.Mode.SRC_ATOP);
-                resignFromBusinessImageView.setImageDrawable(drawable);
                 nameTextView.setText(item.getBusinessName());
                 if (TextUtils.isEmpty(item.getRoleName())) {
                     roleTextView.setVisibility(View.GONE);
@@ -1036,11 +1031,11 @@ public class HomeActivity extends BaseActivity
                     profileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getBusinessProfilePictureUrlHigh(), false);
                 }
                 if (ProfileInfoCacheManager.isAccountSwitched()) {
-                    resignFromBusinessImageView.setVisibility(View.GONE);
+                    businessAccountSettingsImageView.setVisibility(View.GONE);
                 } else {
-                    resignFromBusinessImageView.setVisibility(View.VISIBLE);
+                    businessAccountSettingsImageView.setVisibility(View.VISIBLE);
                 }
-                resignFromBusinessImageView.setOnClickListener(new View.OnClickListener() {
+                businessAccountSettingsImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(HomeActivity.this,
