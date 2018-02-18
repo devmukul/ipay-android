@@ -371,9 +371,6 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TextViewInfoColorRegularReview" parent="TextViewInfoReview">
-    </style>
-
     <style name="TextViewInfoNoteReview" parent="TextViewInfoReview">
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:textStyle">bold</item>
