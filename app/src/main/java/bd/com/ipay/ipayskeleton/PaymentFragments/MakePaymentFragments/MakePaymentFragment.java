@@ -311,11 +311,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 }
             }
             case Utilities.LOCATION_SETTINGS_PERMISSION_CODE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Utilities.initiateQRCodeScan(this);
-                } else {
-                    buttonPayment.performClick();
-                }
+                buttonPayment.performClick();
             }
         }
     }

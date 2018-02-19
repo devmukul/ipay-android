@@ -46,6 +46,7 @@ import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -482,18 +483,19 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
                                 }
                             }
                         }
+                        attemptGetServiceCharge();
 
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getActivity() != null)
-                            Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
+                            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                     }
 
                     mProgressDialog.dismiss();
                     mGetBusinessRuleTask = null;
                 } else {
                     if (getActivity() != null)
-                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
+                        DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                 }
 
                 mGetBusinessRuleTask = null;
