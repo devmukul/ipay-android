@@ -495,7 +495,7 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
                     mGetBusinessRuleTask = null;
                 } else {
                     if (getActivity() != null)
-                        Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG);
+                        DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
                 }
 
                 mGetBusinessRuleTask = null;
