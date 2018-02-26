@@ -29,6 +29,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
@@ -36,7 +37,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupResponse;
-import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -46,7 +46,7 @@ import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class MobileTopupReviewFragment extends ReviewFragment implements HttpResponseListener {
+public class MobileTopupReviewFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mTopupTask = null;
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
@@ -65,15 +65,12 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
     private TextView mReceiverNameView;
     private TextView mMobileNumberView;
     private TextView mAmountView;
-    private TextView mServiceChargeView;
-    private TextView mTotalView;
     private TextView mPackageView;
     private TextView mOperatorView;
     private ProfileImageView mProfileImageView;
     private ImageView mOperatorImageView;
     private Button mTopupButton;
 
-    private View mServiceCharge;
     private List<String> mArrayPackages;
     private List<String> mArrayOperators;
 
@@ -109,13 +106,10 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
         mReceiverNameView = (TextView) v.findViewById(R.id.textview_name);
         mMobileNumberView = (TextView) v.findViewById(R.id.textview_mobile_number);
         mAmountView = (TextView) v.findViewById(R.id.textview_amount);
-        mServiceChargeView = (TextView) v.findViewById(R.id.textview_service_charge);
-        mTotalView = (TextView) v.findViewById(R.id.textview_total);
         mPackageView = (TextView) v.findViewById(R.id.textview_package);
         mOperatorView = (TextView) v.findViewById(R.id.textview_operator);
         mOperatorImageView = (ImageView) v.findViewById(R.id.imageView_operator);
         mTopupButton = (Button) v.findViewById(R.id.button_topup);
-        mServiceCharge = v.findViewById(R.id.service_charge_with_net_amount);
         mProgressDialog = new ProgressDialog(getActivity());
         mMobileNumber = getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER);
 
@@ -149,14 +143,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                 }
             }
         });
-
-
-        if (!Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
-                && !Utilities.isValueAvailable(TopUpActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_TOP_UP);
-        else
-            attemptGetServiceCharge();
-
         return v;
     }
 
@@ -204,37 +190,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
                 .show();
     }
 
-
-    @Override
-    public int getServiceID() {
-        return Constants.SERVICE_ID_TOP_UP;
-    }
-
-    @Override
-    public BigDecimal getAmount() {
-        return new BigDecimal(mAmount);
-    }
-
-    @Override
-    public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        if (serviceCharge.compareTo(BigDecimal.ZERO) == 0) {
-            mServiceCharge.setVisibility(View.GONE);
-
-        } else {
-            mServiceCharge.setVisibility(View.VISIBLE);
-            mServiceChargeView.setText(Utilities.formatTaka(serviceCharge));
-            mTotalView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
-
-        }
-
-    }
-
-    @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-        TopUpActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
-
-    }
-
     private void setOperatorIcon() {
         //Setting the correct image based on Operator
         int[] images = {
@@ -271,8 +226,6 @@ public class MobileTopupReviewFragment extends ReviewFragment implements HttpRes
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        super.httpResponseReceiver(result);
-
         if (isAdded())
             mProgressDialog.dismiss();
 

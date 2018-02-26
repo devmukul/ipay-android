@@ -31,8 +31,8 @@
                     android:id="@+id/receiver_name_text_view"
                     style="@style/TextViewUserInfoPaymentReviewPrimary"
                     android:ellipsize="end"
-                    android:maxLines="1"
-                    android:gravity="center_horizontal"/>
+                    android:gravity="center_horizontal"
+                    android:maxLines="1" />
 
                 <TextView
                     android:id="@+id/receiver_mobile_number_text_view"
@@ -65,41 +65,57 @@
 
             </LinearLayout>
 
-            <View style="@style/Divider" />
-
             <LinearLayout
+                android:id="@+id/serviceChargeViewHolder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <TextView
-                    style="@style/TextViewInfoLabelReview"
-                    android:text="@string/service_charge" />
+                <View style="@style/Divider" />
 
-                <TextView
-                    android:id="@+id/service_charge_text_view"
-                    style="@style/TextViewInfoColorRedReview" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
+                    <TextView
+                        style="@style/TextViewInfoLabelReview"
+                        android:text="@string/service_charge" />
+
+                    <TextView
+                        android:id="@+id/service_charge_text_view"
+                        style="@style/TextViewInfoReview" />
+
+                </LinearLayout>
             </LinearLayout>
 
-            <View style="@style/Divider" />
-
             <LinearLayout
+                android:id="@+id/netAmountViewHolder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <TextView
-                    style="@style/TextViewInfoLabelReview"
-                    android:text="@string/net_amount" />
+                <View style="@style/Divider" />
 
-                <TextView
-                    android:id="@+id/net_amount_text_view"
-                    style="@style/TextViewInfoColorPrimaryReview"
-                    android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
+                    <TextView
+                        style="@style/TextViewInfoLabelReview"
+                        android:text="@string/net_amount" />
+
+                    <TextView
+                        android:id="@+id/net_amount_text_view"
+                        style="@style/TextViewInfoColorPrimaryReview"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

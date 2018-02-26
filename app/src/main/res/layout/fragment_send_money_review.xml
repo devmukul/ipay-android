@@ -66,46 +66,64 @@
 
             </LinearLayout>
 
-            <View style="@style/Divider" />
-
             <LinearLayout
+                android:id="@+id/serviceChargeViewHolder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <TextView
-                    style="@style/TextViewInfoLabelReview"
-                    android:text="@string/service_charge" />
+                <View style="@style/Divider" />
 
-                <TextView
-                    android:id="@+id/service_charge_text_view"
-                    style="@style/TextViewInfoColorRedReview" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/TextViewInfoLabelReview"
+                        android:text="@string/service_charge" />
+
+                    <TextView
+                        android:id="@+id/service_charge_text_view"
+                        style="@style/TextViewInfoReview" />
+
+                </LinearLayout>
+
+                <View style="@style/Divider" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/netAmountViewHolder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/TextViewInfoLabelReview"
+                        android:text="@string/net_amount" />
+
+                    <TextView
+                        android:id="@+id/net_amount_text_view"
+                        style="@style/TextViewInfoColorPrimaryReview"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
             <View style="@style/Divider" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TextViewInfoLabelReview"
-                    android:text="@string/net_amount" />
-
-                <TextView
-                    android:id="@+id/net_amount_text_view"
-                    style="@style/TextViewInfoColorPrimaryReview"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
         </LinearLayout>
-
-        <View style="@style/Divider" />
 
         <LinearLayout
             android:id="@+id/description_view_holder"

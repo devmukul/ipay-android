@@ -20,24 +20,23 @@ import com.google.gson.Gson;
 
 import java.math.BigDecimal;
 
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
-import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class RequestMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
+public class RequestMoneyReviewFragment extends BaseFragment implements HttpResponseListener {
 
     private HttpRequestPostAsyncTask mRequestMoneyTask = null;
 
@@ -49,9 +48,6 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
     private String mPhotoUri;
     private String mDescription;
     private boolean isInContacts;
-
-    private TextView mServiceChargeTextView;
-    private TextView mNetAmountTextView;
 
     private Tracker mTracker;
 
@@ -93,8 +89,6 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         final TextView receiverNameTextView = findViewById(R.id.receiver_name_text_view);
         final TextView receiverMobileNumberTextView = findViewById(R.id.receiver_mobile_number_text_view);
         final TextView amountTextView = findViewById(R.id.amount_text_view);
-        mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
-        mNetAmountTextView = findViewById(R.id.net_amount_text_view);
         TextView descriptionTextView = findViewById(R.id.description_text_view);
         View descriptionViewHolder = findViewById(R.id.description_view_holder);
         final CheckBox addToContactCheckBox = findViewById(R.id.add_to_contact_check_box);
@@ -112,8 +106,6 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
         receiverMobileNumberTextView.setText(mReceiverMobileNumber);
 
         amountTextView.setText(Utilities.formatTaka(mAmount));
-        mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
-        mServiceChargeTextView.setText(Utilities.formatTaka(mAmount.subtract(new BigDecimal(0.0))));
 
 
         if (TextUtils.isEmpty(mDescription)) {
@@ -136,12 +128,6 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
                 }
             }
         });
-
-        if (!Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
-                && !Utilities.isValueAvailable(RequestMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_REQUEST_MONEY);
-        else
-            attemptGetServiceCharge();
     }
 
     public <T extends View> T findViewById(@IdRes int id) {
@@ -179,7 +165,6 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
-        super.httpResponseReceiver(result);
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -226,26 +211,5 @@ public class RequestMoneyReviewFragment extends ReviewFragment implements HttpRe
             mRequestMoneyTask = null;
 
         }
-    }
-
-    @Override
-    public int getServiceID() {
-        return Constants.SERVICE_ID_REQUEST_MONEY;
-    }
-
-    @Override
-    public BigDecimal getAmount() {
-        return mAmount;
-    }
-
-    @Override
-    public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
-        mNetAmountTextView.setText(Utilities.formatTaka(mAmount.subtract(serviceCharge)));
-    }
-
-    @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-
     }
 }

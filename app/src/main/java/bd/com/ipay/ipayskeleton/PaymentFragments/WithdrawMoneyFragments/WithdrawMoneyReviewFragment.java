@@ -55,6 +55,8 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
 
     private TextView mServiceChargeTextView;
     private TextView mNetAmountTextView;
+    private View mNetAmountViewHolder;
+    private View mServiceChargeViewHolder;
 
     private Tracker mTracker;
 
@@ -91,6 +93,8 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
         final TextView amountTextView = findViewById(R.id.amount_text_view);
         mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
         mNetAmountTextView = findViewById(R.id.net_amount_text_view);
+        mNetAmountViewHolder = findViewById(R.id.netAmountViewHolder);
+        mServiceChargeViewHolder = findViewById(R.id.serviceChargeViewHolder);
         final LinearLayout descriptionViewHolder = findViewById(R.id.description_view_holder);
         final TextView descriptionTextView = findViewById(R.id.description_text_view);
         final Button withdrawMoneyButton = findViewById(R.id.withdraw_money_button);
@@ -133,12 +137,7 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
             }
         });
 
-        // Check if Min or max amount is available
-        if (!Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
-                && !Utilities.isValueAvailable(WithdrawMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_WITHDRAW_MONEY);
-        else
-            attemptGetServiceCharge();
+        attemptGetServiceCharge();
     }
 
     public <T extends View> T findViewById(@IdRes int id) {
@@ -202,13 +201,10 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
-        mNetAmountTextView.setText(Utilities.formatTaka(getAmount().add(serviceCharge)));
-    }
-
-    @Override
-    public void onPinLoadFinished(boolean isPinRequired) {
-        WithdrawMoneyActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
+            mServiceChargeViewHolder.setVisibility(View.VISIBLE);
+            mNetAmountViewHolder.setVisibility(View.VISIBLE);
+            mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
+            mNetAmountTextView.setText(Utilities.formatTaka(getAmount().add(serviceCharge)));
     }
 
     private void launchOTPVerification() {

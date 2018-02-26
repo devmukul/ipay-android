@@ -19,29 +19,22 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.math.BigDecimal;
-
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.AddMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.CardPaymentWebViewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByCreditOrDebitCardRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMoneyByCreditOrDebitCardResponse;
-import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
-import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
-public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment implements HttpResponseListener {
+public class AddMoneyFromCreditOrDebitCardReviewFragment extends BaseFragment implements HttpResponseListener {
 
     private static final int CARD_PAYMENT_WEB_VIEW_REQUEST = 2001;
     private HttpRequestPostAsyncTask mAddMoneyTask = null;
-
-    private TextView mServiceChargeTextView;
-    private TextView mNetAmountTextView;
 
     private ProgressDialog mProgressDialog;
 
@@ -66,16 +59,11 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         final TextView amountTextView = findViewById(R.id.amount_text_view);
-        mServiceChargeTextView = findViewById(R.id.service_charge_text_view);
-        mNetAmountTextView = findViewById(R.id.net_amount_text_view);
         final LinearLayout descriptionViewHolder = findViewById(R.id.description_view_holder);
         final TextView descriptionTextView = findViewById(R.id.description_text_view);
         final Button addMoneyButton = findViewById(R.id.add_money_button);
 
-        amountTextView.setText(Utilities.formatTaka(getAmount()));
-        mServiceChargeTextView.setText(Utilities.formatTaka(new BigDecimal(0.0)));
-        mNetAmountTextView.setText(Utilities.formatTaka(getAmount().subtract(new BigDecimal(0.0))));
-
+        amountTextView.setText(Utilities.formatTaka(mAmount));
 
         if (mDescription == null || mDescription.isEmpty()) {
             descriptionViewHolder.setVisibility(View.GONE);
@@ -88,29 +76,9 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
         addMoneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                        && Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-                    final String errorMessage = InputValidator.isValidAmount(getActivity(), new BigDecimal(mAmount),
-                            AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT(),
-                            AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT());
-
-                    if (errorMessage == null) {
-                        attemptAddMoney();
-
-                    } else {
-                        showErrorDialog(errorMessage);
-                    }
-                } else
-                    attemptAddMoney();
+                attemptAddMoney();
             }
         });
-
-        // Check if Min or max amount is available
-        if (!Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())
-                && !Utilities.isValueAvailable(AddMoneyActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT()))
-            attemptGetBusinessRuleWithServiceCharge(Constants.SERVICE_ID_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD);
-        else
-            attemptGetServiceCharge();
     }
 
     private void attemptAddMoney() {
@@ -154,32 +122,10 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
     }
 
     @Override
-    protected int getServiceID() {
-        return Constants.SERVICE_ID_ADD_MONEY_BY_CREDIT_OR_DEBIT_CARD;
-    }
-
-    @Override
-    protected BigDecimal getAmount() {
-        return new BigDecimal(mAmount);
-    }
-
-    @Override
-    protected void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-        mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
-        mNetAmountTextView.setText(Utilities.formatTaka(getAmount().subtract(serviceCharge)));
-    }
-
-    @Override
-    protected void onPinLoadFinished(boolean isPinRequired) {
-        AddMoneyActivity.mMandatoryBusinessRules.setIS_PIN_REQUIRED(isPinRequired);
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         getActivity().setResult(resultCode, data);
         getActivity().finish();
     }
-
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
@@ -217,7 +163,6 @@ public class AddMoneyFromCreditOrDebitCardReviewFragment extends ReviewFragment 
                 }
                 break;
             default:
-                super.httpResponseReceiver(result);
                 break;
         }
     }
