@@ -135,6 +135,7 @@ public class HomeActivity extends BaseActivity
     private NavigationView mNavigationView;
     private RecyclerView mManagedBusinessListRecyclerView;
     private ImageView mMoreBusinessListImageView;
+    private View headerView;
 
     private String mUserID;
     private String mDeviceID;
@@ -172,9 +173,10 @@ public class HomeActivity extends BaseActivity
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mManagedBusinessListRecyclerView = (RecyclerView) mNavigationView.getHeaderView(0).findViewById(R.id.managed_business_list);
         mMoreBusinessListImageView = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.drop_arrow);
+        headerView = mNavigationView.getHeaderView(0);
         mNavigationMenu = mNavigationView.getMenu();
 
-        mMoreBusinessListImageView.setOnClickListener(new View.OnClickListener() {
+        headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mManagedBusinessListRecyclerView.getVisibility() == View.VISIBLE) {
@@ -378,6 +380,11 @@ public class HomeActivity extends BaseActivity
     public void onResume() {
         super.onResume();
         Utilities.hideKeyboard(this);
+        try {
+            drawer.closeDrawer(GravityCompat.START);
+        } catch (Exception e) {
+
+        }
         if (ACLManager.hasServicesAccessibility(ServiceIdConstants.SEE_MANAGERS) && !ProfileInfoCacheManager.isAccountSwitched()) {
             getManagedBusinessAccountList();
         }
@@ -1002,7 +1009,7 @@ public class HomeActivity extends BaseActivity
             private TextView nameTextView;
             private TextView roleTextView;
             private ProfileImageView profileImageView;
-            private ImageView resignFromBusinessImageView;
+            private ImageView businessAccountSettingsImageView;
 
 
             public ViewHolder(View itemView) {
@@ -1010,7 +1017,7 @@ public class HomeActivity extends BaseActivity
                 nameTextView = (TextView) itemView.findViewById(R.id.title_text_view);
                 roleTextView = (TextView) itemView.findViewById(R.id.role_text_view);
                 profileImageView = (ProfileImageView) itemView.findViewById(R.id.profile_image_view);
-                resignFromBusinessImageView = (ImageView) itemView.findViewById(R.id.leave_account);
+                businessAccountSettingsImageView = (ImageView) itemView.findViewById(R.id.leave_account);
             }
 
             public void bind(final BusinessAccountDetails item) {
@@ -1026,28 +1033,18 @@ public class HomeActivity extends BaseActivity
                     profileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + item.getBusinessProfilePictureUrlHigh(), false);
                 }
                 if (ProfileInfoCacheManager.isAccountSwitched()) {
-                    resignFromBusinessImageView.setVisibility(View.GONE);
+                    businessAccountSettingsImageView.setVisibility(View.GONE);
                 } else {
-                    resignFromBusinessImageView.setVisibility(View.VISIBLE);
+                    businessAccountSettingsImageView.setVisibility(View.VISIBLE);
                 }
-                resignFromBusinessImageView.setOnClickListener(new View.OnClickListener() {
+                businessAccountSettingsImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        new AlertDialog.Builder(HomeActivity.this).
-                                setMessage(getString(R.string.do_you_want_to_resign))
-                                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        drawer.closeDrawer(GravityCompat.START);
-                                        resignFromBusiness(item.getId());
-                                    }
-                                }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        }).show();
-
+                        Intent intent = new Intent(HomeActivity.this,
+                                ManagedBusinessAccountSettingsActivity.class);
+                        intent.putExtra(Constants.BUSINESS_ACCOUNT_ID, item.getBusinessAccountId());
+                        intent.putExtra(Constants.ID, item.getId());
+                        startActivity(intent);
                     }
                 });
 

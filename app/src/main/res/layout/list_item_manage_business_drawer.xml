@@ -15,9 +15,9 @@
             android:id="@+id/leave_account"
             android:layout_width="@dimen/value20"
             android:layout_height="@dimen/value20"
+            android:src="@drawable/ic_settings_white"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/value15"
-            android:src="@drawable/ic_cancel_white" />
+            android:layout_marginTop="@dimen/value15" />
 
         <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
             android:id="@+id/profile_image_view"
