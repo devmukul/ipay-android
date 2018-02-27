@@ -298,6 +298,9 @@ public class MobileTopupReviewFragment extends BaseFragment implements HttpRespo
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                    }
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG);
                     Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());

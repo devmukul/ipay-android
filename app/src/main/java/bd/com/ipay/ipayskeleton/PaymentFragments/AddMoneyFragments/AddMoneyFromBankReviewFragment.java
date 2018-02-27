@@ -220,6 +220,9 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                }
                 if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG);
                 Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());

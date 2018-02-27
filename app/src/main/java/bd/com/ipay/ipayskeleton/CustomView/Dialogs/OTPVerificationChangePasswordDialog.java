@@ -223,6 +223,7 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
 
         mProgressDialog.setMessage(context.getString(R.string.change_password_progress));
         mProgressDialog.show();
+        view.setVisibility(View.GONE);
         ChangePasswordWithOTPRequest mChangePasswordWithOTPRequest = new ChangePasswordWithOTPRequest(mPassword, mNewPassword, mOTP);
         Gson gson = new Gson();
         String json = gson.toJson(mChangePasswordWithOTPRequest);
@@ -268,8 +269,14 @@ public class OTPVerificationChangePasswordDialog extends MaterialDialog.Builder 
                         }
                     }
                 } else {
-                    if (context != null)
+                    if (context != null) {
                         Toast.makeText(context, mChangePasswordWithOTPResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        if (mChangePasswordWithOTPResponse.getMessage().toLowerCase().contains("wrong")) {
+                            view.setVisibility(View.VISIBLE);
+                        } else if (mOTPInputDialog != null) {
+                            mOTPInputDialog.hide();
+                        }
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

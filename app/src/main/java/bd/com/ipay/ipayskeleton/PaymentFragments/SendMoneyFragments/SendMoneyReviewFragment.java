@@ -304,6 +304,9 @@ public class SendMoneyReviewFragment extends BaseFragment implements HttpRespons
 
                 }
             } catch (Exception e) {
+                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                }
                 e.printStackTrace();
                 Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }

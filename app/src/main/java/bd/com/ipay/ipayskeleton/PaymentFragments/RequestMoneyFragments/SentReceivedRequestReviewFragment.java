@@ -459,6 +459,9 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
                         Utilities.sendFailedEventTracker(mTracker, "Money Request", ProfileInfoCacheManager.getAccountId(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), mAmount.longValue());
                     }
                 } catch (Exception e) {
+                    if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                    }
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG);

@@ -567,6 +567,9 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
                         }
                     }
                 } catch (Exception e) {
+                    if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                    }
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG);

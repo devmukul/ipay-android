@@ -277,6 +277,9 @@ public class PaymentReviewFragment extends BaseFragment implements HttpResponseL
 
                 }
             } catch (Exception e) {
+                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                }
                 e.printStackTrace();
                 Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }

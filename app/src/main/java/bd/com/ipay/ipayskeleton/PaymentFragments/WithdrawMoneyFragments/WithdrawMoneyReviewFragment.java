@@ -275,6 +275,9 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
                     Utilities.sendFailedEventTracker(mTracker, "Withdraw Money", ProfileInfoCacheManager.getAccountId(), mWithdrawMoneyResponse.getMessage(), Double.valueOf(mAmount).longValue());
                 }
             } catch (Exception e) {
+                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                }
                 e.printStackTrace();
                 Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }

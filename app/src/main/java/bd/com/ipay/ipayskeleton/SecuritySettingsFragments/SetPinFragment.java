@@ -188,6 +188,9 @@ public class SetPinFragment extends BaseFragment implements HttpResponseListener
                     Utilities.sendFailedEventTracker(mTracker, "Pin Set", ProfileInfoCacheManager.getAccountId(), mSetPinResponse.getMessage());
                 }
             } catch (Exception e) {
+                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                }
                 e.printStackTrace();
                 if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.save_failed, Toast.LENGTH_LONG);
