@@ -86,7 +86,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
         mProfileCompletionStatusView.setText("Your profile is " + mProfileCompletionStatusResponse.getCompletionPercentage()
                 + "% complete");
         mProfileCompletionStatusProgressBar.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
-        if (!mProfileCompletionStatusResponse.isCompletedMandatoryFields()) {
+        if (!mProfileCompletionStatusResponse.getAnalyzedProfileVerificationMessage().isEmpty()) {
             mProfileCompletionInformationView.setText("For verification purpose you need to complete the following information - your "
                     + mProfileCompletionStatusResponse.getAnalyzedProfileVerificationMessage() + " to get verified.");
         } else mProfileCompletionInformationView.setVisibility(View.GONE);
