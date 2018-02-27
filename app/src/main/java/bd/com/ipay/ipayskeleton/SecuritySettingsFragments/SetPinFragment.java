@@ -28,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SetPinFragment extends BaseFragment implements HttpResponseListener {
@@ -177,7 +178,7 @@ public class SetPinFragment extends BaseFragment implements HttpResponseListener
                 } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        if (mSetPinResponse.getMessage().toLowerCase().contains("wrong")) {
+                        if (mSetPinResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
                         } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();

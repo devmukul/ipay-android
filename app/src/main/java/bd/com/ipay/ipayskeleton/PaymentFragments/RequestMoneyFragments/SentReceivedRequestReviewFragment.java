@@ -49,6 +49,7 @@ import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SentReceivedRequestReviewFragment extends BaseFragment implements HttpResponseListener {
@@ -450,7 +451,7 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
                     } else {
                         if (getActivity() != null) {
                             Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
-                            if (mRequestMoneyAcceptRejectOrCancelResponse.getMessage().toLowerCase().contains("wrong")) {
+                            if (mRequestMoneyAcceptRejectOrCancelResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
                                 mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
                             } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                                 mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();

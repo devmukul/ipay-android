@@ -248,7 +248,6 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
         Gson gson = new Gson();
         TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse
                 = gson.fromJson(result.getJsonString(), TwoFactorAuthSettingsSaveResponse.class);
-        //mOTPInputDialog.dismiss();
         mHttpPutAsyncTask = null;
         mHttpPostAsyncTask = null;
         mParentHttpResponseListener.httpResponseReceiver(result);

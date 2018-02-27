@@ -37,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddMoneyFromBankReviewFragment extends BaseFragment implements HttpResponseListener {
@@ -208,7 +209,7 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
                 } else {
                     if (getActivity() != null) {
                         Toaster.makeText(getActivity(), mAddMoneyByBankResponse.getMessage(), Toast.LENGTH_LONG);
-                        if (mAddMoneyByBankResponse.getMessage().toLowerCase().contains("wrong")) {
+                        if (mAddMoneyByBankResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
                         } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
                             mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
