@@ -114,11 +114,10 @@ public class ProfileCompletionStatusResponse {
         String message = "";
 
         for (int i = 0; i < tagwiseScorePercentage.size(); i++) {
-            if (tagwiseScorePercentage.get(i) == 0) {
-                message += tagList.get(i);
-                if (i > 0 && i < tagwiseScorePercentage.size() - 1) {
+            if (tagwiseScorePercentage.get(i) != 100) {
+                if (!message.isEmpty())
                     message += ", ";
-                }
+                message += tagList.get(i);
             }
         }
 
