@@ -537,6 +537,9 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
                             PaymentAcceptRejectOrCancelResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                         String message = mRequestPaymentAcceptRejectOrCancelResponse.getMessage();
+                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        }
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
@@ -552,8 +555,14 @@ public class SentReceivedRequestPaymentReviewFragment extends ReviewFragment imp
                         SecuritySettingsActivity.otpDuration = mRequestPaymentAcceptRejectOrCancelResponse.getOtpValidFor();
                         launchOTPVerification();
                     } else {
-                        if (getActivity() != null)
+                        if (getActivity() != null) {
                             Toaster.makeText(getActivity(), mRequestPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
+                            if (mRequestPaymentAcceptRejectOrCancelResponse.getMessage().toLowerCase().contains("wrong")) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                            } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                            }
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

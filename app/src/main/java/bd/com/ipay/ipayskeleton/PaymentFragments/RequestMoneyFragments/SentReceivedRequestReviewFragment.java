@@ -225,7 +225,7 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
             addContact(mReceiverName, mReceiverMobileNumber, null);
         }
 
-       if (PaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+        if (PaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
@@ -425,6 +425,9 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
                     mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
                             RequestMoneyAcceptRejectOrCancelResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        }
                         String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
                             Toaster.makeText(getActivity(), message, Toast.LENGTH_LONG);
@@ -445,8 +448,14 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
                         SecuritySettingsActivity.otpDuration = mRequestMoneyAcceptRejectOrCancelResponse.getOtpValidFor();
                         launchOTPVerification();
                     } else {
-                        if (getActivity() != null)
+                        if (getActivity() != null) {
                             Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
+                            if (mRequestMoneyAcceptRejectOrCancelResponse.getMessage().toLowerCase().contains("wrong")) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                            } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                            }
+                        }
                         Utilities.sendFailedEventTracker(mTracker, "Money Request", ProfileInfoCacheManager.getAccountId(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), mAmount.longValue());
                     }
                 } catch (Exception e) {

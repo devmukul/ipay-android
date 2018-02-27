@@ -156,8 +156,12 @@ public class SetPinFragment extends BaseFragment implements HttpResponseListener
                 mSetPinResponse = gson.fromJson(result.getJsonString(), SetPinResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        }
+                    }
                     ((SecuritySettingsActivity) getActivity()).switchToAccountSettingsFragment();
                     //Google Analytic event
                     Utilities.sendSuccessEventTracker(mTracker, "Pin Set", ProfileInfoCacheManager.getAccountId());
@@ -173,6 +177,11 @@ public class SetPinFragment extends BaseFragment implements HttpResponseListener
                 } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        if (mSetPinResponse.getMessage().toLowerCase().contains("wrong")) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                        } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        }
                     }
 
                     //Google Analytic event
@@ -182,7 +191,6 @@ public class SetPinFragment extends BaseFragment implements HttpResponseListener
                 e.printStackTrace();
                 if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.save_failed, Toast.LENGTH_LONG);
-
                 //Google Analytic event
                 Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }

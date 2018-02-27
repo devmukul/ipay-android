@@ -185,8 +185,12 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
                 final AddMoneyByBankResponse mAddMoneyByBankResponse = gson.fromJson(result.getJsonString(), AddMoneyByBankResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toaster.makeText(getActivity(), mAddMoneyByBankResponse.getMessage(), Toast.LENGTH_LONG);
+                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        }
+                    }
                     getActivity().setResult(Activity.RESULT_OK);
                     // Exit the Add money activity and return to HomeActivity
                     getActivity().finish();
@@ -202,8 +206,14 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
                     SecuritySettingsActivity.otpDuration = mAddMoneyByBankResponse.getOtpValidFor();
                     launchOTPVerification();
                 } else {
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toaster.makeText(getActivity(), mAddMoneyByBankResponse.getMessage(), Toast.LENGTH_LONG);
+                        if (mAddMoneyByBankResponse.getMessage().toLowerCase().contains("wrong")) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                        } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        }
+                    }
 
                     //Google Analytic event
                     Utilities.sendFailedEventTracker(mTracker, "Add Money By Bank", ProfileInfoCacheManager.getAccountId(), mAddMoneyByBankResponse.getMessage(), Double.valueOf(mAmount).longValue());
