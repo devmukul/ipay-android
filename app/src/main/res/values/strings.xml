@@ -183,6 +183,7 @@
     <string name="role">Role</string>
     <string name="select_a_fee_item">Select a fee item</string>
     <string name="select_session">Select Session</string>
+    <string name="from_send_money">From_send_money</string>
     <string name="save">Save</string>
     <string name="update">Update</string>
     <string name="update_ipay">Please update iPay</string>

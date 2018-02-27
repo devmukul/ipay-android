@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -24,6 +25,7 @@ import com.google.zxing.integration.android.IntentResult;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -31,6 +33,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
@@ -52,6 +55,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
 
     private final int PICK_CONTACT_REQUEST = 100;
     private final int SEND_MONEY_REVIEW_REQUEST = 101;
+    private final int SCAN_QR_CODE_REQUEST = 102;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
 
@@ -62,6 +66,8 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     private EditText mDescriptionEditText;
     private EditText mAmountEditText;
     private ProgressDialog mProgressDialog;
+    private ProfileImageView mProfileImageView;
+    private TextView mNameTextView;
 
 
     @Override
@@ -69,11 +75,13 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_send_money, container, false);
         mMobileNumberEditText = (CustomContactsSearchView) v.findViewById(R.id.mobile_number);
+        mNameTextView = (TextView) v.findViewById(R.id.receiver_name_text_view);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         buttonSend = (Button) v.findViewById(R.id.button_send_money);
+        mProfileImageView = (ProfileImageView) v.findViewById(R.id.receiver_profile_image_view);
         mProgressDialog = new ProgressDialog(getActivity());
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
@@ -111,9 +119,10 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         buttonScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Utilities.performQRCodeScan(SendMoneyFragment.this, REQUEST_CODE_PERMISSION);
-
+                Intent intent;
+                intent = new Intent(getActivity(), QRCodePaymentActivity.class);
+                intent.putExtra(Constants.TAG, R.string.from_send_money);
+                startActivityForResult(intent, SCAN_QR_CODE_REQUEST);
             }
         });
 
@@ -152,25 +161,20 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
 
         } else if (requestCode == SEND_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
-        } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
-            IntentResult scanResult = IntentIntegrator.parseActivityResult(
-                    requestCode, resultCode, data);
-            if (scanResult == null) {
-                return;
-            }
-            final String result = scanResult.getContents();
-            if (result != null) {
-                Handler mHandler = new Handler();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (InputValidator.isValidNumber(result)) {
-                            mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
-                        } else if (getActivity() != null)
-                            Toaster.makeText(getActivity(), getResources().getString(
-                                    R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT);
-                    }
-                });
+        } else if (resultCode == Activity.RESULT_OK && requestCode == SCAN_QR_CODE_REQUEST) {
+            try {
+                if (data.hasExtra(Constants.MOBILE_NUMBER)) {
+                    mMobileNumberEditText.setText(data.getStringExtra(Constants.MOBILE_NUMBER));
+                }
+                if (data.hasExtra(Constants.NAME)) {
+                    mNameTextView.setText(data.getStringExtra(Constants.NAME));
+                }
+                if (getActivity().getIntent().hasExtra(Constants.PHOTO_URI)) {
+                    mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + data.getStringExtra(Constants.PHOTO_URI),
+                            false);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
