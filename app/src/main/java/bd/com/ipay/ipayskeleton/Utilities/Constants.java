@@ -371,7 +371,6 @@ public class Constants {
     public static final String URL_GET_TRUSTED_DEVICES = "device";
     public static final String URL_REMOVE_TRUSTED_DEVICE = "device/";
     // Documents Rest
-    public static final String URL_GET_DOCUMENTS = "docs/identification/documents";
     public static final String URL_GET_DOCUMENTS_v2 = "docs/identification/documents/v2";
     public static final String URL_GET_BUSINESS_DOCUMENTS = "docs/identification/documents/business";
     public static final String URL_GET_BUSINESS_DOCUMENTS_v2 = "docs/identification/documents/business/v2";
@@ -380,7 +379,6 @@ public class Constants {
     public static final String URL_UPLOAD_DOCUMENTS_V2 = "docs/identification/documents/v2";
     public static final String URL_UPLOAD_BUSINESS_DOCUMENTS = "docs/identification/documents/business";
     public static final String URL_UPLOAD_BUSINESS_DOCUMENTS_V2 = "docs/identification/documents/business/v2";
-    public static final String URL_GET_DOCUMENT_ACCESS_TOKEN = "user/contentAccessToken";
 
     // Fee Charge REST
     public static final String URL_SERVICE_CHARGE = "feecharge";

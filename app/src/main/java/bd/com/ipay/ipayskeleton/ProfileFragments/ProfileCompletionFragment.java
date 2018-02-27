@@ -21,6 +21,7 @@ import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.ProfileActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -37,6 +38,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
 
     private TextView mProfileCompletionStatusView;
     private ProgressBar mProfileCompletionStatusProgressBar;
+    private TextView mProfileCompletionInformationView;
     private Tracker mTracker;
 
     @Override
@@ -63,6 +65,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
         mProfileCompletionRecyclerView.setLayoutManager(mLayoutManager);
 
         mProfileCompletionStatusView = (TextView) v.findViewById(R.id.textview_profile_completion_status);
+        mProfileCompletionInformationView = (TextView) v.findViewById(R.id.textview_profile_completion_title);
         mProfileCompletionStatusProgressBar = (ProgressBar) v.findViewById(R.id.progress_bar_profile_completion_status);
         getProfileCompletionStatus();
 
@@ -83,6 +86,10 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
         mProfileCompletionStatusView.setText("Your profile is " + mProfileCompletionStatusResponse.getCompletionPercentage()
                 + "% complete");
         mProfileCompletionStatusProgressBar.setProgress(mProfileCompletionStatusResponse.getCompletionPercentage());
+        if (!mProfileCompletionStatusResponse.isCompletedMandatoryFields()) {
+            mProfileCompletionInformationView.setText("For verification purpose you need to complete the following information - your "
+                    + mProfileCompletionStatusResponse.getAnalyzedProfileVerificationMessage() + " to get verified.");
+        } else mProfileCompletionInformationView.setVisibility(View.GONE);
 
         if (this.isAdded()) setContentShown(true);
     }
@@ -339,7 +346,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             // Basic Info Header
             tempPosition += 1;
             if (position < tempPosition) {
-                ((HeaderViewHolder) holder).bindViewHeader(getString(R.string.basic_info));
+                ((HeaderViewHolder) holder).bindViewHeader(mProfileCompletionStatusResponse.getTagList().get(ProfileCompletionPropertyConstants.TAG_POSITION_PROFILE_PICTURE));
                 return;
             }
 
@@ -354,7 +361,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             // Address Header
             tempPosition += 1;
             if (position < tempPosition) {
-                ((HeaderViewHolder) holder).bindViewHeader(getString(R.string.address));
+                ((HeaderViewHolder) holder).bindViewHeader(mProfileCompletionStatusResponse.getTagList().get(ProfileCompletionPropertyConstants.TAG_POSITION_IDENTIFICATION));
                 return;
             }
 
@@ -369,7 +376,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             // Identification Header
             tempPosition += 1;
             if (position < tempPosition) {
-                ((HeaderViewHolder) holder).bindViewHeader(getString(R.string.identification));
+                ((HeaderViewHolder) holder).bindViewHeader(mProfileCompletionStatusResponse.getTagList().get(ProfileCompletionPropertyConstants.TAG_POSITION_BASIC_INFO));
                 return;
             }
 
@@ -384,7 +391,7 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
             // Add Bank Header
             tempPosition += 1;
             if (position < tempPosition) {
-                ((HeaderViewHolder) holder).bindViewHeader(getString(R.string.source_of_fund));
+                ((HeaderViewHolder) holder).bindViewHeader(mProfileCompletionStatusResponse.getTagList().get(ProfileCompletionPropertyConstants.TAG_POSITION_SOURCE_OF_FUND));
                 return;
             }
 
