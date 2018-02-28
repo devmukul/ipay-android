@@ -13,15 +13,17 @@
         android:paddingTop="@dimen/value15">
 
         <LinearLayout
+            android:id="@+id/profile_pic_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                 android:id="@+id/receiver_profile_image_view"
                 style="@style/PaymentReviewImageStyleLarge"
-                android:layout_margin="@dimen/activity_horizontal_margin"/>
+                android:layout_margin="@dimen/activity_horizontal_margin" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -46,40 +48,47 @@
             </LinearLayout>
         </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/mobile_number_holder"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView
-                android:id="@+id/mobile_number"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:inputType="text"
-                android:maxLines="1" />
+                android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/button_scan_qr_code"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/value5"
-                android:layout_toLeftOf="@+id/select_receiver_from_contacts"
-                android:src="@drawable/ic_qr_input"
-                android:visibility="visible" />
+                <bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView
+                    android:id="@+id/mobile_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:inputType="text"
+                    android:maxLines="1" />
 
-            <ImageView
-                android:id="@+id/select_receiver_from_contacts"
-                style="@style/ButtonStyleWithIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_book3x" />
+                <ImageView
+                    android:id="@+id/button_scan_qr_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/value5"
+                    android:layout_toLeftOf="@+id/select_receiver_from_contacts"
+                    android:src="@drawable/ic_qr_input"
+                    android:visibility="visible" />
 
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/select_receiver_from_contacts"
+                    style="@style/ButtonStyleWithIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_book3x" />
 
-        <View style="@style/Divider" />
+            </RelativeLayout>
+
+            <View style="@style/Divider" />
+        </LinearLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

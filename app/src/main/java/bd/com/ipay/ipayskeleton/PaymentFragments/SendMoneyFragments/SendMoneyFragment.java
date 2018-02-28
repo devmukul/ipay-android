@@ -25,7 +25,6 @@ import com.google.zxing.integration.android.IntentResult;
 import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.QRCodePaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -38,7 +37,6 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCh
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
-import bd.com.ipay.ipayskeleton.PaymentFragments.QRCodePaymentFragments.ScanQRCodeFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -58,7 +56,6 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
 
     private final int PICK_CONTACT_REQUEST = 100;
     private final int SEND_MONEY_REVIEW_REQUEST = 101;
-    private final int SCAN_QR_CODE_REQUEST = 102;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
     private HttpRequestGetAsyncTask mGetUserInfoTask;
@@ -72,6 +69,8 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     private ProgressDialog mProgressDialog;
     private ProfileImageView mProfileImageView;
     private TextView mNameTextView;
+    private View mProfilePicHolderView;
+    private View mMobileNumberHolderView;
 
 
     @Override
@@ -86,6 +85,8 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         buttonSend = (Button) v.findViewById(R.id.button_send_money);
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.receiver_profile_image_view);
+        mProfilePicHolderView = v.findViewById(R.id.profile_pic_holder);
+        mMobileNumberHolderView = v.findViewById(R.id.mobile_number_holder);
         mProgressDialog = new ProgressDialog(getActivity());
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
@@ -347,10 +348,13 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                 GetUserInfoResponse mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mProfilePicHolderView.setVisibility(View.VISIBLE);
+                    mMobileNumberHolderView.setVisibility(View.GONE);
+
                     String name = mGetUserInfoResponse.getName();
-                    String profilePicture = null;
+
                     if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
-                        profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
+                        String profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
                         mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture,
                                 false);
                     }
