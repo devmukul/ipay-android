@@ -126,8 +126,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mProgressDialog.setCancelable(false);
 
         mMobileNumberEditText = (BusinessContactsSearchView) v.findViewById(R.id.mobile_number);
-        profileView = (LinearLayout) v.findViewById(R.id.profile);
-        mobileNumberView = (RelativeLayout) v.findViewById(R.id.mobile_number_view);
+        profileView = v.findViewById(R.id.profile);
+        mobileNumberView = v.findViewById(R.id.mobile_number_holder);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
         mRefNumberEditText = (EditText) v.findViewById(R.id.reference_number);
@@ -339,6 +339,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     public void run() {
                         if (InputValidator.isValidNumber(result)) {
                             mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
+                            getProfileInfo(ContactEngine.formatMobileNumberBD(result));
                         } else if (getActivity() != null)
                             Toast.makeText(getActivity(), getResources().getString(
                                     R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT).show();
@@ -554,6 +555,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mobileNumberView.setVisibility(View.GONE);
+                    profileView.setVisibility(View.VISIBLE);
                     String name = mGetUserInfoResponse.getName();
                     if (mGetUserInfoResponse.getAddressList() != null) {
                         if (mGetUserInfoResponse.getAddressList().getOFFICE() != null) {
