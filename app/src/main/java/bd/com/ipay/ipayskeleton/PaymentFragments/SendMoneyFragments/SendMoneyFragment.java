@@ -36,6 +36,9 @@ import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.PaymentFragments.QRCodePaymentFragments.ScanQRCodeFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -58,6 +61,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     private final int SCAN_QR_CODE_REQUEST = 102;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
+    private HttpRequestGetAsyncTask mGetUserInfoTask;
 
     private Button buttonSend;
     private ImageView buttonSelectFromContacts;
@@ -119,10 +123,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         buttonScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent;
-                intent = new Intent(getActivity(), QRCodePaymentActivity.class);
-                intent.putExtra(Constants.TAG, R.string.from_send_money);
-                startActivityForResult(intent, SCAN_QR_CODE_REQUEST);
+                Utilities.performQRCodeScan(SendMoneyFragment.this, REQUEST_CODE_PERMISSION);
             }
         });
 
@@ -161,20 +162,44 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
 
         } else if (requestCode == SEND_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
-        } else if (resultCode == Activity.RESULT_OK && requestCode == SCAN_QR_CODE_REQUEST) {
-            try {
-                if (data.hasExtra(Constants.MOBILE_NUMBER)) {
-                    mMobileNumberEditText.setText(data.getStringExtra(Constants.MOBILE_NUMBER));
-                }
-                if (data.hasExtra(Constants.NAME)) {
-                    mNameTextView.setText(data.getStringExtra(Constants.NAME));
-                }
-                if (getActivity().getIntent().hasExtra(Constants.PHOTO_URI)) {
-                    mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + data.getStringExtra(Constants.PHOTO_URI),
-                            false);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
+            IntentResult scanResult = IntentIntegrator.parseActivityResult(
+                    requestCode, resultCode, data);
+            if (scanResult == null) {
+                return;
+            }
+            final String result = scanResult.getContents();
+            if (result != null) {
+                Handler mHandler = new Handler();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (InputValidator.isValidNumber(result)) {
+                            mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
+                            if (Utilities.isConnectionAvailable(getActivity())) {
+                                String mobileNumber = ContactEngine.formatMobileNumberBD(result);
+                                GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
+
+                                if (mGetUserInfoTask != null) {
+                                    return;
+                                }
+
+                                mProgressDialog.show();
+                                mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
+                                        getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
+                                mGetUserInfoTask.mHttpResponseListener = SendMoneyFragment.this;
+                                mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            } else {
+                                Toaster.makeText(getActivity(), getResources().getString(
+                                        R.string.no_internet_connection), Toast.LENGTH_SHORT);
+                                mProgressDialog.cancel();
+                                getActivity().finish();
+                            }
+                        } else if (getActivity() != null)
+                            Toaster.makeText(getActivity(), getResources().getString(
+                                    R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT);
+                    }
+                });
             }
         }
     }
@@ -277,6 +302,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     public void httpResponseReceiver(GenericHttpResponse result) {
 
         mProgressDialog.dismiss();
+        Gson gson = new Gson();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             if (getActivity() != null)
@@ -286,7 +312,6 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
-                    Gson gson = new Gson();
 
                     BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
 
@@ -316,6 +341,35 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             }
 
             mGetBusinessRuleTask = null;
+        }
+        if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
+            try {
+                GetUserInfoResponse mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    String name = mGetUserInfoResponse.getName();
+                    String profilePicture = null;
+                    if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
+                        profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
+                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture,
+                                false);
+                    }
+                    mNameTextView.setText(name);
+
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+
+                } else {
+                    Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+
+            mGetUserInfoTask = null;
+            mProgressDialog.dismiss();
         }
     }
 }
