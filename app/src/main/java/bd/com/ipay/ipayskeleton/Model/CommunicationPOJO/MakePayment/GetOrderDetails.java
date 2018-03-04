@@ -7,7 +7,12 @@ public class GetOrderDetails {
     private String merchantName;
     private String merchantLogoUrl;
     private String description;
+    private String merchantMobileNumber;
     private double amount;
+
+    public String getMerchantMobileNumber() {
+        return merchantMobileNumber;
+    }
 
     public String getMessage() {
         return message;

@@ -10,6 +10,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.AddMo
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AddOrWithdrawMoney.WithdrawMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.ChangeCredentials.SetPinRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequestByDeepLink;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.SendNewPaymentRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyAcceptRejectOrCancelRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
@@ -90,6 +91,14 @@ public class TwoFactorAuthServicesAsynctaskMap {
                 json = gson.toJson(paymentRequest);
                 mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT, uri, json, context);
                 return mHttpPostAsyncTask;
+            case Constants.COMMAND_PAYMENT_BY_DEEP_LINK:
+                PaymentRequestByDeepLink paymentRequestByDeepLink = gson.fromJson(json, PaymentRequestByDeepLink.class);
+                if (otp != null) {
+                    paymentRequestByDeepLink.setOtp(otp);
+                }
+                json = gson.toJson(paymentRequestByDeepLink);
+                mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT_BY_DEEP_LINK, uri, json, context);
+                return mHttpPostAsyncTask;
 
             case Constants.COMMAND_SEND_PAYMENT_REQUEST:
                 SendNewPaymentRequest mSendNewPaymentRequest = gson.fromJson(json, SendNewPaymentRequest.class);
@@ -107,8 +116,8 @@ public class TwoFactorAuthServicesAsynctaskMap {
                 mHttpPostAsyncTask = new HttpRequestPostAsyncTask(Constants.COMMAND_ACCEPT_REQUESTS_MONEY, uri, json, context);
                 return mHttpPostAsyncTask;
             case Constants.COMMAND_ACCEPT_PAYMENT_REQUEST:
-                RequestMoneyAcceptRejectOrCancelRequest mRequestMoneyAcceptRejectOrCancelRequest=
-                        gson.fromJson(json,RequestMoneyAcceptRejectOrCancelRequest.class);
+                RequestMoneyAcceptRejectOrCancelRequest mRequestMoneyAcceptRejectOrCancelRequest =
+                        gson.fromJson(json, RequestMoneyAcceptRejectOrCancelRequest.class);
                 if (otp != null)
                     mRequestMoneyAcceptRejectOrCancelRequest.setOtp(otp);
                 json = gson.toJson(mRequestMoneyAcceptRejectOrCancelRequest);

@@ -28,11 +28,12 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetOrderDetails;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequestByDeepLink;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -53,9 +54,11 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     private GetOrderDetails mGetOrderDetails;
 
     private HttpRequestPostAsyncTask mPaymentTask = null;
-    private PaymentRequest mPaymentRequest;
+    private PaymentRequestByDeepLink mPaymentRequestByDeepLink;
 
     private ProgressDialog mProgressDialog;
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog
+            mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private TextView mBusinessNameTextView;
     private TextView mAmountTextView;
@@ -64,6 +67,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     private Button mConfirmButton;
 
     private String orderID;
+    private String otp;
 
     private LocationManager locationManager;
     private Location userLocation;
@@ -166,19 +170,25 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             return;
         }
 
-        /*mProgressDialog.setMessage(getString(R.string.progress_dialog_text_payment));
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_text_payment));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
-        mPaymentRequest = new PaymentRequest(
-                ContactEngine.formatMobileNumberBD(mGetOrderDetails.),
-                Double.toString(mGetOrderDetails.getAmount()), mGetOrderDetails.getDescription(), pin, mReferenceNumber, userLocation.getLatitude(), userLocation.getLongitude());
+        mPaymentRequestByDeepLink = new PaymentRequestByDeepLink(pin);
 
-        Gson gson = new Gson();
-        String json = gson.toJson(mPaymentRequest);
-        mPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT,
-                Constants.BASE_URL_SM + Constants.URL_PAYMENT, json, getActivity());
+        String url = Constants.URL_PAY_BY_DEEP_LINK.replace("orderId", orderID);
+        mPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT_BY_DEEP_LINK,
+                "http://10.10.10.11:6776/api/" + url, new Gson().toJson(mPaymentRequestByDeepLink), getActivity());
         mPaymentTask.mHttpResponseListener = this;
-        mPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);*/
+        mPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void launchOtpVerification() {
+        String jsonString = new Gson().toJson(mPaymentRequestByDeepLink);
+        String url = Constants.URL_PAY_BY_DEEP_LINK.replace("orderId", orderID);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(),
+                jsonString, Constants.COMMAND_PAYMENT,
+                "http://10.10.10.11:6776/api/" + url, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
     @SuppressLint("MissingPermission")
@@ -303,8 +313,21 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             } else {
                 DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             }
+        } else if (result.getApiCommand().equals(Constants.COMMAND_PAYMENT_BY_DEEP_LINK)) {
+            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                try {
+
+                } catch (Exception e) {
+                    DialogUtils.showNecessaryDialog(getActivity(), "Something went wrong");
+                }
+            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED ||
+                    result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                ///todo  otp duration must be provided and saved , for now we are proceeding .
+                launchOtpVerification();
+            }
         }
     }
+
 
     @Override
     public void onLocationChanged(Location location) {

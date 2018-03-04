@@ -457,7 +457,7 @@ public class Constants {
     public static final String URL_SEND_PAYMENT_REQUEST = "payment/invoice/send";
     public static final String URL_GET_SINGLE_REQUEST_PAYMENT = "payment/invoice/get/";
     public static final String URL_GET_ORDER_DETAILS = "pg/order/orderId/info";
-
+    public static final String URL_PAY_BY_DEEP_LINK = "pg/order/orderid/pay";
 
     public static final String URL_PAYMENT = "payment/v2";
 
@@ -597,6 +597,7 @@ public class Constants {
     public static final String COMMAND_LOG_OUT = "COMMAND_LOG_OUT";
     public static final String COMMAND_SEND_MONEY = "COMMAND_SEND_MONEY";
     public static final String COMMAND_PAYMENT = "COMMAND_PAYMENT";
+    public static final String COMMAND_PAYMENT_BY_DEEP_LINK = "COMMAND_PAYMENT_BY_DEEP_LINK";
     public static final String COMMAND_SWITCH_ACCOUNT = "COMMAND_SWITCH_ACCOUNT";
     public static final String COMMAND_GET_SERVICE_CHARGE = "COMMAND_GET_SERVICE_CHARGE";
     public static final String COMMAND_REFRESH_BALANCE = "COMMAND_REFRESH_BALANCE";
