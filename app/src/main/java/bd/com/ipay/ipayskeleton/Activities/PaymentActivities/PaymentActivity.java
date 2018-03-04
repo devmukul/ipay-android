@@ -19,6 +19,7 @@ import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.MandatoryBusinessRules;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.MakePaymentByDeepLinkFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.MakePaymentFragment;
 import bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments.PaymentRequestsReceivedFragment;
 import bd.com.ipay.ipayskeleton.R;
@@ -141,6 +142,11 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
             mFabMakingPayment.setVisibility(View.GONE);
             switchedToPendingList = false;
         }
+    }
+
+    public void switchToMakePaymentByDeepLinkFragment() {
+        getSupportFragmentManager().beginTransaction().
+                replace(R.id.fragment_container, new MakePaymentByDeepLinkFragment()).commit();
     }
 
     public void switchToReceivedPaymentRequestsFragment() {

@@ -456,6 +456,7 @@ public class Constants {
     // SM Payment REST
     public static final String URL_SEND_PAYMENT_REQUEST = "payment/invoice/send";
     public static final String URL_GET_SINGLE_REQUEST_PAYMENT = "payment/invoice/get/";
+    public static final String URL_GET_ORDER_DETAILS = "pg/order/orderId/info";
 
 
     public static final String URL_PAYMENT = "payment/v2";
@@ -711,6 +712,7 @@ public class Constants {
     public static final String COMMAND_REMOVE_AN_EMPLOYEE = "COMMAND_REMOVE_AN_EMPLOYEE";
     public static final String COMMAND_GET_EMPLOYEE_DETAILS = "COMMAND_GET_EMPLOYEE_DETAILS";
     public static final String COMMAND_GET_ALL_ROLES = "COMMAND_GET_ALL_ROLES";
+    public static final String COMMAND_GET_ORDER_DETAILS = "COMMAND_GET_ORDER_DETAILS";
 
     // Education
     public static final String COMMAND_GET_INSTITUTION_LIST = "COMMAND_GET_INSTITUTION_LIST";
