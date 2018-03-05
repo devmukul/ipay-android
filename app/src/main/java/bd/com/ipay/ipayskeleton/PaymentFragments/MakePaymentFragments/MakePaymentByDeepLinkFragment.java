@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,8 +70,6 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     private ProfileImageView mBusinessLogoImageView;
     private Button mConfirmButton;
     private Button mCancelButton;
-    private LinearLayout mReferenceLayout;
-    private View divider;
     private String thirdPartyAppUrl;
 
     private String orderID;
@@ -273,10 +270,9 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
 
     private void launchParentThirdPartyApp() {
         if (thirdPartyAppUrl == null) {
-            thirdPartyAppUrl = "com.priyo.go";
+            thirdPartyAppUrl = "com.priyo.people";
         }
-        Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage("com.priyo.go");
-        startActivity(intent);
+        Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage(thirdPartyAppUrl);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         getActivity().finish();
