@@ -1124,4 +1124,5 @@
     <string name="availed_service">You can currently do the following things on behalf of the business.</string>
     <string name="service_under_this_role">Services under this role</string>
     <string name="remove_account">Remove Account</string>
+    <string name="do_you_want_to_cancel_payment">Do you want to cancel payment ?</string>
 </resources>

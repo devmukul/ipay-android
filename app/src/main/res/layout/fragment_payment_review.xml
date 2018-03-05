@@ -93,13 +93,14 @@
                 <TextView
                     android:id="@+id/business_address_line_2_text_view"
                     style="@style/TextViewUserInfoPaymentReviewSecondary"
-                    android:visibility="gone"
-                    android:gravity="center_horizontal" />
+                    android:gravity="center_horizontal"
+                    android:visibility="gone" />
+
                 <TextView
                     android:id="@+id/business_address_line_3_text_view"
                     style="@style/TextViewUserInfoPaymentReviewSecondary"
-                    android:visibility="gone"
-                    android:gravity="center_horizontal" />
+                    android:gravity="center_horizontal"
+                    android:visibility="gone" />
 
             </LinearLayout>
         </LinearLayout>
@@ -182,8 +183,9 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View style="@style/Divider"
-                android:id="@+id/divider"/>
+            <View
+                android:id="@+id/divider"
+                style="@style/Divider" />
 
             <LinearLayout
                 android:id="@+id/reference_number_view_holder"
@@ -192,8 +194,8 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
                     android:id="@+id/reference_layout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal">
@@ -232,13 +234,33 @@
                 android:paddingRight="@dimen/activity_horizontal_margin" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/make_payment_button"
-            style="@style/ButtonPrimaryWithNote"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:text="@string/confirm" />
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/cancel_button"
+                style="@style/ButtonReject"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_weight="1"
+                android:text="@string/cancel" />
+
+            <Button
+                android:id="@+id/make_payment_button"
+                style="@style/ButtonPrimary"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_weight="1"
+                android:text="@string/confirm" />
+
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

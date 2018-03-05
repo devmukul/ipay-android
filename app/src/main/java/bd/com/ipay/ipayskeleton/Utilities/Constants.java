@@ -604,6 +604,7 @@ public class Constants {
     public static final String COMMAND_LOG_OUT = "COMMAND_LOG_OUT";
     public static final String COMMAND_SEND_MONEY = "COMMAND_SEND_MONEY";
     public static final String COMMAND_PAYMENT = "COMMAND_PAYMENT";
+    public static final String COMMAND_CANCEL_ORDER = "COMMAND_CANCEL_ORDER";
     public static final String COMMAND_PAYMENT_BY_DEEP_LINK = "COMMAND_PAYMENT_BY_DEEP_LINK";
     public static final String COMMAND_SWITCH_ACCOUNT = "COMMAND_SWITCH_ACCOUNT";
     public static final String COMMAND_GET_SERVICE_CHARGE = "COMMAND_GET_SERVICE_CHARGE";

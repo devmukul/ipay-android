@@ -3,6 +3,7 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -33,7 +36,9 @@ import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAu
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.CancelOrderRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetOrderDetails;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetOrderDetailsRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequestByDeepLink;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
@@ -45,6 +50,8 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class MakePaymentByDeepLinkFragment extends Fragment implements LocationListener, HttpResponseListener {
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask;
+
+    private HttpRequestDeleteAsyncTask mCancelOrderTask;
 
     private HttpRequestGetAsyncTask mGetOrderDetailsTask;
     private GetOrderDetails mGetOrderDetails;
@@ -61,6 +68,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     private TextView mDescriptionTextView;
     private ProfileImageView mBusinessLogoImageView;
     private Button mConfirmButton;
+    private Button mCancelButton;
     private LinearLayout mReferenceLayout;
     private View divider;
     private String thirdPartyAppUrl;
@@ -88,6 +96,8 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
         mConfirmButton = (Button) view.findViewById(R.id.make_payment_button);
         mReferenceLayout = (LinearLayout) view.findViewById(R.id.reference_layout);
         divider = view.findViewById(R.id.divider);
+        mCancelButton = (Button) view.findViewById(R.id.cancel_button);
+        mCancelButton.setVisibility(View.VISIBLE);
         mReferenceLayout.setVisibility(View.GONE);
         divider.setVisibility(View.GONE);
         getOrderID();
@@ -142,6 +152,30 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
         });
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(getActivity()).setPositiveButton(getString(R.string.do_you_want_to_cancel_payment), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        attemptCancelPayment();
+                    }
+                });
+            }
+        });
+    }
+
+    private void attemptCancelPayment() {
+        if (mCancelOrderTask != null) {
+            return;
+        } else {
+            mProgressDialog.setMessage(getString(R.string.please_wait));
+            mProgressDialog.show();
+            mCancelOrderTask = new HttpRequestDeleteAsyncTask(Constants.COMMAND_CANCEL_ORDER,
+                    new CancelOrderRequestBuilder(orderID).getGeneratedUri(), getActivity());
+            mCancelOrderTask.mHttpResponseListener = this;
+            mCancelOrderTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
     private void attemptMakePayment(@Nullable Location location) {
@@ -177,10 +211,10 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
 
     private void launchOtpVerification() {
         String jsonString = new Gson().toJson(mPaymentRequestByDeepLink);
-        String url = Constants.URL_PAY_BY_DEEP_LINK.replace("orderId", orderID);
+        String mUri = new GetOrderDetailsRequestBuilder(orderID).getGeneratedUri();
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(),
                 jsonString, Constants.COMMAND_PAYMENT,
-                Constants.BASE_URL_PG + url, Constants.METHOD_POST);
+                mUri, Constants.METHOD_POST);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
@@ -253,9 +287,9 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             mProgressDialog.setCancelable(false);
             mProgressDialog.setMessage(getString(R.string.please_wait));
             mProgressDialog.show();
-            String url = Constants.URL_GET_ORDER_DETAILS.replace("orderId", orderID);
+            String mUri = new GetOrderDetailsRequestBuilder(orderID).getGeneratedUri();
             mGetOrderDetailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ORDER_DETAILS,
-                    Constants.BASE_URL_PG + url, getActivity(), this);
+                    mUri, getActivity(), this);
             mGetOrderDetailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
@@ -332,9 +366,19 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
                 launchOtpVerification();
             }
             mPaymentTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_CANCEL_ORDER)) {
+            try {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+
+                } else {
+
+                }
+            } catch (Exception e) {
+
+            }
+            mCancelOrderTask = null;
         }
     }
-
 
     @Override
     public void onLocationChanged(Location location) {
