@@ -39,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.CancelOrderR
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.CancelOrderResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetOrderDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetOrderDetailsRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PayOrderRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequestByDeepLink;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
@@ -108,7 +109,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             }
         }
         if (orderID == null) {
-            orderID = "NUCVH33-6C4740C8461A16";
+            orderID = "BHLYQ33-6C4861C46C6FFC";
         }
         getOrderDetails(orderID);
 
@@ -202,9 +203,9 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
         mProgressDialog.setCancelable(false);
         mPaymentRequestByDeepLink = new PaymentRequestByDeepLink(pin);
 
-        String url = Constants.URL_PAY_BY_DEEP_LINK.replace("orderId", orderID);
+        String mUri = new PayOrderRequestBuilder(orderID).getGeneratedUri();
         mPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT_BY_DEEP_LINK,
-                Constants.BASE_URL_PG + url, new Gson().toJson(mPaymentRequestByDeepLink), getActivity());
+                mUri, new Gson().toJson(mPaymentRequestByDeepLink), getActivity());
         mPaymentTask.mHttpResponseListener = this;
         mPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -363,10 +364,6 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     Toast.makeText(getActivity(), getString(R.string.payment_success), Toast.LENGTH_LONG).show();
                     launchParentThirdPartyApp();
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED ||
-                        result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                    ///todo  otp duration must be provided and saved , for now we are proceeding .
-                    launchOtpVerification();
                 } else {
                     Toast.makeText(getActivity(), getString(R.string.payment_failed), Toast.LENGTH_LONG).show();
                 }

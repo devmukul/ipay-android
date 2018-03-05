@@ -13,6 +13,6 @@ public class PayOrderRequestBuilder {
 
     public String getGeneratedUri() {
         String url = Constants.URL_PAY_BY_DEEP_LINK.replace("orderId", orderId);
-        return Constants.BASE_URL_PG + url;
+        return Constants.BASE_URL_PG + url + "/no2fa";
     }
 }
