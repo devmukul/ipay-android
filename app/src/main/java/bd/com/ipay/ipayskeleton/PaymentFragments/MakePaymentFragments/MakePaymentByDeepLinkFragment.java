@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
@@ -37,6 +36,7 @@ import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.CancelOrderRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.CancelOrderResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetOrderDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetOrderDetailsRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequestByDeepLink;
@@ -52,6 +52,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     private HttpRequestGetAsyncTask mGetBusinessRuleTask;
 
     private HttpRequestDeleteAsyncTask mCancelOrderTask;
+    private CancelOrderResponse mCancelOrderResponse;
 
     private HttpRequestGetAsyncTask mGetOrderDetailsTask;
     private GetOrderDetails mGetOrderDetails;
@@ -82,7 +83,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_payment_review, container, false);
+        View view = inflater.inflate(R.layout.fragment_pay_by_deep_link, container, false);
         mProgressDialog = new ProgressDialog(getActivity());
         setUpViews(view);
         return view;
@@ -94,12 +95,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
         mDescriptionTextView = (TextView) view.findViewById(R.id.description_text_view);
         mBusinessLogoImageView = (ProfileImageView) view.findViewById(R.id.business_profile_image_view);
         mConfirmButton = (Button) view.findViewById(R.id.make_payment_button);
-        mReferenceLayout = (LinearLayout) view.findViewById(R.id.reference_layout);
-        divider = view.findViewById(R.id.divider);
         mCancelButton = (Button) view.findViewById(R.id.cancel_button);
-        mCancelButton.setVisibility(View.VISIBLE);
-        mReferenceLayout.setVisibility(View.GONE);
-        divider.setVisibility(View.GONE);
         getOrderID();
         setButtonActions();
         //attemptGetBusinessRules(ServiceIdConstants.MAKE_PAYMENT);
@@ -112,7 +108,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             }
         }
         if (orderID == null) {
-            orderID = "FBETC33-6C3E581E88D46A";
+            orderID = "NUCVH33-6C4740C8461A16";
         }
         getOrderDetails(orderID);
 
@@ -155,12 +151,16 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AlertDialog.Builder(getActivity()).setPositiveButton(getString(R.string.do_you_want_to_cancel_payment), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        attemptCancelPayment();
-                    }
-                });
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(getString(R.string.do_you_want_to_cancel_payment))
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                attemptCancelPayment();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
     }
@@ -274,7 +274,12 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     }
 
     private void launchParentThirdPartyApp() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(thirdPartyAppUrl));
+        if (thirdPartyAppUrl == null) {
+            thirdPartyAppUrl = "com.priyo.go";
+        }
+        Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage("com.priyo.go");
+        startActivity(intent);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         getActivity().finish();
     }
@@ -342,38 +347,47 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
 
             mGetBusinessRuleTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_ORDER_DETAILS)) {
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                try {
-                    mGetOrderDetails = new Gson().fromJson(result.getJsonString(), GetOrderDetails.class);
+            mGetOrderDetails = new Gson().fromJson(result.getJsonString(), GetOrderDetails.class);
+            try {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     verifyOrderDetails(mGetOrderDetails);
-                } catch (Exception e) {
-                    DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+                } else {
+                    DialogUtils.showNecessaryDialog(getActivity(), mGetOrderDetails.getMessage());
                 }
-            } else {
-                DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
+            } catch (Exception e) {
+                DialogUtils.showNecessaryDialog(getActivity(), mGetOrderDetails.getMessage());
             }
-            mGetBusinessRuleTask = null;
+            mGetOrderDetailsTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_PAYMENT_BY_DEEP_LINK)) {
-            if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                try {
+            try {
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    Toast.makeText(getActivity(), getString(R.string.payment_success), Toast.LENGTH_LONG).show();
                     launchParentThirdPartyApp();
-                } catch (Exception e) {
-                    DialogUtils.showNecessaryDialog(getActivity(), "Something went wrong");
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED ||
+                        result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    ///todo  otp duration must be provided and saved , for now we are proceeding .
+                    launchOtpVerification();
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.payment_failed), Toast.LENGTH_LONG).show();
                 }
-            } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED ||
-                    result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
-                ///todo  otp duration must be provided and saved , for now we are proceeding .
-                launchOtpVerification();
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), getString(R.string.payment_failed), Toast.LENGTH_LONG).show();
             }
             mPaymentTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_CANCEL_ORDER)) {
+            mCancelOrderResponse = new Gson().fromJson(result.getJsonString(),
+                    CancelOrderResponse.class);
             try {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
+                    Toast.makeText(getActivity(), mCancelOrderResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    launchParentThirdPartyApp();
                 } else {
-
+                    Toast.makeText(getActivity(), mCancelOrderResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    launchParentThirdPartyApp();
                 }
             } catch (Exception e) {
+                Toast.makeText(getActivity(), mCancelOrderResponse.getMessage(), Toast.LENGTH_LONG).show();
+                launchParentThirdPartyApp();
 
             }
             mCancelOrderTask = null;

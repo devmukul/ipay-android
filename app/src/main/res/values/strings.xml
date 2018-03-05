@@ -1125,4 +1125,7 @@
     <string name="service_under_this_role">Services under this role</string>
     <string name="remove_account">Remove Account</string>
     <string name="do_you_want_to_cancel_payment">Do you want to cancel payment ?</string>
+    <string name="payment_success">Payment Successful</string>
+    <string name="payment_failed">Payment Failed</string>
+    <string name="cant_fetch_details">Failed to fetch order details</string>
 </resources>
