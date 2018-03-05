@@ -47,6 +47,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.DeepLinkAction;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager.FingerPrintAuthenticationManager;
 import bd.com.ipay.ipayskeleton.Utilities.FingerPrintAuthenticationManager.FingerprintAuthenticationDialog;
@@ -92,6 +93,8 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
     private HttpRequestGetAsyncTask mGetAllAddedCards = null;
     private GetCardResponse mGetCardResponse;
 
+    private DeepLinkAction mDeepLinkAction;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -117,6 +120,8 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         mCountryCodePicker = (CountryCodePicker) v.findViewById(R.id.ccp);
         mInfoView = (ImageView) v.findViewById(R.id.login_info);
         mRememberMeCheckbox = (CheckBox) v.findViewById(R.id.remember_me_checkbox);
+
+        mDeepLinkAction = getActivity().getIntent().getParcelableExtra("DEEP_LINK_ACTION");
 
         mRememberMeCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -551,7 +556,10 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                                     || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
                                 ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                             } else {
-                                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                                if (mDeepLinkAction != null)
+                                    Utilities.performDeepLinkAction(getActivity(), mDeepLinkAction);
+                                else
+                                    ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                             }
                         } else getAddedCards();
                     } else {

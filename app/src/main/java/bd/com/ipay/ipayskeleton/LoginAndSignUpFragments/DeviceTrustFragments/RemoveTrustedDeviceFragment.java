@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 import bd.com.ipay.ipayskeleton.Activities.DeviceTrustActivity;
+import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -43,6 +44,7 @@ import bd.com.ipay.ipayskeleton.Model.GetCardResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DeepLinkAction;
 import bd.com.ipay.ipayskeleton.Utilities.DeviceInfoFactory;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
@@ -81,6 +83,8 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
     private Button mLogOutButton;
     private Tracker mTracker;
 
+    private DeepLinkAction mDeepLinkAction;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +105,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         mTrustedDevicesRecyclerView = (RecyclerView) v.findViewById(R.id.list_trusted_devices);
         mProgressDialog = new ProgressDialog(getActivity());
         mLogOutButton = (Button) v.findViewById(R.id.button_logout);
+        mDeepLinkAction = getActivity().getIntent().getParcelableExtra("DEEP_LINK_ACTION");
 
         mLogOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -357,7 +362,10 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                                 || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
                             ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
-                            ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
+                            if (mDeepLinkAction != null)
+                                Utilities.performDeepLinkAction(getActivity(), mDeepLinkAction);
+                            else
+                                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                         }
                     } else getAddedCards();
                 } else {

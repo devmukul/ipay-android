@@ -56,7 +56,9 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
         mFabMakingPayment = (FloatingActionButton) findViewById(R.id.fab_payment_making);
         mProgressDialog = new ProgressDialog(this);
 
-        if (getIntent().hasExtra(Constants.MOBILE_NUMBER) || getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
+        if (getIntent().getStringExtra("DEEP_LINK_ACTION_VALUE") != null)
+            switchToMakePaymentByDeepLinkFragment();
+        else if (getIntent().hasExtra(Constants.MOBILE_NUMBER) || getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
             if (getIntent().getStringExtra(Constants.MOBILE_NUMBER) != null) {
                 getProfileInfo(getIntent().getStringExtra(Constants.MOBILE_NUMBER));
             } else {
@@ -147,6 +149,9 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
     public void switchToMakePaymentByDeepLinkFragment() {
         getSupportFragmentManager().beginTransaction().
                 replace(R.id.fragment_container, new MakePaymentByDeepLinkFragment()).commit();
+
+        mFabMakingPayment.setVisibility(View.GONE);
+        switchedToPendingList = false;
     }
 
     public void switchToReceivedPaymentRequestsFragment() {
