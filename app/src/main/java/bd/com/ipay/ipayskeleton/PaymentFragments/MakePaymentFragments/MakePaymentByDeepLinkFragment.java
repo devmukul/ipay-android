@@ -3,9 +3,11 @@ package bd.com.ipay.ipayskeleton.PaymentFragments.MakePaymentFragments;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
@@ -15,12 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-
-import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
@@ -36,13 +37,8 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetOrderDeta
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequestByDeepLink;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
-import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
-import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
-import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
-import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 
@@ -65,6 +61,9 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     private TextView mDescriptionTextView;
     private ProfileImageView mBusinessLogoImageView;
     private Button mConfirmButton;
+    private LinearLayout mReferenceLayout;
+    private View divider;
+    private String thirdPartyAppUrl;
 
     private String orderID;
     private String otp;
@@ -87,9 +86,13 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
         mDescriptionTextView = (TextView) view.findViewById(R.id.description_text_view);
         mBusinessLogoImageView = (ProfileImageView) view.findViewById(R.id.business_profile_image_view);
         mConfirmButton = (Button) view.findViewById(R.id.make_payment_button);
+        mReferenceLayout = (LinearLayout) view.findViewById(R.id.reference_layout);
+        divider = view.findViewById(R.id.divider);
+        mReferenceLayout.setVisibility(View.GONE);
+        divider.setVisibility(View.GONE);
         getOrderID();
         setButtonActions();
-        attemptGetBusinessRules(ServiceIdConstants.MAKE_PAYMENT);
+        //attemptGetBusinessRules(ServiceIdConstants.MAKE_PAYMENT);
     }
 
     private void getOrderID() {
@@ -99,8 +102,9 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             }
         }
         if (orderID == null) {
-            orderID = "XCSKF33-6BFABDF342F0A7";
+            orderID = "FBETC33-6C3E581E88D46A";
         }
+        getOrderDetails(orderID);
 
     }
 
@@ -132,16 +136,8 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             @Override
             public void onClick(View v) {
                 if (Utilities.isConnectionAvailable(getActivity())) {
-                    // For now, we are directly sending the money without going through any send money query
-                    // sendMoneyQuery();
-                    Utilities.hideKeyboard(getContext(), getView());
-                    if (PaymentActivity.mMandatoryBusinessRules.IS_LOCATION_REQUIRED()) {
-                        if (Utilities.hasForcedLocationPermission(MakePaymentByDeepLinkFragment.this)) {
-                            getLocationAndAttemptMakePayment();
-                        }
-                    } else {
-                        attemptMakePayment(null);
-                    }
+                    // For now, we are making payment without location (by deep link)
+                    attemptMakePayment(null);
                 } else if (getActivity() != null)
                     Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG).show();
             }
@@ -153,16 +149,13 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     }
 
     private void attemptPaymentWithPinCheck() {
-        if (PaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
-            new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
-                @Override
-                public void ifPinCheckedAndAdded(String pin) {
-                    attemptPayment(pin);
-                }
-            });
-        } else {
-            attemptPayment(null);
-        }
+        new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
+            @Override
+            public void ifPinCheckedAndAdded(String pin) {
+                attemptPayment(pin);
+            }
+        });
+
     }
 
     private void attemptPayment(String pin) {
@@ -177,7 +170,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
 
         String url = Constants.URL_PAY_BY_DEEP_LINK.replace("orderId", orderID);
         mPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT_BY_DEEP_LINK,
-                "http://10.10.10.11:6776/api/" + url, new Gson().toJson(mPaymentRequestByDeepLink), getActivity());
+                Constants.BASE_URL_PG + url, new Gson().toJson(mPaymentRequestByDeepLink), getActivity());
         mPaymentTask.mHttpResponseListener = this;
         mPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -187,7 +180,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
         String url = Constants.URL_PAY_BY_DEEP_LINK.replace("orderId", orderID);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(),
                 jsonString, Constants.COMMAND_PAYMENT,
-                "http://10.10.10.11:6776/api/" + url, Constants.METHOD_POST);
+                Constants.BASE_URL_PG + url, Constants.METHOD_POST);
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
@@ -204,7 +197,11 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     }
 
     private void verifyOrderDetails(GetOrderDetails getOrderDetails) {
-        String errorMessage = null;
+        if (getOrderDetails != null) {
+            fillNecessaryfiledsWithData(getOrderDetails);
+        }
+
+        /*String errorMessage = null;
         if (!Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
                 || !Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
             DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
@@ -232,25 +229,33 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
         } else {
             errorMessage = getString(R.string.balance_not_available);
         }
+        if (ProfileInfoCacheManager.getMobileNumber().equals(getOrderDetails.getMerchantMobileNumber())) {
+            errorMessage = "You can't pay to yourself";
+        }
         if (errorMessage != null) {
             DialogUtils.showNecessaryDialog(getActivity(), errorMessage);
         } else {
             fillNecessaryfiledsWithData(getOrderDetails);
-        }
+        }*/
+    }
+
+    private void launchParentThirdPartyApp() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(thirdPartyAppUrl));
+        startActivity(intent);
+        getActivity().finish();
     }
 
     private void getOrderDetails(String orderID) {
         if (mGetOrderDetailsTask != null) {
             return;
         } else {
-
             mProgressDialog.setMessage(getString(R.string.progress_dialog_fetching));
             mProgressDialog.setCancelable(false);
             mProgressDialog.setMessage(getString(R.string.please_wait));
             mProgressDialog.show();
             String url = Constants.URL_GET_ORDER_DETAILS.replace("orderId", orderID);
             mGetOrderDetailsTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_ORDER_DETAILS,
-                    "http://10.10.10.11:6776/api/" + url, getActivity(), this);
+                    Constants.BASE_URL_PG + url, getActivity(), this);
             mGetOrderDetailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
@@ -262,9 +267,10 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-            mGetBusinessRuleTask = null;
+            mGetOrderDetailsTask = null;
+            mPaymentTask = null;
             if (getActivity() != null) {
-                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
+                DialogUtils.showNecessaryDialog(getActivity(), getString(R.string.service_not_available));
             }
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
             mProgressDialog.dismiss();
@@ -289,7 +295,6 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
                                 PaymentActivity.mMandatoryBusinessRules.setLOCATION_REQUIRED(rule.getRuleValue());
                             }
                         }
-                        getOrderDetails(orderID);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -313,10 +318,11 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             } else {
                 DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
             }
+            mGetBusinessRuleTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_PAYMENT_BY_DEEP_LINK)) {
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                 try {
-
+                    launchParentThirdPartyApp();
                 } catch (Exception e) {
                     DialogUtils.showNecessaryDialog(getActivity(), "Something went wrong");
                 }
@@ -325,6 +331,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
                 ///todo  otp duration must be provided and saved , for now we are proceeding .
                 launchOtpVerification();
             }
+            mPaymentTask = null;
         }
     }
 
