@@ -247,7 +247,7 @@ public class ProfileCompletionStatusResponse {
     }
 
     public boolean isOnboardBasicInfoUpdated() {
-        if (isAddressUpdated() || isBasicProfileUpdated())
+        if (isAddressUpdated() && isBasicProfileUpdated())
             return true;
         return false;
     }

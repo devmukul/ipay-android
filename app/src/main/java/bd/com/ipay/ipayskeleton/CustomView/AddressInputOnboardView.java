@@ -1,5 +1,6 @@
 package bd.com.ipay.ipayskeleton.CustomView;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
@@ -17,6 +18,7 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.AddressClass;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.Address.GetUserAddressResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.District;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.DistrictRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Resource.GetDistrictResponse;
@@ -36,6 +38,9 @@ public class AddressInputOnboardView extends FrameLayout implements HttpResponse
     private HttpRequestGetAsyncTask mGetDistrictListAsyncTask = null;
     private GetDistrictResponse mGetDistrictResponse;
 
+    private HttpRequestGetAsyncTask mGetUserAddressTask = null;
+    private GetUserAddressResponse mGetUserAddressResponse = null;
+
     private List<Thana> mThanaList;
     private List<District> mDistrictList;
 
@@ -53,6 +58,7 @@ public class AddressInputOnboardView extends FrameLayout implements HttpResponse
     private EditText mPostalCodeField;
     private EditTextWithProgressBar mDistrictEditTextProgressBar;
     private EditTextWithProgressBar mThanaEditTextProgressBar;
+    ProgressDialog mProgressDialog;
 
     private ResourceSelectorDialog<District> districtSelectorDialog;
     private ResourceSelectorDialog<Thana> thanaSelectorDialog;
@@ -85,10 +91,12 @@ public class AddressInputOnboardView extends FrameLayout implements HttpResponse
         mDistrictEditTextProgressBar = (EditTextWithProgressBar) v.findViewById(R.id.district);
         mDistrictSelection = mDistrictEditTextProgressBar.getEditText();
         mThanaSelection = mThanaEditTextProgressBar.getEditText();
+        mProgressDialog = new ProgressDialog(context);
 
 
         addView(v);
         getDistrictList();
+        getUserAddress();
     }
 
     private void getThanaList(int districtId) {
@@ -270,8 +278,20 @@ public class AddressInputOnboardView extends FrameLayout implements HttpResponse
         int thana = mSelectedThanaId;
         int district = mSelectedDistrictId;
 
-        return new AddressClass(addressLine1, null , country,
+        return new AddressClass(addressLine1, null, country,
                 district, thana, postalCode);
+    }
+
+    private void getUserAddress() {
+        if (mGetUserAddressTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(context.getString(R.string.loading));
+        mProgressDialog.show();
+        mGetUserAddressTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_ADDRESS_REQUEST,
+                Constants.BASE_URL_MM + Constants.URL_GET_USER_ADDRESS_REQUEST, context, this);
+        mGetUserAddressTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -332,6 +352,20 @@ public class AddressInputOnboardView extends FrameLayout implements HttpResponse
             }
 
             mGetThanaListAsyncTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_ADDRESS_REQUEST)) {
+
+            try {
+                mGetUserAddressResponse = gson.fromJson(result.getJsonString(), GetUserAddressResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mAddressClass = mGetUserAddressResponse.getPresentAddress();
+                    setInformation(mAddressClass);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            mProgressDialog.dismiss();
+            mGetUserAddressTask = null;
         }
     }
 }
