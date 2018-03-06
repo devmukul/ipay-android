@@ -201,6 +201,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
             else {
                 mProgressDialog.setMessage(mProgressDialogStringMap.get(desiredRequest));
                 mProgressDialog.show();
+                hideOtpDialog();
                 mHttpPutAsyncTask = TwoFactorAuthServicesAsynctaskMap.getPutAsyncTask(desiredRequest, json, otp, context, mUri);
                 mHttpPutAsyncTask.mHttpResponseListener = this;
                 mHttpPutAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -210,6 +211,7 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
             else {
                 mProgressDialog.setMessage(mProgressDialogStringMap.get(desiredRequest));
                 mProgressDialog.show();
+                hideOtpDialog();
                 mHttpPostAsyncTask = TwoFactorAuthServicesAsynctaskMap.getPostAsyncTask(desiredRequest, json, otp, context, mUri);
                 mHttpPostAsyncTask.mHttpResponseListener = this;
                 mHttpPostAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -217,12 +219,26 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
         }
     }
 
+    public void hideOtpDialog() {
+        view.setVisibility(View.GONE);
+    }
+
+    public void showOtpDialog() {
+        view.setVisibility(View.VISIBLE);
+    }
+
+    public void dismissDialog() {
+        mOTPInputDialog.dismiss();
+    }
+
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mHttpPutAsyncTask = null;
+            mHttpPostAsyncTask = null;
             if (context != null) {
                 Toast.makeText(context, R.string.service_not_available, Toast.LENGTH_SHORT).show();
                 mProgressDialog.dismiss();
@@ -232,7 +248,8 @@ public class OTPVerificationForTwoFactorAuthenticationServicesDialog extends Mat
         Gson gson = new Gson();
         TwoFactorAuthSettingsSaveResponse twoFactorAuthSettingsSaveResponse
                 = gson.fromJson(result.getJsonString(), TwoFactorAuthSettingsSaveResponse.class);
-        mOTPInputDialog.dismiss();
+        mHttpPutAsyncTask = null;
+        mHttpPostAsyncTask = null;
         mParentHttpResponseListener.httpResponseReceiver(result);
         return;
     }

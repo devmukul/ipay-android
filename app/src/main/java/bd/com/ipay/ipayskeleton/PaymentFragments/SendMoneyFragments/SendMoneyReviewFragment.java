@@ -45,6 +45,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyReviewFragment extends BaseFragment implements HttpResponseListener {
@@ -264,8 +265,12 @@ public class SendMoneyReviewFragment extends BaseFragment implements HttpRespons
                 SendMoneyResponse mSendMoneyResponse = gson.fromJson(result.getJsonString(), SendMoneyResponse.class);
                 switch (result.getStatus()) {
                     case Constants.HTTP_RESPONSE_STATUS_OK:
-                        if (getActivity() != null)
+                        if (getActivity() != null) {
                             Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                            }
+                        }
                         launchHomeActivity();
                         //Google Analytic event
                         Utilities.sendSuccessEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
@@ -282,8 +287,16 @@ public class SendMoneyReviewFragment extends BaseFragment implements HttpRespons
                         Utilities.sendBlockedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), mAmount.longValue());
                         break;
                     default:
-                        if (getActivity() != null)
+                        if (getActivity() != null) {
                             Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                            if (mSendMoneyResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                            } else {
+                                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                                }
+                            }
+                        }
 
                         //Google Analytic event
                         Utilities.sendFailedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(),
@@ -292,6 +305,9 @@ public class SendMoneyReviewFragment extends BaseFragment implements HttpRespons
 
                 }
             } catch (Exception e) {
+                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                }
                 e.printStackTrace();
                 Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }

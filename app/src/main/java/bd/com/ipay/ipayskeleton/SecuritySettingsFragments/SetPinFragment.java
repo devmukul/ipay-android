@@ -28,6 +28,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SetPinFragment extends BaseFragment implements HttpResponseListener {
@@ -156,8 +157,12 @@ public class SetPinFragment extends BaseFragment implements HttpResponseListener
                 mSetPinResponse = gson.fromJson(result.getJsonString(), SetPinResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        }
+                    }
                     ((SecuritySettingsActivity) getActivity()).switchToAccountSettingsFragment();
                     //Google Analytic event
                     Utilities.sendSuccessEventTracker(mTracker, "Pin Set", ProfileInfoCacheManager.getAccountId());
@@ -173,16 +178,23 @@ public class SetPinFragment extends BaseFragment implements HttpResponseListener
                 } else {
                     if (getActivity() != null) {
                         Toast.makeText(getActivity(), mSetPinResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        if (mSetPinResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                        } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        }
                     }
 
                     //Google Analytic event
                     Utilities.sendFailedEventTracker(mTracker, "Pin Set", ProfileInfoCacheManager.getAccountId(), mSetPinResponse.getMessage());
                 }
             } catch (Exception e) {
+                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                }
                 e.printStackTrace();
                 if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.save_failed, Toast.LENGTH_LONG);
-
                 //Google Analytic event
                 Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }
