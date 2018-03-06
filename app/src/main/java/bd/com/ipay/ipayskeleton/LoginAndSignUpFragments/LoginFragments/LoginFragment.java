@@ -21,8 +21,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
 
-import java.util.List;
-
 import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -31,9 +29,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.NotificationApi.RegisterFCMTokenToServerAsyncTask;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.GetBankListResponse;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Bank.UserBankClass;
-import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.CardDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LoginResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
@@ -544,7 +539,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                         ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
                         ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
                         ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
-                        ProfileInfoCacheManager.addSourceOfFund(mProfileCompletionStatusResponse.isBankAdded());
+                        ProfileInfoCacheManager.addSourceOfFund(mProfileCompletionStatusResponse.isSourceOfFundAdded());
 
                         if (ProfileInfoCacheManager.isSourceOfFundAdded()) {
                             if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
