@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -21,6 +23,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
@@ -38,6 +42,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.CancelOrderR
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.CancelOrderResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetOrderDetails;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetOrderDetailsRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.GetPayByDeepLinkResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PayOrderRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequestByDeepLink;
 import bd.com.ipay.ipayskeleton.R;
@@ -70,8 +75,8 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     private ProfileImageView mBusinessLogoImageView;
     private Button mConfirmButton;
     private Button mCancelButton;
-    private String thirdPartyAppUrl;
 
+    private String thirdPartyAppUrl;
     private String orderID;
     private String otp;
 
@@ -148,7 +153,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(getString(R.string.do_you_want_to_cancel_payment))
-                        .setCancelable(false)
+                        .setCancelable(true)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 attemptCancelPayment();
@@ -268,12 +273,29 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
         }*/
     }
 
+    public void showDialogAndLaunchThirdPartyApp(final String message) {
+        MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                .cancelable(false)
+                .content(message)
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        appendSuccesOrFailureMessageAndLaunchThirdPartyApp(message);
+                    }
+                })
+                .show();
+        dialog.show();
+
+    }
+
     private void launchParentThirdPartyApp() {
-        if (thirdPartyAppUrl == null) {
-            thirdPartyAppUrl = "com.priyo.people";
-        }
-        Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage(thirdPartyAppUrl);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        if (thirdPartyAppUrl == null) {
+//            thirdPartyAppUrl = "com.priyo.people";
+//        }
+//        Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage(thirdPartyAppUrl);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(thirdPartyAppUrl));
         startActivity(intent);
         getActivity().finish();
     }
@@ -292,6 +314,11 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             mGetOrderDetailsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
+    }
+
+    private void appendSuccesOrFailureMessageAndLaunchThirdPartyApp(String message) {
+        thirdPartyAppUrl += "/" + message;
+        launchParentThirdPartyApp();
     }
 
     @Override
@@ -345,6 +372,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             try {
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     verifyOrderDetails(mGetOrderDetails);
+                    thirdPartyAppUrl = mGetOrderDetails.getMerchantAppUriSchemeAndroid();
                 } else {
                     DialogUtils.showNecessaryDialog(getActivity(), mGetOrderDetails.getMessage());
                 }
@@ -353,13 +381,11 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             }
             mGetOrderDetailsTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_PAYMENT_BY_DEEP_LINK)) {
+            GetPayByDeepLinkResponse getPayByDeepLinkResponse = new Gson().
+                    fromJson(result.getJsonString(), GetPayByDeepLinkResponse.class);
             try {
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    Toast.makeText(getActivity(), getString(R.string.payment_success), Toast.LENGTH_LONG).show();
-                    launchParentThirdPartyApp();
-                } else {
-                    Toast.makeText(getActivity(), getString(R.string.payment_failed), Toast.LENGTH_LONG).show();
-                }
+                showDialogAndLaunchThirdPartyApp(getPayByDeepLinkResponse.getMessage());
+
             } catch (Exception e) {
                 Toast.makeText(getActivity(), getString(R.string.payment_failed), Toast.LENGTH_LONG).show();
             }
@@ -368,16 +394,9 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
             mCancelOrderResponse = new Gson().fromJson(result.getJsonString(),
                     CancelOrderResponse.class);
             try {
-                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    Toast.makeText(getActivity(), mCancelOrderResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    launchParentThirdPartyApp();
-                } else {
-                    Toast.makeText(getActivity(), mCancelOrderResponse.getMessage(), Toast.LENGTH_LONG).show();
-                    launchParentThirdPartyApp();
-                }
+                showDialogAndLaunchThirdPartyApp(mCancelOrderResponse.getMessage());
             } catch (Exception e) {
                 Toast.makeText(getActivity(), mCancelOrderResponse.getMessage(), Toast.LENGTH_LONG).show();
-                launchParentThirdPartyApp();
 
             }
             mCancelOrderTask = null;

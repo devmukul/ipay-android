@@ -9,6 +9,11 @@ public class GetOrderDetails {
     private String description;
     private String merchantMobileNumber;
     private double amount;
+    private String merchantAppUriSchemeAndroid;
+
+    public String getMerchantAppUriSchemeAndroid() {
+        return merchantAppUriSchemeAndroid;
+    }
 
     public String getMerchantMobileNumber() {
         return merchantMobileNumber;
