@@ -164,6 +164,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
 
     private void attemptSaveBasicInfo() {
         Gson gson = new Gson();
+        mProgressDialog.setMessage(getString(R.string.saving_profile_information));
         mProgressDialog.show();
 
         SetProfileInfoRequest setProfileInfoRequest = new SetProfileInfoRequest(ProfileInfoCacheManager.getUserName(), mGender, ProfileInfoCacheManager.getBirthday(),
@@ -319,6 +320,7 @@ public class OnBoardAddBasicInfoFragment extends BaseFragment implements HttpRes
         mOccupation = mGetProfileInfoResponse.getOccupation();
 
         setProfileInformation();
+        setOccupation();
     }
 
     private void setProfileInformation() {
