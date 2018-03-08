@@ -160,6 +160,29 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputLayout
+                    style="@style/CustomTextInputLayoutWithMargin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:theme="@style/CustomTextInputLayout">
+
+                    <EditText
+                        android:id="@+id/promoCodeEditText"
+                        style="@style/CustomEditTextLogInSignUp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/enter_promo_code_optional" />
+                </android.support.design.widget.TextInputLayout>
+
+            </RelativeLayout>
+
+            <View style="@style/DividerOnly" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/value5"
                 android:paddingTop="@dimen/value5"
