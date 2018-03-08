@@ -23,7 +23,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="5dp"
                 android:gravity="center_horizontal"
-                android:text="@string/mandatory_field"
+                android:text="@string/mandatory_field_except_promo"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/text_size_small" />
 
