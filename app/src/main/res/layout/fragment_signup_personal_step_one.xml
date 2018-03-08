@@ -174,7 +174,8 @@
                         style="@style/CustomEditTextLogInSignUp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/enter_promo_code_optional" />
+                        android:hint="@string/enter_promo_code_optional"
+                        android:maxLength="20" />
                 </android.support.design.widget.TextInputLayout>
 
             </RelativeLayout>
