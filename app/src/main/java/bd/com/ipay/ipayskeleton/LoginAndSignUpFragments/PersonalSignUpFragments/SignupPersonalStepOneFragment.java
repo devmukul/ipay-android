@@ -48,7 +48,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
     private EditText mPasswordView;
     private EditText mConfirmPasswordView;
     private EditText mMobileNumberView;
-    private EditText mPromoCodeView;
+    private EditText mPromoCodeEditText;
 
     private EditText mNameView;
     private Button mNextButton;
@@ -133,7 +133,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
         mMaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxMale);
         mFemaleCheckBox = (CheckBox) v.findViewById(R.id.checkBoxFemale);
         mBirthdayEditText = (EditText) v.findViewById(R.id.birthdayEditText);
-        mPromoCodeView = (EditText) v.findViewById(R.id.promoCodeEditText);
+        mPromoCodeEditText = (EditText) v.findViewById(R.id.promoCodeEditText);
         mGenderEditText = (EditText) v.findViewById(R.id.genderEditText);
         mCrossButton = (ImageView) v.findViewById(R.id.button_cross);
         mLoginButton = (Button) v.findViewById(R.id.button_log_in);
@@ -240,7 +240,7 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
 
         // Store values at the time of the login attempt.
         SignupOrLoginActivity.mPassword = mPasswordView.getText().toString().trim();
-        SignupOrLoginActivity.mPromoCode = mPromoCodeView.getText().toString().trim();
+        SignupOrLoginActivity.mPromoCode = mPromoCodeEditText.getText().toString().trim();
         SignupOrLoginActivity.mCountryCode = mCountryCodePicker.getSelectedCountryNameCode();
         SignupOrLoginActivity.mMobileNumber = ContactEngine.formatMobileNumberInternational(mMobileNumberView.getText().toString().trim(),
                 SignupOrLoginActivity.mCountryCode);
