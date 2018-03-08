@@ -89,7 +89,7 @@ public class LauncherActivity extends AppCompatActivity {
         intent = new Intent(LauncherActivity.this, SignupOrLoginActivity.class);
         intent.putExtra(Constants.TARGET_FRAGMENT, Constants.SIGN_IN);
         if (parcelable != null)
-            intent.putExtra("DEEP_LINK_ACTION", parcelable);
+            intent.putExtra(Constants.DEEP_LINK_ACTION, parcelable);
         startActivity(intent);
         finish();
     }

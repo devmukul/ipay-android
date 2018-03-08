@@ -902,5 +902,7 @@ public class Constants {
     public static final String QUALITY_HIGH = "High";
 
     public static final int LOCATION_REQUIRED_TRUE = 1;
+    public static final String DEEP_LINK_ACTION = "DEEP_LINK_ACTION";
+    public static final String ORDER_ID = "ORDER_ID";
 
 }

@@ -105,11 +105,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     }
 
     private void getOrderID() {
-        orderID = getActivity().getIntent().getStringExtra("DEEP_LINK_ACTION_VALUE");
-
-//        if (orderID == null) {
-//            orderID = "FBETC33-6C3E581E88D46A";
-//        }
+        orderID = getActivity().getIntent().getStringExtra(Constants.ORDER_ID);
         getOrderDetails(orderID);
 
     }

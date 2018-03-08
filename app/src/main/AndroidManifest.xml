@@ -89,15 +89,15 @@
                     android:scheme="ipay" />
 
                 <data
-                    android:host="dev.ipay.com.bd"
+                    android:host="@string/ipay_dev_host"
                     android:scheme="https" />
 
                 <data
-                    android:host="demo.ipay.com.bd"
+                    android:host="@string/ipay_demo_host"
                     android:scheme="https" />
 
                 <data
-                    android:host="www.ipay.com.bd"
+                    android:host="@string/ipay_live_host"
                     android:scheme="https" />
 
             </intent-filter>

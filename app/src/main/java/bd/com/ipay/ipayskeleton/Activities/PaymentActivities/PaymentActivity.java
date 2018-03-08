@@ -56,7 +56,7 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
         mFabMakingPayment = (FloatingActionButton) findViewById(R.id.fab_payment_making);
         mProgressDialog = new ProgressDialog(this);
 
-        if (getIntent().getStringExtra("DEEP_LINK_ACTION_VALUE") != null)
+        if (getIntent().getStringExtra("ORDER_ID") != null)
             switchToMakePaymentByDeepLinkFragment();
         else if (getIntent().hasExtra(Constants.MOBILE_NUMBER) || getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
             if (getIntent().getStringExtra(Constants.MOBILE_NUMBER) != null) {

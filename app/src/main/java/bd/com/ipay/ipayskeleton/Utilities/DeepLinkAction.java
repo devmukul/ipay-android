@@ -5,21 +5,21 @@ import android.os.Parcelable;
 
 public class DeepLinkAction implements Parcelable {
     private String action;
-    private String queryParameters;
+    private String orderId;
 
     public DeepLinkAction() {
         this("", "");
     }
 
-    public DeepLinkAction(String action, String queryParameters) {
+    public DeepLinkAction(String action, String orderId) {
 
         this.action = action;
-        this.queryParameters = queryParameters;
+        this.orderId = orderId;
     }
 
     protected DeepLinkAction(Parcel in) {
         action = in.readString();
-        queryParameters = in.readString();
+        orderId = in.readString();
     }
 
     public static final Creator<DeepLinkAction> CREATOR = new Creator<DeepLinkAction>() {
@@ -43,19 +43,19 @@ public class DeepLinkAction implements Parcelable {
         this.action = action;
     }
 
-    public String getQueryParameters() {
-        return queryParameters;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setQueryParameters(String queryParameters) {
-        this.queryParameters = queryParameters;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     @Override
     public String toString() {
         return "DeepLinkAction{" +
                 "action='" + action + '\'' +
-                ", queryParameters=" + queryParameters +
+                ", orderId=" + orderId +
                 '}';
     }
 
@@ -67,6 +67,6 @@ public class DeepLinkAction implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(action);
-        dest.writeString(queryParameters);
+        dest.writeString(orderId);
     }
 }
