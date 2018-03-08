@@ -50,8 +50,7 @@ public class OnBoardPhotoIdUploadHelperFragment extends Fragment {
                 } else {
                     if (!ProfileInfoCacheManager.isBasicInfoAdded() && SharedPrefManager.isBangladesh()) {
                         ((ProfileVerificationHelperActivity) getActivity()).switchToBasicInfoEditHelperFragment();
-                    }
-                    if (!ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                    } else if (!ProfileInfoCacheManager.isSourceOfFundAdded()) {
                         ((ProfileVerificationHelperActivity) getActivity()).switchToSourceOfFundHelperFragment();
                     } else {
                         ((ProfileVerificationHelperActivity) getActivity()).switchToHomeActivity();
