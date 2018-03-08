@@ -101,15 +101,10 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
         mCancelButton = (Button) view.findViewById(R.id.cancel_button);
         getOrderID();
         setButtonActions();
-        //attemptGetBusinessRules(ServiceIdConstants.MAKE_PAYMENT);
     }
 
     private void getOrderID() {
         orderID = getActivity().getIntent().getStringExtra("DEEP_LINK_ACTION_VALUE");
-
-//        if (orderID == null) {
-//            orderID = "FBETC33-6C3E581E88D46A";
-//        }
         getOrderDetails(orderID);
 
     }
@@ -234,43 +229,6 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
         if (getOrderDetails != null) {
             fillNecessaryfiledsWithData(getOrderDetails);
         }
-
-        /*String errorMessage = null;
-        if (!Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT())
-                || !Utilities.isValueAvailable(PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT())) {
-            DialogUtils.showDialogForBusinessRuleNotAvailable(getActivity());
-
-        } else if (PaymentActivity.mMandatoryBusinessRules.isVERIFICATION_REQUIRED() && !ProfileInfoCacheManager.isAccountVerified()) {
-            DialogUtils.showDialogVerificationRequired(getActivity());
-        }
-        if (SharedPrefManager.ifContainsUserBalance()) {
-            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
-
-            //validation check of amount
-            if (getOrderDetails.getAmount() == 0.0) {
-                errorMessage = "Invalid Amount";
-            } else {
-                final BigDecimal paymentAmount = new BigDecimal(getOrderDetails.getAmount());
-                if (paymentAmount.compareTo(balance) > 0) {
-                    errorMessage = getString(R.string.insufficient_balance);
-                } else {
-                    final BigDecimal minimumPaymentAmount = PaymentActivity.mMandatoryBusinessRules.getMIN_AMOUNT_PER_PAYMENT();
-                    final BigDecimal maximumPaymentAmount = PaymentActivity.mMandatoryBusinessRules.getMAX_AMOUNT_PER_PAYMENT().min(balance);
-
-                    errorMessage = InputValidator.isValidAmount(getActivity(), paymentAmount, minimumPaymentAmount, maximumPaymentAmount);
-                }
-            }
-        } else {
-            errorMessage = getString(R.string.balance_not_available);
-        }
-        if (ProfileInfoCacheManager.getMobileNumber().equals(getOrderDetails.getMerchantMobileNumber())) {
-            errorMessage = "You can't pay to yourself";
-        }
-        if (errorMessage != null) {
-            DialogUtils.showNecessaryDialog(getActivity(), errorMessage);
-        } else {
-            fillNecessaryfiledsWithData(getOrderDetails);
-        }*/
     }
 
     public void showDialogAndLaunchThirdPartyApp(final String message) {
@@ -290,11 +248,6 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     }
 
     private void launchParentThirdPartyApp() {
-//        if (thirdPartyAppUrl == null) {
-//            thirdPartyAppUrl = "com.priyo.people";
-//        }
-//        Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage(thirdPartyAppUrl);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(thirdPartyAppUrl));
         startActivity(intent);
         getActivity().finish();
