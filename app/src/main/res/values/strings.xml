@@ -538,7 +538,7 @@
     <string name="failed_available_bank_list_loading">Failed to load bank lists. Please try again later</string>
     <string name="invite_to_ipay">Invite to iPay</string>
     <string name="and">and</string>
-    <string name="mandatory_field">*All fields are mandatory</string>
+    <string name="mandatory_field">*All fields are mandatory except Promo Code</string>
     <string name="invite_now">Invite Now</string>
     <string name="ask_for_introduction">Ask for Introduction</string>
     <string name="failed_sending_invitation">Invitation sending failed. Please try again</string>
