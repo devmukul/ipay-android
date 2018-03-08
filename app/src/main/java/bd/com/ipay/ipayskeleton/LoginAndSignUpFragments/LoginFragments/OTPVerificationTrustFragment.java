@@ -79,7 +79,6 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
     private ProgressDialog mProgressDialog;
 
     private EnableDisableSMSBroadcastReceiver mEnableDisableSMSBroadcastReceiver;
-    private DeepLinkAction mDeepLinkAction;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,8 +88,6 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
         mResendOTPButton = (Button) v.findViewById(R.id.buttonResend);
         mOTPEditText = (EditText) v.findViewById(R.id.otp_edittext);
         mTimerTextView = (TextView) v.findViewById(R.id.txt_timer);
-
-        mDeepLinkAction = getActivity().getIntent().getParcelableExtra("DEEP_LINK_ACTION");
 
         mDeviceID = DeviceInfoFactory.getDeviceId(getActivity());
         mDeviceName = DeviceInfoFactory.getDeviceName();
@@ -385,10 +382,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                                     || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
                                 ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                             } else {
-                                if (mDeepLinkAction != null)
-                                    Utilities.performDeepLinkAction(getActivity(), mDeepLinkAction);
-                                else
-                                    ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                             }
                         } else getAddedCards();
                     } else {
@@ -418,10 +412,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                                 || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
                             ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
-                            if (mDeepLinkAction != null)
-                                Utilities.performDeepLinkAction(getActivity(), mDeepLinkAction);
-                            else
-                                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                         }
                     } else {
                         Toaster.makeText(getActivity(), mGetCardResponse.getMessage(), Toast.LENGTH_SHORT);

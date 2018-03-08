@@ -93,7 +93,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
     private HttpRequestGetAsyncTask mGetAllAddedCards = null;
     private GetCardResponse mGetCardResponse;
 
-    private DeepLinkAction mDeepLinkAction;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -120,8 +120,6 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
         mCountryCodePicker = (CountryCodePicker) v.findViewById(R.id.ccp);
         mInfoView = (ImageView) v.findViewById(R.id.login_info);
         mRememberMeCheckbox = (CheckBox) v.findViewById(R.id.remember_me_checkbox);
-
-        mDeepLinkAction = getActivity().getIntent().getParcelableExtra("DEEP_LINK_ACTION");
 
         mRememberMeCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -556,10 +554,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                                     || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
                                 ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                             } else {
-                                if (mDeepLinkAction != null)
-                                    Utilities.performDeepLinkAction(getActivity(), mDeepLinkAction);
-                                else
-                                    ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                             }
                         } else getAddedCards();
                     } else {

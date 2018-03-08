@@ -70,10 +70,7 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.AboutActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
-import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Business.Employee.GetBusinessInformationResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetProfileInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserProfilePictureClass;
@@ -1083,7 +1080,7 @@ public class Utilities {
         List<String> pathSegments = uri.getPathSegments();
         Logger.logD(TAG, uri.getPathSegments().toString());
         deepLinkAction.setAction(pathSegments.get(1));
-        deepLinkAction.setQueryParameters(pathSegments.get(2));
+        deepLinkAction.setOrderId(pathSegments.get(2));
 
         Logger.logD(TAG, deepLinkAction.toString());
 
@@ -1095,7 +1092,7 @@ public class Utilities {
         switch (deepLinkAction.getAction()) {
             case "pay":
                 Intent intent = new Intent(activity, PaymentActivity.class);
-                intent.putExtra("DEEP_LINK_ACTION_VALUE", deepLinkAction.getQueryParameters());
+                intent.putExtra(Constants.ORDER_ID, deepLinkAction.getOrderId());
                 activity.startActivity(intent);
                 activity.finish();
                 break;

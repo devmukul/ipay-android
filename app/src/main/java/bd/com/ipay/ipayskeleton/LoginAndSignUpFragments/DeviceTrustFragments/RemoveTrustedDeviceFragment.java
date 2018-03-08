@@ -83,8 +83,6 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
     private Button mLogOutButton;
     private Tracker mTracker;
 
-    private DeepLinkAction mDeepLinkAction;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +103,6 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
         mTrustedDevicesRecyclerView = (RecyclerView) v.findViewById(R.id.list_trusted_devices);
         mProgressDialog = new ProgressDialog(getActivity());
         mLogOutButton = (Button) v.findViewById(R.id.button_logout);
-        mDeepLinkAction = getActivity().getIntent().getParcelableExtra("DEEP_LINK_ACTION");
 
         mLogOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -362,10 +359,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                                 || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
                             ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
-                            if (mDeepLinkAction != null)
-                                Utilities.performDeepLinkAction(getActivity(), mDeepLinkAction);
-                            else
-                                ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
+                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                         }
                     } else getAddedCards();
                 } else {
