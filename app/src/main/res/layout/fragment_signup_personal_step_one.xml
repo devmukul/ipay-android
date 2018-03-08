@@ -79,7 +79,8 @@
                         android:id="@+id/ccp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:defaultNameCode="bd" />
+                        app:defaultNameCode="bd"
+                        app:textSize="@dimen/text_size_small_medium"/>
 
                     <EditText
                         android:id="@+id/mobile_number"
@@ -90,6 +91,8 @@
                         android:background="@android:color/transparent"
                         android:hint="@string/mobile_number"
                         android:inputType="phone"
+                        android:textColorHint="@color/colorGray"
+                        android:textSize="@dimen/text_size_small_medium"
                         android:maxLines="1" />
                 </RelativeLayout>
 
