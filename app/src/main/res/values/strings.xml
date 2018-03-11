@@ -1037,14 +1037,14 @@
     <string name="upload_document">Upload Document</string>
     <string name="select_photo">Select photo</string>
     <string name="upload_photo">Confirm photo</string>
-    <string name="upload_photo_id">Upload photo id</string>
+    <string name="upload_photo_id">Upload photo ID</string>
     <string name="add_basic_info">Add basic info</string>
     <string name="ask_for_introduction_onboard">Ask for Introduction</string>
     <string name="add_bank_onboard">Add bank info</string>
     <string name="skip_now">Skip now</string>
 
     <string name="onboard_step_one_title">Great! you\'re almost done</string>
-    <string name="onboard_photo_id_upload_title">Upload photo id</string>
+    <string name="onboard_photo_id_upload_title">Upload photo ID</string>
     <string name="onboard_document_title">Documents</string>
     <string name="onboard_upload_document_title">Upload document</string>
     <string name="onboard_nice_profile_photo">Nice profile photo</string>

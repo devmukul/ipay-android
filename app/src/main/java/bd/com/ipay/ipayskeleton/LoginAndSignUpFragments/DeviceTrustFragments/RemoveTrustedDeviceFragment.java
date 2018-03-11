@@ -396,7 +396,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                 mGetCardResponse = gson.fromJson(result.getJsonString(), GetCardResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                    if (mGetCardResponse.getUserCardList().isEmpty()) {
+                    if (!mGetCardResponse.isAnyCardVerified()) {
                         ProfileInfoCacheManager.addSourceOfFund(false);
                     } else ProfileInfoCacheManager.addSourceOfFund(true);
 
@@ -406,8 +406,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                     } else {
                         ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
                     }
-                }
-                else {
+                } else {
                     Toaster.makeText(getActivity(), mGetCardResponse.getMessage(), Toast.LENGTH_SHORT);
                 }
             } catch (Exception e) {
