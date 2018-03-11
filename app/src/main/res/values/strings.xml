@@ -107,6 +107,8 @@
     <string name="business_name_required">Business name is required</string>
     <string name="error_invalid_name_with_required_length">Please enter a valid name of minimum 5 characters</string>
     <string name="error_invalid_birthday">Please enter birthday</string>
+    <string name="error_invalid_promo_code">Invalid promo code</string>
+    <string name="error_space_not_allowed">Space is not allowed</string>
     <string name="please_select_institution">Please select an institution</string>
     <string name="please_select_payment_item">Please select a fee</string>
     <string name="please_select_session">Please select a session</string>

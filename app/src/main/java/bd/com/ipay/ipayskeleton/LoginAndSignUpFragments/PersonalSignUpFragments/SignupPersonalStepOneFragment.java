@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -164,6 +166,32 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
             }
         });
 
+        mPromoCodeEditText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // TODO Auto-generated method stub
+                String str = s.toString();
+                if(str.length() > 0 && str.contains(" "))
+                {
+                    mPromoCodeEditText.setError(getString(R.string.error_invalid_promo_code));
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
         mMaleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -279,6 +307,11 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
         } else if (SignupOrLoginActivity.mBirthday == null || SignupOrLoginActivity.mBirthday.length() == 0) {
             mBirthdayEditText.setError(getString(R.string.error_invalid_birthday));
             focusView = mBirthdayEditText;
+            cancel = true;
+
+        } else if (SignupOrLoginActivity.mPromoCode.length()>0 && (SignupOrLoginActivity.mPromoCode.length()< 6 || SignupOrLoginActivity.mPromoCode.contains(" "))) {
+            mPromoCodeEditText.setError(getString(R.string.error_invalid_promo_code));
+            focusView = mPromoCodeEditText;
             cancel = true;
 
         } else if (!mAgreementCheckBox.isChecked()) {
