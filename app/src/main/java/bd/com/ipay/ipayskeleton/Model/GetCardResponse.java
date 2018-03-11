@@ -18,9 +18,11 @@ public class GetCardResponse {
     }
 
     public boolean isAnyCardVerified() {
-        for (CardDetails cardDetail : userCardList) {
-            if (cardDetail.getCardStatus().equals(Constants.VERIFIED))
-                return true;
+        if (!userCardList.isEmpty()) {
+            for (CardDetails cardDetail : userCardList) {
+                if (cardDetail.getCardStatus().equals(Constants.VERIFIED))
+                    return true;
+            }
         }
         return false;
     }
