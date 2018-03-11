@@ -374,7 +374,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                         ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
                         ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
                         ProfileInfoCacheManager.addBasicInfo(mProfileCompletionStatusResponse.isOnboardBasicInfoUpdated());
-                        ProfileInfoCacheManager.addSourceOfFund(mProfileCompletionStatusResponse.isSourceOfFundAdded());
+                        ProfileInfoCacheManager.addSourceOfFund(mProfileCompletionStatusResponse.isBankAdded());
 
                         if (ProfileInfoCacheManager.isSourceOfFundAdded()) {
                             if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()

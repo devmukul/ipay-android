@@ -222,9 +222,13 @@ public class ProfileCompletionStatusResponse {
         return false;
     }
 
-    public boolean isSourceOfFundAdded() {
-        if (getPropertyScore("Source of Fund") == 100)
-            return true;
+    public boolean isBankAdded() {
+        for (CompletionStatus mCompletionStatus : completionStatusList) {
+            if (mCompletionStatus.getProperty().equals("ADD_BANK")) {
+                if (mCompletionStatus.getValue() > 0)
+                    return true;
+            }
+        }
         return false;
     }
 
