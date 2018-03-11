@@ -9,6 +9,7 @@ import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCo
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PERSONAL_ADDRESS;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROPERTY_NAME_TO_ACTION_NAME_MAP;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROPERTY_NAME_TO_ICON_MAP;
+import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROPERTY_NAME_TO_SCORE_MAP;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.PROPERTY_NAME_TO_TITLE_MAP;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_SOURCE_OF_FUND;
 import static bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionPropertyConstants.TAG_POSITION_PROFILE_PICTURE;
@@ -194,45 +195,30 @@ public class ProfileCompletionStatusResponse {
                     otherCompletionDetails.add(propertyDetails);
             }
         }
+
+        initScoreFromPropertyName();
+
+    }
+
+    public void initScoreFromPropertyName() {
+
+        // Iterate the completionStatusList: "Profile Picture","Identification","Basic Info","Source of Fund"
+        for (int i = 0; i < tagList.size(); i++) {
+            int score = tagwiseScorePercentage.get(i);
+            String tag = tagList.get(i);
+            PROPERTY_NAME_TO_SCORE_MAP.put(tag, score);
+        }
     }
 
     public boolean isPhotoIdUpdated() {
-        for (CompletionStatus mCompletionStatus : completionStatusList) {
-            if (mCompletionStatus.getProperty().equals("VERIFICATION_DOCUMENT")) {
-                if (mCompletionStatus.getValue() > 0)
-                    return true;
-            }
-        }
+        if (getPropertyScore("Identification") == 100)
+            return true;
         return false;
     }
 
     public boolean isPhotoUpdated() {
-        for (CompletionStatus mCompletionStatus : completionStatusList) {
-            if (mCompletionStatus.getProperty().equals("PROFILE_PICTURE")) {
-                if (mCompletionStatus.getValue() > 0)
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isAddressUpdated() {
-        for (CompletionStatus mCompletionStatus : completionStatusList) {
-            if (mCompletionStatus.getProperty().equals("PERSONAL_ADDRESS")) {
-                if (mCompletionStatus.getValue() > 0)
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isBasicProfileUpdated() {
-        for (CompletionStatus mCompletionStatus : completionStatusList) {
-            if (mCompletionStatus.getProperty().equals("BASIC_PROFILE")) {
-                if (mCompletionStatus.getValue() > 0)
-                    return true;
-            }
-        }
+        if (getPropertyScore("Profile Picture") == 100)
+            return true;
         return false;
     }
 
@@ -247,9 +233,13 @@ public class ProfileCompletionStatusResponse {
     }
 
     public boolean isOnboardBasicInfoUpdated() {
-        if (isAddressUpdated() || isBasicProfileUpdated())
+        if (getPropertyScore("Basic Info") == 100)
             return true;
         return false;
+    }
+
+    public Integer getPropertyScore(String tag) {
+        return PROPERTY_NAME_TO_SCORE_MAP.get(tag);
     }
 
 
