@@ -197,7 +197,6 @@ public class ProfileCompletionStatusResponse {
         }
 
         initScoreFromPropertyName();
-
     }
 
     public void initScoreFromPropertyName() {

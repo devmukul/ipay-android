@@ -535,6 +535,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                     mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
+                        mProfileCompletionStatusResponse.initScoreFromPropertyName();
                         ProfileInfoCacheManager.switchedFromSignup(false);
                         ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
                         ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
