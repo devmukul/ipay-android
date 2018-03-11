@@ -596,7 +596,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                     mGetCardResponse = gson.fromJson(result.getJsonString(), GetCardResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                        if (mGetCardResponse.getUserCardList().isEmpty()) {
+                        if (!mGetCardResponse.isAnyCardVerified()) {
                             ProfileInfoCacheManager.addSourceOfFund(false);
                         } else ProfileInfoCacheManager.addSourceOfFund(true);
 
