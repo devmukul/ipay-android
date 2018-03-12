@@ -12,7 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -161,9 +161,25 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    mSearchText = newText;
+                    setContentShown(false);
+                    refreshTransactionHistory();
+                }
                 return false;
             }
         });
+
+        mSearchTransactionText.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                mSearchText = "";
+                setContentShown(false);
+                refreshTransactionHistory();
+                return false;
+            }
+        });
+
         return v;
     }
 
