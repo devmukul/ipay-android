@@ -12,6 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -87,6 +88,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private Button mClearFilterButton;
     private ImageView mMoreButton;
     private ImageView mCancelButton;
+    private SearchView mSearchTransactionText;
 
     private TextView mFilterTitle;
     private TextView mEmptyListTextView;
@@ -102,6 +104,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
     private Integer type = null;
     private Calendar fromDate = null;
     private Calendar toDate = null;
+    private String mSearchText;
 
     private Map<CheckBox, Integer> mCheckBoxTypeMap;
     private TransactionHistoryBroadcastReceiver transactionHistoryBroadcastReceiver;
@@ -144,6 +147,21 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 } else {
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
+            }
+        });
+
+        mSearchTransactionText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                mSearchText = query;
+                setContentShown(false);
+                refreshTransactionHistory();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
         return v;
@@ -309,6 +327,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
         mCancelButton = (ImageView) v.findViewById(R.id.cancel_filter);
         mClearFilterButton = (Button) v.findViewById(R.id.filter_clear);
         mFilterTitle = (TextView) v.findViewById(R.id.filter_title);
+        mSearchTransactionText = (SearchView) v.findViewById(R.id.simpleSearchView);
     }
 
     private void setupViewsAndActions() {
@@ -559,7 +578,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
             return;
         }
         String url = TransactionHistoryRequest.generateUri(type,
-                fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT);
+                fromDate, toDate, historyPageCount, Constants.ACTIVITY_LOG_COUNT, mSearchText);
 
         mTransactionHistoryTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_TRANSACTION_HISTORY,
                 url, getActivity());
