@@ -21,6 +21,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 public class ManageBanksActivity extends BaseActivity {
 
     private boolean switchedFromBankVerification = false;
+    private boolean switchedFromOnBoard = false;
 
     public FloatingActionButton mFabAddNewBank;
 
@@ -50,9 +51,10 @@ public class ManageBanksActivity extends BaseActivity {
                 switchToAddNewBankFragment();
             }
         });
-        if (intent != null && intent.getBooleanExtra(Constants.FROM_ON_BOARD, false)) {
+        switchedFromOnBoard = intent.getBooleanExtra(Constants.FROM_ON_BOARD, false);
+        if (intent != null && switchedFromOnBoard) {
             Bundle bundle = new Bundle();
-            bundle.putBoolean(Constants.FROM_ON_BOARD, intent.getBooleanExtra(Constants.FROM_ON_BOARD, false));
+            bundle.putBoolean(Constants.FROM_ON_BOARD, switchedFromOnBoard);
             mFabAddNewBank.setVisibility(View.GONE);
             switchToAddNewBankFragment(bundle);
         }
@@ -87,7 +89,7 @@ public class ManageBanksActivity extends BaseActivity {
     public void onBackPressed() {
         if (!switchedFromBankVerification) {
             // If back to bank account fragment then set the visibility of add bank button
-            if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            if (getSupportFragmentManager().getBackStackEntryCount() == 1 && !switchedFromOnBoard) {
                 mFabAddNewBank.setVisibility(View.VISIBLE);
             }
         }

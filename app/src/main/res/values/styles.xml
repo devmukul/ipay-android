@@ -753,7 +753,6 @@
     </style>
 
     <style name="CustomEditTextLogInSignUp" parent="@android:style/Widget.Holo.TextView">
-        <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textSize">@dimen/text_size_small_medium</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:background">@android:color/transparent</item>

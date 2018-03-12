@@ -107,6 +107,8 @@
     <string name="business_name_required">Business name is required</string>
     <string name="error_invalid_name_with_required_length">Please enter a valid name of minimum 5 characters</string>
     <string name="error_invalid_birthday">Please enter birthday</string>
+    <string name="error_invalid_promo_code">Invalid promo code</string>
+    <string name="error_space_not_allowed">Space is not allowed</string>
     <string name="please_select_institution">Please select an institution</string>
     <string name="please_select_payment_item">Please select a fee</string>
     <string name="please_select_session">Please select a session</string>
@@ -242,6 +244,7 @@
     <string name="enter_otp">Enter Code</string>
     <string name="otp">otp</string>
     <string name="enter_promo_code">Invitation Code</string>
+    <string name="enter_promo_code_optional">Promo Code (Optional)</string>
     <string name="failed_to_reset_password">Failed to reset password. Please try again.</string>
     <string name="invalid_otp">Enter a valid OTP</string>
     <string name="recharge_failed">Mobile recharge failed.</string>
@@ -538,6 +541,7 @@
     <string name="invite_to_ipay">Invite to iPay</string>
     <string name="and">and</string>
     <string name="mandatory_field">*All fields are mandatory</string>
+    <string name="mandatory_field_except_promo">*All fields are mandatory except Promo Code</string>
     <string name="invite_now">Invite Now</string>
     <string name="ask_for_introduction">Ask for Introduction</string>
     <string name="failed_sending_invitation">Invitation sending failed. Please try again</string>

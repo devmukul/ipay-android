@@ -23,7 +23,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="5dp"
                 android:gravity="center_horizontal"
-                android:text="@string/mandatory_field"
+                android:text="@string/mandatory_field_except_promo"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/text_size_small" />
 
@@ -79,7 +79,8 @@
                         android:id="@+id/ccp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:defaultNameCode="bd" />
+                        app:defaultNameCode="bd"
+                        app:textSize="@dimen/text_size_small_medium"/>
 
                     <EditText
                         android:id="@+id/mobile_number"
@@ -90,6 +91,8 @@
                         android:background="@android:color/transparent"
                         android:hint="@string/mobile_number"
                         android:inputType="phone"
+                        android:textColorHint="@color/colorGray"
+                        android:textSize="@dimen/text_size_small_medium"
                         android:maxLines="1" />
                 </RelativeLayout>
 
@@ -152,6 +155,31 @@
                         android:focusable="false"
                         android:hint="@string/birthday_dd_mm_yy"
                         android:inputType="number" />
+                </android.support.design.widget.TextInputLayout>
+
+            </RelativeLayout>
+
+            <View style="@style/DividerOnly" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputLayout
+                    style="@style/CustomTextInputLayoutWithMargin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:theme="@style/CustomTextInputLayout">
+
+                    <EditText
+                        android:id="@+id/promoCodeEditText"
+                        style="@style/CustomEditTextLogInSignUp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/enter_promo_code_optional"
+                        android:maxLength="6"
+                        android:maxLines="1"/>
                 </android.support.design.widget.TextInputLayout>
 
             </RelativeLayout>
