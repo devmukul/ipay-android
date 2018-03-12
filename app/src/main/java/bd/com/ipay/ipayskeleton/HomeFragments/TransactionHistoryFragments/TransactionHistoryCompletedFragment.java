@@ -222,6 +222,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
 
         switch (item.getItemId()) {
             case R.id.action_filter_by_date:
+                mSearchTransactionText.setVisibility(View.INVISIBLE);
                 if (serviceFilterLayout.getVisibility() == View.VISIBLE)
                     serviceFilterLayout.setVisibility(View.GONE);
                 dateFilterLayout.setVisibility(View.VISIBLE);
@@ -232,6 +233,7 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 mFilterTitle.setText(getString(R.string.filter_by_date));
                 return true;
             case R.id.action_filter_by_service:
+                mSearchTransactionText.setVisibility(View.INVISIBLE);
                 if (dateFilterLayout.getVisibility() == View.VISIBLE)
                     dateFilterLayout.setVisibility(View.GONE);
                 serviceFilterLayout.setVisibility(View.VISIBLE);
@@ -259,11 +261,15 @@ public class TransactionHistoryCompletedFragment extends ProgressFragment implem
                 popupMenu.show();
                 break;
             case R.id.cancel_filter:
-                if (serviceFilterLayout.getVisibility() == View.VISIBLE)
+                if (serviceFilterLayout.getVisibility() == View.VISIBLE) {
+                    mSearchTransactionText.setVisibility(View.VISIBLE);
                     serviceFilterLayout.setVisibility(View.GONE);
+                }
 
-                if (dateFilterLayout.getVisibility() == View.VISIBLE)
+                if (dateFilterLayout.getVisibility() == View.VISIBLE) {
+                    mSearchTransactionText.setVisibility(View.VISIBLE);
                     dateFilterLayout.setVisibility(View.GONE);
+                }
                 mFilterTitle.setVisibility(View.INVISIBLE);
                 mCancelButton.setVisibility(View.INVISIBLE);
                 mMoreButton.setVisibility(View.VISIBLE);
