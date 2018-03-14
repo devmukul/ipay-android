@@ -148,8 +148,10 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
                     try {
                         Gson gson = new GsonBuilder().create();
                         GetUserInfoResponse getUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
-                        imageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
-                        name = getUserInfoResponse.getName();
+                        if (!getUserInfoResponse.getProfilePictures().isEmpty())
+                            imageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
+                        if (!getUserInfoResponse.getName().isEmpty())
+                            name = getUserInfoResponse.getName();
                         if (getUserInfoResponse.getAddressList() != null) {
                             if (getUserInfoResponse.getAddressList().getOFFICE() != null) {
                                 address = getUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
