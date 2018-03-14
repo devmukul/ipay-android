@@ -169,6 +169,19 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             if (mobileNumber != null)
                 mMobileNumberEditText.setText(mobileNumber);
+            if (Utilities.isConnectionAvailable(getActivity())) {
+                GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
+
+                if (mGetUserInfoTask != null) {
+                    return;
+                }
+
+                mProgressDialog.show();
+                mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
+                        getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
+                mGetUserInfoTask.mHttpResponseListener = SendMoneyFragment.this;
+                mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
 
         } else if (requestCode == SEND_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
