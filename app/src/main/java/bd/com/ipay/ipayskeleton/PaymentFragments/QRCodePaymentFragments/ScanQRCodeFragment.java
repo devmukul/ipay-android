@@ -145,40 +145,46 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         switch (result.getApiCommand()) {
             case Constants.COMMAND_GET_USER_INFO:
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    Gson gson = new GsonBuilder().create();
-                    GetUserInfoResponse getUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
-                    imageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
-                    name = getUserInfoResponse.getName();
-                    if (getUserInfoResponse.getAddressList() != null) {
-                        if (getUserInfoResponse.getAddressList().getOFFICE() != null) {
-                            address = getUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
-                            country = getUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
-                            district = getUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
-                            thana = getUserInfoResponse.getAddressList().getOFFICE().get(0).getThana();
+                    try {
+                        Gson gson = new GsonBuilder().create();
+                        GetUserInfoResponse getUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
+                        imageUrl = getUserInfoResponse.getProfilePictures().get(0).getUrl();
+                        name = getUserInfoResponse.getName();
+                        if (getUserInfoResponse.getAddressList() != null) {
+                            if (getUserInfoResponse.getAddressList().getOFFICE() != null) {
+                                address = getUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
+                                country = getUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
+                                district = getUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
+                                thana = getUserInfoResponse.getAddressList().getOFFICE().get(0).getThana();
+                            }
                         }
-                    }
 
-                    // We will do a check here to know if the account is a personal account or business account.
-                    // For Personal Account we have to launch the SendMoneyActivity
-                    // For Business Account we have to launch the PaymentActivity with a account status verification check
-                    if (getUserInfoResponse.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
-                        if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEND_MONEY)) {
-                            DialogUtils.showServiceNotAllowedDialog(getContext());
-                        } else {
-                            switchActivity(SendMoneyActivity.class);
-                        }
-                    } else if (getUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
-                        if (getUserInfoResponse.getAccountStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
-                            if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
+                        // We will do a check here to know if the account is a personal account or business account.
+                        // For Personal Account we have to launch the SendMoneyActivity
+                        // For Business Account we have to launch the PaymentActivity with a account status verification check
+                        if (getUserInfoResponse.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE) {
+                            if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.SEND_MONEY)) {
                                 DialogUtils.showServiceNotAllowedDialog(getContext());
                             } else {
-                                switchActivity(PaymentActivity.class);
+                                switchActivity(SendMoneyActivity.class);
                             }
-                        } else {
-                            DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.business_account_not_verified));
+                        } else if (getUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
+                            if (getUserInfoResponse.getAccountStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
+                                if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
+                                    DialogUtils.showServiceNotAllowedDialog(getContext());
+                                } else {
+                                    switchActivity(PaymentActivity.class);
+                                }
+                            } else {
+                                DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.business_account_not_verified));
+                            }
                         }
-                    }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (getActivity() != null)
+                            Toast.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_LONG).show();
 
+                    }
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
                     DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.scan_valid_ipay_qr_code));
                 }
@@ -195,7 +201,7 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
         intent.putExtra(Constants.COUNTRY, country);
         intent.putExtra(Constants.DISTRICT, district);
         intent.putExtra(Constants.ADDRESS, address);
-        intent.putExtra(Constants.THANA,thana);
+        intent.putExtra(Constants.THANA, thana);
         startActivity(intent);
         getActivity().finish();
     }
