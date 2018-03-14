@@ -71,6 +71,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     private TextView mNameTextView;
     private View mProfilePicHolderView;
     private View mMobileNumberHolderView;
+    private View mIconEditMobileNumber;
 
 
     @Override
@@ -87,6 +88,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         mProfileImageView = (ProfileImageView) v.findViewById(R.id.receiver_profile_image_view);
         mProfilePicHolderView = v.findViewById(R.id.profile_pic_holder);
         mMobileNumberHolderView = v.findViewById(R.id.mobile_number_holder);
+        mIconEditMobileNumber = v.findViewById(R.id.edit_icon_mobile_number);
         mProgressDialog = new ProgressDialog(getActivity());
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
@@ -128,6 +130,13 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             }
         });
 
+        mIconEditMobileNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mProfilePicHolderView.setVisibility(View.GONE);
+                mMobileNumberHolderView.setVisibility(View.VISIBLE);
+            }
+        });
         // Get business rule
         attemptGetBusinessRule(Constants.SERVICE_ID_SEND_MONEY);
 

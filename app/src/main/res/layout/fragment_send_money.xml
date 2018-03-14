@@ -18,7 +18,16 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:visibility="gone">
+           android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/edit_icon_mobile_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_editgrey" />
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
                 android:id="@+id/receiver_profile_image_view"
