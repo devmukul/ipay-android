@@ -137,6 +137,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                 mMobileNumberHolderView.setVisibility(View.VISIBLE);
             }
         });
+
         // Get business rule
         attemptGetBusinessRule(Constants.SERVICE_ID_SEND_MONEY);
 
@@ -176,6 +177,8 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                     return;
                 }
 
+                mProgressDialog.setMessage(getString(R.string.please_wait));
+                mProgressDialog.setCancelable(false);
                 mProgressDialog.show();
                 mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
                         getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
@@ -207,6 +210,8 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                                     return;
                                 }
 
+                                mProgressDialog.setMessage(getString(R.string.please_wait));
+                                mProgressDialog.setCancelable(false);
                                 mProgressDialog.show();
                                 mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
                                         getUserInfoRequestBuilder.getGeneratedUri(), getActivity());

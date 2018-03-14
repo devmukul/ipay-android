@@ -96,6 +96,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private TextView mAddressTextView;
     private TextView mThanaAndDistrictTextView;
     private TextView mCountryTextView;
+    private View mIconEditMobileNumber;
 
 
     private String mReceiverMobileNumber;
@@ -140,6 +141,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         businessProfileImageView.setBusinessLogoPlaceHolder();
         businessNameTextView = (TextView) v.findViewById(R.id.textview_name);
         businessMobileNumberTextView = (TextView) v.findViewById(R.id.textview_mobile_number);
+        mIconEditMobileNumber = v.findViewById(R.id.edit_icon_mobile_number);
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
@@ -256,6 +258,14 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             }
         });
 
+        mIconEditMobileNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mobileNumberView.setVisibility(View.VISIBLE);
+                profileView.setVisibility(View.GONE);
+            }
+        });
+
         // Get business rule
         attemptGetBusinessRule(Constants.SERVICE_ID_MAKE_PAYMENT);
         // Start a syncing for business account list
@@ -322,6 +332,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
             if (mobileNumber != null) {
                 mMobileNumberEditText.setText(mobileNumber);
+                getProfileInfo(ContactEngine.formatMobileNumberBD(mobileNumber));
             }
         } else if (requestCode == PAYMENT_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
@@ -593,6 +604,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                     String profilePicture = null;
                     if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
                         profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
+                        businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture, false);
                     }
 
 
