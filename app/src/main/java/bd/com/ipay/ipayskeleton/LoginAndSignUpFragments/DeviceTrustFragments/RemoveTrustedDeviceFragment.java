@@ -354,7 +354,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
 
                     if (ProfileInfoCacheManager.isSourceOfFundAdded()) {
                         if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                                || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                                || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                             ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
                             ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
@@ -401,7 +401,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                     } else ProfileInfoCacheManager.addSourceOfFund(true);
 
                     if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                            || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                            || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                         ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
                     } else {
                         ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
