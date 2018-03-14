@@ -544,7 +544,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
 
                         if (ProfileInfoCacheManager.isSourceOfFundAdded()) {
                             if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                                    || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                                    || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                                 ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                             } else {
                                 ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
@@ -597,7 +597,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                         } else ProfileInfoCacheManager.addSourceOfFund(true);
 
                         if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                                || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                                || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                             ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
