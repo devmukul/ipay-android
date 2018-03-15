@@ -244,6 +244,7 @@
     <string name="enter_otp">Enter Code</string>
     <string name="otp">otp</string>
     <string name="enter_promo_code">Invitation Code</string>
+    <string name="promo_code">Promo Code</string>
     <string name="enter_promo_code_optional">Promo Code (Optional)</string>
     <string name="failed_to_reset_password">Failed to reset password. Please try again.</string>
     <string name="invalid_otp">Enter a valid OTP</string>
@@ -400,6 +401,7 @@
     <string name="events_get_failed">Could not fetch my events</string>
     <string name="recharging_balance">Processing mobile recharge…</string>
     <string name="saving_pin">Saving PIN…</string>
+    <string name="adding_promo">Adding Promo Code...</string>
     <string name="device_name">device name</string>
     <string name="trusted_device_limit_exceed_text">You have reached the limit of your trusted device. To add a new device, please remove minimum one device from the following list.</string>
     <string name="add_trusted_device_alert">Do you want to add this device as trusted?</string>
@@ -690,6 +692,7 @@
     <string name="failed_loading_thana_list">Failed to load thana list</string>
     <string name="failed_loading_district_list">Failed to load district list</string>
     <string name="dialog_prompt_add_pin">Please set your PIN first</string>
+    <string name="dialog_prompt_add_promo">Please enter your Promo Code</string>
     <string name="enter_a_new_pin">Enter a new PIN</string>
     <string name="get_verified_to_invite">You can invite him/her to iPay once you get verified</string>
     <string name="get_verified">Get verified first!</string>

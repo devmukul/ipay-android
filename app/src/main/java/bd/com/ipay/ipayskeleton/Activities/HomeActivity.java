@@ -67,10 +67,12 @@ import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetBusinessTypesAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetRelationshipListAsyncTask;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.AutoResizeTextView;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.AddPromoDialogBuilder;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DataCollectors.Model.LocationCollector;
 import bd.com.ipay.ipayskeleton.DataCollectors.Model.UserLocation;
 import bd.com.ipay.ipayskeleton.HomeFragments.DashBoardFragment;
+import bd.com.ipay.ipayskeleton.HomeFragments.HomeFragment;
 import bd.com.ipay.ipayskeleton.HomeFragments.NotificationFragment;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.AccessControl.GetAccessControlResponse;
@@ -530,6 +532,23 @@ public class HomeActivity extends BaseActivity
         switchedToHomeFragment = false;
     }
 
+    public void showPromoCodeDialogue() {
+
+        AddPromoDialogBuilder addPromoDialogBuilder = new AddPromoDialogBuilder(HomeActivity.this, new AddPromoDialogBuilder.AddPromoListener() {
+            @Override
+            public void onPromoAddSuccess() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        HomeFragment.refreshBalanceButton.performClick();
+                    }
+                }, 1000);
+
+            }
+        });
+        addPromoDialogBuilder.show();
+    }
+
     @ValidateAccess
     public void attemptLiveChat() {
         if (isProfileInfoAvailable()) {
@@ -543,8 +562,7 @@ public class HomeActivity extends BaseActivity
     @ValidateAccess
     public boolean onNavigationItemSelected(final MenuItem item) {
         int id = item.getItemId();
-        // Handle navigation view item clicks here.
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//         Handle navigation view item clicks here.
         if (id == R.id.nav_home) {
             drawer.closeDrawer(GravityCompat.START);
         }
@@ -582,6 +600,14 @@ public class HomeActivity extends BaseActivity
         } else if (id == R.id.nav_invite) {
 
             switchToInviteActivity();
+
+        } else if (id == R.id.nav_promo) {
+
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            }
+
+            showPromoCodeDialogue();
 
         } else if (id == R.id.nav_manage_account) {
 

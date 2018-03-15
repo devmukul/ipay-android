@@ -32,6 +32,11 @@
             android:title="@string/invite_a_contact"
             android:visible="true" />
         <item
+            android:id="@+id/nav_promo"
+            android:icon="@drawable/ic_promo_code"
+            android:title="@string/promo_code"
+            android:visible="true" />
+        <item
             android:id="@+id/nav_live_chat"
             android:icon="@drawable/ic_chat"
             android:title="@string/live_chat" />
