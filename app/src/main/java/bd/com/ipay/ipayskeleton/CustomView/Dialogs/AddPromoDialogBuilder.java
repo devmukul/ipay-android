@@ -131,11 +131,11 @@ public class AddPromoDialogBuilder extends MaterialDialog.Builder implements Htt
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     if (getContext() != null)
-                        Toaster.makeText(getContext(), mAddPromoResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(context, mAddPromoResponse.getMessage(), Toast.LENGTH_LONG);
                     mAddPromoListener.onPromoAddSuccess();
                 } else {
                     if (getContext() != null)
-                        Toaster.makeText(getContext(), mAddPromoResponse.getMessage(), Toast.LENGTH_LONG);
+                        Toaster.makeText(context, mAddPromoResponse.getMessage(), Toast.LENGTH_LONG);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
