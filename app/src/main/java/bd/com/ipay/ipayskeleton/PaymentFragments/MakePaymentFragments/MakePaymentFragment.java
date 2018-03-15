@@ -24,8 +24,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,19 +35,25 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.BusinessContactPickerDialogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Api.ResourceApi.GetAllBusinessListAsyncTask;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.BusinessContactsSearchView;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.DatabaseHelper.DataHelper;
 import bd.com.ipay.ipayskeleton.Model.BusinessContact.GetAllBusinessContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.UserAddress;
@@ -62,6 +66,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -76,6 +81,8 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private HttpRequestGetAsyncTask mGetProfileInfoTask = null;
     private GetUserInfoResponse mGetUserInfoResponse;
 
+    private HttpRequestPostAsyncTask mPaymentTask = null;
+    private PaymentRequest mPaymentRequest;
 
     private Button buttonPayment;
     private ImageView buttonSelectFromContacts;
@@ -106,8 +113,14 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     private String mDistrict;
     private String mCountry;
     private String mThana;
+    private String mAmount;
+    private String mReceiver;
+
+    private double latitude = 0.0;
+    private double longitude = 0.0;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     private LocationManager locationManager;
 
@@ -242,7 +255,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                                 getLocationAndLaunchReviewPage();
                             }
                         } else {
-                            launchReviewPage(null);
+                            attemptPaymentWithPinCheck();
                         }
                     }
                 } else if (getActivity() != null)
@@ -266,6 +279,33 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             }
         });
 
+        mMobileNumberEditText.setCustomTextChangeListener(new BusinessContactsSearchView.CustomTextChangeListener() {
+            @Override
+            public void onTextChange(String inputText) {
+                if (Utilities.isConnectionAvailable(getActivity()) && InputValidator.isValidNumber(inputText)) {
+                    getProfileInfo(inputText);
+                }
+            }
+
+            @Override
+            public void onTextChange(String inputText, String name, String imageURL) {
+                mobileNumberView.setVisibility(View.GONE);
+                profileView.setVisibility(View.VISIBLE);
+
+                if (!imageURL.isEmpty()) {
+                    mReceiverPhotoUri = imageURL;
+                    businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
+                }
+                if (!name.isEmpty()) {
+                    mReceiverName = name;
+                    businessNameTextView.setText(mReceiverName);
+                }
+
+                mMobileNumberEditText.clearSelectedData();
+            }
+        });
+
+
         // Get business rule
         attemptGetBusinessRule(Constants.SERVICE_ID_MAKE_PAYMENT);
         // Start a syncing for business account list
@@ -274,34 +314,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         return v;
     }
 
-    @SuppressLint("MissingPermission")
-    private void getLocationAndLaunchReviewPage() {
-        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            mProgressDialog.setMessage(getString(R.string.please_wait));
-            mProgressDialog.show();
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this, Looper.getMainLooper());
-        } else {
-            Utilities.showGPSHighAccuracyDialog(this);
-        }
-    }
-
-    private void getProfileInfo(String mobileNumber) {
-        if (mGetProfileInfoTask != null) {
-            return;
-        }
-
-        GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
-
-        String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
-        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                mUri, getContext(), this);
-        mProgressDialog.setMessage(getActivity().getString(R.string.loading));
-        mProgressDialog.setMessage(getString(R.string.please_wait));
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
-        mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
 
     @Override
     public void onResume() {
@@ -330,9 +342,22 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
-            if (mobileNumber != null) {
+            String name = data.getStringExtra(Constants.BUSINESS_NAME);
+            String imageURL = data.getStringExtra(Constants.PROFILE_PICTURE);
+
+            if (mobileNumber != null)
                 mMobileNumberEditText.setText(mobileNumber);
-                getProfileInfo(ContactEngine.formatMobileNumberBD(mobileNumber));
+
+            mobileNumberView.setVisibility(View.GONE);
+            profileView.setVisibility(View.VISIBLE);
+
+            if (!imageURL.isEmpty()) {
+                mReceiverPhotoUri = imageURL;
+                businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
+            }
+            if (!name.isEmpty()) {
+                mReceiverName = name;
+                businessNameTextView.setText(mReceiverName);
             }
         } else if (requestCode == PAYMENT_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
@@ -444,19 +469,17 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mProgressDialog.dismiss();
         getActivity().getIntent().setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        String receiver;
-
         if (TextUtils.isEmpty(mReceiverMobileNumber)) {
-            receiver = mMobileNumberEditText.getText().toString().trim();
+            mReceiver = mMobileNumberEditText.getText().toString().trim();
         } else {
-            receiver = mReceiverMobileNumber;
+            mReceiver = mReceiverMobileNumber;
         }
         BigDecimal amount = new BigDecimal(mAmountEditText.getText().toString().trim());
         String referenceNumber = mRefNumberEditText.getText().toString().trim();
         String description = mDescriptionEditText.getText().toString().trim();
         Intent intent = new Intent(getActivity(), PaymentReviewActivity.class);
         intent.putExtra(Constants.AMOUNT, amount);
-        intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(receiver));
+        intent.putExtra(Constants.RECEIVER_MOBILE_NUMBER, ContactEngine.formatMobileNumberBD(mReceiver));
         intent.putExtra(Constants.DESCRIPTION_TAG, description);
         intent.putExtra(Constants.REFERENCE_NUMBER, referenceNumber);
         intent.putExtra(Constants.ADDRESS, mAddressString);
@@ -474,6 +497,79 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             intent.putExtra(Constants.PHOTO_URI, mReceiverPhotoUri);
         }
         startActivityForResult(intent, PAYMENT_REVIEW_REQUEST);
+    }
+
+    private void attemptPaymentWithPinCheck() {
+        if (PaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+            new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
+                @Override
+                public void ifPinCheckedAndAdded(String pin) {
+                    attemptPayment(pin);
+                }
+            });
+        } else {
+            attemptPayment(null);
+        }
+    }
+
+    private void attemptPayment(String pin) {
+
+        if (TextUtils.isEmpty(mReceiverMobileNumber)) {
+            mReceiver = mMobileNumberEditText.getText().toString().trim();
+        } else {
+            mReceiver = mReceiverMobileNumber;
+        }
+        mAmount = mAmountEditText.getText().toString().trim();
+        String referenceNumber = mRefNumberEditText.getText().toString().trim();
+        String description = mDescriptionEditText.getText().toString().trim();
+
+        if (mPaymentTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.progress_dialog_text_payment));
+        mProgressDialog.show();
+        mProgressDialog.setCancelable(false);
+        mPaymentRequest = new PaymentRequest(
+                ContactEngine.formatMobileNumberBD(mReceiver),
+                mAmount, description, pin, referenceNumber, latitude, longitude);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(mPaymentRequest);
+        mPaymentTask = new HttpRequestPostAsyncTask(Constants.COMMAND_PAYMENT,
+                Constants.BASE_URL_SM + Constants.URL_PAYMENT, json, getActivity());
+        mPaymentTask.mHttpResponseListener = this;
+        mPaymentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+
+    @SuppressLint("MissingPermission")
+    private void getLocationAndLaunchReviewPage() {
+        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            mProgressDialog.setMessage(getString(R.string.please_wait));
+            mProgressDialog.show();
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this, Looper.getMainLooper());
+        } else {
+            Utilities.showGPSHighAccuracyDialog(this);
+        }
+    }
+
+    private void getProfileInfo(String mobileNumber) {
+        if (mGetProfileInfoTask != null) {
+            return;
+        }
+
+        GetUserInfoRequestBuilder mGetUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
+
+        String mUri = mGetUserInfoRequestBuilder.getGeneratedUri();
+        mGetProfileInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
+                mUri, getContext(), this);
+        mProgressDialog.setMessage(getActivity().getString(R.string.loading));
+        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+        mGetProfileInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void attemptGetBusinessRule(int serviceID) {
@@ -494,7 +590,11 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
     @Override
     public void onLocationChanged(Location location) {
-        launchReviewPage(location);
+        longitude = location.getLongitude();
+        latitude = location.getLatitude();
+
+        attemptPaymentWithPinCheck();
+
         if (locationManager != null)
             locationManager.removeUpdates(this);
     }
@@ -517,6 +617,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
+        Gson gson = new Gson();
 
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -530,7 +631,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
-                    Gson gson = new Gson();
 
                     BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
 
@@ -561,14 +661,14 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
 
             mGetBusinessRuleTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
-            Gson gson = new Gson();
+
             try {
                 mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mobileNumberView.setVisibility(View.GONE);
                     profileView.setVisibility(View.VISIBLE);
-                    String name = mGetUserInfoResponse.getName();
+                    mReceiverName= mGetUserInfoResponse.getName();
                     if (mGetUserInfoResponse.getAddressList() != null) {
                         if (mGetUserInfoResponse.getAddressList().getOFFICE() != null) {
                             List<UserAddress> office = mGetUserInfoResponse.getAddressList().getOFFICE();
@@ -612,11 +712,11 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                         mReceiverPhotoUri = profilePicture;
                         businessProfileImageView.setBusinessProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture, false);
                     }
-                    if (TextUtils.isEmpty(name)) {
+                    if (TextUtils.isEmpty(mReceiverName)) {
                         businessNameTextView.setVisibility(View.GONE);
                     } else {
                         businessNameTextView.setVisibility(View.VISIBLE);
-                        businessNameTextView.setText(name);
+                        businessNameTextView.setText(mReceiverName);
                     }
 
                 } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
@@ -636,6 +736,67 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             }
 
             mGetProfileInfoTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_PAYMENT)) {
+
+            try {
+                PaymentResponse mPaymentResponse = gson.fromJson(result.getJsonString(), PaymentResponse.class);
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (getActivity() != null)
+                        Toaster.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG);
+                    getActivity().setResult(Activity.RESULT_OK);
+                    switchToPaymentSuccessFragment(mReceiverName, mReceiverPhotoUri, mPaymentResponse.getTransactionId());
+
+                    Utilities.sendSuccessEventTracker(mTracker, "Make Payment", ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
+
+                    //getActivity().finish();
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    ((MyApplication) getActivity().getApplication()).launchLoginPage(mPaymentResponse.getMessage());
+                    Utilities.sendBlockedEventTracker(mTracker, "Make Payment", ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
+
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    Toast.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    SecuritySettingsActivity.otpDuration = mPaymentResponse.getOtpValidFor();
+                    launchOTPVerification();
+                } else {
+                    if (getActivity() != null)
+                        Toaster.makeText(getActivity(), mPaymentResponse.getMessage(), Toast.LENGTH_LONG);
+
+                    //Google Analytic event
+                    Utilities.sendFailedEventTracker(mTracker, "Make Payment", ProfileInfoCacheManager.getAccountId(), mPaymentResponse.getMessage(), new BigDecimal(mAmount).longValue());
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
+            }
+
+            mProgressDialog.dismiss();
+            mPaymentTask = null;
+
         }
     }
+
+    private void switchToPaymentSuccessFragment(String name, String profilePictureUrl, String tansactionId) {
+        PaymentSucessFragment paymentSuccessFragment = new PaymentSucessFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.NAME, name);
+        bundle.putString(Constants.PHOTO_URI, profilePictureUrl);
+        bundle.putString(Constants.TRANSACTION_ID, tansactionId);
+        bundle.putString(Constants.AMOUNT, mAmount);
+        paymentSuccessFragment.setArguments(bundle);
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, paymentSuccessFragment).commit();
+
+    }
+
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mPaymentRequest);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_PAYMENT,
+                Constants.BASE_URL_SM + Constants.URL_PAYMENT, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
+    }
+
 }
