@@ -291,7 +291,7 @@ public class Constants {
             BASE_URL_WEB = "http://stage.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "http://10.10.40.10:8800/data-collector/v1/";
             SERVER_NAME = "stage";
-            BASE_URL_OFFER = "http://10.10.10.10:8070/offer_v2/api/v1/";
+            BASE_URL_OFFER = "http://stage.ipay.com.bd/offer_v2/api/v1/";
 
         } else if (SERVER_TYPE == LIVE_SERVER) {
 
@@ -336,7 +336,7 @@ public class Constants {
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "http://192.168.1.105:8800/data-collector/v1/";
             SERVER_NAME = "local";
-            BASE_URL_OFFER = "http://10.10.10.10:8070/offer_v2/api/v1/";
+            BASE_URL_OFFER = "http://dev.ipay.com.bd/offer_v2/api/v1/";
         }
     }
 
