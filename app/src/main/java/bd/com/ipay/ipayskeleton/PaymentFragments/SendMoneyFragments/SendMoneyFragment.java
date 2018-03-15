@@ -210,12 +210,22 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
+            String name = data.getStringExtra(Constants.NAME);
+            String imageURL = data.getStringExtra(Constants.PROFILE_PICTURE);
+
             if (mobileNumber != null)
                 mMobileNumberEditText.setText(mobileNumber);
-            if (Utilities.isConnectionAvailable(getActivity())) {
-                getUserInfo(mobileNumber);
-            }
 
+            mProfilePicHolderView.setVisibility(View.VISIBLE);
+            mMobileNumberHolderView.setVisibility(View.GONE);
+
+            if (!imageURL.isEmpty()) {
+                mProfileImageView.setProfilePicture(imageURL,
+                        false);
+            }
+            if (!name.isEmpty()) {
+                mNameTextView.setText(name);
+            }
         } else if (requestCode == SEND_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
         } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
