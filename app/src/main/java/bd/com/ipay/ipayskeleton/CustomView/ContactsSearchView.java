@@ -215,11 +215,6 @@ public class ContactsSearchView extends FrameLayout {
 
         @Override
         public void onTextChanged(CharSequence userInput, int start, int before, int count) {
-            if (userInput.length() > 0) {
-                if (CurrentFragmentTag() != null && CurrentFragmentTag().equals(Constants.TOP_UP))
-                    customTextChangeListener.onTextChange(userInput.toString());
-            }
-
             mQuery = userInput.toString();
 
             try {
@@ -300,7 +295,9 @@ public class ContactsSearchView extends FrameLayout {
                 @Override
                 public void onClick(View v) {
                     setText(mobileNumber);
-                    mName = originalName;
+                    if (originalName != null)
+                        mName = originalName;
+                    else mName = name;
                     mImageURL = profilePictureUrlQualityMedium;
                     mCustomAutoCompleteView.clearFocus();
                 }

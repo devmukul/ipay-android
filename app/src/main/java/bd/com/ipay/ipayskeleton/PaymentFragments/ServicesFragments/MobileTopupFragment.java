@@ -22,19 +22,28 @@ import java.util.Arrays;
 import java.util.List;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
+import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
+import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomSelectorDialogWithIcon;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
+import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoRequestBuilder;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
+import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -44,6 +53,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
+import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
@@ -54,6 +64,10 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     private final int PICK_CONTACT_REQUEST = 100;
 
     private HttpRequestGetAsyncTask mGetBusinessRuleTask = null;
+    private HttpRequestGetAsyncTask mGetUserInfoTask;
+    private HttpRequestPostAsyncTask mTopupTask = null;
+    private TopupResponse mTopupResponse;
+    private TopupRequest mTopupRequestModel;
 
     private CustomContactsSearchView mMobileNumberEditText;
     private EditText mAmountEditText;
@@ -63,6 +77,11 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     private Button mRechargeButton;
     private TextView mMobileTopUpInfoTextView;
     private ProgressDialog mProgressDialog;
+    private View mProfilePicHolderView;
+    private View mMobileNumberHolderView;
+    private View mIconEditMobileNumber;
+    private ProfileImageView mProfileImageView;
+    private TextView mNameTextView;
 
     private List<String> mPackageList;
     private List<String> mOperatorList;
@@ -71,6 +90,10 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     private int mSelectedPackageTypeId = -1;
     private int mSelectedOperatorTypeId = 0;
     private String mUserMobileNumber;
+    private String mMobileNumber;
+    private double mAmount;
+
+    private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,6 +107,11 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         mSelectReceiverButton = (ImageView) view.findViewById(R.id.select_receiver_from_contacts);
         mRechargeButton = (Button) view.findViewById(R.id.button_recharge);
         mMobileTopUpInfoTextView = (TextView) view.findViewById(R.id.text_view_mobile_restriction_info);
+        mProfilePicHolderView = view.findViewById(R.id.profile_pic_holder);
+        mMobileNumberHolderView = view.findViewById(R.id.mobile_number_holder);
+        mIconEditMobileNumber = view.findViewById(R.id.edit_icon_mobile_number);
+        mProfileImageView = (ProfileImageView) view.findViewById(R.id.receiver_profile_image_view);
+        mNameTextView = (TextView) view.findViewById(R.id.receiver_name_text_view);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -124,7 +152,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                     // For now, we are directly sending the money without going through any send money query
                     // sendMoneyQuery();
                     if (verifyUserInputs()) {
-                        launchReviewPage();
+                        attemptTopUpWithPinCheck();
                     }
                 } else if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG);
@@ -154,6 +182,15 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
 
             mMobileNumberEditText.requestFocus();
         }
+
+        mIconEditMobileNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mProfilePicHolderView.setVisibility(View.GONE);
+                mMobileNumberHolderView.setVisibility(View.VISIBLE);
+            }
+        });
+
         // Get business rule
         attemptGetBusinessRule(Constants.SERVICE_ID_TOP_UP);
 
@@ -172,13 +209,28 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             @Override
             public void onTextChange(String inputText) {
                 setOperator(inputText);
+                if (Utilities.isConnectionAvailable(getActivity()) && InputValidator.isValidNumber(inputText)) {
+                    getUserInfo(inputText);
+                }
             }
 
             @Override
             public void onTextChange(String inputText, String name, String imageURL) {
+                mProfilePicHolderView.setVisibility(View.VISIBLE);
+                mMobileNumberHolderView.setVisibility(View.GONE);
 
+                if (!imageURL.isEmpty()) {
+                    mProfileImageView.setProfilePicture(imageURL,
+                            false);
+                }
+                if (!name.isEmpty()) {
+                    mNameTextView.setText(name);
+                }
+
+                mMobileNumberEditText.clearSelectedData();
             }
         });
+
         mMobileNumberEditText.setText(mUserMobileNumber);
     }
 
@@ -272,9 +324,9 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             cancel = true;
         }
 
-        String mobileNumber = mMobileNumberEditText.getText().toString().trim();
+        mMobileNumber = mMobileNumberEditText.getText().toString().trim();
 
-        if (!mobileNumber.matches(InputValidator.MOBILE_NUMBER_REGEX)) {
+        if (!mMobileNumber.matches(InputValidator.MOBILE_NUMBER_REGEX)) {
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));
             focusView = mMobileNumberEditText;
             cancel = true;
@@ -293,8 +345,22 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         if (requestCode == PICK_CONTACT_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 String mobileNumber = data.getStringExtra(Constants.MOBILE_NUMBER);
+                String name = data.getStringExtra(Constants.NAME);
+                String imageURL = data.getStringExtra(Constants.PROFILE_PICTURE);
+
                 if (mobileNumber != null)
                     mMobileNumberEditText.setText(mobileNumber);
+
+                mProfilePicHolderView.setVisibility(View.VISIBLE);
+                mMobileNumberHolderView.setVisibility(View.GONE);
+
+                if (!imageURL.isEmpty()) {
+                    mProfileImageView.setProfilePicture(imageURL,
+                            false);
+                }
+                if (!name.isEmpty()) {
+                    mNameTextView.setText(name);
+                }
             }
         } else if (requestCode == MOBILE_TOPUP_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             if (getActivity() != null)
@@ -342,6 +408,23 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
 
     }
 
+    private void getUserInfo(String mobileNumber) {
+        GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
+
+        if (mGetUserInfoTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+        mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
+                getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
+        mGetUserInfoTask.mHttpResponseListener = MobileTopupFragment.this;
+        mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+    }
+
     private void attemptGetBusinessRule(int serviceID) {
         if (mGetBusinessRuleTask != null) {
             return;
@@ -357,20 +440,69 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         mGetBusinessRuleTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void attemptTopUpWithPinCheck() {
+        if (TopUpActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+            new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
+                @Override
+                public void ifPinCheckedAndAdded(String pin) {
+                    attemptTopUp(pin);
+                }
+            });
+        } else {
+            attemptTopUp(null);
+        }
+
+    }
+
+    private void attemptTopUp(String pin) {
+        mAmount = Math.floor(Double.parseDouble(mAmountEditText.getText().toString().trim()));
+
+        int mobileNumberType;
+        if (mSelectedPackageTypeId > 0)
+            mobileNumberType = Constants.MOBILE_TYPE_POSTPAID;
+        else
+            mobileNumberType = Constants.MOBILE_TYPE_PREPAID;
+        SharedPrefManager.setMobileNumberType(mobileNumberType);
+
+        int operatorCode = mSelectedOperatorTypeId + 1;
+        String countryCode = "+88"; // TODO: For now Bangladesh Only
+
+        if (mTopupTask != null)
+            return;
+        mTopupRequestModel = new TopupRequest(Long.parseLong(mMobileNumber.replaceAll("[^0-9]", "")),
+                mMobileNumber, mobileNumberType, operatorCode, mAmount,
+                countryCode, mobileNumberType, Constants.DEFAULT_USER_CLASS, pin);
+
+        mProgressDialog.setMessage(getString(R.string.dialog_requesting_top_up));
+        mProgressDialog.show();
+        mProgressDialog.setCancelable(false);
+        Gson gson = new Gson();
+        String json = gson.toJson(mTopupRequestModel);
+        mTopupTask = new HttpRequestPostAsyncTask(Constants.COMMAND_TOPUP_REQUEST,
+                Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, json, getActivity());
+        mTopupTask.mHttpResponseListener = this;
+        mTopupTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void launchOTPVerification() {
+        String jsonString = new Gson().toJson(mTopupRequestModel);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog = new OTPVerificationForTwoFactorAuthenticationServicesDialog(getActivity(), jsonString, Constants.COMMAND_TOPUP_REQUEST,
+                Constants.BASE_URL_SM + Constants.URL_TOPUP_REQUEST, Constants.METHOD_POST);
+        mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
+        Gson gson = new Gson();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mProgressDialog.dismiss();
-            if (getActivity() != null)
-                Toaster.makeText(getActivity(), R.string.service_not_available, Toast.LENGTH_SHORT);
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
                 try {
-                    Gson gson = new Gson();
 
                     BusinessRule[] businessRuleArray = gson.fromJson(result.getJsonString(), BusinessRule[].class);
 
@@ -397,6 +529,88 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             }
 
             mGetBusinessRuleTask = null;
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
+            try {
+                GetUserInfoResponse mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
+
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mProfilePicHolderView.setVisibility(View.VISIBLE);
+                    mMobileNumberHolderView.setVisibility(View.GONE);
+
+                    String name = mGetUserInfoResponse.getName();
+
+                    if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
+                        String profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
+                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture,
+                                false);
+                    }
+                    mNameTextView.setText(name);
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+
+            mGetUserInfoTask = null;
+            mProgressDialog.dismiss();
+        }
+        else if (result.getApiCommand().equals(Constants.COMMAND_TOPUP_REQUEST)) {
+            try {
+                mTopupResponse = gson.fromJson(result.getJsonString(), TopupResponse.class);
+                if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {
+                    if (getActivity() != null) {
+                        Toaster.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG);
+                        getActivity().setResult(Activity.RESULT_OK);
+                        getActivity().finish();
+
+                        //Google Analytic event
+                        Utilities.sendSuccessEventTracker(mTracker, "TopUp Processing", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
+                    }
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    if (getActivity() != null) {
+                        Toaster.makeText(getActivity(), R.string.progress_dialog_processing, Toast.LENGTH_LONG);
+                        getActivity().setResult(Activity.RESULT_OK);
+                        getActivity().finish();
+
+                        //Google Analytic event
+                        Utilities.sendSuccessEventTracker(mTracker, "TopUp", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
+                    }
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BLOCKED) {
+                    if (getActivity() != null)
+                        ((MyApplication) getActivity().getApplication()).launchLoginPage(mTopupResponse.getMessage());
+                    Utilities.sendBlockedEventTracker(mTracker, "Topup", ProfileInfoCacheManager.getAccountId(), Double.valueOf(mAmount).longValue());
+
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_BAD_REQUEST) {
+                    final String errorMessage;
+                    if (!TextUtils.isEmpty(mTopupResponse.getMessage())) {
+                        errorMessage = mTopupResponse.getMessage();
+                    } else {
+                        errorMessage = getString(R.string.recharge_failed);
+                    }
+                    Toaster.makeText(getActivity(), mTopupResponse.getMessage(), Toast.LENGTH_LONG);
+                    //Google Analytic event
+                    Utilities.sendFailedEventTracker(mTracker, "TopUp", ProfileInfoCacheManager.getAccountId(), errorMessage, Double.valueOf(mAmount).longValue());
+                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_ACCEPTED || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_EXPIRED) {
+                    Toast.makeText(getActivity(), mTopupResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    SecuritySettingsActivity.otpDuration = mTopupResponse.getOtpValidFor();
+                    launchOTPVerification();
+                } else {
+                    if (getActivity() != null)
+                        Toaster.makeText(getActivity(), mTopupResponse.getMessage(), Toast.LENGTH_LONG);
+
+                    //Google Analytic event
+                    Utilities.sendFailedEventTracker(mTracker, "TopUp", ProfileInfoCacheManager.getAccountId(), getString(R.string.recharge_failed), Double.valueOf(mAmount).longValue());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (getActivity() != null)
+                    Toaster.makeText(getActivity(), R.string.recharge_failed, Toast.LENGTH_LONG);
+                Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
+            }
+
+            mTopupTask = null;
         }
     }
 }
