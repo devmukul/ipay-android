@@ -31,6 +31,7 @@ import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
+import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
@@ -138,6 +139,26 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             }
         });
 
+        mMobileNumberEditText.setCustomTextChangeListener(new ContactsSearchView.CustomTextChangeListener() {
+            @Override
+            public void onTextChange(String inputText) {
+                if (Utilities.isConnectionAvailable(getActivity()) && InputValidator.isValidNumber(inputText)) {
+                    getUserInfo(inputText);
+                }
+            }
+        });
+        mMobileNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    String mobileNumber = mMobileNumberEditText.getText().toString().trim();
+                    if (InputValidator.isValidNumber(mobileNumber)) {
+                        getUserInfo(mobileNumber);
+                    }
+                }
+            }
+        });
+
         // Get business rule
         attemptGetBusinessRule(Constants.SERVICE_ID_SEND_MONEY);
 
@@ -171,19 +192,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             if (mobileNumber != null)
                 mMobileNumberEditText.setText(mobileNumber);
             if (Utilities.isConnectionAvailable(getActivity())) {
-                GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
-
-                if (mGetUserInfoTask != null) {
-                    return;
-                }
-
-                mProgressDialog.setMessage(getString(R.string.please_wait));
-                mProgressDialog.setCancelable(false);
-                mProgressDialog.show();
-                mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                        getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
-                mGetUserInfoTask.mHttpResponseListener = SendMoneyFragment.this;
-                mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                getUserInfo(mobileNumber);
             }
 
         } else if (requestCode == SEND_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
@@ -204,19 +213,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                             mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
                             if (Utilities.isConnectionAvailable(getActivity())) {
                                 String mobileNumber = ContactEngine.formatMobileNumberBD(result);
-                                GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
-
-                                if (mGetUserInfoTask != null) {
-                                    return;
-                                }
-
-                                mProgressDialog.setMessage(getString(R.string.please_wait));
-                                mProgressDialog.setCancelable(false);
-                                mProgressDialog.show();
-                                mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                                        getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
-                                mGetUserInfoTask.mHttpResponseListener = SendMoneyFragment.this;
-                                mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                getUserInfo(mobileNumber);
                             } else {
                                 Toaster.makeText(getActivity(), getResources().getString(
                                         R.string.no_internet_connection), Toast.LENGTH_SHORT);
@@ -296,6 +293,23 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         } else {
             return true;
         }
+    }
+
+    private void getUserInfo(String mobileNumber) {
+        GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
+
+        if (mGetUserInfoTask != null) {
+            return;
+        }
+
+        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+        mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
+                getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
+        mGetUserInfoTask.mHttpResponseListener = SendMoneyFragment.this;
+        mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
     private void launchReviewPage() {
@@ -386,11 +400,6 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                                 false);
                     }
                     mNameTextView.setText(name);
-
-                } else if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
-
-                } else {
-                    Toaster.makeText(getActivity(), R.string.profile_info_get_failed, Toast.LENGTH_SHORT);
 
                 }
 

@@ -24,6 +24,7 @@ import bd.com.ipay.ipayskeleton.Model.Contact.DBContactNode;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.TokenManager;
 
 public class ContactsSearchView extends FrameLayout {
@@ -62,6 +63,16 @@ public class ContactsSearchView extends FrameLayout {
         mCustomAutoCompleteView = (CustomAutoCompleteView) view.findViewById(R.id.auto_complete_view);
 
         mCustomAutoCompleteView.addTextChangedListener(new CustomAutoCompleteTextChangedListener());
+
+        mCustomAutoCompleteView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    String inputString = mCustomAutoCompleteView.getText().toString().trim();
+                    customTextChangeListener.onTextChange(inputString);
+                }
+            }
+        });
 
         mContactList = new ArrayList<>();
         setBusinessContactAdapter(mContactList);
@@ -138,12 +149,11 @@ public class ContactsSearchView extends FrameLayout {
     private void readContactsFromDB() {
         Cursor mCursor;
         DataHelper dataHelper = DataHelper.getInstance(mContext);
-        if(!ProfileInfoCacheManager.isAccountSwitched()) {
+        if (!ProfileInfoCacheManager.isAccountSwitched()) {
             mCursor = dataHelper.searchContacts(mQuery, mFilterByiPayMembersOnly, mFilterByBusinessMembersOnly, false,
                     mFilterByVerifiedUsersOnly, false, false, null);
-        }
-        else{
-            mCursor=dataHelper.searchBusinessContacts(mQuery,mFilterByiPayMembersOnly, mFilterByBusinessMembersOnly, false,
+        } else {
+            mCursor = dataHelper.searchBusinessContacts(mQuery, mFilterByiPayMembersOnly, mFilterByBusinessMembersOnly, false,
                     mFilterByVerifiedUsersOnly, false, false, null, Long.parseLong(TokenManager.getOnAccountId()));
         }
 
@@ -182,6 +192,7 @@ public class ContactsSearchView extends FrameLayout {
 
         @Override
         public void afterTextChanged(Editable s) {
+
         }
 
         @Override
@@ -276,6 +287,7 @@ public class ContactsSearchView extends FrameLayout {
                 @Override
                 public void onClick(View v) {
                     setText(mobileNumber);
+                    mCustomAutoCompleteView.clearFocus();
                 }
             });
 
