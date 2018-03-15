@@ -173,6 +173,11 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             public void onTextChange(String inputText) {
                 setOperator(inputText);
             }
+
+            @Override
+            public void onTextChange(String inputText, String name, String imageURL) {
+
+            }
         });
         mMobileNumberEditText.setText(mUserMobileNumber);
     }

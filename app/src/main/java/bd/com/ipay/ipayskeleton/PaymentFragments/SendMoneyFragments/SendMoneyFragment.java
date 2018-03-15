@@ -162,16 +162,21 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                     getUserInfo(inputText);
                 }
             }
-        });
-        mMobileNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    String mobileNumber = mMobileNumberEditText.getText().toString().trim();
-                    if (InputValidator.isValidNumber(mobileNumber)) {
-                        getUserInfo(mobileNumber);
-                    }
+            public void onTextChange(String inputText, String name, String imageURL) {
+                mProfilePicHolderView.setVisibility(View.VISIBLE);
+                mMobileNumberHolderView.setVisibility(View.GONE);
+
+                if (!imageURL.isEmpty()) {
+                    mProfileImageView.setProfilePicture(imageURL,
+                            false);
                 }
+                if (!name.isEmpty()) {
+                    mNameTextView.setText(name);
+                }
+
+                mMobileNumberEditText.clearSelectedData();
             }
         });
 

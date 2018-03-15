@@ -36,6 +36,8 @@ public class ContactsSearchView extends FrameLayout {
     private List<DBContactNode> mContactList;
     private String mQuery = "";
     private Context mContext;
+    private String mImageURL = "";
+    private String mName = "";
 
     private CustomTextChangeListener customTextChangeListener;
 
@@ -69,7 +71,11 @@ public class ContactsSearchView extends FrameLayout {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     String inputString = mCustomAutoCompleteView.getText().toString().trim();
-                    customTextChangeListener.onTextChange(inputString);
+
+                    if (mName.isEmpty() && mImageURL.isEmpty())
+                        customTextChangeListener.onTextChange(inputString);
+                    else
+                        customTextChangeListener.onTextChange(inputString, mName, mImageURL);
                 }
             }
         });
@@ -88,6 +94,11 @@ public class ContactsSearchView extends FrameLayout {
         mCustomAutoCompleteView.setError(null);
 
         hideSuggestionList();
+    }
+
+    public void clearSelectedData() {
+        mName = "";
+        mImageURL = "";
     }
 
     public void setError(String error) {
@@ -186,6 +197,8 @@ public class ContactsSearchView extends FrameLayout {
 
     public interface CustomTextChangeListener {
         void onTextChange(String inputText);
+
+        void onTextChange(String inputText, String name, String imageURL);
     }
 
     public class CustomAutoCompleteTextChangedListener implements TextWatcher {
@@ -287,6 +300,8 @@ public class ContactsSearchView extends FrameLayout {
                 @Override
                 public void onClick(View v) {
                     setText(mobileNumber);
+                    mName = originalName;
+                    mImageURL = profilePictureUrlQualityMedium;
                     mCustomAutoCompleteView.clearFocus();
                 }
             });
