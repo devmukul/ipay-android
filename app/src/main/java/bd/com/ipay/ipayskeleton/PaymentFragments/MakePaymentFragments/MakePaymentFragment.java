@@ -171,7 +171,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             mobileNumberView.setVisibility(View.GONE);
             profileView.setVisibility(View.VISIBLE);
             mReceiverMobileNumber = getActivity().getIntent().getStringExtra(Constants.MOBILE_NUMBER);
-            businessMobileNumberTextView.setText(mReceiverMobileNumber);
+            mMobileNumberEditText.setText(mReceiverMobileNumber);
             if (getActivity().getIntent().hasExtra(Constants.NAME)) {
                 mReceiverName = getActivity().getIntent().getStringExtra(Constants.NAME);
                 if (TextUtils.isEmpty(mReceiverName)) {
