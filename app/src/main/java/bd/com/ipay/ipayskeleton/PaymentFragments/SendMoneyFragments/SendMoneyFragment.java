@@ -457,8 +457,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             }
 
             mGetBusinessRuleTask = null;
-        }
-        if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_GET_USER_INFO)) {
             try {
                 GetUserInfoResponse mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
 
@@ -484,8 +483,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
 
             mGetUserInfoTask = null;
             mProgressDialog.dismiss();
-        }
-        if (result.getApiCommand().equals(Constants.COMMAND_SEND_MONEY)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_SEND_MONEY)) {
 
             try {
                 SendMoneyResponse mSendMoneyResponse = gson.fromJson(result.getJsonString(), SendMoneyResponse.class);
