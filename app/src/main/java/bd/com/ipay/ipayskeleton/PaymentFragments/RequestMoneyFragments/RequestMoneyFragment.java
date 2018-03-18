@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,10 +30,12 @@ import java.math.BigDecimal;
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.RequestMoneyReviewActivity;
+import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
@@ -43,6 +46,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.RequestMoney.RequestMoneyResponse;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -77,10 +81,12 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
     private ProfileImageView mProfileImageView;
     private TextView mNameTextView;
     private ProgressDialog mProgressDialog;
-
+    private CheckBox addToContactCheckBox;
     private String mMobileNumber;
     private String mAmount;
     private String mDescription;
+    private String mName;
+    private String mProfilePicture;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,6 +109,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         mMobileNumberHolderView = v.findViewById(R.id.mobile_number_holder);
         mIconEditMobileNumber = v.findViewById(R.id.edit_icon_mobile_number);
         mNameTextView = (TextView) v.findViewById(R.id.receiver_name_text_view);
+        addToContactCheckBox = (CheckBox) v.findViewById(R.id.add_to_contact_check_box);
 
         mMobileNumberEditText.setCurrentFragmentTag(Constants.REQUEST_MONEY);
 
@@ -138,6 +145,9 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
                 if (Utilities.isConnectionAvailable(getActivity())) {
                     if (verifyUserInputs())
                         attemptRequestMoney();
+                    if (addToContactCheckBox.isChecked()) {
+                        addContact(mName, mMobileNumber, null);
+                    }
                 } else if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG);
             }
@@ -148,19 +158,25 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
             public void onClick(View v) {
                 mProfilePicHolderView.setVisibility(View.GONE);
                 mMobileNumberHolderView.setVisibility(View.VISIBLE);
+
+                addToContactCheckBox.setVisibility(View.GONE);
+                addToContactCheckBox.setChecked(false);
             }
         });
 
         mMobileNumberEditText.setCustomTextChangeListener(new ContactsSearchView.CustomTextChangeListener() {
             @Override
             public void onTextChange(String inputText) {
+                Toaster.makeText(getActivity(), "only" + inputText, Toast.LENGTH_LONG);
                 if (Utilities.isConnectionAvailable(getActivity()) && InputValidator.isValidNumber(inputText)) {
-                    getUserInfo(inputText);
+
+                    getUserInfo(ContactEngine.formatMobileNumberBD(inputText));
                 }
             }
 
             @Override
             public void onTextChange(String inputText, String name, String imageURL) {
+                Toaster.makeText(getActivity(), "with" + name , Toast.LENGTH_LONG);
                 mProfilePicHolderView.setVisibility(View.VISIBLE);
                 mMobileNumberHolderView.setVisibility(View.GONE);
 
@@ -360,6 +376,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
     }
 
     private void getUserInfo(String mobileNumber) {
+        mMobileNumber = mobileNumber;
         GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
 
         if (mGetUserInfoTask != null) {
@@ -396,6 +413,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
             return;
         }
 
+        Utilities.hideKeyboard(getActivity());
         mProgressDialog.setMessage(getString(R.string.requesting_money));
         mProgressDialog.show();
         mProgressDialog.setCancelable(false);
@@ -409,6 +427,15 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         mRequestMoneyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    @ValidateAccess
+    private void addContact(String name, String phoneNumber, String relationship) {
+        AddContactRequestBuilder addContactRequestBuilder = new
+                AddContactRequestBuilder(name, phoneNumber, relationship);
+
+        new AddContactAsyncTask(Constants.COMMAND_ADD_CONTACTS,
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(),
+                getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
@@ -416,6 +443,7 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         Gson gson = new Gson();
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
+            mGetUserInfoTask = null;
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
@@ -457,14 +485,19 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
                     mProfilePicHolderView.setVisibility(View.VISIBLE);
                     mMobileNumberHolderView.setVisibility(View.GONE);
 
-                    String name = mGetUserInfoResponse.getName();
+                    if (!new ContactSearchHelper(getActivity()).searchMobileNumber(mMobileNumber)) {
+                        addToContactCheckBox.setVisibility(View.VISIBLE);
+                        addToContactCheckBox.setChecked(true);
+                    }
+
+                    mName = mGetUserInfoResponse.getName();
 
                     if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
-                        String profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
-                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture,
+                        mProfilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
+                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture,
                                 false);
                     }
-                    mNameTextView.setText(name);
+                    mNameTextView.setText(mName);
 
                 }
 

@@ -20,14 +20,10 @@ public class SendMoneyActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_money);
-        if (getIntent() != null && getIntent().getBooleanExtra(Constants.FROM_QR_SCAN, false)) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, new SendMoneyByQrCodeFragment()).commit();
 
-        } else {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, new SendMoneyFragment()).commit();
-        }
+
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
