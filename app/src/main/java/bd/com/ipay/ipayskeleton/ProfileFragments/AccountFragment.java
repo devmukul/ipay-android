@@ -473,7 +473,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
                     Intent intent = new Intent(Constants.PROFILE_COMPLETION_UPDATE_BROADCAST);
                     LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
 
-                    if (!mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
+                    if (!mProfileCompletionStatusResponse.isCompletedMandatoryFields()) {
                         mProfileCompletionStatusView.setText("Your profile is " +
                                 mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
                                 + "complete.\nSubmit documents and other information to improve your profile.");

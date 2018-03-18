@@ -132,6 +132,8 @@ public class Constants {
     public static final String LONGITUDE = "LONGITUDE";
     public static final String COMMAND_CHECK_VERSION = "COMMAND_CHECK_VERSION";
     public static final String THANA = "THANA";
+    public static final String ID = "ID";
+    public static final String BUSINESS_ACCOUNT_ID = "BUSINESS_ACCOUNT_ID";
     public static String ROLEID = "ROLEID";
 
     public static final String ADDRESS_TYPE = "ADDRESS_TYPE";
@@ -173,6 +175,7 @@ public class Constants {
     public static final int STARTING_MONTH = 01;
     public static final int STARTING_YEAR = 2016;
     public static final int DEFAULT_USER_CLASS = 1;
+    public static final int BUSINESS_ID_DEFAULT = -1;
 
     public static final int PHOTO_ID_FILE_MAX_SIZE = 5;
 
@@ -213,6 +216,7 @@ public class Constants {
     public static final String BASE_URL_WEB;
     public static final String BASE_URL_DATA_COLLECTOR;
     private static final String SERVER_NAME;
+    public static final String BASE_URL_OFFER;
 
     public static final int DEV_SERVER = 1;
     public static final int TEST_SERVER = 2;
@@ -260,6 +264,7 @@ public class Constants {
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "http://10.10.10.10:8800/data-collector/v1/";
             SERVER_NAME = "dev";
+            BASE_URL_OFFER = "http://10.10.10.10:8070/offer_v2/api/v1/";
 
         } else if (SERVER_TYPE == TEST_SERVER) {
 
@@ -274,6 +279,7 @@ public class Constants {
             BASE_URL_WEB = "http://test.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "http://10.15.40.10:8800/data-collector/v1/";
             SERVER_NAME = "test";
+            BASE_URL_OFFER = "https://test.ipay.com.bd/offer_v2/api/v1/";
 
         } else if (SERVER_TYPE == STAGE_SERVER) {
 
@@ -288,6 +294,7 @@ public class Constants {
             BASE_URL_WEB = "http://stage.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "http://10.10.40.10:8800/data-collector/v1/";
             SERVER_NAME = "stage";
+            BASE_URL_OFFER = "http://stage.ipay.com.bd/offer_v2/api/v1/";
 
         } else if (SERVER_TYPE == LIVE_SERVER) {
 
@@ -302,6 +309,7 @@ public class Constants {
             BASE_URL_WEB = "https://www.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "https://www.ipay.com.bd/data-collector/v1/";
             SERVER_NAME = "live";
+            BASE_URL_OFFER = "https://www.ipay.com.bd/offer_v2/api/v1/";
 
         } else if (SERVER_TYPE == DEMO_SERVER) {
 
@@ -316,6 +324,7 @@ public class Constants {
             BASE_URL_DATA_COLLECTOR = "https://demo.ipay.com.bd/data-collector/v1/";
             BASE_URL_WEB = "https://demo.ipay.com.bd";
             SERVER_NAME = "demo";
+            BASE_URL_OFFER = "https://demo.ipay.com.bd/offer_v2/api/v1/";
 
         } else {
 
@@ -330,6 +339,7 @@ public class Constants {
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "http://192.168.1.105:8800/data-collector/v1/";
             SERVER_NAME = "local";
+            BASE_URL_OFFER = "http://dev.ipay.com.bd/offer_v2/api/v1/";
         }
     }
 
@@ -371,7 +381,6 @@ public class Constants {
     public static final String URL_GET_TRUSTED_DEVICES = "device";
     public static final String URL_REMOVE_TRUSTED_DEVICE = "device/";
     // Documents Rest
-    public static final String URL_GET_DOCUMENTS = "docs/identification/documents";
     public static final String URL_GET_DOCUMENTS_v2 = "docs/identification/documents/v2";
     public static final String URL_GET_BUSINESS_DOCUMENTS = "docs/identification/documents/business";
     public static final String URL_GET_BUSINESS_DOCUMENTS_v2 = "docs/identification/documents/business/v2";
@@ -380,7 +389,6 @@ public class Constants {
     public static final String URL_UPLOAD_DOCUMENTS_V2 = "docs/identification/documents/v2";
     public static final String URL_UPLOAD_BUSINESS_DOCUMENTS = "docs/identification/documents/business";
     public static final String URL_UPLOAD_BUSINESS_DOCUMENTS_V2 = "docs/identification/documents/business/v2";
-    public static final String URL_GET_DOCUMENT_ACCESS_TOKEN = "user/contentAccessToken";
 
     // Fee Charge REST
     public static final String URL_SERVICE_CHARGE = "feecharge";
@@ -554,6 +562,9 @@ public class Constants {
     // FCM notification
     public static final String URL_REFRESH_FIREBASE_TOKEN = "firebase/login/";
 
+    // FCM notification
+    public static final String URL_PROMO_ACTIVE = "promo/activate";
+
     // User Data collector
     public static final String URL_ENDPOINT_LOCATION_COLLECTOR = "location";
 
@@ -624,6 +635,7 @@ public class Constants {
     public static final String COMMAND_REMOVE_A_BANK = "COMMAND_REMOVE_A_BANK";
     public static final String COMMAND_TOPUP_REQUEST = "COMMAND_TOPUP_REQUEST";
     public static final String COMMAND_SET_PIN = "COMMAND_SET_PIN";
+    public static final String COMMAND_ADD_PROMO = "COMMAND_ADD_PROMO";
     public static final String COMMAND_CHANGE_PASSWORD = "COMMAND_CHANGE_PASSWORD";
     public static final String COMMAND_CHANGE_PASSWORD_VALIDATION = "COMMAND_CHANGE_PASSWORD_VALIDATION";
     public static final String COMMAND_GET_PROFILE_INFO_REQUEST = "COMMAND_GET_PROFILE_INFO_REQUEST";
@@ -701,6 +713,7 @@ public class Constants {
     public static final String COMMAND_SET_BUSINESS_INFORMATION = "COMMAND_SET_BUSINESS_INFORMATION";
     public static final String COMMAND_GET_DETAILS_OF_BUSINESS_ROLE = "COMMAND_GET_DETAILS_OF_BUSINESS_ROLE";
     public static final String COMMAND_GET_ROLE_MAANGER_REQUESTS = "COMMAND_GET_ROLE_MAANGER_REQUESTS";
+    public static final String COMMAND_LEAVE_ACCOUNT = "COMMAND_LEAVE_ACCOUNT";
 
     public static final String COMMAND_CREATE_EMPLOYEE = "COMMAND_CREATE_EMPLOYEE";
     public static final String COMMAND_UPDATE_EMPLOYEE = "COMMAND_UPDATE_EMPLOYEE";

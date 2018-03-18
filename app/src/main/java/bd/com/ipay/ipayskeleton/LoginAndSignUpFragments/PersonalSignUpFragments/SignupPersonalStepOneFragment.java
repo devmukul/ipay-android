@@ -23,6 +23,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -74,35 +76,37 @@ public class SignupPersonalStepOneFragment extends BaseFragment implements HttpR
     private int mYear;
     private int mMonth;
     private int mDay;
+    private String mDayName;
+
     private final DatePickerDialog.OnDateSetListener mDateSetListener =
-            new DatePickerDialog.OnDateSetListener() {
-                public void onDateSet(DatePicker view, int year,
-                                      int monthOfYear, int dayOfMonth) {
-                    String[] mWeekArray, mMonthArray;
-                    String birthDate, birthMonth, birthYear;
-                    int dayofweek;
+        new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year,
+                                  int monthOfYear, int dayOfMonth) {
+                String[] mMonthArray;
+                String birthDate, birthMonth, birthYear;
 
-                    mYear = year;
-                    mMonth = monthOfYear + 1;
-                    mDay = dayOfMonth;
-                    mWeekArray = getResources().getStringArray(R.array.day_of_week);
-                    mMonthArray = getResources().getStringArray(R.array.month_name);
+                mYear = year;
+                mMonth = monthOfYear + 1;
+                mDay = dayOfMonth;
+                mMonthArray = getResources().getStringArray(R.array.month_name);
 
-                    if (mDay < 10) birthDate = "0" + mDay;
-                    else birthDate = mDay + "";
-                    if (mMonth < 10) birthMonth = "0" + mMonth;
-                    else birthMonth = mMonth + "";
-                    birthYear = mYear + "";
-
-                    Calendar c = Calendar.getInstance();
-                    c.setTime(new Date(mYear, mMonth - 1, mDay));
-                    dayofweek = c.get(Calendar.DAY_OF_WEEK);
-
-                    mDOB = birthDate + "/" + birthMonth + "/" + birthYear;
-                    mBirthdayEditText.setError(null);
-                    mBirthdayEditText.setText(mWeekArray[dayofweek - 1] + " , " + mDay + " " + mMonthArray[mMonth - 1] + " , " + mYear);
+                if (mDay < 10) birthDate = "0" + mDay;
+                else birthDate = mDay + "";
+                if (mMonth < 10) birthMonth = "0" + mMonth;
+                else birthMonth = mMonth + "";
+                birthYear = mYear + "";
+                mDOB = birthDate + "/" + birthMonth + "/" + birthYear;
+                try {
+                    Date date = new SimpleDateFormat("dd/MM/yyyy").parse(mDOB);
+                    mDayName = new SimpleDateFormat("EE").format(date);
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
-            };
+
+                mBirthdayEditText.setError(null);
+                mBirthdayEditText.setText(mDayName + " , " + mDay + " " + mMonthArray[mMonth - 1] + " , " + mYear);
+            }
+        };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

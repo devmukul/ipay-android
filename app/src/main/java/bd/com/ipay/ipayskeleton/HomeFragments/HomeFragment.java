@@ -103,7 +103,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private LinearLayout mRequestMoneyButton;
     private LinearLayout mPayByQRCodeButton;
     private LinearLayout mMakePaymentButton;
-    private ImageView refreshBalanceButton;
+    public static ImageView refreshBalanceButton;
     private final BroadcastReceiver mBalanceUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -366,11 +366,11 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
 
             mProfileCompletionStatusResponse.analyzeProfileCompletionData();
 
-            if (!mProfileCompletionStatusResponse.isCompletedMandetoryFields()) {
+            if (!mProfileCompletionStatusResponse.getAnalyzedProfileVerificationMessage().isEmpty()) {
 
                 mProfileCompletionMessageView.setText("Your profile is " +
                         mProfileCompletionStatusResponse.getCompletionPercentage() + "% "
-                        + "complete.\nSubmit documents and other information to improve your profile.");
+                        + "complete.\nThe following information are required " + mProfileCompletionStatusResponse.getAnalyzedProfileVerificationMessage() + " to get verified.");
 
                 mProgressBar.startAnimation(mProfileCompletionStatusResponse.getCompletionPercentage());
 

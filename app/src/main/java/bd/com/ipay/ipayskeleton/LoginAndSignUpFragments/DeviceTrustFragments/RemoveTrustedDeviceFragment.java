@@ -345,7 +345,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
             try {
                 mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-
+                    mProfileCompletionStatusResponse.initScoreFromPropertyName();
                     ProfileInfoCacheManager.switchedFromSignup(false);
                     ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
                     ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
@@ -354,7 +354,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
 
                     if (ProfileInfoCacheManager.isSourceOfFundAdded()) {
                         if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                                || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                                || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                             ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
                             ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
@@ -396,18 +396,17 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                 mGetCardResponse = gson.fromJson(result.getJsonString(), GetCardResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                    if (mGetCardResponse.getUserCardList().isEmpty()) {
+                    if (!mGetCardResponse.isAnyCardVerified()) {
                         ProfileInfoCacheManager.addSourceOfFund(false);
                     } else ProfileInfoCacheManager.addSourceOfFund(true);
 
                     if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                            || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                            || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                         ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
                     } else {
                         ((DeviceTrustActivity) getActivity()).switchToHomeActivity();
                     }
-                }
-                else {
+                } else {
                     Toaster.makeText(getActivity(), mGetCardResponse.getMessage(), Toast.LENGTH_SHORT);
                 }
             } catch (Exception e) {

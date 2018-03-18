@@ -1,5 +1,7 @@
 package bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion;
 
+import android.support.annotation.IntegerRes;
+
 import java.util.HashMap;
 
 import bd.com.ipay.ipayskeleton.R;
@@ -26,9 +28,9 @@ public class ProfileCompletionPropertyConstants {
     public static final String BUSINESS_INFO = "BUSINESS_INFO";
     public static final String BUSINESS_DOCUMENTS = "BUSINESS_DOCUMENTS";
 
-    public static final int TAG_POSITION_BASIC_INFO = 0;
-    public static final int TAG_POSITION_PERSONAL_ADDRESS = 1;
-    public static final int TAG_POSITION_IDENTIFICATION = 2;
+    public static final int TAG_POSITION_PROFILE_PICTURE = 0;
+    public static final int TAG_POSITION_IDENTIFICATION = 1;
+    public static final int TAG_POSITION_BASIC_INFO = 2;
     public static final int TAG_POSITION_SOURCE_OF_FUND = 3;
 
     public static final int TAG_POSITION_BUSINESS_INFO = 0;
@@ -38,6 +40,7 @@ public class ProfileCompletionPropertyConstants {
     public static final HashMap<String, String> PROPERTY_NAME_TO_TITLE_MAP = new HashMap<>();
     public static final HashMap<String, Integer> PROPERTY_NAME_TO_ICON_MAP = new HashMap<>();
     public static final HashMap<String, String> PROPERTY_NAME_TO_ACTION_NAME_MAP = new HashMap<>();
+    public static final HashMap<String, Integer> PROPERTY_NAME_TO_SCORE_MAP = new HashMap<>();
 
     static {
         PROPERTY_NAME_TO_TITLE_MAP.put(ADD_PIN, "Set up PIN");
@@ -53,7 +56,7 @@ public class ProfileCompletionPropertyConstants {
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFIED_EMAIL, "Add a verified email");
         PROPERTY_NAME_TO_TITLE_MAP.put(PHOTOID, "Submit Document");
         PROPERTY_NAME_TO_TITLE_MAP.put(VERIFICATION_DOCUMENT, "Submit Verification Document");
-        PROPERTY_NAME_TO_TITLE_MAP.put(VERIFY_BANK_OR_CARD, "Verify by Bank or Card");
+        PROPERTY_NAME_TO_TITLE_MAP.put(VERIFY_BANK_OR_CARD, "Verify Bank or Card");
         PROPERTY_NAME_TO_TITLE_MAP.put(PARENT, "Add Parent's Information");
     }
 

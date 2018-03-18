@@ -49,6 +49,7 @@ import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SentReceivedRequestReviewFragment extends BaseFragment implements HttpResponseListener {
@@ -225,7 +226,7 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
             addContact(mReceiverName, mReceiverMobileNumber, null);
         }
 
-       if (PaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
+        if (PaymentActivity.mMandatoryBusinessRules.IS_PIN_REQUIRED()) {
             new CustomPinCheckerWithInputDialog(getActivity(), new CustomPinCheckerWithInputDialog.PinCheckAndSetListener() {
                 @Override
                 public void ifPinCheckedAndAdded(String pin) {
@@ -425,6 +426,9 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
                     mRequestMoneyAcceptRejectOrCancelResponse = gson.fromJson(result.getJsonString(),
                             RequestMoneyAcceptRejectOrCancelResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        }
                         String message = mRequestMoneyAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
                             Toaster.makeText(getActivity(), message, Toast.LENGTH_LONG);
@@ -445,11 +449,20 @@ public class SentReceivedRequestReviewFragment extends BaseFragment implements H
                         SecuritySettingsActivity.otpDuration = mRequestMoneyAcceptRejectOrCancelResponse.getOtpValidFor();
                         launchOTPVerification();
                     } else {
-                        if (getActivity() != null)
+                        if (getActivity() != null) {
                             Toaster.makeText(getActivity(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
+                            if (mRequestMoneyAcceptRejectOrCancelResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                            } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                            }
+                        }
                         Utilities.sendFailedEventTracker(mTracker, "Money Request", ProfileInfoCacheManager.getAccountId(), mRequestMoneyAcceptRejectOrCancelResponse.getMessage(), mAmount.longValue());
                     }
                 } catch (Exception e) {
+                    if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                    }
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG);
