@@ -200,6 +200,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             public void onClick(View v) {
                 mProfilePicHolderView.setVisibility(View.GONE);
                 mMobileNumberHolderView.setVisibility(View.VISIBLE);
+                mMobileNumberEditText.requestFocus();
 
                 addToContactCheckBox.setVisibility(View.GONE);
                 addToContactCheckBox.setChecked(false);

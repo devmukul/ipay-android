@@ -276,6 +276,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             public void onClick(View v) {
                 mobileNumberView.setVisibility(View.VISIBLE);
                 profileView.setVisibility(View.GONE);
+                mMobileNumberEditText.requestFocus();
             }
         });
 
