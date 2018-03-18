@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogA
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.TopUpReviewActivity;
+import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
@@ -44,6 +46,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.TopUp.TopupResponse;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -51,6 +54,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactEngine;
+import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
@@ -82,6 +86,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     private View mIconEditMobileNumber;
     private ProfileImageView mProfileImageView;
     private TextView mNameTextView;
+    private CheckBox addToContactCheckBox;
 
     private List<String> mPackageList;
     private List<String> mOperatorList;
@@ -92,6 +97,8 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     private String mUserMobileNumber;
     private String mMobileNumber;
     private double mAmount;
+    private String mName;
+    private String mProfilePicture;
 
     private OTPVerificationForTwoFactorAuthenticationServicesDialog mOTPVerificationForTwoFactorAuthenticationServicesDialog;
 
@@ -112,6 +119,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         mIconEditMobileNumber = view.findViewById(R.id.edit_icon_mobile_number);
         mProfileImageView = (ProfileImageView) view.findViewById(R.id.receiver_profile_image_view);
         mNameTextView = (TextView) view.findViewById(R.id.receiver_name_text_view);
+        addToContactCheckBox = (CheckBox) view.findViewById(R.id.add_to_contact_check_box);
 
         mProgressDialog = new ProgressDialog(getActivity());
 
@@ -153,6 +161,10 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                     // sendMoneyQuery();
                     if (verifyUserInputs()) {
                         attemptTopUpWithPinCheck();
+
+                        if (addToContactCheckBox.isChecked()) {
+                            addContact(mName, mMobileNumber, null);
+                        }
                     }
                 } else if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG);
@@ -188,6 +200,9 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             public void onClick(View v) {
                 mProfilePicHolderView.setVisibility(View.GONE);
                 mMobileNumberHolderView.setVisibility(View.VISIBLE);
+
+                addToContactCheckBox.setVisibility(View.GONE);
+                addToContactCheckBox.setChecked(false);
             }
         });
 
@@ -210,7 +225,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             public void onTextChange(String inputText) {
                 setOperator(inputText);
                 if (Utilities.isConnectionAvailable(getActivity()) && InputValidator.isValidNumber(inputText)) {
-                    getUserInfo(inputText);
+                    getUserInfo(ContactEngine.formatMobileNumberBD(inputText));
                 }
             }
 
@@ -409,6 +424,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     }
 
     private void getUserInfo(String mobileNumber) {
+        mMobileNumber = mobileNumber;
         GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
 
         if (mGetUserInfoTask != null) {
@@ -491,6 +507,16 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         mOTPVerificationForTwoFactorAuthenticationServicesDialog.mParentHttpResponseListener = this;
     }
 
+    @ValidateAccess
+    private void addContact(String name, String phoneNumber, String relationship) {
+        AddContactRequestBuilder addContactRequestBuilder = new
+                AddContactRequestBuilder(name, phoneNumber, relationship);
+
+        new AddContactAsyncTask(Constants.COMMAND_ADD_CONTACTS,
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(),
+                getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     @Override
     public void httpResponseReceiver(GenericHttpResponse result) {
         mProgressDialog.dismiss();
@@ -537,14 +563,19 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
                     mProfilePicHolderView.setVisibility(View.VISIBLE);
                     mMobileNumberHolderView.setVisibility(View.GONE);
 
-                    String name = mGetUserInfoResponse.getName();
+                    if (!new ContactSearchHelper(getActivity()).searchMobileNumber(mMobileNumber)) {
+                        addToContactCheckBox.setVisibility(View.VISIBLE);
+                        addToContactCheckBox.setChecked(true);
+                    }
+
+                    mName = mGetUserInfoResponse.getName();
 
                     if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
-                        String profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
-                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture,
+                        mProfilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
+                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture,
                                 false);
                     }
-                    mNameTextView.setText(name);
+                    mNameTextView.setText(mName);
 
                 }
 
