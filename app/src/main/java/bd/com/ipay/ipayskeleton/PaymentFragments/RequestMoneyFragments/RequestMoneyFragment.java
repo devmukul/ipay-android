@@ -444,6 +444,9 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         if (result == null || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_INTERNAL_ERROR
                 || result.getStatus() == Constants.HTTP_RESPONSE_STATUS_NOT_FOUND) {
             mGetUserInfoTask = null;
+            mRequestMoneyTask = null;
+            mGetBusinessRuleTask = null;
+
         } else if (result.getApiCommand().equals(Constants.COMMAND_GET_BUSINESS_RULE)) {
 
             if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
