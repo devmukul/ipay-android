@@ -132,6 +132,17 @@
 
         <View style="@style/Divider" />
 
+        <CheckBox
+            android:id="@+id/add_to_contact_check_box"
+            style="@style/CheckboxRightStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+            android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+            android:drawableTint="@color/colorPrimary"
+            android:text="@string/add_to_contacts"
+            android:visibility="gone" />
+
         <Button
             android:id="@+id/button_request_money"
             style="@style/ButtonPrimaryWithNote"
