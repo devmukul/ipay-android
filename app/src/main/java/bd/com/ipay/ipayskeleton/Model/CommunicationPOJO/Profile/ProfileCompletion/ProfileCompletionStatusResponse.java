@@ -210,15 +210,26 @@ public class ProfileCompletionStatusResponse {
     }
 
     public boolean isPhotoIdUpdated() {
-        if (getPropertyScore("Identification") == 100)
-            return true;
-        return false;
+        try {
+            if (getPropertyScore("Identification") == 100)
+                return true;
+            return false;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean isPhotoUpdated() {
-        if (getPropertyScore("Profile Picture") == 100)
-            return true;
-        return false;
+        try {
+            if (getPropertyScore("Profile Picture") == 100)
+                return true;
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean isBankAdded() {
@@ -232,9 +243,15 @@ public class ProfileCompletionStatusResponse {
     }
 
     public boolean isOnboardBasicInfoUpdated() {
-        if (getPropertyScore("Basic Info") == 100)
-            return true;
-        return false;
+        try {
+            if (getPropertyScore("Basic Info") == 100)
+                return true;
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
     public Integer getPropertyScore(String tag) {
