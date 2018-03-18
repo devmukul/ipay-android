@@ -167,7 +167,6 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         mMobileNumberEditText.setCustomTextChangeListener(new ContactsSearchView.CustomTextChangeListener() {
             @Override
             public void onTextChange(String inputText) {
-                Toaster.makeText(getActivity(), "only" + inputText, Toast.LENGTH_LONG);
                 if (Utilities.isConnectionAvailable(getActivity()) && InputValidator.isValidNumber(inputText)) {
 
                     getUserInfo(ContactEngine.formatMobileNumberBD(inputText));
@@ -176,7 +175,6 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
 
             @Override
             public void onTextChange(String inputText, String name, String imageURL) {
-                Toaster.makeText(getActivity(), "with" + name , Toast.LENGTH_LONG);
                 mProfilePicHolderView.setVisibility(View.VISIBLE);
                 mMobileNumberHolderView.setVisibility(View.GONE);
 
