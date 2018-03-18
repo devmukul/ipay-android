@@ -596,7 +596,7 @@ public class LoginFragment extends BaseFragment implements HttpResponseListener 
                             ProfileInfoCacheManager.addSourceOfFund(false);
                         } else ProfileInfoCacheManager.addSourceOfFund(true);
 
-                        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && !ProfileInfoCacheManager.isAccountVerified() && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
                                 || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                             ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
