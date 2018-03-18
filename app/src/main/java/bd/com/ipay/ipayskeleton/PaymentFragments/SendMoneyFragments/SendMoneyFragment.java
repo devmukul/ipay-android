@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,10 +29,12 @@ import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogA
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyReviewActivity;
+import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
+import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
@@ -44,6 +47,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUse
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.BasicInfo.GetUserInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyResponse;
+import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -84,11 +88,14 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     private View mProfilePicHolderView;
     private View mMobileNumberHolderView;
     private View mIconEditMobileNumber;
+    private CheckBox addToContactCheckBox;
 
     private String mReceiver;
     private String mAmount;
     private String mDescription;
     private String mSenderMobileNumber;
+    private String mName;
+    private String mProfilePicture;
 
 
     @Override
@@ -107,6 +114,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         mMobileNumberHolderView = v.findViewById(R.id.mobile_number_holder);
         mIconEditMobileNumber = v.findViewById(R.id.edit_icon_mobile_number);
         mProgressDialog = new ProgressDialog(getActivity());
+        addToContactCheckBox = (CheckBox) v.findViewById(R.id.add_to_contact_check_box);
 
         // Allow user to write not more than two digits after decimal point for an input of an amount
         mAmountEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter()});
@@ -134,6 +142,9 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                     // sendMoneyQuery();
                     if (verifyUserInputs()) {
                         attemptSendMoneyWithPinCheck();
+                        if (addToContactCheckBox.isChecked()) {
+                            addContact(mName, mReceiver, null);
+                        }
                     }
                 } else if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_LONG);
@@ -152,6 +163,9 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             public void onClick(View v) {
                 mProfilePicHolderView.setVisibility(View.GONE);
                 mMobileNumberHolderView.setVisibility(View.VISIBLE);
+
+                addToContactCheckBox.setVisibility(View.GONE);
+                addToContactCheckBox.setChecked(false);
             }
         });
 
@@ -159,7 +173,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             @Override
             public void onTextChange(String inputText) {
                 if (Utilities.isConnectionAvailable(getActivity()) && InputValidator.isValidNumber(inputText)) {
-                    getUserInfo(inputText);
+                    getUserInfo(ContactEngine.formatMobileNumberBD(inputText));
                 }
             }
 
@@ -345,6 +359,9 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     }
 
     private void getUserInfo(String mobileNumber) {
+        mReceiver = mobileNumber;
+
+
         GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
 
         if (mGetUserInfoTask != null) {
@@ -359,6 +376,16 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         mGetUserInfoTask.mHttpResponseListener = SendMoneyFragment.this;
         mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
+    }
+
+    @ValidateAccess
+    private void addContact(String name, String phoneNumber, String relationship) {
+        AddContactRequestBuilder addContactRequestBuilder = new
+                AddContactRequestBuilder(name, phoneNumber, relationship);
+
+        new AddContactAsyncTask(Constants.COMMAND_ADD_CONTACTS,
+                addContactRequestBuilder.generateUri(), addContactRequestBuilder.getAddContactRequest(),
+                getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void launchReviewPage() {
@@ -469,14 +496,19 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                     mProfilePicHolderView.setVisibility(View.VISIBLE);
                     mMobileNumberHolderView.setVisibility(View.GONE);
 
-                    String name = mGetUserInfoResponse.getName();
+                    if (!new ContactSearchHelper(getActivity()).searchMobileNumber(mReceiver)) {
+                        addToContactCheckBox.setVisibility(View.VISIBLE);
+                        addToContactCheckBox.setChecked(true);
+                    }
+
+                    mName = mGetUserInfoResponse.getName();
 
                     if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
-                        String profilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
-                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + profilePicture,
+                        mProfilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
+                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture,
                                 false);
                     }
-                    mNameTextView.setText(name);
+                    mNameTextView.setText(mName);
 
                 }
 
