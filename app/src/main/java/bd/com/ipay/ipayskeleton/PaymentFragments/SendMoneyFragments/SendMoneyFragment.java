@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 
 import bd.com.ipay.ipayskeleton.Activities.DialogActivities.ContactPickerDialogActivity;
 import bd.com.ipay.ipayskeleton.Activities.DrawerActivities.SecuritySettingsActivity;
+import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.PaymentActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyActivity;
 import bd.com.ipay.ipayskeleton.Activities.PaymentActivities.SendMoneyReviewActivity;
 import bd.com.ipay.ipayskeleton.Api.ContactApi.AddContactAsyncTask;
@@ -50,6 +51,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.SendMoney.SendMoneyRespo
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
@@ -59,6 +61,7 @@ import bd.com.ipay.ipayskeleton.Utilities.DecimalDigitsInputFilter;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
+import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -96,6 +99,11 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     private String mSenderMobileNumber;
     private String mName;
     private String mProfilePicture;
+
+    private String address;
+    private String country;
+    private String district;
+    private String thana;
 
 
     @Override
@@ -496,23 +504,45 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                 GetUserInfoResponse mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    mProfilePicHolderView.setVisibility(View.VISIBLE);
-                    mMobileNumberHolderView.setVisibility(View.GONE);
 
-                    if (!new ContactSearchHelper(getActivity()).searchMobileNumber(mReceiver)) {
-                        addToContactCheckBox.setVisibility(View.VISIBLE);
-                        addToContactCheckBox.setChecked(true);
+                    if (mGetUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
+                        if (mGetUserInfoResponse.getAccountStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
+                            if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
+                                DialogUtils.showServiceNotAllowedDialog(getContext());
+                            } else {
+                                if (mGetUserInfoResponse.getAddressList() != null) {
+                                    if (mGetUserInfoResponse.getAddressList().getOFFICE() != null) {
+                                        address = mGetUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
+                                        country = mGetUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
+                                        district = mGetUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
+                                        thana = mGetUserInfoResponse.getAddressList().getOFFICE().get(0).getThana();
+                                    }
+                                }
+                                switchActivity(PaymentActivity.class);
+                            }
+                        } else {
+                            DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.business_account_not_verified));
+                        }
+                    } else {
+
+                        mProfilePicHolderView.setVisibility(View.VISIBLE);
+                        mMobileNumberHolderView.setVisibility(View.GONE);
+
+                        if (!new ContactSearchHelper(getActivity()).searchMobileNumber(mReceiver)) {
+                            addToContactCheckBox.setVisibility(View.VISIBLE);
+                            addToContactCheckBox.setChecked(true);
+                        }
+
+                        mName = mGetUserInfoResponse.getName();
+
+                        if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
+                            mProfilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
+                            mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture,
+                                    false);
+                        }
+                        mNameTextView.setText(mName);
+
                     }
-
-                    mName = mGetUserInfoResponse.getName();
-
-                    if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
-                        mProfilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
-                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture,
-                                false);
-                    }
-                    mNameTextView.setText(mName);
-
                 }
 
             } catch (Exception e) {
@@ -563,5 +593,19 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             mSendMoneyTask = null;
 
         }
+    }
+
+    private void switchActivity(Class tClass) {
+        Intent intent = new Intent(getActivity(), tClass);
+        intent.putExtra(Constants.MOBILE_NUMBER, mReceiver);
+        intent.putExtra(Constants.FROM_QR_SCAN, true);
+        intent.putExtra(Constants.NAME, mName);
+        intent.putExtra(Constants.PHOTO_URI, mProfilePicture);
+        intent.putExtra(Constants.COUNTRY, country);
+        intent.putExtra(Constants.DISTRICT, district);
+        intent.putExtra(Constants.ADDRESS, address);
+        intent.putExtra(Constants.THANA, thana);
+        startActivity(intent);
+        getActivity().finish();
     }
 }
