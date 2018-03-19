@@ -112,7 +112,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
         mOperatorEditText = (EditText) view.findViewById(R.id.operator);
         mSelectReceiverButton = (ImageView) view.findViewById(R.id.select_receiver_from_contacts);
         mRechargeButton = (Button) view.findViewById(R.id.button_recharge);
-        mMobileTopUpInfoTextView = (TextView) view.findViewById(R.id.text_view_mobile_restriction_info);
         mProfilePicHolderView = view.findViewById(R.id.profile_pic_holder);
         mMobileNumberHolderView = view.findViewById(R.id.mobile_number_holder);
         mIconEditMobileNumber = view.findViewById(R.id.edit_icon_mobile_number);
