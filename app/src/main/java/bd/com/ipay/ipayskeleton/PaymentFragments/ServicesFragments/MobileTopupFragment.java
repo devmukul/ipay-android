@@ -225,7 +225,9 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             @Override
             public void onTextChange(String inputText) {
                 setOperator(inputText);
-                if (Utilities.isConnectionAvailable(getActivity()) && InputValidator.isValidNumber(inputText)) {
+                if (mProfilePicHolderView.getVisibility() == View.GONE
+                        && Utilities.isConnectionAvailable(getActivity())
+                        && InputValidator.isValidNumber(inputText)) {
                     getUserInfo(ContactEngine.formatMobileNumberBD(inputText));
                 }
             }
@@ -587,8 +589,7 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
 
             mGetUserInfoTask = null;
             mProgressDialog.dismiss();
-        }
-        else if (result.getApiCommand().equals(Constants.COMMAND_TOPUP_REQUEST)) {
+        } else if (result.getApiCommand().equals(Constants.COMMAND_TOPUP_REQUEST)) {
             try {
                 mTopupResponse = gson.fromJson(result.getJsonString(), TopupResponse.class);
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_PROCESSING) {

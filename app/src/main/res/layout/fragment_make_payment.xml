@@ -7,10 +7,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true"
-        android:orientation="vertical"
-        android:animateLayoutChanges="true">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -66,18 +66,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/activity_horizontal_margin"
+            android:animateLayoutChanges="true"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:visibility="gone"
-            android:animateLayoutChanges="true">
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/edit_icon_mobile_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingBottom="@dimen/activity_horizontal_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin_semi_double"
+                android:paddingRight="@dimen/activity_horizontal_margin_semi_double"
+                android:paddingTop="@dimen/activity_horizontal_margin"
                 android:src="@drawable/ic_editgrey" />
 
             <bd.com.ipay.ipayskeleton.CustomView.ProfileImageView
@@ -161,6 +163,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/value5"
                         android:layout_marginRight="@dimen/value5"
+                        android:padding="@dimen/value5"
                         android:src="@drawable/ic_qr_input"
                         android:visibility="visible" />
 
@@ -169,6 +172,7 @@
                         style="@style/ButtonStyleWithIcon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:padding="@dimen/value5"
                         android:src="@drawable/ic_book3x" />
                 </LinearLayout>
 

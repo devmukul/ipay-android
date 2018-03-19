@@ -168,7 +168,9 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
         mMobileNumberEditText.setCustomTextChangeListener(new ContactsSearchView.CustomTextChangeListener() {
             @Override
             public void onTextChange(String inputText) {
-                if (Utilities.isConnectionAvailable(getActivity()) && InputValidator.isValidNumber(inputText)) {
+                if (mProfilePicHolderView.getVisibility() == View.GONE
+                        && Utilities.isConnectionAvailable(getActivity())
+                        && InputValidator.isValidNumber(inputText)) {
 
                     getUserInfo(ContactEngine.formatMobileNumberBD(inputText));
                 }

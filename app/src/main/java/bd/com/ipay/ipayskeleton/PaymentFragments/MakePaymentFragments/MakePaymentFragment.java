@@ -283,7 +283,9 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         mMobileNumberEditText.setCustomTextChangeListener(new BusinessContactsSearchView.CustomTextChangeListener() {
             @Override
             public void onTextChange(String inputText) {
-                if (Utilities.isConnectionAvailable(getActivity()) && InputValidator.isValidNumber(inputText)) {
+                if (profileView.getVisibility() == View.GONE
+                        && Utilities.isConnectionAvailable(getActivity())
+                        && InputValidator.isValidNumber(inputText)) {
                     getProfileInfo(inputText);
                 }
             }
@@ -669,7 +671,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
                     mobileNumberView.setVisibility(View.GONE);
                     profileView.setVisibility(View.VISIBLE);
-                    mReceiverName= mGetUserInfoResponse.getName();
+                    mReceiverName = mGetUserInfoResponse.getName();
                     if (mGetUserInfoResponse.getAddressList() != null) {
                         if (mGetUserInfoResponse.getAddressList().getOFFICE() != null) {
                             List<UserAddress> office = mGetUserInfoResponse.getAddressList().getOFFICE();
