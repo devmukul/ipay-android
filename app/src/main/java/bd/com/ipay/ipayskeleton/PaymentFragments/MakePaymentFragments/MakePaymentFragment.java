@@ -220,14 +220,14 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                                     (Constants.BASE_URL_FTP_SERVER + mReceiverPhotoUri, false);
                         }
                     } catch (Exception e) {
-                        getProfileInfo(mReceiverMobileNumber);
+                        getProfileInfo(ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
                     }
 
                 } else {
-                    getProfileInfo(mReceiverMobileNumber);
+                    getProfileInfo(ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
                 }
             } else {
-                getProfileInfo(mReceiverMobileNumber);
+                getProfileInfo(ContactEngine.formatMobileNumberBD(mReceiverMobileNumber));
             }
         } else {
             profileView.setVisibility(View.GONE);
@@ -286,7 +286,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                 if (profileView.getVisibility() == View.GONE
                         && Utilities.isConnectionAvailable(getActivity())
                         && InputValidator.isValidNumber(inputText)) {
-                    getProfileInfo(inputText);
+                    getProfileInfo(ContactEngine.formatMobileNumberBD(inputText));
                 }
             }
 
