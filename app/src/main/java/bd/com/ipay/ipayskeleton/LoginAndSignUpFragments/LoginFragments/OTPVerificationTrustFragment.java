@@ -370,6 +370,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                 try {
                     mProfileCompletionStatusResponse = gson.fromJson(result.getJsonString(), ProfileCompletionStatusResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                        mProfileCompletionStatusResponse.initScoreFromPropertyName();
                         ProfileInfoCacheManager.switchedFromSignup(false);
                         ProfileInfoCacheManager.uploadProfilePicture(mProfileCompletionStatusResponse.isPhotoUpdated());
                         ProfileInfoCacheManager.uploadIdentificationDocument(mProfileCompletionStatusResponse.isPhotoIdUpdated());
@@ -378,7 +379,7 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
 
                         if (ProfileInfoCacheManager.isSourceOfFundAdded()) {
                             if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                                    || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                                    || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                                 ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                             } else {
                                 ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
@@ -386,13 +387,13 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                         } else getAddedCards();
                     } else {
                         if (getActivity() != null)
-                            Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
+                            ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (getActivity() != null)
-                        Toaster.makeText(getActivity(), R.string.failed_fetching_profile_completion_status, Toast.LENGTH_LONG);
+                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                 }
                 mProgressDialog.dismiss();
                 mGetProfileCompletionStatusTask = null;
@@ -403,12 +404,12 @@ public class OTPVerificationTrustFragment extends BaseFragment implements HttpRe
                     mGetCardResponse = gson.fromJson(result.getJsonString(), GetCardResponse.class);
                     if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
 
-                        if (mGetCardResponse.getUserCardList().isEmpty()) {
+                        if (!mGetCardResponse.isAnyCardVerified()) {
                             ProfileInfoCacheManager.addSourceOfFund(false);
                         } else ProfileInfoCacheManager.addSourceOfFund(true);
 
-                        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
-                                || !ProfileInfoCacheManager.isBasicInfoAdded()) || !ProfileInfoCacheManager.isSourceOfFundAdded()) {
+                        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && !ProfileInfoCacheManager.isAccountVerified() && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                                || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                             ((SignupOrLoginActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
                             ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();

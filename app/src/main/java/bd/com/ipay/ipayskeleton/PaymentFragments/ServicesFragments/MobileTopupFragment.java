@@ -79,7 +79,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
     private EditText mOperatorEditText;
     private ImageView mSelectReceiverButton;
     private Button mRechargeButton;
-    private TextView mMobileTopUpInfoTextView;
     private ProgressDialog mProgressDialog;
     private View mProfilePicHolderView;
     private View mMobileNumberHolderView;
@@ -178,7 +177,6 @@ public class MobileTopupFragment extends BaseFragment implements HttpResponseLis
             mOperatorEditText.setEnabled(false);
             mSelectReceiverButton.setVisibility(View.GONE);
             mAmountEditText.requestFocus();
-            mMobileTopUpInfoTextView.setVisibility(View.VISIBLE);
 
         } else {
             mMobileNumberEditText.setEnabledStatus(true);

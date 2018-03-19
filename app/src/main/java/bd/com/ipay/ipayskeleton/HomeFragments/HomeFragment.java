@@ -103,7 +103,7 @@ public class HomeFragment extends BaseFragment implements HttpResponseListener {
     private LinearLayout mRequestMoneyButton;
     private LinearLayout mPayByQRCodeButton;
     private LinearLayout mMakePaymentButton;
-    private ImageView refreshBalanceButton;
+    public static ImageView refreshBalanceButton;
     private final BroadcastReceiver mBalanceUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

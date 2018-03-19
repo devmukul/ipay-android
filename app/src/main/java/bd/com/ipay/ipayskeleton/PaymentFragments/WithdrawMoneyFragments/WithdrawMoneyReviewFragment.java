@@ -39,6 +39,7 @@ import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpResponseListener {
@@ -201,10 +202,10 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
 
     @Override
     public void onServiceChargeLoadFinished(BigDecimal serviceCharge) {
-            mServiceChargeViewHolder.setVisibility(View.VISIBLE);
-            mNetAmountViewHolder.setVisibility(View.VISIBLE);
-            mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
-            mNetAmountTextView.setText(Utilities.formatTaka(getAmount().add(serviceCharge)));
+        mServiceChargeViewHolder.setVisibility(View.VISIBLE);
+        mNetAmountViewHolder.setVisibility(View.VISIBLE);
+        mServiceChargeTextView.setText(Utilities.formatTaka(serviceCharge));
+        mNetAmountTextView.setText(Utilities.formatTaka(getAmount().add(serviceCharge)));
     }
 
     private void launchOTPVerification() {
@@ -235,8 +236,12 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
                 WithdrawMoneyResponse mWithdrawMoneyResponse = gson.fromJson(result.getJsonString(), WithdrawMoneyResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        }
+                    }
                     getActivity().setResult(Activity.RESULT_OK);
                     getActivity().finish();
 
@@ -258,13 +263,22 @@ public class WithdrawMoneyReviewFragment extends ReviewFragment implements HttpR
                     SecuritySettingsActivity.otpDuration = mWithdrawMoneyResponse.getOtpValidFor();
                     launchOTPVerification();
                 } else {
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toast.makeText(getActivity(), mWithdrawMoneyResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        if (mWithdrawMoneyResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                        } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        }
+                    }
 
                     //Google Analytic event
                     Utilities.sendFailedEventTracker(mTracker, "Withdraw Money", ProfileInfoCacheManager.getAccountId(), mWithdrawMoneyResponse.getMessage(), Double.valueOf(mAmount).longValue());
                 }
             } catch (Exception e) {
+                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                }
                 e.printStackTrace();
                 Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }

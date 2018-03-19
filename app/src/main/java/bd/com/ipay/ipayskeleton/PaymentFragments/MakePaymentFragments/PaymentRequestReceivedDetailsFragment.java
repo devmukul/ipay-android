@@ -51,6 +51,7 @@ import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implements LocationListener, HttpResponseListener {
@@ -541,6 +542,9 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
                         String message = mRequestPaymentAcceptRejectOrCancelResponse.getMessage();
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                            }
 
                             if (switchedFromTransactionHistory)
                                 Utilities.finishLauncherActivity(getActivity());
@@ -554,10 +558,19 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
                         SecuritySettingsActivity.otpDuration = mRequestPaymentAcceptRejectOrCancelResponse.getOtpValidFor();
                         launchOTPVerification();
                     } else {
-                        if (getActivity() != null)
+                        if (getActivity() != null) {
                             Toaster.makeText(getActivity(), mRequestPaymentAcceptRejectOrCancelResponse.getMessage(), Toast.LENGTH_LONG);
+                            if (mRequestPaymentAcceptRejectOrCancelResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                            } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                            }
+                        }
                     }
                 } catch (Exception e) {
+                    if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                        mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                    }
                     e.printStackTrace();
                     if (getActivity() != null)
                         Toaster.makeText(getActivity(), R.string.could_not_accept_money_request, Toast.LENGTH_LONG);

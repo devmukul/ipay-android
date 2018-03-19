@@ -216,6 +216,7 @@ public class Constants {
     public static final String BASE_URL_WEB;
     public static final String BASE_URL_DATA_COLLECTOR;
     private static final String SERVER_NAME;
+    public static final String BASE_URL_OFFER;
 
     public static final int DEV_SERVER = 1;
     public static final int TEST_SERVER = 2;
@@ -263,6 +264,7 @@ public class Constants {
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "http://10.10.10.10:8800/data-collector/v1/";
             SERVER_NAME = "dev";
+            BASE_URL_OFFER = "http://10.10.10.10:8070/offer_v2/api/v1/";
 
         } else if (SERVER_TYPE == TEST_SERVER) {
 
@@ -277,6 +279,7 @@ public class Constants {
             BASE_URL_WEB = "http://test.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "http://10.15.40.10:8800/data-collector/v1/";
             SERVER_NAME = "test";
+            BASE_URL_OFFER = "https://test.ipay.com.bd/offer_v2/api/v1/";
 
         } else if (SERVER_TYPE == STAGE_SERVER) {
 
@@ -291,6 +294,7 @@ public class Constants {
             BASE_URL_WEB = "http://stage.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "http://10.10.40.10:8800/data-collector/v1/";
             SERVER_NAME = "stage";
+            BASE_URL_OFFER = "http://stage.ipay.com.bd/offer_v2/api/v1/";
 
         } else if (SERVER_TYPE == LIVE_SERVER) {
 
@@ -305,6 +309,7 @@ public class Constants {
             BASE_URL_WEB = "https://www.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "https://www.ipay.com.bd/data-collector/v1/";
             SERVER_NAME = "live";
+            BASE_URL_OFFER = "https://www.ipay.com.bd/offer_v2/api/v1/";
 
         } else if (SERVER_TYPE == DEMO_SERVER) {
 
@@ -319,6 +324,7 @@ public class Constants {
             BASE_URL_DATA_COLLECTOR = "https://demo.ipay.com.bd/data-collector/v1/";
             BASE_URL_WEB = "https://demo.ipay.com.bd";
             SERVER_NAME = "demo";
+            BASE_URL_OFFER = "https://demo.ipay.com.bd/offer_v2/api/v1/";
 
         } else {
 
@@ -333,6 +339,7 @@ public class Constants {
             BASE_URL_WEB = "http://dev.ipay.com.bd";
             BASE_URL_DATA_COLLECTOR = "http://192.168.1.105:8800/data-collector/v1/";
             SERVER_NAME = "local";
+            BASE_URL_OFFER = "http://dev.ipay.com.bd/offer_v2/api/v1/";
         }
     }
 
@@ -555,6 +562,9 @@ public class Constants {
     // FCM notification
     public static final String URL_REFRESH_FIREBASE_TOKEN = "firebase/login/";
 
+    // FCM notification
+    public static final String URL_PROMO_ACTIVE = "promo/activate";
+
     // User Data collector
     public static final String URL_ENDPOINT_LOCATION_COLLECTOR = "location";
 
@@ -625,6 +635,7 @@ public class Constants {
     public static final String COMMAND_REMOVE_A_BANK = "COMMAND_REMOVE_A_BANK";
     public static final String COMMAND_TOPUP_REQUEST = "COMMAND_TOPUP_REQUEST";
     public static final String COMMAND_SET_PIN = "COMMAND_SET_PIN";
+    public static final String COMMAND_ADD_PROMO = "COMMAND_ADD_PROMO";
     public static final String COMMAND_CHANGE_PASSWORD = "COMMAND_CHANGE_PASSWORD";
     public static final String COMMAND_CHANGE_PASSWORD_VALIDATION = "COMMAND_CHANGE_PASSWORD_VALIDATION";
     public static final String COMMAND_GET_PROFILE_INFO_REQUEST = "COMMAND_GET_PROFILE_INFO_REQUEST";

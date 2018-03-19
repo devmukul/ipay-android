@@ -18,7 +18,6 @@ import bd.com.ipay.ipayskeleton.Api.HttpResponse.GenericHttpResponse;
 import bd.com.ipay.ipayskeleton.Api.HttpResponse.HttpResponseListener;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutRequest;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.LoginAndSignUp.LogoutResponse;
-import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBankFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddBasicInfoHelperFragment;
 import bd.com.ipay.ipayskeleton.ProfileCompletionHelperFragments.OnBoardAddSourceOfFundHelperFragment;
@@ -172,11 +171,6 @@ public class ProfileVerificationHelperActivity extends BaseActivity implements H
     public void switchToBasicInfoEditFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new OnBoardAddBasicInfoFragment()).addToBackStack(null).commit();
-    }
-
-    public void switchToAddNewBankFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new OnBoardAddBankFragment()).commit();
     }
 
     public void switchToAskedIntroductionHelperFragment() {

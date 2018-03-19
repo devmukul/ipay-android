@@ -37,6 +37,7 @@ import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class AddMoneyFromBankReviewFragment extends BaseFragment implements HttpResponseListener {
@@ -185,8 +186,12 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
                 final AddMoneyByBankResponse mAddMoneyByBankResponse = gson.fromJson(result.getJsonString(), AddMoneyByBankResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toaster.makeText(getActivity(), mAddMoneyByBankResponse.getMessage(), Toast.LENGTH_LONG);
+                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        }
+                    }
                     getActivity().setResult(Activity.RESULT_OK);
                     // Exit the Add money activity and return to HomeActivity
                     getActivity().finish();
@@ -202,14 +207,23 @@ public class AddMoneyFromBankReviewFragment extends BaseFragment implements Http
                     SecuritySettingsActivity.otpDuration = mAddMoneyByBankResponse.getOtpValidFor();
                     launchOTPVerification();
                 } else {
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         Toaster.makeText(getActivity(), mAddMoneyByBankResponse.getMessage(), Toast.LENGTH_LONG);
+                        if (mAddMoneyByBankResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                        } else if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        }
+                    }
 
                     //Google Analytic event
                     Utilities.sendFailedEventTracker(mTracker, "Add Money By Bank", ProfileInfoCacheManager.getAccountId(), mAddMoneyByBankResponse.getMessage(), Double.valueOf(mAmount).longValue());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                }
                 if (getActivity() != null)
                     Toaster.makeText(getActivity(), R.string.add_money_failed, Toast.LENGTH_LONG);
                 Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
