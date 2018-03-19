@@ -1062,8 +1062,8 @@
     <string name="onboard_profile_info_update_page_title">Add basic information</string>
 
     <string name="onboard_upload_photo_text">Upload your profile photo. Face the camera straight on, photo must be in focus and not blurry.</string>
-    <string name="onboard_upload_photo_id_text">Upload a copy of photo ID.\nLike: National ID, Driving License, Passport etc. Make sure all information is clearly readable and that it is fully in frame.</string>
-    <string name="onboard_upload_prifile_info_text">Add your basic information and present address to send some goodies or official doc.</string>
+    <string name="onboard_upload_photo_id_text">Your photo ID can be either your National ID, Passport or your Driving License. Make sure all information is clearly readable and that it is fully in frame.</string>
+    <string name="onboard_upload_prifile_info_text">Your basic information is your occupation, organization and present address. Add your basic information to receive some goodies or official documents.</string>
     <string name="onboard_add_bank_text">Update your bank info to add money from your account to shop, send money or transfer.</string>
     <string name="onboard_ask_for_introduction_text">Find an iPay user from your contact list and send request to introduce you.</string>
     <string name="upload_profile_photo_again">Do you want to upload a profile photo again? You have already uploaded once</string>

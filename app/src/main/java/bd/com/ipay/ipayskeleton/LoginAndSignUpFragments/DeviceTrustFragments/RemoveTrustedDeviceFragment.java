@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 import bd.com.ipay.ipayskeleton.Activities.DeviceTrustActivity;
+import bd.com.ipay.ipayskeleton.Activities.SignupOrLoginActivity;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestDeleteAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestGetAsyncTask;
 import bd.com.ipay.ipayskeleton.Api.GenericApi.HttpRequestPostAsyncTask;
@@ -353,7 +354,7 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                     ProfileInfoCacheManager.addSourceOfFund(mProfileCompletionStatusResponse.isBankAdded());
 
                     if (ProfileInfoCacheManager.isSourceOfFundAdded()) {
-                        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
+                        if (ProfileInfoCacheManager.getAccountType() == Constants.PERSONAL_ACCOUNT_TYPE && !ProfileInfoCacheManager.isAccountVerified() && (!ProfileInfoCacheManager.isProfilePictureUploaded() || !ProfileInfoCacheManager.isIdentificationDocumentUploaded()
                                 || !ProfileInfoCacheManager.isBasicInfoAdded() || !ProfileInfoCacheManager.isSourceOfFundAdded())) {
                             ((DeviceTrustActivity) getActivity()).switchToProfileCompletionHelperActivity();
                         } else {
@@ -362,13 +363,13 @@ public class RemoveTrustedDeviceFragment extends ProgressFragment implements Htt
                     } else getAddedCards();
                 } else {
                     if (getActivity() != null)
-                        Toaster.makeText(getActivity(), mProfileCompletionStatusResponse.getMessage(), Toast.LENGTH_LONG);
+                        ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
                 if (getActivity() != null)
-                    Toaster.makeText(getActivity(), R.string.failed_fetching_profile_completion_status, Toast.LENGTH_LONG);
+                    ((SignupOrLoginActivity) getActivity()).switchToHomeActivity();
             }
             mProgressDialog.dismiss();
             mGetProfileCompletionStatusTask = null;
