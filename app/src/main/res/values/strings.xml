@@ -1077,7 +1077,7 @@
 
     <string name="please_enter_a_document_id">Please enter your document ID</string>
     <string name="alpha_numeric">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890</string>
-    <string name="please_select_max_file_size_message">Please select a file with max size %d MB</string>
+    <string name="please_select_max_file_size_message">Please select a file with max size 3 MB</string>
     <string name="settings_not_changed">No change in settings.</string>
     <string name="credit_or_debit_card_transaction_default_header">Money Added from Credit/Debit Card</string>
     <string name="ssl_error_title">SSL Certificate Error</string>

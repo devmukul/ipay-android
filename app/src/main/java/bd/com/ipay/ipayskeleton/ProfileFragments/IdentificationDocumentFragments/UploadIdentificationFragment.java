@@ -214,12 +214,12 @@ public class UploadIdentificationFragment extends BaseFragment implements HttpRe
             focusableView = null;
             isValidInput = false;
         } else if (mDocumentFirstPageImageFile.length() > Constants.MAX_FILE_BYTE_SIZE) {
-            mDocumentFirstPageErrorTextView.setText(getString(R.string.please_select_max_file_size_message, Constants.MAX_FILE_MB_SIZE));
+            mDocumentFirstPageErrorTextView.setText(getString(R.string.please_select_max_file_size_message));
             mDocumentFirstPageErrorTextView.setVisibility(View.VISIBLE);
             focusableView = null;
             isValidInput = false;
         } else if (mDocumentSecondPageImageFile != null && mDocumentSecondPageImageFile.length() > Constants.MAX_FILE_BYTE_SIZE) {
-            mDocumentSecondPageErrorTextView.setText(getString(R.string.please_select_max_file_size_message, Constants.MAX_FILE_MB_SIZE));
+            mDocumentSecondPageErrorTextView.setText(getString(R.string.please_select_max_file_size_message));
             mDocumentSecondPageErrorTextView.setVisibility(View.VISIBLE);
             focusableView = null;
             isValidInput = false;
