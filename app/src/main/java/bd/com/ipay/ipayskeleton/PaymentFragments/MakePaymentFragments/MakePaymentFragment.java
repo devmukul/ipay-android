@@ -401,12 +401,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
         }
         String mobileNumber = mMobileNumberEditText.getText().toString().trim();
 
-        if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
-            focusView = mDescriptionEditText;
-            mDescriptionEditText.setError(getString(R.string.please_write_note));
-            cancel = true;
-        }
-
         if (TextUtils.isEmpty(mReceiverMobileNumber)) {
             if (!InputValidator.isValidNumber(mobileNumber)) {
                 focusView = mMobileNumberEditText;

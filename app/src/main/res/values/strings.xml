@@ -290,6 +290,7 @@
     <string name="add_money">Add Money</string>
     <string name="add_money_history">Add Money History</string>
     <string name="title">Title</string>
+    <string name="note_optional">Note (Optional)</string>
     <string name="note">Note</string>
     <string name="additional_info">Additional Information</string>
     <string name="withdraw_money">Withdraw Money</string>

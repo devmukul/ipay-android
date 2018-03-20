@@ -219,10 +219,6 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             focusView = mAmountEditText;
             mAmountEditText.setError(errorMessage);
             cancel = true;
-        } else if (!(mDescriptionEditText.getText().toString().trim().length() > 0)) {
-            focusView = mDescriptionEditText;
-            mDescriptionEditText.setError(getString(R.string.please_write_note));
-            cancel = true;
         } else if (!InputValidator.isValidNumber(mobileNumber)) {
             focusView = mMobileNumberEditText;
             mMobileNumberEditText.setError(getString(R.string.please_enter_valid_mobile_number));

@@ -297,10 +297,6 @@ public class AddMoneyFragment extends Fragment implements HttpResponseListener {
         } else if (!isValidAmount()) {
             focusView = mAmountEditText;
             shouldProceed = false;
-        } else if (TextUtils.isEmpty(mNoteEditText.getText().toString().trim())) {
-            focusView = mNoteEditText;
-            mNoteEditText.setError(getString(R.string.please_write_note));
-            shouldProceed = false;
         } else {
             focusView = null;
             shouldProceed = true;
