@@ -66,10 +66,11 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
     private RecyclerView.LayoutManager mLayoutManager;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Tracker mTracker;
+
     @Override
     public void onResume() {
         super.onResume();
-        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_introducer) );
+        Utilities.sendScreenTracker(mTracker, getString(R.string.screen_name_introducer));
     }
 
     @Override
@@ -174,18 +175,6 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                         if (mIntroducerList == null) {
                             mIntroducerList = mIntroducerListResponse.getIntroducers();
                             MINIMUM_INTRODUCER_COUNT = mIntroducerListResponse.getRequiredForProfileCompletion();
-
-                            if (mIntroducerList.size() < MINIMUM_INTRODUCER_COUNT) {
-                                mCompleteIntroducerHeaderLayout.setVisibility(View.VISIBLE);
-
-                                String mIntroducerMessage = getString(R.string.introducers_to_complete_the_account_verification_process);
-                                if (MINIMUM_INTRODUCER_COUNT == 1)
-                                    mIntroducerMessage = mIntroducerMessage.replace(getString(R.string.introducers), getString(R.string.introducer));
-
-                                mIntroducerStatusTextView.setText(getString(R.string.you_need_to_have) + MINIMUM_INTRODUCER_COUNT
-                                        + mIntroducerMessage);
-                            } else mCompleteIntroducerHeaderLayout.setVisibility(View.GONE);
-
                             mAskForRecommendation.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 @ValidateAccess(ServiceIdConstants.GET_CONTACTS)
@@ -201,6 +190,13 @@ public class IntroducerFragment extends ProgressFragment implements HttpResponse
                             tempIntroducerClasses = mIntroducerListResponse.getIntroducers();
                             mIntroducerList.clear();
                             mIntroducerList.addAll(tempIntroducerClasses);
+                        }
+                        if (mIntroducerListResponse.getIntroducers().size() == 0) {
+                            mCompleteIntroducerHeaderLayout.setVisibility(View.VISIBLE);
+                            String mIntroducerMessage = getString(R.string.you_do_not_have_any_introducer);
+                            mIntroducerStatusTextView.setText(mIntroducerMessage);
+                        } else {
+                            mCompleteIntroducerHeaderLayout.setVisibility(View.GONE);
                         }
                         mIntroduceAdapter.notifyDataSetChanged();
 
