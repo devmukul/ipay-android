@@ -56,9 +56,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     public static AddressClass mAddressBusiness;
     public static AddressClass mAddressBusinessHolder;
 
-    private MaterialDialog.Builder mOverlayPermissionDialogBuilder;
-    private MaterialDialog mOverlayPermissionDialog;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,49 +82,6 @@ public class SignupOrLoginActivity extends AppCompatActivity {
             } else if (targetFragment.equals(Constants.SIGN_UP)) {
                 switchToAccountSelectionFragment();
             }
-        }
-
-        // Initialize the dialog
-        initializeErrorDialogForOverlayPermission();
-
-        // Check for overlay permission
-        if (checkDrawOverlayPermission()) {
-            // Do nothing
-        } else showErrorDialogOnOverlayPermission();
-
-    }
-
-    private void initializeErrorDialogForOverlayPermission() {
-        mOverlayPermissionDialogBuilder = new MaterialDialog.Builder(SignupOrLoginActivity.this)
-                .title(R.string.attention)
-                .content(R.string.allow_overlay_permission)
-                .cancelable(false)
-                .positiveText(R.string.ok)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        checkDrawOverlayPermission();
-                    }
-                });
-        mOverlayPermissionDialog = mOverlayPermissionDialogBuilder.build();
-    }
-
-    private void showErrorDialogOnOverlayPermission() {
-        mOverlayPermissionDialog.show();
-    }
-
-    public boolean checkDrawOverlayPermission() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-
-        if (!Settings.canDrawOverlays(this)) {
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:" + getPackageName()));
-            startActivityForResult(intent, OVERLAY_REQUEST_CODE);
-            return false;
-        } else {
-            return true;
         }
     }
 
@@ -233,20 +187,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    @TargetApi(Build.VERSION_CODES.M)
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == OVERLAY_REQUEST_CODE) {
 
-            // Dismiss the dialog
-            mOverlayPermissionDialog.dismiss();
-
-            if (Settings.canDrawOverlays(this)) {
-                // Do nothing
-            } else
-                showErrorDialogOnOverlayPermission();  // Request the permission again
-        }
-    }
 
 }
 
