@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.view.View;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -129,6 +130,21 @@ public class DialogUtils {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         ((Activity) context).onBackPressed();
+                    }
+                })
+                .show();
+        dialog.show();
+    }
+
+    public static void showDialogOwnNumberErrorDialog(final Context context, final View view) {
+        MaterialDialog dialog = new MaterialDialog.Builder(context)
+                .cancelable(false)
+                .content(context.getString(R.string.you_cannot_send_money_to_your_number))
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        view.callOnClick();
                     }
                 })
                 .show();

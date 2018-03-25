@@ -56,11 +56,8 @@ public class PaymentActivity extends BaseActivity implements HttpResponseListene
         mProgressDialog = new ProgressDialog(this);
 
         if (getIntent().hasExtra(Constants.MOBILE_NUMBER) || getIntent().getBooleanExtra(LAUNCH_NEW_REQUEST, false)) {
-            if (getIntent().getStringExtra(Constants.MOBILE_NUMBER) != null) {
-                getProfileInfo(getIntent().getStringExtra(Constants.MOBILE_NUMBER));
-            } else {
-                switchToMakePaymentFragment(null);
-            }
+
+            switchToMakePaymentFragment(null);
         } else {
             switchToReceivedPaymentRequestsFragment();
         }
