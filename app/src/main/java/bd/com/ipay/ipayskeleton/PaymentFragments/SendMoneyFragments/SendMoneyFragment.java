@@ -1,15 +1,12 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,8 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -45,6 +40,7 @@ import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.ContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomPinCheckerWithInputDialog;
+import bd.com.ipay.ipayskeleton.CustomView.Dialogs.CustomProgressDialog;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.OTPVerificationForTwoFactorAuthenticationServicesDialog;
 import bd.com.ipay.ipayskeleton.CustomView.ProfileImageView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
@@ -97,6 +93,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
     private View mMobileNumberHolderView;
     private View mIconEditMobileNumber;
     private CheckBox addToContactCheckBox;
+    private CustomProgressDialog mCustomProgressDialog;
 
     private String mReceiver;
     private String mAmount;
@@ -119,6 +116,7 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         mNameTextView = (TextView) v.findViewById(R.id.receiver_name_text_view);
         mDescriptionEditText = (EditText) v.findViewById(R.id.description);
         mAmountEditText = (EditText) v.findViewById(R.id.amount);
+        mCustomProgressDialog = new CustomProgressDialog(getContext());
         buttonScanQRCode = (ImageView) v.findViewById(R.id.button_scan_qr_code);
         buttonSelectFromContacts = (ImageView) v.findViewById(R.id.select_receiver_from_contacts);
         buttonSend = (Button) v.findViewById(R.id.button_send_money);
@@ -420,8 +418,10 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             return;
         }
 
-        mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
-        mProgressDialog.show();
+        //mProgressDialog.setMessage(getString(R.string.progress_dialog_text_sending_money));
+        //mProgressDialog.show();
+        mCustomProgressDialog.setLoadingMessage(getString(R.string.progress_dialog_text_sending_money));
+        mCustomProgressDialog.showDialog();
         mProgressDialog.setCancelable(false);
         mSendMoneyRequest = new SendMoneyRequest(
                 mSenderMobileNumber, ContactEngine.formatMobileNumberBD(mReceiver),
@@ -556,12 +556,18 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
         } else if (result.getApiCommand().equals(Constants.COMMAND_SEND_MONEY)) {
 
             try {
-                SendMoneyResponse mSendMoneyResponse = gson.fromJson(result.getJsonString(), SendMoneyResponse.class);
+                final SendMoneyResponse mSendMoneyResponse = gson.fromJson(result.getJsonString(), SendMoneyResponse.class);
                 switch (result.getStatus()) {
                     case Constants.HTTP_RESPONSE_STATUS_OK:
-                        if (getActivity() != null)
-                            Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
-                        getActivity().finish();
+                        //if (getActivity() != null)
+                        //  Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mCustomProgressDialog.showSuccessAnimationAndMessage(mSendMoneyResponse.getMessage());
+                            }
+                        }, 2000);
+                        //getActivity().finish();
                         //Google Analytic event
                         Utilities.sendSuccessEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
                         break;

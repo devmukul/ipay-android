@@ -15,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/value15"
+        android:text="tested"
         android:id="@+id/progress_dialog_text_view"
         android:layout_gravity="center"/>
 
