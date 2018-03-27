@@ -1131,4 +1131,5 @@
     <string name="availed_service">You can currently do the following things on behalf of the business.</string>
     <string name="service_under_this_role">Services under this role</string>
     <string name="remove_account">Remove Account</string>
+    <string name="you_do_not_have_any_introducer">You do not have any introducer yet</string>
 </resources>
