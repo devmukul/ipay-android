@@ -153,7 +153,7 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
                     if (!ProfileInfoCacheManager.isAccountVerified()) {
                         photoSelectionHelperDialog.show();
                     } else
-                        showProfilePictureUpdateRestrictionDialog();
+                        DialogUtils.showProfilePictureUpdateRestrictionDialog(getContext());
                 }
             });
 
@@ -219,20 +219,6 @@ public class AccountFragment extends BaseFragment implements HttpResponseListene
         }
     }
 
-    private void showProfilePictureUpdateRestrictionDialog() {
-        MaterialDialog.Builder dialog = new MaterialDialog.Builder(getActivity());
-        dialog
-                .content(R.string.can_not_change_picture)
-                .cancelable(false)
-                .positiveText(R.string.got_it)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
-    }
 
     private void initProfilePicHelperDialog() {
         if (!ProfileInfoCacheManager.isAccountVerified()) {

@@ -25,6 +25,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletio
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.ProfileCompletion.ProfileCompletionStatusResponse;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
+import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
@@ -191,7 +192,11 @@ public class ProfileCompletionFragment extends ProgressFragment implements HttpR
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((ProfileActivity) getActivity()).switchToFragment(propertyDetails.getPropertyName(), null, true);
+                        if (propertyDetails.getPropertyName().equals(ProfileCompletionPropertyConstants.PROFILE_PICTURE)) {
+                            DialogUtils.showProfilePictureUpdateRestrictionDialog(getContext());
+                        } else {
+                            ((ProfileActivity) getActivity()).switchToFragment(propertyDetails.getPropertyName(), null, true);
+                        }
                     }
                 });
             }

@@ -134,4 +134,18 @@ public class DialogUtils {
                 .show();
         dialog.show();
     }
+    public static void showProfilePictureUpdateRestrictionDialog(Context context) {
+        MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
+        dialog
+                .content(R.string.can_not_change_picture)
+                .cancelable(false)
+                .positiveText(R.string.got_it)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
 }
