@@ -41,6 +41,7 @@ import bd.com.ipay.ipayskeleton.Aspect.ValidateAccess;
 import bd.com.ipay.ipayskeleton.CustomView.Dialogs.ResourceSelectorDialog;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.Profile.IntroductionAndInvite.GetInviteInfoResponse;
 import bd.com.ipay.ipayskeleton.Model.Contact.AddContactRequestBuilder;
+import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ACLManager;
 import bd.com.ipay.ipayskeleton.Utilities.Common.CommonData;
@@ -209,7 +210,8 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         buttonScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utilities.performQRCodeScan(ContactsHolderFragment.this, REQUEST_CODE_PERMISSION);
+                Intent intent = new Intent(getContext(), BarcodeCaptureActivity.class);
+                startActivityForResult(intent, Constants.RC_BARCODE_CAPTURE);
             }
         });
 
@@ -257,7 +259,8 @@ public class ContactsHolderFragment extends Fragment implements HttpResponseList
         switch (requestCode) {
             case REQUEST_CODE_PERMISSION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Utilities.initiateQRCodeScan(this);
+                    Intent intent = new Intent(getContext(), BarcodeCaptureActivity.class);
+                    startActivityForResult(intent, Constants.RC_BARCODE_CAPTURE);
                 } else {
                     Toaster.makeText(getActivity(), R.string.error_camera_permission_denied, Toast.LENGTH_LONG);
                 }

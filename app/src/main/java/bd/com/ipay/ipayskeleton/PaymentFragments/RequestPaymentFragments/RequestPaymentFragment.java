@@ -36,6 +36,7 @@ import bd.com.ipay.ipayskeleton.BaseFragments.BaseFragment;
 import bd.com.ipay.ipayskeleton.CustomView.CustomContactsSearchView;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.BusinessRule;
 import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.BusinessRuleAndServiceCharge.BusinessRule.GetBusinessRuleRequestBuilder;
+import bd.com.ipay.ipayskeleton.QRScanner.BarcodeCaptureActivity;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
 import bd.com.ipay.ipayskeleton.Utilities.CacheManager.ProfileInfoCacheManager;
@@ -234,7 +235,9 @@ public class RequestPaymentFragment extends BaseFragment implements LocationList
         switch (requestCode) {
             case Utilities.LOCATION_SETTINGS_PERMISSION_CODE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Utilities.initiateQRCodeScan(this);
+
+                    Intent intent = new Intent(getContext(), BarcodeCaptureActivity.class);
+                    startActivityForResult(intent, Constants.RC_BARCODE_CAPTURE);
                 } else {
                     buttonRequestPayment.performClick();
                 }
