@@ -164,4 +164,19 @@ public class DialogUtils {
                 .show();
         dialog.show();
     }
+
+    public static void showBalanceErrorInTransaction(final Context context, String errorMessage) {
+        MaterialDialog dialog = new MaterialDialog.Builder(context)
+                .cancelable(false)
+                .content(errorMessage)
+                .positiveText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        ((Activity) context).onBackPressed();
+                    }
+                })
+                .show();
+        dialog.show();
+    }
 }
