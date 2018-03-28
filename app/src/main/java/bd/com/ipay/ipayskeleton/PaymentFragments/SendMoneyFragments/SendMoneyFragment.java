@@ -561,13 +561,14 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                     case Constants.HTTP_RESPONSE_STATUS_OK:
                         //if (getActivity() != null)
                         //  Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                        mCustomProgressDialog.showSuccessAnimationAndMessage(mSendMoneyResponse.getMessage());
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                mCustomProgressDialog.showSuccessAnimationAndMessage(mSendMoneyResponse.getMessage());
+                                getActivity().finish();
                             }
                         }, 2000);
-                        //getActivity().finish();
+
                         //Google Analytic event
                         Utilities.sendSuccessEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
                         break;
