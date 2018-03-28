@@ -46,6 +46,7 @@ import bd.com.ipay.ipayskeleton.Model.CommunicationPOJO.MakePayment.PaymentAccep
 import bd.com.ipay.ipayskeleton.PaymentFragments.CommonFragments.ReviewFragment;
 import bd.com.ipay.ipayskeleton.R;
 import bd.com.ipay.ipayskeleton.Utilities.BusinessRuleConstants;
+import bd.com.ipay.ipayskeleton.Utilities.CacheManager.SharedPrefManager;
 import bd.com.ipay.ipayskeleton.Utilities.Constants;
 import bd.com.ipay.ipayskeleton.Utilities.ContactSearchHelper;
 import bd.com.ipay.ipayskeleton.Utilities.DialogUtils;
@@ -198,13 +199,7 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
             @Override
             @ValidateAccess(ServiceIdConstants.ACCEPT_REQUEST)
             public void onClick(View v) {
-                if (mMandatoryBusinessRules.IS_LOCATION_REQUIRED()) {
-                    if (Utilities.hasForcedLocationPermission(PaymentRequestReceivedDetailsFragment.this)) {
-                        getLocationAndAttemptAcceptRequestWithPinCheck();
-                    }
-                } else {
-                    attemptAcceptRequestWithPinCheck();
-                }
+                verifyBalance();
             }
         });
 
@@ -305,6 +300,31 @@ public class PaymentRequestReceivedDetailsFragment extends ReviewFragment implem
         });
 
         alertDialogue.show();
+    }
+
+    private void verifyBalance() {
+        String errorMessage = null;
+
+        if (SharedPrefManager.ifContainsUserBalance()) {
+            final BigDecimal balance = new BigDecimal(SharedPrefManager.getUserBalance());
+            if (mAmount.compareTo(balance) > 0) {
+                errorMessage = getString(R.string.insufficient_balance);
+            }
+        } else {
+            errorMessage = getString(R.string.balance_not_available);
+        }
+
+        if (errorMessage != null) {
+            DialogUtils.showBalanceErrorInTransaction(getActivity(), errorMessage);
+        } else {
+            if (mMandatoryBusinessRules.IS_LOCATION_REQUIRED()) {
+                if (Utilities.hasForcedLocationPermission(PaymentRequestReceivedDetailsFragment.this)) {
+                    getLocationAndAttemptAcceptRequestWithPinCheck();
+                }
+            } else {
+                attemptAcceptRequestWithPinCheck();
+            }
+        }
     }
 
     private void cancelRequestPayment() {
