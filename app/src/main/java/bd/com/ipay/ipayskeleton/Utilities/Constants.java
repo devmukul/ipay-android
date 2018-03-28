@@ -315,7 +315,7 @@ public class Constants {
 
             BASE_URL_MM = "https://demo.ipay.com.bd/api/v1/";
             BASE_URL_SM = "https://demo.ipay.com.bd/api/v1/money/";
-            BASE_URL_PG = "http://10.10.10.11:6776/api/pg/order/";
+            BASE_URL_PG = "http://demo.ipay.com.bd/api/pg/order/";
             BASE_URL_EDU = "https://demo.ipay.com.bd/api/v1/em/";
             BASE_URL_CARD = "https://demo.ipay.com.bd/api/v1/card/";
             BASE_URL_FTP_SERVER = "https://demo.ipay.com.bd";
