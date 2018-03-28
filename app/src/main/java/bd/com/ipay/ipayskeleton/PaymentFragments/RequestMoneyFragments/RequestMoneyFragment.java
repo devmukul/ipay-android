@@ -331,6 +331,10 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
                             public void run() {
                                 if (InputValidator.isValidNumber(resultElements[0])) {
                                     mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(resultElements[0]));
+                                    if (Utilities.isConnectionAvailable(getActivity())) {
+                                        String mobileNumber = ContactEngine.formatMobileNumberBD(resultElements[0]);
+                                        getUserInfo(mobileNumber);
+                                    }
                                     if (resultElements.length > 1) {
                                         switch (resultElements.length) {
                                             case 2: {
@@ -376,45 +380,6 @@ public class RequestMoneyFragment extends BaseFragment implements HttpResponseLi
             }
         } else if (requestCode == REQUEST_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
-        } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
-            IntentResult scanResult = IntentIntegrator.parseActivityResult(
-                    requestCode, resultCode, data);
-            if (scanResult == null) {
-                return;
-            }
-            final String result = scanResult.getContents();
-            final String[] resultElements = result.split(" ");
-
-            if (result != null) {
-                Handler mHandler = new Handler();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (InputValidator.isValidNumber(resultElements[0])) {
-                            mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(resultElements[0]));
-                            if (Utilities.isConnectionAvailable(getActivity())) {
-                                String mobileNumber = ContactEngine.formatMobileNumberBD(resultElements[0]);
-                                getUserInfo(mobileNumber);
-                            }
-                            if (resultElements.length > 1) {
-                                switch (resultElements.length) {
-                                    case 2: {
-                                        mAmountEditText.setText(resultElements[1]);
-                                        break;
-                                    }
-                                    case 3: {
-                                        mAmountEditText.setText(resultElements[1]);
-                                        mDescriptionEditText.setText(resultElements[2]);
-                                        break;
-                                    }
-                                }
-                            }
-                        } else if (getActivity() != null)
-                            Toaster.makeText(getActivity(), getResources().getString(
-                                    R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT);
-                    }
-                });
-            }
         }
     }
 

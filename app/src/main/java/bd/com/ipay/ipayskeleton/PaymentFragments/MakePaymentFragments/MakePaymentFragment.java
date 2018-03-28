@@ -360,6 +360,7 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
                             public void run() {
                                 if (InputValidator.isValidNumber(result)) {
                                     mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
+                                    getProfileInfo(ContactEngine.formatMobileNumberBD(result));
                                 } else if (getActivity() != null)
                                     Toast.makeText(getActivity(), getResources().getString(
                                             R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT).show();
@@ -393,27 +394,6 @@ public class MakePaymentFragment extends BaseFragment implements LocationListene
             }
         } else if (requestCode == PAYMENT_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
-        } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
-            IntentResult scanResult = IntentIntegrator.parseActivityResult(
-                    requestCode, resultCode, data);
-            if (scanResult == null) {
-                return;
-            }
-            final String result = scanResult.getContents();
-            if (result != null) {
-                Handler mHandler = new Handler();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (InputValidator.isValidNumber(result)) {
-                            mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
-                            getProfileInfo(ContactEngine.formatMobileNumberBD(result));
-                        } else if (getActivity() != null)
-                            Toast.makeText(getActivity(), getResources().getString(
-                                    R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
         } else if (requestCode == Utilities.LOCATION_SETTINGS_RESULT_CODE || requestCode == Utilities.LOCATION_SOURCE_SETTINGS_RESULT_CODE) {
             buttonPayment.performClick();
         }

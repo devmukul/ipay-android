@@ -121,49 +121,6 @@ public class ScanQRCodeFragment extends BaseFragment implements HttpResponseList
             }else{
                 getActivity().finish();
             }
-        }else {
-            if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
-                IntentResult scanResult = IntentIntegrator.parseActivityResult(
-                        requestCode, resultCode, data);
-                if (scanResult == null) {
-                    getActivity().finish();
-                    return;
-                }
-                final String result = scanResult.getContents();
-                if (result != null) {
-                    final Handler mHandler = new Handler();
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (InputValidator.isValidNumber(result)) {
-                                if (Utilities.isConnectionAvailable(getActivity())) {
-                                    mobileNumber = ContactEngine.formatMobileNumberBD(result);
-                                    GetUserInfoRequestBuilder getUserInfoRequestBuilder = new GetUserInfoRequestBuilder(mobileNumber);
-
-                                    if (mGetUserInfoTask != null) {
-                                        return;
-                                    }
-
-                                    mProgressDialog.show();
-                                    mGetUserInfoTask = new HttpRequestGetAsyncTask(Constants.COMMAND_GET_USER_INFO,
-                                            getUserInfoRequestBuilder.getGeneratedUri(), getActivity());
-                                    mGetUserInfoTask.mHttpResponseListener = ScanQRCodeFragment.this;
-                                    mGetUserInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                                } else {
-                                    Toaster.makeText(getActivity(), getResources().getString(
-                                            R.string.no_internet_connection), Toast.LENGTH_SHORT);
-                                    mProgressDialog.cancel();
-                                    getActivity().finish();
-                                }
-                            } else if (getActivity() != null) {
-                                DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.scan_valid_ipay_qr_code));
-                            }
-                        }
-                    });
-                }
-            } else {
-                getActivity().finish();
-            }
         }
     }
 

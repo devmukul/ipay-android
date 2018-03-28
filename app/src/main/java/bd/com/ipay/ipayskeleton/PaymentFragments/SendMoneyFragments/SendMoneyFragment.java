@@ -255,6 +255,15 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                             public void run() {
                                 if (InputValidator.isValidNumber(result)) {
                                     mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
+                                    if (Utilities.isConnectionAvailable(getActivity())) {
+                                        String mobileNumber = ContactEngine.formatMobileNumberBD(result);
+                                        getUserInfo(mobileNumber);
+                                    } else {
+                                        Toaster.makeText(getActivity(), getResources().getString(
+                                                R.string.no_internet_connection), Toast.LENGTH_SHORT);
+                                        mProgressDialog.cancel();
+                                        getActivity().finish();
+                                    }
                                 } else if (getActivity() != null)
                                     Toaster.makeText(getActivity(), getResources().getString(
                                             R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT);
@@ -287,35 +296,6 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
             }
         } else if (requestCode == SEND_MONEY_REVIEW_REQUEST && resultCode == Activity.RESULT_OK) {
             getActivity().finish();
-        } else if (resultCode == Activity.RESULT_OK && requestCode == IntentIntegrator.REQUEST_CODE) {
-            IntentResult scanResult = IntentIntegrator.parseActivityResult(
-                    requestCode, resultCode, data);
-            if (scanResult == null) {
-                return;
-            }
-            final String result = scanResult.getContents();
-            if (result != null) {
-                Handler mHandler = new Handler();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (InputValidator.isValidNumber(result)) {
-                            mMobileNumberEditText.setText(ContactEngine.formatMobileNumberBD(result));
-                            if (Utilities.isConnectionAvailable(getActivity())) {
-                                String mobileNumber = ContactEngine.formatMobileNumberBD(result);
-                                getUserInfo(mobileNumber);
-                            } else {
-                                Toaster.makeText(getActivity(), getResources().getString(
-                                        R.string.no_internet_connection), Toast.LENGTH_SHORT);
-                                mProgressDialog.cancel();
-                                getActivity().finish();
-                            }
-                        } else if (getActivity() != null)
-                            Toaster.makeText(getActivity(), getResources().getString(
-                                    R.string.scan_valid_ipay_qr_code), Toast.LENGTH_SHORT);
-                    }
-                });
-            }
         }
     }
 
