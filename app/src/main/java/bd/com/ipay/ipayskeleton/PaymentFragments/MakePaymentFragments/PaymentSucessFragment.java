@@ -63,6 +63,7 @@ public class PaymentSucessFragment extends BaseFragment {
 
         if (getArguments() != null) {
             mReceiverBusinessName = getArguments().getString(Constants.NAME);
+            mAmount = new BigDecimal(getArguments().getString(Constants.AMOUNT));
             mPhotoUri = getArguments().getString(Constants.PHOTO_URI);
             mTransactionId = getArguments().getString(Constants.TRANSACTION_ID);
 
