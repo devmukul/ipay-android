@@ -1,15 +1,12 @@
 package bd.com.ipay.ipayskeleton.PaymentFragments.SendMoneyFragments;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,8 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -68,6 +63,7 @@ import bd.com.ipay.ipayskeleton.Utilities.InputValidator;
 import bd.com.ipay.ipayskeleton.Utilities.MyApplication;
 import bd.com.ipay.ipayskeleton.Utilities.ServiceIdConstants;
 import bd.com.ipay.ipayskeleton.Utilities.ToasterAndLogger.Toaster;
+import bd.com.ipay.ipayskeleton.Utilities.TwoFactorAuthConstants;
 import bd.com.ipay.ipayskeleton.Utilities.Utilities;
 
 public class SendMoneyFragment extends BaseFragment implements HttpResponseListener {
@@ -561,6 +557,9 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                     case Constants.HTTP_RESPONSE_STATUS_OK:
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
+                        if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                        }
                         getActivity().finish();
                         //Google Analytic event
                         Utilities.sendSuccessEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(), new BigDecimal(mAmount).longValue());
@@ -580,6 +579,13 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                         if (getActivity() != null)
                             Toaster.makeText(getActivity(), mSendMoneyResponse.getMessage(), Toast.LENGTH_LONG);
 
+                        if (mSendMoneyResponse.getMessage().toLowerCase().contains(TwoFactorAuthConstants.WRONG_OTP)) {
+                            mOTPVerificationForTwoFactorAuthenticationServicesDialog.showOtpDialog();
+                        } else {
+                            if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                                mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                            }
+                        }
                         //Google Analytic event
                         Utilities.sendFailedEventTracker(mTracker, "Send Money", ProfileInfoCacheManager.getAccountId(),
                                 mSendMoneyResponse.getMessage(), new BigDecimal(mAmount).longValue());
@@ -588,6 +594,9 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                if (mOTPVerificationForTwoFactorAuthenticationServicesDialog != null) {
+                    mOTPVerificationForTwoFactorAuthenticationServicesDialog.dismissDialog();
+                }
                 Utilities.sendExceptionTracker(mTracker, ProfileInfoCacheManager.getAccountId(), e.getMessage());
             }
             mProgressDialog.dismiss();
