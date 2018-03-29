@@ -1081,9 +1081,7 @@ public class Utilities {
         Logger.logD(TAG, uri.getPathSegments().toString());
         deepLinkAction.setAction(pathSegments.get(1));
         deepLinkAction.setOrderId(pathSegments.get(2));
-
         Logger.logD(TAG, deepLinkAction.toString());
-
         return deepLinkAction;
     }
 

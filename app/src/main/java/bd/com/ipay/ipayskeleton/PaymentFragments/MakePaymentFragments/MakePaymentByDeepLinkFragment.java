@@ -270,7 +270,7 @@ public class MakePaymentByDeepLinkFragment extends Fragment implements LocationL
     }
 
     private void appendSuccesOrFailureMessageAndLaunchThirdPartyApp(String message) {
-        thirdPartyAppUrl += "/" + message;
+        thirdPartyAppUrl += "://test/" + message;
         launchParentThirdPartyApp();
     }
 
