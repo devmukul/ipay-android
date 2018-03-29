@@ -505,45 +505,23 @@ public class SendMoneyFragment extends BaseFragment implements HttpResponseListe
                 GetUserInfoResponse mGetUserInfoResponse = gson.fromJson(result.getJsonString(), GetUserInfoResponse.class);
 
                 if (result.getStatus() == Constants.HTTP_RESPONSE_STATUS_OK) {
+                    mProfilePicHolderView.setVisibility(View.VISIBLE);
+                    mMobileNumberHolderView.setVisibility(View.GONE);
 
-                    if (mGetUserInfoResponse.getAccountType() == Constants.BUSINESS_ACCOUNT_TYPE) {
-                        if (mGetUserInfoResponse.getAccountStatus().equals(Constants.ACCOUNT_VERIFICATION_STATUS_VERIFIED)) {
-                            if (!ACLManager.hasServicesAccessibility(ServiceIdConstants.MAKE_PAYMENT)) {
-                                DialogUtils.showServiceNotAllowedDialog(getContext());
-                            } else {
-                                if (mGetUserInfoResponse.getAddressList() != null) {
-                                    if (mGetUserInfoResponse.getAddressList().getOFFICE() != null) {
-                                        address = mGetUserInfoResponse.getAddressList().getOFFICE().get(0).getAddressLine1();
-                                        country = mGetUserInfoResponse.getAddressList().getOFFICE().get(0).getCountry();
-                                        district = mGetUserInfoResponse.getAddressList().getOFFICE().get(0).getDistrict();
-                                        thana = mGetUserInfoResponse.getAddressList().getOFFICE().get(0).getThana();
-                                    }
-                                }
-                                switchActivity(PaymentActivity.class);
-                            }
-                        } else {
-                            DialogUtils.showDialogForInvalidQRCode(getActivity(), getString(R.string.business_account_not_verified));
-                        }
-                    } else {
-
-                        mProfilePicHolderView.setVisibility(View.VISIBLE);
-                        mMobileNumberHolderView.setVisibility(View.GONE);
-
-                        if (!new ContactSearchHelper(getActivity()).searchMobileNumber(mReceiver)) {
-                            addToContactCheckBox.setVisibility(View.VISIBLE);
-                            addToContactCheckBox.setChecked(true);
-                        }
-
-                        mName = mGetUserInfoResponse.getName();
-
-                        if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
-                            mProfilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
-                            mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture,
-                                    false);
-                        }
-                        mNameTextView.setText(mName);
-
+                    if (!new ContactSearchHelper(getActivity()).searchMobileNumber(mReceiver)) {
+                        addToContactCheckBox.setVisibility(View.VISIBLE);
+                        addToContactCheckBox.setChecked(true);
                     }
+
+                    mName = mGetUserInfoResponse.getName();
+
+                    if (!mGetUserInfoResponse.getProfilePictures().isEmpty()) {
+                        mProfilePicture = Utilities.getImage(mGetUserInfoResponse.getProfilePictures(), Constants.IMAGE_QUALITY_MEDIUM);
+                        mProfileImageView.setProfilePicture(Constants.BASE_URL_FTP_SERVER + mProfilePicture,
+                                false);
+                    }
+                    mNameTextView.setText(mName);
+
                 }
 
             } catch (Exception e) {
